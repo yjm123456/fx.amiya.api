@@ -155,11 +155,11 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
         /// <summary>
-        /// 修改绑定主播
+        /// 修改绑定助理
         /// </summary>
         /// <param name="updateVo"></param>
         /// <returns></returns>
-        [HttpPut]
+        [HttpPut("updateAssistant")]
         public async Task<ResultData> UpdateAssistantAsync(UpdateCustomerConsumptionCredentialVo updateVo) {
             await customerConsumptionCredentialsService.UpdateAssistantAsync(updateVo.Id,updateVo.AssistantId);
             return ResultData.Success();
