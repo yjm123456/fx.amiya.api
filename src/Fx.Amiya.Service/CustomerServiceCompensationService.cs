@@ -85,6 +85,7 @@ namespace Fx.Amiya.Service
                 customerServiceCompensation.CreateDate = DateTime.Now;
                 customerServiceCompensation.CreateBy = addDto.CreateBy;
                 customerServiceCompensation.Name = addDto.Name;
+                customerServiceCompensation.Valid = true;
                 customerServiceCompensation.BelongEmpId = addDto.BelongEmpId;
                 customerServiceCompensation.TotalPrice = addDto.TotalPrice;
                 customerServiceCompensation.OtherPrice = addDto.OtherPrice;
@@ -106,7 +107,7 @@ namespace Fx.Amiya.Service
 
         public async Task<CustomerServiceCompensationDto> GetByIdAsync(string id)
         {
-            var result = await dalCustomerServiceCompensation.GetAll().Where(x => x.Id == id && x.Valid == true).FirstOrDefaultAsync();
+            var result = await dalCustomerServiceCompensation.GetAll().Include(x => x.CreateByEmployee).Include(x => x.BelongEmployee).Where(x => x.Id == id && x.Valid == true).FirstOrDefaultAsync();
             if (result == null)
             {
                 return new CustomerServiceCompensationDto();

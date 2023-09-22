@@ -2283,7 +2283,7 @@ namespace Fx.Amiya.Service
                 orderDealDto.InvitationDocuments = input.InvitationDocuments;
                 orderDealDto.AddContentPlatFormOrderDealDetailsDtoList = input.AddContentPlatFormOrderDealDetailsDtoList;
                 await _contentPlatFormOrderDalService.AddAsync(orderDealDto);
-                
+
                 unitOfWork.Commit();
             }
             catch (Exception err)
@@ -3019,11 +3019,15 @@ namespace Fx.Amiya.Service
         public async Task<CustomerServiceSimplePerformanceDto> GetCustomerServiceSimpleByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int belongCustomerServiceId)
         {
             var dealData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
-                .Where(e => belongCustomerServiceId == 0 || (e.SupportEmpId == 0 ? belongCustomerServiceId == e.BelongEmpId.Value : e.SupportEmpId == belongCustomerServiceId));
+                 //.Where(e => belongCustomerServiceId == 0 || (e.SupportEmpId == 0 ? belongCustomerServiceId == e.BelongEmpId.Value : e.SupportEmpId == belongCustomerServiceId));
+                 .Where(e => belongCustomerServiceId == 0 || belongCustomerServiceId == e.BelongEmpId.Value);
+            var count = await dealData
+               .SelectMany(e => e.ContentPlatformOrderDealInfoList)
+               .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.IsToHospital == true).CountAsync();
             var dealResult = await dealData
                 .SelectMany(e => e.ContentPlatformOrderDealInfoList)
                 .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.IsToHospital == true)
-                .GroupBy(e => e.ContentPlatFormOrder.BelongEmpId)
+                .GroupBy(e => e.ContentPlatFormOrder.BelongEmpId)//因为此处已按归属客服区分，所以无法使用辅助客服与归属客服数据相加
                 .Select(e => new CustomerServiceSimplePerformanceDto
                 {
                     CustomerServiceId = e.Key.Value,
@@ -3041,12 +3045,12 @@ namespace Fx.Amiya.Service
                 dealResult = new CustomerServiceSimplePerformanceDto();
             }
 
-            //var supportData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
-            //.Where(e => belongCustomerServiceId == e.SupportEmpId && e.SupportEmpId != e.BelongEmpId)
-            //.SelectMany(k => k.ContentPlatformOrderDealInfoList)
-            //.Where(u => u.CreateDate >= startDate && u.CreateDate < endDate && u.IsDeal == true);
-            //dealResult.SupportPrice = DecimalExtension.ChangePriceToTenThousand(supportData.Sum(x => x.Price));
-            //dealResult.TotaPrice += dealResult.SupportPrice;
+            var supportData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
+            .Where(e => belongCustomerServiceId == e.SupportEmpId && e.SupportEmpId != e.BelongEmpId)
+            .SelectMany(k => k.ContentPlatformOrderDealInfoList)
+            .Where(u => u.CreateDate >= startDate && u.CreateDate < endDate && u.IsDeal == true);
+            dealResult.SupportPrice = DecimalExtension.ChangePriceToTenThousand(supportData.Sum(x => x.Price));
+            dealResult.TotaPrice += dealResult.SupportPrice;
             string belongLiveAnchorId = "";
             var empInfo = await _amiyaEmployeeService.GetByIdAsync(belongCustomerServiceId);
             dealResult.CustomerServiceName = empInfo.Name;
@@ -3113,7 +3117,7 @@ namespace Fx.Amiya.Service
         public async Task<List<CustomerServiceDetailsPerformanceDto>> GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, List<int> belongCustomerServiceIds)
         {
             var dealData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
-                .Where(e => belongCustomerServiceIds.Count == 0 || (e.SupportEmpId == 0 ? belongCustomerServiceIds.Contains(e.BelongEmpId.Value) : belongCustomerServiceIds.Contains(e.SupportEmpId)));
+                .Where(e => belongCustomerServiceIds.Count == 0 || belongCustomerServiceIds.Contains(e.BelongEmpId.Value));
             var dealResult = dealData
                 .SelectMany(e => e.ContentPlatformOrderDealInfoList)
                 .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true)
@@ -3134,13 +3138,13 @@ namespace Fx.Amiya.Service
 
             foreach (var z in dealResult)
             {
-                //var supportData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
-                //.Where(e => e.IsSupportOrder == true && e.SupportEmpId == z.CustomerServiceId && e.SupportEmpId != e.BelongEmpId)
-                //.SelectMany(k => k.ContentPlatformOrderDealInfoList)
-                //.Where(u => u.CreateDate >= startDate && u.CreateDate < endDate && u.IsDeal == true);
-                //var supp = await supportData.ToListAsync();
-                //z.SupportPrice = supportData.Sum(x => x.Price);
-                //z.TotalServicePrice += z.SupportPrice;
+                var supportData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
+                .Where(e => e.IsSupportOrder == true && e.SupportEmpId == z.CustomerServiceId && e.SupportEmpId != e.BelongEmpId)
+                .SelectMany(k => k.ContentPlatformOrderDealInfoList)
+                .Where(u => u.CreateDate >= startDate && u.CreateDate < endDate && u.IsDeal == true);
+                var supp = await supportData.ToListAsync();
+                z.SupportPrice = supportData.Sum(x => x.Price);
+                z.TotalServicePrice += z.SupportPrice;
                 z.CustomerServiceName = await _dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(z.CustomerServiceId)).Select(e => e.Name).FirstOrDefaultAsync();
                 var sendInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && x.BelongEmpId == z.CustomerServiceId && x.SendDate >= startDate && x.SendDate < endDate).ToList();
                 var thisMonthVisitInfo = sendInfo.Where(x => x.IsToHospital == true).ToList();

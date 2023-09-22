@@ -10,11 +10,6 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerServiceCompensation.Input
     /// </summary>
     public class AddCustomerServiceCompensationVo
     {
-
-        /// <summary>
-        /// 创建人id
-        /// </summary>
-        public int CreateBy { get; set; }
         /// <summary>
         /// 账单名称
         /// </summary>

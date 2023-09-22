@@ -46,7 +46,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("listWithPage")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<CustomerServiceCompensationVo>>> GetListWithPageAsync(QueryCustomerServiceCompensationVo query)
+        public async Task<ResultData<FxPageInfo<CustomerServiceCompensationVo>>> GetListWithPageAsync([FromQuery]QueryCustomerServiceCompensationVo query)
         {
             try
             {
