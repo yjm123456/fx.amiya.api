@@ -73,7 +73,7 @@ namespace Fx.Amiya.Service
         public async Task<FxPageInfo<RecommandDocumentSettleDto>> GetListWithPageAsync(QueryReconciliationDocumentsSettleDto query)
         {
             var record = _dalRecommandDocumentSettle.GetAll().Include(x => x.AmiyaEmployee)
-              .Where(e => (string.IsNullOrEmpty(query.KeyWord) || e.RecommandDocumentId.Contains(query.KeyWord) || e.OrderId.Contains(query.KeyWord) || e.DealInfoId.Contains(query.KeyWord) || e.CheckRemark.Contains(query.KeyWord)))
+              .Where(e => (string.IsNullOrEmpty(query.KeyWord) || e.RecommandDocumentId.Contains(query.KeyWord) || e.OrderId.Contains(query.KeyWord) || e.DealInfoId.Contains(query.KeyWord)||e.CustomerServiceCompensationId==query.KeyWord || e.CheckRemark.Contains(query.KeyWord)))
               .Where(e => !query.StartDate.HasValue || e.CreateDate >= query.StartDate)
               .Where(e => !query.EndDate.HasValue || e.CreateDate <= query.EndDate)
               .Where(e => !query.ChooseHospitalId.HasValue || e.HospitalId == query.ChooseHospitalId)
