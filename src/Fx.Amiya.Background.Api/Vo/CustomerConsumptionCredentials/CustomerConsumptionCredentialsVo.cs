@@ -29,6 +29,19 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerConsumptionCredentials
 
         public DateTime ConsumeDate { get; set; }
         /// <summary>
+        /// 助理名称
+        /// </summary>
+        public string AssistantName { get; set; }
+        /// <summary>
+        /// 助理id
+        /// </summary>
+        public int? AssistantId { get; set; }
+        /// <summary>
+        /// 加密手机号
+        /// </summary>
+        public string EncryptPhone { get; set; }
+
+        /// <summary>
         /// 消费凭证截图1
         /// </summary>
 
@@ -61,5 +74,6 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerConsumptionCredentials
         /// 审核备注
         /// </summary>
         public string CheckRemark { get; set; }
+        
     }
 }

@@ -55,6 +55,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
+                
                 var q = await customerConsumptionCredentialsService.GetListAsync(keyword, valid, checkState, pageNum, pageSize);
 
                 var customerConsumptionCredentials = from d in q.List
@@ -79,7 +80,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                          UpdateDate = d.UpdateDate,
                                                          DeleteDate = d.DeleteDate,
                                                          Valid = d.Valid,
-                                                         CheckRemark=d.CheckRemark
+                                                         CheckRemark=d.CheckRemark,
+                                                         AssistantId=d.AssistantId,
+                                                         AssistantName=d.AssistantName,
+                                                         EncryptPhone=d.EncryptPhone
                                                      };
 
                 FxPageInfo<CustomerConsumptionCredentialsVo> customerConsumptionCredentialsPageInfo = new FxPageInfo<CustomerConsumptionCredentialsVo>();

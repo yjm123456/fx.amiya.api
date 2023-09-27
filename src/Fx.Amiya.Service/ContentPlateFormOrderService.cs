@@ -2291,7 +2291,7 @@ namespace Fx.Amiya.Service
 
                 try
                 {
-                    if (input.EmpId!=0&&input.IsFinish&&order.HospitalDepartmentId== "99138ad8-a96b-40c2-b27c-c7e13d41d47b") {
+                    if (input.EmpId!=0&&input.IsFinish&&order.HospitalDepartmentId== "7f9b164b-8560-4d32-bdbf-f7c28c55e0ae") {
                         DealAfterAddTrackDto dealTrack = new DealAfterAddTrackDto();
                         dealTrack.EmployeeId = input.EmpId;
                         dealTrack.CreateDate = DateTime.Now;
@@ -2301,7 +2301,7 @@ namespace Fx.Amiya.Service
                 }
                 catch (Exception ex)
                 {
-
+                    
                     
                 }
             }

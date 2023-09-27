@@ -14,6 +14,9 @@ namespace Fx.Amiya.Dto.CustomerConsumptionCredentials
         public string ToHospitalPhone { get; set; }
 
         public string LiveAnchor { get; set; }
+        public string AssistantName { get; set; }
+        public int? AssistantId { get; set; }
+        public string EncryptPhone { get; set; }
 
         public DateTime ConsumeDate { get; set; }
 

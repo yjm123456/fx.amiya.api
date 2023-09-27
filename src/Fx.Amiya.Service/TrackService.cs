@@ -619,71 +619,79 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task AddWaitTrackAfterDealAsync(DealAfterAddTrackDto dealTrack)
         {
-            List<WaitTrackCustomer> waitTrackList = new List<WaitTrackCustomer>();
-            WaitTrackCustomer oneDay = new WaitTrackCustomer();
-            oneDay.Phone = dealTrack.Phone;
-            oneDay.PlanTrackDate= dealTrack.CreateDate.AddDays(1);
-            oneDay.TrackTypeId = 17;
-            oneDay.TrackThemeId = 21;
-            oneDay.CreateDate=DateTime.Now;
-            oneDay.TrackPlan = "告知术后注意事项、以及恢复期可能发生的问题，并安抚";
-            oneDay.CreateBy = dealTrack.EmployeeId;
-            oneDay.Status = false;
-            oneDay.PlanTrackEmployeeId = dealTrack.EmployeeId;
-            waitTrackList.Add(oneDay);
+            try
+            {
+                List<WaitTrackCustomer> waitTrackList = new List<WaitTrackCustomer>();
+                WaitTrackCustomer oneDay = new WaitTrackCustomer();
+                oneDay.Phone = dealTrack.Phone;
+                oneDay.PlanTrackDate = dealTrack.CreateDate.AddDays(1);
+                oneDay.TrackTypeId = 6;
+                oneDay.TrackThemeId = 54;
+                oneDay.CreateDate = DateTime.Now;
+                oneDay.TrackPlan = "告知术后注意事项、以及恢复期可能发生的问题，并安抚";
+                oneDay.CreateBy = dealTrack.EmployeeId;
+                oneDay.Status = false;
+                oneDay.PlanTrackEmployeeId = dealTrack.EmployeeId;
+                waitTrackList.Add(oneDay);
 
-            WaitTrackCustomer oneWeek=new WaitTrackCustomer();
-            oneWeek.Phone = dealTrack.Phone;
-            oneWeek.PlanTrackDate = dealTrack.CreateDate.AddDays(7);
-            oneWeek.TrackTypeId = 17;
-            oneWeek.TrackThemeId = 22;
-            oneWeek.CreateDate = DateTime.Now;
-            oneWeek.TrackPlan = "关心恢复的情况";
-            oneWeek.CreateBy = dealTrack.EmployeeId;
-            oneWeek.Status = false;
-            oneWeek.PlanTrackEmployeeId = dealTrack.EmployeeId;
-            waitTrackList.Add(oneWeek);
-
-
-            WaitTrackCustomer halfMonth = new WaitTrackCustomer();
-            halfMonth.Phone = dealTrack.Phone;
-            halfMonth.PlanTrackDate = dealTrack.CreateDate.AddDays(15);
-            halfMonth.TrackTypeId = 17;
-            halfMonth.TrackThemeId = 23;
-            halfMonth.CreateDate = DateTime.Now;
-            halfMonth.TrackPlan = "关心目前的效果，告知1个月的时候会有吸收代谢的情况，看个人代谢的情况，建议一个月的时候加强效果";
-            halfMonth.CreateBy = dealTrack.EmployeeId;
-            halfMonth.Status = false;
-            halfMonth.PlanTrackEmployeeId = dealTrack.EmployeeId;
-            waitTrackList.Add(halfMonth);
+                WaitTrackCustomer oneWeek = new WaitTrackCustomer();
+                oneWeek.Phone = dealTrack.Phone;
+                oneWeek.PlanTrackDate = dealTrack.CreateDate.AddDays(7);
+                oneWeek.TrackTypeId = 6;
+                oneWeek.TrackThemeId = 55;
+                oneWeek.CreateDate = DateTime.Now;
+                oneWeek.TrackPlan = "关心恢复的情况";
+                oneWeek.CreateBy = dealTrack.EmployeeId;
+                oneWeek.Status = false;
+                oneWeek.PlanTrackEmployeeId = dealTrack.EmployeeId;
+                waitTrackList.Add(oneWeek);
 
 
-            WaitTrackCustomer oneMonth=new WaitTrackCustomer();
-            halfMonth.Phone = dealTrack.Phone;
-            halfMonth.PlanTrackDate = dealTrack.CreateDate.AddMonths(1);
-            halfMonth.TrackTypeId = 18;
-            halfMonth.TrackThemeId = 24;
-            halfMonth.CreateDate = DateTime.Now;
-            halfMonth.TrackPlan = "关心吸收的情况，邀约补量，或下一步调整";
-            halfMonth.CreateBy = dealTrack.EmployeeId;
-            halfMonth.Status = false;
-            halfMonth.PlanTrackEmployeeId = dealTrack.EmployeeId;
-            waitTrackList.Add(oneMonth);
+                WaitTrackCustomer halfMonth = new WaitTrackCustomer();
+                halfMonth.Phone = dealTrack.Phone;
+                halfMonth.PlanTrackDate = dealTrack.CreateDate.AddDays(15);
+                halfMonth.TrackTypeId = 6;
+                halfMonth.TrackThemeId = 56;
+                halfMonth.CreateDate = DateTime.Now;
+                halfMonth.TrackPlan = "关心目前的效果，告知1个月的时候会有吸收代谢的情况，看个人代谢的情况，建议一个月的时候加强效果";
+                halfMonth.CreateBy = dealTrack.EmployeeId;
+                halfMonth.Status = false;
+                halfMonth.PlanTrackEmployeeId = dealTrack.EmployeeId;
+                waitTrackList.Add(halfMonth);
 
 
-            WaitTrackCustomer threeMonth = new WaitTrackCustomer();
-            halfMonth.Phone = dealTrack.Phone;
-            halfMonth.PlanTrackDate = dealTrack.CreateDate.AddMonths(3);
-            halfMonth.TrackTypeId = 18;
-            halfMonth.TrackThemeId = 25;
-            halfMonth.CreateDate = DateTime.Now;
-            halfMonth.TrackPlan = "补量以及下一步的调整";
-            halfMonth.CreateBy = dealTrack.EmployeeId;
-            halfMonth.Status = false;
-            halfMonth.PlanTrackEmployeeId = dealTrack.EmployeeId;
-            waitTrackList.Add(threeMonth);
+                WaitTrackCustomer oneMonth = new WaitTrackCustomer();
+                oneMonth.Phone = dealTrack.Phone;
+                oneMonth.PlanTrackDate = dealTrack.CreateDate.AddMonths(1);
+                oneMonth.TrackTypeId = 12;
+                oneMonth.TrackThemeId = 57;
+                oneMonth.CreateDate = DateTime.Now;
+                oneMonth.TrackPlan = "关心吸收的情况，邀约补量，或下一步调整";
+                oneMonth.CreateBy = dealTrack.EmployeeId;
+                oneMonth.Status = false;
+                oneMonth.PlanTrackEmployeeId = dealTrack.EmployeeId;
+                waitTrackList.Add(oneMonth);
 
-            await dalWaitTrackCustomer.AddCollectionAsync(waitTrackList,true);
+
+                WaitTrackCustomer threeMonth = new WaitTrackCustomer();
+                threeMonth.Phone = dealTrack.Phone;
+                threeMonth.PlanTrackDate = dealTrack.CreateDate.AddMonths(3);
+                threeMonth.TrackTypeId = 12;
+                threeMonth.TrackThemeId = 58;
+                threeMonth.CreateDate = DateTime.Now;
+                threeMonth.TrackPlan = "补量以及下一步的调整";
+                threeMonth.CreateBy = dealTrack.EmployeeId;
+                threeMonth.Status = false;
+                threeMonth.PlanTrackEmployeeId = dealTrack.EmployeeId;
+                waitTrackList.Add(threeMonth);
+
+                await dalWaitTrackCustomer.AddCollectionAsync(waitTrackList, true);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
 
         }
     }

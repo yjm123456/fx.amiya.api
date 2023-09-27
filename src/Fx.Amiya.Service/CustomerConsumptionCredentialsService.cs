@@ -11,6 +11,8 @@ using Fx.Infrastructure;
 using Fx.Common;
 using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto.CheckBaseInfo;
+using Fx.Amiya.Dto.WxAppConfig;
+using Newtonsoft.Json;
 
 namespace Fx.Amiya.Service
 {
@@ -19,12 +21,16 @@ namespace Fx.Amiya.Service
         private IDalCustomerConsumptionCredentials dalCustomerConsumptionCredentials;
         private IContentPlateFormOrderService contentPlateFormOrderService;
         private IDalLiveAnchorBaseInfo dalLiveAnchorBaseInfo;
+        private IDalAmiyaEmployee dalAmiyaEmployee;
+        private IDalConfig _dalConfig;
         public CustomerConsumptionCredentialsService(IDalCustomerConsumptionCredentials dalCustomerConsumptionCredentials,
-            IContentPlateFormOrderService contentPlateFormOrderService, IDalLiveAnchorBaseInfo dalLiveAnchorBaseInfo)
+            IContentPlateFormOrderService contentPlateFormOrderService, IDalLiveAnchorBaseInfo dalLiveAnchorBaseInfo, IDalAmiyaEmployee dalAmiyaEmployee, IDalConfig dalConfig)
         {
             this.contentPlateFormOrderService = contentPlateFormOrderService;
             this.dalCustomerConsumptionCredentials = dalCustomerConsumptionCredentials;
             this.dalLiveAnchorBaseInfo = dalLiveAnchorBaseInfo;
+            this.dalAmiyaEmployee = dalAmiyaEmployee;
+            _dalConfig = dalConfig;
         }
 
 
@@ -33,6 +39,7 @@ namespace Fx.Amiya.Service
         public async Task<FxPageInfo<CustomerConsumptionCredentialsDto>> GetListAsync(string keyWord, bool valid, int? checkState, int pageNum, int pageSize)
         {
 
+            var config = await GetCallCenterConfig();
             var CustomerConsumptionCredentialsBaseInfos = from d in dalCustomerConsumptionCredentials.GetAll()
                                                           where (string.IsNullOrWhiteSpace(keyWord) || d.CustomerName.Contains(keyWord) || d.ToHospitalPhone.Contains(keyWord))
                                                           && (d.Valid == valid)
@@ -43,7 +50,9 @@ namespace Fx.Amiya.Service
                                                               Id = d.Id,
                                                               CustomerId = d.CustomerId,
                                                               CustomerName = d.CustomerName,
+                                                              //ToHospitalPhone = config.EnablePhoneEncrypt == true ? ServiceClass.GetIncompletePhone(d.ToHospitalPhone) : d.ToHospitalPhone,
                                                               ToHospitalPhone = d.ToHospitalPhone,
+                                                              EncryptPhone = d.ToHospitalPhone,
                                                               ConsumeDate = d.ConsumeDate,
                                                               PayVoucherPicture1 = d.PayVoucherPicture1,
                                                               PayVoucherPicture2 = d.PayVoucherPicture2,
@@ -59,16 +68,21 @@ namespace Fx.Amiya.Service
                                                               DeleteDate = d.DeleteDate,
                                                               Valid = d.Valid,
                                                               CheckRemark = d.CheckRemark,
-                                                              BaseLiveAnchorId = d.BaseLiveAnchorId
+                                                              BaseLiveAnchorId = d.BaseLiveAnchorId,
+                                                              AssistantId=d.AssistantId
                                                           };
             FxPageInfo<CustomerConsumptionCredentialsDto> CustomerConsumptionCredentialsBaseInfoPageInfo = new FxPageInfo<CustomerConsumptionCredentialsDto>();
             CustomerConsumptionCredentialsBaseInfoPageInfo.TotalCount = await CustomerConsumptionCredentialsBaseInfos.CountAsync();
             CustomerConsumptionCredentialsBaseInfoPageInfo.List = await CustomerConsumptionCredentialsBaseInfos.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
             foreach (var x in CustomerConsumptionCredentialsBaseInfoPageInfo.List)
             {
+                if (x.AssistantId.HasValue) {
+                    x.AssistantName = dalAmiyaEmployee.GetAll().Where(e => e.Id ==x.AssistantId).FirstOrDefault()?.Name;
+                }
+                
                 if (!string.IsNullOrEmpty(x.BaseLiveAnchorId))
                 {
-                    x.LiveAnchor = dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == x.BaseLiveAnchorId)?.FirstOrDefault().LiveAnchorName ?? "";
+                    x.LiveAnchor = dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == x.BaseLiveAnchorId).FirstOrDefault()?.LiveAnchorName ?? "";
                 }
                 else
                 {
@@ -76,7 +90,7 @@ namespace Fx.Amiya.Service
                     var contentPlatFormOrder = contentPlatFormOrderList.FirstOrDefault();
                     if (contentPlatFormOrder != null)
                     {
-                        x.LiveAnchor = dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == contentPlatFormOrder.LiveAnchorBaseId)?.FirstOrDefault().LiveAnchorName ?? "";
+                        x.LiveAnchor = dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == contentPlatFormOrder.LiveAnchorBaseId).FirstOrDefault()?.LiveAnchorName ?? "";
                     }
                 }
             }
@@ -84,6 +98,11 @@ namespace Fx.Amiya.Service
             return CustomerConsumptionCredentialsBaseInfoPageInfo;
         }
 
+        private async Task<CallCenterConfigDto> GetCallCenterConfig()
+        {
+            var config = await _dalConfig.GetAll().SingleOrDefaultAsync();
+            return JsonConvert.DeserializeObject<WxAppConfigDto>(config.ConfigJson).CallCenterConfig;
+        }
         public async Task<FxPageInfo<CustomerConsumptionCredentialsDto>> GetByCustomerIdListAsync(string customerId, int pageNum, int pageSize)
         {
 
