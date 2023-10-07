@@ -3194,7 +3194,7 @@ namespace Fx.Amiya.Service
             //}
             var orderTrades = from d in dalOrderTrade.GetAll()
                               where d.OrderInfoList.Count(e => e.AppType == (byte)AppType.MiniProgram && e.OrderType == (byte)OrderType.MaterialOrder) > 0
-                              && (string.IsNullOrWhiteSpace(keyword) || d.CustomerInfo.Phone == keyword || d.Address.Contact.Contains(keyword))
+                              &&  (string.IsNullOrWhiteSpace(keyword) || d.CustomerInfo.Phone == keyword || d.Address.Contact.Contains(keyword) || d.OrderInfoList.Count(e=>e.GoodsName.Contains(keyword))>0)
                               && (d.CreateDate >= startDate && d.CreateDate <= endDate.AddDays(1))
                               select d;
 
@@ -3298,7 +3298,7 @@ namespace Fx.Amiya.Service
                 }
             }
             var order = dalOrderInfo.GetAll().Include(e => e.OrderTrade).Where(e => e.AppType == (byte)AppType.MiniProgram && e.OrderType == (byte)OrderType.MaterialOrder && (e.CreateDate >= startDate && e.CreateDate <= endDate.AddDays(1)));
-
+            order = from d in order where string.IsNullOrWhiteSpace(keyword) || d.OrderTrade.CustomerInfo.Phone == keyword || d.OrderTrade.Address.Contact.Contains(keyword) || d.GoodsName.Contains(keyword) select d;
             if (isSendGoods == null)
             {
                 order = from d in order
@@ -3355,7 +3355,7 @@ namespace Fx.Amiya.Service
                 var categoryName = await _goodsInfoService.GetCategoryByIdAsync(item.GoodsId);
                 item.CategoryName = categoryName;
             }
-            orderList = orderList.Where(e => string.IsNullOrEmpty(keyword) || (e.GoodsName.Contains(keyword) || e.CategoryName.Contains(keyword) || e.Standard.Contains(keyword))).ToList();
+            
             List<MiniprogramOrderExportDto> orderTradePageInfo = new List<MiniprogramOrderExportDto>();
             orderTradePageInfo = orderList.OrderByDescending(e => e.CreateDate).ToList();
 

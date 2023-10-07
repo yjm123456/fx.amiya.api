@@ -836,7 +836,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
         public async Task<string> GetCategoryByIdAsync(string id)
         {
             var goodsInfo = await _goodsInfoRepository.GetByIdAsync(id);
-            return goodsInfo?.CategoryName;
+            return goodsInfo?.CategoryName ??"";
         }
 
         Dictionary<ExchangeType, string> exchangeTypeDict = new Dictionary<ExchangeType, string>()
