@@ -3119,7 +3119,7 @@ namespace Fx.Amiya.Service
 
         public async Task<OrderTradeForWxDto> GetOrderTradeByTradeIdAsync(string tradeId)
         {
-            var orderTrade = await dalOrderTrade.GetAll().Include(e=>e.Address).Include(e => e.OrderInfoList).Include(e=>e.CustomerInfo).SingleOrDefaultAsync(e => e.TradeId == tradeId);
+            var orderTrade = await dalOrderTrade.GetAll().Include(e => e.Address).Include(e => e.OrderInfoList).Include(e => e.CustomerInfo).SingleOrDefaultAsync(e => e.TradeId == tradeId);
             if (orderTrade == null)
                 throw new Exception("交易编号错误");
 
@@ -3194,7 +3194,7 @@ namespace Fx.Amiya.Service
             //}
             var orderTrades = from d in dalOrderTrade.GetAll()
                               where d.OrderInfoList.Count(e => e.AppType == (byte)AppType.MiniProgram && e.OrderType == (byte)OrderType.MaterialOrder) > 0
-                              &&  (string.IsNullOrWhiteSpace(keyword) || d.CustomerInfo.Phone == keyword || d.Address.Contact.Contains(keyword) || d.OrderInfoList.Count(e=>e.GoodsName.Contains(keyword))>0)
+                              && (string.IsNullOrWhiteSpace(keyword) || d.CustomerInfo.Phone.Contains(keyword) || d.Address.Contact.Contains(keyword) || d.OrderInfoList.Count(e => e.GoodsName.Contains(keyword)) > 0)
                               && (d.CreateDate >= startDate && d.CreateDate <= endDate.AddDays(1))
                               select d;
 
@@ -3298,7 +3298,7 @@ namespace Fx.Amiya.Service
                 }
             }
             var order = dalOrderInfo.GetAll().Include(e => e.OrderTrade).Where(e => e.AppType == (byte)AppType.MiniProgram && e.OrderType == (byte)OrderType.MaterialOrder && (e.CreateDate >= startDate && e.CreateDate <= endDate.AddDays(1)));
-            order = from d in order where string.IsNullOrWhiteSpace(keyword) || d.OrderTrade.CustomerInfo.Phone == keyword || d.OrderTrade.Address.Contact.Contains(keyword) || d.GoodsName.Contains(keyword) select d;
+            order = from d in order where string.IsNullOrWhiteSpace(keyword) || d.OrderTrade.CustomerInfo.Phone.Contains(keyword) || d.OrderTrade.Address.Contact.Contains(keyword) || d.GoodsName.Contains(keyword) select d;
             if (isSendGoods == null)
             {
                 order = from d in order
@@ -3355,7 +3355,7 @@ namespace Fx.Amiya.Service
                 var categoryName = await _goodsInfoService.GetCategoryByIdAsync(item.GoodsId);
                 item.CategoryName = categoryName;
             }
-            
+
             List<MiniprogramOrderExportDto> orderTradePageInfo = new List<MiniprogramOrderExportDto>();
             orderTradePageInfo = orderList.OrderByDescending(e => e.CreateDate).ToList();
 
@@ -3479,7 +3479,7 @@ namespace Fx.Amiya.Service
                 try
                 {
                     operationLog.OperationBy = sendGoodsDto.HandleBy;
-                    
+
                     OrderKey orderKey = new OrderKey();
                     if (orderTrade.CustomerInfo.AppId == "wx695942e4818de445")
                     {
@@ -5221,7 +5221,7 @@ namespace Fx.Amiya.Service
             var balance = await integrationAccountService.GetIntegrationBalanceByCustomerIDAsync(cartOrderAddDto.CustomerId);
             if (totalIntegral > balance) throw new Exception("积分余额不足！");
             //integralOrderList = amiyaOrderList.Where(e => e.ExchangeType == (int)ExchangeType.Integration).ToList();
-            moneyOrintegralMoneyOrderList = amiyaOrderList.Where(e => e.ExchangeType == (int)ExchangeType.HuiShouQian || e.ExchangeType == (int)ExchangeType.ShanDePay || e.ExchangeType == (int)ExchangeType.PointAndMoney||e.ExchangeType==(int)ExchangeType.Wechat).ToList();
+            moneyOrintegralMoneyOrderList = amiyaOrderList.Where(e => e.ExchangeType == (int)ExchangeType.HuiShouQian || e.ExchangeType == (int)ExchangeType.ShanDePay || e.ExchangeType == (int)ExchangeType.PointAndMoney || e.ExchangeType == (int)ExchangeType.Wechat).ToList();
 
             PayRequestInfoDto payRequestInfoDto = null;
 
@@ -5605,7 +5605,7 @@ namespace Fx.Amiya.Service
                 payRequestInfo.paySign = payRequest.paySign;
                 //交易信息添加支付交易订单号
                 await this.TradeAddTransNoAsync(orderTradeAdd.Id, orderTradeAdd.Id);
-                
+
                 //扣除库存
                 foreach (var item in moneyOrPointOrderList)
                 {
@@ -6040,7 +6040,7 @@ namespace Fx.Amiya.Service
                 throw new Exception("取消订单失败");
             }
         }
-        private async Task UploadMiniprogramOrderInfoAsync(UploadMiniprogramOrderInfoDto uploadInfo,string appId)
+        private async Task UploadMiniprogramOrderInfoAsync(UploadMiniprogramOrderInfoDto uploadInfo, string appId)
         {
             var appInfo = new DockingHospitalCustomerInfoDto();
             if (appId == "wx695942e4818de445")
@@ -6050,7 +6050,7 @@ namespace Fx.Amiya.Service
             else if (appId == "wx8747b7f34c0047eb")
             {
                 appInfo = await dockingHospitalCustomerInfoService.GetMiniProgramAccessTokenInfo(84);
-            } 
+            }
             var requestUrl = $"https://api.weixin.qq.com/wxa/sec/order/upload_shipping_info?access_token={appInfo.AccessToken}";
             var result = HttpUtil.HTTPJsonPost(requestUrl, JsonConvert.SerializeObject(uploadInfo));
         }
@@ -6068,6 +6068,61 @@ namespace Fx.Amiya.Service
                 Key = e.delivery_id,
                 Value = e.delivery_name
             }).ToList();
+        }
+        /// <summary>
+        /// 抖音本地生活订单导入
+        /// </summary>
+        /// <param name="importDto"></param>
+        /// <returns></returns>
+        public async Task ImportTiktokLocalOrderAsync(List<ImportTikTokLocalOrderDto> importDto)
+        {
+            try
+            {
+                unitOfWork.BeginTransaction();
+                var employee = dalAmiyaEmployee.GetAll().Select(e => new { Id = e.Id, Name = e.Name }).ToList();
+                List<OrderInfo> orders = new List<OrderInfo>();
+                foreach (var item in importDto)
+                {
+                    OrderInfo orderInfo = new OrderInfo();
+                    await Task.Delay(1);
+                    orderInfo.Id = CreateOrderIdHelper.GetNextNumber();
+                    orderInfo.GoodsName = item.GoodsName;
+                    orderInfo.GoodsId = "e244a87fe29e4f148f948d7071e82435";
+                    orderInfo.Phone = item.Phone;
+                    orderInfo.AppointmentHospital = item.AppointmentHospital;
+                    if (item.StatusCode == "已核销")
+                    {
+                        orderInfo.StatusCode = OrderStatusCode.TRADE_FINISHED;
+                    }
+                    else
+                    {
+                        orderInfo.StatusCode = OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS;
+
+                    }
+                    orderInfo.ActualPayment = item.ActualPayment;
+                    orderInfo.AccountReceivable = item.AccountReceivable;
+                    orderInfo.CreateDate = item.CreateDate;
+                    orderInfo.AppType = (byte)AppType.TikTokLocal;
+                    orderInfo.OrderType = (byte)OrderType.VirtualOrder;
+                    orderInfo.OrderNature = (byte)OrderNatureType.PrivateDomainCooperation;
+                    orderInfo.Quantity = 1;
+                    orderInfo.ExchangeType = (byte)ExchangeType.ThirdPartyPayment;
+                    orderInfo.Standard = item.Standard;
+                    orderInfo.IsUseCoupon = false;
+                    var belongEmpId = employee.Where(e => e.Name == item.BelongEmp).Select(e => e.Id).FirstOrDefault();
+                    orderInfo.BelongEmpId = belongEmpId;
+                    orderInfo.CheckState = 0;
+                    orders.Add(orderInfo);
+
+                }
+                await dalOrderInfo.AddCollectionAsync(orders, true);
+                unitOfWork.Commit();
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw new Exception("导入失败");
+            }
         }
     }
     /// <summary>

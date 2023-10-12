@@ -691,5 +691,10 @@ namespace Fx.Amiya.IService
         /// <param name="code">核销码</param>
         /// <returns></returns>
         bool WriteOffCodeIsExist(string code);
+        /// <summary>
+        /// 导入抖音本地生活订单
+        /// </summary>
+        /// <returns></returns>
+        Task ImportTiktokLocalOrderAsync(List<ImportTikTokLocalOrderDto> importDto);
     }
 }

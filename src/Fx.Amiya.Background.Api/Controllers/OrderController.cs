@@ -36,6 +36,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using OfficeOpenXml;
 
 namespace Fx.Amiya.Background.Api.Controllers
 {
@@ -1577,6 +1578,51 @@ namespace Fx.Amiya.Background.Api.Controllers
                                    OrderNatureText = d.OrderNatureText
                                };
             return ResultData<List<OrderNatureTypeVo>>.Success().AddData("orderNatureList", orderNatures.ToList());
+        }
+
+        /// <summary>
+        /// 抖音本地生活订单导入
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("importTikTokLocalOrder")]
+        public async Task<ResultData> ImportTikTokLocalOrderAsync(IFormFile file) {
+            if (file == null || file.Length <= 0)
+                throw new Exception("请检查文件是否存在");
+            using (var stream = new MemoryStream())
+            {
+                await file.CopyToAsync(stream);//取到文件流
+
+                using (ExcelPackage package = new ExcelPackage(stream))
+                {
+
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets["sheet1"];
+                    if (worksheet == null)
+                    {
+                        throw new Exception("请另外新建一个excel文件'.xlsx'后将填写好的数据复制到新文件中上传，勿采用当前导出文件进行上传！");
+                    }
+                    //获取表格的列数和行数
+                    int rowCount = worksheet.Dimension.Rows;
+                    List<ImportTikTokLocalOrderDto> addDtoList = new List<ImportTikTokLocalOrderDto>();
+                    for (int x = 2; x <= rowCount; x++)
+                    {
+                        ImportTikTokLocalOrderDto addDto = new ImportTikTokLocalOrderDto();
+                        addDto.GoodsName = worksheet.Cells[x, 1].Value.ToString();
+                        addDto.Phone = worksheet.Cells[x, 2].Value.ToString();
+                        addDto.AppointmentHospital = worksheet.Cells[x, 3].Value.ToString();
+                        addDto.StatusCode = worksheet.Cells[x, 4].Value.ToString();
+                        addDto.ActualPayment = Convert.ToDecimal(worksheet.Cells[x, 5].Value);
+                        addDto.AccountReceivable = addDto.ActualPayment;
+                        addDto.CreateDate = Convert.ToDateTime(worksheet.Cells[x, 6].Value);
+                        addDto.Standard = worksheet.Cells[x, 7].Value.ToString();
+                        addDto.BelongEmp = worksheet.Cells[x, 8].Value.ToString();
+                        addDto.Quantity = Convert.ToInt32(worksheet.Cells[x, 9].Value);
+                        addDtoList.Add(addDto);
+                    }
+                    await orderService.ImportTiktokLocalOrderAsync(addDtoList);
+                }
+            }
+            return ResultData.Success();
+
         }
     }
 }

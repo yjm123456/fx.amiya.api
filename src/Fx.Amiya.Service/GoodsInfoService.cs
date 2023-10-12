@@ -1,5 +1,6 @@
-﻿using Fx.Amiya.Core.Dto.Goods;
+﻿
 using Fx.Amiya.Core.Interfaces.Goods;
+using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto.GoodsInfo;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -66,7 +67,7 @@ namespace Fx.Amiya.Service
             if (categoryId.HasValue)
             {
                 var category = await goodsCategory.GetByIdAsync(categoryId.Value);
-                if (category.ShowDirectionType == (int)ShowDirectionType.Integral)
+                if (category.ShowDirectionType == (int)Core.Dto.Goods.ShowDirectionType.Integral)
                 {
                     isIntegralCategory = true;
                 }
@@ -175,6 +176,38 @@ namespace Fx.Amiya.Service
                 MaxPrice = e.g.MaxShowPrice
             }).ToList();
             return fxPageInfo;
+        }
+        public async Task AddGoodsInfoAsync(GoodsInfoAddDto addDto) {
+            //GoodsInfo goodsInfo = new GoodsInfo();
+            //goodsInfo.Id = Guid.NewGuid().ToString("N");
+            //goodsInfo.Name = addDto.Name;
+            //goodsInfo.ThumbPicUrl = addDto.ThumbPicUrl;
+            //goodsInfo.SimpleCode = addDto.SimpleCode;
+            //goodsInfo.Description = addDto.Description;
+            //goodsInfo.Standard = addDto.Standard;
+            //goodsInfo.Unit = addDto.Unit;
+            //goodsInfo.SalePrice = addDto.SalePrice;
+            //goodsInfo.Valid = true;
+            //goodsInfo.InventoryQuantity = addDto.InventoryQuantity;
+            //goodsInfo.ExchangeType = (byte)goodsInfoAdd.ExchangeType;
+            //goodsInfo.IntegrationQuantity = addDto.IntegrationQuantity;
+            //goodsInfo.IsMaterial = addDto.IsMaterial;
+            //goodsInfo.GoodsType = addDto.GoodsType;
+            //goodsInfo.IsLimitBuy = addDto.IsLimitBuy;
+            //goodsInfo.LimitBuyQuantity = addDto.LimitBuyQuantity;
+            //goodsInfo.CreateDate = DateTime.Now;
+            //goodsInfo.CreateBy = addDto.CreateBy;
+            //goodsInfo.Version = 0;
+            
+            //goodsInfo.DetailsDescription = goodsInfoAdd.DetailsDescription;
+            //goodsInfo.MaxShowPrice = goodsInfoAdd.MaxShowPrice;
+            //goodsInfo.MinShowPrice = goodsInfoAdd.MinShowPrice;
+            //goodsInfo.VisitCount = goodsInfoAdd.VisitCount;
+            //goodsInfo.ShowSaleCount = goodsInfoAdd.ShowSaleCount;
+            //goodsInfo.SaleCount = 0;
+            //goodsInfo.Sort = goodsInfoAdd.Sort;
+            //goodsInfo.AppId = goodsInfoAdd.AppId;
+            //goodsInfo.IsHot = goodsInfoAdd.IsHot;
         }
     }
 }

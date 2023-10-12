@@ -387,6 +387,10 @@ namespace Fx.Amiya.IService
         /// 微信视频号=7
         /// </summary>
         WeChatVideo,
+        /// <summary>
+        /// 抖音本地生活
+        /// </summary>
+        TikTokLocal=8
     }
 
     #region 内容平台相关枚举

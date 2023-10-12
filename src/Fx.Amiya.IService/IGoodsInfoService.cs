@@ -34,5 +34,11 @@ namespace Fx.Amiya.IService
         /// <param name="pageSize"></param>
         /// <returns></returns>
         Task<FxPageInfo<SimpleGoodsInfoDto>> TagSearchAsync(string tagId,string appId, int sort, int pageNum, int pageSize);
+        /// <summary>
+        /// 添加商品
+        /// </summary>
+        /// <param name="addDto"></param>
+        /// <returns></returns>
+        Task AddGoodsInfoAsync(GoodsInfoAddDto addDto);
     }
 }
