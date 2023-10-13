@@ -48,7 +48,7 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public int? CreateEmpId { get; set; }
         /// <summary>
-        /// 操作人
+        /// 操作人(一般为财务角色)
         /// </summary>
         public int CreateBy { get; set; }
         /// <summary>
