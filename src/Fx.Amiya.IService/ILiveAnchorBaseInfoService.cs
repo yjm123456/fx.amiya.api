@@ -32,6 +32,7 @@ namespace Fx.Amiya.IService
         Task<LiveAnchorBaseInfoDto> GetByNameAsync(string name);
         Task<List<LiveAnchorBaseInfoDto>> GetByIdAndIsSelfLiveAnchorAsync(string id, bool? isSelfLiveAnchor);
         Task UpdateAsync(UpdateLiveAnchorBaseInfoDto updateDto);
+        Task<List<LiveAnchorBaseInfoDto>> GetCooperateLiveAnchorAsync(bool? isValid);
 
     }
 }

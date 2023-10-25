@@ -2111,7 +2111,10 @@ namespace Fx.Amiya.Service
                     AddOrderPrice = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.AddOrderPrice,
                     ContentPlatFormId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.ContentPlateformId,
                     SendDate = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.SendDate,
-                    CreateDate = ContentPlatFOrmOrderDealInfo.CreateDate
+                    CreateDate = ContentPlatFOrmOrderDealInfo.CreateDate,
+                    LiveAnchorId= ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.LiveAnchor.Id,
+                    BelongLiveAnchor = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId,
+                    LastDealHospitalId = ContentPlatFOrmOrderDealInfo.LastDealHospitalId,
                 }
                 ).ToList();
         }

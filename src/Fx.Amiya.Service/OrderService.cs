@@ -6105,7 +6105,7 @@ namespace Fx.Amiya.Service
                     orderInfo.AppType = (byte)AppType.TikTokLocal;
                     orderInfo.OrderType = (byte)OrderType.VirtualOrder;
                     orderInfo.OrderNature = (byte)OrderNatureType.PrivateDomainCooperation;
-                    orderInfo.Quantity = 1;
+                    orderInfo.Quantity = item.Quantity;
                     orderInfo.ExchangeType = (byte)ExchangeType.ThirdPartyPayment;
                     orderInfo.Standard = item.Standard;
                     orderInfo.IsUseCoupon = false;

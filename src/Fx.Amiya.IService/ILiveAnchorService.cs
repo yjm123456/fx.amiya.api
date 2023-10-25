@@ -55,6 +55,12 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<List<LiveAnchorDto>> GetLiveAnchorListByBaseInfoId(string baseInfoId);
         /// <summary>
+        /// 根据主播基础信息id集合获取所有主播id
+        /// </summary>
+        /// <param name="baseInfoId"></param>
+        /// <returns></returns>
+        Task<List<LiveAnchorDto>> GetLiveAnchorListByBaseInfoIdListAsync(List<string> baseInfoId);
+        /// <summary>
         /// 获取需要同步视频号订单的主播信息
         /// </summary>
         /// <returns></returns>

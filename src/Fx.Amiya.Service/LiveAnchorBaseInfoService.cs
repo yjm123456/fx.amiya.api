@@ -265,5 +265,16 @@ namespace Fx.Amiya.Service
             var resultList = await liveAnchorBaseInfos.ToListAsync();
             return resultList;
         }
+        /// <summary>
+        /// 获取合作达人
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<LiveAnchorBaseInfoDto>> GetCooperateLiveAnchorAsync(bool? isValid)
+        {
+            return await dalLiveAnchorBaseInfo.GetAll().Where(e=>e.IsSelfLivevAnchor==false&&(!isValid.HasValue||e.Valid==isValid)).Select(e=>new LiveAnchorBaseInfoDto { 
+                LiveAnchorName=e.LiveAnchorName,
+                Id=e.Id
+            }).ToListAsync();
+        }
     }
 }

@@ -51,6 +51,10 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 主播
         /// </summary>
         public string LiveAnchorName { get; set; }
+        /// <summary>
+        /// 主播id
+        /// </summary>
+        public int LiveAnchorId { get; set; }
 
         /// <summary>
         /// 项目

@@ -379,5 +379,14 @@ namespace Fx.Amiya.Service
             }
             return await data.Select(e => e.Id).ToListAsync();
         }
+
+        public async Task<List<LiveAnchorDto>> GetLiveAnchorListByBaseInfoIdListAsync(List<string> baseInfoId)
+        {
+            return await dalLiveAnchor.GetAll().Where(e => baseInfoId.Contains(e.LiveAnchorBaseId)).Select(e => new LiveAnchorDto
+            {
+                Id = e.Id,
+                LiveAnchorBaseId = e.LiveAnchorBaseId,
+            }).ToListAsync();
+        }
     }
 }

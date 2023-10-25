@@ -77,68 +77,86 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData> ContentPlateFormAddOrderAsync(ContentPlateFormOrderAddVo addVo)
         {
-            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            OperationAddDto operationLog = new OperationAddDto();
+            try
+            {
+                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                operationLog.OperationBy=Convert.ToInt32(employee.Id);
+                //if (employee.PositionName == "客服" || employee.PositionName == "客服管理员")
+                //{
+                //    var IsExistOrder = _tmallOrderService.IsExistPhoneAsync(addVo.Phone);
+                //    if (await IsExistOrder == true)
+                //    {
+                //        throw new Exception("该客户手机号已在下单平台产生过订单，请确认后联系客服主管！");
+                //    }
+                //}
 
-            //if (employee.PositionName == "客服" || employee.PositionName == "客服管理员")
-            //{
-            //    var IsExistOrder = _tmallOrderService.IsExistPhoneAsync(addVo.Phone);
-            //    if (await IsExistOrder == true)
-            //    {
-            //        throw new Exception("该客户手机号已在下单平台产生过订单，请确认后联系客服主管！");
-            //    }
-            //}
-
-            //添加订单
-            ContentPlateFormOrderAddDto addDto = new ContentPlateFormOrderAddDto();
-            addDto.EmployeeId = addVo.BelongEmpId;
-            addDto.Id = CreateOrderIdHelper.GetNextNumber();
-            addDto.BelongMonth = addVo.BelongMonth;
-            addDto.AddOrderPrice = addVo.AddOrderPrice;
-            addDto.OrderType = addVo.OrderType;
-            addDto.ContentPlateFormId = addVo.ContentPlateFormId;
-            addDto.ConsultationEmpId = addVo.ConsultationEmpId;
-            addDto.ConsultationType = addVo.ConsultationType;
-            addDto.LiveAnchorId = addVo.LiveAnchorId;
-            addDto.LiveAnchorWeChatNo = addVo.LiveAnchorWeChatNo;
-            addDto.CustomerName = addVo.CustomerName;
-            addDto.Phone = addVo.Phone;
-            addDto.City = addVo.City;
-            addDto.Sex = addVo.Sex;
-            addDto.Birthday = addVo.Birthday;
-            addDto.Occupation = addVo.Occupation;
-            addDto.WechatNumber = addVo.WechatNumber;
-            addDto.AppointmentDate = addVo.AppointmentDate;
-            addDto.AppointmentHospitalId = addVo.AppointmentHospitalId;
-            addDto.DepositAmount = addVo.DepositAmount;
-            addDto.OrderSource = addVo.OrderSource;
-            addDto.UnSendReason = addVo.UnSendReason;
-            addDto.AcceptConsulting = addVo.AcceptConsulting;
-            addDto.GoodsId = addVo.GoodsId;
-            addDto.HospitalDepartmentId = addVo.HospitalDepartmentId;
-            addDto.ConsultingContent = addVo.ConsultingContent;
-            addDto.Remark = addVo.Remark;
-            addDto.LateProjectStage = addVo.LateProjectStage;
-            addDto.CustomerPictures = new List<string>();
-            addDto.CustomerPictures = addVo.CustomerPictures;
-            addDto.IsSupportOrder = addVo.IsSupportOrder;
-            addDto.SupportEmpId = addVo.SupportEmpId;
-            addDto.GetCustomerType = addVo.GetCustomerType;
-            await _orderService.AddContentPlateFormOrderAsync(addDto);
+                //添加订单
+                ContentPlateFormOrderAddDto addDto = new ContentPlateFormOrderAddDto();
+                addDto.EmployeeId = addVo.BelongEmpId;
+                addDto.Id = CreateOrderIdHelper.GetNextNumber();
+                addDto.BelongMonth = addVo.BelongMonth;
+                addDto.AddOrderPrice = addVo.AddOrderPrice;
+                addDto.OrderType = addVo.OrderType;
+                addDto.ContentPlateFormId = addVo.ContentPlateFormId;
+                addDto.ConsultationEmpId = addVo.ConsultationEmpId;
+                addDto.ConsultationType = addVo.ConsultationType;
+                addDto.LiveAnchorId = addVo.LiveAnchorId;
+                addDto.LiveAnchorWeChatNo = addVo.LiveAnchorWeChatNo;
+                addDto.CustomerName = addVo.CustomerName;
+                addDto.Phone = addVo.Phone;
+                addDto.City = addVo.City;
+                addDto.Sex = addVo.Sex;
+                addDto.Birthday = addVo.Birthday;
+                addDto.Occupation = addVo.Occupation;
+                addDto.WechatNumber = addVo.WechatNumber;
+                addDto.AppointmentDate = addVo.AppointmentDate;
+                addDto.AppointmentHospitalId = addVo.AppointmentHospitalId;
+                addDto.DepositAmount = addVo.DepositAmount;
+                addDto.OrderSource = addVo.OrderSource;
+                addDto.UnSendReason = addVo.UnSendReason;
+                addDto.AcceptConsulting = addVo.AcceptConsulting;
+                addDto.GoodsId = addVo.GoodsId;
+                addDto.HospitalDepartmentId = addVo.HospitalDepartmentId;
+                addDto.ConsultingContent = addVo.ConsultingContent;
+                addDto.Remark = addVo.Remark;
+                addDto.LateProjectStage = addVo.LateProjectStage;
+                addDto.CustomerPictures = new List<string>();
+                addDto.CustomerPictures = addVo.CustomerPictures;
+                addDto.IsSupportOrder = addVo.IsSupportOrder;
+                addDto.SupportEmpId = addVo.SupportEmpId;
+                addDto.GetCustomerType = addVo.GetCustomerType;
+                await _orderService.AddContentPlateFormOrderAsync(addDto);
 
 
-            //编辑客户基础信息
-            EditCustomerDto editDto = new EditCustomerDto();
-            var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
-            string encryptPhon = ServiceClass.Encrypt(addVo.Phone, config.PhoneEncryptKey);
-            editDto.EncryptPhone = encryptPhon;
-            editDto.Name = addVo.CustomerName;
-            editDto.Sex = addVo.Sex;
-            editDto.Birthday = addVo.Birthday;
-            editDto.Occupation = addVo.Occupation;
-            editDto.WechatNumber = addVo.WechatNumber;
-            editDto.City = addVo.City;
-            await customerService.EditAsync(editDto);
-            return ResultData.Success();
+                //编辑客户基础信息
+                EditCustomerDto editDto = new EditCustomerDto();
+                var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
+                string encryptPhon = ServiceClass.Encrypt(addVo.Phone, config.PhoneEncryptKey);
+                editDto.EncryptPhone = encryptPhon;
+                editDto.Name = addVo.CustomerName;
+                editDto.Sex = addVo.Sex;
+                editDto.Birthday = addVo.Birthday;
+                editDto.Occupation = addVo.Occupation;
+                editDto.WechatNumber = addVo.WechatNumber;
+                editDto.City = addVo.City;
+                await customerService.EditAsync(editDto);
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                operationLog.Message = ex.Message;
+                operationLog.Code = -1;
+                throw ex;
+            }
+            finally
+            {
+                operationLog.Parameters = JsonConvert.SerializeObject(addVo);
+                operationLog.RequestType = (int)RequestType.Add;
+                operationLog.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationLog);
+            }
+            
         }
 
 
