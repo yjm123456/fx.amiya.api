@@ -61,6 +61,7 @@ namespace Fx.Amiya.Service
                     performanceData.Add(newPerformance);
                 }
             }
+            performanceData = performanceData.Where(e => e.Performance > 0).ToList();
             CooperateLiveAnchorAchievementDto totalPerformance = new CooperateLiveAnchorAchievementDto();
             totalPerformance.LiveanchorName = "整体业绩";
             totalPerformance.Performance = performanceData.Sum(e => e.Performance);
