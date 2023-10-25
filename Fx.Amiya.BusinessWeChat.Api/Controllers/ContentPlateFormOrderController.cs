@@ -151,6 +151,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             }
             finally
             {
+                operationLog.Source = (int)RequestSource.AmiyaBusinessWechat;
                 operationLog.Parameters = JsonConvert.SerializeObject(addVo);
                 operationLog.RequestType = (int)RequestType.Add;
                 operationLog.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
@@ -689,6 +690,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 throw ex;
             }
             finally {
+                operationLog.Source = (int)RequestSource.AmiyaBusinessWechat;
                 operationLog.Parameters = JsonConvert.SerializeObject(updateVo);
                 operationLog.RequestType = (int)RequestType.Add;
                 operationLog.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
