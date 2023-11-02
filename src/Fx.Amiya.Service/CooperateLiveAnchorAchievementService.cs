@@ -89,12 +89,13 @@ namespace Fx.Amiya.Service
                 OldCustomerPerformance = e.Sum(e => e.IsOldCustomer ? e.Price : 0),
                 HospitalId = e.Key
             }).OrderByDescending(e => e.TotalPerformance).ToList();
-            var hospitalNameList = dalHospitalInfo.GetAll().Select(e => new { Name = e.Name, Id = e.Id }).ToList();
+            var hospitalNameList = dalHospitalInfo.GetAll().Select(e => new { Name = e.Name, Id = e.Id,Logo=e.ThumbPicUrl }).ToList();
             int index = 1;
             foreach (var item in performanceData)
             {
                 item.Rank = index;
                 item.HospitalName = hospitalNameList.FirstOrDefault(e => e.Id == item.HospitalId)?.Name ?? "";
+                item.Logo= hospitalNameList.FirstOrDefault(e => e.Id == item.HospitalId)?.Logo ?? "";
                 item.PerformanceRatio = CalculateRatio(item.TotalPerformance, totalPerformance).Value;
                 item.NewCustomerPerformanceRatio = CalculateRatio(item.NewCustomerPerformance, item.TotalPerformance).Value;
                 item.OldCustomerPerformanceRatio = CalculateRatio(item.OldCustomerPerformance, item.TotalPerformance).Value;

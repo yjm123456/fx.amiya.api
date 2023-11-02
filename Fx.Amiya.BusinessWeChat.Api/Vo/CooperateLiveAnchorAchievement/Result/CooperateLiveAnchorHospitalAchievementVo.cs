@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Dto.CooperateLiveAnchorAchievement
+namespace Fx.Amiya.BusinessWeChat.Api.Vo.CooperateLiveAnchorAchievement.Result
 {
-    public class CooperateLiveAnchorHospitalAchievementDto
+    public class CooperateLiveAnchorHospitalAchievementVo
     {
         /// <summary>
         /// 排名
@@ -16,10 +15,6 @@ namespace Fx.Amiya.Dto.CooperateLiveAnchorAchievement
         /// 机构名称
         /// </summary>
         public string HospitalName { get; set; }
-        /// <summary>
-        /// 到院id
-        /// </summary>
-        public int? HospitalId { get; set; }
         /// <summary>
         /// 总业绩
         /// </summary>

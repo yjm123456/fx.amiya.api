@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Fx.Amiya.Background.Api.Vo.CallRecord;
 using Fx.Amiya.Common;
 using Fx.Amiya.Core.Services;
+using Fx.Amiya.SyncFeishuMultidimensionalTable;
 using Fx.Amiya.SyncOrder.TikTok;
 using Fx.Amiya.SyncOrder.Tmall;
 using Fx.Amiya.SyncOrder.WeChatVideo;
@@ -59,6 +60,7 @@ namespace Fx.Amiya.Background.Api
             services.AddFxAmiyaSyncWeiFenXiaoOrderService();
             services.AddFxAmiyaSyncTikTokOrderService();
             services.AddFxAmiyaSyncWeChatVideoOrderService();
+            services.AddFeishuSyncMultidimensionalTableService();
             FxAmiyaModulesRegister.RegisteModules(services);
 
             services.AddFxJwtTokenAuthenticationServices();

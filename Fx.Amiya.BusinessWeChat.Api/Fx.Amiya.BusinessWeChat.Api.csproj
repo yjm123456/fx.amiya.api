@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>E:\新建文件夹\amiya.api\Fx.Amiya.BusinessWeChat.Api\Fx.Amiya.BusinessWeChat.Api.xml</DocumentationFile>
+    <DocumentationFile>C:\新建文件夹\amiya.api\Fx.Amiya.BusinessWeChat.Api\Fx.Amiya.BusinessWeChat.Api.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

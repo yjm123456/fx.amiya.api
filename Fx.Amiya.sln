@@ -176,6 +176,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fx.Amiya.SyncFeishuMultidimensionalTable", "Fx.Amiya.SyncFeishuMultidimensionalTable\Fx.Amiya.SyncFeishuMultidimensionalTable.csproj", "{F9B345FB-764F-4540-A86B-746A1A0D7DBE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -446,6 +448,10 @@ Global
 		{F3FA4120-22B4-459E-8C3C-8A1B366DCC94}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3FA4120-22B4-459E-8C3C-8A1B366DCC94}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3FA4120-22B4-459E-8C3C-8A1B366DCC94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9B345FB-764F-4540-A86B-746A1A0D7DBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9B345FB-764F-4540-A86B-746A1A0D7DBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9B345FB-764F-4540-A86B-746A1A0D7DBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9B345FB-764F-4540-A86B-746A1A0D7DBE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -509,6 +515,7 @@ Global
 		{41F9DD37-6BFC-4C03-8C94-E8DF73EC7C4A} = {B1D119C9-4D26-452F-9B3B-AD58B1CCC9A0}
 		{FFDA1CB4-AA07-4F39-9704-1FE5AA482C66} = {F44E332D-4805-4F93-9710-830473B2D9C7}
 		{F3FA4120-22B4-459E-8C3C-8A1B366DCC94} = {B1D119C9-4D26-452F-9B3B-AD58B1CCC9A0}
+		{F9B345FB-764F-4540-A86B-746A1A0D7DBE} = {B1D119C9-4D26-452F-9B3B-AD58B1CCC9A0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A0E44A17-667C-4412-BDA3-BD2FC32CF44F}

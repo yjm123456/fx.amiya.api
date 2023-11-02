@@ -205,6 +205,8 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<LiveReplayWordAnalyse> LiveReplayWordAnalyses { get; set; }
         public virtual DbSet<CustomerServiceCompensation> CustomerServiceCompensation { get; set; }
         public virtual DbSet<HospitalContract> HospitalContract { get; set; }
+        public virtual DbSet<FeishuAppInfo> FeishuAppInfos { get; set; }
+        public virtual DbSet<TikTokShortVideoData> TikTokShortVideoDatas { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new WxMiniUserInfoConfiguration());
@@ -404,6 +406,8 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new LiveReplayWordAnalyseConfiguration());
             modelBuilder.ApplyConfiguration(new CustomerServiceCompensationConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalContractConfiguration());
+            modelBuilder.ApplyConfiguration(new TikTokShortVideoDataConfiguration());
+            modelBuilder.ApplyConfiguration(new FeishuAppInfoConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }

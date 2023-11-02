@@ -24,6 +24,9 @@ using Fx.Amiya.Dto.WechatVideoOrder;
 using Fx.Amiya.Dto.MessageNotice.Input;
 using Fx.Amiya.Dto.BindCustomerService;
 using Fx.Infrastructure.DataAccess;
+using Fx.Amiya.SyncFeishuMultidimensionalTable;
+using Fx.Amiya.Dto.TikTokShortVideoData;
+using Fx.Amiya.SyncFeishuMultidimensionalTable.FeishuAppConfig;
 
 namespace Fx.Amiya.Background.Api
 {
@@ -50,6 +53,8 @@ namespace Fx.Amiya.Background.Api
         private ISyncWeChatVideoOrder _syncWeChatVideoOrder;
         private IWeChatVideoOrderService weChatVideoOrderService;
         private IOrderAppInfoService orderAppInfoService;
+        private ISyncFeishuMultidimensionalTable syncFeishuMultidimensionalTable;
+        private ITikTokShortVideoDataService tikTokShortVideoDataService;
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -79,7 +84,7 @@ namespace Fx.Amiya.Background.Api
              ISyncTikTokOrder syncTikTokOrder,
              ICustomerAppointmentScheduleService customerAppointmentScheduleService,
              IMessageNoticeService messageNoticeService,
-             IMemberRankInfo memberRankInfoService, ITikTokOrderInfoService tokOrderInfoService, IServiceProvider serviceProvider, ISyncWeChatVideoOrder syncWeChatVideoOrder = null, IWeChatVideoOrderService weChatVideoOrderService = null, IOrderAppInfoService orderAppInfoService = null)
+             IMemberRankInfo memberRankInfoService, ITikTokOrderInfoService tokOrderInfoService, IServiceProvider serviceProvider, ISyncWeChatVideoOrder syncWeChatVideoOrder = null, IWeChatVideoOrderService weChatVideoOrderService = null, IOrderAppInfoService orderAppInfoService = null, ISyncFeishuMultidimensionalTable syncFeishuMultidimensionalTable = null, ITikTokShortVideoDataService tikTokShortVideoDataService = null)
         {
             this.orderService = orderService;
             this.syncOrder = syncOrder;
@@ -99,6 +104,8 @@ namespace Fx.Amiya.Background.Api
             _syncWeChatVideoOrder = syncWeChatVideoOrder;
             this.weChatVideoOrderService = weChatVideoOrderService;
             this.orderAppInfoService = orderAppInfoService;
+            this.syncFeishuMultidimensionalTable = syncFeishuMultidimensionalTable;
+            this.tikTokShortVideoDataService = tikTokShortVideoDataService;
         }
 
 
@@ -606,6 +613,34 @@ namespace Fx.Amiya.Background.Api
             {
                 unitOfWork.RollBack();
 
+            }
+        }
+        /// <summary>
+        /// 同步多为表格短视频数据
+        /// </summary>
+        /// <returns></returns>
+        [Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 60 * 25, SkipWhileExecuting = true)]//每天凌晨一点运行
+        public async Task SyncMultidimensionalTableDataAsync()
+        {
+            var liveAnchorIds =await syncFeishuMultidimensionalTable.GetLiveAnchorIdsAsync();
+            List<ShortVideoDataInfo> list=new List<ShortVideoDataInfo>();
+            foreach (var id in liveAnchorIds) {
+                var dataList = await syncFeishuMultidimensionalTable.GetShortVideoDataByCodeAsync(id);
+                list.AddRange(dataList);
+            }
+            
+            if (list.Count > 0)
+            {
+                var data = list.Select(e => new AddTikTokShortVideoDataDto
+                {
+                    VideoId = e.VideoId,
+                    PlayNum = e.PlayNum,
+                    Title = e.Title,
+                    Like = e.Like,
+                    Comments = e.Comments,
+                    BelongLiveAnchorId = e.BelongLiveAnchorId
+                }).ToList();
+                await tikTokShortVideoDataService.AddListAsync(data);
             }
         }
 
