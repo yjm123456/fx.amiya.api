@@ -130,6 +130,13 @@ namespace Fx.Amiya.IService
         Task UpdateCustomerRFMLevelAsync(int id, int rFMLevel);
 
         /// <summary>
+        /// 修改累计发放礼品情况
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task UpdateCustomerRFMLevelAsync(int id);
+
+        /// <summary>
         /// 添加RFM更新记录
         /// </summary>
         /// <param name="addDto"></param>

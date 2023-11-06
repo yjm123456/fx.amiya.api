@@ -80,7 +80,7 @@ namespace Fx.Amiya.Service
             this.dalCustomerTagInfo = dalCustomerTagInfo;
             this.dalMiniprogram = dalMiniprogram;
         }
-        public async Task<string> BindCustomerAsync(string fxUserId, string phoneNumber,string appId)
+        public async Task<string> BindCustomerAsync(string fxUserId, string phoneNumber, string appId)
         {
             try
             {
@@ -89,10 +89,11 @@ namespace Fx.Amiya.Service
                 {
                     throw new Exception("小程序id错误！");
                 }
-                else {
-                    customerInfo = await dalCustomerInfo.GetAll().FirstOrDefaultAsync(t => t.Phone == phoneNumber&&t.AppId==appId );
+                else
+                {
+                    customerInfo = await dalCustomerInfo.GetAll().FirstOrDefaultAsync(t => t.Phone == phoneNumber && t.AppId == appId);
                 }
-                
+
                 if (customerInfo != null)
                     throw new Exception("此电话号码已经被绑定到其他账号！");
                 customerInfo = new CustomerInfo();
@@ -255,7 +256,7 @@ namespace Fx.Amiya.Service
                 unitOfWork.BeginTransaction();
                 var customer = await dalCustomerInfo.GetAll().SingleOrDefaultAsync(e => e.Id == customerId);
                 if (customer == null) throw new Exception("客户编号错误");
-                var customerPhone = await dalCustomerInfo.GetAll().SingleOrDefaultAsync(e =>e.AppId==appId&&e.Phone==phone);
+                var customerPhone = await dalCustomerInfo.GetAll().SingleOrDefaultAsync(e => e.AppId == appId && e.Phone == phone);
                 if (customerPhone != null) throw new Exception("该手机号已绑定其他账号！");
                 customer.Phone = phone;
                 await dalCustomerInfo.UpdateAsync(customer, true);
@@ -418,7 +419,7 @@ namespace Fx.Amiya.Service
                                     Sex = b.Sex,
                                     CustomerServiceId = bcs.CustomerServiceId,
                                     CustomerServiceName = bcs.CustomerServiceAmiyaEmployee.Name,
-                                    AppName=dalMiniprogram.GetAll().Where(e=>e.AppId==c.AppId).FirstOrDefault().Name ??""
+                                    AppName = dalMiniprogram.GetAll().Where(e => e.AppId == c.AppId).FirstOrDefault().Name ?? ""
                                 };
 
                 int pageNum = customerSearchParam.PageNum;
@@ -621,6 +622,7 @@ namespace Fx.Amiya.Service
                                 && (customerSearchParam.StartDate == null && customerSearchParam.EndDate == null || d.CreateDate >= startrq && d.CreateDate < endrq)
                                 select new BindCustomerConsumptionInfoDto
                                 {
+                                    Id = d.Id.ToString(),
                                     CreateDate = d.CreateDate,
                                     Phone = config.EnablePhoneEncrypt == true ? ServiceClass.GetIncompletePhone(d.BuyerPhone) : d.BuyerPhone,
                                     EncryptPhone = ServiceClass.Encrypt(d.BuyerPhone, config.PhoneEncryptKey),
@@ -628,14 +630,16 @@ namespace Fx.Amiya.Service
                                     CustomerServiceId = d.CustomerServiceId,
                                     CustomerServiceName = d.CustomerServiceAmiyaEmployee.Name,
                                     FirstOrderCreateDate = d.FirstConsumptionDate.Value,
+                                    SystemSendGiftTime = d.SystemSendGiftTime,
+                                    NewSystemSendGiftDate = d.NewSystemSendGiftDate,
                                     FirstOrderInfo = d.FirstProjectDemand,
                                     NewConsumptionTime = d.NewConsumptionDate,
                                     NewConsumptionPlatForm = d.NewConsumptionContentPlatform.HasValue ? ServiceClass.GetOrderFromText(d.NewConsumptionContentPlatform.Value) : "未知",
                                     NewConsumptionPlatFormAppTypeText = d.NewContentPlatForm,
                                     AllConsumptionPrice = d.AllPrice.HasValue ? d.AllPrice.Value : 0.00M,
                                     CreatedOrderNum = d.AllOrderCount.HasValue ? d.AllOrderCount.Value : 0,
-                                    NewLiveAnchorName=d.NewLiveAnchor,
-                                    NewWechatNo=d.NewWechatNo
+                                    NewLiveAnchorName = d.NewLiveAnchor,
+                                    NewWechatNo = d.NewWechatNo
                                 };
             int pageNum = customerSearchParam.PageNum;
             int pageSize = customerSearchParam.PageSize;
@@ -707,8 +711,8 @@ namespace Fx.Amiya.Service
                                     NewConsumptionPlatFormAppTypeText = d.NewContentPlatForm,
                                     AllConsumptionPrice = d.AllPrice.HasValue ? d.AllPrice.Value : 0.00M,
                                     CreatedOrderNum = d.AllOrderCount.HasValue ? d.AllOrderCount.Value : 0,
-                                    NewLiveAnchorName=d.NewLiveAnchor,
-                                    NewWechatNo=d.NewWechatNo
+                                    NewLiveAnchorName = d.NewLiveAnchor,
+                                    NewWechatNo = d.NewWechatNo
                                 };
             int pageNum = customerSearchParam.PageNum;
             int pageSize = customerSearchParam.PageSize;
@@ -970,7 +974,7 @@ namespace Fx.Amiya.Service
             catch (Exception err)
             {
                 unitOfWork.RollBack();
-                throw new Exception(err.Message.ToString());;
+                throw new Exception(err.Message.ToString()); ;
             }
         }
 

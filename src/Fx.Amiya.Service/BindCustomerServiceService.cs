@@ -132,6 +132,8 @@ namespace Fx.Amiya.Service
                 result.NewContentPlatForm = bindCustomerServiceInfo.NewContentPlatForm;
                 result.AllPrice = bindCustomerServiceInfo.AllPrice;
                 result.AllOrderCount = bindCustomerServiceInfo.AllOrderCount;
+                result.SystemSendGiftTime = bindCustomerServiceInfo.SystemSendGiftTime;
+                result.NewSystemSendGiftDate = bindCustomerServiceInfo.NewSystemSendGiftDate;
                 return result;
             }
             catch (Exception err)
@@ -575,6 +577,22 @@ namespace Fx.Amiya.Service
             if (bindCustomerService != null)
             {
                 bindCustomerService.RfmType = rFMLevel;
+                await dalBindCustomerService.UpdateAsync(bindCustomerService, true);
+            }
+        }
+
+        /// <summary>
+        /// 修改累计发放礼品情况
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task UpdateCustomerRFMLevelAsync(int id)
+        {
+            var bindCustomerService = await dalBindCustomerService.GetAll().FirstOrDefaultAsync(e => e.Id == id);
+            if (bindCustomerService != null)
+            {
+                bindCustomerService.SystemSendGiftTime+=1;
+                bindCustomerService.NewSystemSendGiftDate = DateTime.Now;
                 await dalBindCustomerService.UpdateAsync(bindCustomerService, true);
             }
         }

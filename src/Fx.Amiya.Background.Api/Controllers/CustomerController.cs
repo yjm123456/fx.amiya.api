@@ -287,6 +287,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                Province = d.Province,
                                City = d.City,
                                Avatar = d.Avatar,
+                               SystemSendGiftTime = d.SystemSendGiftTime,
+                               NewSystemSendGiftDate = d.NewSystemSendGiftDate,
                                CustomerServiceId = d.CustomerServiceId,
                                CustomerServiceName = d.CustomerServiceName,
                                NewConsumptionPlatFormId = d.NewConsumptionPlatFormId,
@@ -622,6 +624,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             customerSimpleInfoVo.WechatNumber = customer.WechatNumber;
             customerSimpleInfoVo.City = customer.City;
             customerSimpleInfoVo.Remark = customer.Remark;
+            customerSimpleInfoVo.SystemSendGiftTime = customer.SystemSendGiftTime;
+            customerSimpleInfoVo.NewSystemSendGiftDate = customer.NewSystemSendGiftDate;
             customerSimpleInfoVo.TagList = customer.TagList.Select(e => new BaseIdAndNameVo { Id = e.Id, Name = e.Name }).ToList();
             return ResultData<CustomerBaseDetailInfoVo>.Success().AddData("customer", customerSimpleInfoVo);
         }

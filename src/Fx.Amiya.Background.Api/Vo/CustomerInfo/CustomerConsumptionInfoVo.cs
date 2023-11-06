@@ -91,5 +91,15 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerInfo
         /// 最新消费所属微信
         /// </summary>
         public string NewWechatNo { get; set; }
+
+        /// <summary>
+        /// 累计发放礼品次数
+        /// </summary>
+        public int? SystemSendGiftTime { get; set; }
+
+        /// <summary>
+        /// 最近发放礼品时间
+        /// </summary>
+        public DateTime? NewSystemSendGiftDate { get; set; }
     }
 }

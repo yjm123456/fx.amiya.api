@@ -132,6 +132,8 @@ namespace Fx.Amiya.Service
 
                     customerBaseInfoServiceDto.CreateDate = bindCustomerService.CreateDate;
                     customerBaseInfoServiceDto.AllPrice = bindCustomerService.AllPrice;
+                    customerBaseInfoServiceDto.SystemSendGiftTime = bindCustomerService.SystemSendGiftTime;
+                    customerBaseInfoServiceDto.NewSystemSendGiftDate = bindCustomerService.NewSystemSendGiftDate;
                     customerBaseInfoServiceDto.NewConsumptionContentPlatform = bindCustomerService.NewConsumptionContentPlatform;
 
                 }

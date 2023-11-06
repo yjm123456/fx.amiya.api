@@ -153,5 +153,14 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerInfo
         /// 标签
         /// </summary>
         public List<BaseIdAndNameVo> TagList { get; set; }
+        /// <summary>
+        /// 累计发放礼品次数
+        /// </summary>
+        public int? SystemSendGiftTime { get; set; }
+
+        /// <summary>
+        /// 最近发放礼品时间
+        /// </summary>
+        public DateTime? NewSystemSendGiftDate { get; set; }
     }
 }
