@@ -213,7 +213,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   GoodsName = d.GoodsName,
                                   ActualPayment = d.ActualPayment,
                                   TbBuyerNick = d.TbBuyerNick,
-                                  CategoryName = d.CategoryName
+                                  CategoryName = d.CategoryName,
+                                  CreateBy=d.CreateBy,
+                                  SendType=d.SendType
                               };
 
 
@@ -263,7 +265,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                                       SendGoodsDate = d.SendGoodsDate,
                                       OrderId = d.OrderId,
                                       ActualPayment = d.ActualPayment,
-                                      CategoryName = d.CategoryName
+                                      CategoryName = d.CategoryName,
+                                      Quantity=d.Quantity,
+                                      CreateBy=d.CreateBy,
+                                      SendType=d.SendType
                                   };
 
                 var exportOrder = receiveGift.ToList();
@@ -404,6 +409,30 @@ namespace Fx.Amiya.Background.Api.Controllers
             await giftService.SendReceiveGiftAsync(addDto, sendGift.CustomerId);
             return ResultData.Success();
         }
+
+        /// <summary>
+        /// 客服发放礼品
+        /// </summary>
+        /// <param name="sendGift"></param>
+        /// <returns></returns>
+        [HttpPost("customerServiceSendGift")]
+        public async Task<ResultData> SendGiftAsync(CustomerServiceSendGiftVo sendGift)
+        {
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeId = Convert.ToInt32(employee.Id);
+            CustomerServiceSendGiftDto sendDto = new CustomerServiceSendGiftDto();
+            sendDto.ReceiveName = sendGift.ReceiveName;
+            sendDto.ReceivePhone = sendGift.Phone;
+            sendDto.GiftId = sendGift.GiftId;
+            sendDto.Address = sendGift.Address;
+            sendDto.CreateBy = employeeId;
+            sendDto.Quantity=sendGift.Quantity;
+            sendDto.Id = sendGift.Id;
+            await giftService.CustomerServiceSendGiftAsync(sendDto);
+            return ResultData.Success();
+        }
+
+
         /// <summary>
         /// 根据加密手机号获取发放礼品的初始数据
         /// </summary>

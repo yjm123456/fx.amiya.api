@@ -50,5 +50,13 @@ namespace Fx.Amiya.Background.Api.Vo.Gift
         /// 礼品类别
         /// </summary>
         public string CategoryName { get; set; }
+        /// <summary>
+        /// 创建人
+        /// </summary>
+        public string CreateBy { get; set; }
+        /// <summary>
+        /// 发放类型
+        /// </summary>
+        public string SendType { get; set; }
     }
 }

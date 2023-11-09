@@ -26,17 +26,19 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private TokenReader tokenReader;
         private IOrderService _orderService;
         private IGiftCategoryService giftCategoryService;
+        private ICustomerService customerService;
 
         public GiftController(IGiftService giftService,
             TokenReader tokenReader,
             IMiniSessionStorage sessionStorage,
-            IOrderService orderService, IGiftCategoryService giftCategoryService)
+            IOrderService orderService, IGiftCategoryService giftCategoryService, ICustomerService customerService)
         {
             this.giftService = giftService;
             this.tokenReader = tokenReader;
             this.sessionStorage = sessionStorage;
             _orderService = orderService;
             this.giftCategoryService = giftCategoryService;
+            this.customerService = customerService;
         }
 
 
@@ -139,8 +141,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             var token = tokenReader.GetToken();
             var sesssionInfo = sessionStorage.GetSession(token);
             string customerId = sesssionInfo.FxCustomerId;
-
-            var q = await giftService.GetReceiveGiftListByCustomerIdAsync(customerId, pageNum, pageSize,categoryId);
+            string phone = await customerService.GetPhoneByCustomerIdAsync(customerId);
+            var q = await giftService.GetReceiveGiftListByCustomerIdAsync(customerId, phone, pageNum, pageSize,categoryId);
             var receiveGift = from d in q.List
                               select new ReceiveGiftOfWxVo
                               {

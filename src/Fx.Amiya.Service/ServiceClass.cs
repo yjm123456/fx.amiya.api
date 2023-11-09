@@ -2326,5 +2326,25 @@ namespace Fx.Amiya.Service
             return t;
         }
         #endregion
+        /// <summary>
+        /// 礼物发放类型
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static string GiftSendTypeText(int type) {
+            string text = "";
+            switch (type) {
+                case 0:
+                    text = "自行领取";
+                    break;
+                case 1:
+                    text = "系统发放";
+                    break;
+                default:
+                    text = "其他";
+                    break;
+            }
+            return text;
+        }
     }
 }

@@ -619,7 +619,7 @@ namespace Fx.Amiya.Background.Api
         /// 同步多维表格短视频数据
         /// </summary>
         /// <returns></returns>
-        [Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 60 * 24 + 1000 * 60 * 60 * 9, SkipWhileExecuting = true)]//每天9点运行一次
+        [Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 60 * 6, SkipWhileExecuting = true)]//每6小时运行一次
         public async Task SyncMultidimensionalTableDataAsync()
         {
             var liveAnchorIds = await syncFeishuMultidimensionalTable.GetLiveAnchorIdsAsync();

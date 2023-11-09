@@ -138,10 +138,12 @@ namespace Fx.Amiya.IService
         /// 根据客户编号获取已领取的礼品
         /// </summary>
         /// <param name="customerId"></param>
+        /// <param name="categoryId"></param>
+        /// <param name="phone"></param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<ReceiveGiftWrapperOfWxDto>> GetReceiveGiftListByCustomerIdAsync(string customerId, int pageNum, int pageSize,string categoryId);
+        Task<FxPageInfo<ReceiveGiftWrapperOfWxDto>> GetReceiveGiftListByCustomerIdAsync(string customerId,string phone, int pageNum, int pageSize,string categoryId);
         /// <summary>
         /// 根据礼品类别获取礼品名称列表
         /// </summary>
@@ -155,5 +157,11 @@ namespace Fx.Amiya.IService
         /// <param name="customerId"></param>
         /// <returns></returns>
         Task SendReceiveGiftAsync(SendReceiveGiftDto addDto, string customerId);
+        /// <summary>
+        /// 客服发送礼品
+        /// </summary>
+        /// <param name="sendDto"></param>
+        /// <returns></returns>
+        Task CustomerServiceSendGiftAsync(CustomerServiceSendGiftDto sendDto);
     }
 }

@@ -42,16 +42,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("shortVideoData")]
-        public async Task<ResultData<FxPageInfo<TikTokShortVideoDataInfoVo>>> GetShortVideoDataAsync([FromQuery] ShortVideoDataQueryVo query) {
+        public async Task<ResultData<FxPageInfo<TikTokShortVideoDataInfoVo>>> GetShortVideoDataAsync([FromQuery] ShortVideoDataQueryVo query)
+        {
             FxPageInfo<TikTokShortVideoDataInfoVo> pageInfo = new FxPageInfo<TikTokShortVideoDataInfoVo>();
-            ShortVideoDataQueryDto queryDto =new ShortVideoDataQueryDto();
+            ShortVideoDataQueryDto queryDto = new ShortVideoDataQueryDto();
             queryDto.PageNum = query.PageNum;
             queryDto.PageSize = query.PageSize;
             queryDto.KeyWord = query.KeyWord;
             queryDto.LiveAnchorId = query.LiveAnchorId;
-            var res =await tikTokShortVideoDataService.GetShortVideoDataByPageAsync(queryDto);
+            var res = await tikTokShortVideoDataService.GetShortVideoDataByPageAsync(queryDto);
             pageInfo.TotalCount = res.TotalCount;
-            pageInfo.List = res.List.Select(e => new TikTokShortVideoDataInfoVo {
+            pageInfo.List = res.List.Select(e => new TikTokShortVideoDataInfoVo
+            {
                 Id = e.Id,
                 PlayNum = e.PlayNum,
                 Title = e.Title,
@@ -60,7 +62,39 @@ namespace Fx.Amiya.Background.Api.Controllers
                 Comments = e.Comments,
                 LiveAnchorName = e.LiveAnchorName
             }).ToList();
-            return ResultData<FxPageInfo<TikTokShortVideoDataInfoVo>>.Success().AddData("videoData",pageInfo);
+            return ResultData<FxPageInfo<TikTokShortVideoDataInfoVo>>.Success().AddData("videoData", pageInfo);
+        }
+        /// <summary>
+        /// 刷新短视频数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("refreshData")]
+        public async Task<ResultData> RefreshShortVideoDataAsync()
+        {
+            var liveAnchorIds = await syncFeishuMultidimensionalTable.GetLiveAnchorIdsAsync();
+            List<ShortVideoDataInfo> list = new List<ShortVideoDataInfo>();
+            foreach (var id in liveAnchorIds)
+            {
+                var dataList = await syncFeishuMultidimensionalTable.GetShortVideoDataByCodeAsync(id);
+                list.AddRange(dataList);
+            }
+
+            if (list.Count > 0)
+            {
+                var data = list.Select(e => new AddTikTokShortVideoDataDto
+                {
+                    VideoId = e.VideoId,
+                    PlayNum = e.PlayNum,
+                    Title = e.Title,
+                    Like = e.Like,
+                    Comments = e.Comments,
+                    BelongLiveAnchorId = e.BelongLiveAnchorId
+                }).ToList();
+                await tikTokShortVideoDataService.AddListAsync(data);
+               
+            }
+            return ResultData.Success();
         }
     }
 }
+

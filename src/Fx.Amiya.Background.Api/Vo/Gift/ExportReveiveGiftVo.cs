@@ -16,6 +16,12 @@ namespace Fx.Amiya.Background.Api.Vo.Gift
         /// </summary>
         [Description("礼品名称")]
         public string GiftName { get; set; }
+        [Description("数量")]
+        public int Quantity { get; set; }
+        [Description("发放类型")]
+        public string SendType { get; set; }
+        [Description("发放人")]
+        public string CreateBy { get; set; }
         /// <summary>
         /// 礼品类别
         /// </summary>
@@ -78,5 +84,6 @@ namespace Fx.Amiya.Background.Api.Vo.Gift
         /// </summary>
         [Description("发货时间")]
         public DateTime? SendGoodsDate { get; set; }
+        
     }
 }

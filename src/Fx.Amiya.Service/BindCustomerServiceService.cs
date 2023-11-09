@@ -591,7 +591,13 @@ namespace Fx.Amiya.Service
             var bindCustomerService = await dalBindCustomerService.GetAll().FirstOrDefaultAsync(e => e.Id == id);
             if (bindCustomerService != null)
             {
-                bindCustomerService.SystemSendGiftTime+=1;
+                if (!bindCustomerService.SystemSendGiftTime.HasValue)
+                {
+                    bindCustomerService.SystemSendGiftTime = 1;
+                }
+                else {
+                    bindCustomerService.SystemSendGiftTime += 1;
+                }
                 bindCustomerService.NewSystemSendGiftDate = DateTime.Now;
                 await dalBindCustomerService.UpdateAsync(bindCustomerService, true);
             }

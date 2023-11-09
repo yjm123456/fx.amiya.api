@@ -15,7 +15,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.HasKey(t => t.Id);
             builder.Property(t => t.Id).HasColumnName("id").HasColumnType("int").IsRequired();
             builder.Property(t => t.GiftId).HasColumnName("gift_id").HasColumnType("int").IsRequired();
-            builder.Property(t => t.CustomerId).HasColumnName("customer_id").HasColumnType("varchar(50)").IsRequired(); 
+            builder.Property(t => t.CustomerId).HasColumnName("customer_id").HasColumnType("varchar(50)").IsRequired(false); 
             builder.Property(t => t.Date).HasColumnName("date").HasColumnType("datetime").IsRequired();
             builder.Property(t => t.Address).HasColumnName("address").HasColumnType("varchar(200)").IsRequired(false);
             builder.Property(t => t.Quantity).HasColumnName("quantity").HasColumnType("int").IsRequired();
@@ -28,8 +28,8 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.ExpressId).HasColumnName("express_id").HasColumnType("varchar(50)").IsRequired(false);
             builder.Property(t => t.OrderId).HasColumnName("order_id").HasColumnType("varchar(100)").IsRequired(false);
             builder.Property(t => t.AddressId).HasColumnName("address_id").HasColumnType("int").IsRequired(false);
-          
-
+            builder.Property(t => t.CreateBy).HasColumnName("create_by").HasColumnType("int").IsRequired(false);
+            builder.Property(t=>t.SendType).HasColumnName("send_type").HasColumnType("int").IsRequired().HasDefaultValue(0);
             builder.HasOne(t=>t.GiftInfo).WithMany(t=>t.ReceiveGiftList).HasForeignKey(t=>t.GiftId);
             builder.HasOne(t=>t.CustomerInfo).WithMany(t=>t.ReceiveGiftList).HasForeignKey(t=>t.CustomerId);
             builder.HasOne(t=>t.AmiyaEmployee).WithMany(t=>t.ReceiveGiftList).HasForeignKey(t=>t.SendGoodsBy);

@@ -35,6 +35,8 @@ namespace Fx.Amiya.Service
         private IFxSmsBasedTemplateSender _smsSender;
         private IDalGiftCategory dalGiftCategory;
         private IMiniProgramTemplateMessageSendService miniProgramTemplateMessageSendService;
+        private IBindCustomerServiceService bindCustomerServiceService;
+       
         public GiftService(IDalGiftInfo dalGiftInfo,
             IDalReceiveGift dalReceiveGift,
             IDalOrderInfo dalOrderInfo,
@@ -44,7 +46,7 @@ namespace Fx.Amiya.Service
             IDalBindCustomerService dalBindCustomerService,
             IDalConfig dalConfig,
             IDalAmiyaEmployee dalAmiyaEmployee,
-            IFxSmsBasedTemplateSender smsSender, IDalGiftCategory dalGiftCategory, IMiniProgramTemplateMessageSendService miniProgramTemplateMessageSendService)
+            IFxSmsBasedTemplateSender smsSender, IDalGiftCategory dalGiftCategory, IMiniProgramTemplateMessageSendService miniProgramTemplateMessageSendService, IBindCustomerServiceService bindCustomerServiceService)
         {
             this.dalGiftInfo = dalGiftInfo;
             this.dalReceiveGift = dalReceiveGift;
@@ -58,6 +60,7 @@ namespace Fx.Amiya.Service
             _smsSender = smsSender;
             this.dalGiftCategory = dalGiftCategory;
             this.miniProgramTemplateMessageSendService = miniProgramTemplateMessageSendService;
+            this.bindCustomerServiceService = bindCustomerServiceService;
         }
 
 
@@ -73,7 +76,7 @@ namespace Fx.Amiya.Service
         public async Task<FxPageInfo<GiftInfoDto>> GetListWithPageAsync(string name, int pageNum, int pageSize, string categoryId)
         {
             var giftInfo = from d in dalGiftInfo.GetAll()
-                           where (name == null || d.Name.Contains(name)) &&(string.IsNullOrEmpty(categoryId)||d.CategoryId==categoryId)
+                           where (name == null || d.Name.Contains(name)) && (string.IsNullOrEmpty(categoryId) || d.CategoryId == categoryId)
                            select new GiftInfoDto
                            {
                                Id = d.Id,
@@ -87,8 +90,8 @@ namespace Fx.Amiya.Service
                                UpdateBy = d.UpdateBy,
                                UpdateName = d.UpdateByAmiyaEmplooyee.Name,
                                UpdateDate = d.UpdateDate,
-                               CategoryId=d.CategoryId,
-                               CategoryName=(dalGiftCategory.GetAll().Where(e => e.Id == d.CategoryId).SingleOrDefault()).Name
+                               CategoryId = d.CategoryId,
+                               CategoryName = (dalGiftCategory.GetAll().Where(e => e.Id == d.CategoryId).SingleOrDefault()).Name
                            };
             FxPageInfo<GiftInfoDto> giftPageInfo = new FxPageInfo<GiftInfoDto>();
             giftPageInfo.TotalCount = await giftInfo.CountAsync();
@@ -139,7 +142,7 @@ namespace Fx.Amiya.Service
             giftInfoDto.UpdateName = giftInfo.UpdateByAmiyaEmplooyee?.Name;
             giftInfoDto.UpdateDate = giftInfo.UpdateDate;
             giftInfoDto.CategoryId = giftInfo.CategoryId;
-            giftInfoDto.CategoryName = string.IsNullOrEmpty(giftInfo.CategoryId)?"":(dalGiftCategory.GetAll().Where(e => e.Id == giftInfo.CategoryId).SingleOrDefault()).Name;
+            giftInfoDto.CategoryName = string.IsNullOrEmpty(giftInfo.CategoryId) ? "" : (dalGiftCategory.GetAll().Where(e => e.Id == giftInfo.CategoryId).SingleOrDefault()).Name;
             return giftInfoDto;
         }
 
@@ -187,7 +190,7 @@ namespace Fx.Amiya.Service
         public async Task<FxPageInfo<GiftInfoSimpleDto>> GetSimpleListOfWxAsync(string name, int pageNum, int pageSize, string categoryId)
         {
             var gift = from d in dalGiftInfo.GetAll()
-                       where (string.IsNullOrWhiteSpace(name) || d.Name.Contains(name))&&(string.IsNullOrEmpty(categoryId) ||d.CategoryId==categoryId)
+                       where (string.IsNullOrWhiteSpace(name) || d.Name.Contains(name)) && (string.IsNullOrEmpty(categoryId) || d.CategoryId == categoryId)
                        && d.Valid
                        && d.Quantity > 0
                        select new GiftInfoSimpleDto
@@ -195,7 +198,7 @@ namespace Fx.Amiya.Service
                            Id = d.Id,
                            Name = d.Name,
                            ThumbPicUrl = d.ThumbPicUrl,
-                           CategoryId=d.CategoryId
+                           CategoryId = d.CategoryId
                        };
 
             FxPageInfo<GiftInfoSimpleDto> giftPageInfo = new FxPageInfo<GiftInfoSimpleDto>();
@@ -262,7 +265,7 @@ namespace Fx.Amiya.Service
                 receiveGift.IsSendGoods = false;
                 receiveGift.Quantity = 1;
                 receiveGift.AddressId = addDto.AddressId;
-
+                receiveGift.ReceivePhone = address.Phone;
                 await dalReceiveGift.AddAsync(receiveGift, true);
                 var x = await GetByIdAsync(receiveGift.GiftId);
                 goodsName = x.Name.ToString();
@@ -324,7 +327,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageSize"></param>
         /// <param name="categoryId">分类id</param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ReceiveGiftDto>> GetReceiveGiftListAsync(DateTime? startDaste,DateTime? endDate, int employeeId, bool? isSendGoods, string keyword, int pageNum, int pageSize,string categoryId)
+        public async Task<FxPageInfo<ReceiveGiftDto>> GetReceiveGiftListAsync(DateTime? startDaste, DateTime? endDate, int employeeId, bool? isSendGoods, string keyword, int pageNum, int pageSize, string categoryId)
         {
             bool hidePhone = true;
             //var config = await GetCallCenterConfig();
@@ -340,10 +343,10 @@ namespace Fx.Amiya.Service
 
             var receiveGift = from d in dalReceiveGift.GetAll()
                               where (isSendGoods == null || d.IsSendGoods == isSendGoods)
-                              && (string.IsNullOrWhiteSpace(keyword) || d.GiftInfo.Name.Contains(keyword) || d.CustomerInfo.Phone == keyword || d.ReceivePhone == keyword)
-                              && (!startDaste.HasValue || d.Date>=startDaste.Value)
+                              && (string.IsNullOrWhiteSpace(keyword) || d.GiftInfo.Name.Contains(keyword) || d.ReceivePhone == keyword)
+                              && (!startDaste.HasValue || d.Date >= startDaste.Value)
                               && (!endDate.HasValue || d.Date <= endDate.Value.AddDays(1))
-                              &&(string.IsNullOrEmpty(categoryId)||d.GiftInfo.CategoryId==categoryId)
+                              && (string.IsNullOrEmpty(categoryId) || d.GiftInfo.CategoryId == categoryId)
                               select new ReceiveGiftDto
                               {
                                   Id = d.Id,
@@ -351,7 +354,7 @@ namespace Fx.Amiya.Service
                                   GiftName = d.GiftInfo.Name,
                                   ThumbPicUrl = d.GiftInfo.ThumbPicUrl,
                                   CustomerId = d.CustomerId,
-                                  Phone = hidePhone == true ? ServiceClass.GetIncompletePhone(d.CustomerInfo.Phone) : d.CustomerInfo.Phone,
+                                  Phone = hidePhone == true ? ServiceClass.GetIncompletePhone(d.CustomerInfo == null ? d.ReceivePhone : d.CustomerInfo.Phone) : d.CustomerInfo == null ? d.ReceivePhone : d.CustomerInfo.Phone,
                                   Date = d.Date,
                                   CourierNumber = d.CourierNumber,
                                   ExpressId = d.ExpressId,
@@ -367,13 +370,15 @@ namespace Fx.Amiya.Service
                                   TbBuyerNick = d.OrderInfo.BuyerNick,
                                   Address = d.AddressInfo == null ? d.Address : d.AddressInfo.Province + d.AddressInfo.City + d.AddressInfo.District + d.AddressInfo.Other,
                                   ReceiveName = d.AddressInfo == null ? d.ReceiveName : d.AddressInfo.Contact,
-                                  ReceivePhone = d.AddressInfo == null ? (hidePhone == true ? ServiceClass.GetIncompletePhone(d.ReceivePhone) : d.ReceivePhone)
+                                  ReceivePhone = d.AddressInfo == null ? (hidePhone == true ? ServiceClass.GetIncompletePhone(d.CustomerInfo == null ? d.ReceivePhone : d.CustomerInfo.Phone) : d.ReceivePhone)
                                   : (hidePhone == true ? ServiceClass.GetIncompletePhone(d.AddressInfo.Phone) : d.AddressInfo.Phone),
-                                  CategoryName=!string.IsNullOrEmpty(d.GiftInfo.CategoryId)? (dalGiftCategory.GetAll().Where(e => e.Id == d.GiftInfo.CategoryId).SingleOrDefault()).Name:""
+                                  CategoryName = !string.IsNullOrEmpty(d.GiftInfo.CategoryId) ? (dalGiftCategory.GetAll().Where(e => e.Id == d.GiftInfo.CategoryId).SingleOrDefault()).Name : "",
+                                  CreateBy = dalAmiyaEmployee.GetAll().Where(e => e.Id == d.CreateBy).FirstOrDefault() == null ? "" : dalAmiyaEmployee.GetAll().Where(e => e.Id == d.CreateBy).FirstOrDefault().Name,
+                                  SendType = ServiceClass.GiftSendTypeText(d.SendType)
                                   //  Address = d.Address,
                                   //ReceiveName = d.ReceiveName,
                                   //ReceivePhone = hidePhone == true ? GetPortionPhone(d.ReceivePhone) : d.ReceivePhone,
-                              };
+        };
             FxPageInfo<ReceiveGiftDto> receiveGiftPageInfo = new FxPageInfo<ReceiveGiftDto>();
             receiveGiftPageInfo.TotalCount = await receiveGift.CountAsync();
             receiveGiftPageInfo.List = await receiveGift.OrderByDescending(e => e.Date).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
@@ -390,7 +395,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageSize"></param>
         /// <param name="categoryId">分类id</param>
         /// <returns></returns>
-        public async Task<List<ReceiveGiftDto>> ExportReceiveGiftListAsync(DateTime? startDaste, DateTime? endDate, bool? isSendGoods, int employeeId, string keyword,string categoryId)
+        public async Task<List<ReceiveGiftDto>> ExportReceiveGiftListAsync(DateTime? startDaste, DateTime? endDate, bool? isSendGoods, int employeeId, string keyword, string categoryId)
         {
             bool hidePhone = false;
             var config = await GetCallCenterConfig();
@@ -406,10 +411,10 @@ namespace Fx.Amiya.Service
 
             var receiveGift = from d in dalReceiveGift.GetAll()
                               where (isSendGoods == null || d.IsSendGoods == isSendGoods)
-                              && (string.IsNullOrWhiteSpace(keyword) || d.GiftInfo.Name.Contains(keyword) || d.CustomerInfo.Phone == keyword || d.ReceivePhone == keyword)
+                              && (string.IsNullOrWhiteSpace(keyword) || d.GiftInfo.Name.Contains(keyword) || d.ReceivePhone == keyword)
                               && (!startDaste.HasValue || d.Date >= startDaste.Value)
                               && (!endDate.HasValue || d.Date <= endDate.Value.AddDays(1))
-                              &&(string.IsNullOrEmpty(categoryId)||d.GiftInfo.CategoryId==categoryId)
+                              && (string.IsNullOrEmpty(categoryId) || d.GiftInfo.CategoryId == categoryId)
                               select new ReceiveGiftDto
                               {
                                   Id = d.Id,
@@ -417,7 +422,7 @@ namespace Fx.Amiya.Service
                                   GiftName = d.GiftInfo.Name,
                                   ThumbPicUrl = d.GiftInfo.ThumbPicUrl,
                                   CustomerId = d.CustomerId,
-                                  Phone = hidePhone == true ? ServiceClass.GetIncompletePhone(d.CustomerInfo.Phone) : d.CustomerInfo.Phone,
+                                  Phone = hidePhone == true ? ServiceClass.GetIncompletePhone(d.CustomerInfo == null ? d.ReceivePhone : d.CustomerInfo.Phone) : d.CustomerInfo == null ? d.ReceivePhone : d.CustomerInfo.Phone,
                                   Date = d.Date,
                                   CourierNumber = d.CourierNumber,
                                   ExpressId = d.ExpressId,
@@ -433,15 +438,17 @@ namespace Fx.Amiya.Service
                                   TbBuyerNick = d.OrderInfo.BuyerNick,
                                   Address = d.AddressInfo == null ? d.Address : d.AddressInfo.Province + d.AddressInfo.City + d.AddressInfo.District + d.AddressInfo.Other,
                                   ReceiveName = d.AddressInfo == null ? d.ReceiveName : d.AddressInfo.Contact,
-                                  ReceivePhone = d.AddressInfo == null ? (hidePhone == true ? ServiceClass.GetIncompletePhone(d.ReceivePhone) : d.ReceivePhone)
+                                  ReceivePhone = d.AddressInfo == null ? (hidePhone == true ? ServiceClass.GetIncompletePhone(d.CustomerInfo == null ? d.ReceivePhone : d.CustomerInfo.Phone) : d.CustomerInfo == null ? d.ReceivePhone : d.CustomerInfo.Phone)
                                   : (hidePhone == true ? ServiceClass.GetIncompletePhone(d.AddressInfo.Phone) : d.AddressInfo.Phone),
-                                  CategoryName = !string.IsNullOrEmpty(d.GiftInfo.CategoryId) ? (dalGiftCategory.GetAll().Where(e => e.Id == d.GiftInfo.CategoryId).SingleOrDefault()).Name : ""
+                                  CategoryName = !string.IsNullOrEmpty(d.GiftInfo.CategoryId) ? (dalGiftCategory.GetAll().Where(e => e.Id == d.GiftInfo.CategoryId).SingleOrDefault()).Name : "",
+                                  CreateBy = dalAmiyaEmployee.GetAll().Where(e => e.Id == d.CreateBy).FirstOrDefault() == null ? "" : dalAmiyaEmployee.GetAll().Where(e => e.Id == d.CreateBy).FirstOrDefault().Name,
+                                  SendType = ServiceClass.GiftSendTypeText(d.SendType)
                                   //  Address = d.Address,
                                   //ReceiveName = d.ReceiveName,
                                   //ReceivePhone = hidePhone == true ? GetPortionPhone(d.ReceivePhone) : d.ReceivePhone,
                               };
             List<ReceiveGiftDto> receiveGiftPageInfo = new List<ReceiveGiftDto>();
-            receiveGiftPageInfo= await receiveGift.OrderByDescending(e => e.Date).ToListAsync();
+            receiveGiftPageInfo = await receiveGift.OrderByDescending(e => e.Date).ToListAsync();
 
             return receiveGiftPageInfo;
         }
@@ -462,14 +469,14 @@ namespace Fx.Amiya.Service
             string phone = ServiceClass.Decrypto(encryptPhone, config.PhoneEncryptKey);
 
             var receiveGift = from d in dalReceiveGift.GetAll()
-                              where d.CustomerInfo.Phone == phone
+                              where d.ReceivePhone == phone
                               select new ReceiveGiftSimpleDto
                               {
                                   Id = d.Id,
                                   GiftId = d.GiftId,
                                   GiftName = d.GiftInfo.Name,
                                   ThumbPicUrl = d.GiftInfo.ThumbPicUrl,
-                                  ReceivePhone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.ReceivePhone) : d.ReceivePhone,
+                                  ReceivePhone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.CustomerInfo == null ? d.ReceivePhone : d.CustomerInfo.Phone) : d.CustomerInfo == null ? d.ReceivePhone : d.CustomerInfo.Phone,
                                   Date = d.Date,
                                   IsSendGoods = d.IsSendGoods,
                                   CourierNumber = d.CourierNumber,
@@ -546,11 +553,11 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ReceiveGiftWrapperOfWxDto>> GetReceiveGiftListByCustomerIdAsync(string customerId, int pageNum, int pageSize,string categoryId)
+        public async Task<FxPageInfo<ReceiveGiftWrapperOfWxDto>> GetReceiveGiftListByCustomerIdAsync(string customerId, string phone, int pageNum, int pageSize, string categoryId)
         {
             var receiveGift = from d in dalReceiveGift.GetAll()
                               .Include(e => e.GiftInfo)
-                              where d.CustomerId == customerId && d.GiftInfo.CategoryId==categoryId
+                              where (d.CustomerId==customerId||d.ReceivePhone==phone) &&(d.GiftInfo.CategoryId==categoryId)
                               select new ReceiveGiftDto
                               {
                                   Id = d.Id,
@@ -563,6 +570,8 @@ namespace Fx.Amiya.Service
                                   Date = d.Date,
                                   ExpressId = d.ExpressId
                               };
+            
+
 
             var list = await receiveGift.OrderByDescending(e => e.Date).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
 
@@ -637,8 +646,8 @@ namespace Fx.Amiya.Service
         {
             var list = dalGiftInfo.GetAll().Where(e => e.CategoryId == categoryId && e.Valid == true).Select(e => new BaseIdAndNameDto
             {
-                Id=e.Id.ToString(),
-                Name=e.Name
+                Id = e.Id.ToString(),
+                Name = e.Name
             }).ToList();
             return list;
         }
@@ -653,7 +662,7 @@ namespace Fx.Amiya.Service
             try
             {
                 //订单号集合
-                
+
                 string goodsName = "";
                 unitOfWork.BeginTransaction();
                 var gift = await dalGiftInfo.GetAll().SingleOrDefaultAsync(e => e.Id == addDto.GiftId);
@@ -673,6 +682,7 @@ namespace Fx.Amiya.Service
                 receiveGift.IsSendGoods = false;
                 receiveGift.Quantity = 1;
                 receiveGift.Address = addDto.Address;
+                receiveGift.SendType = (int)GiftSendType.CustomerServiceSend;
                 if (addDto.AddressId.HasValue)
                 {
                     string phone = "";
@@ -681,17 +691,19 @@ namespace Fx.Amiya.Service
                     receiveGift.ReceivePhone = phone;
                     receiveGift.AddressId = addDto.AddressId;
                 }
-                else {                    
+                else
+                {
                     receiveGift.ReceivePhone = addDto.ReceivePhone;
                     receiveGift.ReceiveName = addDto.ReceiveName;
                     receiveGift.Address = addDto.Address;
-                }                               
+                }
                 receiveGift.OrderId = addDto.OrderId;
-                if (!string.IsNullOrEmpty(receiveGift.OrderId)) {
+                if (!string.IsNullOrEmpty(receiveGift.OrderId))
+                {
                     var receivedGift = dalReceiveGift.GetAll().Where(e => e.OrderId == receiveGift.OrderId).FirstOrDefault();
                     if (receivedGift != null) throw new Exception("该订单已赠送过礼品");
                 }
-                await dalReceiveGift.AddAsync(receiveGift, true);               
+                await dalReceiveGift.AddAsync(receiveGift, true);
                 unitOfWork.Commit();
                 SendGiftPresentMessageDto sendGiftPresentMessageDto = new SendGiftPresentMessageDto();
                 sendGiftPresentMessageDto.CustomerId = customerId;
@@ -703,6 +715,47 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
+                throw new Exception(ex.Message.ToString());
+            }
+        }
+
+        public async Task CustomerServiceSendGiftAsync(CustomerServiceSendGiftDto sendDto)
+        {
+            try
+            {
+                //订单号集合
+
+                string goodsName = "";
+                unitOfWork.BeginTransaction();
+                var gift = await dalGiftInfo.GetAll().SingleOrDefaultAsync(e => e.Id == sendDto.GiftId);
+                if (gift == null)
+                    throw new Exception("礼品编号错误");
+                if (gift.Quantity <= 0)
+                    throw new Exception(gift.Name + " 已被领取完了");
+
+                gift.Quantity = gift.Quantity - 1;
+                gift.Version = gift.Version + 1;
+                await dalGiftInfo.UpdateAsync(gift, true);
+
+                ReceiveGift receiveGift = new ReceiveGift();
+                receiveGift.GiftId = sendDto.GiftId;
+                receiveGift.Date = DateTime.Now;
+                receiveGift.IsSendGoods = false;
+                receiveGift.Quantity = sendDto.Quantity;
+                receiveGift.Address = sendDto.Address;
+                receiveGift.ReceivePhone = sendDto.ReceivePhone;
+                receiveGift.ReceiveName = sendDto.ReceiveName;
+                receiveGift.CreateBy = sendDto.CreateBy;
+                receiveGift.SendType = (int)GiftSendType.CustomerServiceSend;
+                await dalReceiveGift.AddAsync(receiveGift, true);
+                //发送礼品数加1
+                await bindCustomerServiceService.UpdateCustomerRFMLevelAsync(sendDto.Id);
+                unitOfWork.Commit();
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+
                 throw new Exception(ex.Message.ToString());
             }
         }

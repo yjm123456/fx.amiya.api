@@ -21,6 +21,11 @@ namespace Fx.Amiya.DbModels.Model
         public string ExpressId { get; set; }
         public string OrderId { get; set; }
         public int? AddressId { get; set; }
+        public int? CreateBy { get; set; }
+        /// <summary>
+        /// 领取类型
+        /// </summary>
+        public int SendType { get; set; }
         public OrderInfo OrderInfo { get; set; }
 
         public GiftInfo GiftInfo { get; set; }

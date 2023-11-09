@@ -1427,4 +1427,17 @@ namespace Fx.Amiya.IService
 
     }
     #endregion
+    /// <summary>
+    /// 礼品发放类型
+    /// </summary>
+    public enum GiftSendType { 
+        /// <summary>
+        /// 客户自己领取
+        /// </summary>
+        CustomerRecieve=0,
+        /// <summary>
+        /// 客服发送
+        /// </summary>
+        CustomerServiceSend=1
+    }
 }
