@@ -38,5 +38,6 @@ namespace Fx.Amiya.Background.Api.Vo.SendOrderInfo
         /// 是否未明确时间
         /// </summary>
         public bool IsUncertainDate { get; set; }
+        public bool IsMainHospital { get; set; }
     }
 }

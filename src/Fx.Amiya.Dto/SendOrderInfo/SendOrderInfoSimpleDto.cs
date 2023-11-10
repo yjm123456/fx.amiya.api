@@ -36,6 +36,7 @@ namespace Fx.Amiya.Dto.SendOrderInfo
         /// 平台类型名称
         /// </summary>
         public string AppTypeText { get; set; }
-      
+        public bool IsMainHospital { get; set; }
+
     }
 }

@@ -139,6 +139,7 @@ namespace Fx.Amiya.Service
                                 Phone = config.EnablePhoneEncrypt == true ? ServiceClass.GetIncompletePhone(d.OrderInfo.Phone) : d.OrderInfo.Phone,
                                 IsHospitalCheckPhone = p.HospitalId == d.HospitalId,
                                 StatusCode = d.OrderInfo.StatusCode,
+                                IsMainHospital=d.IsMainHospital,
                                 StatusText = ServiceClass.GetOrderStatusText(d.OrderInfo.StatusCode),
                                 AppType = d.OrderInfo.AppType,
                                 AppTypeText = ServiceClass.GetAppTypeText(d.OrderInfo.AppType),
@@ -413,6 +414,7 @@ namespace Fx.Amiya.Service
             sendOrderInfoDto.TimeType = sendOrderInfo.TimeType;
             sendOrderInfoDto.GoodsId = sendOrderInfo.OrderInfo.GoodsId;
             sendOrderInfoDto.GoodsName = sendOrderInfo.OrderInfo.GoodsName;
+            sendOrderInfoDto.IsMainHospital = sendOrderInfo.IsMainHospital;
             sendOrderInfoDto.AppType = sendOrderInfo.OrderInfo.AppType;
             sendOrderInfoDto.AppTypeText = ServiceClass.GetAppTypeText(sendOrderInfo.OrderInfo.AppType);
             return sendOrderInfoDto;

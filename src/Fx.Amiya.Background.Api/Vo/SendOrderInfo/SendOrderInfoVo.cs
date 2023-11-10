@@ -128,6 +128,10 @@ namespace Fx.Amiya.Background.Api.Vo.SendOrderInfo
         /// 首次留言内容
         /// </summary>
         public string FirstMessageContent { get; set; }
+        /// <summary>
+        /// 是否为主派医院
+        /// </summary>
+        public bool IsMainHospital { get; set; }
 
 
     }

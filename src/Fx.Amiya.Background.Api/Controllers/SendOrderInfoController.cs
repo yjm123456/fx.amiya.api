@@ -60,7 +60,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 employeeId = Convert.ToInt32(employee.Id);
             }
 
-            var q = await sendOrderInfoService.GetListWithPageAsync(keyword, (int)employeeId, startDate, endDate, appType, statusCode, hospitalId, pageNum,  pageSize);
+            var q = await sendOrderInfoService.GetListWithPageAsync(keyword, (int)employeeId, startDate, endDate, appType, statusCode, hospitalId, pageNum, pageSize);
             var sendOrder = from d in q.List
                             select new SendOrderInfoVo
                             {
@@ -77,8 +77,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 Time = d.Time,
                                 GoodsId = d.GoodsId,
                                 GoodsName = d.GoodsName,
-                                PurchaseNum=d.PurchaseNum,
-                                PurchaseSinglePrice=d.PurchaseSinglePrice,
+                                PurchaseNum = d.PurchaseNum,
+                                PurchaseSinglePrice = d.PurchaseSinglePrice,
                                 ActualPayment = d.ActualPayment,
                                 ThumbPicUrl = d.ThumbPicUrl,
                                 Description = d.Description,
@@ -91,7 +91,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 StatusCode = d.StatusCode,
                                 AppType = d.AppType,
                                 AppTypeText = d.AppTypeText,
-                                FirstMessageContent = d.FirstMessageContent
+                                FirstMessageContent = d.FirstMessageContent,
+                                IsMainHospital = d.IsMainHospital
                             };
 
             FxPageInfo<SendOrderInfoVo> snedOrderPageInfo = new FxPageInfo<SendOrderInfoVo>();
@@ -136,7 +137,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   AppointmentHospital = d.AppointmentHospital,
                                   ThumbPicUrl = d.ThumbPicUrl,
                                   Description = d.Description,
-                                  CreateDate=d.CreateDate,
+                                  CreateDate = d.CreateDate,
                                   Standard = d.Standard,
                                   Parts = d.Parts,
                                   StatusCode = d.StatusCode,
@@ -229,6 +230,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             sendOrderInfoSimpleVo.GoodsName = sendOrderInfo.GoodsName;
             sendOrderInfoSimpleVo.AppType = sendOrderInfo.AppType;
             sendOrderInfoSimpleVo.AppTypeText = sendOrderInfo.AppTypeText;
+            sendOrderInfoSimpleVo.IsMainHospital = sendOrderInfo.IsMainHospital;
 
             return ResultData<SendOrderInfoSimpleVo>.Success().AddData("sendOrderInfo", sendOrderInfoSimpleVo);
         }
@@ -277,7 +279,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
             int hospitalId = employee.HospitalId;
-            var q = await sendOrderInfoService.GetListByHospitalIdAsync(hospitalId, keyword, startDate, endDate, pageNum, pageSize,false);
+            var q = await sendOrderInfoService.GetListByHospitalIdAsync(hospitalId, keyword, startDate, endDate, pageNum, pageSize, false);
             var sendOrder = from d in q.List
                             select new SendOrderInfoVo
                             {
@@ -295,8 +297,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 GoodsId = d.GoodsId,
                                 GoodsName = d.GoodsName,
                                 ActualPayment = d.ActualPayment,
-                                PurchaseNum=d.PurchaseNum,
-                                PurchaseSinglePrice=d.PurchaseSinglePrice,
+                                PurchaseNum = d.PurchaseNum,
+                                PurchaseSinglePrice = d.PurchaseSinglePrice,
                                 ThumbPicUrl = d.ThumbPicUrl,
                                 Description = d.Description,
                                 Standard = d.Standard,
@@ -328,7 +330,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
             int hospitalId = employee.HospitalId;
             var hospitalInfo = await hospitalInfoService.GetBaseByIdAsync(hospitalId);
-            var q = await sendOrderInfoService.GetHospitalOrderReportAsync( startDate, endDate, hospitalInfo.Name, false);
+            var q = await sendOrderInfoService.GetHospitalOrderReportAsync(startDate, endDate, hospitalInfo.Name, false);
             var sendOrder = from d in q
                             select new ExportSendOrderInfoVo
                             {
