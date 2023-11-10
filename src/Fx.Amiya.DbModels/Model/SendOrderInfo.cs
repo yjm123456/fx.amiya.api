@@ -21,6 +21,7 @@ namespace Fx.Amiya.DbModels.Model
         public OrderInfo OrderInfo { get; set; }
         public HospitalInfo HospitalInfo { get; set; }
         public AmiyaEmployee AmiyaEmployee { get; set; }
+        public bool IsMainHospital { get; set; }
         public List<SendOrderMessageBoard> SendOrderMessageBoardList { get; set; }
     }
 }

@@ -23,6 +23,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t=>t.AppointmentDate).HasColumnName("appointment_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(t=>t.TimeType).HasColumnName("time_type").HasColumnType("tinyint").IsRequired(false);
             builder.Property(t => t.IsUncertainDate).HasColumnName("is_uncertain_date").HasColumnType("bit").IsRequired();
+            builder.Property(t => t.IsMainHospital).HasColumnName("is_main_hospital").HasColumnType("bit").IsRequired();
 
             builder.HasOne(t => t.OrderInfo).WithMany(t => t.SendOrderInfoList).HasForeignKey(t => t.OrderId);
             builder.HasOne(t => t.HospitalInfo).WithMany(t => t.SendOrderInfoList).HasForeignKey(t => t.HospitalId);

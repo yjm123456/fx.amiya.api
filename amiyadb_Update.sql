@@ -20,4 +20,10 @@ ALTER TABLE `amiyadb`.`tbl_bind_customer_service`
 ADD COLUMN `system_send_gift_time` INT NULL AFTER `rfm_type`,
 ADD COLUMN `new_system_send_gift_date` DATETIME NULL AFTER `system_send_gift_time`;
 
------------------------------------------------余建明 2023/11/06 END--------------------------------------------
+--下单平台派单列表新增是否为主派医院，并将现所有主派医院改为“是”
+ALTER TABLE `amiyadb`.`tbl_send_order_info` 
+ADD COLUMN `is_main_hospital` BIT(1) NOT NULL DEFAULT 0 AFTER `feedback_date`;
+
+update tbl_send_order_info set is_main_hospital=true
+
+-----------------------------------------------余建明 2023/11/07 END--------------------------------------------

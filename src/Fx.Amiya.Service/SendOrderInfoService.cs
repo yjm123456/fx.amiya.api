@@ -244,62 +244,92 @@ namespace Fx.Amiya.Service
         {
             try
             {
+                Dictionary<int, bool> SendHospitalId = new Dictionary<int, bool>();
+                SendHospitalId.Add(addDto.HospitalId, true);
+                //主医院派单
+                await this.SendOrderListAsync(addDto, SendHospitalId, employeeId);
+                if (addDto.OtherHospitalId.Count > 0)
+                {
+                    //次医院派单
+                    Dictionary<int, bool> OtherSendHospitalId = new Dictionary<int, bool>();
+                    foreach (var x in addDto.OtherHospitalId)
+                    {
+                        OtherSendHospitalId.Add(x, false);
+                    }
+                    await this.SendOrderListAsync(addDto, OtherSendHospitalId, employeeId);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message.ToString());
+            }
+
+        }
+
+        private async Task SendOrderListAsync(AddSendOrderInfoDto addDto, Dictionary<int, bool> HospitalIdList, int employeeId)
+        {
+            try
+            {
                 unitOfWork.BeginTransaction();
-                DateTime date = DateTime.Now;
-
-                SendOrderInfo sendOrderInfo = new SendOrderInfo();
-                sendOrderInfo.OrderId = addDto.OrderId;
-                sendOrderInfo.HospitalId = addDto.HospitalId;
-                sendOrderInfo.SendBy = employeeId;
-                sendOrderInfo.PurchaseNum = addDto.PurchaseNum;
-                sendOrderInfo.PurchaseSinglePrice = addDto.PurchaseSinglePrice;
-                sendOrderInfo.SendDate = date;
-                sendOrderInfo.IsUncertainDate = addDto.IsUncertainDate;
-                sendOrderInfo.TimeType = addDto.TimeType;
-                if (!addDto.IsUncertainDate)
+                foreach (var x in HospitalIdList)
                 {
-                    sendOrderInfo.AppointmentDate = addDto.AppointmentDate;
-                }
+                    DateTime date = DateTime.Now;
 
-                await dalSendOrderInfo.AddAsync(sendOrderInfo, true);
+                    SendOrderInfo sendOrderInfo = new SendOrderInfo();
+                    sendOrderInfo.OrderId = addDto.OrderId;
+                    sendOrderInfo.HospitalId = x.Key;
+                    sendOrderInfo.SendBy = employeeId;
+                    sendOrderInfo.PurchaseNum = addDto.PurchaseNum;
+                    sendOrderInfo.PurchaseSinglePrice = addDto.PurchaseSinglePrice;
+                    sendOrderInfo.SendDate = date;
+                    sendOrderInfo.IsUncertainDate = addDto.IsUncertainDate;
+                    sendOrderInfo.IsMainHospital = x.Value;
+                    sendOrderInfo.TimeType = addDto.TimeType;
+                    if (!addDto.IsUncertainDate)
+                    {
+                        sendOrderInfo.AppointmentDate = addDto.AppointmentDate;
+                    }
 
-                if (!string.IsNullOrWhiteSpace(addDto.Content))
-                {
-                    SendOrderMessageBoard sendOrderMessageBoard = new SendOrderMessageBoard();
-                    sendOrderMessageBoard.Date = DateTime.Now;
-                    sendOrderMessageBoard.Type = (byte)SendOrderMessageBoardType.Amiya;
-                    sendOrderMessageBoard.SendOrderInfoId = sendOrderInfo.Id;
-                    sendOrderMessageBoard.HospitalId = sendOrderInfo.HospitalId;
-                    sendOrderMessageBoard.AmiyaEmployeeId = employeeId;
-                    sendOrderMessageBoard.Content = addDto.Content;
-                    await dalSendOrderMessageBoard.AddAsync(sendOrderMessageBoard, true);
-                }
+                    await dalSendOrderInfo.AddAsync(sendOrderInfo, true);
 
-                //获取医院客户列表
-                var q = from d in dalSendOrderInfo.GetAll().Include(x=>x.OrderInfo)
-                        where (d.OrderId == addDto.OrderId)
-                        select d;
-                var order = await q.FirstOrDefaultAsync();
-                var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(addDto.HospitalId, order.OrderInfo.Phone);
-                //操作医院客户表
-                if (!string.IsNullOrEmpty(customer.Id))
-                {
-                    UpdateSendHospitalCustomerInfoDto updateSendHospitalCustomerInfoDto = new UpdateSendHospitalCustomerInfoDto();
-                    updateSendHospitalCustomerInfoDto.Id = customer.Id;
-                    updateSendHospitalCustomerInfoDto.NewGoodsDemand = order.OrderInfo.GoodsName;
-                    updateSendHospitalCustomerInfoDto.SendAmount += 1;
-                    await hospitalCustomerInfoService.InsertSendAmountAsync(updateSendHospitalCustomerInfoDto);
-                }
-                else
-                {
-                    AddSendHospitalCustomerInfoDto addSendHospitalCustomerInfoDto = new AddSendHospitalCustomerInfoDto();
-                    addSendHospitalCustomerInfoDto.NewGoodsDemand = order.OrderInfo.GoodsName;
-                    addSendHospitalCustomerInfoDto.SendAmount = 1;
-                    addSendHospitalCustomerInfoDto.CustomerPhone = order.OrderInfo.Phone;
-                    addSendHospitalCustomerInfoDto.hospitalId = addDto.HospitalId;
-                    addSendHospitalCustomerInfoDto.DealAmount = 0;
-                    await hospitalCustomerInfoService.AddAsync(addSendHospitalCustomerInfoDto);
+                    if (!string.IsNullOrWhiteSpace(addDto.Content))
+                    {
+                        SendOrderMessageBoard sendOrderMessageBoard = new SendOrderMessageBoard();
+                        sendOrderMessageBoard.Date = DateTime.Now;
+                        sendOrderMessageBoard.Type = (byte)SendOrderMessageBoardType.Amiya;
+                        sendOrderMessageBoard.SendOrderInfoId = sendOrderInfo.Id;
+                        sendOrderMessageBoard.HospitalId = sendOrderInfo.HospitalId;
+                        sendOrderMessageBoard.AmiyaEmployeeId = employeeId;
+                        sendOrderMessageBoard.Content = addDto.Content;
+                        await dalSendOrderMessageBoard.AddAsync(sendOrderMessageBoard, true);
+                    }
 
+                    //获取医院客户列表
+                    var q = from d in dalSendOrderInfo.GetAll().Include(x => x.OrderInfo)
+                            where (d.OrderId == addDto.OrderId)
+                            select d;
+                    var order = await q.FirstOrDefaultAsync();
+                    var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(x.Key, order.OrderInfo.Phone);
+                    //操作医院客户表
+                    if (!string.IsNullOrEmpty(customer.Id))
+                    {
+                        UpdateSendHospitalCustomerInfoDto updateSendHospitalCustomerInfoDto = new UpdateSendHospitalCustomerInfoDto();
+                        updateSendHospitalCustomerInfoDto.Id = customer.Id;
+                        updateSendHospitalCustomerInfoDto.NewGoodsDemand = order.OrderInfo.GoodsName;
+                        updateSendHospitalCustomerInfoDto.SendAmount += 1;
+                        await hospitalCustomerInfoService.InsertSendAmountAsync(updateSendHospitalCustomerInfoDto);
+                    }
+                    else
+                    {
+                        AddSendHospitalCustomerInfoDto addSendHospitalCustomerInfoDto = new AddSendHospitalCustomerInfoDto();
+                        addSendHospitalCustomerInfoDto.NewGoodsDemand = order.OrderInfo.GoodsName;
+                        addSendHospitalCustomerInfoDto.SendAmount = 1;
+                        addSendHospitalCustomerInfoDto.CustomerPhone = order.OrderInfo.Phone;
+                        addSendHospitalCustomerInfoDto.hospitalId = x.Key;
+                        addSendHospitalCustomerInfoDto.DealAmount = 0;
+                        await hospitalCustomerInfoService.AddAsync(addSendHospitalCustomerInfoDto);
+
+                    }
                 }
                 unitOfWork.Commit();
             }
@@ -308,10 +338,7 @@ namespace Fx.Amiya.Service
                 unitOfWork.RollBack();
                 throw new Exception(ex.Message.ToString());
             }
-
         }
-
-
 
 
         /// <summary>

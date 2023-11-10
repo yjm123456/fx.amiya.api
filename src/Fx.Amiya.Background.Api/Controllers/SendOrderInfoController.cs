@@ -170,6 +170,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.OrderId = addVo.OrderId;
             addDto.IsUncertainDate = addVo.IsUncertainDate;
             addDto.AppointmentDate = addVo.AppointmentDate;
+            addDto.OtherHospitalId = addVo.OtherHospitalId;
             addDto.TimeType = addVo.TimeType;
             addDto.Content = addVo.Content;
             await sendOrderInfoService.AddAsync(addDto, employeeId);
@@ -228,7 +229,6 @@ namespace Fx.Amiya.Background.Api.Controllers
             sendOrderInfoSimpleVo.GoodsName = sendOrderInfo.GoodsName;
             sendOrderInfoSimpleVo.AppType = sendOrderInfo.AppType;
             sendOrderInfoSimpleVo.AppTypeText = sendOrderInfo.AppTypeText;
-            sendOrderInfoSimpleVo.IsUncertainDate = sendOrderInfo.IsUncertainDate;
 
             return ResultData<SendOrderInfoSimpleVo>.Success().AddData("sendOrderInfo", sendOrderInfoSimpleVo);
         }

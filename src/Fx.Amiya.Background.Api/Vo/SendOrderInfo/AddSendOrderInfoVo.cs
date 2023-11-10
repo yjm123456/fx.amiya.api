@@ -13,9 +13,13 @@ namespace Fx.Amiya.Background.Api.Vo.SendOrderInfo
         public string OrderId { get; set; }
 
         /// <summary>
-        /// 医院编号
+        /// 主派医院编号
         /// </summary>
         public int HospitalId { get; set; }
+        /// <summary>
+        /// 次派医院编号
+        /// </summary>
+        public List<int> OtherHospitalId { get; set; }
 
         /// <summary>
         /// 采购单价

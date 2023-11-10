@@ -7,8 +7,15 @@ namespace Fx.Amiya.Dto.SendOrderInfo
    public class AddSendOrderInfoDto
     {
         public string OrderId { get; set; }
+
+        /// <summary>
+        /// 主派医院编号
+        /// </summary>
         public int HospitalId { get; set; }
-        
+        /// <summary>
+        /// 次派医院编号
+        /// </summary>
+        public List<int> OtherHospitalId { get; set; }
         /// <summary>
         /// 是否未明确时间
         /// </summary>
