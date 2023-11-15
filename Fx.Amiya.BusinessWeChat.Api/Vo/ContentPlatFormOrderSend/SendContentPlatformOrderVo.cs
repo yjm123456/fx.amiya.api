@@ -219,5 +219,9 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend
         /// 是否是重单可深度订单
         /// </summary>
         public bool IsRepeatProfundityOrder { get; set; }
+        /// <summary>
+        /// 是否主推
+        /// </summary>
+        public bool IsMainHospital { get; set; }
     }
 }

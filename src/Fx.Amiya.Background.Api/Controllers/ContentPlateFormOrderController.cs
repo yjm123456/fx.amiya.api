@@ -1138,13 +1138,15 @@ namespace Fx.Amiya.Background.Api.Controllers
             int employeeId = Convert.ToInt32(employee.Id);
             AddContentPlatFormSendOrderInfoDto addDto = new AddContentPlatFormSendOrderInfoDto();
             addDto.HospitalId = addVo.HospitalId;
+            addDto.OtherHospitalId = addVo.OtherHospitalId;
             addDto.OrderId = addVo.OrderId;
             addDto.IsUncertainDate = addVo.IsUncertainDate;
             addDto.AppointmentDate = addVo.AppointmentDate;
             addDto.Remark = addVo.Remark;
             addDto.SendBy = addVo.SendBy;
             addDto.EmployeeId = employeeId;
-            await _orderService.SendOrderAsync(addDto);
+            //await _orderService.SendOrderAsync(addDto);
+            await _orderService.AddAsync(addDto);
             return ResultData.Success();
         }
 

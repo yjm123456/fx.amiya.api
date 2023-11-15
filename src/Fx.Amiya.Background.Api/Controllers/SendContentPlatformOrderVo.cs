@@ -218,5 +218,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 是否是重单可深度订单
         /// </summary>
         public bool IsRepeatProfundityOrder { get; set; }
+        /// <summary>
+        /// 是否是主推医院
+        /// </summary>
+        public bool IsMainHospital { get; set; }
     }
 }

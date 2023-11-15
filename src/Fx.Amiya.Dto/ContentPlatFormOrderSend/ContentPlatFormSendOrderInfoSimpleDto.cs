@@ -33,5 +33,9 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 派单人
         /// </summary>
         public int SendBy { get; set; }
+        /// <summary>
+        /// 是否主派
+        /// </summary>
+        public bool IsMainHospital { get; set; }
     }
 }

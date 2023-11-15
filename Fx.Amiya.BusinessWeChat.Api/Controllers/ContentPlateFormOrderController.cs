@@ -588,7 +588,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             addDto.Remark = addVo.Remark;
             addDto.SendBy = addVo.SendBy;
             addDto.EmployeeId = employeeId;
-            await _orderService.SendOrderAsync(addDto);
+            await _orderService.AddAsync(addDto);
             return ResultData.Success();
         }
 

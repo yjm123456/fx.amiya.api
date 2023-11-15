@@ -17,7 +17,10 @@ namespace Fx.Amiya.DbModels.Model
         public DateTime? AppointmentDate { get; set; }
         public string Remark { get; set; }
         public string HospitalRemark { get; set; }
-
+        /// <summary>
+        /// 是否是主派医院
+        /// </summary>
+        public bool IsMainHospital { get; set; }
         public ContentPlatformOrder ContentPlatformOrder { get; set; }
         public AmiyaEmployee AmiyaEmployee { get; set; }
         public HospitalInfo HospitalInfo { get; set; }

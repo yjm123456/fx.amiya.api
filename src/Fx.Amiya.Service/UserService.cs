@@ -754,6 +754,7 @@ namespace Fx.Amiya.Service
                     userLastTimeLoginAppId.CreateDate = DateTime.Now;
                     userLastTimeLoginAppId.AppId = appId;
                     userLastTimeLoginAppId.Valid = true;
+                    userLastTimeLoginAppId.UserId = userId;
                     await dalUserLastTimeLoginAppId.AddAsync(userLastTimeLoginAppId, true);
                 }
             }

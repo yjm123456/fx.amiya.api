@@ -161,6 +161,7 @@ namespace Fx.Amiya.Service
             sendOrderInfoDto.AppointmentDate = sendOrderInfo.AppointmentDate;
             sendOrderInfoDto.Remark = sendOrderInfo.Remark;
             sendOrderInfoDto.SendBy = sendOrderInfo.Sender;
+            sendOrderInfoDto.IsMainHospital = sendOrderInfo.IsMainHospital;
             return sendOrderInfoDto;
         }
 
@@ -192,12 +193,32 @@ namespace Fx.Amiya.Service
             return sendOrder.ToList();
         }
 
+        ///// <summary>
+        ///// 派单
+        ///// </summary>
+        ///// <param name="addDto"></param>
+        ///// <returns></returns>
+        //public async Task AddAsync(AddContentPlatFormSendOrderInfoDto addDto)
+        //{
+        //    ContentPlatformOrderSend sendOrderInfo = new ContentPlatformOrderSend();
+        //    sendOrderInfo.ContentPlatformOrderId = addDto.OrderId;
+        //    sendOrderInfo.HospitalId = addDto.HospitalId;
+        //    sendOrderInfo.Sender = addDto.SendBy;
+        //    sendOrderInfo.SendDate = DateTime.Now;
+        //    sendOrderInfo.IsUncertainDate = addDto.IsUncertainDate;
+        //    sendOrderInfo.Remark = addDto.Remark;
+        //    if (!addDto.IsUncertainDate)
+        //    {
+        //        sendOrderInfo.AppointmentDate = addDto.AppointmentDate;
+        //    }
+        //    await _dalContentPlatformOrderSend.AddAsync(sendOrderInfo, true);
+        //}
         /// <summary>
-        /// 派单
+        /// 派单(多派)
         /// </summary>
         /// <param name="addDto"></param>
         /// <returns></returns>
-        public async Task AddAsync(AddContentPlatFormSendOrderInfoDto addDto)
+        public async Task AddMultiAsync(AddContentPlatFormSendOrderInfoDto addDto,bool isMain)
         {
             ContentPlatformOrderSend sendOrderInfo = new ContentPlatformOrderSend();
             sendOrderInfo.ContentPlatformOrderId = addDto.OrderId;
@@ -206,13 +227,19 @@ namespace Fx.Amiya.Service
             sendOrderInfo.SendDate = DateTime.Now;
             sendOrderInfo.IsUncertainDate = addDto.IsUncertainDate;
             sendOrderInfo.Remark = addDto.Remark;
+            if (isMain)
+            {
+                sendOrderInfo.IsMainHospital = true;
+            }
+            else {
+                sendOrderInfo.IsMainHospital = false;
+            }
             if (!addDto.IsUncertainDate)
             {
                 sendOrderInfo.AppointmentDate = addDto.AppointmentDate;
             }
             await _dalContentPlatformOrderSend.AddAsync(sendOrderInfo, true);
         }
-
         /// <summary>
         /// 修改派单
         /// </summary>
@@ -693,7 +720,8 @@ namespace Fx.Amiya.Service
                                             OtherContentPlatFormOrderId = d.ContentPlatformOrder.OtherContentPlatFormOrderId,
                                             OrderSourceText = ServiceClass.GerContentPlatFormOrderSourceText(d.ContentPlatformOrder.OrderSource.Value),
                                             AcceptConsulting = d.ContentPlatformOrder.AcceptConsulting,
-                                            IsRepeatProfundityOrder = d.ContentPlatformOrder.IsRepeatProfundityOrder
+                                            IsRepeatProfundityOrder = d.ContentPlatformOrder.IsRepeatProfundityOrder,
+                                            IsMainHospital=d.IsMainHospital
                                         };
 
             FxPageInfo<SendContentPlatformOrderDto> pageInfo = new FxPageInfo<SendContentPlatformOrderDto>();

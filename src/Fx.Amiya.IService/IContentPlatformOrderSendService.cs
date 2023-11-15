@@ -51,12 +51,17 @@ namespace Fx.Amiya.IService
         Task<List<TodaySendOrderInfoDto>> GetTodaySendOrderAsync();
 
         /// <summary>
-        /// 添加派单
+        /// 添加派单(单派)
         /// </summary>
         /// <param name="addDto"></param>
         /// <returns></returns>
-        Task AddAsync(AddContentPlatFormSendOrderInfoDto addDto);
-
+        //Task AddAsync(AddContentPlatFormSendOrderInfoDto addDto);
+        /// <summary>
+        /// 添加派单(多派)
+        /// </summary>
+        /// <param name="addDto"></param>
+        /// <returns></returns>
+        Task AddMultiAsync(AddContentPlatFormSendOrderInfoDto addDto,bool isMain);
         /// <summary>
         /// 修改派单
         /// </summary>

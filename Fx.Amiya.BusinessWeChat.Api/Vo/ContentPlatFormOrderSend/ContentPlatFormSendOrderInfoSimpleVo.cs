@@ -33,5 +33,9 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend
         /// 备注
         /// </summary>
         public string Remark { get; set; }
+        /// <summary>
+        /// 是否主派
+        /// </summary>
+        public bool IsMainHospital { get; set; }
     }
 }

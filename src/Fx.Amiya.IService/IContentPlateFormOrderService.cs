@@ -129,7 +129,7 @@ namespace Fx.Amiya.IService
         /// <param name="addDto"></param>
         /// <param name="employeeId"></param>
         /// <returns></returns>
-        Task SendOrderAsync(AddContentPlatFormSendOrderInfoDto addDto);
+        Task AddAsync(AddContentPlatFormSendOrderInfoDto addDto);
 
         /// <summary>
         /// 修改派单

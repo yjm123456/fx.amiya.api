@@ -67,7 +67,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             sendOrderInfoSimpleVo.IsUncertainDate = sendOrderInfo.IsUncertainDate;
             sendOrderInfoSimpleVo.AppointmentDate = sendOrderInfo.AppointmentDate;
             sendOrderInfoSimpleVo.IsUncertainDate = sendOrderInfo.IsUncertainDate;
-
+            sendOrderInfoSimpleVo.IsMainHospital = sendOrderInfo.IsMainHospital;
             return ResultData<ContentPlatFormSendOrderInfoSimpleVo>.Success().AddData("sendOrderInfo", sendOrderInfoSimpleVo);
         }
 
@@ -164,7 +164,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                                             ConsultatioType = d.ConsultationTypeText,
                                             CheckState = d.CheckState,
                                             OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
-                                            IsRepeatProfundityOrder = d.IsRepeatProfundityOrder
+                                            IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
+                                            IsMainHospital= d.IsMainHospital,
                                         };
             FxPageInfo<SendContentPlatformOrderVo> pageInfo = new FxPageInfo<SendContentPlatformOrderVo>();
             pageInfo.TotalCount = orders.TotalCount;

@@ -713,68 +713,24 @@ namespace Fx.Amiya.Service
             return pageInfo;
         }
 
-        /// <summary>
-        /// 派单
-        /// </summary>
-        /// <param name="addDto"></param>
-        /// <param name="employeeId"></param>
-        /// <returns></returns>
-        public async Task SendOrderAsync(AddContentPlatFormSendOrderInfoDto addDto)
-        {
-            unitOfWork.BeginTransaction();
+        public async Task AddAsync(AddContentPlatFormSendOrderInfoDto addDto) {
             try
             {
-                var orderInfo = await this.GetByOrderIdAsync(addDto.OrderId);
-                var phone = orderInfo.Phone;
-                var hasOrder = await this.GetOrderListByPhoneAsync(phone);
-                List<string> OrderIds = new List<string>();
-                foreach (var x in hasOrder)
+                unitOfWork.BeginTransaction();
+                Dictionary<int, bool> SendHospitalId = new Dictionary<int, bool>();
+                SendHospitalId.Add(addDto.HospitalId, true);
+                //主医院派单
+                await this.SendOrderAsync(addDto, SendHospitalId);
+                if (addDto.OtherHospitalId.Count > 0)
                 {
-                    OrderIds.Add(x.Id);
+                    //次医院派单
+                    Dictionary<int, bool> OtherSendHospitalId = new Dictionary<int, bool>();
+                    foreach (var x in addDto.OtherHospitalId)
+                    {
+                        OtherSendHospitalId.Add(x, false);
+                    }
+                    await this.SendOrderAsync(addDto, OtherSendHospitalId);
                 }
-                //var sendInfo = await _contentPlatformOrderSend.GetSendOrderInfoByOrderId(OrderIds);
-                //var IsHasThisHospital = sendInfo.Where(x => x.HospitalId == addDto.HospitalId).ToList();
-                //if (IsHasThisHospital.Count != 0)
-                //{
-                //    throw new Exception("该客户已有订单派单到此医院，请重新选择派单医院！");
-                //}
-                await _contentPlatformOrderSend.AddAsync(addDto);
-                var contentPlatFormOrder = await this.GetByOrderIdAsync(addDto.OrderId);
-                //修改订单状态
-                await this.UpdateStateAndRepeateOrderPicAsync(addDto.OrderId, addDto.SendBy, contentPlatFormOrder.BelongEmpId, addDto.EmployeeId);
-
-                //当派单为新医院时更新医院接单人数据
-                //await hospitalBindCustomerService.UpdateBindCustomerToZeroAsync(contentPlatFormOrder.Phone);
-
-                //小黄车更新派单触达
-                await _shoppingCartRegistration.UpdateSendOrderAsync(orderInfo.Phone);
-
-
-                //获取医院客户列表
-                var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(addDto.HospitalId, orderInfo.Phone);
-                //操作医院客户表
-                if (!string.IsNullOrEmpty(customer.Id))
-                {
-                    UpdateSendHospitalCustomerInfoDto updateSendHospitalCustomerInfoDto = new UpdateSendHospitalCustomerInfoDto();
-                    updateSendHospitalCustomerInfoDto.Id = customer.Id;
-                    updateSendHospitalCustomerInfoDto.NewGoodsDemand = orderInfo.GoodsName;
-                    updateSendHospitalCustomerInfoDto.hospitalId = addDto.HospitalId;
-                    updateSendHospitalCustomerInfoDto.SendAmount += 1;
-                    await hospitalCustomerInfoService.InsertSendAmountAsync(updateSendHospitalCustomerInfoDto);
-                }
-                else
-                {
-                    AddSendHospitalCustomerInfoDto addSendHospitalCustomerInfoDto = new AddSendHospitalCustomerInfoDto();
-                    addSendHospitalCustomerInfoDto.NewGoodsDemand = orderInfo.GoodsName;
-                    addSendHospitalCustomerInfoDto.SendAmount = 1;
-                    addSendHospitalCustomerInfoDto.CustomerPhone = orderInfo.Phone;
-                    addSendHospitalCustomerInfoDto.hospitalId = addDto.HospitalId;
-                    addSendHospitalCustomerInfoDto.DealAmount = 0;
-                    await hospitalCustomerInfoService.AddAsync(addSendHospitalCustomerInfoDto);
-
-                }
-                //完成视频预约到诊
-                await customerAppointmentScheduleService.UpdateAppointmentCompleteStatusAsync(phone, (int)AppointmentType.VideoAppointment);
                 unitOfWork.Commit();
             }
             catch (Exception ex)
@@ -783,6 +739,152 @@ namespace Fx.Amiya.Service
                 throw new Exception(ex.Message.ToString());
             }
         }
+
+
+        /// <summary>
+        /// 派单
+        /// </summary>
+        /// <param name="addDto"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        private async Task SendOrderAsync(AddContentPlatFormSendOrderInfoDto addDto, Dictionary<int, bool> hospitalDic)
+        {
+            
+            try
+            {
+                foreach (var item in hospitalDic) {
+                    var orderInfo = await this.GetByOrderIdAsync(addDto.OrderId);
+                    var phone = orderInfo.Phone;
+                    var hasOrder = await this.GetOrderListByPhoneAsync(phone);
+                    List<string> OrderIds = new List<string>();
+                    foreach (var x in hasOrder)
+                    {
+                        OrderIds.Add(x.Id);
+                    }
+                    //var sendInfo = await _contentPlatformOrderSend.GetSendOrderInfoByOrderId(OrderIds);
+                    //var IsHasThisHospital = sendInfo.Where(x => x.HospitalId == addDto.HospitalId).ToList();
+                    //if (IsHasThisHospital.Count != 0)
+                    //{
+                    //    throw new Exception("该客户已有订单派单到此医院，请重新选择派单医院！");
+                    //}
+                    addDto.HospitalId = item.Key;
+                    await _contentPlatformOrderSend.AddMultiAsync(addDto,item.Value);
+                    var contentPlatFormOrder = await this.GetByOrderIdAsync(addDto.OrderId);
+                    //修改订单状态
+                    await this.UpdateStateAndRepeateOrderPicAsync(addDto.OrderId, addDto.SendBy, contentPlatFormOrder.BelongEmpId, addDto.EmployeeId);
+
+                    //当派单为新医院时更新医院接单人数据
+                    //await hospitalBindCustomerService.UpdateBindCustomerToZeroAsync(contentPlatFormOrder.Phone);
+
+                    //小黄车更新派单触达
+                    await _shoppingCartRegistration.UpdateSendOrderAsync(orderInfo.Phone);
+
+
+                    //获取医院客户列表
+                    var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(addDto.HospitalId, orderInfo.Phone);
+                    //操作医院客户表
+                    if (!string.IsNullOrEmpty(customer.Id))
+                    {
+                        UpdateSendHospitalCustomerInfoDto updateSendHospitalCustomerInfoDto = new UpdateSendHospitalCustomerInfoDto();
+                        updateSendHospitalCustomerInfoDto.Id = customer.Id;
+                        updateSendHospitalCustomerInfoDto.NewGoodsDemand = orderInfo.GoodsName;
+                        updateSendHospitalCustomerInfoDto.hospitalId = addDto.HospitalId;
+                        updateSendHospitalCustomerInfoDto.SendAmount += 1;
+                        await hospitalCustomerInfoService.InsertSendAmountAsync(updateSendHospitalCustomerInfoDto);
+                    }
+                    else
+                    {
+                        AddSendHospitalCustomerInfoDto addSendHospitalCustomerInfoDto = new AddSendHospitalCustomerInfoDto();
+                        addSendHospitalCustomerInfoDto.NewGoodsDemand = orderInfo.GoodsName;
+                        addSendHospitalCustomerInfoDto.SendAmount = 1;
+                        addSendHospitalCustomerInfoDto.CustomerPhone = orderInfo.Phone;
+                        addSendHospitalCustomerInfoDto.hospitalId = addDto.HospitalId;
+                        addSendHospitalCustomerInfoDto.DealAmount = 0;
+                        await hospitalCustomerInfoService.AddAsync(addSendHospitalCustomerInfoDto);
+
+                    }
+                    //完成视频预约到诊
+                    await customerAppointmentScheduleService.UpdateAppointmentCompleteStatusAsync(phone, (int)AppointmentType.VideoAppointment);
+                }
+               
+            }
+            catch (Exception ex)
+            {
+               
+                throw new Exception(ex.Message.ToString());
+            }
+        }
+
+        ///// <summary>
+        ///// 派单
+        ///// </summary>
+        ///// <param name="addDto"></param>
+        ///// <param name="employeeId"></param>
+        ///// <returns></returns>
+        //private async Task SendOrderAsync(AddContentPlatFormSendOrderInfoDto addDto, Dictionary<int, bool> hospitalDic)
+        //{
+        //    unitOfWork.BeginTransaction();
+        //    try
+        //    {
+        //        var orderInfo = await this.GetByOrderIdAsync(addDto.OrderId);
+        //        var phone = orderInfo.Phone;
+        //        var hasOrder = await this.GetOrderListByPhoneAsync(phone);
+        //        List<string> OrderIds = new List<string>();
+        //        foreach (var x in hasOrder)
+        //        {
+        //            OrderIds.Add(x.Id);
+        //        }
+        //        //var sendInfo = await _contentPlatformOrderSend.GetSendOrderInfoByOrderId(OrderIds);
+        //        //var IsHasThisHospital = sendInfo.Where(x => x.HospitalId == addDto.HospitalId).ToList();
+        //        //if (IsHasThisHospital.Count != 0)
+        //        //{
+        //        //    throw new Exception("该客户已有订单派单到此医院，请重新选择派单医院！");
+        //        //}
+        //        await _contentPlatformOrderSend.AddAsync(addDto);
+        //        var contentPlatFormOrder = await this.GetByOrderIdAsync(addDto.OrderId);
+        //        //修改订单状态
+        //        await this.UpdateStateAndRepeateOrderPicAsync(addDto.OrderId, addDto.SendBy, contentPlatFormOrder.BelongEmpId, addDto.EmployeeId);
+
+        //        //当派单为新医院时更新医院接单人数据
+        //        //await hospitalBindCustomerService.UpdateBindCustomerToZeroAsync(contentPlatFormOrder.Phone);
+
+        //        //小黄车更新派单触达
+        //        await _shoppingCartRegistration.UpdateSendOrderAsync(orderInfo.Phone);
+
+
+        //        //获取医院客户列表
+        //        var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(addDto.HospitalId, orderInfo.Phone);
+        //        //操作医院客户表
+        //        if (!string.IsNullOrEmpty(customer.Id))
+        //        {
+        //            UpdateSendHospitalCustomerInfoDto updateSendHospitalCustomerInfoDto = new UpdateSendHospitalCustomerInfoDto();
+        //            updateSendHospitalCustomerInfoDto.Id = customer.Id;
+        //            updateSendHospitalCustomerInfoDto.NewGoodsDemand = orderInfo.GoodsName;
+        //            updateSendHospitalCustomerInfoDto.hospitalId = addDto.HospitalId;
+        //            updateSendHospitalCustomerInfoDto.SendAmount += 1;
+        //            await hospitalCustomerInfoService.InsertSendAmountAsync(updateSendHospitalCustomerInfoDto);
+        //        }
+        //        else
+        //        {
+        //            AddSendHospitalCustomerInfoDto addSendHospitalCustomerInfoDto = new AddSendHospitalCustomerInfoDto();
+        //            addSendHospitalCustomerInfoDto.NewGoodsDemand = orderInfo.GoodsName;
+        //            addSendHospitalCustomerInfoDto.SendAmount = 1;
+        //            addSendHospitalCustomerInfoDto.CustomerPhone = orderInfo.Phone;
+        //            addSendHospitalCustomerInfoDto.hospitalId = addDto.HospitalId;
+        //            addSendHospitalCustomerInfoDto.DealAmount = 0;
+        //            await hospitalCustomerInfoService.AddAsync(addSendHospitalCustomerInfoDto);
+
+        //        }
+        //        //完成视频预约到诊
+        //        await customerAppointmentScheduleService.UpdateAppointmentCompleteStatusAsync(phone, (int)AppointmentType.VideoAppointment);
+        //        unitOfWork.Commit();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        unitOfWork.RollBack();
+        //        throw new Exception(ex.Message.ToString());
+        //    }
+        //}
 
 
         /// <summary>
