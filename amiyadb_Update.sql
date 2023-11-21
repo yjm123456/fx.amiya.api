@@ -27,3 +27,18 @@ ADD COLUMN `is_main_hospital` BIT(1) NOT NULL DEFAULT 0 AFTER `feedback_date`;
 update tbl_send_order_info set is_main_hospital=true
 
 -----------------------------------------------余建明 2023/11/07 END--------------------------------------------
+
+
+------------------------------------------------ 王健 2023/11/21 BEGIN ------------------------------------------------------
+
+
+----内容平台派单添加主派.次派
+ALTER TABLE `amiyadb`.`tbl_content_platform_order_send` 
+ADD COLUMN `is_main_hospital` BIT(1) NOT NULL DEFAULT 0 AFTER `hospital_remark`;
+
+update tbl_content_platform_order_send set is_main_hospital=true;
+
+
+-------------------------------------------- 王健 2023/11/21 END-------------------------------------------------
+
+
