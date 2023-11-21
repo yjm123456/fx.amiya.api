@@ -454,7 +454,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             CheckState = d.CheckState,
                                             OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
                                             IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
-                                            IsMainHospital=d.IsMainHospital
+                                            IsMainHospital = d.IsMainHospital
                                         };
             FxPageInfo<SendContentPlatformOrderVo> pageInfo = new FxPageInfo<SendContentPlatformOrderVo>();
             pageInfo.TotalCount = orders.TotalCount;
@@ -552,6 +552,35 @@ namespace Fx.Amiya.Background.Api.Controllers
             pageInfo.TotalCount = result.TotalCount;
             pageInfo.List = contentPlatformOrders;
             return ResultData<FxPageInfo<ContentPlatFormOrderDealInfoVo>>.Success().AddData("contentPlatFormOrderDealInfo", pageInfo);
+        }
+        /// <summary>
+        /// 根据内容派单id获取
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("sendOrderInfoList")]
+        public async Task<ResultData<FxPageInfo<SimpleSendOrderInfoVo>>> GetSendOrderInfiListAsync([FromQuery] QuerySendOrderInfoListVo query)
+        {
+            FxPageInfo<SimpleSendOrderInfoVo> pageInfo = new FxPageInfo<SimpleSendOrderInfoVo>();
+            QuerySendOrderInfoListDto queryDto = new QuerySendOrderInfoListDto();
+            queryDto.ContentPlatformId = query.ContentPlatformId;
+            queryDto.PageNum = query.PageNum;
+            queryDto.PageSize = query.PageSize;
+            var res = await _sendOrderInfoService.GetSendOrderInfoListByContentplateformIdAsync(queryDto);
+            pageInfo.TotalCount = res.TotalCount;
+            pageInfo.List = res.List.Select(e => new SimpleSendOrderInfoVo
+            {
+                Id = e.Id,
+                HospitalName = e.HospitalName,
+                HospitalId = e.HospitalId,
+                AppointmentDate = e.AppointmentDate,
+                Remark = e.Remark,
+                SendBy = e.SendBy,
+                IsMainHospital = e.IsMainHospital,
+                SendDate = e.SendDate,
+                SenderName = e.SenderName
+            });
+            return ResultData<FxPageInfo<SimpleSendOrderInfoVo>>.Success().AddData("sendOrderInfoList", pageInfo);
         }
     }
 }

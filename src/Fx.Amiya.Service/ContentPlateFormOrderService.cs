@@ -898,7 +898,8 @@ namespace Fx.Amiya.Service
             try
             {
                 unitOfWork.BeginTransaction();
-
+                var sendOrderList = dalContentPlatformOrderSend.GetAll().Where(e => e.ContentPlatformOrderId == updateDto.OrderId).Select(e => e.HospitalId).ToList();
+                if (sendOrderList.Contains(updateDto.HospitalId)) throw new Exception("该订单已有该医院的派单数据请勿重复派单!");
                 await _contentPlatformOrderSend.UpdateOrderSend(updateDto, employeeId);
                 //修改订单状态
                 var send = await _contentPlatformOrderSend.GetSimpleByIdAsync(updateDto.Id);

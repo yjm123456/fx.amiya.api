@@ -1096,7 +1096,38 @@ namespace Fx.Amiya.Service
 
 
 
+
+
         #endregion
+        /// <summary>
+        /// 根据内容平台id获取派单列表
+        /// </summary>
+        /// <param name="contentplateformId"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<SimpleSendOrderInfoDto>> GetSendOrderInfoListByContentplateformIdAsync(QuerySendOrderInfoListDto query)
+        {
+            FxPageInfo<SimpleSendOrderInfoDto> pageInfo = new FxPageInfo<SimpleSendOrderInfoDto>();
+            var res =  _dalContentPlatformOrderSend.GetAll()
+                      .Where(e => e.ContentPlatformOrderId == query.ContentPlatformId)
+                      .Include(e => e.ContentPlatformOrder)
+                      .Include(e => e.HospitalInfo)
+                      .Select(e => new SimpleSendOrderInfoDto
+                      {
+                          Id = e.Id,
+                          HospitalName = e.HospitalInfo.Name,
+                          HospitalId = e.HospitalId,
+                          AppointmentDate = e.ContentPlatformOrder.AppointmentDate,
+                          Remark = e.Remark,
+                          SendBy = e.Sender,
+                          IsMainHospital = e.IsMainHospital,
+                          SendDate = e.ContentPlatformOrder.SendDate,
+                          SenderName = e.AmiyaEmployee.Name
+                      });
+            pageInfo.TotalCount=await res.CountAsync();
+            pageInfo.List = res.Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToList();
+            return pageInfo;
+
+        }
 
     }
 }

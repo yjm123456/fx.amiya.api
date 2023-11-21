@@ -222,6 +222,12 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<decimal> GetTotalSendCount();
+        /// <summary>
+        /// 根据内容平台id获取派单列表
+        /// </summary>
+        /// <param name="contentplateformId"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<SimpleSendOrderInfoDto>> GetSendOrderInfoListByContentplateformIdAsync(QuerySendOrderInfoListDto query);
         
     }
 }

@@ -3,31 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend
+namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend
 {
-    /// <summary>
-    /// 内容平台添加派单
-    /// </summary>
-    public class AddContentPlatFormSendOrderInfoVo
+    public class SimpleSendOrderInfoVo
     {
-        /// <summary>
-        /// 订单编号
-        /// </summary>
-        public string OrderId { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// 医院编号
         /// </summary>
         public int HospitalId { get; set; }
-
         /// <summary>
-        /// 次派医院编号
+        /// 医院名称
         /// </summary>
-        public List<int> OtherHospitalId { get; set; }
-        /// <summary>
-        /// 是否未明确时间
-        /// </summary>
-        public bool IsUncertainDate { get; set; }
+        public string HospitalName { get; set; }
 
         /// <summary>
         /// 预约到院日期
@@ -37,10 +26,22 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend
         /// 备注
         /// </summary>
         public string Remark { get; set; }
-        /// <summary>
-        /// 派单人员
-        /// </summary>
 
+        /// <summary>
+        /// 派单人
+        /// </summary>
         public int SendBy { get; set; }
+        /// <summary>
+        /// 派单人姓名
+        /// </summary>
+        public string SenderName { get; set; }
+        /// <summary>
+        /// 派单时间
+        /// </summary>
+        public DateTime? SendDate { get; set; }
+        /// <summary>
+        /// 是否主派
+        /// </summary>
+        public bool IsMainHospital { get; set; }
     }
 }
