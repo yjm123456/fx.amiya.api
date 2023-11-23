@@ -3,6 +3,7 @@ using Fx.Amiya.Dto.HospitalOperationData;
 using Fx.Amiya.Dto.HospitalPerformance;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.IService;
+using Fx.Common.Extensions;
 using jos_sdk_net.Util;
 using System;
 using System.Collections.Generic;
@@ -317,23 +318,14 @@ namespace Fx.Amiya.Service
         /// <summary>
         /// 【新】获取选择月份全国机构运营数据概况
         /// </summary>
-        /// <param name="year"></param>
-        /// <param name="month"></param>
-        /// <param name="isCity"></param>
+        /// <param name="date"></param>
         /// <returns></returns>
-        public async Task<List<HospitalPerformanceDto>> GetHospitalPerformanceBymonthBWAsync(int? year, int? month)
+        public async Task<List<HospitalPerformanceDto>> GetHospitalPerformanceBymonthBWAsync(DateTime date)
         {
             List<HospitalPerformanceDto> resultList = new List<HospitalPerformanceDto>();
-            DateTime date = DateTime.Now.Date;
-            if (year.HasValue == true)
-            {
-                date = Convert.ToDateTime(year + "-01-01");
-            }
-            if (month.HasValue == true)
-            {
-                date = Convert.ToDateTime(DateTime.Now.Year + "-" + month.Value + "-01");
-            }
-            var contentPlatFormOrderSendList = await contentPlatformOrderSendService.GetTodayOrderSendDataAsync(date);
+            var nowDate = DateTimeExtension.GetChooseDateStartDateAndEndDate(date);
+            DateTime startDate = Convert.ToDateTime(date.Year + "-" + date.Month + "-01 0:00:00");
+            var contentPlatFormOrderSendList = await contentPlatformOrderSendService.GetTodayOrderSendDataAsync(startDate);
             foreach (var x in contentPlatFormOrderSendList)
             {
                 var isExist = 0;
@@ -348,13 +340,23 @@ namespace Fx.Amiya.Service
                 hospitalPerformanceDto.HospitalLogo = x.ThumbPictureUrl;
                 List<int> hospitalIds = new List<int>();
                 hospitalIds.Add(x.SendHospitalId);
-                var contentPlatFormOrderDealInfoList = await contentPlatFormOrderDealInfoService.GetMonthSendPerformanceByHospitalIdListAsync(hospitalIds, date);
+                //当月业绩
+                var contentPlatFormOrderDealInfoList = await contentPlatFormOrderDealInfoService.GetMonthSendPerformanceByHospitalIdListAsync(hospitalIds, startDate);
                 var dealInfoList = contentPlatFormOrderDealInfoList.Where(x => x.IsDeal == true && x.DealDate.HasValue == true);
                 hospitalPerformanceDto.NewCustomerAchievement = dealInfoList.Where(x => x.IsOldCustomer == false).Sum(x => x.Price);
 
                 hospitalPerformanceDto.OldCustomerAchievement = dealInfoList.Where(x => x.IsOldCustomer == true).Sum(x => x.Price);
                 hospitalPerformanceDto.TotalAchievement = dealInfoList.Sum(x => x.Price);
                 hospitalPerformanceDto.NewOrOldCustomerRate = CalculateAccounted(hospitalPerformanceDto.NewCustomerAchievement, hospitalPerformanceDto.OldCustomerAchievement);
+                //当日业绩
+                var contentPlatFormOrderDealInfoListToday = await contentPlatFormOrderDealInfoService.GetMonthSendPerformanceByHospitalIdListAsync(hospitalIds, nowDate.StartDate,nowDate.EndDate);
+                var dealInfoListToday = contentPlatFormOrderDealInfoListToday.Where(x => x.IsDeal == true && x.DealDate.HasValue == true);
+                hospitalPerformanceDto.TodayNewCustomerAchievement = dealInfoListToday.Where(x => x.IsOldCustomer == false).Sum(x => x.Price);
+
+                hospitalPerformanceDto.TodayOldCustomerAchievement = dealInfoListToday.Where(x => x.IsOldCustomer == true).Sum(x => x.Price);
+                hospitalPerformanceDto.TodayTotalAchievement = dealInfoListToday.Sum(x => x.Price);
+                hospitalPerformanceDto.TodayNewOrOldCustomerRate = CalculateAccounted(hospitalPerformanceDto.TodayNewCustomerAchievement, hospitalPerformanceDto.TodayOldCustomerAchievement);
+
                 resultList.Add(hospitalPerformanceDto);
             }
 

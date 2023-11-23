@@ -100,91 +100,166 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// <summary>
         /// 获取达人业绩数据
         /// </summary>
-        /// <param name="year"></param>
-        /// <param name="month"></param>
+        /// <param name="date">日期</param>
         /// <param name="liveAnchorBaseId">主播基础id，不传查询所有</param>
         /// <param name="isSelfLiveAnchor">是否为自播主播</param>
         /// <returns></returns>
         [HttpGet("performanceByLiveAnchorName")]
-        public async Task<ResultData<LiveAnchorMonthPerformanceVo>> GetPerformanceByGroupAsync(int year, int month, string liveAnchorBaseId, bool? isSelfLiveAnchor)
+        public async Task<ResultData<LiveAnchorMonthAndDatePerformanceVo>> GetPerformanceByGroupAsync(DateTime date,  string liveAnchorBaseId, bool? isSelfLiveAnchor)
         {
             //获取当前月同比,环比等数据
-            var groupPerformance = await amiyaPerformanceService.GetMonthPerformanceBySelfLiveAnchorAsync(year, month, liveAnchorBaseId, isSelfLiveAnchor);
+            var groupPerformance = await amiyaPerformanceService.GetMonthPerformanceBySelfLiveAnchorAsync(date, liveAnchorBaseId, isSelfLiveAnchor);
 
             //数据组合
             LiveAnchorMonthPerformanceVo monthPerformanceRatioDto = new LiveAnchorMonthPerformanceVo
             {
-                CueerntMonthTotalPerformance = groupPerformance.CueerntMonthTotalPerformance,
-                TotalPerformanceYearOnYear = groupPerformance.TotalPerformanceYearOnYear,
-                TotalPerformanceChainratio = groupPerformance.TotalPerformanceChainratio,
-                TotalPerformanceTarget = groupPerformance.TotalPerformanceTarget,
-                TotalPerformanceTargetComplete = groupPerformance.TotalPerformanceTargetComplete,
+                CueerntMonthTotalPerformance = groupPerformance.MonthDataVo.CueerntMonthTotalPerformance,
+                TotalPerformanceYearOnYear = groupPerformance.MonthDataVo.TotalPerformanceYearOnYear,
+                TotalPerformanceChainratio = groupPerformance.MonthDataVo.TotalPerformanceChainratio,
+                TotalPerformanceTarget = groupPerformance.MonthDataVo.TotalPerformanceTarget,
+                TotalPerformanceTargetComplete = groupPerformance.MonthDataVo.TotalPerformanceTargetComplete,
 
-                CurrentMonthNewCustomerPerformance = groupPerformance.CurrentMonthNewCustomerPerformance,
-                NewCustomerPerformanceRatio = groupPerformance.NewCustomerPerformanceRatio,
-                NewCustomerPerformanceYearOnYear = groupPerformance.NewCustomerPerformanceYearOnYear,
-                NewCustomerPerformanceChainRatio = groupPerformance.NewCustomerPerformanceChainRatio,
-                NewCustomerPerformanceTarget = groupPerformance.NewCustomerPerformanceTarget,
-                NewCustomerPerformanceTargetComplete = groupPerformance.NewCustomerPerformanceTargetComplete,
+                CurrentMonthNewCustomerPerformance = groupPerformance.MonthDataVo.CurrentMonthNewCustomerPerformance,
+                NewCustomerPerformanceRatio = groupPerformance.MonthDataVo.NewCustomerPerformanceRatio,
+                NewCustomerPerformanceYearOnYear = groupPerformance.MonthDataVo.NewCustomerPerformanceYearOnYear,
+                NewCustomerPerformanceChainRatio = groupPerformance.MonthDataVo.NewCustomerPerformanceChainRatio,
+                NewCustomerPerformanceTarget = groupPerformance.MonthDataVo.NewCustomerPerformanceTarget,
+                NewCustomerPerformanceTargetComplete = groupPerformance.MonthDataVo.NewCustomerPerformanceTargetComplete,
 
-                CurrentMonthOldCustomerPerformance = groupPerformance.CurrentMonthOldCustomerPerformance,
-                OldCustomerPerformanceRatio = groupPerformance.OldCustomerPerformanceRatio,
-                OldCustomerPerformanceYearOnYear = groupPerformance.OldCustomerPerformanceYearOnYear,
-                OldCustomerPerformanceChainRatio = groupPerformance.OldCustomerPerformanceChainRatio,
-                OldCustomerTarget = groupPerformance.OldCustomerTarget,
-                OldCustomerTargetComplete = groupPerformance.OldCustomerTargetComplete,
-
-
-                PictureConsultationPerformance = groupPerformance.PictureConsultationPerformance,
-                PictureConsultationPerformanceRatio = groupPerformance.PictureConsultationPerformanceRatio,
-                PictureConsultationPerformanceYearOnYear = groupPerformance.PictureConsultationPerformanceYearOnYear,
-                PictureConsultationPerformanceChainRatio = groupPerformance.PictureConsultationPerformanceChainRatio,
-
-                VideoConsultationPerformance = groupPerformance.VideoConsultationPerformance,
-                VideoConsultationPerformanceRatio = groupPerformance.VideoConsultationPerformanceRatio,
-                VideoConsultationPerformanceYearOnYear = groupPerformance.VideoConsultationPerformanceYearOnYear,
-                VideoConsultationPerformanceChainRatio = groupPerformance.VideoConsultationPerformanceChainRatio,
+                CurrentMonthOldCustomerPerformance = groupPerformance.MonthDataVo.CurrentMonthOldCustomerPerformance,
+                OldCustomerPerformanceRatio = groupPerformance.MonthDataVo.OldCustomerPerformanceRatio,
+                OldCustomerPerformanceYearOnYear = groupPerformance.MonthDataVo.OldCustomerPerformanceYearOnYear,
+                OldCustomerPerformanceChainRatio = groupPerformance.MonthDataVo.OldCustomerPerformanceChainRatio,
+                OldCustomerTarget = groupPerformance.MonthDataVo.OldCustomerTarget,
+                OldCustomerTargetComplete = groupPerformance.MonthDataVo.OldCustomerTargetComplete,
 
 
-                AcompanyingPerformance = groupPerformance.AcompanyingPerformance,
-                AcompanyingPerformanceRatio = groupPerformance.AcompanyingPerformanceRatio,
-                AcompanyingPerformanceYearOnYear = groupPerformance.AcompanyingPerformanceYearOnYear,
-                AcompanyingPerformanceChainRatio = groupPerformance.AcompanyingPerformanceChainRatio,
+                PictureConsultationPerformance = groupPerformance.MonthDataVo.PictureConsultationPerformance,
+                PictureConsultationPerformanceRatio = groupPerformance.MonthDataVo.PictureConsultationPerformanceRatio,
+                PictureConsultationPerformanceYearOnYear = groupPerformance.MonthDataVo.PictureConsultationPerformanceYearOnYear,
+                PictureConsultationPerformanceChainRatio = groupPerformance.MonthDataVo.PictureConsultationPerformanceChainRatio,
+
+                VideoConsultationPerformance = groupPerformance.MonthDataVo.VideoConsultationPerformance,
+                VideoConsultationPerformanceRatio = groupPerformance.MonthDataVo.VideoConsultationPerformanceRatio,
+                VideoConsultationPerformanceYearOnYear = groupPerformance.MonthDataVo.VideoConsultationPerformanceYearOnYear,
+                VideoConsultationPerformanceChainRatio = groupPerformance.MonthDataVo.VideoConsultationPerformanceChainRatio,
 
 
-                NotAcompanyingPerformance = groupPerformance.NotAcompanyingPerformance,
-                NotAcompanyingPerformanceRatio = groupPerformance.NotAcompanyingPerformanceRatio,
-                NotAcompanyingPerformanceYearOnYear = groupPerformance.NotAcompanyingPerformanceYearOnYear,
-                NotAcompanyingPerformanceChainRatio = groupPerformance.NotAcompanyingPerformanceChainRatio,
+                AcompanyingPerformance = groupPerformance.MonthDataVo.AcompanyingPerformance,
+                AcompanyingPerformanceRatio = groupPerformance.MonthDataVo.AcompanyingPerformanceRatio,
+                AcompanyingPerformanceYearOnYear = groupPerformance.MonthDataVo.AcompanyingPerformanceYearOnYear,
+                AcompanyingPerformanceChainRatio = groupPerformance.MonthDataVo.AcompanyingPerformanceChainRatio,
 
 
-                ZeroPricePerformance = groupPerformance.ZeroPricePerformance,
-                ZeroPricePerformanceRatio = groupPerformance.ZeroPricePerformanceRatio,
-                ZeroPricePerformanceYearOnYear = groupPerformance.ZeroPricePerformanceYearOnYear,
-                ZeroPricePerformanceChainRatio = groupPerformance.ZeroPricePerformanceChainRatio,
+                NotAcompanyingPerformance = groupPerformance.MonthDataVo.NotAcompanyingPerformance,
+                NotAcompanyingPerformanceRatio = groupPerformance.MonthDataVo.NotAcompanyingPerformanceRatio,
+                NotAcompanyingPerformanceYearOnYear = groupPerformance.MonthDataVo.NotAcompanyingPerformanceYearOnYear,
+                NotAcompanyingPerformanceChainRatio = groupPerformance.MonthDataVo.NotAcompanyingPerformanceChainRatio,
 
 
-                ExistPricePerformance = groupPerformance.ExistPricePerformance,
-                ExistPricePerformanceRatio = groupPerformance.ExistPricePerformanceRatio,
-                ExistPricePerformanceYearOnYear = groupPerformance.ExistPricePerformanceYearOnYear,
-                ExistPricePerformanceChainRatio = groupPerformance.ExistPricePerformanceChainRatio,
+                ZeroPricePerformance = groupPerformance.MonthDataVo.ZeroPricePerformance,
+                ZeroPricePerformanceRatio = groupPerformance.MonthDataVo.ZeroPricePerformanceRatio,
+                ZeroPricePerformanceYearOnYear = groupPerformance.MonthDataVo.ZeroPricePerformanceYearOnYear,
+                ZeroPricePerformanceChainRatio = groupPerformance.MonthDataVo.ZeroPricePerformanceChainRatio,
 
 
-                HistorySendDuringMonthDeal = groupPerformance.HistorySendDuringMonthDeal,
-                HistorySendDuringMonthDealPerformanceRatio = groupPerformance.HistorySendDuringMonthDealPerformanceRatio,
-                HistorySendDuringMonthDealYearOnYear = groupPerformance.HistorySendDuringMonthDealYearOnYear,
-                HistorySendDuringMonthDealChainRatio = groupPerformance.HistorySendDuringMonthDealChainRatio,
+                ExistPricePerformance = groupPerformance.MonthDataVo.ExistPricePerformance,
+                ExistPricePerformanceRatio = groupPerformance.MonthDataVo.ExistPricePerformanceRatio,
+                ExistPricePerformanceYearOnYear = groupPerformance.MonthDataVo.ExistPricePerformanceYearOnYear,
+                ExistPricePerformanceChainRatio = groupPerformance.MonthDataVo.ExistPricePerformanceChainRatio,
 
 
-                DuringMonthSendDuringMonthDeal = groupPerformance.DuringMonthSendDuringMonthDeal,
-                DuringMonthSendDuringMonthDealPerformanceRatio = groupPerformance.DuringMonthSendDuringMonthDealPerformanceRatio,
-                DuringMonthSendDuringMonthDealYearOnYear = groupPerformance.DuringMonthSendDuringMonthDealYearOnYear,
-                DuringMonthSendDuringMonthDealChainRatio = groupPerformance.DuringMonthSendDuringMonthDealChainRatio,
+                HistorySendDuringMonthDeal = groupPerformance.MonthDataVo.HistorySendDuringMonthDeal,
+                HistorySendDuringMonthDealPerformanceRatio = groupPerformance.MonthDataVo.HistorySendDuringMonthDealPerformanceRatio,
+                HistorySendDuringMonthDealYearOnYear = groupPerformance.MonthDataVo.HistorySendDuringMonthDealYearOnYear,
+                HistorySendDuringMonthDealChainRatio = groupPerformance.MonthDataVo.HistorySendDuringMonthDealChainRatio,
+
+
+                DuringMonthSendDuringMonthDeal = groupPerformance.MonthDataVo.DuringMonthSendDuringMonthDeal,
+                DuringMonthSendDuringMonthDealPerformanceRatio = groupPerformance.MonthDataVo.DuringMonthSendDuringMonthDealPerformanceRatio,
+                DuringMonthSendDuringMonthDealYearOnYear = groupPerformance.MonthDataVo.DuringMonthSendDuringMonthDealYearOnYear,
+                DuringMonthSendDuringMonthDealChainRatio = groupPerformance.MonthDataVo.DuringMonthSendDuringMonthDealChainRatio,
 
 
             };
 
-            return ResultData<LiveAnchorMonthPerformanceVo>.Success().AddData("performance", monthPerformanceRatioDto);
+            //数据组合
+            LiveAnchorMonthPerformanceVo todayPerformanceRatioDto = new LiveAnchorMonthPerformanceVo
+            {
+                CueerntMonthTotalPerformance = groupPerformance.CurrentDateDataVo.CueerntMonthTotalPerformance,
+                TotalPerformanceYearOnYear = groupPerformance.CurrentDateDataVo.TotalPerformanceYearOnYear,
+                TotalPerformanceChainratio = groupPerformance.CurrentDateDataVo.TotalPerformanceChainratio,
+                TotalPerformanceTarget = groupPerformance.CurrentDateDataVo.TotalPerformanceTarget,
+                TotalPerformanceTargetComplete = groupPerformance.CurrentDateDataVo.TotalPerformanceTargetComplete,
+
+                CurrentMonthNewCustomerPerformance = groupPerformance.CurrentDateDataVo.CurrentMonthNewCustomerPerformance,
+                NewCustomerPerformanceRatio = groupPerformance.CurrentDateDataVo.NewCustomerPerformanceRatio,
+                NewCustomerPerformanceYearOnYear = groupPerformance.CurrentDateDataVo.NewCustomerPerformanceYearOnYear,
+                NewCustomerPerformanceChainRatio = groupPerformance.CurrentDateDataVo.NewCustomerPerformanceChainRatio,
+                NewCustomerPerformanceTarget = groupPerformance.CurrentDateDataVo.NewCustomerPerformanceTarget,
+                NewCustomerPerformanceTargetComplete = groupPerformance.CurrentDateDataVo.NewCustomerPerformanceTargetComplete,
+
+                CurrentMonthOldCustomerPerformance = groupPerformance.CurrentDateDataVo.CurrentMonthOldCustomerPerformance,
+                OldCustomerPerformanceRatio = groupPerformance.CurrentDateDataVo.OldCustomerPerformanceRatio,
+                OldCustomerPerformanceYearOnYear = groupPerformance.CurrentDateDataVo.OldCustomerPerformanceYearOnYear,
+                OldCustomerPerformanceChainRatio = groupPerformance.CurrentDateDataVo.OldCustomerPerformanceChainRatio,
+                OldCustomerTarget = groupPerformance.CurrentDateDataVo.OldCustomerTarget,
+                OldCustomerTargetComplete = groupPerformance.CurrentDateDataVo.OldCustomerTargetComplete,
+
+
+                PictureConsultationPerformance = groupPerformance.CurrentDateDataVo.PictureConsultationPerformance,
+                PictureConsultationPerformanceRatio = groupPerformance.CurrentDateDataVo.PictureConsultationPerformanceRatio,
+                PictureConsultationPerformanceYearOnYear = groupPerformance.CurrentDateDataVo.PictureConsultationPerformanceYearOnYear,
+                PictureConsultationPerformanceChainRatio = groupPerformance.CurrentDateDataVo.PictureConsultationPerformanceChainRatio,
+
+                VideoConsultationPerformance = groupPerformance.CurrentDateDataVo.VideoConsultationPerformance,
+                VideoConsultationPerformanceRatio = groupPerformance.CurrentDateDataVo.VideoConsultationPerformanceRatio,
+                VideoConsultationPerformanceYearOnYear = groupPerformance.CurrentDateDataVo.VideoConsultationPerformanceYearOnYear,
+                VideoConsultationPerformanceChainRatio = groupPerformance.CurrentDateDataVo.VideoConsultationPerformanceChainRatio,
+
+
+                AcompanyingPerformance = groupPerformance.CurrentDateDataVo.AcompanyingPerformance,
+                AcompanyingPerformanceRatio = groupPerformance.CurrentDateDataVo.AcompanyingPerformanceRatio,
+                AcompanyingPerformanceYearOnYear = groupPerformance.CurrentDateDataVo.AcompanyingPerformanceYearOnYear,
+                AcompanyingPerformanceChainRatio = groupPerformance.CurrentDateDataVo.AcompanyingPerformanceChainRatio,
+
+
+                NotAcompanyingPerformance = groupPerformance.CurrentDateDataVo.NotAcompanyingPerformance,
+                NotAcompanyingPerformanceRatio = groupPerformance.CurrentDateDataVo.NotAcompanyingPerformanceRatio,
+                NotAcompanyingPerformanceYearOnYear = groupPerformance.CurrentDateDataVo.NotAcompanyingPerformanceYearOnYear,
+                NotAcompanyingPerformanceChainRatio = groupPerformance.CurrentDateDataVo.NotAcompanyingPerformanceChainRatio,
+
+
+                ZeroPricePerformance = groupPerformance.CurrentDateDataVo.ZeroPricePerformance,
+                ZeroPricePerformanceRatio = groupPerformance.CurrentDateDataVo.ZeroPricePerformanceRatio,
+                ZeroPricePerformanceYearOnYear = groupPerformance.CurrentDateDataVo.ZeroPricePerformanceYearOnYear,
+                ZeroPricePerformanceChainRatio = groupPerformance.CurrentDateDataVo.ZeroPricePerformanceChainRatio,
+
+
+                ExistPricePerformance = groupPerformance.CurrentDateDataVo.ExistPricePerformance,
+                ExistPricePerformanceRatio = groupPerformance.CurrentDateDataVo.ExistPricePerformanceRatio,
+                ExistPricePerformanceYearOnYear = groupPerformance.CurrentDateDataVo.ExistPricePerformanceYearOnYear,
+                ExistPricePerformanceChainRatio = groupPerformance.CurrentDateDataVo.ExistPricePerformanceChainRatio,
+
+
+                HistorySendDuringMonthDeal = groupPerformance.CurrentDateDataVo.HistorySendDuringMonthDeal,
+                HistorySendDuringMonthDealPerformanceRatio = groupPerformance.CurrentDateDataVo.HistorySendDuringMonthDealPerformanceRatio,
+                HistorySendDuringMonthDealYearOnYear = groupPerformance.CurrentDateDataVo.HistorySendDuringMonthDealYearOnYear,
+                HistorySendDuringMonthDealChainRatio = groupPerformance.CurrentDateDataVo.HistorySendDuringMonthDealChainRatio,
+
+
+                DuringMonthSendDuringMonthDeal = groupPerformance.CurrentDateDataVo.DuringMonthSendDuringMonthDeal,
+                DuringMonthSendDuringMonthDealPerformanceRatio = groupPerformance.CurrentDateDataVo.DuringMonthSendDuringMonthDealPerformanceRatio,
+                DuringMonthSendDuringMonthDealYearOnYear = groupPerformance.CurrentDateDataVo.DuringMonthSendDuringMonthDealYearOnYear,
+                DuringMonthSendDuringMonthDealChainRatio = groupPerformance.CurrentDateDataVo.DuringMonthSendDuringMonthDealChainRatio,
+
+
+            };
+
+            LiveAnchorMonthAndDatePerformanceVo liveAnchorMonthAndDatePerformanceVo = new LiveAnchorMonthAndDatePerformanceVo();
+            liveAnchorMonthAndDatePerformanceVo.MonthDataVo = monthPerformanceRatioDto;
+            liveAnchorMonthAndDatePerformanceVo.CurrentDateDataVo = todayPerformanceRatioDto;
+            return ResultData<LiveAnchorMonthAndDatePerformanceVo>.Success().AddData("performance", liveAnchorMonthAndDatePerformanceVo);
         }
 
         #endregion
@@ -320,28 +395,36 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// <summary>
         /// 获取机构业绩数据
         /// </summary>
-        /// <param name="year"></param>
-        /// <param name="month"></param>
+        /// <param name="date"></param>
         /// <returns></returns>
         [HttpGet("hospitalPerformance")]
-        public async Task<ResultData<List<HospitalPerformanceVo>>> GetHospitalPerformanceAsync(int? year, int? month)
+        public async Task<ResultData<List<HospitalPerformanceVo>>> GetHospitalPerformanceAsync(DateTime date)
         {
             List<HospitalPerformanceVo> hospitalPerformanceVo = new List<HospitalPerformanceVo>();
-            var hospitalPerformanceDatasResult = await hospitalPerformanceService.GetHospitalPerformanceBymonthBWAsync(year, month);
+            var hospitalPerformanceDatasResult = await hospitalPerformanceService.GetHospitalPerformanceBymonthBWAsync(date);
             var hospitalPerformanceDatasDecending = hospitalPerformanceDatasResult.OrderByDescending(x => x.TotalAchievement).ToList();
             var hospitalPerformanceDatas = hospitalPerformanceDatasDecending.ToList();
             // var hospitalPerformanceDatas = hospitalPerformanceDatasDecending.Take(20).ToList();
             var totalAchievement = hospitalPerformanceDatasDecending.Sum(x => x.TotalAchievement);
+            var todaySumAchievement = hospitalPerformanceDatas.Sum(x => x.TodayTotalAchievement);
             foreach (var x in hospitalPerformanceDatas)
             {
                 HospitalPerformanceVo hospitalOperatingDataVo = new HospitalPerformanceVo();
                 hospitalOperatingDataVo.HospitalName = x.HospitalName;
                 hospitalOperatingDataVo.HospitalLogo = x.HospitalLogo;
+                //当月业绩
                 hospitalOperatingDataVo.NewCustomerAchievement = DecimalExtension.ChangePriceToTenThousand(x.NewCustomerAchievement);
                 hospitalOperatingDataVo.OldCustomerAchievement = DecimalExtension.ChangePriceToTenThousand(x.OldCustomerAchievement);
                 hospitalOperatingDataVo.TotalAchievement = DecimalExtension.ChangePriceToTenThousand(x.TotalAchievement);
                 hospitalOperatingDataVo.NewOrOldCustomerRate = x.NewOrOldCustomerRate;
                 hospitalOperatingDataVo.TotalAchievementRatio = DecimalExtension.CalculateTargetComplete(x.TotalAchievement, totalAchievement);
+
+                //当日业绩
+                hospitalOperatingDataVo.TodayNewCustomerAchievement = DecimalExtension.ChangePriceToTenThousand(x.TodayNewCustomerAchievement);
+                hospitalOperatingDataVo.TodayOldCustomerAchievement = DecimalExtension.ChangePriceToTenThousand(x.TodayOldCustomerAchievement);
+                hospitalOperatingDataVo.TodayTotalAchievement = DecimalExtension.ChangePriceToTenThousand(x.TodayTotalAchievement);
+                hospitalOperatingDataVo.TodayNewOrOldCustomerRate = x.TodayNewOrOldCustomerRate;
+                hospitalOperatingDataVo.TodayTotalAchievementRatio = DecimalExtension.CalculateTargetComplete(x.TodayTotalAchievement, todaySumAchievement);
                 hospitalPerformanceVo.Add(hospitalOperatingDataVo);
             }
 

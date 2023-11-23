@@ -1368,6 +1368,36 @@ namespace Fx.Amiya.Service
 
             return returnInfo;
         }
+
+        /// <summary>
+        /// 根据到院id和时间获取当月上门成交业绩
+        /// </summary>
+        /// <param name="recordStartDate"></param>
+        /// <param name="recordEndDate"></param>
+        /// <param name="hospitalIds"></param>
+        /// <returns></returns>
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetMonthSendPerformanceByHospitalIdListAsync(List<int> hospitalIds, DateTime recordStartDate,DateTime recordEndDate)
+        {
+            var result = await dalContentPlatFormOrderDealInfo.GetAll()
+                .Where(o => o.IsToHospital == true && o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= recordStartDate && o.ToHospitalDate < recordEndDate)
+                .Where(o => hospitalIds.Count == 0 || hospitalIds.Contains(o.LastDealHospitalId.Value))
+                .ToListAsync();
+            var returnInfo = result.Select(
+                  d =>
+                       new ContentPlatFormOrderDealInfoDto
+                       {
+                           IsToHospital = d.IsToHospital,
+                           IsDeal = d.IsDeal,
+                           IsOldCustomer = d.IsOldCustomer,
+                           ToHospitalType = d.ToHospitalType,
+                           Price = d.Price,
+                           ToHospitalDate = d.ToHospitalDate,
+                           DealDate = d.DealDate,
+                       }
+                ).ToList();
+
+            return returnInfo;
+        }
         /// <summary>
         /// 根据到院id与月份获取上门成交业绩
         /// </summary>

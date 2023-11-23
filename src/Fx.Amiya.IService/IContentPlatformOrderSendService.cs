@@ -188,6 +188,14 @@ namespace Fx.Amiya.IService
         Task<List<SendContentPlatformOrderDto>> GetTodayOrderSendDataAsync(DateTime startDate);
 
         /// <summary>
+        /// 根据时间获取已派单数据（暂未使用）
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+        Task<List<SendContentPlatformOrderDto>> GetOrderSendDataByDateAsync(DateTime startDate, DateTime endDate);
+
+        /// <summary>
         /// 根据医院id与月份获取派单业绩
         /// </summary>
         /// <param name="hospitalId"></param>

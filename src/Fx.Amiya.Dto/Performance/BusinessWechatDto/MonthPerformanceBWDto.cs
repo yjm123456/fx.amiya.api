@@ -6,6 +6,18 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Dto.Performance.BusinessWechatDto
 {
+    public class LiveAnchorMonthAndDatePerformanceDto
+    {
+        /// <summary>
+        /// 月数据
+        /// </summary>
+        public MonthPerformanceBWDto MonthDataVo { get; set; }
+        /// <summary>
+        /// 日数据
+        /// </summary>
+        public MonthPerformanceBWDto CurrentDateDataVo { get; set; }
+    }
+
     /// <summary>
     /// 企业微信达人业绩输出类
     /// </summary>
@@ -13,7 +25,7 @@ namespace Fx.Amiya.Dto.Performance.BusinessWechatDto
     {
         #region【总业绩】
         /// <summary>
-        /// 本月总业绩
+        /// 总业绩
         /// </summary>
         public decimal CueerntMonthTotalPerformance { get; set; }
         /// <summary>
@@ -36,7 +48,7 @@ namespace Fx.Amiya.Dto.Performance.BusinessWechatDto
 
         #region 【新客业绩】
         /// <summary>
-        /// 当前月新客业绩
+        /// 新客业绩
         /// </summary>
         public decimal CurrentMonthNewCustomerPerformance { get; set; }
         /// <summary>
@@ -63,7 +75,7 @@ namespace Fx.Amiya.Dto.Performance.BusinessWechatDto
 
         #region【老客业绩】
         /// <summary>
-        /// 当前月老客业绩
+        /// 老客业绩
         /// </summary>
         public decimal CurrentMonthOldCustomerPerformance { get; set; }
         /// <summary>

@@ -49,6 +49,10 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.Performance
         /// 新客业绩
         /// </summary>
         public decimal NewCustomerAchievement { get; set; }
+        /// <summary>
+        /// 今日新客业绩
+        /// </summary>
+        public decimal TodayNewCustomerAchievement { get; set; }
 
         /// <summary>
         /// 新客客单价
@@ -64,6 +68,10 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.Performance
         /// 老客业绩
         /// </summary>
         public decimal OldCustomerAchievement { get; set; }
+        /// <summary>
+        /// 今日老客业绩
+        /// </summary>
+        public decimal TodayOldCustomerAchievement { get; set; }
 
         /// <summary>
         /// 老客客单价
@@ -74,16 +82,28 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.Performance
         /// 总业绩
         /// </summary>
         public decimal TotalAchievement { get; set; }
+        /// <summary>
+        /// 今日总业绩
+        /// </summary>
+        public decimal TodayTotalAchievement { get; set; }
 
         /// <summary>
         /// 业绩贡献值
         /// </summary>
         public decimal? TotalAchievementRatio { get; set; }
+        /// <summary>
+        /// 今日业绩贡献值
+        /// </summary>
+        public decimal? TodayTotalAchievementRatio { get; set; }
 
         /// <summary>
         /// 新老客占比
         /// </summary>
         public string NewOrOldCustomerRate { get; set; }
+        /// <summary>
+        /// 今日新老客占比
+        /// </summary>
+        public string TodayNewOrOldCustomerRate { get; set; }
 
     }
 }

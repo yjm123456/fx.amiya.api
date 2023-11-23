@@ -936,14 +936,14 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
-        /// 获取今天已派单数据
+        /// 获取选取时间至今已派单数据
         /// </summary>
         /// <param name="startDate"></param>
         /// <returns></returns>
         public async Task<List<SendContentPlatformOrderDto>> GetTodayOrderSendDataAsync(DateTime startDate)
         {
             DateTime startrq = startDate;
-            DateTime endrq = DateTime.Now.Date.AddDays(1);
+            DateTime endrq = DateTime.Now.Date.AddDays(1).AddSeconds(-1);
             var orders = from d in _dalContentPlatformOrderSend.GetAll().Include(x => x.HospitalInfo).ThenInclude(x => x.CooperativeHospitalCity)
                          where d.SendDate >= startrq && d.SendDate < endrq
                          select new SendContentPlatformOrderDto
@@ -958,6 +958,29 @@ namespace Fx.Amiya.Service
             var result = orders.ToList();
             return result;
         }
+
+        /// <summary>
+        /// 根据时间获取已派单数据（暂未使用）
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <returns></returns>
+        public async Task<List<SendContentPlatformOrderDto>> GetOrderSendDataByDateAsync(DateTime startDate ,DateTime endDate)
+        {
+            var orders = from d in _dalContentPlatformOrderSend.GetAll().Include(x => x.HospitalInfo).ThenInclude(x => x.CooperativeHospitalCity)
+                         where d.SendDate >= startDate && d.SendDate < endDate
+                         select new SendContentPlatformOrderDto
+                         {
+                             OrderId = d.ContentPlatformOrderId,
+                             SendHospitalId = d.HospitalId,
+                             ThumbPictureUrl = d.HospitalInfo.ThumbPicUrl,
+                             SendHospital = d.HospitalInfo.Name,
+                             City = d.HospitalInfo.CooperativeHospitalCity.Name,
+                             SendDate = d.SendDate,
+                         };
+            var result = orders.ToList();
+            return result;
+        }
+
 
         /// <summary>
         /// 根据医院id与月份获取派单业绩

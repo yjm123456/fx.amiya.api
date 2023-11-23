@@ -243,12 +243,11 @@ namespace Fx.Amiya.IService
         /// <summary>
         ///  自播/合作达人总业绩
         /// </summary>
-        /// <param name="year"></param>
-        /// <param name="month"></param>
+        /// <param name="date">日期</param>
         /// <param name="liveAnchorBaseId"></param>
         /// <param name="isSelfLiveAnchor"></param>
         /// <returns></returns>
-        Task<MonthPerformanceBWDto> GetMonthPerformanceBySelfLiveAnchorAsync(int year, int month, string liveAnchorBaseId, bool? isSelfLiveAnchor);
+        Task<LiveAnchorMonthAndDatePerformanceDto> GetMonthPerformanceBySelfLiveAnchorAsync(DateTime date, string liveAnchorBaseId, bool? isSelfLiveAnchor);
 
         /// <summary>
         /// 助理总体业绩
