@@ -550,5 +550,98 @@ namespace Fx.Amiya.Service
             result.TardeId = order.TradeId;
             return result;
         }
+        /// <summary>
+        /// 创建退款公共请求参数
+        /// </summary>
+        /// <returns></returns>
+        private string BuildCheckOrderStatusCommonParam(HuiShouQianCheckOrderParam huiShouQianCheckOrderParam)
+        {
+            HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
+            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
+            huiShouQianPackageInfo.Key = payInfo.PartnerKey;
+            huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
+            huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;
+            HuiShouQianCheckOrderCommonParam huiShouQianCommonInfo = new HuiShouQianCheckOrderCommonParam();
+            huiShouQianCommonInfo.SignContent = huiShouQianCheckOrderParam;
+            var serializerSettings = new JsonSerializerSettings();
+            serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            string signContent = JsonConvert.SerializeObject(huiShouQianCheckOrderParam, serializerSettings);
+            var signData = BuildPayParamString(huiShouQianCommonInfo.Method, huiShouQianCommonInfo.Version, huiShouQianCommonInfo.Format, huiShouQianCommonInfo.MerchantNo, huiShouQianCommonInfo.SignType, signContent, huiShouQianPackageInfo.Key);
+            RSAHelper rsa = new RSAHelper(RSAType.RSA2, Encoding.UTF8, huiShouQianPackageInfo.PrivateKey, "");
+            var sign = rsa.Sign(signData);
+            huiShouQianCommonInfo.Sign = sign;
+            return BuildRefundQueryParamString(huiShouQianCommonInfo.Method, huiShouQianCommonInfo.Version, huiShouQianCommonInfo.Format, huiShouQianCommonInfo.MerchantNo, huiShouQianCommonInfo.SignType, signContent, sign);
+        }
+        public async Task CheckOrderStatus(string transNo)
+        {
+            HuiShouQianCheckOrderParam query = new HuiShouQianCheckOrderParam();
+            query.transNo = transNo;
+            var para = BuildCheckOrderStatusCommonParam(query);
+            var result = await PostCheckOrder("https://api.huishouqian.com/api/acquiring" + "?", para);
+        }
+        internal async Task<RefundOrderResult> PostCheckOrder(string url, string postData)
+        {
+
+            string text = string.Empty;
+
+            Uri requestUri = new Uri(url, false);
+            HttpWebRequest httpWebRequest;
+
+            httpWebRequest = (HttpWebRequest)WebRequest.Create(requestUri);
+
+            Encoding uTF = Encoding.UTF8;
+            byte[] bytes = uTF.GetBytes(postData);
+            httpWebRequest.Method = "POST";
+            httpWebRequest.ContentType = "application/x-www-form-urlencoded";
+            httpWebRequest.KeepAlive = true;
+
+            Stream requestStream = httpWebRequest.GetRequestStream();
+            requestStream.Write(bytes, 0, bytes.Length);
+            requestStream.Close();
+            requestStream.Dispose();
+            using (HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+            {
+                using (Stream responseStream = httpWebResponse.GetResponseStream())
+                {
+                    Encoding uTF2 = Encoding.UTF8;
+                    StreamReader streamReader = new StreamReader(responseStream, uTF2);
+                    text = streamReader.ReadToEnd();
+                    text = text.Replace("\\\"{", "{");
+                    text = text.TrimStart('\"');
+                    text = text.TrimEnd('\"');
+                    text = text.Replace("\\", "");
+                    text = text.Replace("\"{", "{");
+                    text = text.Replace("\"}\"", "\"}");
+                    var response = JsonConvert.DeserializeObject<HuiShouQianRefundResult>(text, new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore
+                    });
+                    if (response.Success)
+                    {
+                        if (response.Result.OrderStatus == "FAIL")
+                        {
+                            RefundOrderResult refundOrderResult = new RefundOrderResult();
+                            refundOrderResult.Result = false;
+                            refundOrderResult.Msg = response.Result.RespMsg;
+                            return refundOrderResult;
+                        }
+                        else
+                        {
+                            RefundOrderResult refundOrderResult = new RefundOrderResult();
+                            refundOrderResult.Result = true;
+                            refundOrderResult.TradeNo = response.Result.TradeNo;
+                            return refundOrderResult;
+                        }
+                    }
+                    else
+                    {
+                        RefundOrderResult refundOrderResult = new RefundOrderResult();
+                        refundOrderResult.Result = false;
+                        refundOrderResult.Msg = response.Result.RespMsg;
+                        return refundOrderResult;
+                    }
+                }
+            }
+        }
     }
 }

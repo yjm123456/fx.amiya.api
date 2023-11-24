@@ -124,7 +124,11 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 导出数据
         /// </summary>
-        Export = 4
+        Export = 4,
+        /// <summary>
+        /// 支付回调
+        /// </summary>
+        Pay=5
 
     }
 

@@ -1237,6 +1237,9 @@ namespace Fx.Amiya.Service
                 case 4:
                     requestTypeText = "数据导出";
                     break;
+                case 5:
+                    requestTypeText = "支付回调";
+                    break;
                 default:
                     requestTypeText = "其他";
                     break;

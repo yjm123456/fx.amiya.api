@@ -4604,56 +4604,64 @@ namespace Fx.Amiya.Service
         /// <param name="Phone"></param>
         private void BuildSendMailInfo(byte appType, string orderId, decimal intergrationQuantity, string goodsName, string Phone)
         {
-            SendMails sendMails = new SendMails();
-            var sub = "有新顾客在“" + ServiceClass.GetAppTypeText(appType) + "”下单啦，订单号为：" + orderId + "，请及时跟进哦！";
-            if (appType == (byte)AppType.MiniProgram && intergrationQuantity > 0)
+            try
             {
-                sub = "有新的顾客在“积分兑换”中兑换了礼品“" + goodsName + "”，请及时跟进哦！";
-            }
-            //向管理员发送邮箱通知
-            var bindCustomerInfos = from z in dalBindCustomerService.GetAll()
-                                    where z.BuyerPhone == Phone
-                                    select z;
-            var bindCustmerInfo = bindCustomerInfos.FirstOrDefault();
-            var empInfos = from k in dalAmiyaEmployee.GetAll()
-                           select k;
-            if (bindCustmerInfo != null)
-            {
-                var empId = bindCustmerInfo.CustomerServiceId;
-                var empInfoRes = from m in empInfos
-                                 where m.Id == empId
-                                 select m;
-                var empInfo = empInfoRes.FirstOrDefault();
-                if (empInfo != null)
+                SendMails sendMails = new SendMails();
+                var sub = "有新顾客在“" + ServiceClass.GetAppTypeText(appType) + "”下单啦，订单号为：" + orderId + "，请及时跟进哦！";
+                if (appType == (byte)AppType.MiniProgram && intergrationQuantity > 0)
                 {
-                    var email = empInfo.Email;
-                    if (email == "0" || string.IsNullOrEmpty(email))
+                    sub = "有新的顾客在“积分兑换”中兑换了礼品“" + goodsName + "”，请及时跟进哦！";
+                }
+                //向管理员发送邮箱通知
+                var bindCustomerInfos = from z in dalBindCustomerService.GetAll()
+                                        where z.BuyerPhone == Phone
+                                        select z;
+                var bindCustmerInfo = bindCustomerInfos.FirstOrDefault();
+                var empInfos = from k in dalAmiyaEmployee.GetAll()
+                               select k;
+                if (bindCustmerInfo != null)
+                {
+                    var empId = bindCustmerInfo.CustomerServiceId;
+                    var empInfoRes = from m in empInfos
+                                     where m.Id == empId
+                                     select m;
+                    var empInfo = empInfoRes.FirstOrDefault();
+                    if (empInfo != null)
                     {
-                        var employee = empInfos.Include(e => e.AmiyaPositionInfo).Where(e => e.AmiyaPositionInfo.Name == "客服主管" && e.Valid == true).ToListAsync();
-                        foreach (var x in employee.Result)
+                        var email = empInfo.Email;
+                        if (email == "0" || string.IsNullOrEmpty(email))
                         {
-                            email = x.Email;
-                            if (email == "0" || string.IsNullOrEmpty(email))
-                                continue;
+                            var employee = empInfos.Include(e => e.AmiyaPositionInfo).Where(e => e.AmiyaPositionInfo.Name == "客服主管" && e.Valid == true).ToListAsync();
+                            foreach (var x in employee.Result)
+                            {
+                                email = x.Email;
+                                if (email == "0" || string.IsNullOrEmpty(email))
+                                    continue;
+                                sendMails.sendMail("smtp.qq.com", "3023330386@qq.com", "kivbmbikthsmdejf", "啊美雅", "3023330386@qq.com", email, "客户下单提示", sub);
+                            }
+                        }
+                        else
+                        {
                             sendMails.sendMail("smtp.qq.com", "3023330386@qq.com", "kivbmbikthsmdejf", "啊美雅", "3023330386@qq.com", email, "客户下单提示", sub);
                         }
                     }
-                    else
+                }
+                else
+                {
+                    var employee = empInfos.Include(e => e.AmiyaPositionInfo).Where(e => e.AmiyaPositionInfo.Name == "客服主管" && e.Valid == true).ToListAsync();
+                    foreach (var x in employee.Result)
                     {
+                        var email = x.Email;
+                        if (email == "0" || string.IsNullOrEmpty(email))
+                            continue;
                         sendMails.sendMail("smtp.qq.com", "3023330386@qq.com", "kivbmbikthsmdejf", "啊美雅", "3023330386@qq.com", email, "客户下单提示", sub);
                     }
                 }
             }
-            else
+            catch (Exception ex)
             {
-                var employee = empInfos.Include(e => e.AmiyaPositionInfo).Where(e => e.AmiyaPositionInfo.Name == "客服主管" && e.Valid == true).ToListAsync();
-                foreach (var x in employee.Result)
-                {
-                    var email = x.Email;
-                    if (email == "0" || string.IsNullOrEmpty(email))
-                        continue;
-                    sendMails.sendMail("smtp.qq.com", "3023330386@qq.com", "kivbmbikthsmdejf", "啊美雅", "3023330386@qq.com", email, "客户下单提示", sub);
-                }
+
+               
             }
         }
         /// <summary>
@@ -4941,6 +4949,7 @@ namespace Fx.Amiya.Service
                     }
                 }
                 orderTrade.StatusCode = OrderStatusCode.TRADE_CLOSED_BY_TAOBAO;
+                orderTrade.UpdateDate = DateTime.Now;
                 await dalOrderTrade.UpdateAsync(orderTrade, true);
                 unitOfWork.Commit();
             }
