@@ -3252,7 +3252,7 @@ namespace Fx.Amiya.Service
             FxPageInfo<OrderTradeDto> orderTradePageInfo = new FxPageInfo<OrderTradeDto>();
             orderTradePageInfo.TotalCount = await orderTradeList.CountAsync();
             var selectResult = await orderTradeList.OrderByDescending(e => e.CreateDate).ToListAsync();
-            orderTradePageInfo.List = selectResult.Skip((pageNum - 1) * pageSize).Take(10).ToList();
+            orderTradePageInfo.List = selectResult.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
             foreach (var x in orderTradePageInfo.List)
             {
                 if (x.OrderIdsList.Count > 0)
