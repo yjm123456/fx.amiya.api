@@ -199,6 +199,10 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 抖音今日投流费用
         /// </summary>
         public decimal TikTokFlowInvestmentNum { get; set; }
+        /// <summary>
+        /// 抖音橱窗收入
+        /// </summary>
+        public decimal TikTokShowcaseIncome { get; set; }
 
         /// <summary>
         /// 今日发布量（当前渠道发布量）
@@ -258,6 +262,10 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 今日运营渠道投流费用（当前渠道投流费用）
         /// </summary>
         public decimal FlowInvestmentNum { get; set; }
+        /// <summary>
+        /// 今日抖音橱窗收入
+        /// </summary>
+        public decimal TikTokShowcaseIncome { get; set; }
         ///// <summary>
         ///// 今日线索量
         ///// </summary>

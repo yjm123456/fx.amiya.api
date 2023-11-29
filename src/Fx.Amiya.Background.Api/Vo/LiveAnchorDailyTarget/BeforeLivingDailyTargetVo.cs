@@ -37,6 +37,10 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
 
         public int SendNum { get; set; }
         /// <summary>
+        /// 今日抖音橱窗收入
+        /// </summary>
+        public decimal TikTokShowcaseIncome { get; set; }
+        /// <summary>
         /// 填报日期
         /// </summary>
 

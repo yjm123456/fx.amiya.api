@@ -17,6 +17,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.OperationEmpId).HasColumnName("operation_empId").HasColumnType("datetime").IsRequired();
             builder.Property(e => e.FlowInvestmentNum).HasColumnName("flow_investment_num").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.SendNum).HasColumnName("send_num").HasColumnType("int").IsRequired();
+            builder.Property(e => e.TikTokShowcaseIncome).HasColumnName("tiktok_showcase_income").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.RecordDate).HasColumnName("record_date").HasColumnType("datetime").IsRequired();
             builder.Property(e => e.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
             builder.Property(e => e.UpdateDate).HasColumnName("update_date").HasColumnType("datetime").IsRequired(false);

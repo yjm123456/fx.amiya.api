@@ -218,6 +218,30 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// </summary>
         public string TikTokFlowinvestmentCompleteRate { get; set; }
 
+        /// <summary>
+        /// 今日抖音橱窗收入
+        /// </summary>
+        
+        public decimal TikTokShowcaseIncome { get; set; }
+
+        /// <summary>
+        /// 抖音橱窗收入目标
+        /// </summary>
+        
+        public decimal TikTokShowcaseIncomeTarget { get; set; }
+
+
+        /// <summary>
+        /// 累计抖音橱窗收入
+        /// </summary>
+        
+        public decimal CumulativeTikTokShowcaseIncome { get; set; }
+
+        /// <summary>
+        /// 抖音橱窗收入完成率
+        /// </summary>
+        
+        public string TikTokShowcaseIncomeCompleteRate { get; set; }
 
         /// <summary>
         /// 小红书运营人员Id

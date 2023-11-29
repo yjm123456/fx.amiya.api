@@ -22,6 +22,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.TikTokOperationEmployeeId).HasColumnName("tik_tok_operation_employee_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.TikTokSendNum).HasColumnName("tiktok_send_num").HasColumnType("int").IsRequired();
             builder.Property(t => t.TikTokFlowInvestmentNum).HasColumnName("tiktok_flow_investment_num").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(t=>t.TikTokShowcaseIncome).HasColumnName("tiktok_showcase_income").HasColumnType("decimal(12,2)").IsRequired();
 
             builder.Property(t => t.ZhihuOperationEmployeeId).HasColumnName("zhihu_operation_employee_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.ZhihuSendNum).HasColumnName("zhihu_send_num").HasColumnType("int").IsRequired();

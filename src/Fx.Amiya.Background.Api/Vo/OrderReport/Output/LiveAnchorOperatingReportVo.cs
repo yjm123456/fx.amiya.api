@@ -82,7 +82,30 @@ namespace Fx.Amiya.Background.Api.Vo.OrderReport.OutPut
         [Description("抖音投流费用完成率")]
         public string TikTokFlowinvestmentCompleteRate { get; set; }
 
-        
+        /// <summary>
+        /// 今日抖音橱窗收入
+        /// </summary>
+        [Description("今日抖音橱窗收入")]
+        public decimal TikTokShowcaseIncome { get; set; }
+
+        /// <summary>
+        /// 抖音橱窗收入目标
+        /// </summary>
+        [Description("抖音橱窗收入目标")]
+        public decimal TikTokShowcaseIncomeTarget { get; set; }
+
+
+        /// <summary>
+        /// 累计抖音橱窗收入
+        /// </summary>
+        [Description("抖音橱窗累计收入")]
+        public decimal CumulativeTikTokShowcaseIncome { get; set; }
+
+        /// <summary>
+        /// 抖音橱窗收入完成率
+        /// </summary>
+        [Description("抖音橱窗收入目标完成率")]
+        public string TikTokShowcaseIncomeCompleteRate { get; set; }
 
         #endregion
 

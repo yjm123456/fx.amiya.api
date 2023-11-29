@@ -17,6 +17,10 @@ namespace Fx.Amiya.DbModels.Model
         public int SendNum { get; set; }
 
         public DateTime RecordDate { get; set; }
+        /// <summary>
+        /// 今日抖音橱窗收入
+        /// </summary>
+        public decimal TikTokShowcaseIncome { get; set; }
 
         public LiveAnchorMonthlyTargetBeforeLiving LiveAnchorMonthlyTargetBeforeLiving { get; set; }
 

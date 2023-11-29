@@ -114,6 +114,7 @@ namespace Fx.Amiya.Service
                                           OperationEmpName = d.AmiyaEmployee.Name,
                                           FlowInvestmentNum = d.FlowInvestmentNum,
                                           SendNum = d.SendNum,
+                                          TikTokShowcaseIncome=d.TikTokShowcaseIncome
                                       };
                 var tikTokDailyInfoList = await tikTokDailyInfo.ToListAsync();
 
@@ -470,6 +471,7 @@ namespace Fx.Amiya.Service
                                               OperationEmpName = d.AmiyaEmployee.Name,
                                               FlowInvestmentNum = d.FlowInvestmentNum,
                                               SendNum = d.SendNum,
+                                              TikTokShowcaseIncome=d.TikTokShowcaseIncome
                                           };
                     BeforeLivingDailyTargetDtoList = await tikTokDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
                 }
@@ -778,6 +780,7 @@ namespace Fx.Amiya.Service
                     liveAnchorDailyTargetDto.TikTokSendNum = liveAnchorDailyTarget.SendNum;
                     liveAnchorDailyTargetDto.TikTokFlowInvestmentNum = liveAnchorDailyTarget.FlowInvestmentNum;
                     liveAnchorDailyTargetDto.RecordDate = liveAnchorDailyTarget.RecordDate;
+                    liveAnchorDailyTargetDto.TikTokShowcaseIncome = liveAnchorDailyTarget.TikTokShowcaseIncome;
                 }
                 if (type == 2)
                 {
@@ -1200,6 +1203,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.FlowInvestmentNum = addDto.TikTokFlowInvestmentNum;
                 liveAnchorDailyTarget.SendNum = addDto.TikTokSendNum;
                 liveAnchorDailyTarget.FlowInvestmentNum = addDto.FlowInvestmentNum;
+                liveAnchorDailyTarget.TikTokShowcaseIncome = addDto.TikTokShowcaseIncome;
                 liveAnchorDailyTarget.CreateDate = DateTime.Now;
                 liveAnchorDailyTarget.Valid = true;
                 liveAnchorDailyTarget.UpdateDate = DateTime.Now;
@@ -1212,6 +1216,7 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTarget.CumulativeTikTokFlowinvestment = addDto.TikTokFlowInvestmentNum;
                 editLiveAnchorMonthlyTarget.CumulativeRelease = addDto.TodaySendNum;
                 editLiveAnchorMonthlyTarget.CumulativeFlowInvestment = addDto.FlowInvestmentNum;
+                editLiveAnchorMonthlyTarget.CumulativeTikTokShowcaseIncome = addDto.TikTokShowcaseIncome;
                 await _liveAnchorMonthlyTargetService.EditAsync(editLiveAnchorMonthlyTarget);
                 unitOfWork.Commit();
             }
@@ -1249,6 +1254,7 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTarget.CumulativeTikTokFlowinvestment = -liveAnchorDailyTarget.FlowInvestmentNum;
                 editLiveAnchorMonthlyTarget.CumulativeRelease = -liveAnchorDailyTarget.SendNum;
                 editLiveAnchorMonthlyTarget.CumulativeFlowInvestment = -liveAnchorDailyTarget.FlowInvestmentNum;
+                editLiveAnchorMonthlyTarget.CumulativeTikTokShowcaseIncome = -liveAnchorDailyTarget.TikTokShowcaseIncome;
                 await _liveAnchorMonthlyTargetService.EditAsync(editLiveAnchorMonthlyTarget);
 
                 liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
@@ -1256,6 +1262,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.FlowInvestmentNum = updateDto.TikTokFlowInvestmentNum;
                 liveAnchorDailyTarget.SendNum = updateDto.TikTokSendNum;
                 liveAnchorDailyTarget.FlowInvestmentNum = updateDto.FlowInvestmentNum;
+                liveAnchorDailyTarget.TikTokShowcaseIncome = updateDto.TikTokShowcaseIncome;
                 liveAnchorDailyTarget.RecordDate = updateDto.RecordDate;
                 liveAnchorDailyTarget.UpdateDate = DateTime.Now;
                 await _beforeLivingTikTokDailyTraget.UpdateAsync(liveAnchorDailyTarget, true);
@@ -1266,6 +1273,7 @@ namespace Fx.Amiya.Service
                 lasteditLiveAnchorMonthlyTarget.CumulativeTikTokFlowinvestment = updateDto.TikTokFlowInvestmentNum;
                 lasteditLiveAnchorMonthlyTarget.CumulativeRelease = updateDto.TodaySendNum;
                 lasteditLiveAnchorMonthlyTarget.CumulativeFlowInvestment = updateDto.FlowInvestmentNum;
+                lasteditLiveAnchorMonthlyTarget.CumulativeTikTokShowcaseIncome = updateDto.TikTokShowcaseIncome;
                 await _liveAnchorMonthlyTargetService.EditAsync(lasteditLiveAnchorMonthlyTarget);
                 unitOfWork.Commit();
             }
@@ -2096,7 +2104,7 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTarget.CumulativeTikTokRelease = -liveAnchorDailyTarget.TikTokSendNum;
                 editLiveAnchorMonthlyTarget.CumulativeXiaoHongShuRelease = -liveAnchorDailyTarget.XiaoHongShuSendNum;
                 editLiveAnchorMonthlyTarget.CumulativeVideoRelease = -liveAnchorDailyTarget.VideoSendNum;
-
+                editLiveAnchorMonthlyTarget.CumulativeTikTokShowcaseIncome = -liveAnchorDailyTarget.TikTokShowcaseIncome;
 
                 editLiveAnchorMonthlyTarget.CumulativeZhihuFlowinvestment = -liveAnchorDailyTarget.ZhihuFlowInvestmentNum;
                 editLiveAnchorMonthlyTarget.CumulativeSinaWeiBoFlowinvestment = -liveAnchorDailyTarget.SinaWeiBoFlowInvestmentNum;
@@ -2172,6 +2180,9 @@ namespace Fx.Amiya.Service
                                           FlowinvestmentTarget = d.LiveAnchorMonthlyTargetBeforeLiving.ZhihuFlowinvestmentTarget,
                                           CumulativeFlowinvestment = d.LiveAnchorMonthlyTargetBeforeLiving.CumulativeZhihuFlowinvestment,
                                           FlowinvestmentCompleteRate = d.LiveAnchorMonthlyTargetBeforeLiving.ZhihuFlowinvestmentCompleteRate.ToString() + "%",
+                                          TikTokShowcaseIncome=d.TikTokShowcaseIncome,
+                                          CumulativeTikTokShowcaseIncome=d.LiveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokShowcaseIncome,
+                                          TikTokShowcaseIncomeCompleteRate=d.LiveAnchorMonthlyTargetBeforeLiving.TikTokShowcaseIncomeCompleteRate.ToString()+"%",
 
                                           OperationFlowinvestmentTarget = d.LiveAnchorMonthlyTargetBeforeLiving.FlowInvestmentTarget,
                                           CumulativeOperationFlowinvestment = d.LiveAnchorMonthlyTargetBeforeLiving.CumulativeFlowInvestment,
@@ -2415,6 +2426,10 @@ namespace Fx.Amiya.Service
                     liveAnchorDailyTargetDto.TikTokReleaseTarget = x.ReleaseTarget;
                     liveAnchorDailyTargetDto.TikTokCumulativeRelease = x.CumulativeRelease;
                     liveAnchorDailyTargetDto.TikTokReleaseCompleteRate = x.ReleaseCompleteRate;
+                    liveAnchorDailyTargetDto.TikTokShowcaseIncome = x.TikTokShowcaseIncome;
+                    liveAnchorDailyTargetDto.CumulativeTikTokShowcaseIncome = x.CumulativeTikTokShowcaseIncome;
+                    liveAnchorDailyTargetDto.TikTokShowcaseIncomeCompleteRate = x.TikTokShowcaseIncomeCompleteRate;
+
                     liveAnchorDailyTargetDto.ReleaseTarget = x.MonthlyAllSendTarget;
                     liveAnchorDailyTargetDto.CumulativeRelease = x.CumulativeMonthlyAllSendNum;
                     liveAnchorDailyTargetDto.ReleaseCompleteRate = x.MonthlyAllSendNumCompleteRate;

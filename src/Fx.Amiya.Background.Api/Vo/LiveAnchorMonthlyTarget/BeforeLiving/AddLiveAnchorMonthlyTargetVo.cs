@@ -50,6 +50,10 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.BeforeLiving
         /// 抖音发布目标
         /// </summary>
         public int TikTokReleaseTarget { get; set; }
+        /// <summary>
+        /// 抖音橱窗收入目标
+        /// </summary>
+        public decimal TikTokShowcaseIncomeTarget { get; set; }
 
         /// <summary>
         /// 抖音投流费用目标

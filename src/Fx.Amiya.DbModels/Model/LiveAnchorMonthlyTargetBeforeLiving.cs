@@ -69,6 +69,21 @@ namespace Fx.Amiya.DbModels.Model
         public decimal TikTokFlowinvestmentCompleteRate { get; set; }
 
         /// <summary>
+        /// 抖音橱窗收入目标
+        /// </summary>
+        public decimal TikTokShowcaseIncomeTarget { get; set; }
+
+        /// <summary>
+        /// 累计抖音橱窗收入
+        /// </summary>
+
+        public decimal CumulativeTikTokShowcaseIncome { get; set; }
+        /// <summary>
+        /// 抖音橱窗收入完成率
+        /// </summary>
+        public decimal TikTokShowcaseIncomeCompleteRate { get; set; }
+
+        /// <summary>
         /// 知乎发布目标
         /// </summary>
         public int ZhihuReleaseTarget { get; set; }

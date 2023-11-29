@@ -53,7 +53,10 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 抖音投流费用目标
         /// </summary>
         public decimal TikTokFlowinvestmentTarget { get; set; }
-
+        /// <summary>
+        /// 抖音橱窗收入目标
+        /// </summary>
+        public decimal TikTokShowcaseIncomeTarget { get; set; }
 
         /// <summary>
         /// 小红书发布目标

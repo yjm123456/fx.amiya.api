@@ -6,6 +6,7 @@ using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.BindCustomerService;
 using Fx.Amiya.Background.Api.Vo.CustomerInfo;
 using Fx.Amiya.Dto.BindCustomerService;
+using Fx.Amiya.Dto.OperationLog;
 using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.IService;
 using Fx.Amiya.Service;
@@ -14,6 +15,7 @@ using Fx.Common;
 using Fx.Open.Infrastructure.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Fx.Amiya.Background.Api.Controllers
 {
@@ -27,17 +29,19 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IOrderService _orderService;
         private IContentPlateFormOrderService _contentPlatFormOrderService;
         private IHttpContextAccessor httpContextAccessor;
+        private IOperationLogService operationLogService;
         public BindCustomerServiceController(IBindCustomerServiceService bindCustomerServiceService,
             IOrderService orderService,
             IAmiyaEmployeeService employeeService,
             IContentPlateFormOrderService contentPlatFormOrderService,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor, IOperationLogService operationLogService)
         {
             this.employeeService = employeeService;
             this.bindCustomerServiceService = bindCustomerServiceService;
             this.httpContextAccessor = httpContextAccessor;
             _orderService = orderService;
             _contentPlatFormOrderService = contentPlatFormOrderService;
+            this.operationLogService = operationLogService;
         }
 
         /// <summary>
@@ -112,13 +116,32 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpPut("updatePublicPoolPhone")]
         public async Task<ResultData> updatePublicPoolPhoneAsync(UpdateBindCustomerServiceVo updateVo)
         {
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            int employeeId = Convert.ToInt32(employee.Id);
-            UpdateBindCustomerServiceDto updateDto = new UpdateBindCustomerServiceDto();
-            updateDto.CustomerServiceId = updateVo.CustomerServiceId;
-            updateDto.EncryptPhoneList = updateVo.EncryptPhoneList;
-            await bindCustomerServiceService.UpdateAsync(updateDto, employeeId);
-            return ResultData.Success();
+            OperationAddDto operationLog = new OperationAddDto();
+            operationLog.Source = (int)RequestSource.AmiyaBackground;
+            operationLog.Code = 0;
+            try
+            {
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationLog.OperationBy = employeeId;
+                UpdateBindCustomerServiceDto updateDto = new UpdateBindCustomerServiceDto();
+                updateDto.CustomerServiceId = updateVo.CustomerServiceId;
+                updateDto.EncryptPhoneList = updateVo.EncryptPhoneList;
+                await bindCustomerServiceService.UpdateAsync(updateDto, employeeId);
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                operationLog.Message = ex.Message;
+                operationLog.Code = -1;
+                throw ex;
+            }
+            finally {
+                operationLog.Parameters = JsonConvert.SerializeObject(updateVo);
+                operationLog.RequestType = (int)RequestType.Update;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationLog);
+            }
         }
 
         /// <summary>
@@ -156,24 +179,43 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpPut("OrderListBindCustomerService")]
         public async Task<ResultData> OrderListBindCustomerUpdateAsync(UpdateBindCustomerServiceVo updateVo)
         {
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            int employeeId = Convert.ToInt32(employee.Id);
-            UpdateBindCustomerServiceDto updateDto = new UpdateBindCustomerServiceDto();
-            updateDto.CustomerServiceId = updateVo.CustomerServiceId;
-            updateDto.EncryptPhoneList = updateVo.EncryptPhoneList;
-            await bindCustomerServiceService.UpdateAsync(updateDto, employeeId);
-
-            foreach (var x in updateVo.EncryptPhoneList)
+            OperationAddDto operationLog = new OperationAddDto();
+            operationLog.Source = (int)RequestSource.AmiyaBackground;
+            operationLog.Code = 0;
+            try
             {
-                //(todo;)
-                var orderList = await _orderService.GetListByEncryptPhoneAsync(x, 1, 9999);
-                var orderIdList = orderList.List.Select(x => x.Id).ToList();
-                UpdateBelongEmpInfoOrderDto updateOrderBelongEmpIdDto = new UpdateBelongEmpInfoOrderDto();
-                updateOrderBelongEmpIdDto.OrderId = orderIdList;
-                updateOrderBelongEmpIdDto.BelongEmpId = updateVo.CustomerServiceId;
-                await _orderService.UpdateOrderBelongEmpIdAsync(updateOrderBelongEmpIdDto);
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationLog.OperationBy = employeeId;
+                UpdateBindCustomerServiceDto updateDto = new UpdateBindCustomerServiceDto();
+                updateDto.CustomerServiceId = updateVo.CustomerServiceId;
+                updateDto.EncryptPhoneList = updateVo.EncryptPhoneList;
+                await bindCustomerServiceService.UpdateAsync(updateDto, employeeId);
+
+                foreach (var x in updateVo.EncryptPhoneList)
+                {
+                    //(todo;)
+                    var orderList = await _orderService.GetListByEncryptPhoneAsync(x, 1, 9999);
+                    var orderIdList = orderList.List.Select(x => x.Id).ToList();
+                    UpdateBelongEmpInfoOrderDto updateOrderBelongEmpIdDto = new UpdateBelongEmpInfoOrderDto();
+                    updateOrderBelongEmpIdDto.OrderId = orderIdList;
+                    updateOrderBelongEmpIdDto.BelongEmpId = updateVo.CustomerServiceId;
+                    await _orderService.UpdateOrderBelongEmpIdAsync(updateOrderBelongEmpIdDto);
+                }
+                return ResultData.Success();
             }
-            return ResultData.Success();
+            catch (Exception ex)
+            {
+                operationLog.Message = ex.Message;
+                operationLog.Code = -1;
+                throw ex;
+            }
+            finally {
+                operationLog.Parameters = JsonConvert.SerializeObject(updateVo);
+                operationLog.RequestType = (int)RequestType.Update;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationLog);
+            }
         }
         /// <summary>
         /// 内容平台修改绑定客服
@@ -183,24 +225,43 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpPut("ContentPlatFormOrderListBindCustomerService")]
         public async Task<ResultData> ContentPlatFormOrderListBindCustomerUpdateAsync(UpdateBindCustomerServiceVo updateVo)
         {
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            int employeeId = Convert.ToInt32(employee.Id);
-            UpdateBindCustomerServiceDto updateDto = new UpdateBindCustomerServiceDto();
-            updateDto.CustomerServiceId = updateVo.CustomerServiceId;
-            updateDto.EncryptPhoneList = updateVo.EncryptPhoneList;
-            await bindCustomerServiceService.UpdateAsync(updateDto, employeeId);
-
-            foreach (var x in updateVo.EncryptPhoneList)
+            OperationAddDto operationLog = new OperationAddDto();
+            operationLog.Source = (int)RequestSource.AmiyaBackground;
+            operationLog.Code = 0;
+            try
             {
-                //(todo;)
-                var orderList = await _contentPlatFormOrderService.GetListByEncryptPhoneAsync(x, 1, 9999);
-                var orderIdList = orderList.List.Select(x => x.Id).ToList();
-                UpdateBelongEmpInfoOrderDto updateOrderBelongEmpIdDto = new UpdateBelongEmpInfoOrderDto();
-                updateOrderBelongEmpIdDto.OrderId = orderIdList;
-                updateOrderBelongEmpIdDto.BelongEmpId = updateVo.CustomerServiceId;
-                await _contentPlatFormOrderService.UpdateOrderBelongEmpIdAsync(updateOrderBelongEmpIdDto);
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationLog.OperationBy = employeeId;
+                UpdateBindCustomerServiceDto updateDto = new UpdateBindCustomerServiceDto();
+                updateDto.CustomerServiceId = updateVo.CustomerServiceId;
+                updateDto.EncryptPhoneList = updateVo.EncryptPhoneList;
+                await bindCustomerServiceService.UpdateAsync(updateDto, employeeId);
+
+                foreach (var x in updateVo.EncryptPhoneList)
+                {
+                    //(todo;)
+                    var orderList = await _contentPlatFormOrderService.GetListByEncryptPhoneAsync(x, 1, 9999);
+                    var orderIdList = orderList.List.Select(x => x.Id).ToList();
+                    UpdateBelongEmpInfoOrderDto updateOrderBelongEmpIdDto = new UpdateBelongEmpInfoOrderDto();
+                    updateOrderBelongEmpIdDto.OrderId = orderIdList;
+                    updateOrderBelongEmpIdDto.BelongEmpId = updateVo.CustomerServiceId;
+                    await _contentPlatFormOrderService.UpdateOrderBelongEmpIdAsync(updateOrderBelongEmpIdDto);
+                }
+                return ResultData.Success();
             }
-            return ResultData.Success();
+            catch (Exception ex)
+            {
+                operationLog.Message = ex.Message;
+                operationLog.Code = -1;
+                throw ex;
+            }
+            finally {
+                operationLog.Parameters = JsonConvert.SerializeObject(updateVo);
+                operationLog.RequestType = (int)RequestType.Update;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationLog);
+            }
         }
 
         /// <summary>

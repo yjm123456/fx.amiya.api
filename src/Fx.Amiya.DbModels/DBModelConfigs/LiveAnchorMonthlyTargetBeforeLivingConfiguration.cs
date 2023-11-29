@@ -38,6 +38,10 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.TikTokFlowinvestmentTarget).HasColumnName("tik_tok_flow_investment_target").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.CumulativeTikTokFlowinvestment).HasColumnName("cumulative_tik_tok_flow_investment").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.TikTokFlowinvestmentCompleteRate).HasColumnName("tik_tok_flow_investment_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(t => t.TikTokShowcaseIncomeTarget).HasColumnName("tik_tok_showcase_income_target").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(t => t.CumulativeTikTokShowcaseIncome).HasColumnName("cumulative_tik_tok_showcase_income").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(t => t.TikTokShowcaseIncomeCompleteRate).HasColumnName("tik_tok_showcase_income_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
+
 
             builder.Property(t => t.XiaoHongShuReleaseTarget).HasColumnName("xiaohongshu_release_target").HasColumnType("int").IsRequired();
             builder.Property(t => t.CumulativeXiaoHongShuRelease).HasColumnName("cumulative_xiaohongshu_release").HasColumnType("int").IsRequired();

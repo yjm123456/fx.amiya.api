@@ -2130,6 +2130,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                           TikTokFlowinvestmentTarget = d.TikTokFlowinvestmentTarget,
                           CumulativeTikTokFlowinvestment = d.CumulativeTikTokFlowinvestment,
                           TikTokFlowinvestmentCompleteRate = d.TikTokFlowinvestmentCompleteRate,
+                          TikTokShowcaseIncome = d.TikTokShowcaseIncome,
+                          CumulativeTikTokShowcaseIncome=d.CumulativeTikTokShowcaseIncome,
+                          TikTokShowcaseIncomeCompleteRate=d.TikTokShowcaseIncomeCompleteRate,
 
                           ZhihuOperationEmployeeName = d.ZhihuOperationEmployeeName,
                           ZhihuSendNum = d.ZhihuSendNum,
@@ -2293,6 +2296,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                               TikTokFlowinvestmentTarget = d.TikTokFlowinvestmentTarget,
                               CumulativeTikTokFlowinvestment = d.CumulativeTikTokFlowinvestment,
                               TikTokFlowinvestmentCompleteRate = d.TikTokFlowinvestmentCompleteRate,
+                              TikTokShowcaseIncome = d.TikTokShowcaseIncome,
+                              CumulativeTikTokShowcaseIncome = d.CumulativeTikTokShowcaseIncome,
+                              TikTokShowcaseIncomeCompleteRate = d.TikTokShowcaseIncomeCompleteRate,
 
                               ZhihuOperationEmployeeName = d.ZhihuOperationEmployeeName,
                               ZhihuSendNum = d.ZhihuSendNum,

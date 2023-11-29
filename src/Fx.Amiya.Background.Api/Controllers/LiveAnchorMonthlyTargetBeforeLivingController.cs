@@ -86,6 +86,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                   TikTokFlowinvestmentTarget = d.TikTokFlowinvestmentTarget,
                                                   CumulativeTikTokFlowinvestment = d.CumulativeTikTokFlowinvestment,
                                                   TikTokFlowinvestmentCompleteRate = d.TikTokFlowinvestmentCompleteRate,
+                                                  TikTokShowcaseIncomeTarget=d.TikTokShowcaseIncomeTarget,
+                                                  CumulativeTikTokShowcaseIncome=d.CumulativeTikTokShowcaseIncome,
+                                                  TikTokShowcaseIncomeCompleteRate=d.TikTokShowcaseIncomeCompleteRate,
 
                                                   XiaoHongShuReleaseTarget = d.XiaoHongShuReleaseTarget,
                                                   CumulativeXiaoHongShuRelease = d.CumulativeXiaoHongShuRelease,
@@ -180,6 +183,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
                 addDto.TikTokReleaseTarget = addVo.TikTokReleaseTarget;
                 addDto.TikTokFlowinvestmentTarget = addVo.TikTokFlowinvestmentTarget;
+                addDto.TikTokShowcaseIncomeTarget = addVo.TikTokShowcaseIncomeTarget;
 
                 addDto.XiaoHongShuReleaseTarget = addVo.XiaoHongShuReleaseTarget;
                 addDto.XiaoHongShuFlowinvestmentTarget = addVo.XiaoHongShuFlowinvestmentTarget;
@@ -225,6 +229,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorMonthlyTargetBeforeLivingVo.TikTokFlowinvestmentTarget = liveAnchorMonthlyTargetBeforeLiving.TikTokFlowinvestmentTarget;
                 liveAnchorMonthlyTargetBeforeLivingVo.CumulativeTikTokFlowinvestment = liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokFlowinvestment;
                 liveAnchorMonthlyTargetBeforeLivingVo.TikTokFlowinvestmentCompleteRate = liveAnchorMonthlyTargetBeforeLiving.TikTokFlowinvestmentCompleteRate;
+                liveAnchorMonthlyTargetBeforeLivingVo.TikTokShowcaseIncomeTarget = liveAnchorMonthlyTargetBeforeLiving.TikTokShowcaseIncomeTarget;
+                liveAnchorMonthlyTargetBeforeLivingVo.CumulativeTikTokShowcaseIncome = liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokShowcaseIncome;
+                liveAnchorMonthlyTargetBeforeLivingVo.TikTokShowcaseIncomeCompleteRate = liveAnchorMonthlyTargetBeforeLiving.TikTokShowcaseIncomeCompleteRate;
 
                 liveAnchorMonthlyTargetBeforeLivingVo.XiaoHongShuReleaseTarget = liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuReleaseTarget;
                 liveAnchorMonthlyTargetBeforeLivingVo.CumulativeXiaoHongShuRelease = liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuRelease;
@@ -294,7 +301,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.SinaWeiBoReleaseTarget = updateVo.SinaWeiBoReleaseTarget;
                 updateDto.VideoReleaseTarget = updateVo.VideoReleaseTarget;
 
-
+                updateDto.TikTokShowcaseIncomeTarget = updateVo.TikTokShowcaseIncomeTarget;
                 updateDto.TikTokFlowinvestmentTarget = updateVo.TikTokFlowinvestmentTarget;
                 updateDto.ZhihuFlowinvestmentTarget = updateVo.ZhihuFlowinvestmentTarget;
                 updateDto.XiaoHongShuFlowinvestmentTarget = updateVo.XiaoHongShuFlowinvestmentTarget;

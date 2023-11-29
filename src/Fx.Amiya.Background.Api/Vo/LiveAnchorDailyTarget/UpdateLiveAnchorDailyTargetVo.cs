@@ -200,6 +200,10 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 今日运营渠道投流费用（所有投流费用相加）
         /// </summary>
         public decimal FlowInvestmentNum { get; set; }
+        /// <summary>
+        /// 今日抖音橱窗收入
+        /// </summary>
+        public decimal TikTokShowcaseIncome { get; set; }
         ///// <summary>
         ///// 今日线索量
         ///// </summary>

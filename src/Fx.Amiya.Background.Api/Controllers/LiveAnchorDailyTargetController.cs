@@ -80,6 +80,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 TikTokOperationEmployeeName = d.TikTokOperationEmployeeName,
                                                 TikTokSendNum = d.TikTokSendNum,
                                                 TikTokFlowInvestmentNum = d.TikTokFlowInvestmentNum,
+                                                TikTokShowcaseIncome=d.TikTokShowcaseIncome,
 
                                                 VideoOperationEmployeeName = d.VideoOperationEmployeeName,
                                                 VideoSendNum = d.VideoSendNum,
@@ -176,7 +177,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 SendOrderNum = d.SendOrderNum,
                                                 DealNum = d.DealNum,
                                                 PerformanceNum = d.PerformanceNum,
-
+                                                TikTokShowcaseIncome=d.TikTokShowcaseIncome
                                             };
 
                 FxPageInfo<BeforeLivingDailyTargetVo> liveAnchorDailyTargetPageInfo = new FxPageInfo<BeforeLivingDailyTargetVo>();
@@ -333,6 +334,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorDailyTargetVo.TikTokOperationEmployeeId = liveAnchorDailyTarget.TikTokOperationEmployeeId;
                 liveAnchorDailyTargetVo.TikTokSendNum = liveAnchorDailyTarget.TikTokSendNum;
                 liveAnchorDailyTargetVo.TikTokFlowInvestmentNum = liveAnchorDailyTarget.TikTokFlowInvestmentNum;
+                liveAnchorDailyTargetVo.TikTokShowcaseIncome = liveAnchorDailyTarget.TikTokShowcaseIncome;
 
                 liveAnchorDailyTargetVo.ZhihuOperationEmployeeId = liveAnchorDailyTarget.ZhihuOperationEmployeeId;
                 liveAnchorDailyTargetVo.ZhihuSendNum = liveAnchorDailyTarget.ZhihuSendNum;
@@ -422,6 +424,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.TodaySendNum = addVo.TodaySendNum;
                     addDto.FlowInvestmentNum = addVo.FlowInvestmentNum;
                     addDto.RecordDate = addVo.RecordDate;
+                    addDto.TikTokShowcaseIncome = addVo.TikTokShowcaseIncome;
                     await _liveAnchorDailyTargetService.BeforeLivingTikTokAddAsync(addDto);
                 }
                 return ResultData.Success();
@@ -450,6 +453,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.TikTokOperationEmployeeId = updateVo.TikTokOperationEmployeeId;
                 updateDto.TikTokSendNum = updateVo.TikTokSendNum;
                 updateDto.TikTokFlowInvestmentNum = updateVo.TikTokFlowInvestmentNum;
+                updateDto.TikTokShowcaseIncome = updateVo.TikTokShowcaseIncome;
                 updateDto.TodaySendNum = updateVo.TodaySendNum;
                 updateDto.FlowInvestmentNum = updateVo.FlowInvestmentNum;
                 updateDto.RecordDate = updateVo.RecordDate;

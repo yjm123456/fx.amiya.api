@@ -22,7 +22,10 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// </summary>
 
         public decimal CumulativeTikTokFlowinvestment { get; set; }
-
+        /// <summary>
+        /// 当日抖音橱窗收入
+        /// </summary>
+        public decimal CumulativeTikTokShowcaseIncome { get; set; }
         /// <summary>
         /// 当日视频号发布条数
         /// </summary>

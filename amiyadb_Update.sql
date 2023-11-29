@@ -41,3 +41,28 @@ update tbl_content_platform_order_send set is_main_hospital=true;
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
+
+-------------------------------------------王健 2023/11/29  BEGIN ------------------------------------------------------
+
+
+--抖音直播前日运营数据添加抖音橱窗收入
+ALTER TABLE `tbl_beforeliving_tiktok_daily_target`
+	CHANGE COLUMN `record_date` `record_date` DATETIME NOT NULL AFTER `valid`,
+	ADD COLUMN `tiktok_showcase_income` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `send_num`;
+	
+	
+--抖音直播前日运营数据添加抖音橱窗收入
+ALTER TABLE `tbl_liveanchor_daily_target`
+	ADD COLUMN `tiktok_showcase_income` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `living_update_date`;
+
+
+--直播前月目标数据添加抖音橱窗收入,累计橱窗收入,橱窗收入目标完成率
+	
+ALTER TABLE `tbl_liveanchor_monthly_target_before_living`
+	ADD COLUMN `tik_tok_showcase_income_target` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `flow_investment_complete_rate`,
+	ADD COLUMN `cumulative_tik_tok_showcase_income` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `tik_tok_showcase_income_target`,
+	ADD COLUMN `tik_tok_showcase_income_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_tik_tok_showcase_income`;
+
+--------------------------------------------王健 2023/11/29 END----------------------------------------------------------
+
+

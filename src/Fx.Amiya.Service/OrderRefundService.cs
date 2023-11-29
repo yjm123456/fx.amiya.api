@@ -209,7 +209,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
 
-                throw new Exception("退款提交失败请稍后重试!");
+                throw ex;
             }
         }
         /// <summary>

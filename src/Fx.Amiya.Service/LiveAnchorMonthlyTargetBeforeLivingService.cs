@@ -89,6 +89,10 @@ namespace Fx.Amiya.Service
                                                               TikTokFlowinvestmentTarget = d.TikTokFlowinvestmentTarget,
                                                               CumulativeTikTokFlowinvestment = d.CumulativeTikTokFlowinvestment,
                                                               TikTokFlowinvestmentCompleteRate = d.TikTokFlowinvestmentCompleteRate,
+                                                              TikTokShowcaseIncomeTarget=d.TikTokShowcaseIncomeTarget,
+                                                              CumulativeTikTokShowcaseIncome=d.CumulativeTikTokShowcaseIncome,
+                                                              TikTokShowcaseIncomeCompleteRate=d.TikTokShowcaseIncomeCompleteRate,
+
 
                                                               XiaoHongShuReleaseTarget = d.XiaoHongShuReleaseTarget,
                                                               CumulativeXiaoHongShuRelease = d.CumulativeXiaoHongShuRelease,
@@ -156,6 +160,9 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.TikTokFlowinvestmentTarget = addDto.TikTokFlowinvestmentTarget;
                 liveAnchorMonthlyTarget.CumulativeTikTokFlowinvestment = 0;
                 liveAnchorMonthlyTarget.TikTokFlowinvestmentCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.TikTokShowcaseIncomeTarget = addDto.TikTokShowcaseIncomeTarget;
+                liveAnchorMonthlyTarget.CumulativeTikTokShowcaseIncome = 0.00M;
+                liveAnchorMonthlyTarget.TikTokShowcaseIncomeCompleteRate = 0.00M;
 
                 liveAnchorMonthlyTarget.XiaoHongShuReleaseTarget = addDto.XiaoHongShuReleaseTarget;
                 liveAnchorMonthlyTarget.CumulativeXiaoHongShuRelease = 0;
@@ -233,6 +240,9 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTargetDto.TikTokFlowinvestmentTarget = liveAnchorMonthlyTarget.TikTokFlowinvestmentTarget;
                 liveAnchorMonthlyTargetDto.CumulativeTikTokFlowinvestment = liveAnchorMonthlyTarget.CumulativeTikTokFlowinvestment;
                 liveAnchorMonthlyTargetDto.TikTokFlowinvestmentCompleteRate = liveAnchorMonthlyTarget.TikTokFlowinvestmentCompleteRate;
+                liveAnchorMonthlyTargetDto.TikTokShowcaseIncomeTarget = liveAnchorMonthlyTarget.TikTokShowcaseIncomeTarget;
+                liveAnchorMonthlyTargetDto.CumulativeTikTokShowcaseIncome = liveAnchorMonthlyTarget.CumulativeTikTokShowcaseIncome;
+                liveAnchorMonthlyTargetDto.TikTokShowcaseIncomeCompleteRate = liveAnchorMonthlyTarget.TikTokShowcaseIncomeCompleteRate;
 
                 liveAnchorMonthlyTargetDto.XiaoHongShuReleaseTarget = liveAnchorMonthlyTarget.XiaoHongShuReleaseTarget;
                 liveAnchorMonthlyTargetDto.CumulativeXiaoHongShuRelease = liveAnchorMonthlyTarget.CumulativeXiaoHongShuRelease;
@@ -298,7 +308,7 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.XiaoHongShuReleaseTarget = updateDto.XiaoHongShuReleaseTarget;
                 liveAnchorMonthlyTarget.SinaWeiBoReleaseTarget = updateDto.SinaWeiBoReleaseTarget;
                 liveAnchorMonthlyTarget.VideoReleaseTarget = updateDto.VideoReleaseTarget;
-
+                liveAnchorMonthlyTarget.TikTokShowcaseIncomeTarget = updateDto.TikTokShowcaseIncomeTarget;
 
                 liveAnchorMonthlyTarget.TikTokFlowinvestmentTarget = updateDto.TikTokFlowinvestmentTarget;
                 liveAnchorMonthlyTarget.ZhihuFlowinvestmentTarget = updateDto.ZhihuFlowinvestmentTarget;
@@ -398,6 +408,17 @@ namespace Fx.Amiya.Service
                 }
                 #endregion
 
+                #region 抖音橱窗收入
+                liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokShowcaseIncome += editDto.CumulativeTikTokShowcaseIncome;
+                if (liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokShowcaseIncome <= 0)
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.TikTokShowcaseIncomeCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.TikTokShowcaseIncomeCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokShowcaseIncome) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.TikTokShowcaseIncomeTarget)) * 100, 2);
+                }
+                #endregion
                 #region #小红书发布
                 liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuRelease += editDto.CumulativeXiaoHongShuRelease;
                 if (liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuRelease <= 0)
