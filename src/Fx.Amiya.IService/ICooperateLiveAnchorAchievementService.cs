@@ -11,7 +11,7 @@ namespace Fx.Amiya.IService
 {
     public interface ICooperateLiveAnchorAchievementService
     {
-        Task<List<CooperateLiveAnchorAchievementDto>> GetCooperateLiveAnchorAchievementAsync(QueryCooperateLiveAnchorAchievementDto query);
-        Task<List<CooperateLiveAnchorHospitalAchievementDto>> GetCooperateLiveAnchorHospitalAchieementsAsync(QueryCooperateLiveAnchorAchievementDto query);
+        Task<List<CooperateLiveAnchorAchievementDto>> GetCooperateLiveAnchorAchievementAsync(DateTime checkDate);
+        Task<List<CooperateLiveAnchorHospitalAchievementDto>> GetCooperateLiveAnchorHospitalAchieementsAsync(DateTime checkDate);
     }
 }

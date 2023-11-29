@@ -1376,7 +1376,7 @@ namespace Fx.Amiya.Service
         /// <param name="recordEndDate"></param>
         /// <param name="hospitalIds"></param>
         /// <returns></returns>
-        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetMonthSendPerformanceByHospitalIdListAsync(List<int> hospitalIds, DateTime recordStartDate,DateTime recordEndDate)
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetMonthSendPerformanceByHospitalIdListAsync(List<int> hospitalIds, DateTime recordStartDate, DateTime recordEndDate)
         {
             var result = await dalContentPlatFormOrderDealInfo.GetAll()
                 .Where(o => o.IsToHospital == true && o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= recordStartDate && o.ToHospitalDate < recordEndDate)
@@ -2142,9 +2142,10 @@ namespace Fx.Amiya.Service
                     ContentPlatFormId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.ContentPlateformId,
                     SendDate = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.SendDate,
                     CreateDate = ContentPlatFOrmOrderDealInfo.CreateDate,
-                    LiveAnchorId= ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.LiveAnchor.Id,
+                    LiveAnchorId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.LiveAnchor.Id,
                     BelongLiveAnchor = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId,
                     LastDealHospitalId = ContentPlatFOrmOrderDealInfo.LastDealHospitalId,
+                    DealDate = ContentPlatFOrmOrderDealInfo.DealDate
                 }
                 ).ToList();
         }
@@ -2173,7 +2174,7 @@ namespace Fx.Amiya.Service
                 contentPlatformOrderDeal = contentPlatformOrderDeal.Where(e => ids.Contains(e.ContentPlatFormOrder.LiveAnchorId.Value));
             }
             if (!string.IsNullOrEmpty(query.ContentPlatformId))
-            {          
+            {
                 contentPlatformOrderDeal = contentPlatformOrderDeal.Where(e => e.ContentPlatFormOrder.ContentPlateformId == query.ContentPlatformId);
             }
             if (query.LiveAnchorId.HasValue)
@@ -2202,7 +2203,7 @@ namespace Fx.Amiya.Service
                                         {
                                             Name = c.ContentPlatFormOrder.CustomerName,
                                             Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(c.ContentPlatFormOrder.Phone) : c.ContentPlatFormOrder.Phone,
-                                            EncryptPhone= ServiceClass.Encrypt(c.ContentPlatFormOrder.Phone, config.PhoneEncryptKey),
+                                            EncryptPhone = ServiceClass.Encrypt(c.ContentPlatFormOrder.Phone, config.PhoneEncryptKey),
                                             AssistantName = e.Name,
                                             SendHospital = h.Name,
                                             Status = c.IsDeal ? "已成交" : "未成交"

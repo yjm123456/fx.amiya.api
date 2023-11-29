@@ -75,13 +75,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="source">客户来源</param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<ShoppingCartRegistrationVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder,int? createBy, bool? isSendOrder, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? assignEmpId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId, int? source)
+        public async Task<ResultData<FxPageInfo<ShoppingCartRegistrationVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder,int? createBy, bool? isSendOrder, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? assignEmpId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? ShoppingCartRegistrationCustomerType, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId, int? source)
         {
             try
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await shoppingCartRegistrationService.GetListWithPageAsync(startDate, endDate, LiveAnchorId, isCreateOrder,createBy, isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, pageNum, pageSize, minPrice, maxPrice, assignEmpId, startRefundTime, endRefundTime, startBadReviewTime, endBadReviewTime, emergencyLevel, isBadReview, baseLiveAnchorId, source);
+                var q = await shoppingCartRegistrationService.GetListWithPageAsync(startDate, endDate, LiveAnchorId, isCreateOrder,createBy, isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, pageNum, pageSize, minPrice, maxPrice, assignEmpId, startRefundTime, endRefundTime, startBadReviewTime, endBadReviewTime, ShoppingCartRegistrationCustomerType, emergencyLevel, isBadReview, baseLiveAnchorId, source);
 
                 var shoppingCartRegistration = from d in q.List
                                                select new ShoppingCartRegistrationVo
@@ -119,6 +119,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                    EmergencyLevel = d.EmergencyLevel,
                                                    EmergencyLevelText = ServiceClass.GetShopCartRegisterEmergencyLevelText(d.EmergencyLevel),
                                                    Source = d.Source,
+                                                   ShoppingCartRegistrationCustomerType=d.ShoppingCartRegistrationCustomerType,
+                                                   ShoppingCartRegistrationCustomerTypeText=d.ShoppingCartRegistrationCustomerTypeText,
                                                    SourceText = d.SourceText,
                                                    ProductType = d.ProductType,
                                                    ProductTypeText = d.ProductTypeText,
@@ -172,6 +174,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.SubPhone = addVo.SubPhone;
                 addDto.Price = addVo.Price;
                 addDto.ConsultationType = addVo.ConsultationType;
+                addDto.ShoppingCartRegistrationCustomerType = addVo.ShoppingCartRegistrationCustomerType;
                 addDto.IsWriteOff = addVo.IsWriteOff;
                 addDto.IsAddWeChat = addVo.IsAddWeChat;
                 addDto.ConsultationDate = addVo.ConsultationDate;
@@ -239,6 +242,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shoppingCartRegistrationVo.Price = shoppingCartRegistration.Price;
                 shoppingCartRegistrationVo.ConsultationType = shoppingCartRegistration.ConsultationType;
                 shoppingCartRegistrationVo.IsWriteOff = shoppingCartRegistration.IsWriteOff;
+                shoppingCartRegistrationVo.ShoppingCartRegistrationCustomerType = shoppingCartRegistration.ShoppingCartRegistrationCustomerType;
                 shoppingCartRegistrationVo.GetCustomerType = shoppingCartRegistration.GetCustomerType;
                 shoppingCartRegistrationVo.IsConsultation = shoppingCartRegistration.IsConsultation;
                 shoppingCartRegistrationVo.ConsultationDate = shoppingCartRegistration.ConsultationDate;
@@ -299,6 +303,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shoppingCartRegistrationVo.Phone = shoppingCartRegistration.Phone;
                 shoppingCartRegistrationVo.SubPhone = shoppingCartRegistration.SubPhone;
                 shoppingCartRegistrationVo.IsAddWeChat = shoppingCartRegistration.IsAddWeChat;
+                shoppingCartRegistrationVo.ShoppingCartRegistrationCustomerType = shoppingCartRegistrationVo.ShoppingCartRegistrationCustomerType;
                 shoppingCartRegistrationVo.Price = shoppingCartRegistration.Price;
                 shoppingCartRegistrationVo.ConsultationType = shoppingCartRegistration.ConsultationType;
                 shoppingCartRegistrationVo.ConsultationTypeText = shoppingCartRegistration.ConsultationTypeText;
@@ -377,6 +382,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.EmergencyLevel = updateVo.EmergencyLevel;
                 updateDto.Source = updateVo.Source;
                 updateDto.ProductType = updateVo.ProductType;
+                updateDto.ShoppingCartRegistrationCustomerType = updateVo.ShoppingCartRegistrationCustomerType;
                 updateDto.CreateBy = updateVo.CreateBy;
                 var contentPlatFormOrder = await contentPlateFormOrderService.GetOrderListByPhoneAsync(updateVo.Phone);
                 var isSendOrder = contentPlatFormOrder.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder).Count();
@@ -463,6 +469,22 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetCustomerSourceListAsync()
         {
             var nameList = shoppingCartRegistrationService.GetCustomerSourceList();
+            var result = nameList.Select(e => new BaseIdAndNameVo<int>
+            {
+                Id = e.Key,
+                Name = e.Value
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("sourceList", result);
+
+        }
+        /// <summary>
+        /// 客户类型列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("customerTypeList")]
+        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetCustomerTypeListAsync()
+        {
+            var nameList = shoppingCartRegistrationService.GetCustomerTypeList();
             var result = nameList.Select(e => new BaseIdAndNameVo<int>
             {
                 Id = e.Key,

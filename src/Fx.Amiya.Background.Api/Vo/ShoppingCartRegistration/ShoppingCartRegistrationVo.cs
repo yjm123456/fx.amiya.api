@@ -187,6 +187,15 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// 获客方式(文本)
         /// </summary>
         public string GetCustomerTypeText { get; set; }
+        /// <summary>
+        /// 小黄车登记顾客类型
+        /// </summary>
+        public int ShoppingCartRegistrationCustomerType { get; set; }
+
+        /// <summary>
+        /// 小黄车登记顾客类型文本
+        /// </summary>
+        public string ShoppingCartRegistrationCustomerTypeText { get; set; }
 
     }
 }

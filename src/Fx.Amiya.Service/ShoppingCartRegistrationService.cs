@@ -57,7 +57,7 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, int? createBy, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? assignEmpId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId, int? source)
+        public async Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, int? createBy, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? assignEmpId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? ShoppingCartRegistrationCustomerType, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId, int? source)
         {
             try
             {
@@ -82,6 +82,7 @@ namespace Fx.Amiya.Service
                                                && (!startBadReviewTime.HasValue || d.BadReviewDate >= startBadReviewTime.Value.Date)
                                                && (!endBadReviewTime.HasValue || d.BadReviewDate <= endBadReviewTime.Value.AddDays(1).Date)
                                                && (!emergencyLevel.HasValue || d.EmergencyLevel == emergencyLevel)
+                                               && (!ShoppingCartRegistrationCustomerType.HasValue || d.ShoppingCartRegistrationCustomerType == ShoppingCartRegistrationCustomerType)
                                                && (!isBadReview.HasValue || d.IsBadReview == isBadReview)
                                                && (string.IsNullOrEmpty(baseLiveAnchorId) || d.BaseLiveAnchorId == baseLiveAnchorId)
                                                && (!source.HasValue || d.Source == source.Value)
@@ -98,6 +99,8 @@ namespace Fx.Amiya.Service
                                                    Price = d.Price,
                                                    ConsultationType = d.ConsultationType,
                                                    ConsultationTypeText = ServiceClass.GetConsulationTypeText(d.ConsultationType),
+                                                   ShoppingCartRegistrationCustomerType = d.ShoppingCartRegistrationCustomerType,
+                                                   ShoppingCartRegistrationCustomerTypeText = ServiceClass.GetShoppingCartCustomerTypeText(d.ShoppingCartRegistrationCustomerType),
                                                    IsWriteOff = d.IsWriteOff,
                                                    IsCreateOrder = d.IsCreateOrder,
                                                    IsSendOrder = d.IsSendOrder,
@@ -205,6 +208,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.LiveAnchorId = addDto.LiveAnchorId;
                 shoppingCartRegistration.LiveAnchorWechatNo = addDto.LiveAnchorWechatNo;
                 shoppingCartRegistration.CustomerNickName = addDto.CustomerNickName;
+                shoppingCartRegistration.ShoppingCartRegistrationCustomerType = addDto.ShoppingCartRegistrationCustomerType;
                 shoppingCartRegistration.Phone = addDto.Phone;
                 shoppingCartRegistration.SubPhone = addDto.SubPhone;
                 shoppingCartRegistration.IsAddWeChat = addDto.IsAddWeChat;
@@ -266,6 +270,7 @@ namespace Fx.Amiya.Service
                     shoppingCartRegistration.RecordDate = addDto.RecordDate;
                     shoppingCartRegistration.ContentPlatFormId = addDto.ContentPlatFormId;
                     shoppingCartRegistration.LiveAnchorId = addDto.LiveAnchorId;
+                    shoppingCartRegistration.ShoppingCartRegistrationCustomerType = addDto.ShoppingCartRegistrationCustomerType;
                     shoppingCartRegistration.LiveAnchorWechatNo = addDto.LiveAnchorWechatNo;
                     shoppingCartRegistration.CustomerNickName = addDto.CustomerNickName;
                     shoppingCartRegistration.Phone = addDto.Phone;
@@ -334,6 +339,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.CustomerNickName = shoppingCartRegistration.CustomerNickName;
                 shoppingCartRegistrationDto.Phone = shoppingCartRegistration.Phone;
                 shoppingCartRegistrationDto.SubPhone = shoppingCartRegistration.SubPhone;
+                shoppingCartRegistrationDto.ShoppingCartRegistrationCustomerType = shoppingCartRegistration.ShoppingCartRegistrationCustomerType;
                 shoppingCartRegistrationDto.Price = shoppingCartRegistration.Price;
                 shoppingCartRegistrationDto.IsAddWeChat = shoppingCartRegistration.IsAddWeChat;
                 shoppingCartRegistrationDto.ConsultationType = shoppingCartRegistration.ConsultationType;
@@ -386,6 +392,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.Id = shoppingCartRegistration.Id;
                 shoppingCartRegistrationDto.RecordDate = shoppingCartRegistration.RecordDate;
                 shoppingCartRegistrationDto.ContentPlatFormId = shoppingCartRegistration.ContentPlatFormId;
+                shoppingCartRegistrationDto.ShoppingCartRegistrationCustomerType = shoppingCartRegistration.ShoppingCartRegistrationCustomerType;
                 var contentPlatForm = await _contentPlatformService.GetByIdAsync(shoppingCartRegistrationDto.ContentPlatFormId);
                 shoppingCartRegistrationDto.ContentPlatFormName = contentPlatForm.ContentPlatformName;
                 shoppingCartRegistrationDto.LiveAnchorId = shoppingCartRegistration.LiveAnchorId;
@@ -450,6 +457,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.LiveAnchorId = shoppingCartRegistration.LiveAnchorId;
                 shoppingCartRegistrationDto.LiveAnchorWechatNo = shoppingCartRegistration.LiveAnchorWechatNo;
                 shoppingCartRegistrationDto.CustomerNickName = shoppingCartRegistration.CustomerNickName;
+                shoppingCartRegistrationDto.ShoppingCartRegistrationCustomerType = shoppingCartRegistrationDto.ShoppingCartRegistrationCustomerType;
                 shoppingCartRegistrationDto.GetCustomerType = shoppingCartRegistration.GetCustomerType;
                 shoppingCartRegistrationDto.Phone = shoppingCartRegistration.Phone;
                 shoppingCartRegistrationDto.SubPhone = shoppingCartRegistration.SubPhone;
@@ -532,6 +540,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.Price = updateDto.Price;
                 shoppingCartRegistration.GetCustomerType = updateDto.GetCustomerType;
                 shoppingCartRegistration.IsAddWeChat = updateDto.IsAddWeChat;
+                shoppingCartRegistration.ShoppingCartRegistrationCustomerType = updateDto.ShoppingCartRegistrationCustomerType;
                 shoppingCartRegistration.ConsultationType = updateDto.ConsultationType;
                 shoppingCartRegistration.IsWriteOff = updateDto.IsWriteOff;
                 shoppingCartRegistration.IsConsultation = updateDto.IsConsultation;
@@ -702,6 +711,25 @@ namespace Fx.Amiya.Service
                 emergencyLevelList.Add(emergencyLevelDto);
             }
             return emergencyLevelList;
+        }
+
+
+        /// <summary>
+        /// 获取客户类型列表
+        /// </summary>
+        /// <returns></returns>
+        public List<BaseKeyValueDto<int>> GetCustomerTypeList()
+        {
+            var enumResult = Enum.GetValues(typeof(ShoppingCartRegistionCustomerSource));
+            List<BaseKeyValueDto<int>> result = new List<BaseKeyValueDto<int>>();
+            foreach (var item in enumResult)
+            {
+                BaseKeyValueDto<int> keyAndValue = new BaseKeyValueDto<int>();
+                keyAndValue.Key = Convert.ToInt32(item);
+                keyAndValue.Value = ServiceClass.GetShoppingCartCustomerTypeText(keyAndValue.Key);
+                result.Add(keyAndValue);
+            }
+            return result;
         }
 
         /// <summary>

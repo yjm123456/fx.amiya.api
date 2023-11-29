@@ -126,6 +126,9 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// </summary>
         public int GetCustomerType { get; set; }
 
-
+        /// <summary>
+        /// 小黄车登记顾客类型
+        /// </summary>
+        public int ShoppingCartRegistrationCustomerType { get; set; }
     }
 }

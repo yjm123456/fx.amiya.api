@@ -31,47 +31,57 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 获取合作达人业绩
         /// </summary>
-        /// <param name="query"></param>
+        /// <param name="checkDate"></param>
         /// <returns></returns>
         [HttpGet("cooperateLiveAnchorPerformanceData")]
-        public async Task<ResultData<List<CooperateLiveAnchorAchievementVo>>> GetCooperateLiveAnchorAchievementAsync([FromQuery] QueryCooperateLiveAnchorAchievementVo query)
+        public async Task<ResultData<List<CooperateLiveAnchorAchievementVo>>> GetCooperateLiveAnchorAchievementAsync(DateTime checkDate)
         {
-            QueryCooperateLiveAnchorAchievementDto queryDto = new QueryCooperateLiveAnchorAchievementDto();
-            queryDto.Month = query.Month;
-            queryDto.Year = query.Year;
-            var res = (await _cooperateLiveAnchorAchievementService.GetCooperateLiveAnchorAchievementAsync(queryDto)).Select(e => new CooperateLiveAnchorAchievementVo
+            var res = (await _cooperateLiveAnchorAchievementService.GetCooperateLiveAnchorAchievementAsync(checkDate)).Select(e => new CooperateLiveAnchorAchievementVo
             {
                 LiveanchorName = e.LiveanchorName,
                 Performance = e.Performance,
                 NewCustomerPerformance = e.NewCustomerPerformance,
                 NewCustomerPerformanceRatio = e.NewCustomerPerformanceRatio,
                 OldCustomerPerformance = e.OldCustomerPerformance,
-                OldCustomerPerformanceRatio = e.OldCustomerPerformanceRatio
+                OldCustomerPerformanceRatio = e.OldCustomerPerformanceRatio,
+
+                //加载今日数据
+                TodayPerformance = e.TodayPerformance,
+                TodayNewCustomerPerformance = e.TodayNewCustomerPerformance,
+                TodayNewCustomerPerformanceRatio = e.TodayNewCustomerPerformanceRatio,
+                TodayOldCustomerPerformance = e.TodayOldCustomerPerformance,
+                TodayOldCustomerPerformanceRatio = e.TodayOldCustomerPerformanceRatio
             }).ToList();
             return ResultData<List<CooperateLiveAnchorAchievementVo>>.Success().AddData("data", res);
         }
+
+
         /// <summary>
         /// 机构排名数据
         /// </summary>
-        /// <param name="query"></param>
+        /// <param name="checkDate"></param>
         /// <returns></returns>
         [HttpGet("cooperatehospitalRank")]
-        public async Task<ResultData<List<CooperateLiveAnchorHospitalAchievementVo>>> GetCooperateHospitalAchievementAsync([FromQuery] QueryCooperateLiveAnchorAchievementVo query)
+        public async Task<ResultData<List<CooperateLiveAnchorHospitalAchievementVo>>> GetCooperateHospitalAchievementAsync(DateTime checkDate)
         {
 
-            QueryCooperateLiveAnchorAchievementDto queryDto = new QueryCooperateLiveAnchorAchievementDto();
-            queryDto.Month = query.Month;
-            queryDto.Year = query.Year;
-            var res = (await _cooperateLiveAnchorAchievementService.GetCooperateLiveAnchorHospitalAchieementsAsync(queryDto)).Select(e => new CooperateLiveAnchorHospitalAchievementVo
+            var res = (await _cooperateLiveAnchorAchievementService.GetCooperateLiveAnchorHospitalAchieementsAsync(checkDate)).Select(e => new CooperateLiveAnchorHospitalAchievementVo
             {
                 Rank = e.Rank,
                 HospitalName = e.HospitalName,
                 TotalPerformance = e.TotalPerformance,
+                TodayTotalPerformance = e.TodayTotalPerformance,
                 PerformanceRatio = e.PerformanceRatio,
+                TodayPerformanceRatio = e.TodayPerformanceRatio,
                 NewCustomerPerformance = e.NewCustomerPerformance,
+                TodayNewCustomerPerformance = e.TodayNewCustomerPerformance,
                 NewCustomerPerformanceRatio = e.NewCustomerPerformanceRatio,
+                TodayNewCustomerPerformanceRatio = e.TodayNewCustomerPerformanceRatio,
                 OldCustomerPerformance = e.OldCustomerPerformance,
-                OldCustomerPerformanceRatio = e.OldCustomerPerformanceRatio
+                TodayOldCustomerPerformance = e.TodayOldCustomerPerformance,
+                OldCustomerPerformanceRatio = e.OldCustomerPerformanceRatio,
+                TodayOldCustomerPerformanceRatio = e.TodayOldCustomerPerformanceRatio,
+                Logo = e.Logo
             }).ToList();
             return ResultData<List<CooperateLiveAnchorHospitalAchievementVo>>.Success().AddData("data", res);
         }

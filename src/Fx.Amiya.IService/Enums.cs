@@ -989,10 +989,26 @@ namespace Fx.Amiya.IService
         /// </summary>
         ProductionTransform = 6,
 
+    }
+
+
+    /// <summary>
+    /// 小黄车客户类型
+    /// </summary>
+    public enum ShoppingCartRegistionCustomerSource
+    {
+        /// <summary>
+        /// 其他
+        /// </summary>
+        Other = 0,
+        /// <summary>
+        /// 医美
+        /// </summary>
+        AestheticMedicine = 1,
         /// <summary>
         /// 带货
         /// </summary>
-        TakeGoods = 7,
+        TakeGoods = 2,
     }
 
 
