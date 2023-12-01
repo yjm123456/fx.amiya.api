@@ -1838,7 +1838,7 @@ namespace Fx.Amiya.Service
 
             //当月派单今日成交业绩
             var thisMonthTodaySendAndDealInfo = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceAsync(todayDate.StartDate, todayDate.EndDate, false, LiveAnchorInfo);
-            var thisMonthTodaySendAndDealPerformance = thisMonthSendAndDealInfo.Sum(o => o.Price);
+            var thisMonthTodaySendAndDealPerformance = thisMonthTodaySendAndDealInfo.Sum(o => o.Price);
             #endregion
 
             #region 历史派单当月成交业绩
@@ -1855,7 +1855,7 @@ namespace Fx.Amiya.Service
 
             //历史派单今日成交业绩
             var historyMonthTodaySendAndDealInfo = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceAsync(todayDate.StartDate, todayDate.EndDate, true, LiveAnchorInfo);
-            var historyMonthTodaySendAndDealPerformance = historyMonthSendAndDealInfo.Sum(o => o.Price);
+            var historyMonthTodaySendAndDealPerformance = historyMonthTodaySendAndDealInfo.Sum(o => o.Price);
             #endregion
 
             //数据组合
