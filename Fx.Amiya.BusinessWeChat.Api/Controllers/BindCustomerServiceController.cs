@@ -169,7 +169,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         public async Task<ResultData> ContentPlatFormOrderListBindCustomerUpdateAsync(UpdateBindCustomerServiceVo updateVo)
         {
             OperationAddDto operationLog = new OperationAddDto();
-            operationLog.Source = (int)RequestSource.AmiyaBackground;
+            operationLog.Source = (int)RequestSource.AmiyaBusinessWechat;
             operationLog.Code = 0;
             try
             {
