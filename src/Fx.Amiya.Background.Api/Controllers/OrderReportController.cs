@@ -2297,6 +2297,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                               CumulativeTikTokFlowinvestment = d.CumulativeTikTokFlowinvestment,
                               TikTokFlowinvestmentCompleteRate = d.TikTokFlowinvestmentCompleteRate,
                               TikTokShowcaseIncome = d.TikTokShowcaseIncome,
+                              TikTokShowcaseIncomeTarget=d.TikTokShowcaseIncomeTarget,
                               CumulativeTikTokShowcaseIncome = d.CumulativeTikTokShowcaseIncome,
                               TikTokShowcaseIncomeCompleteRate = d.TikTokShowcaseIncomeCompleteRate,
 

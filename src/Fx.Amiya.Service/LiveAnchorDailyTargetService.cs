@@ -270,7 +270,7 @@ namespace Fx.Amiya.Service
                     liveAnchorDailyTargetDto.TikTokSendNum = x.SendNum;
                     liveAnchorDailyTargetDto.TikTokFlowInvestmentNum = x.FlowInvestmentNum;
                     liveAnchorDailyTargetDto.UpdateDate = x.UpdateDate;
-
+                    liveAnchorDailyTargetDto.TikTokShowcaseIncome = x.TikTokShowcaseIncome;
                     ///小红书
                     var xiaohongshuThisDayDataInfo = xiaohongshuDailyInfoList.Where(k => k.RecordDate == x.RecordDate && k.LiveAnchorMonthlyTargetId == x.LiveAnchorMonthlyTargetId).FirstOrDefault();
                     if (xiaohongshuThisDayDataInfo == null)
@@ -2181,6 +2181,7 @@ namespace Fx.Amiya.Service
                                           CumulativeFlowinvestment = d.LiveAnchorMonthlyTargetBeforeLiving.CumulativeZhihuFlowinvestment,
                                           FlowinvestmentCompleteRate = d.LiveAnchorMonthlyTargetBeforeLiving.ZhihuFlowinvestmentCompleteRate.ToString() + "%",
                                           TikTokShowcaseIncome=d.TikTokShowcaseIncome,
+                                          TikTokShowcaseIncomeTarget=d.LiveAnchorMonthlyTargetBeforeLiving.TikTokShowcaseIncomeTarget,
                                           CumulativeTikTokShowcaseIncome=d.LiveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokShowcaseIncome,
                                           TikTokShowcaseIncomeCompleteRate=d.LiveAnchorMonthlyTargetBeforeLiving.TikTokShowcaseIncomeCompleteRate.ToString()+"%",
 
