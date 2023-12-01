@@ -23,6 +23,8 @@ using Fx.Common;
 using Fx.Amiya.BusinessWechat.Api.Vo;
 using Fx.Amiya.Dto.BindCustomerService;
 using Fx.Amiya.Dto.TmallOrder;
+using Fx.Amiya.Dto.OperationLog;
+using Newtonsoft.Json;
 
 namespace Fx.Amiya.BusinessWechat.Api.Controllers
 {
@@ -37,6 +39,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         private IBindCustomerServiceService bindCustomerService;
         private IHttpContextAccessor httpContextAccessor;
         private IContentPlateFormOrderService _contentPlatFormOrderService;
+        private IOperationLogService operationLogService;
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -44,11 +47,12 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// <param name="httpContextAccessor"></param>
         public BindCustomerServiceController(IBindCustomerServiceService bindCustomerService,
             IContentPlateFormOrderService contentPlatFormOrderService,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor, IOperationLogService operationLogService)
         {
             this.bindCustomerService = bindCustomerService;
             _contentPlatFormOrderService = contentPlatFormOrderService;
             this.httpContextAccessor = httpContextAccessor;
+            this.operationLogService = operationLogService;
         }
 
 
@@ -127,13 +131,33 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpPut("updatePublicPoolPhone")]
         public async Task<ResultData> updatePublicPoolPhoneAsync(UpdateBindCustomerServiceVo updateVo)
         {
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            int employeeId = Convert.ToInt32(employee.Id);
-            UpdateBindCustomerServiceDto updateDto = new UpdateBindCustomerServiceDto();
-            updateDto.CustomerServiceId = updateVo.CustomerServiceId;
-            updateDto.EncryptPhoneList = updateVo.EncryptPhoneList;
-            await bindCustomerService.UpdateAsync(updateDto, employeeId);
-            return ResultData.Success();
+            OperationAddDto operationLog = new OperationAddDto();
+            operationLog.Source = (int)RequestSource.AmiyaBusinessWechat;
+            operationLog.Code = 0;
+            try
+            {
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationLog.OperationBy = employeeId;
+                UpdateBindCustomerServiceDto updateDto = new UpdateBindCustomerServiceDto();
+                updateDto.CustomerServiceId = updateVo.CustomerServiceId;
+                updateDto.EncryptPhoneList = updateVo.EncryptPhoneList;
+                await bindCustomerService.UpdateAsync(updateDto, employeeId);
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                operationLog.Message = ex.Message;
+                operationLog.Code = -1;
+                throw ex;
+            }
+            finally
+            {
+                operationLog.Parameters = JsonConvert.SerializeObject(updateVo);
+                operationLog.RequestType = (int)RequestType.Update;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationLog);
+            }
         }
 
         /// <summary>
@@ -144,24 +168,44 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpPut("ContentPlatFormOrderListBindCustomerService")]
         public async Task<ResultData> ContentPlatFormOrderListBindCustomerUpdateAsync(UpdateBindCustomerServiceVo updateVo)
         {
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            int employeeId = Convert.ToInt32(employee.Id);
-            UpdateBindCustomerServiceDto updateDto = new UpdateBindCustomerServiceDto();
-            updateDto.CustomerServiceId = updateVo.CustomerServiceId;
-            updateDto.EncryptPhoneList = updateVo.EncryptPhoneList;
-            await bindCustomerService.UpdateAsync(updateDto, employeeId);
-
-            foreach (var x in updateVo.EncryptPhoneList)
+            OperationAddDto operationLog = new OperationAddDto();
+            operationLog.Source = (int)RequestSource.AmiyaBackground;
+            operationLog.Code = 0;
+            try
             {
-                //(todo;)
-                var orderList = await _contentPlatFormOrderService.GetListByEncryptPhoneAsync(x, 1, 9999);
-                var orderIdList = orderList.List.Select(x => x.Id).ToList();
-                UpdateBelongEmpInfoOrderDto updateOrderBelongEmpIdDto = new UpdateBelongEmpInfoOrderDto();
-                updateOrderBelongEmpIdDto.OrderId = orderIdList;
-                updateOrderBelongEmpIdDto.BelongEmpId = updateVo.CustomerServiceId;
-                await _contentPlatFormOrderService.UpdateOrderBelongEmpIdAsync(updateOrderBelongEmpIdDto);
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationLog.OperationBy = employeeId;
+                UpdateBindCustomerServiceDto updateDto = new UpdateBindCustomerServiceDto();
+                updateDto.CustomerServiceId = updateVo.CustomerServiceId;
+                updateDto.EncryptPhoneList = updateVo.EncryptPhoneList;
+                await bindCustomerService.UpdateAsync(updateDto, employeeId);
+
+                foreach (var x in updateVo.EncryptPhoneList)
+                {
+                    //(todo;)
+                    var orderList = await _contentPlatFormOrderService.GetListByEncryptPhoneAsync(x, 1, 9999);
+                    var orderIdList = orderList.List.Select(x => x.Id).ToList();
+                    UpdateBelongEmpInfoOrderDto updateOrderBelongEmpIdDto = new UpdateBelongEmpInfoOrderDto();
+                    updateOrderBelongEmpIdDto.OrderId = orderIdList;
+                    updateOrderBelongEmpIdDto.BelongEmpId = updateVo.CustomerServiceId;
+                    await _contentPlatFormOrderService.UpdateOrderBelongEmpIdAsync(updateOrderBelongEmpIdDto);
+                }
+                return ResultData.Success();
             }
-            return ResultData.Success();
+            catch (Exception ex)
+            {
+                operationLog.Message = ex.Message;
+                operationLog.Code = -1;
+                throw ex;
+            }
+            finally
+            {
+                operationLog.Parameters = JsonConvert.SerializeObject(updateVo);
+                operationLog.RequestType = (int)RequestType.Update;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationLog);
+            }
         }
 
     }
