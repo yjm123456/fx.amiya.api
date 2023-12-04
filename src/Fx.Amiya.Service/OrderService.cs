@@ -3124,7 +3124,7 @@ namespace Fx.Amiya.Service
                 throw new Exception("交易编号错误");
 
             OrderTradeForWxDto orderTradeDto = new OrderTradeForWxDto();
-            orderTradeDto.Phone = orderTrade.Address.Phone;
+            orderTradeDto.Phone = orderTrade.Address == null ? orderTrade.CustomerInfo.Phone : orderTrade.Address.Phone;
             orderTradeDto.ChanelOrderNo = orderTrade.ChanelOrderNo;
             orderTradeDto.AppId = orderTrade.CustomerInfo.AppId;
             orderTradeDto.TradeId = orderTrade.TradeId;

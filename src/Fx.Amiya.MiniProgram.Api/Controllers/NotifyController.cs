@@ -562,6 +562,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         public async Task<string> HSQPayOrderNotifyUrl()
         {
             OperationAddDto operationLog2 = new OperationAddDto();
+            HuiShouQianNotifyParam notifyParam = new HuiShouQianNotifyParam();
             try
             {
                 operationLog2.OperationBy = null;
@@ -591,7 +592,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                         sign = arr[1];
                     }
                 }
-                var notifyParam = JsonConvert.DeserializeObject<HuiShouQianNotifyParam>(signContent);
+                notifyParam = JsonConvert.DeserializeObject<HuiShouQianNotifyParam>(signContent);
                 var signContent1 = BuildPayParamString("CALLBACK", "1.0.0", "JSON", payInfo.AppId, "RSA2", signContent, huiShouQianPackageInfo.Key);
                 RSAHelper rsa = new RSAHelper(RSAType.RSA2, Encoding.UTF8, huiShouQianPackageInfo.PrivateKey, huiShouQianPackageInfo.PublicKey);
                 var verify = rsa.Verify(signContent1, sign);
@@ -805,7 +806,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             finally
             {
                 operationLog2.Source = (int)RequestSource.AmiyaBackground;
-                operationLog2.Parameters = JsonConvert.SerializeObject("");
+                operationLog2.Parameters = JsonConvert.SerializeObject(notifyParam);
                 operationLog2.RequestType = (int)RequestType.Pay;
                 operationLog2.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
                 await operationLogService.AddOperationLogAsync(operationLog2);
@@ -1070,7 +1071,124 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         {
             await huiShouQianPaymentService.CheckOrderStatus(transNo);
         }
+        //[HttpPost("testPayInfo/{tradeId}")]
+        //public async Task TestPayInfo(string tradeId)
+        //{
+        //    try
+        //    {
+                
+        //        bool isMaterialOrder = false;
+        //        var orderTrade = await orderService.GetOrderTradeByTradeIdAsync(tradeId);
+        //        if (true)
+        //        {
+        //            List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
+        //            foreach (var item in orderTrade.OrderInfoList)
+        //            {
+        //                UpdateOrderDto updateOrder = new UpdateOrderDto();
+        //                updateOrder.OrderId = item.Id;
+        //                if (item.OrderType == (byte)OrderType.MaterialOrder)
+        //                {
+        //                    updateOrder.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
+        //                    isMaterialOrder = true;
+        //                }
+        //                else if (item.OrderType == (byte)OrderType.VirtualOrder)
+        //                {
+        //                    updateOrder.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+        //                    OperationAddDto operationLog = new OperationAddDto();
+        //                    UploadMiniprogramOrderInfoDto uploadMiniprogramOrderInfo = new UploadMiniprogramOrderInfoDto();
+        //                    try
+        //                    {
+        //                        operationLog.OperationBy = null;
 
+        //                        OrderKey orderKey = new OrderKey();
+        //                        if (orderTrade.AppId == "wx695942e4818de445")
+        //                        {
+        //                            orderKey.mchid = "1634868495";
+        //                        }
+        //                        else if (orderTrade.AppId == "wx8747b7f34c0047eb")
+        //                        {
+        //                            orderKey.mchid = "1633229187";
+        //                        }
 
+        //                        orderKey.transaction_id = "4200002083202312043752280919";
+        //                        uploadMiniprogramOrderInfo.order_key = orderKey;
+        //                        uploadMiniprogramOrderInfo.logistics_type = 3;
+        //                        uploadMiniprogramOrderInfo.delivery_mode = 1;
+        //                        uploadMiniprogramOrderInfo.is_all_delivered = true;
+        //                        ShippingInfo shippingInfo = new ShippingInfo();
+        //                        shippingInfo.item_desc = item.GoodsName;
+        //                        Contact contact = new Contact();
+        //                        contact.receiver_contact = ServiceClass.GetIncompletePhone(orderTrade.Phone);
+        //                        shippingInfo.contact = contact;
+        //                        uploadMiniprogramOrderInfo.shipping_list = new List<ShippingInfo> { shippingInfo };
+        //                        uploadMiniprogramOrderInfo.upload_time = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssK");
+        //                        uploadMiniprogramOrderInfo.payer = new PayerInfo() { openid = dalWxMpUser.GetAll().Where(e => e.UserId == orderTrade.UserId).FirstOrDefault().OpenId };
+        //                        await this.UploadMiniprogramOrderInfoAsync(uploadMiniprogramOrderInfo, orderTrade.AppId);
+        //                    }
+        //                    catch (Exception ex)
+        //                    {
+        //                        operationLog.Message = ex.Message;
+        //                        operationLog.Code = -1;
+
+        //                    }
+        //                    finally
+        //                    {
+        //                        operationLog.Parameters = JsonConvert.SerializeObject(uploadMiniprogramOrderInfo);
+        //                        operationLog.RequestType = (int)RequestType.Pay;
+        //                        operationLog.Source = (int)RequestSource.AmiyaBackground;
+        //                        operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+        //                        await operationLogService.AddOperationLogAsync(operationLog);
+        //                    }
+        //                }
+        //                if (item.ActualPayment.HasValue)
+        //                {
+        //                    updateOrder.Actual_payment = item.ActualPayment.Value;
+
+        //                    var bind = await _dalBindCustomerService.GetAll().FirstOrDefaultAsync(e => e.BuyerPhone == item.Phone);
+        //                    if (bind != null)
+        //                    {
+        //                        bind.NewConsumptionDate = DateTime.Now;
+        //                        bind.NewConsumptionContentPlatform = (int)OrderFrom.ThirdPartyOrder;
+        //                        bind.NewContentPlatForm = ServiceClass.GetAppTypeText(item.AppType);
+        //                        bind.AllPrice += item.ActualPayment.Value;
+        //                        bind.AllOrderCount += item.Quantity;
+        //                        await _dalBindCustomerService.UpdateAsync(bind, true);
+        //                    }
+        //                }
+        //                if (item.IntegrationQuantity.HasValue)
+        //                {
+        //                    updateOrder.IntergrationQuantity = item.IntegrationQuantity;
+        //                }
+        //                Random random = new Random();
+        //                updateOrder.AppType = item.AppType;
+        //                updateOrder.WriteOffCode = random.Next().ToString().Substring(0, 8);
+        //                updateOrderList.Add(updateOrder);
+        //            }
+        //            //修改订单状态
+        //            await orderService.UpdateAsync(updateOrderList);
+        //            UpdateOrderTradeDto updateOrderTrade = new UpdateOrderTradeDto();
+        //            updateOrderTrade.TradeId = tradeId;
+        //            updateOrderTrade.AddressId = orderTrade.AddressId;
+        //            if (isMaterialOrder)
+        //            {
+        //                updateOrderTrade.StatusCode = OrderStatusCode.WAIT_SELLER_SEND_GOODS;
+        //            }
+        //            else
+        //            {
+        //                updateOrderTrade.StatusCode = OrderStatusCode.TRADE_BUYER_PAID;
+        //            }
+
+        //            await orderService.UpdateOrderTradeAsync(updateOrderTrade);
+        //            await orderService.TradeAddChanelOrderNoAsync(orderTrade.TradeId, "4200002083202312043752280919");
+                    
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+                
+        //        throw ex;
+        //    }
+
+        //}
     }
 }
