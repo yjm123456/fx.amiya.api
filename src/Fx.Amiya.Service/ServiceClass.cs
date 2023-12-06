@@ -798,9 +798,9 @@ namespace Fx.Amiya.Service
                 case 6:
                     sourceText = "产品转化";
                     break;
-                case 7:
-                    sourceText = "带货";
-                    break;
+                //case 7:
+                //    sourceText = "带货";
+                //    break;
                 default:
                     sourceText = "";
                     break;

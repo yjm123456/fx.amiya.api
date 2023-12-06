@@ -163,5 +163,14 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder
         /// 获客方式
         /// </summary>
         public int GetCustomerType { get; set; }
+        /// <summary>
+        /// 客户来源
+        /// </summary>
+        public int CustomerSource { get; set; }
+
+        /// <summary>
+        /// 顾客类型
+        /// </summary>
+        public int CustomerType { get; set; }
     }
 }

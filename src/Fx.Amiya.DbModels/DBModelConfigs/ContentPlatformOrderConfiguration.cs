@@ -75,6 +75,8 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.IsSupportOrder).HasColumnName("is_support_order").HasColumnType("bit").IsRequired();
             builder.Property(e => e.SupportEmpId).HasColumnName("support_emp_id").HasColumnType("int").IsRequired();
             builder.Property(e => e.GetCustomerType).HasColumnName("get_customer_type").HasColumnType("int").IsRequired();
+            builder.Property(e => e.CustomerSource).HasColumnName("customer_source").HasColumnType("int").IsRequired();
+            builder.Property(e => e.CustomerType).HasColumnName("customer_type").HasColumnType("int").IsRequired();
 
 
             builder.HasOne(e => e.Contentplatform).WithMany(e => e.ContentPlatformOrderList).HasForeignKey(e=>e.ContentPlateformId);

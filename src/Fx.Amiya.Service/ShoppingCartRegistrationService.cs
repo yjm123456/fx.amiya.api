@@ -405,6 +405,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.CustomerNickName = shoppingCartRegistration.CustomerNickName;
                 shoppingCartRegistrationDto.Phone = shoppingCartRegistration.Phone;
                 shoppingCartRegistrationDto.GetCustomerType = shoppingCartRegistration.GetCustomerType;
+                shoppingCartRegistrationDto.GetCustomerTypeText = ServiceClass.GetShoppingCartGetCustomerTypeText(shoppingCartRegistration.GetCustomerType);
                 shoppingCartRegistrationDto.SubPhone = shoppingCartRegistration.SubPhone;
                 shoppingCartRegistrationDto.Price = shoppingCartRegistration.Price;
                 shoppingCartRegistrationDto.IsAddWeChat = shoppingCartRegistration.IsAddWeChat;
@@ -431,6 +432,9 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.EmergencyLevel = shoppingCartRegistration.EmergencyLevel;
                 shoppingCartRegistrationDto.Source = shoppingCartRegistration.Source;
                 shoppingCartRegistrationDto.ProductType = shoppingCartRegistration.ProductType;
+                shoppingCartRegistrationDto.ShoppingCartRegistrationCustomerType = shoppingCartRegistration.ShoppingCartRegistrationCustomerType;
+                shoppingCartRegistrationDto.ShoppingCartRegistrationCustomerTypeText = ServiceClass.GetShoppingCartCustomerTypeText(shoppingCartRegistration.ShoppingCartRegistrationCustomerType);
+                shoppingCartRegistrationDto.SourceText = ServiceClass.GetTiktokCustomerSourceText(shoppingCartRegistration.Source);
                 return shoppingCartRegistrationDto;
             }
             catch (Exception ex)

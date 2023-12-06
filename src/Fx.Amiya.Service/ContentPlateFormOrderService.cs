@@ -211,6 +211,8 @@ namespace Fx.Amiya.Service
                 order.AddOrderPrice = input.AddOrderPrice;
                 order.BelongMonth = input.BelongMonth;
                 order.OrderSource = input.OrderSource;
+                order.CustomerSource = input.CustomerSource;
+                order.CustomerType = input.CustomerType;
                 order.UnSendReason = input.UnSendReason;
                 order.ConsultationEmpId = input.ConsultationEmpId;
                 order.IsSupportOrder = input.IsSupportOrder;
@@ -1607,6 +1609,10 @@ namespace Fx.Amiya.Service
                 var hospitalInfo = await _hospitalInfoService.GetBaseByIdAsync(result.AppointmentHospitalId);
                 result.AppointmentHospitalName = hospitalInfo.Name;
             }
+            result.CustomerSource = order.CustomerSource;
+            result.CustomerSourceText = ServiceClass.GetTiktokCustomerSourceText(order.CustomerSource);
+            result.CustomerType = order.CustomerType;
+            result.CustomerTypeText = ServiceClass.GetShoppingCartCustomerTypeText(order.CustomerType);
             var goodsInfo = await amiyaGoodsDemandService.GetByIdAsync(order.GoodsId);
             result.GoodsName = goodsInfo.ProjectNname;
             result.ThumbPicture = goodsInfo.ThumbPictureUrl;
@@ -1860,6 +1866,8 @@ namespace Fx.Amiya.Service
                 order.OrderSource = input.OrderSource;
                 order.AcceptConsulting = input.AcceptConsulting;
                 order.UnSendReason = input.UnSendReason;
+                order.CustomerSource = input.CustomerSource;
+                order.CustomerType = input.CustomerType;
 
                 await _contentPlatFormCustomerPictureService.DeleteByContentPlatFormOrderIdAsync(order.Id);
                 foreach (var z in input.CustomerPictures)

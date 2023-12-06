@@ -293,6 +293,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shoppingCartRegistrationVo.Id = shoppingCartRegistration.Id;
                 shoppingCartRegistrationVo.RecordDate = shoppingCartRegistration.RecordDate;
                 shoppingCartRegistrationVo.GetCustomerType = shoppingCartRegistration.GetCustomerType;
+                shoppingCartRegistrationVo.GetCustomerTypeText = shoppingCartRegistration.GetCustomerTypeText;
                 shoppingCartRegistrationVo.ContentPlatFormId = shoppingCartRegistration.ContentPlatFormId;
                 shoppingCartRegistrationVo.ContentPlatFormName = shoppingCartRegistration.ContentPlatFormName;
                 shoppingCartRegistrationVo.LiveAnchorId = shoppingCartRegistration.LiveAnchorId;
@@ -328,6 +329,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shoppingCartRegistrationVo.EmergencyLevel = shoppingCartRegistration.EmergencyLevel;
                 shoppingCartRegistrationVo.EmergencyLevelText = ServiceClass.GetShopCartRegisterEmergencyLevelText(shoppingCartRegistration.EmergencyLevel);
                 shoppingCartRegistrationVo.Source = shoppingCartRegistration.Source;
+                shoppingCartRegistrationVo.SourceText = shoppingCartRegistration.SourceText;
+                shoppingCartRegistrationVo.ShoppingCartRegistrationCustomerType = shoppingCartRegistration.ShoppingCartRegistrationCustomerType;
+                shoppingCartRegistrationVo.ShoppingCartRegistrationCustomerTypeText = shoppingCartRegistration.ShoppingCartRegistrationCustomerTypeText;
                 shoppingCartRegistrationVo.ProductType = shoppingCartRegistration.ProductType;
                 return ResultData<ShoppingCartRegistrationVo>.Success().AddData("shoppingCartRegistrationInfo", shoppingCartRegistrationVo);
             }

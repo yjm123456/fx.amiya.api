@@ -126,6 +126,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 addDto.IsSupportOrder = addVo.IsSupportOrder;
                 addDto.SupportEmpId = addVo.SupportEmpId;
                 addDto.GetCustomerType = addVo.GetCustomerType;
+                addDto.CustomerSource = addVo.CustomerSource;
+                addDto.CustomerType = addVo.CustomerType;
                 await _orderService.AddContentPlateFormOrderAsync(addDto);
 
 
@@ -475,6 +477,10 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             orderUpdateInfo.IsSupportOrder = order.IsSupportOrder;
             orderUpdateInfo.SupportEmpName = order.SupportEmpName;
             orderUpdateInfo.SupportEmpId = order.SupportEmpId;
+            orderUpdateInfo.CustomerType = order.CustomerType;
+            orderUpdateInfo.CustomerTypeText = order.CustomerTypeText;
+            orderUpdateInfo.CustomerSource = order.CustomerSource;
+            orderUpdateInfo.CustomerSourceText = order.CustomerSourceText;
             return ResultData<ContentPlateFormOrderVo>.Success().AddData("orderInfo", orderUpdateInfo);
         }
 
@@ -537,6 +543,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             updateDto.Birthday = updateVo.Birthday;
             updateDto.Occupation = updateVo.Occupation;
             updateDto.WechatNumber = updateVo.WechatNumber;
+            updateDto.CustomerSource = updateVo.CustomerSource;
+            updateDto.CustomerType = updateDto.CustomerType;
             await _orderService.UpdateContentPlateFormOrderAsync(updateDto);
 
 

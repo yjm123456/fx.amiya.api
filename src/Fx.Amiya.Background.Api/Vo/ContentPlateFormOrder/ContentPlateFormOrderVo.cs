@@ -410,5 +410,25 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 获客方式文本
         /// </summary>
         public string GetCustomerTypeText { get; set; }
+
+        /// <summary>
+        /// 客户来源
+        /// </summary>
+        public int CustomerSource { get; set; }
+
+        /// <summary>
+        /// 客户来源文本
+        /// </summary>
+        public string CustomerSourceText { get; set; }
+
+        /// <summary>
+        /// 顾客类型
+        /// </summary>
+        public int CustomerType { get; set; }
+
+        /// <summary>
+        /// 顾客类型文本
+        /// </summary>
+        public string CustomerTypeText { get; set; }
     }
 }

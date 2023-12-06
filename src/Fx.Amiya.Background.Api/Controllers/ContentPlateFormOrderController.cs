@@ -163,6 +163,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.IsSupportOrder = addVo.IsSupportOrder;
                 addDto.SupportEmpId = addVo.SupportEmpId;
                 addDto.GetCustomerType = addVo.GetCustomerType;
+                addDto.CustomerType = addVo.CustomerType;
+                addDto.CustomerSource = addVo.CustomerSource;
                 await _orderService.AddContentPlateFormOrderAsync(addDto);
 
 
@@ -909,6 +911,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderUpdateInfo.SupportEmpName = order.SupportEmpName;
             orderUpdateInfo.SupportEmpId = order.SupportEmpId;
             orderUpdateInfo.CustomerServiceSettlePrice = order.CustomerServiceSettlePrice;
+            orderUpdateInfo.CustomerType = order.CustomerType;
+            orderUpdateInfo.CustomerTypeText = order.CustomerTypeText;
+            orderUpdateInfo.CustomerSource = order.CustomerSource;
+            orderUpdateInfo.CustomerSourceText = order.CustomerSourceText;
             return ResultData<ContentPlateFormOrderVo>.Success().AddData("orderInfo", orderUpdateInfo);
         }
 
@@ -1040,6 +1046,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.Birthday = updateVo.Birthday;
             updateDto.Occupation = updateVo.Occupation;
             updateDto.WechatNumber = updateVo.WechatNumber;
+            updateDto.CustomerType = updateVo.CustomerType;
+            updateDto.CustomerSource = updateVo.CustomerSource;
             await _orderService.UpdateContentPlateFormOrderAsync(updateDto);
 
 
