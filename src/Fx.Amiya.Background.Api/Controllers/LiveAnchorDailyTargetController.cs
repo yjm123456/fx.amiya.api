@@ -830,10 +830,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.GMV = updateVo.GMV;
                 updateDto.EliminateCardGMV = updateVo.EliminateCardGMV;
                 updateDto.RefundGMV = updateVo.RefundGMV;
-                updateDto.TikTokPlusNum = updateDto.TikTokPlusNum;
-                updateDto.QianChuanNum = updateDto.QianChuanNum;
-                updateDto.ShuiXinTuiNum = updateDto.ShuiXinTuiNum;
-                updateDto.WeiXinDou = updateDto.WeiXinDou;
+                updateDto.TikTokPlusNum = updateVo.TikTokPlusNum;
+                updateDto.QianChuanNum = updateVo.QianChuanNum;
+                updateDto.ShuiXinTuiNum = updateVo.ShuiXinTuiNum;
+                updateDto.WeiXinDou = updateVo.WeiXinDou;
                 await _liveAnchorDailyTargetService.LivingUpdateAsync(updateDto);
                 return ResultData.Success();
             }
