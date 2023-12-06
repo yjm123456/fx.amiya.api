@@ -11,8 +11,26 @@ namespace Fx.Amiya.DbModels.Model
         public string LiveAnchorMonthlyTargetId { get; set; }
 
         public int OperationEmpId { get; set; }
-
+        /// <summary>
+        /// 直播间投流
+        /// </summary>
         public decimal LivingRoomFlowInvestmentNum { get; set; }
+        /// <summary>
+        /// 抖+投流费用
+        /// </summary>
+        public decimal TikTokPlusNum { get; set; }
+        /// <summary>
+        /// 千川投流
+        /// </summary>
+        public decimal QianChuanNum { get; set; }
+        /// <summary>
+        /// 随心推
+        /// </summary>
+        public decimal ShuiXinTuiNum { get; set; }
+        /// <summary>
+        /// 微信豆
+        /// </summary>
+        public decimal WeiXinDou { get; set; }
 
         public int Consultation { get; set; }
         public int Consultation2 { get; set; }

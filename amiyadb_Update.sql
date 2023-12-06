@@ -73,3 +73,17 @@ ADD COLUMN `customer_type` INT NOT NULL DEFAULT 0 AFTER `get_customer_type`;
 
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
+
+
+------------------------------------------------王健 2023/12/6 BEGIN--------------------------------------------
+
+--直播中添加投流细分数据
+ALTER TABLE `tbl_living_daily_target`
+	ADD COLUMN `tiktok_plus_num` DECIMAL(12,2) NOT NULL DEFAULT 0 AFTER `refund_gmv`,
+	ADD COLUMN `qian_chuan_num` DECIMAL(12,2) NOT NULL DEFAULT 0 AFTER `tiktok_plus_num`,
+	ADD COLUMN `shui_xin_tui_num` DECIMAL(12,2) NOT NULL DEFAULT 0 AFTER `qian_chuan_num`,
+	ADD COLUMN `weixin_dou` DECIMAL(12,2) NOT NULL DEFAULT 0 AFTER `shui_xin_tui_num`;
+
+
+------------------------------------------------王健 2023/12/6 END--------------------------------------------
+

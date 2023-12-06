@@ -33,6 +33,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.Remark).HasColumnName("remark").HasColumnType("varchar(500)").IsRequired(false);
             builder.Property(t => t.OrderNum).HasColumnName("order_num").HasColumnType("INT").IsRequired();
 
+
             builder.HasOne(e => e.AmiyaEmployee).WithMany(e => e.LivingDailyTakeGoodsList).HasForeignKey(e => e.CreatBy);
             builder.HasOne(e => e.SupplierBrand).WithMany(e => e.LivingDailyTakeGoodsList).HasForeignKey(e => e.BrandId);
             builder.HasOne(e => e.SupplierCategory).WithMany(e => e.LivingDailyTakeGoodsList).HasForeignKey(e => e.CategoryId);

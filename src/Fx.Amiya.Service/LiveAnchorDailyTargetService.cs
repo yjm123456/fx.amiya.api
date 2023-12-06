@@ -641,7 +641,11 @@ namespace Fx.Amiya.Service
                                           RefundCard = d.RefundCard,
                                           GMV = d.GMV,
                                           EliminateCardGMV = d.EliminateCardGMV,
-                                          RefundGMV = d.RefundGMV
+                                          RefundGMV = d.RefundGMV,
+                                          TikTokPlusNum=d.TikTokPlusNum,
+                                          QianChuanNum=d.QianChuanNum,
+                                          ShuiXinTuiNum=d.ShuiXinTuiNum,
+                                          WeiXinDou=d.WeiXinDou
                                       };
                 var result = await tikTokDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
 
@@ -864,6 +868,10 @@ namespace Fx.Amiya.Service
                     liveAnchorDailyTargetDto.LiveAnchorId = liveAnchorDailyTarget.LiveAnchorMonthlyTargetLiving.LiveAnchorId;
                     liveAnchorDailyTargetDto.LivingTrackingEmployeeId = liveAnchorDailyTarget.OperationEmpId;
                     liveAnchorDailyTargetDto.LivingRoomFlowInvestmentNum = liveAnchorDailyTarget.LivingRoomFlowInvestmentNum;
+                    liveAnchorDailyTargetDto.TikTokPlusNum = liveAnchorDailyTarget.TikTokPlusNum;
+                    liveAnchorDailyTargetDto.QianChuanNum = liveAnchorDailyTarget.QianChuanNum;
+                    liveAnchorDailyTargetDto.ShuiXinTuiNum = liveAnchorDailyTarget.ShuiXinTuiNum;
+                    liveAnchorDailyTargetDto.WeiXinDou = liveAnchorDailyTarget.WeiXinDou;
                     liveAnchorDailyTargetDto.Consultation = liveAnchorDailyTarget.Consultation;
                     liveAnchorDailyTargetDto.Consultation2 = liveAnchorDailyTarget.Consultation2;
                     liveAnchorDailyTargetDto.CargoSettlementCommission = liveAnchorDailyTarget.CargoSettlementCommission;
@@ -1799,6 +1807,10 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.Valid = true;
                 liveAnchorDailyTarget.UpdateDate = DateTime.Now;
                 liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
+                liveAnchorDailyTarget.TikTokPlusNum = addDto.TikTokPlusNum;
+                liveAnchorDailyTarget.QianChuanNum = addDto.QianChuanNum;
+                liveAnchorDailyTarget.ShuiXinTuiNum = addDto.ShuiXinTuiNum;
+                liveAnchorDailyTarget.WeiXinDou = addDto.WeiXinDou;
                 await _livingDailyTarget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyLivingTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyLivingTargetRateAndNumDto();
@@ -1862,6 +1874,10 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.GMV = updateDto.GMV;
                 liveAnchorDailyTarget.EliminateCardGMV = updateDto.EliminateCardGMV;
                 liveAnchorDailyTarget.RefundGMV = updateDto.RefundGMV;
+                liveAnchorDailyTarget.TikTokPlusNum=updateDto.TikTokPlusNum;
+                liveAnchorDailyTarget.QianChuanNum = updateDto.QianChuanNum;
+                liveAnchorDailyTarget.ShuiXinTuiNum = updateDto.ShuiXinTuiNum;
+                liveAnchorDailyTarget.WeiXinDou = updateDto.WeiXinDou;
                 await _livingDailyTarget.UpdateAsync(liveAnchorDailyTarget, true);
 
                 //添加修改后的

@@ -3205,6 +3205,8 @@ namespace Fx.Amiya.Service
                               || d.StatusCode == OrderStatusCode.TRADE_BUYER_PAID
                               || d.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS
                               || d.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS
+                              || d.StatusCode == OrderStatusCode.REFUNDING
+                              || d.StatusCode == OrderStatusCode.TRADE_CLOSED
                               select d;
             }
             else if (isSendGoods == true)
@@ -3219,6 +3221,8 @@ namespace Fx.Amiya.Service
                 orderTrades = from d in orderTrades
                               where d.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS
                               || d.StatusCode == OrderStatusCode.TRADE_BUYER_PAID
+                              || d.StatusCode == OrderStatusCode.REFUNDING
+                              || d.StatusCode == OrderStatusCode.TRADE_CLOSED
                               select d;
             }
 
@@ -3438,7 +3442,10 @@ namespace Fx.Amiya.Service
                 var orderTrade = await dalOrderTrade.GetAll().Include(e => e.OrderInfoList).Include(e => e.Address).ThenInclude(e => e.CustomerInfo).SingleOrDefaultAsync(e => e.TradeId == sendGoodsDto.TradeId);
                 if (orderTrade == null)
                     throw new Exception("交易编号错误！");
-
+                if (orderTrade.StatusCode == OrderStatusCode.REFUNDING || orderTrade.StatusCode == OrderStatusCode.TRADE_CLOSED)
+                {
+                    throw new Exception("订单处于退款状态不能发货！");
+                }
                 var sendGoodsRecord = await dalSendGoodsRecord.GetAll().SingleOrDefaultAsync(e => e.TradeId == sendGoodsDto.TradeId && e.OrderId == sendGoodsDto.OrderId);
                 if (sendGoodsRecord != null)
                     throw new Exception("该交易已发货，请勿重复操作！");

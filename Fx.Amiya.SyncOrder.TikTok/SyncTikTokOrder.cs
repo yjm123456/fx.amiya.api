@@ -66,6 +66,7 @@ namespace Fx.Amiya.SyncOrder.TikTok
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return new List<TikTokOrder>();
             }
         }

@@ -16,6 +16,11 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.LiveAnchorMonthlyTargetId).HasColumnName("live_anchor_monthly_target_id").HasColumnType("varchar(50)").IsRequired();
             builder.Property(e => e.OperationEmpId).HasColumnName("operation_empId").HasColumnType("datetime").IsRequired();
             builder.Property(e => e.LivingRoomFlowInvestmentNum).HasColumnName("living_room_flow_investment_num").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.TikTokPlusNum).HasColumnName("tiktok_plus_num").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.QianChuanNum).HasColumnName("qian_chuan_num").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.ShuiXinTuiNum).HasColumnName("shui_xin_tui_num").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.WeiXinDou).HasColumnName("weixin_dou").HasColumnType("decimal(12,2)").IsRequired();
+
             builder.Property(e => e.Consultation).HasColumnName("consultation").HasColumnType("int").IsRequired();
             builder.Property(e => e.Consultation2).HasColumnName("consultation2").HasColumnType("int").IsRequired();
             builder.Property(e => e.CargoSettlementCommission).HasColumnName("cargo_settlement_commission").HasColumnType("decimal(12,2)").IsRequired();

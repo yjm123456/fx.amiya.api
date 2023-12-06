@@ -229,7 +229,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 RefundCard=d.RefundCard,
                                                 GMV=d.GMV,
                                                 EliminateCardGMV=d.EliminateCardGMV,
-                                                RefundGMV=d.RefundGMV
+                                                RefundGMV=d.RefundGMV,
+                                                TikTokPlusNum=d.TikTokPlusNum,
+                                                QianChuanNum=d.QianChuanNum,
+                                                ShuiXinTuiNum=d.ShuiXinTuiNum,
+                                                WeiXinDou=d.WeiXinDou
                                             };
 
                 FxPageInfo<LivingDailyTargetVo> liveAnchorDailyTargetPageInfo = new FxPageInfo<LivingDailyTargetVo>();
@@ -354,6 +358,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorDailyTargetVo.TodaySendNum = liveAnchorDailyTarget.TodaySendNum;
                 liveAnchorDailyTargetVo.FlowInvestmentNum = liveAnchorDailyTarget.FlowInvestmentNum;
                 liveAnchorDailyTargetVo.LivingRoomFlowInvestmentNum = liveAnchorDailyTarget.LivingRoomFlowInvestmentNum;
+                liveAnchorDailyTargetVo.TikTokPlusNum = liveAnchorDailyTarget.TikTokPlusNum;
+                liveAnchorDailyTargetVo.QianChuanNum = liveAnchorDailyTarget.QianChuanNum;
+                liveAnchorDailyTargetVo.ShuiXinTuiNum = liveAnchorDailyTarget.ShuiXinTuiNum;
+                liveAnchorDailyTargetVo.WeiXinDou = liveAnchorDailyTarget.WeiXinDou;
+
+
                 liveAnchorDailyTargetVo.CluesNum = liveAnchorDailyTarget.CluesNum;
                 liveAnchorDailyTargetVo.AddFansNum = liveAnchorDailyTarget.AddFansNum;
                 liveAnchorDailyTargetVo.AddWechatNum = liveAnchorDailyTarget.AddWechatNum;
@@ -781,6 +791,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.GMV = addVo.GMV;
                     addDto.EliminateCardGMV = addVo.EliminateCardGMV;
                     addDto.RefundGMV = addVo.RefundGMV;
+                    addDto.TikTokPlusNum=addVo.TikTokPlusNum;
+                    addDto.QianChuanNum=addVo.QianChuanNum;
+                    addDto.ShuiXinTuiNum = addVo.ShuiXinTuiNum;
+                    addDto.WeiXinDou=addVo.WeiXinDou;
                     await _liveAnchorDailyTargetService.LivingAddAsync(addDto);
                 }
                 return ResultData.Success();
@@ -816,6 +830,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.GMV = updateVo.GMV;
                 updateDto.EliminateCardGMV = updateVo.EliminateCardGMV;
                 updateDto.RefundGMV = updateVo.RefundGMV;
+                updateDto.TikTokPlusNum = updateDto.TikTokPlusNum;
+                updateDto.QianChuanNum = updateDto.QianChuanNum;
+                updateDto.ShuiXinTuiNum = updateDto.ShuiXinTuiNum;
+                updateDto.WeiXinDou = updateDto.WeiXinDou;
                 await _liveAnchorDailyTargetService.LivingUpdateAsync(updateDto);
                 return ResultData.Success();
             }

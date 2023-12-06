@@ -452,6 +452,22 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 今日直播间投流量
         /// </summary>
         public decimal LivingRoomFlowInvestmentNum { get; set; }
+        /// <summary>
+        /// 抖+投流费用
+        /// </summary>
+        public decimal TikTokPlusNum { get; set; }
+        /// <summary>
+        /// 千川投流
+        /// </summary>
+        public decimal QianChuanNum { get; set; }
+        /// <summary>
+        /// 随心推
+        /// </summary>
+        public decimal ShuiXinTuiNum { get; set; }
+        /// <summary>
+        /// 微信豆
+        /// </summary>
+        public decimal WeiXinDou { get; set; }
 
         /// <summary>
         /// 今日99面诊卡数量
