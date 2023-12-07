@@ -134,27 +134,6 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 OldCustomerTargetComplete = groupPerformance.MonthDataVo.OldCustomerTargetComplete,
 
 
-                PictureConsultationPerformance = groupPerformance.MonthDataVo.PictureConsultationPerformance,
-                PictureConsultationPerformanceRatio = groupPerformance.MonthDataVo.PictureConsultationPerformanceRatio,
-                PictureConsultationPerformanceYearOnYear = groupPerformance.MonthDataVo.PictureConsultationPerformanceYearOnYear,
-                PictureConsultationPerformanceChainRatio = groupPerformance.MonthDataVo.PictureConsultationPerformanceChainRatio,
-
-                VideoConsultationPerformance = groupPerformance.MonthDataVo.VideoConsultationPerformance,
-                VideoConsultationPerformanceRatio = groupPerformance.MonthDataVo.VideoConsultationPerformanceRatio,
-                VideoConsultationPerformanceYearOnYear = groupPerformance.MonthDataVo.VideoConsultationPerformanceYearOnYear,
-                VideoConsultationPerformanceChainRatio = groupPerformance.MonthDataVo.VideoConsultationPerformanceChainRatio,
-
-
-                AcompanyingPerformance = groupPerformance.MonthDataVo.AcompanyingPerformance,
-                AcompanyingPerformanceRatio = groupPerformance.MonthDataVo.AcompanyingPerformanceRatio,
-                AcompanyingPerformanceYearOnYear = groupPerformance.MonthDataVo.AcompanyingPerformanceYearOnYear,
-                AcompanyingPerformanceChainRatio = groupPerformance.MonthDataVo.AcompanyingPerformanceChainRatio,
-
-
-                NotAcompanyingPerformance = groupPerformance.MonthDataVo.NotAcompanyingPerformance,
-                NotAcompanyingPerformanceRatio = groupPerformance.MonthDataVo.NotAcompanyingPerformanceRatio,
-                NotAcompanyingPerformanceYearOnYear = groupPerformance.MonthDataVo.NotAcompanyingPerformanceYearOnYear,
-                NotAcompanyingPerformanceChainRatio = groupPerformance.MonthDataVo.NotAcompanyingPerformanceChainRatio,
 
 
                 ZeroPricePerformance = groupPerformance.MonthDataVo.ZeroPricePerformance,
@@ -169,16 +148,6 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 ExistPricePerformanceChainRatio = groupPerformance.MonthDataVo.ExistPricePerformanceChainRatio,
 
 
-                HistorySendDuringMonthDeal = groupPerformance.MonthDataVo.HistorySendDuringMonthDeal,
-                HistorySendDuringMonthDealPerformanceRatio = groupPerformance.MonthDataVo.HistorySendDuringMonthDealPerformanceRatio,
-                HistorySendDuringMonthDealYearOnYear = groupPerformance.MonthDataVo.HistorySendDuringMonthDealYearOnYear,
-                HistorySendDuringMonthDealChainRatio = groupPerformance.MonthDataVo.HistorySendDuringMonthDealChainRatio,
-
-
-                DuringMonthSendDuringMonthDeal = groupPerformance.MonthDataVo.DuringMonthSendDuringMonthDeal,
-                DuringMonthSendDuringMonthDealPerformanceRatio = groupPerformance.MonthDataVo.DuringMonthSendDuringMonthDealPerformanceRatio,
-                DuringMonthSendDuringMonthDealYearOnYear = groupPerformance.MonthDataVo.DuringMonthSendDuringMonthDealYearOnYear,
-                DuringMonthSendDuringMonthDealChainRatio = groupPerformance.MonthDataVo.DuringMonthSendDuringMonthDealChainRatio,
 
 
             };
@@ -207,27 +176,6 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 OldCustomerTargetComplete = groupPerformance.CurrentDateDataVo.OldCustomerTargetComplete,
 
 
-                PictureConsultationPerformance = groupPerformance.CurrentDateDataVo.PictureConsultationPerformance,
-                PictureConsultationPerformanceRatio = groupPerformance.CurrentDateDataVo.PictureConsultationPerformanceRatio,
-                PictureConsultationPerformanceYearOnYear = groupPerformance.CurrentDateDataVo.PictureConsultationPerformanceYearOnYear,
-                PictureConsultationPerformanceChainRatio = groupPerformance.CurrentDateDataVo.PictureConsultationPerformanceChainRatio,
-
-                VideoConsultationPerformance = groupPerformance.CurrentDateDataVo.VideoConsultationPerformance,
-                VideoConsultationPerformanceRatio = groupPerformance.CurrentDateDataVo.VideoConsultationPerformanceRatio,
-                VideoConsultationPerformanceYearOnYear = groupPerformance.CurrentDateDataVo.VideoConsultationPerformanceYearOnYear,
-                VideoConsultationPerformanceChainRatio = groupPerformance.CurrentDateDataVo.VideoConsultationPerformanceChainRatio,
-
-
-                AcompanyingPerformance = groupPerformance.CurrentDateDataVo.AcompanyingPerformance,
-                AcompanyingPerformanceRatio = groupPerformance.CurrentDateDataVo.AcompanyingPerformanceRatio,
-                AcompanyingPerformanceYearOnYear = groupPerformance.CurrentDateDataVo.AcompanyingPerformanceYearOnYear,
-                AcompanyingPerformanceChainRatio = groupPerformance.CurrentDateDataVo.AcompanyingPerformanceChainRatio,
-
-
-                NotAcompanyingPerformance = groupPerformance.CurrentDateDataVo.NotAcompanyingPerformance,
-                NotAcompanyingPerformanceRatio = groupPerformance.CurrentDateDataVo.NotAcompanyingPerformanceRatio,
-                NotAcompanyingPerformanceYearOnYear = groupPerformance.CurrentDateDataVo.NotAcompanyingPerformanceYearOnYear,
-                NotAcompanyingPerformanceChainRatio = groupPerformance.CurrentDateDataVo.NotAcompanyingPerformanceChainRatio,
 
 
                 ZeroPricePerformance = groupPerformance.CurrentDateDataVo.ZeroPricePerformance,
@@ -242,16 +190,6 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 ExistPricePerformanceChainRatio = groupPerformance.CurrentDateDataVo.ExistPricePerformanceChainRatio,
 
 
-                HistorySendDuringMonthDeal = groupPerformance.CurrentDateDataVo.HistorySendDuringMonthDeal,
-                HistorySendDuringMonthDealPerformanceRatio = groupPerformance.CurrentDateDataVo.HistorySendDuringMonthDealPerformanceRatio,
-                HistorySendDuringMonthDealYearOnYear = groupPerformance.CurrentDateDataVo.HistorySendDuringMonthDealYearOnYear,
-                HistorySendDuringMonthDealChainRatio = groupPerformance.CurrentDateDataVo.HistorySendDuringMonthDealChainRatio,
-
-
-                DuringMonthSendDuringMonthDeal = groupPerformance.CurrentDateDataVo.DuringMonthSendDuringMonthDeal,
-                DuringMonthSendDuringMonthDealPerformanceRatio = groupPerformance.CurrentDateDataVo.DuringMonthSendDuringMonthDealPerformanceRatio,
-                DuringMonthSendDuringMonthDealYearOnYear = groupPerformance.CurrentDateDataVo.DuringMonthSendDuringMonthDealYearOnYear,
-                DuringMonthSendDuringMonthDealChainRatio = groupPerformance.CurrentDateDataVo.DuringMonthSendDuringMonthDealChainRatio,
 
 
             };

@@ -544,7 +544,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             updateDto.Occupation = updateVo.Occupation;
             updateDto.WechatNumber = updateVo.WechatNumber;
             updateDto.CustomerSource = updateVo.CustomerSource;
-            updateDto.CustomerType = updateDto.CustomerType;
+            updateDto.CustomerType = updateVo.CustomerType;
             await _orderService.UpdateContentPlateFormOrderAsync(updateDto);
 
 

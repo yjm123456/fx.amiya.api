@@ -1726,6 +1726,14 @@ namespace Fx.Amiya.Service
             //当日总业绩
             var todayOrder = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(todayDate.StartDate, todayDate.EndDate, LiveAnchorInfo);
             var curTodayTotalPerformance = todayOrder.Sum(o => o.Price);
+
+            //当日同比业绩
+            var todayOrderYearOnYear = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(todayDate.LastYearThisMonthStartDate, todayDate.LastYearThisMonthEndDate, LiveAnchorInfo);
+            var todayTotalPerformanceYearOnYear = todayOrderYearOnYear.Sum(o => o.Price);
+
+            //当日环比业绩
+            var todayOrderChain = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(todayDate.LastMonthStartDate, todayDate.LastMonthEndDate, LiveAnchorInfo);
+            var todayTotalPerformanceChainRatio = todayOrderChain.Sum(o => o.Price);
             #endregion
 
             #region 新客业绩
@@ -1736,6 +1744,10 @@ namespace Fx.Amiya.Service
             var newPerformanceChainRatio = newOrderChainRatio.Sum(o => o.Price);
             //当日新客业绩
             var curTodayNewCustomer = todayOrder.Where(o => o.IsOldCustomer == false).Sum(o => o.Price);
+            var todayNewOrderYearOnYear = todayOrderYearOnYear.Where(x => x.IsOldCustomer == false);
+            var todayNewPerformanceYearOnYear = todayNewOrderYearOnYear.Sum(o => o.Price);
+            List<ContentPlatFormOrderDealInfoDto> todayNewOrderChainRatio = orderChain.Where(x => x.IsOldCustomer == false).ToList();
+            var todayNewPerformanceChainRatio = todayNewOrderChainRatio.Sum(o => o.Price);
             #endregion
 
             #region 老客业绩
@@ -1747,54 +1759,58 @@ namespace Fx.Amiya.Service
 
             //当日老客业绩
             var curTodayOldCustomer = todayOrder.Where(o => o.IsOldCustomer == true).Sum(o => o.Price);
+            var todayOldOrderYearOnYear = todayOrderYearOnYear.Where(x => x.IsOldCustomer == true);
+            var todayOldPerformanceYearOnYear = todayOldOrderYearOnYear.Sum(o => o.Price);
+            List<ContentPlatFormOrderDealInfoDto> todayOldOrderChainRatio = orderChain.Where(x => x.IsOldCustomer == true).ToList();
+            var todayOldPerformanceChainRatio = todayOldOrderChainRatio.Sum(o => o.Price);
             #endregion
 
             #region 视频业绩
-            var curVideoPerformance = order.Where(o => o.ConsultationType == (int)ContentPlateFormOrderConsultationType.Collaboration).Sum(o => o.Price);
-            var videoYearOnYearr = orderYearOnYear.Where(x => x.ConsultationType == (int)ContentPlateFormOrderConsultationType.Collaboration).ToList();
-            var videoPerformanceYearOnYear = videoYearOnYearr.Sum(o => o.Price);
-            var videoOrderChainRatio = orderChain.Where(x => x.ConsultationType == (int)ContentPlateFormOrderConsultationType.Collaboration).ToList();
-            var videoPerformanceRatio = videoOrderChainRatio.Sum(o => o.Price);
+            //var curVideoPerformance = order.Where(o => o.ConsultationType == (int)ContentPlateFormOrderConsultationType.Collaboration).Sum(o => o.Price);
+            //var videoYearOnYearr = orderYearOnYear.Where(x => x.ConsultationType == (int)ContentPlateFormOrderConsultationType.Collaboration).ToList();
+            //var videoPerformanceYearOnYear = videoYearOnYearr.Sum(o => o.Price);
+            //var videoOrderChainRatio = orderChain.Where(x => x.ConsultationType == (int)ContentPlateFormOrderConsultationType.Collaboration).ToList();
+            //var videoPerformanceRatio = videoOrderChainRatio.Sum(o => o.Price);
 
-            //当日视频业绩
-            var curTodayVideoPerformance = todayOrder.Where(o => o.ConsultationType == (int)ContentPlateFormOrderConsultationType.Collaboration).Sum(o => o.Price);
+            ////当日视频业绩
+            //var curTodayVideoPerformance = todayOrder.Where(o => o.ConsultationType == (int)ContentPlateFormOrderConsultationType.Collaboration).Sum(o => o.Price);
             #endregion
 
             #region 照片业绩
-            var curPicturePerformance = order.Where(o => o.ConsultationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).Sum(o => o.Price);
-            var pictureYearOnYearr = orderYearOnYear.Where(x => x.ConsultationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).ToList();
-            var picturePerformanceYearOnYear = pictureYearOnYearr.Sum(o => o.Price);
-            var pictureOrderChainRatio = orderChain.Where(x => x.ConsultationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).ToList();
-            var picturePerformanceRatio = pictureOrderChainRatio.Sum(o => o.Price);
+            //var curPicturePerformance = order.Where(o => o.ConsultationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).Sum(o => o.Price);
+            //var pictureYearOnYearr = orderYearOnYear.Where(x => x.ConsultationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).ToList();
+            //var picturePerformanceYearOnYear = pictureYearOnYearr.Sum(o => o.Price);
+            //var pictureOrderChainRatio = orderChain.Where(x => x.ConsultationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).ToList();
+            //var picturePerformanceRatio = pictureOrderChainRatio.Sum(o => o.Price);
 
-            //当日照片业绩
-            var curTodayPicturePerformance = todayOrder.Where(o => o.ConsultationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).Sum(o => o.Price);
+            ////当日照片业绩
+            //var curTodayPicturePerformance = todayOrder.Where(o => o.ConsultationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).Sum(o => o.Price);
             #endregion
 
             #region 主播接诊业绩
-            var curLiveAnchorAcompanyingPerformance = order.Where(o => o.IsAcompanying == true).Sum(o => o.Price);
-            var liveAnchorAcompanyingYearOnYearr = orderYearOnYear.Where(x => x.IsAcompanying == true).ToList();
-            var liveAnchorAcompanyingPerformanceYearOnYear = liveAnchorAcompanyingYearOnYearr.Sum(o => o.Price);
-            var liveAnchorAcompanyingOrderChainRatio = orderChain.Where(x => x.IsAcompanying == true).ToList();
-            var liveAnchorAcompanyingPerformanceRatio = liveAnchorAcompanyingOrderChainRatio.Sum(o => o.Price);
+            //var curLiveAnchorAcompanyingPerformance = order.Where(o => o.IsAcompanying == true).Sum(o => o.Price);
+            //var liveAnchorAcompanyingYearOnYearr = orderYearOnYear.Where(x => x.IsAcompanying == true).ToList();
+            //var liveAnchorAcompanyingPerformanceYearOnYear = liveAnchorAcompanyingYearOnYearr.Sum(o => o.Price);
+            //var liveAnchorAcompanyingOrderChainRatio = orderChain.Where(x => x.IsAcompanying == true).ToList();
+            //var liveAnchorAcompanyingPerformanceRatio = liveAnchorAcompanyingOrderChainRatio.Sum(o => o.Price);
 
-            //当日主播接诊业绩
-            var curTodayLiveAnchorAcompanyingPerformance = todayOrder.Where(o => o.IsAcompanying == true).Sum(o => o.Price);
+            ////当日主播接诊业绩
+            //var curTodayLiveAnchorAcompanyingPerformance = todayOrder.Where(o => o.IsAcompanying == true).Sum(o => o.Price);
             #endregion
 
             #region 非主播接诊业绩
-            var curNotLiveAnchorAcompanyingPerformance = order.Where(o => o.IsAcompanying == false).Sum(o => o.Price);
-            var notLiveAnchorAcompanyingYearOnYearr = orderYearOnYear.Where(x => x.IsAcompanying == false).ToList();
-            var notLiveAnchorAcompanyingPerformanceYearOnYear = notLiveAnchorAcompanyingYearOnYearr.Sum(o => o.Price);
-            var notLiveAnchorAcompanyingOrderChainRatio = orderChain.Where(x => x.IsAcompanying == false).ToList();
-            var notLiveAnchorAcompanyingPerformanceRatio = notLiveAnchorAcompanyingOrderChainRatio.Sum(o => o.Price);
+            //var curNotLiveAnchorAcompanyingPerformance = order.Where(o => o.IsAcompanying == false).Sum(o => o.Price);
+            //var notLiveAnchorAcompanyingYearOnYearr = orderYearOnYear.Where(x => x.IsAcompanying == false).ToList();
+            //var notLiveAnchorAcompanyingPerformanceYearOnYear = notLiveAnchorAcompanyingYearOnYearr.Sum(o => o.Price);
+            //var notLiveAnchorAcompanyingOrderChainRatio = orderChain.Where(x => x.IsAcompanying == false).ToList();
+            //var notLiveAnchorAcompanyingPerformanceRatio = notLiveAnchorAcompanyingOrderChainRatio.Sum(o => o.Price);
 
-            //当日非主播接诊业绩
-            var curTodayNotLiveAnchorAcompanyingPerformance = todayOrder.Where(o => o.IsAcompanying == false).Sum(o => o.Price);
+            ////当日非主播接诊业绩
+            //var curTodayNotLiveAnchorAcompanyingPerformance = todayOrder.Where(o => o.IsAcompanying == false).Sum(o => o.Price);
             #endregion
 
             #region 有效业绩
-            //199业绩
+            //有效业绩
             var curHavingPricePerformance = order.Where(o => o.AddOrderPrice > 0).Sum(o => o.Price);
             var havingPriceYearOnYearr = orderYearOnYear.Where(x => x.AddOrderPrice > 0).ToList();
             var havingPricePerformanceYearOnYear = havingPriceYearOnYearr.Sum(o => o.Price);
@@ -1803,6 +1819,10 @@ namespace Fx.Amiya.Service
 
             //当日有效业绩
             var curTodayHavingPricePerformance = todayOrder.Where(o => o.AddOrderPrice > 0).Sum(o => o.Price);
+            var todayHavingPriceYearOnYearr = todayOrderYearOnYear.Where(x => x.AddOrderPrice > 0).ToList();
+            var todayHavingPricePerformanceYearOnYear = todayHavingPriceYearOnYearr.Sum(o => o.Price);
+            var todayHavingPriceOrderChainRatio = todayOrderChain.Where(x => x.AddOrderPrice > 0).ToList();
+            var todayHavingPricePerformanceRatio = todayHavingPriceOrderChainRatio.Sum(o => o.Price);
 
             //负数业绩
             curHavingPricePerformance += order.Where(o => o.AddOrderPrice < 0).Sum(o => o.Price);
@@ -1811,6 +1831,8 @@ namespace Fx.Amiya.Service
 
             //当日有效负数业绩相加
             curTodayHavingPricePerformance += todayOrder.Where(o => o.AddOrderPrice < 0).Sum(o => o.Price);
+            todayHavingPricePerformanceYearOnYear += todayOrderYearOnYear.Where(x => x.AddOrderPrice < 0).Sum(o => o.Price);
+            todayHavingPricePerformanceRatio += todayOrderChain.Where(x => x.AddOrderPrice < 0).Sum(o => o.Price);
             #endregion
 
             #region 潜在业绩
@@ -1823,39 +1845,44 @@ namespace Fx.Amiya.Service
 
             //当日潜在业绩
             var curTodayNotHavePricePerformance = todayOrder.Where(o => o.AddOrderPrice == 0).Sum(o => o.Price);
+
+            var curTodayNotHavePriceYearOnYearr = todayOrderYearOnYear.Where(x => x.AddOrderPrice == 0).ToList();
+            var curTodayNotHavePricePerformanceYearOnYear = curTodayNotHavePriceYearOnYearr.Sum(o => o.Price);
+            var curTodayNotHavePriceOrderChainRatio = todayOrderChain.Where(x => x.AddOrderPrice == 0).ToList();
+            var curTodayNotHavePricePerformanceRatio = curTodayNotHavePriceOrderChainRatio.Sum(o => o.Price);
             #endregion
 
             #region 当月派单当月成交业绩
-            //总业绩
-            var thisMonthSendAndDealInfo = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceAsync(sequentialDate.StartDate, sequentialDate.EndDate, false, LiveAnchorInfo);
-            var thisMonthSendAndDealPerformance = thisMonthSendAndDealInfo.Sum(o => o.Price);
-            //同比业绩
-            var thisMonthSendAndDealInfoYearOnYear = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceAsync(sequentialDate.LastYearThisMonthStartDate, sequentialDate.LastYearThisMonthEndDate, false, LiveAnchorInfo);
-            var thisMonthSendAndDealPerformanceYearOnYear = thisMonthSendAndDealInfoYearOnYear.Sum(o => o.Price);
-            //环比业绩
-            var thisMonthSendAndDealPerformanceChain = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceAsync(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate, false, LiveAnchorInfo);
-            var thisMonthSendAndDealPerformanceChainRatio = orderChain.Sum(o => o.Price);
+            ////总业绩
+            //var thisMonthSendAndDealInfo = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceAsync(sequentialDate.StartDate, sequentialDate.EndDate, false, LiveAnchorInfo);
+            //var thisMonthSendAndDealPerformance = thisMonthSendAndDealInfo.Sum(o => o.Price);
+            ////同比业绩
+            //var thisMonthSendAndDealInfoYearOnYear = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceAsync(sequentialDate.LastYearThisMonthStartDate, sequentialDate.LastYearThisMonthEndDate, false, LiveAnchorInfo);
+            //var thisMonthSendAndDealPerformanceYearOnYear = thisMonthSendAndDealInfoYearOnYear.Sum(o => o.Price);
+            ////环比业绩
+            //var thisMonthSendAndDealPerformanceChain = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceAsync(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate, false, LiveAnchorInfo);
+            //var thisMonthSendAndDealPerformanceChainRatio = orderChain.Sum(o => o.Price);
 
-            //当月派单今日成交业绩
-            var thisMonthTodaySendAndDealInfo = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceAsync(todayDate.StartDate, todayDate.EndDate, false, LiveAnchorInfo);
-            var thisMonthTodaySendAndDealPerformance = thisMonthTodaySendAndDealInfo.Sum(o => o.Price);
+            ////当月派单今日成交业绩
+            //var thisMonthTodaySendAndDealInfo = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceAsync(todayDate.StartDate, todayDate.EndDate, false, LiveAnchorInfo);
+            //var thisMonthTodaySendAndDealPerformance = thisMonthTodaySendAndDealInfo.Sum(o => o.Price);
             #endregion
 
             #region 历史派单当月成交业绩
-            //总业绩
-            var historyMonthSendAndDealInfo = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceAsync(sequentialDate.StartDate, sequentialDate.EndDate, true, LiveAnchorInfo);
-            var historyMonthSendAndDealPerformance = historyMonthSendAndDealInfo.Sum(o => o.Price);
-            //同比业绩
-            var historyMonthSendAndDealInfoYearOnYear = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceAsync(sequentialDate.LastYearThisMonthStartDate, sequentialDate.LastYearThisMonthEndDate, true, LiveAnchorInfo);
-            var historyMonthSendAndDealPerformanceYearOnYear = historyMonthSendAndDealInfoYearOnYear.Sum(o => o.Price);
-            //环比业绩
-            var historyMonthSendAndDealPerformanceChain = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceAsync(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate, true, LiveAnchorInfo);
-            var historyMonthSendAndDealPerformanceChainRatio = orderChain.Sum(o => o.Price);
+            ////总业绩
+            //var historyMonthSendAndDealInfo = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceAsync(sequentialDate.StartDate, sequentialDate.EndDate, true, LiveAnchorInfo);
+            //var historyMonthSendAndDealPerformance = historyMonthSendAndDealInfo.Sum(o => o.Price);
+            ////同比业绩
+            //var historyMonthSendAndDealInfoYearOnYear = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceAsync(sequentialDate.LastYearThisMonthStartDate, sequentialDate.LastYearThisMonthEndDate, true, LiveAnchorInfo);
+            //var historyMonthSendAndDealPerformanceYearOnYear = historyMonthSendAndDealInfoYearOnYear.Sum(o => o.Price);
+            ////环比业绩
+            //var historyMonthSendAndDealPerformanceChain = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceAsync(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate, true, LiveAnchorInfo);
+            //var historyMonthSendAndDealPerformanceChainRatio = orderChain.Sum(o => o.Price);
 
 
-            //历史派单今日成交业绩
-            var historyMonthTodaySendAndDealInfo = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceAsync(todayDate.StartDate, todayDate.EndDate, true, LiveAnchorInfo);
-            var historyMonthTodaySendAndDealPerformance = historyMonthTodaySendAndDealInfo.Sum(o => o.Price);
+            ////历史派单今日成交业绩
+            //var historyMonthTodaySendAndDealInfo = await contentPlatFormOrderDealInfoService.GetSendAndDealPerformanceAsync(todayDate.StartDate, todayDate.EndDate, true, LiveAnchorInfo);
+            //var historyMonthTodaySendAndDealPerformance = historyMonthTodaySendAndDealInfo.Sum(o => o.Price);
             #endregion
 
             //数据组合
@@ -1882,27 +1909,27 @@ namespace Fx.Amiya.Service
                 OldCustomerTargetComplete = CalculateTargetComplete(curOldCustomer, target.OldCustomerPerformanceTarget),
 
 
-                PictureConsultationPerformance = DecimalExtension.ChangePriceToTenThousand(curPicturePerformance),
-                PictureConsultationPerformanceRatio = CalculateTargetComplete(curPicturePerformance, curTotalPerformance),
-                PictureConsultationPerformanceYearOnYear = CalculateYearOnYear(curPicturePerformance, picturePerformanceYearOnYear),
-                PictureConsultationPerformanceChainRatio = CalculateChainratio(curPicturePerformance, picturePerformanceRatio),
+                //PictureConsultationPerformance = DecimalExtension.ChangePriceToTenThousand(curPicturePerformance),
+                //PictureConsultationPerformanceRatio = CalculateTargetComplete(curPicturePerformance, curTotalPerformance),
+                //PictureConsultationPerformanceYearOnYear = CalculateYearOnYear(curPicturePerformance, picturePerformanceYearOnYear),
+                //PictureConsultationPerformanceChainRatio = CalculateChainratio(curPicturePerformance, picturePerformanceRatio),
 
-                VideoConsultationPerformance = DecimalExtension.ChangePriceToTenThousand(curVideoPerformance),
-                VideoConsultationPerformanceRatio = CalculateTargetComplete(curVideoPerformance, curTotalPerformance),
-                VideoConsultationPerformanceYearOnYear = CalculateYearOnYear(curVideoPerformance, videoPerformanceYearOnYear),
-                VideoConsultationPerformanceChainRatio = CalculateChainratio(curVideoPerformance, videoPerformanceRatio),
-
-
-                AcompanyingPerformance = DecimalExtension.ChangePriceToTenThousand(curLiveAnchorAcompanyingPerformance),
-                AcompanyingPerformanceRatio = CalculateTargetComplete(curLiveAnchorAcompanyingPerformance, curTotalPerformance),
-                AcompanyingPerformanceYearOnYear = CalculateYearOnYear(curLiveAnchorAcompanyingPerformance, liveAnchorAcompanyingPerformanceYearOnYear),
-                AcompanyingPerformanceChainRatio = CalculateChainratio(curLiveAnchorAcompanyingPerformance, liveAnchorAcompanyingPerformanceRatio),
+                //VideoConsultationPerformance = DecimalExtension.ChangePriceToTenThousand(curVideoPerformance),
+                //VideoConsultationPerformanceRatio = CalculateTargetComplete(curVideoPerformance, curTotalPerformance),
+                //VideoConsultationPerformanceYearOnYear = CalculateYearOnYear(curVideoPerformance, videoPerformanceYearOnYear),
+                //VideoConsultationPerformanceChainRatio = CalculateChainratio(curVideoPerformance, videoPerformanceRatio),
 
 
-                NotAcompanyingPerformance = DecimalExtension.ChangePriceToTenThousand(curNotLiveAnchorAcompanyingPerformance),
-                NotAcompanyingPerformanceRatio = CalculateTargetComplete(curNotLiveAnchorAcompanyingPerformance, curTotalPerformance),
-                NotAcompanyingPerformanceYearOnYear = CalculateYearOnYear(curNotLiveAnchorAcompanyingPerformance, notLiveAnchorAcompanyingPerformanceYearOnYear),
-                NotAcompanyingPerformanceChainRatio = CalculateChainratio(curNotLiveAnchorAcompanyingPerformance, notLiveAnchorAcompanyingPerformanceRatio),
+                //AcompanyingPerformance = DecimalExtension.ChangePriceToTenThousand(curLiveAnchorAcompanyingPerformance),
+                //AcompanyingPerformanceRatio = CalculateTargetComplete(curLiveAnchorAcompanyingPerformance, curTotalPerformance),
+                //AcompanyingPerformanceYearOnYear = CalculateYearOnYear(curLiveAnchorAcompanyingPerformance, liveAnchorAcompanyingPerformanceYearOnYear),
+                //AcompanyingPerformanceChainRatio = CalculateChainratio(curLiveAnchorAcompanyingPerformance, liveAnchorAcompanyingPerformanceRatio),
+
+
+                //NotAcompanyingPerformance = DecimalExtension.ChangePriceToTenThousand(curNotLiveAnchorAcompanyingPerformance),
+                //NotAcompanyingPerformanceRatio = CalculateTargetComplete(curNotLiveAnchorAcompanyingPerformance, curTotalPerformance),
+                //NotAcompanyingPerformanceYearOnYear = CalculateYearOnYear(curNotLiveAnchorAcompanyingPerformance, notLiveAnchorAcompanyingPerformanceYearOnYear),
+                //NotAcompanyingPerformanceChainRatio = CalculateChainratio(curNotLiveAnchorAcompanyingPerformance, notLiveAnchorAcompanyingPerformanceRatio),
 
 
                 ZeroPricePerformance = DecimalExtension.ChangePriceToTenThousand(curNotHavePricePerformance),
@@ -1917,16 +1944,16 @@ namespace Fx.Amiya.Service
                 ExistPricePerformanceChainRatio = CalculateChainratio(curHavingPricePerformance, havingPricePerformanceRatio),
 
 
-                DuringMonthSendDuringMonthDeal = DecimalExtension.ChangePriceToTenThousand(thisMonthSendAndDealPerformance),
-                DuringMonthSendDuringMonthDealPerformanceRatio = CalculateTargetComplete(thisMonthSendAndDealPerformance, curTotalPerformance),
-                DuringMonthSendDuringMonthDealYearOnYear = CalculateYearOnYear(thisMonthSendAndDealPerformance, thisMonthSendAndDealPerformanceYearOnYear),
-                DuringMonthSendDuringMonthDealChainRatio = CalculateChainratio(thisMonthSendAndDealPerformance, thisMonthSendAndDealPerformanceChainRatio),
+                //DuringMonthSendDuringMonthDeal = DecimalExtension.ChangePriceToTenThousand(thisMonthSendAndDealPerformance),
+                //DuringMonthSendDuringMonthDealPerformanceRatio = CalculateTargetComplete(thisMonthSendAndDealPerformance, curTotalPerformance),
+                //DuringMonthSendDuringMonthDealYearOnYear = CalculateYearOnYear(thisMonthSendAndDealPerformance, thisMonthSendAndDealPerformanceYearOnYear),
+                //DuringMonthSendDuringMonthDealChainRatio = CalculateChainratio(thisMonthSendAndDealPerformance, thisMonthSendAndDealPerformanceChainRatio),
 
 
-                HistorySendDuringMonthDeal = DecimalExtension.ChangePriceToTenThousand(historyMonthSendAndDealPerformance),
-                HistorySendDuringMonthDealPerformanceRatio = CalculateTargetComplete(historyMonthSendAndDealPerformance, curTotalPerformance),
-                HistorySendDuringMonthDealYearOnYear = CalculateYearOnYear(historyMonthSendAndDealPerformance, historyMonthSendAndDealPerformanceYearOnYear),
-                HistorySendDuringMonthDealChainRatio = CalculateChainratio(historyMonthSendAndDealPerformance, historyMonthSendAndDealPerformanceChainRatio),
+                //HistorySendDuringMonthDeal = DecimalExtension.ChangePriceToTenThousand(historyMonthSendAndDealPerformance),
+                //HistorySendDuringMonthDealPerformanceRatio = CalculateTargetComplete(historyMonthSendAndDealPerformance, curTotalPerformance),
+                //HistorySendDuringMonthDealYearOnYear = CalculateYearOnYear(historyMonthSendAndDealPerformance, historyMonthSendAndDealPerformanceYearOnYear),
+                //HistorySendDuringMonthDealChainRatio = CalculateChainratio(historyMonthSendAndDealPerformance, historyMonthSendAndDealPerformanceChainRatio),
 
             };
 
@@ -1935,46 +1962,56 @@ namespace Fx.Amiya.Service
                 CueerntMonthTotalPerformance = DecimalExtension.ChangePriceToTenThousand(curTodayTotalPerformance),
                 TotalPerformanceTarget = DecimalExtension.ChangePriceToTenThousand(target.TotalPerformanceTarget / days),
                 TotalPerformanceTargetComplete = CalculateTargetComplete(curTodayTotalPerformance, target.TotalPerformanceTarget / days),
+                TotalPerformanceYearOnYear = CalculateYearOnYear(curTodayTotalPerformance, todayTotalPerformanceYearOnYear),
+                TotalPerformanceChainratio = CalculateChainratio(curTodayTotalPerformance, todayTotalPerformanceChainRatio),
 
                 CurrentMonthNewCustomerPerformance = DecimalExtension.ChangePriceToTenThousand(curTodayNewCustomer),
                 NewCustomerPerformanceRatio = CalculateTargetComplete(curTodayNewCustomer, curTodayTotalPerformance),
+                NewCustomerPerformanceYearOnYear = CalculateYearOnYear(curTodayNewCustomer, todayNewPerformanceYearOnYear),
+                NewCustomerPerformanceChainRatio = CalculateChainratio(curTodayNewCustomer, todayNewPerformanceChainRatio),
                 NewCustomerPerformanceTarget = DecimalExtension.ChangePriceToTenThousand(target.NewCustomerPerformanceTarget / days),
                 NewCustomerPerformanceTargetComplete = CalculateTargetComplete(curTodayNewCustomer, target.NewCustomerPerformanceTarget / days),
 
                 CurrentMonthOldCustomerPerformance = DecimalExtension.ChangePriceToTenThousand(curTodayOldCustomer),
                 OldCustomerPerformanceRatio = CalculateTargetComplete(curTodayOldCustomer, curTodayTotalPerformance),
+                OldCustomerPerformanceYearOnYear = CalculateYearOnYear(curTodayOldCustomer, todayOldPerformanceYearOnYear),
+                OldCustomerPerformanceChainRatio = CalculateChainratio(curTodayOldCustomer, todayOldPerformanceChainRatio),
                 OldCustomerTarget = DecimalExtension.ChangePriceToTenThousand(target.OldCustomerPerformanceTarget / days),
                 OldCustomerTargetComplete = CalculateTargetComplete(curTodayOldCustomer, target.OldCustomerPerformanceTarget / days),
 
 
-                PictureConsultationPerformance = DecimalExtension.ChangePriceToTenThousand(curTodayPicturePerformance),
-                PictureConsultationPerformanceRatio = CalculateTargetComplete(curTodayPicturePerformance, curTodayTotalPerformance),
+                //PictureConsultationPerformance = DecimalExtension.ChangePriceToTenThousand(curTodayPicturePerformance),
+                //PictureConsultationPerformanceRatio = CalculateTargetComplete(curTodayPicturePerformance, curTodayTotalPerformance),
 
-                VideoConsultationPerformance = DecimalExtension.ChangePriceToTenThousand(curTodayVideoPerformance),
-                VideoConsultationPerformanceRatio = CalculateTargetComplete(curTodayVideoPerformance, curTodayTotalPerformance),
-
-
-                AcompanyingPerformance = DecimalExtension.ChangePriceToTenThousand(curTodayLiveAnchorAcompanyingPerformance),
-                AcompanyingPerformanceRatio = CalculateTargetComplete(curTodayLiveAnchorAcompanyingPerformance, curTodayTotalPerformance),
+                //VideoConsultationPerformance = DecimalExtension.ChangePriceToTenThousand(curTodayVideoPerformance),
+                //VideoConsultationPerformanceRatio = CalculateTargetComplete(curTodayVideoPerformance, curTodayTotalPerformance),
 
 
-                NotAcompanyingPerformance = DecimalExtension.ChangePriceToTenThousand(curTodayNotLiveAnchorAcompanyingPerformance),
-                NotAcompanyingPerformanceRatio = CalculateTargetComplete(curTodayNotLiveAnchorAcompanyingPerformance, curTodayTotalPerformance),
+                //AcompanyingPerformance = DecimalExtension.ChangePriceToTenThousand(curTodayLiveAnchorAcompanyingPerformance),
+                //AcompanyingPerformanceRatio = CalculateTargetComplete(curTodayLiveAnchorAcompanyingPerformance, curTodayTotalPerformance),
+
+
+                //NotAcompanyingPerformance = DecimalExtension.ChangePriceToTenThousand(curTodayNotLiveAnchorAcompanyingPerformance),
+                //NotAcompanyingPerformanceRatio = CalculateTargetComplete(curTodayNotLiveAnchorAcompanyingPerformance, curTodayTotalPerformance),
 
 
                 ZeroPricePerformance = DecimalExtension.ChangePriceToTenThousand(curTodayNotHavePricePerformance),
                 ZeroPricePerformanceRatio = CalculateTargetComplete(curTodayNotHavePricePerformance, curTodayTotalPerformance),
+                ZeroPricePerformanceYearOnYear = CalculateYearOnYear(curTodayNotHavePricePerformance, curTodayNotHavePricePerformanceYearOnYear),
+                ZeroPricePerformanceChainRatio = CalculateChainratio(curTodayNotHavePricePerformance, curTodayNotHavePricePerformanceRatio),
 
 
                 ExistPricePerformance = DecimalExtension.ChangePriceToTenThousand(curTodayHavingPricePerformance),
                 ExistPricePerformanceRatio = CalculateTargetComplete(curTodayHavingPricePerformance, curTodayTotalPerformance),
+                ExistPricePerformanceYearOnYear = CalculateYearOnYear(curTodayHavingPricePerformance, todayHavingPricePerformanceYearOnYear),
+                ExistPricePerformanceChainRatio = CalculateChainratio(curTodayHavingPricePerformance, todayHavingPricePerformanceRatio),
 
 
-                DuringMonthSendDuringMonthDeal = DecimalExtension.ChangePriceToTenThousand(thisMonthTodaySendAndDealPerformance),
-                DuringMonthSendDuringMonthDealPerformanceRatio = CalculateTargetComplete(thisMonthTodaySendAndDealPerformance, curTodayTotalPerformance),
+                //DuringMonthSendDuringMonthDeal = DecimalExtension.ChangePriceToTenThousand(thisMonthTodaySendAndDealPerformance),
+                //DuringMonthSendDuringMonthDealPerformanceRatio = CalculateTargetComplete(thisMonthTodaySendAndDealPerformance, curTodayTotalPerformance),
 
-                HistorySendDuringMonthDeal = DecimalExtension.ChangePriceToTenThousand(historyMonthTodaySendAndDealPerformance),
-                HistorySendDuringMonthDealPerformanceRatio = CalculateTargetComplete(historyMonthTodaySendAndDealPerformance, curTodayTotalPerformance),
+                //HistorySendDuringMonthDeal = DecimalExtension.ChangePriceToTenThousand(historyMonthTodaySendAndDealPerformance),
+                //HistorySendDuringMonthDealPerformanceRatio = CalculateTargetComplete(historyMonthTodaySendAndDealPerformance, curTodayTotalPerformance),
 
             };
 
