@@ -3390,7 +3390,7 @@ namespace Fx.Amiya.Service
             }
 
             var orders = from d in dalOrderInfo.GetAll()
-                         where d.TradeId == tradeId && (d.StatusCode == OrderStatusCode.TRADE_BUYER_PAID || d.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || d.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS || d.StatusCode == OrderStatusCode.TRADE_FINISHED)
+                         where d.TradeId == tradeId && (d.StatusCode == OrderStatusCode.TRADE_BUYER_PAID || d.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || d.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS || d.StatusCode == OrderStatusCode.TRADE_FINISHED||d.StatusCode==OrderStatusCode.REFUNDING||d.StatusCode==OrderStatusCode.TRADE_CLOSED)
                          select new OrderInfoDto
                          {
                              Id = d.Id,
