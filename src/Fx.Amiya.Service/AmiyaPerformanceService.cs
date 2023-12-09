@@ -1746,7 +1746,7 @@ namespace Fx.Amiya.Service
             var curTodayNewCustomer = todayOrder.Where(o => o.IsOldCustomer == false).Sum(o => o.Price);
             var todayNewOrderYearOnYear = todayOrderYearOnYear.Where(x => x.IsOldCustomer == false);
             var todayNewPerformanceYearOnYear = todayNewOrderYearOnYear.Sum(o => o.Price);
-            List<ContentPlatFormOrderDealInfoDto> todayNewOrderChainRatio = orderChain.Where(x => x.IsOldCustomer == false).ToList();
+            List<ContentPlatFormOrderDealInfoDto> todayNewOrderChainRatio = todayOrderChain.Where(x => x.IsOldCustomer == false).ToList();
             var todayNewPerformanceChainRatio = todayNewOrderChainRatio.Sum(o => o.Price);
             #endregion
 
@@ -1761,7 +1761,7 @@ namespace Fx.Amiya.Service
             var curTodayOldCustomer = todayOrder.Where(o => o.IsOldCustomer == true).Sum(o => o.Price);
             var todayOldOrderYearOnYear = todayOrderYearOnYear.Where(x => x.IsOldCustomer == true);
             var todayOldPerformanceYearOnYear = todayOldOrderYearOnYear.Sum(o => o.Price);
-            List<ContentPlatFormOrderDealInfoDto> todayOldOrderChainRatio = orderChain.Where(x => x.IsOldCustomer == true).ToList();
+            List<ContentPlatFormOrderDealInfoDto> todayOldOrderChainRatio = todayOrderChain.Where(x => x.IsOldCustomer == true).ToList();
             var todayOldPerformanceChainRatio = todayOldOrderChainRatio.Sum(o => o.Price);
             #endregion
 
@@ -2914,11 +2914,23 @@ namespace Fx.Amiya.Service
             if (performanceChainRatio == 0m)
                 return null;
             var result = Math.Round((currentMonthPerformance - performanceChainRatio) / performanceChainRatio * 100, 2, MidpointRounding.AwayFromZero);
+            if (currentMonthPerformance > 0 && performanceChainRatio < 0)
+            {
+                result = Math.Abs(result);
+            }
             if (result > 99.99M)
             {
                 result = Math.Round(result, 1, MidpointRounding.AwayFromZero);
             }
             if (result > 999.99M)
+            {
+                result = Math.Round(result, 0, MidpointRounding.AwayFromZero);
+            }
+            if (result < 99.99M)
+            {
+                result = Math.Round(result, 1, MidpointRounding.AwayFromZero);
+            }
+            if (result < 999.99M)
             {
                 result = Math.Round(result, 0, MidpointRounding.AwayFromZero);
             }

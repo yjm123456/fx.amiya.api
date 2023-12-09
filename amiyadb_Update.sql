@@ -70,7 +70,6 @@ ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration`
 ADD COLUMN `customer_type` INT NOT NULL DEFAULT 0 AFTER `get_customer_type`;
 -----------------------------------------------余建明 2023/11/29 END--------------------------------------------
 
---------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
 
@@ -94,5 +93,6 @@ ALTER TABLE `amiyadb`.`tbl_content_platform_order`
 ADD COLUMN `customer_source` INT NOT NULL DEFAULT 0 AFTER `get_customer_type`,
 ADD COLUMN `customer_type` INT NOT NULL DEFAULT 0 AFTER `customer_source`;
 ------------------------------------------------余建明 2023/12/6 END--------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
  
