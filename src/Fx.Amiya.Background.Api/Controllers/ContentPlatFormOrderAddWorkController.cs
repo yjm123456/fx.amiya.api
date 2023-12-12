@@ -28,11 +28,13 @@ namespace Fx.Amiya.Background.Api.Controllers
     {
         private IContentPlatFormOrderAddWorkService contentPlatFormOrderAddWorkService;
         private IHttpContextAccessor _httpContextAccessor;
+        private IAmiyaEmployeeService amiyaEmployeeService;
 
-        public ContentPlatFormOrderAddWorkController(IHttpContextAccessor httpContextAccessor, IContentPlatFormOrderAddWorkService contentPlatFormOrderAddWorkService)
+        public ContentPlatFormOrderAddWorkController(IHttpContextAccessor httpContextAccessor, IContentPlatFormOrderAddWorkService contentPlatFormOrderAddWorkService, IAmiyaEmployeeService amiyaEmployeeService)
         {
             this.contentPlatFormOrderAddWorkService = contentPlatFormOrderAddWorkService;
             _httpContextAccessor = httpContextAccessor;
+            this.amiyaEmployeeService = amiyaEmployeeService;
         }
 
 
@@ -299,6 +301,57 @@ namespace Fx.Amiya.Background.Api.Controllers
                 return ResultData.Fail(ex.Message);
             }
         }
+        /// <summary>
+        /// 获取录单申请历史数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("historyData")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderAddWorkVo>>> GetHistoryDataAsync([FromQuery]QueryContentplatFormOrderAddWorkHistoryVo query) {
+            
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeId = Convert.ToInt32(employee.Id);
+            var hasPression=await amiyaEmployeeService.IsAdminOrHasPremissionLookDataCenterAsync(employeeId);
+            if (!hasPression) throw new Exception("没有访问该数据的权限！");
+            FxPageInfo<ContentPlatFormOrderAddWorkVo> pageInfo = new FxPageInfo<ContentPlatFormOrderAddWorkVo>();
+            QueryContentplatFormOrderAddWorkHistoryDto queryDto = new QueryContentplatFormOrderAddWorkHistoryDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.KeyWord = query.KeyWord;
+            queryDto.HospitalId = query.HospitalId;
+            queryDto.CheckState = query.CheckState;
+            queryDto.CreateBy = query.CreateBy;
+            queryDto.PageNum = query.PageNum;
+            queryDto.PageSize = query.PageSize;
+            queryDto.Valid=query.Valid;
+            var list = await contentPlatFormOrderAddWorkService.GetHistoryDataAsync(queryDto);
+            pageInfo.TotalCount = list.TotalCount;
+            pageInfo.List = list.List.Select(e => new ContentPlatFormOrderAddWorkVo
+            {
+                Id = e.Id,
+                HospitalId = e.HospitalId,
+                HospitalName = e.HospitalName,
+                AcceptBy = e.AcceptBy,
+                AcceptByEmpName = e.AcceptByEmpName,
+                AddWorkTypeText = e.AddWorkTypeText,
+                Phone = e.Phone,
+                EncryptPhone = e.EncryptPhone,
+                SendRemark = e.SendRemark,
+                CreateBy = e.CreateBy,
+                CreateByEmpName = e.CreateByEmpName,
+                CreateDate = e.CreateDate,
+                BelongCustomerServiceId = e.BelongCustomerServiceId,
+                CheckState = e.CheckState,
+                CheckStateText = e.CheckStateText,
+                CheckRemark = e.CheckRemark,
+                CheckDate = e.CheckDate,
+                BelongCustomerServiceName = e.BelongCustomerServiceName,
+                Valid=e.Valid
+            }).ToList();
+            return ResultData<FxPageInfo<ContentPlatFormOrderAddWorkVo>>.Success().AddData("historyData",pageInfo);
+        }
+        
 
         #region 枚举下拉框
 

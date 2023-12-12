@@ -653,7 +653,7 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="baseLiveAnchorId">主播基础信息id</param>
         /// <returns></returns>
-        public async Task<List<AmiyaEmployeeNameDto>> GetCustomerServiceNameListAsync(string baseLiveAnchorId=null)
+        public async Task<List<AmiyaEmployeeNameDto>> GetCustomerServiceNameListAsync(string baseLiveAnchorId = null)
         {
             var employee = from d in dalAmiyaEmployee.GetAll()
                            where d.IsCustomerService == true && (string.IsNullOrEmpty(baseLiveAnchorId) || d.LiveAnchorBaseId == baseLiveAnchorId)
@@ -762,10 +762,21 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task UpdateAvatarAsync(int id, string url)
         {
-            var account =await dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e=>e.Id==id);
+            var account = await dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == id);
             if (account == null) throw new Exception("用户编号错误！");
             account.Avatar = url;
-            await dalAmiyaEmployee.UpdateAsync(account,true);
+            await dalAmiyaEmployee.UpdateAsync(account, true);
+        }
+        /// <summary>
+        /// 判断员工是否是管理员或查看数据中心权限
+        /// </summary>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        public async Task<bool> IsAdminOrHasPremissionLookDataCenterAsync(int employeeId)
+        {
+            var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).Where(e => e.Id == employeeId && (e.AmiyaPositionInfo.ReadDataCenter == true || e.AmiyaPositionId == 1)).SingleOrDefaultAsync();
+            if (employee != null) return true;
+            return false;
         }
     }
 }

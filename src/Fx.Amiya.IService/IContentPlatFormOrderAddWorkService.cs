@@ -28,6 +28,11 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task CheckAsync(CheckContentPlatFormOrderAddWorkDto updateContentPlatFormOrderAddWorkDto);
         Task DeleteAsync(List<string> idList);
+        /// <summary>
+        /// 获取历史录单申请数据
+        /// </summary>
+        /// <returns></returns>
+        Task<FxPageInfo<ContentPlatFormOrderAddWorkDto>> GetHistoryDataAsync(QueryContentplatFormOrderAddWorkHistoryDto query);
 
         public List<BaseIdAndNameDto> GetContentPlatformOrderAddWorkTypeText();
     }

@@ -21,13 +21,15 @@ namespace Fx.Amiya.Service
         private IDalContentPlatFormOrderAddWork _dalContentPlatFormOrderAddWork;
         private IAmiyaEmployeeService amiyaEmployeeService;
         private IUnitOfWork unitOfWork;
+        private IWxAppConfigService wxAppConfigService;
         public ContentPlatFormOrderAddWorkService(IDalContentPlatFormOrderAddWork dalContentPlatFormOrderAddWork,
             IAmiyaEmployeeService amiyaEmployeeService,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork, IWxAppConfigService wxAppConfigService)
         {
             _dalContentPlatFormOrderAddWork = dalContentPlatFormOrderAddWork;
             this.amiyaEmployeeService = amiyaEmployeeService;
             this.unitOfWork = unitOfWork;
+            this.wxAppConfigService = wxAppConfigService;
         }
 
         public async Task<FxPageInfo<ContentPlatFormOrderAddWorkDto>> GetListByPageAsync(QueryContentPlatFormOrderAddWorkPageDto query)
@@ -52,7 +54,7 @@ namespace Fx.Amiya.Service
                     EncryptPhone = ServiceClass.GetIncompletePhone(e.Phone),
                     Phone = e.Phone,
                     SendRemark = e.SendRemark,
-                    AddWorkTypeText=ServiceClass.GetContentPlatformOrderAddWorkTypeText(e.AddWorkType),
+                    AddWorkTypeText = ServiceClass.GetContentPlatformOrderAddWorkTypeText(e.AddWorkType),
                     CreateBy = e.CreateBy,
                     CreateByEmpName = e.CreateEmployee.Name,
                     CreateDate = e.CreateDate,
@@ -218,7 +220,7 @@ namespace Fx.Amiya.Service
             catch (Exception err)
             {
                 unitOfWork.RollBack();
-                throw new Exception(err.Message.ToString());;
+                throw new Exception(err.Message.ToString()); ;
             }
         }
 
@@ -239,6 +241,57 @@ namespace Fx.Amiya.Service
                 appointmentTypeList.Add(appointmentType);
             }
             return appointmentTypeList;
+        }
+        /// <summary>
+        /// 获取录单申请历史数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<ContentPlatFormOrderAddWorkDto>> GetHistoryDataAsync(QueryContentplatFormOrderAddWorkHistoryDto query)
+        {
+            var config = await wxAppConfigService.GetCallCenterConfig();
+            var record = _dalContentPlatFormOrderAddWork.GetAll().Include(x => x.CreateEmployee).Include(x => x.AcceptEmployee).Include(x => x.HospitalInfo)
+                .Where(e => (string.IsNullOrEmpty(query.KeyWord) || e.Phone.Contains(query.KeyWord) || e.Id.Contains(query.KeyWord)))
+                .Where(e => !query.HospitalId.HasValue || e.HospitalId == query.HospitalId.Value)
+                .Where(e => !query.CheckState.HasValue || e.CheckState == query.CheckState.Value)
+                .Where(e => !query.StartDate.HasValue || e.CreateDate >= query.StartDate)
+                .Where(e => !query.EndDate.HasValue || e.CreateDate <= query.EndDate.Value.AddDays(1))
+                .Where(e => !query.CreateBy.HasValue || e.CreateBy == query.CreateBy.Value)
+                .Where(e => !query.Valid.HasValue || e.Valid == query.Valid.Value)
+                .OrderByDescending(x => x.CreateDate)
+                .Select(e => new ContentPlatFormOrderAddWorkDto
+                {
+                    Id = e.Id,
+                    HospitalId = e.HospitalId,
+                    HospitalName = e.HospitalInfo.Name,
+                    AcceptBy = e.AcceptBy,
+                    AcceptByEmpName = e.AcceptEmployee.Name,
+                    EncryptPhone = ServiceClass.Encrypt(e.Phone, config.PhoneEncryptKey),
+                    Phone = ServiceClass.GetIncompletePhone(e.Phone),
+                    SendRemark = e.SendRemark,
+                    AddWorkTypeText = ServiceClass.GetContentPlatformOrderAddWorkTypeText(e.AddWorkType),
+                    CreateBy = e.CreateBy,
+                    CreateByEmpName = e.CreateEmployee.Name,
+                    CreateDate = e.CreateDate,
+                    BelongCustomerServiceId = e.BelongCustomerServiceId,
+                    CheckState = e.CheckState,
+                    CheckStateText = ServiceClass.GetCheckTypeText(e.CheckState),
+                    CheckRemark = e.CheckRemark,
+                    CheckDate = e.CheckDate,
+                    Valid=e.Valid
+                });
+            FxPageInfo<ContentPlatFormOrderAddWorkDto> fxPageInfo = new FxPageInfo<ContentPlatFormOrderAddWorkDto>();
+            fxPageInfo.TotalCount = await record.CountAsync();
+            fxPageInfo.List = await record.Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToListAsync();
+            foreach (var x in fxPageInfo.List)
+            {
+                if (x.BelongCustomerServiceId.HasValue)
+                {
+                    var empInfo = await amiyaEmployeeService.GetByIdAsync(x.BelongCustomerServiceId.Value);
+                    x.BelongCustomerServiceName = empInfo.Name;
+                }
+            }
+            return fxPageInfo;
         }
     }
 }

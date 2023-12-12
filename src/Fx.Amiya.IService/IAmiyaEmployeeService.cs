@@ -199,6 +199,12 @@ namespace Fx.Amiya.IService
         /// <param name="url"></param>
         /// <returns></returns>
         Task UpdateAvatarAsync(int id,string url);
+        /// <summary>
+        /// 判断用户是否是管理员或查看数据中心权限
+        /// </summary>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        Task<bool> IsAdminOrHasPremissionLookDataCenterAsync(int employeeId);
 
     }
 }

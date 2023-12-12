@@ -70,5 +70,9 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderAddWork
         /// 审核时间
         /// </summary>
         public DateTime? CheckDate { get; set; }
+        /// <summary>
+        /// 是否有效
+        /// </summary>
+        public bool Valid { get; set; }
     }
 }
