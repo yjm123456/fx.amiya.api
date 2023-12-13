@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration;
+using Fx.Amiya.Dto.OperationLog;
 using Fx.Amiya.Dto.ShoppingCartRegistration;
 using Fx.Amiya.IService;
 using Fx.Amiya.Service;
@@ -9,6 +10,7 @@ using Fx.Open.Infrastructure.Web;
 using jos_sdk_net.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
@@ -30,18 +32,19 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IShoppingCartRegistrationService shoppingCartRegistrationService;
         private IHttpContextAccessor httpContextAccessor;
         private IContentPlateFormOrderService contentPlateFormOrderService;
-
+        private IOperationLogService operationLogService;
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="shoppingCartRegistrationService"></param>
         public ShoppingCartRegistrationController(IShoppingCartRegistrationService shoppingCartRegistrationService,
             IContentPlateFormOrderService contentPlateFormOrderService,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor, IOperationLogService operationLogService)
         {
             this.shoppingCartRegistrationService = shoppingCartRegistrationService;
             this.httpContextAccessor = httpContextAccessor;
             this.contentPlateFormOrderService = contentPlateFormOrderService;
+            this.operationLogService = operationLogService;
         }
 
 
@@ -349,6 +352,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpPut]
         public async Task<ResultData> UpdateAsync(UpdateShoppingCartRegistrationVo updateVo)
         {
+            OperationAddDto operationLog = new OperationAddDto();
             try
             {
                 //var isExistPhone = await shoppingCartRegistrationService.GetByPhoneAsync(updateVo.Phone);
@@ -356,6 +360,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                 //{
                 //    throw new Exception("已存在该客户手机号，无法录入，请重新填写！");
                 //}
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationLog.OperationBy = employeeId;
+                
                 UpdateShoppingCartRegistrationDto updateDto = new UpdateShoppingCartRegistrationDto();
                 updateDto.Id = updateVo.Id;
                 updateDto.RecordDate = updateVo.RecordDate;
@@ -387,6 +395,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.Source = updateVo.Source;
                 updateDto.ProductType = updateVo.ProductType;
                 updateDto.ShoppingCartRegistrationCustomerType = updateVo.ShoppingCartRegistrationCustomerType;
+                updateDto.OperationBy =employeeId;
                 updateDto.CreateBy = updateVo.CreateBy;
                 var contentPlatFormOrder = await contentPlateFormOrderService.GetOrderListByPhoneAsync(updateVo.Phone);
                 var isSendOrder = contentPlatFormOrder.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder).Count();
@@ -404,7 +413,17 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             catch (Exception ex)
             {
+                operationLog.Message = ex.Message;
+                operationLog.Code = -1;
                 return ResultData.Fail(ex.Message);
+            }
+            finally
+            {
+                operationLog.Source = (int)RequestSource.AmiyaBackground;
+                operationLog.Parameters = JsonConvert.SerializeObject(updateVo);
+                operationLog.RequestType = (int)RequestType.Update;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationLog);
             }
         }
 

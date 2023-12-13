@@ -499,86 +499,77 @@ namespace Fx.Amiya.Service
 
         public async Task UpdateAsync(UpdateShoppingCartRegistrationDto updateDto)
         {
-            //   unitOfWork.BeginTransaction();
-            try
-            {
-                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
-                if (shoppingCartRegistration == null)
-                    throw new Exception("小黄车登记编号错误！");
-                //if (!string.IsNullOrEmpty(updateDto.Phone))
-                //{
-                //    var bind = await _dalBindCustomerService.GetAll()
-                //  .Include(e => e.CustomerServiceAmiyaEmployee)
-                //  .SingleOrDefaultAsync(e => e.BuyerPhone == updateDto.Phone);
-                //    if (bind != null)
-                //    {
-                //        if (bind.CustomerServiceId != shoppingCartRegistration.CreateBy)
-                //        {
-                //            var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == shoppingCartRegistration.CreateBy);
-                //            if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
-                //            {
-                //                throw new Exception("该客户已绑定给" + bind.CustomerServiceAmiyaEmployee.Name + ",请联系对应人员进行操作！");
-                //            }
-                //        }
+            var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
+            if (shoppingCartRegistration == null)
+                throw new Exception("小黄车登记编号错误！");
+            if (updateDto.OperationBy != shoppingCartRegistration.CreateBy) throw new Exception("当前登录账号和创建人不一致,不能修改该信息！");
+            //if (!string.IsNullOrEmpty(updateDto.Phone))
+            //{
+            //    var bind = await _dalBindCustomerService.GetAll()
+            //  .Include(e => e.CustomerServiceAmiyaEmployee)
+            //  .SingleOrDefaultAsync(e => e.BuyerPhone == updateDto.Phone);
+            //    if (bind != null)
+            //    {
+            //        if (bind.CustomerServiceId != shoppingCartRegistration.CreateBy)
+            //        {
+            //            var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == shoppingCartRegistration.CreateBy);
+            //            if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
+            //            {
+            //                throw new Exception("该客户已绑定给" + bind.CustomerServiceAmiyaEmployee.Name + ",请联系对应人员进行操作！");
+            //            }
+            //        }
 
-                //    }
-                //    else
-                //    {
-                //        //添加绑定客服
-                //        BindCustomerService bindCustomerService = new BindCustomerService();
-                //        bindCustomerService.CustomerServiceId = shoppingCartRegistration.CreateBy;
-                //        bindCustomerService.BuyerPhone = updateDto.Phone;
-                //        bindCustomerService.UserId = null;
-                //        bindCustomerService.CreateBy = shoppingCartRegistration.CreateBy;
-                //        bindCustomerService.CreateDate = DateTime.Now;
-                //        await _dalBindCustomerService.AddAsync(bindCustomerService, true);
-                //    }
-                //}
-                shoppingCartRegistration.RecordDate = updateDto.RecordDate;
-                shoppingCartRegistration.ContentPlatFormId = updateDto.ContentPlatFormId;
-                shoppingCartRegistration.LiveAnchorId = updateDto.LiveAnchorId;
-                shoppingCartRegistration.LiveAnchorWechatNo = updateDto.LiveAnchorWechatNo;
-                shoppingCartRegistration.CustomerNickName = updateDto.CustomerNickName;
-                shoppingCartRegistration.Phone = updateDto.Phone;
-                shoppingCartRegistration.SubPhone = updateDto.SubPhone;
-                shoppingCartRegistration.Price = updateDto.Price;
-                shoppingCartRegistration.GetCustomerType = updateDto.GetCustomerType;
-                shoppingCartRegistration.IsAddWeChat = updateDto.IsAddWeChat;
-                shoppingCartRegistration.ShoppingCartRegistrationCustomerType = updateDto.ShoppingCartRegistrationCustomerType;
-                shoppingCartRegistration.ConsultationType = updateDto.ConsultationType;
-                shoppingCartRegistration.IsWriteOff = updateDto.IsWriteOff;
-                shoppingCartRegistration.IsConsultation = updateDto.IsConsultation;
-                shoppingCartRegistration.ConsultationDate = updateDto.ConsultationDate;
-                shoppingCartRegistration.IsReturnBackPrice = updateDto.IsReturnBackPrice;
-                shoppingCartRegistration.Remark = updateDto.Remark;
-                shoppingCartRegistration.IsReContent = updateDto.IsReContent;
-                shoppingCartRegistration.ReContent = updateDto.ReContent;
-                shoppingCartRegistration.RefundDate = updateDto.RefundDate;
-                shoppingCartRegistration.RefundReason = updateDto.RefundReason;
-                shoppingCartRegistration.BadReviewDate = updateDto.BadReviewDate;
-                shoppingCartRegistration.BadReviewContent = updateDto.BadReviewContent;
-                shoppingCartRegistration.BadReviewReason = updateDto.BadReviewReason;
-                shoppingCartRegistration.IsBadReview = updateDto.IsBadReview;
-                shoppingCartRegistration.AssignEmpId = updateDto.AssignEmpId;
-                shoppingCartRegistration.IsCreateOrder = updateDto.IsCreateOrder;
-                shoppingCartRegistration.IsSendOrder = updateDto.IsSendOrder;
-                shoppingCartRegistration.EmergencyLevel = updateDto.EmergencyLevel;
-                shoppingCartRegistration.Source = updateDto.Source;
-                shoppingCartRegistration.CreateBy = updateDto.CreateBy;
-                shoppingCartRegistration.ProductType = updateDto.ProductType;
-                var baseLiveAnchorId = await _liveAnchorService.GetByIdAsync(updateDto.LiveAnchorId);
-                if (!string.IsNullOrEmpty(baseLiveAnchorId.LiveAnchorBaseId))
-                {
-                    shoppingCartRegistration.BaseLiveAnchorId = baseLiveAnchorId.LiveAnchorBaseId;
-                }
-                await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
-                // unitOfWork.Commit();
-            }
-            catch (Exception ex)
+            //    }
+            //    else
+            //    {
+            //        //添加绑定客服
+            //        BindCustomerService bindCustomerService = new BindCustomerService();
+            //        bindCustomerService.CustomerServiceId = shoppingCartRegistration.CreateBy;
+            //        bindCustomerService.BuyerPhone = updateDto.Phone;
+            //        bindCustomerService.UserId = null;
+            //        bindCustomerService.CreateBy = shoppingCartRegistration.CreateBy;
+            //        bindCustomerService.CreateDate = DateTime.Now;
+            //        await _dalBindCustomerService.AddAsync(bindCustomerService, true);
+            //    }
+            //}
+            shoppingCartRegistration.RecordDate = updateDto.RecordDate;
+            shoppingCartRegistration.ContentPlatFormId = updateDto.ContentPlatFormId;
+            shoppingCartRegistration.LiveAnchorId = updateDto.LiveAnchorId;
+            shoppingCartRegistration.LiveAnchorWechatNo = updateDto.LiveAnchorWechatNo;
+            shoppingCartRegistration.CustomerNickName = updateDto.CustomerNickName;
+            shoppingCartRegistration.Phone = updateDto.Phone;
+            shoppingCartRegistration.SubPhone = updateDto.SubPhone;
+            shoppingCartRegistration.Price = updateDto.Price;
+            shoppingCartRegistration.GetCustomerType = updateDto.GetCustomerType;
+            shoppingCartRegistration.IsAddWeChat = updateDto.IsAddWeChat;
+            shoppingCartRegistration.ShoppingCartRegistrationCustomerType = updateDto.ShoppingCartRegistrationCustomerType;
+            shoppingCartRegistration.ConsultationType = updateDto.ConsultationType;
+            shoppingCartRegistration.IsWriteOff = updateDto.IsWriteOff;
+            shoppingCartRegistration.IsConsultation = updateDto.IsConsultation;
+            shoppingCartRegistration.ConsultationDate = updateDto.ConsultationDate;
+            shoppingCartRegistration.IsReturnBackPrice = updateDto.IsReturnBackPrice;
+            shoppingCartRegistration.Remark = updateDto.Remark;
+            shoppingCartRegistration.IsReContent = updateDto.IsReContent;
+            shoppingCartRegistration.ReContent = updateDto.ReContent;
+            shoppingCartRegistration.RefundDate = updateDto.RefundDate;
+            shoppingCartRegistration.RefundReason = updateDto.RefundReason;
+            shoppingCartRegistration.BadReviewDate = updateDto.BadReviewDate;
+            shoppingCartRegistration.BadReviewContent = updateDto.BadReviewContent;
+            shoppingCartRegistration.BadReviewReason = updateDto.BadReviewReason;
+            shoppingCartRegistration.IsBadReview = updateDto.IsBadReview;
+            shoppingCartRegistration.AssignEmpId = updateDto.AssignEmpId;
+            shoppingCartRegistration.IsCreateOrder = updateDto.IsCreateOrder;
+            shoppingCartRegistration.IsSendOrder = updateDto.IsSendOrder;
+            shoppingCartRegistration.EmergencyLevel = updateDto.EmergencyLevel;
+            shoppingCartRegistration.Source = updateDto.Source;
+            shoppingCartRegistration.CreateBy = updateDto.CreateBy;
+            shoppingCartRegistration.ProductType = updateDto.ProductType;
+            var baseLiveAnchorId = await _liveAnchorService.GetByIdAsync(updateDto.LiveAnchorId);
+            if (!string.IsNullOrEmpty(baseLiveAnchorId.LiveAnchorBaseId))
             {
-                // unitOfWork.RollBack();
-                throw new Exception(ex.Message.ToString());
+                shoppingCartRegistration.BaseLiveAnchorId = baseLiveAnchorId.LiveAnchorBaseId;
             }
+            await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
         }
 
         public async Task AssignAsync(string id, int assignBy)
