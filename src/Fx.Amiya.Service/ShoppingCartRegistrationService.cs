@@ -626,7 +626,7 @@ namespace Fx.Amiya.Service
                         x.EmergencyLevel = (int)EmergencyLevel.Important;
                         x.IsCreateOrder = true;
                         x.IsAddWeChat = true;
-                        x.IsWriteOff = true;
+                        //x.IsWriteOff = true;
                         x.IsConsultation = true;
                         x.ConsultationDate = DateTime.Now;
                         await dalShoppingCartRegistration.UpdateAsync(x, true);

@@ -2522,7 +2522,14 @@ namespace Fx.Amiya.Service
             else
             {
                 startDate = new DateTime(year, month, 1);
-                endDate = new DateTime(year, month + 1, 1);
+                if (month == 12)
+                {
+                    endDate = new DateTime(year + 1, 1, 1);
+                }
+                else
+                {
+                    endDate = new DateTime(year, month + 1, 1);
+                }
             }
 
             var order = await contentPlatFormOrderDealInfoService.GetPerformanceDetailByDateAsync(startDate, endDate, LiveAnchorInfo);

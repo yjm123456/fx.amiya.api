@@ -7,6 +7,11 @@ namespace Fx.Amiya.Background.Api.Vo.AssistantHomePage.Result
 {
     public class AssistantOrderDataVo
     {
+
+        /// <summary>
+        /// 总分诊
+        /// </summary>
+        public int TotalShoppingCartRegistionCount { get; set; }
         /// <summary>
         /// 总订单
         /// </summary>

@@ -4565,6 +4565,18 @@ namespace Fx.Amiya.Service
                                        select d;
 
             }
+            QueryAssistantHomePageDataDto queryAssistantHomePageDataDto = new QueryAssistantHomePageDataDto();
+            queryAssistantHomePageDataDto.StartDate = Convert.ToDateTime("2010-01-01");
+            queryAssistantHomePageDataDto.EndDate = query.Date;
+            queryAssistantHomePageDataDto.BaseLiveAnchorId = query.BaseLiveAnchorId;
+            queryAssistantHomePageDataDto.ContentPlatformId = query.ContentPlatformId;
+            queryAssistantHomePageDataDto.LiveAnchorId = query.LiveAnchorId;
+            queryAssistantHomePageDataDto.WechatNoId = query.WechatNoId;
+            queryAssistantHomePageDataDto.Source = query.Source;
+            queryAssistantHomePageDataDto.AssistantId = query.AssistantId;
+
+            var shoppingCartRegistionData = await _shoppingCartRegistration.GetAsistantMonthPerformanceDataAsync(queryAssistantHomePageDataDto);
+            assistantOrderData.TotalShoppingCartRegistionCount = shoppingCartRegistionData.Count();
             assistantOrderData.TotalOrderCount = await contentPlatformOrder.CountAsync();
             assistantOrderData.TodayOrderCount = await contentPlatformOrder.Where(e => e.CreateDate >= startDate && e.CreateDate < endDate).CountAsync();
             assistantOrderData.UnSendOrderCount = await contentPlatformOrder.Where(e => e.OrderStatus < (int)ContentPlateFormOrderStatus.SendOrder).CountAsync();

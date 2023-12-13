@@ -9,6 +9,10 @@ namespace Fx.Amiya.Dto.AssistantHomePage.Result
     public class AssistantOrderDataDto
     {
         /// <summary>
+        /// 总分诊
+        /// </summary>
+        public int TotalShoppingCartRegistionCount { get; set; }
+        /// <summary>
         /// 总订单
         /// </summary>
         public int TotalOrderCount { get; set; }

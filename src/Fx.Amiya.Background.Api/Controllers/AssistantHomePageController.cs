@@ -56,6 +56,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.PageNum = query.PageNum;
             queryDto.PageSize = query.PageSize;
             var data = await contentPlateFormOrderService.GetAssistantOrderDataAsync(queryDto);
+            result.TotalShoppingCartRegistionCount = data.TotalShoppingCartRegistionCount;
             result.TotalOrderCount = data.TotalOrderCount;
             result.TodayOrderCount = data.TodayOrderCount;
             result.UnSendOrderCount = data.UnSendOrderCount;
