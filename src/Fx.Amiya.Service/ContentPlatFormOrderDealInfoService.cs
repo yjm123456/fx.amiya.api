@@ -2206,7 +2206,11 @@ namespace Fx.Amiya.Service
                                             EncryptPhone = ServiceClass.Encrypt(c.ContentPlatFormOrder.Phone, config.PhoneEncryptKey),
                                             AssistantName = e.Name,
                                             SendHospital = h.Name,
-                                            Status = c.IsDeal ? "已成交" : "未成交"
+                                            Status = c.IsDeal ? "已成交" : "未成交",
+                                            AddOrderPrice = c.ContentPlatFormOrder.AddOrderPrice,
+                                            DealPrice = c.Price,
+                                            IsOldCustomer = c.IsOldCustomer ? "老客" : "新客"
+
                                         }).Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToList();
             return todayToHospitalData;
         }

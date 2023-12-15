@@ -91,7 +91,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                 AssistantName = e.AssistantName,
                 SendHospital = e.SendHospital,
                 Status = e.Status,
-                EncryptPhone = e.EncryptPhone
+                EncryptPhone = e.EncryptPhone,
+                AddOrderPrice = e.AddOrderPrice,
+                DealPrice = e.DealPrice,
+                IsOldCustomer = e.IsOldCustomer
+
             }).ToList();
             return ResultData<FxPageInfo<TodayToHospitalDataVo>>.Success().AddData("todayToHospitalData", fxPageInfo);
         }

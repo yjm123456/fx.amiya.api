@@ -32,5 +32,20 @@ namespace Fx.Amiya.Dto.AssistantHomePage.Result
         /// 加密手机号
         /// </summary>
         public string EncryptPhone { get; set; }
+
+        /// <summary>
+        /// 下单金额
+        /// </summary>
+        public decimal? AddOrderPrice { get; set; }
+
+        /// <summary>
+        /// 成交金额
+        /// </summary>
+        public decimal? DealPrice { get; set; }
+
+        /// <summary>
+        /// 新客/老客
+        /// </summary>
+        public string IsOldCustomer { get; set; }
     }
 }
