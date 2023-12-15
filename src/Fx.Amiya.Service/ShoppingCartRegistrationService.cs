@@ -502,7 +502,14 @@ namespace Fx.Amiya.Service
             var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
             if (shoppingCartRegistration == null)
                 throw new Exception("小黄车登记编号错误！");
-            if (updateDto.OperationBy != shoppingCartRegistration.CreateBy) throw new Exception("当前登录账号和创建人不一致,不能修改该信息！");
+            if (updateDto.OperationBy != shoppingCartRegistration.CreateBy)
+            {
+                shoppingCartRegistration.IsAddWeChat = updateDto.IsAddWeChat;
+                shoppingCartRegistration.Remark = updateDto.Remark;
+                await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
+                //throw new Exception("数据已编辑成功，因当前登录账号和创建人不一致,该部分数据只有加V与备注修改生效！");
+            }
+            #region 删除部分
             //if (!string.IsNullOrEmpty(updateDto.Phone))
             //{
             //    var bind = await _dalBindCustomerService.GetAll()
@@ -532,44 +539,48 @@ namespace Fx.Amiya.Service
             //        await _dalBindCustomerService.AddAsync(bindCustomerService, true);
             //    }
             //}
-            shoppingCartRegistration.RecordDate = updateDto.RecordDate;
-            shoppingCartRegistration.ContentPlatFormId = updateDto.ContentPlatFormId;
-            shoppingCartRegistration.LiveAnchorId = updateDto.LiveAnchorId;
-            shoppingCartRegistration.LiveAnchorWechatNo = updateDto.LiveAnchorWechatNo;
-            shoppingCartRegistration.CustomerNickName = updateDto.CustomerNickName;
-            shoppingCartRegistration.Phone = updateDto.Phone;
-            shoppingCartRegistration.SubPhone = updateDto.SubPhone;
-            shoppingCartRegistration.Price = updateDto.Price;
-            shoppingCartRegistration.GetCustomerType = updateDto.GetCustomerType;
-            shoppingCartRegistration.IsAddWeChat = updateDto.IsAddWeChat;
-            shoppingCartRegistration.ShoppingCartRegistrationCustomerType = updateDto.ShoppingCartRegistrationCustomerType;
-            shoppingCartRegistration.ConsultationType = updateDto.ConsultationType;
-            shoppingCartRegistration.IsWriteOff = updateDto.IsWriteOff;
-            shoppingCartRegistration.IsConsultation = updateDto.IsConsultation;
-            shoppingCartRegistration.ConsultationDate = updateDto.ConsultationDate;
-            shoppingCartRegistration.IsReturnBackPrice = updateDto.IsReturnBackPrice;
-            shoppingCartRegistration.Remark = updateDto.Remark;
-            shoppingCartRegistration.IsReContent = updateDto.IsReContent;
-            shoppingCartRegistration.ReContent = updateDto.ReContent;
-            shoppingCartRegistration.RefundDate = updateDto.RefundDate;
-            shoppingCartRegistration.RefundReason = updateDto.RefundReason;
-            shoppingCartRegistration.BadReviewDate = updateDto.BadReviewDate;
-            shoppingCartRegistration.BadReviewContent = updateDto.BadReviewContent;
-            shoppingCartRegistration.BadReviewReason = updateDto.BadReviewReason;
-            shoppingCartRegistration.IsBadReview = updateDto.IsBadReview;
-            shoppingCartRegistration.AssignEmpId = updateDto.AssignEmpId;
-            shoppingCartRegistration.IsCreateOrder = updateDto.IsCreateOrder;
-            shoppingCartRegistration.IsSendOrder = updateDto.IsSendOrder;
-            shoppingCartRegistration.EmergencyLevel = updateDto.EmergencyLevel;
-            shoppingCartRegistration.Source = updateDto.Source;
-            shoppingCartRegistration.CreateBy = updateDto.CreateBy;
-            shoppingCartRegistration.ProductType = updateDto.ProductType;
-            var baseLiveAnchorId = await _liveAnchorService.GetByIdAsync(updateDto.LiveAnchorId);
-            if (!string.IsNullOrEmpty(baseLiveAnchorId.LiveAnchorBaseId))
+            #endregion
+            else
             {
-                shoppingCartRegistration.BaseLiveAnchorId = baseLiveAnchorId.LiveAnchorBaseId;
+                shoppingCartRegistration.RecordDate = updateDto.RecordDate;
+                shoppingCartRegistration.ContentPlatFormId = updateDto.ContentPlatFormId;
+                shoppingCartRegistration.LiveAnchorId = updateDto.LiveAnchorId;
+                shoppingCartRegistration.LiveAnchorWechatNo = updateDto.LiveAnchorWechatNo;
+                shoppingCartRegistration.CustomerNickName = updateDto.CustomerNickName;
+                shoppingCartRegistration.Phone = updateDto.Phone;
+                shoppingCartRegistration.SubPhone = updateDto.SubPhone;
+                shoppingCartRegistration.Price = updateDto.Price;
+                shoppingCartRegistration.GetCustomerType = updateDto.GetCustomerType;
+                shoppingCartRegistration.IsAddWeChat = updateDto.IsAddWeChat;
+                shoppingCartRegistration.ShoppingCartRegistrationCustomerType = updateDto.ShoppingCartRegistrationCustomerType;
+                shoppingCartRegistration.ConsultationType = updateDto.ConsultationType;
+                shoppingCartRegistration.IsWriteOff = updateDto.IsWriteOff;
+                shoppingCartRegistration.IsConsultation = updateDto.IsConsultation;
+                shoppingCartRegistration.ConsultationDate = updateDto.ConsultationDate;
+                shoppingCartRegistration.IsReturnBackPrice = updateDto.IsReturnBackPrice;
+                shoppingCartRegistration.Remark = updateDto.Remark;
+                shoppingCartRegistration.IsReContent = updateDto.IsReContent;
+                shoppingCartRegistration.ReContent = updateDto.ReContent;
+                shoppingCartRegistration.RefundDate = updateDto.RefundDate;
+                shoppingCartRegistration.RefundReason = updateDto.RefundReason;
+                shoppingCartRegistration.BadReviewDate = updateDto.BadReviewDate;
+                shoppingCartRegistration.BadReviewContent = updateDto.BadReviewContent;
+                shoppingCartRegistration.BadReviewReason = updateDto.BadReviewReason;
+                shoppingCartRegistration.IsBadReview = updateDto.IsBadReview;
+                shoppingCartRegistration.AssignEmpId = updateDto.AssignEmpId;
+                shoppingCartRegistration.IsCreateOrder = updateDto.IsCreateOrder;
+                shoppingCartRegistration.IsSendOrder = updateDto.IsSendOrder;
+                shoppingCartRegistration.EmergencyLevel = updateDto.EmergencyLevel;
+                shoppingCartRegistration.Source = updateDto.Source;
+                shoppingCartRegistration.CreateBy = updateDto.CreateBy;
+                shoppingCartRegistration.ProductType = updateDto.ProductType;
+                var baseLiveAnchorId = await _liveAnchorService.GetByIdAsync(updateDto.LiveAnchorId);
+                if (!string.IsNullOrEmpty(baseLiveAnchorId.LiveAnchorBaseId))
+                {
+                    shoppingCartRegistration.BaseLiveAnchorId = baseLiveAnchorId.LiveAnchorBaseId;
+                }
+                await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
             }
-            await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
         }
 
         public async Task AssignAsync(string id, int assignBy)
