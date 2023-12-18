@@ -71,6 +71,10 @@ namespace Fx.Amiya.Dto.BindCustomerService
         /// 最近发放礼品时间
         /// </summary>
         public DateTime? NewSystemSendGiftDate { get; set; }
+        /// <summary>
+        /// 消费周期
+        /// </summary>
+        public int? ConsumerCycle { get; set; }
 
     }
 }

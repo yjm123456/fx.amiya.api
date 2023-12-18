@@ -92,5 +92,9 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerInfo
         /// RFM类型文本
         /// </summary>
         public string RfmTypeText { get; set; }
+        /// <summary>
+        /// 消费周期
+        /// </summary>
+        public int? ConsumerCycle { get; set; }
     }
 }

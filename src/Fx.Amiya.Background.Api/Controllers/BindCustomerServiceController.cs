@@ -351,7 +351,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                   AllOrderCount = d.AllOrderCount,
                                                   ConsumptionDate = d.ConsumptionDate,
                                                   RfmType = d.RfmType,
-                                                  RfmTypeText = d.RfmTypeText
+                                                  RfmTypeText = d.RfmTypeText,
+                                                  ConsumerCycle=d.ConsumerCycle
                                               };
 
                 FxPageInfo<BindCustomerInfoVo> pageInfo = new FxPageInfo<BindCustomerInfoVo>();

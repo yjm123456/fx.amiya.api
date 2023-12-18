@@ -558,12 +558,46 @@ namespace Fx.Amiya.Service
                                                     ConsumptionDate = DateTime.Now.Subtract(d.NewConsumptionDate.Value).Days + 1,
                                                     RfmType = d.RfmType,
                                                     RfmTypeText = ServiceClass.GetRFMTagText(d.RfmType),
-                                                    CreateDate = d.CreateDate
+                                                    CreateDate = d.CreateDate,
+                                                    FirstConsumptionDate=d.FirstConsumptionDate,
                                                 };
             FxPageInfo<BindCustomerServiceDto> result = new FxPageInfo<BindCustomerServiceDto>();
             result.TotalCount = await bindCustomerServiceInfoResult.CountAsync();
             result.List = await bindCustomerServiceInfoResult.OrderByDescending(z => z.NewConsumptionDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+            result.List = result.List.Select(e => { e.ConsumerCycle = CalConsumerCycle(e.FirstConsumptionDate, e.NewConsumptionDate, e.AllOrderCount); return e; }).ToList();
             return result;
+        }
+        /// <summary>
+        /// 计算消费周期
+        /// </summary>
+        /// <param name="firstConsumerDate"></param>
+        /// <param name="lastConsumerDate"></param>
+        /// <param name="consumerTimes"></param>
+        /// <returns></returns>
+        private int? CalConsumerCycle(DateTime? firstConsumerDate, DateTime? lastConsumerDate, int? consumerTimes)
+        {
+            if (consumerTimes == 1) return null;
+            if (!firstConsumerDate.HasValue) return null;
+            if (!lastConsumerDate.HasValue) return null;
+            if (!consumerTimes.HasValue) return null;
+            var totalCycle = (lastConsumerDate.Value.Date - firstConsumerDate.Value.Date).TotalDays;
+            if (consumerTimes == 2)
+            {
+                return Convert.ToInt32(totalCycle);
+            }
+            else
+            {
+                var cycle = Convert.ToInt32(totalCycle) / (consumerTimes - 1);
+                if (cycle < 1)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return cycle;
+                }
+            }
+
         }
         /// <summary>
         /// 修改客户RFM等级
@@ -595,7 +629,8 @@ namespace Fx.Amiya.Service
                 {
                     bindCustomerService.SystemSendGiftTime = 1;
                 }
-                else {
+                else
+                {
                     bindCustomerService.SystemSendGiftTime += 1;
                 }
                 bindCustomerService.NewSystemSendGiftDate = DateTime.Now;
