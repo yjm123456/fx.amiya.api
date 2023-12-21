@@ -559,7 +559,7 @@ namespace Fx.Amiya.Service
                                                     RfmType = d.RfmType,
                                                     RfmTypeText = ServiceClass.GetRFMTagText(d.RfmType),
                                                     CreateDate = d.CreateDate,
-                                                    FirstConsumptionDate=d.FirstConsumptionDate,
+                                                    FirstConsumptionDate = d.FirstConsumptionDate,
                                                 };
             FxPageInfo<BindCustomerServiceDto> result = new FxPageInfo<BindCustomerServiceDto>();
             result.TotalCount = await bindCustomerServiceInfoResult.CountAsync();
@@ -576,10 +576,9 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         private int? CalConsumerCycle(DateTime? firstConsumerDate, DateTime? lastConsumerDate, int? consumerTimes)
         {
-            if (consumerTimes == 1) return null;
+            if (!consumerTimes.HasValue||consumerTimes <= 1) return 0;
             if (!firstConsumerDate.HasValue) return null;
             if (!lastConsumerDate.HasValue) return null;
-            if (!consumerTimes.HasValue) return null;
             var totalCycle = (lastConsumerDate.Value.Date - firstConsumerDate.Value.Date).TotalDays;
             if (consumerTimes == 2)
             {
