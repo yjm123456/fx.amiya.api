@@ -398,11 +398,33 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpPost("BelongEmployeeOrder")]
         public async Task<ResultData> BelongEmployeeOrderAsync(BelongEmpInfoOrderVo input)
         {
-            UpdateBelongEmpInfoOrderDto dto = new UpdateBelongEmpInfoOrderDto();
-            dto.OrderId = input.OrderId;
-            dto.BelongEmpId = input.BelongEmpInfo;
-            await orderService.UpdateOrderBelongEmpIdAsync(dto);
-            return ResultData.Success();
+            OperationAddDto operationLog = new OperationAddDto();
+            operationLog.Source = (int)RequestSource.AmiyaBackground;
+            operationLog.Code = 0;
+            try
+            {
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationLog.OperationBy = employeeId;
+                UpdateBelongEmpInfoOrderDto dto = new UpdateBelongEmpInfoOrderDto();
+                dto.OrderId = input.OrderId;
+                dto.BelongEmpId = input.BelongEmpInfo;
+                await orderService.UpdateOrderBelongEmpIdAsync(dto);
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                operationLog.Message = ex.Message;
+                operationLog.Code = -1;
+                throw ex;
+            }
+            finally
+            {
+                operationLog.Parameters = JsonConvert.SerializeObject(input);
+                operationLog.RequestType = (int)RequestType.Update;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationLog);
+            }
         }
 
         /// <summary>

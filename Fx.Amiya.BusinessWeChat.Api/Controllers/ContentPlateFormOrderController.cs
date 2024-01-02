@@ -586,19 +586,39 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData> AddAsync(AddContentPlatFormSendOrderInfoVo addVo)
         {
-            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            int employeeId = Convert.ToInt32(employee.Id);
-            AddContentPlatFormSendOrderInfoDto addDto = new AddContentPlatFormSendOrderInfoDto();
-            addDto.HospitalId = addVo.HospitalId;
-            addDto.OrderId = addVo.OrderId;
-            addDto.IsUncertainDate = addVo.IsUncertainDate;
-            addDto.AppointmentDate = addVo.AppointmentDate;
-            addDto.Remark = addVo.Remark;
-            addDto.SendBy = addVo.SendBy;
-            addDto.EmployeeId = employeeId;
-            addDto.OtherHospitalId = addVo.OtherHospitalId;
-            await _orderService.AddAsync(addDto);
-            return ResultData.Success();
+            OperationAddDto operationLog = new OperationAddDto();
+            operationLog.Source = (int)RequestSource.AmiyaBusinessWechat;
+            operationLog.Code = 0;
+            try
+            {
+                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationLog.OperationBy = employeeId;
+                AddContentPlatFormSendOrderInfoDto addDto = new AddContentPlatFormSendOrderInfoDto();
+                addDto.HospitalId = addVo.HospitalId;
+                addDto.OrderId = addVo.OrderId;
+                addDto.IsUncertainDate = addVo.IsUncertainDate;
+                addDto.AppointmentDate = addVo.AppointmentDate;
+                addDto.Remark = addVo.Remark;
+                addDto.SendBy = addVo.SendBy;
+                addDto.EmployeeId = employeeId;
+                addDto.OtherHospitalId = addVo.OtherHospitalId;
+                await _orderService.AddAsync(addDto);
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                operationLog.Message = ex.Message;
+                operationLog.Code = -1;
+                throw ex;
+            }
+            finally
+            {
+                operationLog.Parameters = JsonConvert.SerializeObject(addVo);
+                operationLog.RequestType = (int)RequestType.Update;
+                operationLog.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationLog);
+            }
         }
 
         /// <summary>
@@ -610,18 +630,38 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData> UpdateAsync(UpdateContentPlatFormSendOrderInfoVo updateVo)
         {
-            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            int employeeId = Convert.ToInt32(employee.Id);
-            UpdateContentPlatFormSendOrderInfoDto updateDto = new UpdateContentPlatFormSendOrderInfoDto();
-            updateDto.Id = updateVo.Id;
-            updateDto.OrderId = updateVo.OrderId;
-            updateDto.HospitalId = updateVo.HospitalId;
-            updateDto.IsUncertainDate = updateVo.IsUncertainDate;
-            updateDto.AppointmentDate = updateVo.AppointmentDate;
-            updateDto.Remark = updateVo.Remark;
+            OperationAddDto operationLog = new OperationAddDto();
+            operationLog.Source = (int)RequestSource.AmiyaBusinessWechat;
+            operationLog.Code = 0;
+            try
+            {
+                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationLog.OperationBy = employeeId;
+                UpdateContentPlatFormSendOrderInfoDto updateDto = new UpdateContentPlatFormSendOrderInfoDto();
+                updateDto.Id = updateVo.Id;
+                updateDto.OrderId = updateVo.OrderId;
+                updateDto.HospitalId = updateVo.HospitalId;
+                updateDto.IsUncertainDate = updateVo.IsUncertainDate;
+                updateDto.AppointmentDate = updateVo.AppointmentDate;
+                updateDto.Remark = updateVo.Remark;
 
-            await _orderService.UpdateAsync(updateDto, employeeId);
-            return ResultData.Success();
+                await _orderService.UpdateAsync(updateDto, employeeId);
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                operationLog.Message = ex.Message;
+                operationLog.Code = -1;
+                throw ex;
+            }
+            finally
+            {
+                operationLog.Parameters = JsonConvert.SerializeObject(updateVo);
+                operationLog.RequestType = (int)RequestType.Update;
+                operationLog.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationLog);
+            }
         }
 
         /// <summary>
