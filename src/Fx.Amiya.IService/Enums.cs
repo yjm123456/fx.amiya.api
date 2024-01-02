@@ -128,7 +128,11 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 支付回调
         /// </summary>
-        Pay=5
+        Pay=5,
+        /// <summary>
+        /// 用户登陆
+        /// </summary>
+        Login=6
 
     }
 

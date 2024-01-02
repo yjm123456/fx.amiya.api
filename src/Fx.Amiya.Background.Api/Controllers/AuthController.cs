@@ -21,6 +21,10 @@ using Fx.Identity.Core;
 using System.Security.Claims;
 using Fx.Authentication.Jwt;
 using Fx.Amiya.Background.Api.Vo.AmiyaEmployee;
+using Fx.Amiya.Dto.OperationLog;
+using System.Net;
+using System.Net.Sockets;
+using System.Net.NetworkInformation;
 
 namespace Fx.Amiya.Background.Api.Controllers
 {
@@ -32,15 +36,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IHospitalEmployeeService hospitalEmployeeService;
         private IHttpContextAccessor httpContextAccessor;
         private FxAppGlobal _fxAppGlobal;
+        private IOperationLogService operationLogService;
 
         public AuthController(IAmiyaEmployeeService amiyaEmployeeService,
             IHospitalEmployeeService hospitalEmployeeService,
             IHttpContextAccessor httpContextAccessor,
+             IOperationLogService operationLogService,
             FxAppGlobal fxAppGlobal)
         {
             this.amiyaEmployeeService = amiyaEmployeeService;
             this.hospitalEmployeeService = hospitalEmployeeService;
             this.httpContextAccessor = httpContextAccessor;
+            this.operationLogService = operationLogService;
             _fxAppGlobal = fxAppGlobal;
         }
 
@@ -53,11 +60,15 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("amiyaLogin")]
         public async Task<ResultData<AmiyaEmployeeAccountVo>> AmiyaLoginAsync([Required(ErrorMessage = "请输入用户名")] string userName, [Required(ErrorMessage = "请输入密码")] string password)
         {
+            OperationAddDto operationLog = new OperationAddDto();
+            operationLog.Source = (int)RequestSource.AmiyaBackground;
+            operationLog.Code = 0;
             try
             {
                 var jwtConfig = _fxAppGlobal.AppConfig.FxJwtConfig;
                 var employee = await amiyaEmployeeService.LoginAsync(userName.Trim(), password.Trim().GetMD5String());
-
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationLog.OperationBy = employeeId;
                 var identity = new FxInternalEmployeeIdentity().CreateFxIdentity(employee.Id.ToString());
 
                 AmiyaEmployeeAccountVo accountVo = new AmiyaEmployeeAccountVo()
@@ -81,7 +92,27 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             catch (Exception ex)
             {
+                operationLog.Message = ex.Message;
+                operationLog.Code = -1;
                 return ResultData<AmiyaEmployeeAccountVo>.Fail(ex.Message);
+            }
+            finally
+            {
+                var localOtherInfo = "";
+                var hostName = Dns.GetHostName();
+                var ipAddresses = Dns.GetHostAddresses(hostName);
+                foreach (var x in ipAddresses)
+                {
+                    localOtherInfo += x + ";";
+                }
+                localOtherInfo = localOtherInfo.Substring(0, localOtherInfo.Length - 1);
+                var localIP = ipAddresses.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
+
+
+                operationLog.Parameters = "用户登陆 账户："+ userName + "， 主机名称：" + hostName + "，IP地址：" + localIP + "，其他信息：" + localOtherInfo;
+                operationLog.RequestType = (int)RequestType.Login;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationLog);
             }
         }
 
@@ -142,7 +173,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
                 HospitalEmployeeAccountVo avvountVo = new HospitalEmployeeAccountVo()
                 {
-                    Avatar=employee.Avatar ?? "",
+                    Avatar = employee.Avatar ?? "",
                     EmployeeId = employee.Id,
                     EmployeeName = employee.Name,
                     HospitalId = employee.HospitalId,

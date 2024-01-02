@@ -13,6 +13,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Net;
+using System.Net.Sockets;
+using Fx.Amiya.Dto.OperationLog;
 
 namespace Fx.Amiya.BusinessWechat.Api.Controllers
 {
@@ -24,14 +27,17 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         private IHospitalEmployeeService hospitalEmployeeService;
         private IHttpContextAccessor httpContextAccessor;
         private FxAppGlobal _fxAppGlobal;
+        private IOperationLogService operationLogService;
 
         public AuthController(IAmiyaEmployeeService amiyaEmployeeService,
             IHospitalEmployeeService hospitalEmployeeService,
+             IOperationLogService operationLogService,
             IHttpContextAccessor httpContextAccessor,
             FxAppGlobal fxAppGlobal)
         {
             this.amiyaEmployeeService = amiyaEmployeeService;
             this.hospitalEmployeeService = hospitalEmployeeService;
+            this.operationLogService = operationLogService;
             this.httpContextAccessor = httpContextAccessor;
             _fxAppGlobal = fxAppGlobal;
         }
@@ -82,10 +88,15 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("amiyaLogin")]
         public async Task<ResultData<AmiyaEmployeeAccountVo>> AmiyaLoginAsync([Required(ErrorMessage = "请输入用户名")] string userName, [Required(ErrorMessage = "请输入密码")] string password, string userId, string code)
         {
+            OperationAddDto operationLog = new OperationAddDto();
+            operationLog.Source = (int)RequestSource.AmiyaBusinessWechat;
+            operationLog.Code = 0;
             try
             {
                 var jwtConfig = _fxAppGlobal.AppConfig.FxJwtConfig;
                 var employee = await amiyaEmployeeService.LoginAsync(userName.Trim(), password.Trim().GetMD5String());
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationLog.OperationBy = employeeId;
                 if (!string.IsNullOrEmpty(userId) && !string.IsNullOrEmpty(code))
                 {
                     if (!string.IsNullOrEmpty(employee.UserId) && employee.UserId != userId)
@@ -118,7 +129,27 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             }
             catch (Exception ex)
             {
+                operationLog.Message = ex.Message;
+                operationLog.Code = -1;
                 return ResultData<AmiyaEmployeeAccountVo>.Fail(ex.Message);
+            }
+            finally
+            {
+                var localOtherInfo = "";
+                var hostName = Dns.GetHostName();
+                var ipAddresses = Dns.GetHostAddresses(hostName);
+                foreach (var x in ipAddresses)
+                {
+                    localOtherInfo += x + ";";
+                }
+                localOtherInfo = localOtherInfo.Substring(0, localOtherInfo.Length - 1);
+                var localIP = ipAddresses.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
+
+
+                operationLog.Parameters = "用户登陆,登陆方式：账号密码登陆，账户：" + userName + "， 主机名称：" + hostName + "，IP地址：" + localIP + "，其他信息：" + localOtherInfo;
+                operationLog.RequestType = (int)RequestType.Login;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationLog);
             }
         }
 
@@ -132,10 +163,15 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("amiyaLoginByUserIdAndCode")]
         public async Task<ResultData<AmiyaEmployeeAccountVo>> AmiyaLoginByUserIdAndCodeAsync([Required(ErrorMessage = "请输入用户id")] string userId, [Required(ErrorMessage = "请输入用户code")] string code)
         {
+            OperationAddDto operationLog = new OperationAddDto();
+            operationLog.Source = (int)RequestSource.AmiyaBusinessWechat;
+            operationLog.Code = 0;
             try
             {
                 var jwtConfig = _fxAppGlobal.AppConfig.FxJwtConfig;
                 var employee = await amiyaEmployeeService.LoginByUserIdAndCodeAsync(userId, code);
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationLog.OperationBy = employeeId;
                 if (!string.IsNullOrEmpty(userId) && !string.IsNullOrEmpty(code))
                 {
                     await amiyaEmployeeService.UpdateBusinessWechatUserIdAndCode(employee.Id, userId, code);
@@ -163,7 +199,27 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             }
             catch (Exception ex)
             {
+                operationLog.Message = ex.Message;
+                operationLog.Code = -1;
                 return ResultData<AmiyaEmployeeAccountVo>.Fail(ex.Message);
+            }
+            finally
+            {
+                var localOtherInfo = "";
+                var hostName = Dns.GetHostName();
+                var ipAddresses = Dns.GetHostAddresses(hostName);
+                foreach (var x in ipAddresses)
+                {
+                    localOtherInfo += x + ";";
+                }
+                localOtherInfo = localOtherInfo.Substring(0, localOtherInfo.Length - 1);
+                var localIP = ipAddresses.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
+
+
+                operationLog.Parameters = "用户登陆, 登陆方式：企业微信授权登陆， 账户：" + userId + "， 主机名称：" + hostName + "，IP地址：" + localIP + "，其他信息：" + localOtherInfo;
+                operationLog.RequestType = (int)RequestType.Login;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationLog);
             }
         }
 
