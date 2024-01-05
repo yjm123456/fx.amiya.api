@@ -215,6 +215,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             checkReconciliationDocumentSettleDto.CheckState = query.CheckState;
             checkReconciliationDocumentSettleDto.Id = query.Id;
             checkReconciliationDocumentSettleDto.CheckBelongEmpId = query.CheckBelongEmpId;
+            checkReconciliationDocumentSettleDto.CustomerServicePerformance = query.CustomerServicePerformance;
+            checkReconciliationDocumentSettleDto.PerformancePercent = query.PerformancePercent;
             await billService.CheckReconciliationDocumentsSettleAsync(checkReconciliationDocumentSettleDto);
             return ResultData.Success();
 

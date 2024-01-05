@@ -95,6 +95,16 @@ namespace Fx.Amiya.DbModels.Model
         /// 薪资单据id
         /// </summary>
         public string CustomerServiceCompensationId { get; set; }
+
+        /// <summary>
+        /// 提成点数
+        /// </summary>
+        public decimal PerformancePercent { get; set; }
+
+        /// <summary>
+        /// 提成金额
+        /// </summary>
+        public decimal CustomerServicePerformance { get; set; }
         /// <summary>
         /// 对账单
         /// </summary>

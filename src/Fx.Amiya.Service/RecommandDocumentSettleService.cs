@@ -192,6 +192,8 @@ namespace Fx.Amiya.Service
                 result.CheckBelongEmpId = checkDto.CheckBelongEmpId;
                 result.CheckRemark = checkDto.CheckRemark;
                 result.CheckDate = DateTime.Now;
+                result.PerformancePercent = checkDto.PerformancePercent;
+                result.CustomerServicePerformance = checkDto.CustomerServicePerformance;
                 await _dalRecommandDocumentSettle.UpdateAsync(result, true);
             }
         }

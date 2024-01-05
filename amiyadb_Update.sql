@@ -106,3 +106,9 @@ ALTER TABLE `tbl_amiya_employee`
 
 ----------------------------------------------王健 2023/1/4 END----------------------------------------
  
+----------------------------------------------余建明 2024/1/4 BEGIN----------------------------------------
+--助理薪资审核新增提成点数与提成业绩
+ ALTER TABLE `amiyadb`.`tbl_recommand_document_settle` 
+ADD COLUMN `performance_percent` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `customer_service_compensation_id`,
+ADD COLUMN `customer_service_performance` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `performance_percent`;
+----------------------------------------------余建明 2024/1/4 END----------------------------------------

@@ -34,6 +34,15 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         /// 最终审核归属客服
         /// </summary>
         public int? CheckBelongEmpId { get; set; }
+        /// <summary>
+        /// 提成点数
+        /// </summary>
+        public decimal PerformancePercent { get; set; }
+
+        /// <summary>
+        /// 提成金额
+        /// </summary>
+        public decimal CustomerServicePerformance { get; set; }
 
     }
 }
