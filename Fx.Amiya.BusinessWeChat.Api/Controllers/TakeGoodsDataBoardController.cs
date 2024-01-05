@@ -74,6 +74,10 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             result.RefunGMVCompleteRate = data.RefunGMVCompleteRate;
             result.RefunGMVChainRatio = data.RefunGMVChainRatio;
             result.RefunGMVYearOnYear = data.RefunGMVYearOnYear;
+            result.TikTokPlusNum = data.TikTokPlusNum;
+            result.ShuiXinTuiNum = data.ShuiXinTuiNum;
+            result.WeiXinDou=data.WeiXinDou;
+            result.QianChuanNum=data.QianChuanNum;
             return ResultData<GMVDataVo>.Success().AddData("gmvData", result);
         }
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.CarouselImage;
+﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.CarouselImage;
 using Fx.Amiya.Dto.ReconciliationDocuments;
 using Fx.Common;
 using System;
@@ -68,5 +69,10 @@ namespace Fx.Amiya.IService
         /// <param name="query"></param>
         /// <returns></returns>
         Task<FxPageInfo<RecommandDocumentSettleDto>> GetListWithPageByCustomerServiceCompensationIdAsync(QueryReconciliationDocumentsSettleDto query);
+        /// <summary>
+        /// 获取业绩上传人列表
+        /// </summary>
+        /// <returns></returns>
+        Task<List<BaseIdAndNameDto<int>>> GetCreateEmpNameListAsync();
     }
 }

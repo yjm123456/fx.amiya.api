@@ -254,7 +254,10 @@ namespace Fx.Amiya.Service
                     Valid = true,
                     Email = addDto.Email,
                     IsCustomerService = addDto.IsCustomerService,
-                    LiveAnchorBaseId = addDto.LiveAnchorBaseId
+                    LiveAnchorBaseId = addDto.LiveAnchorBaseId,
+                    OldCustomerCommission=addDto.OldCustomerCommission,
+                    NewCustomerCommission=addDto.NewCustomerCommission,
+                    InspectionCommission=addDto.InspectionCommission,
                 };
 
                 await dalAmiyaEmployee.AddAsync(employee, true);
@@ -294,6 +297,9 @@ namespace Fx.Amiya.Service
                     DepartmentId = employee.AmiyaPositionInfo.DepartmentId,
                     DepartmentName = employee.AmiyaPositionInfo.AmiyaDepartment.Name,
                     LiveAnchorBaseId = employee.LiveAnchorBaseId,
+                    OldCustomerCommission=employee.OldCustomerCommission,
+                    NewCustomerCommission=employee.NewCustomerCommission,
+                    InspectionCommission=employee.InspectionCommission,
                     LiveAnchorBaseName = dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == employee.LiveAnchorBaseId).FirstOrDefault()?.LiveAnchorName
                 };
                 if (employeeDto.IsCustomerService == true || employeeDto.PositionId == 19)
@@ -417,7 +423,10 @@ namespace Fx.Amiya.Service
                                     PositionId = d.AmiyaPositionId,
                                     PositionName = d.AmiyaPositionInfo.Name,
                                     IsCustomerService = d.IsCustomerService,
-                                    LiveAnchorBaseId = d.LiveAnchorBaseId
+                                    LiveAnchorBaseId = d.LiveAnchorBaseId,
+                                    OldCustomerCommission=d.OldCustomerCommission,
+                                    NewCustomerCommission=d.NewCustomerCommission,
+                                    InspectionCommission=d.InspectionCommission
                                 };
                 FxPageInfo<AmiyaEmployeeDto> employeePageInfo = new FxPageInfo<AmiyaEmployeeDto>();
                 employeePageInfo.TotalCount = await employees.CountAsync();
@@ -499,6 +508,9 @@ namespace Fx.Amiya.Service
                 employee.AmiyaPositionId = updateDto.PositionId;
                 employee.IsCustomerService = updateDto.IsCustomerService;
                 employee.LiveAnchorBaseId = updateDto.LiveAnchorBaseId;
+                employee.OldCustomerCommission=updateDto.OldCustomerCommission;
+                employee.NewCustomerCommission=updateDto.NewCustomerCommission;
+                employee.InspectionCommission=updateDto.InspectionCommission;
                 await dalAmiyaEmployee.UpdateAsync(employee, true);
 
 

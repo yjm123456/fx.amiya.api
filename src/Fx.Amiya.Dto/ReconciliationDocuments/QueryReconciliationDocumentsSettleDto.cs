@@ -30,6 +30,10 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         /// </summary>
         public int? CheckState { get; set; }
         /// <summary>
+        /// 上传人
+        /// </summary>
+        public int? CreateEmpId { get; set; }
+        /// <summary>
         /// 薪资单id
         /// </summary>
         public string CustomerServiceCompensationId { get; set; }

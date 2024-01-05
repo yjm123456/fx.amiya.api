@@ -77,6 +77,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.IsCustomerService = addVo.IsCustomerService;
                 addDto.Email = addVo.Email;
                 addDto.LiveAnchorBaseId = addVo.LiveAnchorBaseId;
+                addDto.OldCustomerCommission= addVo.OldCustomerCommission;
+                addDto.NewCustomerCommission=addVo.NewCustomerCommission;
+                addDto.InspectionCommission= addVo.InspectionCommission;
                 await employeeService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -155,7 +158,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                                         PositionId = d.PositionId,
                                         PositionName = d.PositionName,
                                         IsCustomerService = d.IsCustomerService,
-                                        LiveAnchorBaseName=d.LiveAnchorBaseName
+                                        LiveAnchorBaseName=d.LiveAnchorBaseName,
+                                        OldCustomerCommission=d.OldCustomerCommission,
+                                        NewCustomerCommission=d.NewCustomerCommission,
+                                        InspectionCommission=d.InspectionCommission
                                     };
 
                 FxPageInfo<AmiyaEmployeeVo> employeePage = new FxPageInfo<AmiyaEmployeeVo>();
@@ -194,6 +200,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                     employeeVo.IsCustomerService = q.IsCustomerService;
                     employeeVo.LiveAnchorIds = q.LiveAnchorIds;
                     employeeVo.LiveAnchorBaseId = q.LiveAnchorBaseId;
+                    employeeVo.OldCustomerCommission=q.OldCustomerCommission;
+                    employeeVo.NewCustomerCommission= q.NewCustomerCommission;
+                    employeeVo.InspectionCommission=q.InspectionCommission;
+
                 }
                 return ResultData<AmiyaEmployeeVo>.Success().AddData("employeeInfo", employeeVo);
             }
@@ -225,6 +235,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.IsCustomerService = updateVo.IsCustomerService;
                 updateDto.LiveAnchorIds = updateVo.LiveAnchorIds;
                 updateDto.LiveAnchorBaseId = updateVo.LiveAnchorBaseId;
+                updateDto.InspectionCommission=updateVo.InspectionCommission;
+                updateDto.OldCustomerCommission=updateVo.OldCustomerCommission;
+                updateDto.NewCustomerCommission=updateVo.NewCustomerCommission;
                 await employeeService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

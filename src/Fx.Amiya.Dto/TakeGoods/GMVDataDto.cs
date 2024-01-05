@@ -145,5 +145,21 @@ namespace Fx.Amiya.Dto.TakeGoods
         /// 退款gmv同比
         /// </summary>
         public decimal RefunGMVYearOnYear { get; set; }
+        /// <summary>
+        /// 抖+投流投流费用
+        /// </summary>
+        public decimal TikTokPlusNum { get; set; }
+        /// <summary>
+        /// 千川投流费用
+        /// </summary>
+        public decimal QianChuanNum { get; set; }
+        /// <summary>
+        /// 随心推投流费用
+        /// </summary>
+        public decimal ShuiXinTuiNum { get; set; }
+        /// <summary>
+        /// 微信豆投流费用
+        /// </summary>
+        public decimal WeiXinDou { get; set; }
     }
 }

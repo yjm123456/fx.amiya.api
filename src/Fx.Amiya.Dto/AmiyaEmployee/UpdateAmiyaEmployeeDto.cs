@@ -23,5 +23,17 @@ namespace Fx.Amiya.Dto.AmiyaEmployee
         /// 当为客服/运营咨询情况下上传绑定主播ID
         /// </summary>
         public List<int> LiveAnchorIds { get; set; }
+        /// <summary>
+        /// 新客提成
+        /// </summary>
+        public decimal? NewCustomerCommission { get; set; }
+        /// <summary>
+        /// 老客提成
+        /// </summary>
+        public decimal? OldCustomerCommission { get; set; }
+        /// <summary>
+        /// 稽查提成
+        /// </summary>
+        public decimal? InspectionCommission { get; set; }
     }
 }

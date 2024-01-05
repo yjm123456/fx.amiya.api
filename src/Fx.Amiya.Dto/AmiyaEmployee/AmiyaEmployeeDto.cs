@@ -29,6 +29,18 @@ namespace Fx.Amiya.Dto.AmiyaEmployee
         public bool ReadLiveAnchorData { get; set; }
         public string LiveAnchorBaseId { get; set; }
         public string LiveAnchorBaseName { get; set; }
+        /// <summary>
+        /// 新客提成
+        /// </summary>
+        public decimal? NewCustomerCommission { get; set; }
+        /// <summary>
+        /// 老客提成
+        /// </summary>
+        public decimal? OldCustomerCommission { get; set; }
+        /// <summary>
+        /// 稽查提成
+        /// </summary>
+        public decimal? InspectionCommission { get; set; }
         public List<int> LiveAnchorIds { get; set; }
     }
 }

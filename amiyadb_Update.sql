@@ -95,4 +95,14 @@ ADD COLUMN `customer_type` INT NOT NULL DEFAULT 0 AFTER `customer_source`;
 ------------------------------------------------余建明 2023/12/6 END--------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
+
+----------------------------------------------王健 2023/1/4 BEGIN----------------------------------------
+
+ALTER TABLE `tbl_amiya_employee`
+	ADD COLUMN `new_customer_commission` DECIMAL(10,2) NULL DEFAULT NULL AFTER `bind_base_live_anchor_id`,
+	ADD COLUMN `old_customer_commission` DECIMAL(10,2) NULL DEFAULT NULL AFTER `new_customer_commission`,
+	ADD COLUMN `inspection_commission` DECIMAL(10,2) NULL DEFAULT NULL AFTER `old_customer_commission`;
+
+
+----------------------------------------------王健 2023/1/4 END----------------------------------------
  

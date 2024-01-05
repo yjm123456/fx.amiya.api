@@ -71,6 +71,15 @@ namespace Fx.Amiya.Service
             gMVData.LaterCompleteEveryDayQianChuan = qianChuanSchedule.ResidueTimeNeedCompletePerformance;
             #endregion
 
+            #region 直播间投流细分
+
+            gMVData.QianChuanNum = thisMonthData.Sum(e => e.QianChuanNum);
+            gMVData.ShuiXinTuiNum = thisMonthData.Sum(e=>e.ShuiXinTuiNum);
+            gMVData.TikTokPlusNum = thisMonthData.Sum(e=>e.TikTokPlusNum);
+            gMVData.WeiXinDou = thisMonthData.Sum(e=>e.WeiXinDou);
+
+            #endregion 
+
             #region 刀刀组和吉娜组数据
             if (string.IsNullOrEmpty(liveAnchorId))
             {

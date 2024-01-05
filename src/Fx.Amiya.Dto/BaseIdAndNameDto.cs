@@ -11,4 +11,9 @@ namespace Fx.Amiya.Dto
         public string Id { get; set; }
         public string Name { get; set; }
     }
+    public class BaseIdAndNameDto<T>
+    {
+        public T Id { get; set; }
+        public string Name { get; set; }
+    }
 }

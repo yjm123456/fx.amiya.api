@@ -19,7 +19,18 @@ namespace Fx.Amiya.DbModels.Model
         public string UserId { get; set; }
         public string Code { get; set; }
         public DateTime? CodeExpireDate { get; set; }
-
+        /// <summary>
+        /// 新客提成
+        /// </summary>
+        public decimal? NewCustomerCommission { get; set; }
+        /// <summary>
+        /// 老客提成
+        /// </summary>
+        public decimal? OldCustomerCommission { get; set; }
+        /// <summary>
+        /// 稽查提成
+        /// </summary>
+        public decimal? InspectionCommission { get; set; }
         public string LiveAnchorBaseId { get; set; }
         public AmiyaPositionInfo AmiyaPositionInfo { get; set; }
         public List<AmiyaPositionInfo> UpdateByAmiyaPositionInfoList { get; set; }

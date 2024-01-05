@@ -1,5 +1,6 @@
 ﻿
 using Fx.Amiya.DbModels.Model;
+using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.ReconciliationDocuments;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -17,13 +18,15 @@ namespace Fx.Amiya.Service
         private IDalRecommandDocumentSettle _dalRecommandDocumentSettle;
         private IAmiyaEmployeeService amiyaEmployeeService;
         private ILiveAnchorService liveAnchorService;
+        private IDalAmiyaEmployee dalAmiyaEmployee;
         public RecommandDocumentSettleService(IDalRecommandDocumentSettle dalRecommandDocumentSettle,
             ILiveAnchorService liveAnchorService,
-            IAmiyaEmployeeService amiyaEmployeeService)
+            IAmiyaEmployeeService amiyaEmployeeService, IDalAmiyaEmployee dalAmiyaEmployee)
         {
             _dalRecommandDocumentSettle = dalRecommandDocumentSettle;
             this.amiyaEmployeeService = amiyaEmployeeService;
             this.liveAnchorService = liveAnchorService;
+            this.dalAmiyaEmployee = dalAmiyaEmployee;
         }
 
         public async Task<List<RecommandDocumentSettleDto>> GetAllAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, int chooseHospitalId, string keyword)
@@ -80,6 +83,7 @@ namespace Fx.Amiya.Service
               .Where(e => !query.IsOldCustoemr.HasValue || e.IsOldCustomer == query.IsOldCustoemr)
               .Where(e => !query.CheckState.HasValue || e.CompensationCheckState == query.CheckState)
               .Where(e => !query.BelongEmpId.HasValue || e.BelongEmpId == query.BelongEmpId).OrderByDescending(x => x.CreateDate)
+              .Where(e=>!query.CreateEmpId.HasValue||e.CreateEmpId==query.CreateEmpId)
               .Select(e => new RecommandDocumentSettleDto
               {
                   Id = e.Id,
@@ -113,6 +117,7 @@ namespace Fx.Amiya.Service
             resultPageInfo.List = await record.OrderByDescending(x => x.CreateDate).Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToListAsync();
             return resultPageInfo;
         }
+
 
         public async Task<List<RecommandDocumentSettleDto>> GetRecommandDocumentSettleAsync(List<string> recommandDocumentIds, bool? isSettle)
         {
@@ -250,6 +255,20 @@ namespace Fx.Amiya.Service
             resultPageInfo.TotalCount = await record.CountAsync();
             resultPageInfo.List = await record.OrderByDescending(x => x.CreateDate).Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToListAsync();
             return resultPageInfo;
+        }
+        /// <summary>
+        /// 获取业绩上传人名称列表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<BaseIdAndNameDto<int>>> GetCreateEmpNameListAsync()
+        {
+            var idList = _dalRecommandDocumentSettle.GetAll().Select(e => e.CreateEmpId).ToList();
+            var nameList =await dalAmiyaEmployee.GetAll().Where(e => idList.Contains(e.Id)).Select(e => new BaseIdAndNameDto<int>
+            {
+                Id = e.Id,
+                Name = e.Name,
+            }).ToListAsync();
+            return nameList;
         }
     }
 }

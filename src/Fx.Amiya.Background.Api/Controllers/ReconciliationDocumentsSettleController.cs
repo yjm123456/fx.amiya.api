@@ -1,4 +1,5 @@
 ﻿
+using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.ReconciliationDocuments;
 using Fx.Amiya.Background.Api.Vo.ReconciliationDocuments.Input;
 using Fx.Amiya.Dto.OperationLog;
@@ -28,17 +29,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IBillService billService;
         private IOperationLogService operationLogService;
         private IHttpContextAccessor httpContextAccessor;
-        //private IRecommandDocumentSettleService reconciliationDocumentsSettleService;
+        private IRecommandDocumentSettleService reconciliationDocumentsSettleService;
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="billService"></param>
-        public ReconciliationDocumentsSettleController(IBillService billService, IOperationLogService operationLogService, IHttpContextAccessor httpContextAccessor)
+        public ReconciliationDocumentsSettleController(IBillService billService, IOperationLogService operationLogService, IHttpContextAccessor httpContextAccessor, IRecommandDocumentSettleService reconciliationDocumentsSettleService)
         {
-            //this.reconciliationDocumentsSettleService = reconciliationDocumentsSettleService;
+
             this.billService = billService;
             this.operationLogService = operationLogService;
             this.httpContextAccessor = httpContextAccessor;
+            this.reconciliationDocumentsSettleService = reconciliationDocumentsSettleService;
         }
 
 
@@ -240,6 +242,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryReconciliationDocumentsSettleDto.EndDate = query.EndDate;
                 queryReconciliationDocumentsSettleDto.PageNum = query.PageNum;
                 queryReconciliationDocumentsSettleDto.PageSize = query.PageSize;
+                queryReconciliationDocumentsSettleDto.CreateEmpId = query.CreateEmpId;
                 var q = await billService.GetSettleListWithPageByCustomerCompensationAsync(queryReconciliationDocumentsSettleDto);
 
                 var reconciliationDocumentsSettle = from d in q.List
@@ -292,6 +295,19 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 return ResultData<FxPageInfo<ReconciliationDocumentsSettleVo>>.Fail(ex.Message);
             }
+        }
+        /// <summary>
+        /// 获取上传人名称列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("createEmpNameList")]
+        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetCreateEmpNameListAsync() {
+            var res=await reconciliationDocumentsSettleService.GetCreateEmpNameListAsync();
+            var nameList= res.Select(e=>new BaseIdAndNameVo<int> { 
+                Id=e.Id,
+                Name=e.Name
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("creteEmpNameList", nameList);
         }
     }
 }

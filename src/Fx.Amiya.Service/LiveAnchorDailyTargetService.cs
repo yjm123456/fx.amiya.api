@@ -2823,7 +2823,12 @@ namespace Fx.Amiya.Service
                 {
                     GMV = e.GMV,
                     RefundGMV = e.RefundGMV,
-                    LivingRoomCumulativeFlowInvestment = e.LivingRoomFlowInvestmentNum
+                    TikTokPlusNum=e.TikTokPlusNum,
+                    QianChuanNum=e.QianChuanNum,
+                    WeiXinDou=e.WeiXinDou,
+                    ShuiXinTuiNum=e.ShuiXinTuiNum,
+                    LivingRoomCumulativeFlowInvestment = e.LivingRoomFlowInvestmentNum,
+
                 }).ToList();
         }
     }
