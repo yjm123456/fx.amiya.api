@@ -109,7 +109,9 @@ namespace Fx.Amiya.Service
                   CheckDate = e.CheckDate,
                   CompensationCheckState = e.CompensationCheckState,
                   CompensationCheckStateText = ServiceClass.GetCheckTypeText(e.CompensationCheckState),
-                  CustomerServiceCompensationId = e.CustomerServiceCompensationId
+                  CustomerServiceCompensationId = e.CustomerServiceCompensationId,
+                  CustomerServicePerformance =e.CustomerServicePerformance,
+                  PerformancePercent=e.PerformancePercent,
               });
 
             FxPageInfo<RecommandDocumentSettleDto> resultPageInfo = new FxPageInfo<RecommandDocumentSettleDto>();

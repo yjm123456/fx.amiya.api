@@ -115,5 +115,15 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         /// </summary>
         public string CustomerServiceCompensationId { get; set; }
 
+        /// <summary>
+        /// 提成点数
+        /// </summary>
+        public decimal PerformancePercent { get; set; }
+
+        /// <summary>
+        /// 提成金额
+        /// </summary>
+        public decimal CustomerServicePerformance { get; set; }
+
     }
 }

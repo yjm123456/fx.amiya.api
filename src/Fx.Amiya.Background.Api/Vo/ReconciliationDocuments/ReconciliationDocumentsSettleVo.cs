@@ -178,5 +178,15 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
         /// 薪资单据id
         /// </summary>
         public string CustomerServiceCompensationId { get; set; }
+
+        /// <summary>
+        /// 提成点数
+        /// </summary>
+        public decimal PerformancePercent { get; set; }
+
+        /// <summary>
+        /// 提成金额
+        /// </summary>
+        public decimal CustomerServicePerformance { get; set; }
     }
 }

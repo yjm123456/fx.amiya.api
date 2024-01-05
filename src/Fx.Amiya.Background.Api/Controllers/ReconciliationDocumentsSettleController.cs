@@ -284,6 +284,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                         CheckRemark = d.CheckRemark,
                                                         CheckBelongEmpName = d.CheckBelongEmpName,
                                                         CustomerServiceCompensationId = d.CustomerServiceCompensationId,
+                                                        PerformancePercent=d.PerformancePercent,
+                                                        CustomerServicePerformance=d.CustomerServicePerformance
                                                     };
 
                 FxPageInfo<ReconciliationDocumentsSettleVo> reconciliationDocumentsSettleResult = new FxPageInfo<ReconciliationDocumentsSettleVo>();
