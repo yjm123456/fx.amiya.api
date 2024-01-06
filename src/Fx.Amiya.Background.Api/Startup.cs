@@ -45,7 +45,7 @@ namespace Fx.Amiya.Background.Api
             
 
             services.AddFxSwagger("Fx.Amiya.Background.Api.xml", "啊美雅微信后台API");
-            #region 配置全局路由
+            #region 配置全局路由 
             //在各个控制器添加前缀
             services.AddMvc(opt =>
             {
