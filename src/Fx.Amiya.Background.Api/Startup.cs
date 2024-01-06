@@ -75,7 +75,7 @@ namespace Fx.Amiya.Background.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-
+             
             app.UseCors(b => b.WithOrigins("*").WithHeaders("*").WithMethods("*"));
             app.UseRouting();
             app.UseAuthentication();
