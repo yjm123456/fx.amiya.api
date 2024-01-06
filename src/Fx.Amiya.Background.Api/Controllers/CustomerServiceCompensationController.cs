@@ -75,7 +75,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       TotalPrice = d.TotalPrice,
                                                       OtherPrice = d.OtherPrice,
                                                       Remark = d.Remark,
-                                                  };  
+                                                  };   
 
                 FxPageInfo<CustomerServiceCompensationVo> pageInfo = new FxPageInfo<CustomerServiceCompensationVo>();
                 pageInfo.TotalCount = q.TotalCount;
