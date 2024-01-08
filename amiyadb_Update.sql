@@ -99,9 +99,9 @@ ADD COLUMN `customer_type` INT NOT NULL DEFAULT 0 AFTER `customer_source`;
 ----------------------------------------------王健 2023/1/4 BEGIN----------------------------------------
 ---员工表添加提成信息
 ALTER TABLE `tbl_amiya_employee`
-	ADD COLUMN `new_customer_commission` DECIMAL(10,2) NULL DEFAULT NULL AFTER `bind_base_live_anchor_id`,
-	ADD COLUMN `old_customer_commission` DECIMAL(10,2) NULL DEFAULT NULL AFTER `new_customer_commission`,
-	ADD COLUMN `inspection_commission` DECIMAL(10,2) NULL DEFAULT NULL AFTER `old_customer_commission`;
+	ADD COLUMN `new_customer_commission` DECIMAL(10,2) NULL DEFAULT 0 AFTER `bind_base_live_anchor_id`,
+	ADD COLUMN `old_customer_commission` DECIMAL(10,2) NULL DEFAULT 0 AFTER `new_customer_commission`,
+	ADD COLUMN `inspection_commission` DECIMAL(10,2) NULL DEFAULT 0 AFTER `old_customer_commission`;
 
 ---助理薪资表添加字段
 ALTER TABLE `tbl_customer_service_compensation`

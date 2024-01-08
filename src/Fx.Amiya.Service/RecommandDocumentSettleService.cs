@@ -84,6 +84,7 @@ namespace Fx.Amiya.Service
               .Where(e => !query.CheckState.HasValue || e.CompensationCheckState == query.CheckState)
               .Where(e => !query.BelongEmpId.HasValue || e.BelongEmpId == query.BelongEmpId).OrderByDescending(x => x.CreateDate)
               .Where(e=>!query.CreateEmpId.HasValue||e.CreateEmpId==query.CreateEmpId)
+              .Where(e=>!query.IsGenerateSalry.HasValue||query.IsGenerateSalry==1?string.IsNullOrEmpty(e.CustomerServiceCompensationId):!string.IsNullOrEmpty(e.CustomerServiceCompensationId))
               .Select(e => new RecommandDocumentSettleDto
               {
                   Id = e.Id,

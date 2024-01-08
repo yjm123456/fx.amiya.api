@@ -245,6 +245,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryReconciliationDocumentsSettleDto.PageNum = query.PageNum;
                 queryReconciliationDocumentsSettleDto.PageSize = query.PageSize;
                 queryReconciliationDocumentsSettleDto.CreateEmpId = query.CreateEmpId;
+                queryReconciliationDocumentsSettleDto.IsGenerateSalry = query.IsGenerateSalry;
                 var q = await billService.GetSettleListWithPageByCustomerCompensationAsync(queryReconciliationDocumentsSettleDto);
 
                 var reconciliationDocumentsSettle = from d in q.List

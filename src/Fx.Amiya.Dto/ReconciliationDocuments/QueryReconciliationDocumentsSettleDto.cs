@@ -37,5 +37,9 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         /// 薪资单id
         /// </summary>
         public string CustomerServiceCompensationId { get; set; }
+        /// <summary>
+        /// 是否生成薪资单(1,未生成,2已生成)
+        /// </summary>
+        public int? IsGenerateSalry { get; set; }
     }
 }
