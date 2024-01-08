@@ -40,5 +40,49 @@ namespace Fx.Amiya.Dto.CustomerServiceCompensation.Input
         /// 对账单审核记录id集合
         /// </summary>
         public List<string> RecommandDocumentSettleIdList { get; set; }
+        /// <summary>
+        /// 底薪
+        /// </summary>
+        public decimal Salary { get; set; }
+        /// <summary>
+        /// 提成点数
+        /// </summary>
+        //public decimal PerformancePercent { get; set; }
+        /// <summary>
+        /// 提成金额
+        /// </summary>
+        public decimal CustomerServicePerformance { get; set; }
+        /// <summary>
+        /// 上门率
+        /// </summary>
+        public decimal ToHospitalRate { get; set; }
+        /// <summary>
+        /// 上门率奖励
+        /// </summary>
+        public decimal ToHospitalRateReword { get; set; }
+        /// <summary>
+        /// 复购率
+        /// </summary>
+        public decimal RepeatPurchasesRate { get; set; }
+        /// <summary>
+        /// 复购率奖励
+        /// </summary>
+        public decimal RepeatPurchasesRateReword { get; set; }
+        /// <summary>
+        /// 新客上门奖励
+        /// </summary>
+        public decimal NewCustomerToHospitalReword { get; set; }
+        /// <summary>
+        /// 老客上门奖励
+        /// </summary>
+        public decimal OldCustomerToHospitalReword { get; set; }
+        /// <summary>
+        /// 目标达成奖励
+        /// </summary>
+        public decimal TargetFinishReword { get; set; }
+        /// <summary>
+        /// 其他扣款
+        /// </summary>
+        public decimal OtherChargebacks { get; set; }
     }
 }

@@ -75,7 +75,17 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       TotalPrice = d.TotalPrice,
                                                       OtherPrice = d.OtherPrice,
                                                       Remark = d.Remark,
-                                                  };   
+                                                      Salary = d.Salary,                                                     
+                                                      CustomerServicePerformance = d.CustomerServicePerformance,
+                                                      ToHospitalRate = d.ToHospitalRate,
+                                                      ToHospitalRateReword = d.ToHospitalRateReword,
+                                                      RepeatPurchasesRate = d.RepeatPurchasesRate,
+                                                      RepeatPurchasesRateReword = d.RepeatPurchasesRateReword,
+                                                      NewCustomerToHospitalReword = d.NewCustomerToHospitalReword,
+                                                      OldCustomerToHospitalReword = d.OldCustomerToHospitalReword,
+                                                      TargetFinishReword = d.TargetFinishReword,
+                                                      OtherChargebacks = d.OtherChargebacks,
+                                                  };
 
                 FxPageInfo<CustomerServiceCompensationVo> pageInfo = new FxPageInfo<CustomerServiceCompensationVo>();
                 pageInfo.TotalCount = q.TotalCount;
@@ -113,6 +123,17 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.Remark = addVo.Remark;
                 addDto.RecommandDocumentSettleIdList = addVo.RecommandDocumentSettleIdList;
                 addDto.CreateBy = employeeId;
+                addDto.Salary = addVo.Salary;
+                //addDto.PerformancePercent = addVo.PerformancePercent;
+                addDto.CustomerServicePerformance = addVo.CustomerServicePerformance;
+                addDto.ToHospitalRate = addVo.ToHospitalRate;
+                addDto.ToHospitalRateReword = addVo.ToHospitalRateReword;
+                addDto.RepeatPurchasesRate = addVo.RepeatPurchasesRate;
+                addDto.RepeatPurchasesRateReword = addVo.RepeatPurchasesRateReword;
+                addDto.NewCustomerToHospitalReword = addVo.NewCustomerToHospitalReword;
+                addDto.OldCustomerToHospitalReword = addVo.OldCustomerToHospitalReword;
+                addDto.TargetFinishReword = addVo.TargetFinishReword;
+                addDto.OtherChargebacks = addVo.OtherChargebacks;
                 await customerServiceCompensationService.AddAsync(addDto);
 
                 return ResultData.Success();
@@ -150,6 +171,17 @@ namespace Fx.Amiya.Background.Api.Controllers
                 customerServiceCompensationVo.TotalPrice = customerServiceCompensation.TotalPrice;
                 customerServiceCompensationVo.OtherPrice = customerServiceCompensation.OtherPrice;
                 customerServiceCompensationVo.Remark = customerServiceCompensation.Remark;
+                customerServiceCompensationVo.Salary = customerServiceCompensation.Salary;
+                //customerServiceCompensationVo.PerformancePercent = customerServiceCompensation.PerformancePercent;
+                customerServiceCompensationVo.CustomerServicePerformance = customerServiceCompensation.CustomerServicePerformance;
+                customerServiceCompensationVo.ToHospitalRate = customerServiceCompensation.ToHospitalRate;
+                customerServiceCompensationVo.ToHospitalRateReword = customerServiceCompensation.ToHospitalRateReword;
+                customerServiceCompensationVo.RepeatPurchasesRate = customerServiceCompensation.RepeatPurchasesRate;
+                customerServiceCompensationVo.RepeatPurchasesRateReword = customerServiceCompensation.RepeatPurchasesRateReword;
+                customerServiceCompensationVo.NewCustomerToHospitalReword = customerServiceCompensation.NewCustomerToHospitalReword;
+                customerServiceCompensationVo.OldCustomerToHospitalReword = customerServiceCompensation.OldCustomerToHospitalReword;
+                customerServiceCompensationVo.TargetFinishReword = customerServiceCompensation.TargetFinishReword;
+                customerServiceCompensationVo.OtherChargebacks = customerServiceCompensation.OtherChargebacks;
                 return ResultData<CustomerServiceCompensationVo>.Success().AddData("customerServiceCompensation", customerServiceCompensationVo);
             }
             catch (Exception ex)
@@ -178,6 +210,17 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.TotalPrice = updateVo.TotalPrice;
                 updateDto.OtherPrice = updateVo.OtherPrice;
                 updateDto.Remark = updateVo.Remark;
+                updateDto.Salary = updateVo.Salary;
+                //updateDto.PerformancePercent = updateVo.PerformancePercent;
+                updateDto.CustomerServicePerformance = updateVo.CustomerServicePerformance;
+                updateDto.ToHospitalRate = updateVo.ToHospitalRate;
+                updateDto.ToHospitalRateReword = updateVo.ToHospitalRateReword;
+                updateDto.RepeatPurchasesRate = updateVo.RepeatPurchasesRate;
+                updateDto.RepeatPurchasesRateReword = updateVo.RepeatPurchasesRateReword;
+                updateDto.NewCustomerToHospitalReword = updateVo.NewCustomerToHospitalReword;
+                updateDto.OldCustomerToHospitalReword = updateVo.OldCustomerToHospitalReword;
+                updateDto.TargetFinishReword = updateVo.TargetFinishReword;
+                updateDto.OtherChargebacks = updateVo.OtherChargebacks;
                 await customerServiceCompensationService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -198,6 +241,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
+                
                 await customerServiceCompensationService.DeleteAsync(id);
                 return ResultData.Success();
             }

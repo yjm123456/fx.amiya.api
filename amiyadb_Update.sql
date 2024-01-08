@@ -97,12 +97,24 @@ ADD COLUMN `customer_type` INT NOT NULL DEFAULT 0 AFTER `customer_source`;
 
 
 ----------------------------------------------王健 2023/1/4 BEGIN----------------------------------------
-
+---员工表添加提成信息
 ALTER TABLE `tbl_amiya_employee`
 	ADD COLUMN `new_customer_commission` DECIMAL(10,2) NULL DEFAULT NULL AFTER `bind_base_live_anchor_id`,
 	ADD COLUMN `old_customer_commission` DECIMAL(10,2) NULL DEFAULT NULL AFTER `new_customer_commission`,
 	ADD COLUMN `inspection_commission` DECIMAL(10,2) NULL DEFAULT NULL AFTER `old_customer_commission`;
 
+---助理薪资表添加字段
+ALTER TABLE `tbl_customer_service_compensation`
+	ADD COLUMN `salary` DECIMAL(12,2) NOT NULL DEFAULT 0 AFTER `remark`,
+	ADD COLUMN `customer_service_performance` DECIMAL(12,2) NOT NULL DEFAULT 0 AFTER `salary`,
+	ADD COLUMN `to_hospital_rate` DECIMAL(12,2) NOT NULL DEFAULT 0 AFTER `customer_service_performance`,
+	ADD COLUMN `to_hospital_rate_reword` DECIMAL(12,2) NOT NULL DEFAULT 0 AFTER `to_hospital_rate`,
+	ADD COLUMN `repeat_purchases_rate` DECIMAL(12,2) NOT NULL DEFAULT 0 AFTER `to_hospital_rate_reword`,
+	ADD COLUMN `repeat_purchases_rate_reword` DECIMAL(12,2) NOT NULL DEFAULT 0 AFTER `repeat_purchases_rate`,
+	ADD COLUMN `new_customer_to_hospital_reword` DECIMAL(12,2) NOT NULL DEFAULT 0 AFTER `repeat_purchases_rate_reword`,
+	ADD COLUMN `old_customer_to_hospital_reword` DECIMAL(12,2) NOT NULL DEFAULT 0 AFTER `new_customer_to_hospital_reword`,
+	ADD COLUMN `target_finish_reword` DECIMAL(12,2) NOT NULL DEFAULT 0 AFTER `old_customer_to_hospital_reword`,
+	ADD COLUMN `other_chargebacks` DECIMAL(12,2) NOT NULL DEFAULT 0 AFTER `target_finish_reword`;
 
 ----------------------------------------------王健 2023/1/4 END----------------------------------------
  

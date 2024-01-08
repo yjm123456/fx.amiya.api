@@ -22,11 +22,22 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.TotalPrice).HasColumnName("total_price").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.OtherPrice).HasColumnName("other_price").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.Remark).HasColumnName("remark").HasColumnType("VARCHAR(1000)").IsRequired(false);
+            builder.Property(e=>e.Salary).HasColumnName("salary").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.CustomerServicePerformance).HasColumnName("customer_service_performance").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.ToHospitalRate).HasColumnName("to_hospital_rate").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.ToHospitalRateReword).HasColumnName("to_hospital_rate_reword").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.RepeatPurchasesRate).HasColumnName("repeat_purchases_rate").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.RepeatPurchasesRateReword).HasColumnName("repeat_purchases_rate_reword").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.NewCustomerToHospitalReword).HasColumnName("new_customer_to_hospital_reword").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.OldCustomerToHospitalReword).HasColumnName("old_customer_to_hospital_reword").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.TargetFinishReword).HasColumnName("target_finish_reword").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.OtherChargebacks).HasColumnName("other_chargebacks").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.CreateDate).HasColumnName("create_date").HasColumnType("DATETIME").IsRequired();
             builder.Property(e => e.CreateBy).HasColumnName("create_by").HasColumnType("INT").IsRequired();
             builder.Property(e => e.UpdateDate).HasColumnName("update_date").HasColumnType("DATETIME").IsRequired(false);
             builder.Property(e => e.Valid).HasColumnName("valid").HasColumnType("BIT(1)").IsRequired();
             builder.Property(e => e.DeleteDate).HasColumnName("delete_date").HasColumnType("DATETIME").IsRequired(false);
+
 
             builder.HasOne(t => t.CreateByEmployee).WithMany(t => t.CustomerServiceCompensationCreateByList).HasForeignKey(t => t.CreateBy);
             builder.HasOne(t => t.BelongEmployee).WithMany(t => t.CustomerServiceCompensationBelongEmpList).HasForeignKey(t => t.BelongEmpId);

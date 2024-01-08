@@ -217,6 +217,21 @@ namespace Fx.Amiya.Service
                 }
             }
         }
+        /// <summary>
+        /// 薪资单作废时移除薪资单
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="customerServiceCompensationId"></param>
+        /// <returns></returns>
+        public async Task RemoveCustomerServiceCompensationIdAsync(string customerServiceCompensationId)
+        {
+            var list = _dalRecommandDocumentSettle.GetAll().Where(e => e.CustomerServiceCompensationId == customerServiceCompensationId);
+            foreach (var item in list)
+            {
+                item.CustomerServiceCompensationId = null;
+                await _dalRecommandDocumentSettle.UpdateAsync(item, true);
+            }
+        }
 
         /// <summary>
         /// 根据薪资单id获取对账单记录

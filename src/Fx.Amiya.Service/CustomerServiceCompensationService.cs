@@ -62,6 +62,16 @@ namespace Fx.Amiya.Service
                                                    TotalPrice = d.TotalPrice,
                                                    OtherPrice = d.OtherPrice,
                                                    Remark = d.Remark,
+                                                   Salary = d.Salary,                                                  
+                                                   CustomerServicePerformance = d.CustomerServicePerformance,
+                                                   ToHospitalRate = d.ToHospitalRate,
+                                                   ToHospitalRateReword = d.ToHospitalRateReword,
+                                                   RepeatPurchasesRate = d.RepeatPurchasesRate,
+                                                   RepeatPurchasesRateReword = d.RepeatPurchasesRateReword,
+                                                   NewCustomerToHospitalReword = d.NewCustomerToHospitalReword,
+                                                   OldCustomerToHospitalReword = d.OldCustomerToHospitalReword,
+                                                   TargetFinishReword = d.TargetFinishReword,
+                                                   OtherChargebacks = d.OtherChargebacks,
                                                };
             FxPageInfo<CustomerServiceCompensationDto> customerServiceCompensationPageInfo = new FxPageInfo<CustomerServiceCompensationDto>();
             customerServiceCompensationPageInfo.TotalCount = await customerServiceCompensations.CountAsync();
@@ -90,6 +100,17 @@ namespace Fx.Amiya.Service
                 customerServiceCompensation.TotalPrice = addDto.TotalPrice;
                 customerServiceCompensation.OtherPrice = addDto.OtherPrice;
                 customerServiceCompensation.Remark = addDto.Remark;
+                customerServiceCompensation.Salary = addDto.Salary;
+                //customerServiceCompensation.PerformancePercent = addDto.PerformancePercent;
+                customerServiceCompensation.CustomerServicePerformance = addDto.CustomerServicePerformance;
+                customerServiceCompensation.ToHospitalRate = addDto.ToHospitalRate;
+                customerServiceCompensation.ToHospitalRateReword = addDto.ToHospitalRateReword;
+                customerServiceCompensation.RepeatPurchasesRate = addDto.RepeatPurchasesRate;
+                customerServiceCompensation.RepeatPurchasesRateReword = addDto.RepeatPurchasesRateReword;
+                customerServiceCompensation.NewCustomerToHospitalReword = addDto.NewCustomerToHospitalReword;
+                customerServiceCompensation.OldCustomerToHospitalReword = addDto.OldCustomerToHospitalReword;
+                customerServiceCompensation.TargetFinishReword = addDto.TargetFinishReword;
+                customerServiceCompensation.OtherChargebacks = addDto.OtherChargebacks;
                 await dalCustomerServiceCompensation.AddAsync(customerServiceCompensation, true);
 
                 //对账单审核记录加入id
@@ -128,6 +149,17 @@ namespace Fx.Amiya.Service
             returnResult.TotalPrice = result.TotalPrice;
             returnResult.OtherPrice = result.OtherPrice;
             returnResult.Remark = result.Remark;
+            returnResult.Salary = result.Salary;
+            //returnResult.PerformancePercent = result.PerformancePercent;
+            returnResult.CustomerServicePerformance = result.CustomerServicePerformance;
+            returnResult.ToHospitalRate = result.ToHospitalRate;
+            returnResult.ToHospitalRateReword = result.ToHospitalRateReword;
+            returnResult.RepeatPurchasesRate = result.RepeatPurchasesRate;
+            returnResult.RepeatPurchasesRateReword = result.RepeatPurchasesRateReword;
+            returnResult.NewCustomerToHospitalReword = result.NewCustomerToHospitalReword;
+            returnResult.OldCustomerToHospitalReword = result.OldCustomerToHospitalReword;
+            returnResult.TargetFinishReword = result.TargetFinishReword;
+            returnResult.OtherChargebacks = result.OtherChargebacks;
 
             return returnResult;
         }
@@ -150,6 +182,17 @@ namespace Fx.Amiya.Service
             result.OtherPrice = updateDto.OtherPrice;
             result.Remark = updateDto.Remark;
             result.UpdateDate = DateTime.Now;
+            result.Salary = updateDto.Salary;
+            //result.PerformancePercent = updateDto.PerformancePercent;
+            result.CustomerServicePerformance = updateDto.CustomerServicePerformance;
+            result.ToHospitalRate = updateDto.ToHospitalRate;
+            result.ToHospitalRateReword = updateDto.ToHospitalRateReword;
+            result.RepeatPurchasesRate = updateDto.RepeatPurchasesRate;
+            result.RepeatPurchasesRateReword = updateDto.RepeatPurchasesRateReword;
+            result.NewCustomerToHospitalReword = updateDto.NewCustomerToHospitalReword;
+            result.OldCustomerToHospitalReword = updateDto.OldCustomerToHospitalReword;
+            result.TargetFinishReword = updateDto.TargetFinishReword;
+            result.OtherChargebacks = updateDto.OtherChargebacks;
             await dalCustomerServiceCompensation.UpdateAsync(result, true);
         }
 
@@ -162,17 +205,20 @@ namespace Fx.Amiya.Service
         {
             try
             {
-
+                unitOfWork.BeginTransaction();
                 var result = await dalCustomerServiceCompensation.GetAll().SingleOrDefaultAsync(e => e.Id == id && e.Valid == true);
                 if (result == null)
                     throw new Exception("未找到助理薪资单信息");
                 result.Valid = false;
                 result.DeleteDate = DateTime.Now;
                 await dalCustomerServiceCompensation.UpdateAsync(result, true);
+                await recommandDocumentSettleService.RemoveCustomerServiceCompensationIdAsync(id);
+                unitOfWork.Commit();
 
             }
             catch (Exception er)
             {
+                unitOfWork.RollBack();
                 throw new Exception(er.Message.ToString());
             }
         }
