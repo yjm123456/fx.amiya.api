@@ -83,8 +83,7 @@ namespace Fx.Amiya.Service
               .Where(e => !query.IsOldCustoemr.HasValue || e.IsOldCustomer == query.IsOldCustoemr)
               .Where(e => !query.CheckState.HasValue || e.CompensationCheckState == query.CheckState)
               .Where(e => !query.BelongEmpId.HasValue || e.BelongEmpId == query.BelongEmpId).OrderByDescending(x => x.CreateDate)
-              .Where(e=>!query.CreateEmpId.HasValue||e.CreateEmpId==query.CreateEmpId)
-              .Where(e=>!query.IsGenerateSalry.HasValue||query.IsGenerateSalry==1?string.IsNullOrEmpty(e.CustomerServiceCompensationId):!string.IsNullOrEmpty(e.CustomerServiceCompensationId))
+              .Where(e=>!query.CreateEmpId.HasValue||e.CreateEmpId==query.CreateEmpId)            
               .Select(e => new RecommandDocumentSettleDto
               {
                   Id = e.Id,
@@ -114,7 +113,9 @@ namespace Fx.Amiya.Service
                   CustomerServicePerformance =e.CustomerServicePerformance,
                   PerformancePercent=e.PerformancePercent,
               });
-
+            if (query.IsGenerateSalry.HasValue) {
+                record = record.Where(e => query.IsGenerateSalry == 1 ? string.IsNullOrEmpty(e.CustomerServiceCompensationId) : !string.IsNullOrEmpty(e.CustomerServiceCompensationId));
+            }
             FxPageInfo<RecommandDocumentSettleDto> resultPageInfo = new FxPageInfo<RecommandDocumentSettleDto>();
             resultPageInfo.TotalCount = await record.CountAsync();
             resultPageInfo.List = await record.OrderByDescending(x => x.CreateDate).Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToListAsync();
