@@ -3153,6 +3153,7 @@ namespace Fx.Amiya.Service
         {
             var dealData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
                  //.Where(e => belongCustomerServiceId == 0 || (e.SupportEmpId == 0 ? belongCustomerServiceId == e.BelongEmpId.Value : e.SupportEmpId == belongCustomerServiceId));
+                 .Where(e => e.IsSupportOrder == false)
                  .Where(e => belongCustomerServiceId == 0 || belongCustomerServiceId == e.BelongEmpId.Value);
             var count = await dealData
                .SelectMany(e => e.ContentPlatformOrderDealInfoList)
@@ -3179,6 +3180,7 @@ namespace Fx.Amiya.Service
             }
 
             var supportData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
+                .Where(e => e.IsSupportOrder == true)
             .Where(e => belongCustomerServiceId == e.SupportEmpId && e.SupportEmpId != e.BelongEmpId)
             .SelectMany(k => k.ContentPlatformOrderDealInfoList)
             .Where(u => u.CreateDate >= startDate && u.CreateDate < endDate && u.IsDeal == true);
@@ -3256,6 +3258,7 @@ namespace Fx.Amiya.Service
         public async Task<List<CustomerServiceDetailsPerformanceDto>> GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, List<int> belongCustomerServiceIds)
         {
             var dealData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
+                 .Where(e => e.IsSupportOrder == false)
                 .Where(e => belongCustomerServiceIds.Count == 0 || belongCustomerServiceIds.Contains(e.BelongEmpId.Value));
             var dealResult = dealData
                 .SelectMany(e => e.ContentPlatformOrderDealInfoList)
