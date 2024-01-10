@@ -715,7 +715,8 @@ namespace Fx.Amiya.Service
             return pageInfo;
         }
 
-        public async Task AddAsync(AddContentPlatFormSendOrderInfoDto addDto) {
+        public async Task AddAsync(AddContentPlatFormSendOrderInfoDto addDto)
+        {
             try
             {
                 unitOfWork.BeginTransaction();
@@ -751,10 +752,11 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         private async Task SendOrderAsync(AddContentPlatFormSendOrderInfoDto addDto, Dictionary<int, bool> hospitalDic)
         {
-            
+
             try
             {
-                foreach (var item in hospitalDic) {
+                foreach (var item in hospitalDic)
+                {
                     var orderInfo = await this.GetByOrderIdAsync(addDto.OrderId);
                     var phone = orderInfo.Phone;
                     var hasOrder = await this.GetOrderListByPhoneAsync(phone);
@@ -770,7 +772,7 @@ namespace Fx.Amiya.Service
                     //    throw new Exception("该客户已有订单派单到此医院，请重新选择派单医院！");
                     //}
                     addDto.HospitalId = item.Key;
-                    await _contentPlatformOrderSend.AddMultiAsync(addDto,item.Value);
+                    await _contentPlatformOrderSend.AddMultiAsync(addDto, item.Value);
                     var contentPlatFormOrder = await this.GetByOrderIdAsync(addDto.OrderId);
                     //修改订单状态
                     await this.UpdateStateAndRepeateOrderPicAsync(addDto.OrderId, addDto.SendBy, contentPlatFormOrder.BelongEmpId, addDto.EmployeeId);
@@ -808,11 +810,11 @@ namespace Fx.Amiya.Service
                     //完成视频预约到诊
                     await customerAppointmentScheduleService.UpdateAppointmentCompleteStatusAsync(phone, (int)AppointmentType.VideoAppointment);
                 }
-               
+
             }
             catch (Exception ex)
             {
-               
+
                 throw new Exception(ex.Message.ToString());
             }
         }
@@ -2402,7 +2404,8 @@ namespace Fx.Amiya.Service
 
                 try
                 {
-                    if (input.EmpId!=0&&input.IsFinish&&order.HospitalDepartmentId== "7f9b164b-8560-4d32-bdbf-f7c28c55e0ae") {
+                    if (input.EmpId != 0 && input.IsFinish && order.HospitalDepartmentId == "7f9b164b-8560-4d32-bdbf-f7c28c55e0ae")
+                    {
                         DealAfterAddTrackDto dealTrack = new DealAfterAddTrackDto();
                         dealTrack.EmployeeId = input.EmpId;
                         dealTrack.CreateDate = DateTime.Now;
@@ -2412,8 +2415,8 @@ namespace Fx.Amiya.Service
                 }
                 catch (Exception ex)
                 {
-                    
-                    
+
+
                 }
             }
             catch (Exception err)
@@ -3181,6 +3184,12 @@ namespace Fx.Amiya.Service
             .Where(u => u.CreateDate >= startDate && u.CreateDate < endDate && u.IsDeal == true);
             dealResult.SupportPrice = DecimalExtension.ChangePriceToTenThousand(supportData.Sum(x => x.Price));
             dealResult.TotaPrice += dealResult.SupportPrice;
+            dealResult.NewCustomerPrice += DecimalExtension.ChangePriceToTenThousand(supportData.Sum(e => e.IsOldCustomer ? 0m : e.Price));
+            dealResult.OldCustomerPrice += DecimalExtension.ChangePriceToTenThousand(supportData.Sum(e => e.IsOldCustomer ? e.Price : 0m));
+            dealResult.NewCustomerNum += supportData.Sum(x => x.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.FIRST_SEEK_ADVICE ? 1 : 0);
+            dealResult.DealNum += supportData.Sum(e => e.IsDeal == true ? 1 : 0);
+            dealResult.SequentCustomerNum += supportData.Sum(x => ((x.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.AGAIN_SEEK_ADVICE || x.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.AGAIN_CONSUMPTION) && x.IsDeal == true) ? 1 : 0);
+            dealResult.OldCustomerNum += supportData.Sum(x => x.IsOldCustomer == true && x.IsDeal == true ? 1 : 0);
             string belongLiveAnchorId = "";
             var empInfo = await _amiyaEmployeeService.GetByIdAsync(belongCustomerServiceId);
             dealResult.CustomerServiceName = empInfo.Name;
@@ -3275,6 +3284,14 @@ namespace Fx.Amiya.Service
                 var supp = await supportData.ToListAsync();
                 z.SupportPrice = supportData.Sum(x => x.Price);
                 z.TotalServicePrice += z.SupportPrice;
+                z.DealPrice += supportData.Sum(e => e.CheckPrice ?? 0m);
+                z.NewCustomerPrice += supportData.Sum(e => e.IsOldCustomer ? 0m : e.Price);
+                z.NewCustomerServicePrice += supportData.Sum(e => e.IsOldCustomer ? 0m : e.SettlePrice ?? 0m);
+                z.OldCustomerPrice += supportData.Sum(e => e.IsOldCustomer ? e.Price : 0m);
+                z.OldCustomerServicePrice += supportData.Sum(e => e.IsOldCustomer ? e.SettlePrice ?? 0m : 0m);
+                z.AcompanyingPerformance += supportData.Sum(x => x.IsAcompanying ? x.Price : 0m);
+                z.NotAcompanyingPerformance += supportData.Sum(x => x.IsAcompanying ? 0m : x.Price);
+
                 z.CustomerServiceName = await _dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(z.CustomerServiceId)).Select(e => e.Name).FirstOrDefaultAsync();
                 var sendInfo = dealData.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && x.BelongEmpId == z.CustomerServiceId && x.SendDate >= startDate && x.SendDate < endDate).ToList();
                 var thisMonthVisitInfo = sendInfo.Where(x => x.IsToHospital == true).ToList();
