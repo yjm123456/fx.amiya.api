@@ -1025,8 +1025,16 @@ namespace Fx.Amiya.Service
                 {
                     var orderInfo = await _dalContentPlatformOrder.GetAll().SingleOrDefaultAsync(e => e.Id == x);
                     if (orderInfo == null)
-                    { throw new Exception("未找到该订单，归属客服失败！"); }
+                    { throw new Exception("未找到该订单，改绑归属客服失败！"); }
                     orderInfo.BelongEmpId = input.BelongEmpId;
+                    if (orderInfo.IsSupportOrder == true)
+                    {
+                        if (orderInfo.SupportEmpId == input.BelongEmpId)
+                        {
+                            orderInfo.SupportEmpId = 0;
+                            orderInfo.IsSupportOrder = false;
+                        }
+                    }
                     await _dalContentPlatformOrder.UpdateAsync(orderInfo, true);
                 }
                 unitOfWork.Commit();
