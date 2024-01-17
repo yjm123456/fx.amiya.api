@@ -122,7 +122,10 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                     DepartmentName = employee.DepartmentName,
                     ReadDataCenter = employee.ReadDataCenter,
                     ReadLiveAnchorData = employee.ReadLiveAnchorData,
-                    Avatar=employee.Avatar
+                    Avatar = employee.Avatar,
+                    ReadTakeGoodsData = employee.ReadTakeGoodsData,
+                    ReadCooperateLiveAnchorData = employee.ReadCooperateLiveAnchorData,
+                    ReadSelfLiveAnchorData = employee.ReadSelfLiveAnchorData,
                 };
 
                 return ResultData<AmiyaEmployeeAccountVo>.Success().AddData("amiyaLogin", accountVo);
@@ -192,7 +195,10 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                     DepartmentId = employee.DepartmentId,
                     DepartmentName = employee.DepartmentName,
                     ReadDataCenter = employee.ReadDataCenter,
-                    ReadLiveAnchorData = employee.ReadLiveAnchorData
+                    ReadLiveAnchorData = employee.ReadLiveAnchorData,
+                    ReadTakeGoodsData = employee.ReadTakeGoodsData,
+                    ReadCooperateLiveAnchorData = employee.ReadCooperateLiveAnchorData,
+                    ReadSelfLiveAnchorData = employee.ReadSelfLiveAnchorData,
                 };
 
                 return ResultData<AmiyaEmployeeAccountVo>.Success().AddData("amiyaLoginByUserIdAndCode", accountVo);
@@ -311,7 +317,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
 
                 HospitalEmployeeAccountVo avvountVo = new HospitalEmployeeAccountVo()
                 {
-                    Avatar=employee.Avatar,
+                    Avatar = employee.Avatar,
                     EmployeeId = employee.Id,
                     EmployeeName = employee.Name,
                     HospitalId = employee.HospitalId,

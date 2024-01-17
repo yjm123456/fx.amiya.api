@@ -14,6 +14,7 @@ using Fx.Sms.Core;
 using jos_sdk_net.Util;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +42,8 @@ namespace Fx.Amiya.Service
         private IDalCustomerInfo dalCustomerInfo;
         private IWxAppConfigService _wxAppConfigService;
         private readonly IDalConfig _dalConfig;
-        public WeChatVideoOrderService(IDalWeChatVideoOrderInfo dalWeChatVideoOrderInfo, IFxSmsBasedTemplateSender smsSender, IDalAmiyaEmployee dalAmiyaEmployee, IDalBindCustomerService dalBindCustomerService, IIntegrationAccount integrationAccountService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, IBindCustomerServiceService bindCustomerService, ICustomerService customerService, IOrderService orderService, IDalLiveAnchor dalLiveAnchor, IDalCustomerInfo dalCustomerInfo, IWxAppConfigService wxAppConfigService, IDalConfig dalConfig)
+        private readonly IOrderAppInfoService orderAppInfoService;
+        public WeChatVideoOrderService(IDalWeChatVideoOrderInfo dalWeChatVideoOrderInfo, IFxSmsBasedTemplateSender smsSender, IDalAmiyaEmployee dalAmiyaEmployee, IDalBindCustomerService dalBindCustomerService, IIntegrationAccount integrationAccountService, IMemberCard memberCardService, IMemberRankInfo memberRankInfoService, IBindCustomerServiceService bindCustomerService, ICustomerService customerService, IOrderService orderService, IDalLiveAnchor dalLiveAnchor, IDalCustomerInfo dalCustomerInfo, IWxAppConfigService wxAppConfigService, IDalConfig dalConfig, IOrderAppInfoService orderAppInfoService)
         {
             this.dalWeChatVideoOrderInfo = dalWeChatVideoOrderInfo;
             _smsSender = smsSender;
@@ -57,6 +59,7 @@ namespace Fx.Amiya.Service
             this.dalCustomerInfo = dalCustomerInfo;
             _wxAppConfigService = wxAppConfigService;
             _dalConfig = dalConfig;
+            this.orderAppInfoService = orderAppInfoService;
         }
 
         /// <summary>
@@ -360,6 +363,54 @@ namespace Fx.Amiya.Service
 
             return autoCompleteDataDto;
 
+        }
+        /// <summary>
+        /// 视频号手机号解密
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public async Task<string> EncryptPhoneAsync(string orderId)
+        {
+            try
+            {
+                var orderInfo = dalWeChatVideoOrderInfo.GetAll().Where(e => e.Id == orderId).FirstOrDefault();
+                if (orderInfo == null) throw new Exception("订单不存在");
+                var liveAnchorId = orderInfo.BelongLiveAnchorId;
+                if (!liveAnchorId.HasValue) throw new Exception("订单为绑定主播不能解密");
+                var appInfo = await orderAppInfoService.GetWeChatVideoAppInfo(liveAnchorId.Value);
+                var postUrl = $"https://api.weixin.qq.com/channels/ec/order/sensitiveinfo/decode?access_token={appInfo.AccessToken}";
+                var body = new { order_id = orderId };
+                var res = HttpUtil.HTTPJsonPost(postUrl, JsonConvert.SerializeObject(body));
+                JObject requestObject = JsonConvert.DeserializeObject(res) as JObject;
+                string phone = "";
+                string nickname = "";
+                if (Convert.ToInt32(requestObject["errcode"]) == 0)
+                {
+                    if (orderInfo.OrderType == 0)
+                    {
+                        phone = Convert.ToString(requestObject["address_info"]["tel_number"]);
+                    }
+                    if (orderInfo.OrderType == 1)
+                    {
+                        phone = Convert.ToString(requestObject["address_info"]["tel_number"]);
+                    }
+                    nickname= Convert.ToString(requestObject["address_info"]["user_name"]);
+                }
+                else
+                {
+                    if (Convert.ToInt32(requestObject["errcode"]) == 10020123) throw new Exception("订单解码数到达当月限制");
+                    if (Convert.ToInt32(requestObject["errcode"]) == 10020124) throw new Exception("未完成支付的订单不支持解码");
+                }
+                if (string.IsNullOrEmpty(phone)) throw new Exception("解码失败");
+                orderInfo.Phone = phone;
+                orderInfo.BuyerNick = nickname;
+                await dalWeChatVideoOrderInfo.UpdateAsync(orderInfo, true);
+                return phone;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

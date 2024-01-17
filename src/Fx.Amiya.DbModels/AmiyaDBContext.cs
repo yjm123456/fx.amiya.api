@@ -20,7 +20,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<LivingDailyTakeGoods> LivingDailyTakeGoods { get; set; }
         public virtual DbSet<Bill> Bill { get; set; }
         public virtual DbSet<BillReturnBackPriceData> BillReturnBackPriceData { get; set; }
-        public virtual DbSet<CustomerAppointmentSchedule> CustomerAppointmentSchedule { get; set; }        
+        public virtual DbSet<CustomerAppointmentSchedule> CustomerAppointmentSchedule { get; set; }
         public virtual DbSet<CustomerHospitalDealInfo> CustomerHospitalDealInfo { get; set; }
         public virtual DbSet<CustomerHospitalDealDetails> CustomerHospitalDealDetails { get; set; }
         public virtual DbSet<AmiyaWareHouse> AmiyaWareHouse { get; set; }
@@ -207,6 +207,9 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<HospitalContract> HospitalContract { get; set; }
         public virtual DbSet<FeishuAppInfo> FeishuAppInfos { get; set; }
         public virtual DbSet<TikTokShortVideoData> TikTokShortVideoDatas { get; set; }
+        public virtual DbSet<FeishuTables> FeishuTables { get; set; }
+        public virtual DbSet<ShortVideoComments> ShortVideoComments { get; set; }
+        public virtual DbSet<ShortVideoFansData> ShortVideoFansDatas { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new WxMiniUserInfoConfiguration());
@@ -222,7 +225,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new GreatHospitalDataWriteConfiguration());
             modelBuilder.ApplyConfiguration(new LiveAnchorBaseInfoConfiguration());
             modelBuilder.ApplyConfiguration(new LiveAnchorWechatInfoConfiguration());
-            modelBuilder.ApplyConfiguration(new AmiyaWareHouseConfiguration()); 
+            modelBuilder.ApplyConfiguration(new AmiyaWareHouseConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaWareHouseStorageRacksConfiguration());
             modelBuilder.ApplyConfiguration(new CustomerHospitalDealInfoConfiguration());
             modelBuilder.ApplyConfiguration(new CustomerHospitalDealDetailsConfiguration());
@@ -408,6 +411,10 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new HospitalContractConfiguration());
             modelBuilder.ApplyConfiguration(new TikTokShortVideoDataConfiguration());
             modelBuilder.ApplyConfiguration(new FeishuAppInfoConfiguration());
+            modelBuilder.ApplyConfiguration(new FeishuTablesConfiguration());
+            modelBuilder.ApplyConfiguration(new ShortVideoCommentsConfiguration());
+            modelBuilder.ApplyConfiguration(new ShortVideoFansDataConfiguration());
+            
             base.OnModelCreating(modelBuilder);
         }
     }

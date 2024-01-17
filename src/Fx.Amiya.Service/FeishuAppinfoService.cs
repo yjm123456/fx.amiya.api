@@ -48,6 +48,7 @@ namespace Fx.Amiya.Service
             feishuAppInfoDto.AccessToken=appinfo.AccessToken;
             feishuAppInfoDto.ExpireDate = appinfo.ExpireDate;
             feishuAppInfoDto.BelongLiveAnchorId = appinfo.BelongLiveAnchorId;
+            feishuAppInfoDto.Id = appinfo.Id;
             return feishuAppInfoDto;
         }
     }

@@ -8,6 +8,7 @@ namespace Fx.Amiya.SyncFeishuMultidimensionalTable.FeishuAppConfig
 {
     public class FeishuAppinfo
     {
+        public string Id { get; set; }
         /// <summary>
         /// 应用id
         /// </summary>

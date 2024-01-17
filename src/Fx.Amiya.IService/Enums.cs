@@ -1464,4 +1464,22 @@ namespace Fx.Amiya.IService
         /// </summary>
         CustomerServiceSend=1
     }
+    /// <summary>
+    /// 飞书多维表格类型
+    /// </summary>
+    public enum FeishuTableType
+    {
+        /// <summary>
+        /// 短视频数据
+        /// </summary>
+        VideoData = 1,
+        /// <summary>
+        /// 评论数据
+        /// </summary>
+        Comments = 2,
+        /// <summary>
+        /// 粉丝数据
+        /// </summary>
+        FansData=3
+    }
 }

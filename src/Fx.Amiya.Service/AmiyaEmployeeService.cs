@@ -71,6 +71,9 @@ namespace Fx.Amiya.Service
                 employeeDto.Avatar = employee.Avatar;
                 employeeDto.ReadDataCenter = employee.AmiyaPositionInfo.ReadDataCenter;
                 employeeDto.ReadLiveAnchorData = employee.AmiyaPositionInfo.ReadLiveAnchorData;
+                employeeDto.ReadSelfLiveAnchorData = employee.AmiyaPositionInfo.ReadSelfLiveAnchorData;
+                employeeDto.ReadCooperateLiveAnchorData = employee.AmiyaPositionInfo.ReadCooperateLiveAnchorData;
+                employeeDto.ReadTakeGoodsData = employee.AmiyaPositionInfo.ReadTakeGoodsData;
                 return employeeDto;
             }
             catch (Exception ex)
@@ -110,7 +113,9 @@ namespace Fx.Amiya.Service
                 employeeDto.DepartmentName = employee.AmiyaPositionInfo.AmiyaDepartment.Name;
                 employeeDto.ReadDataCenter = employee.AmiyaPositionInfo.ReadDataCenter;
                 employeeDto.ReadLiveAnchorData = employee.AmiyaPositionInfo.ReadLiveAnchorData;
-
+                employeeDto.ReadCooperateLiveAnchorData = employee.AmiyaPositionInfo.ReadCooperateLiveAnchorData;
+                employeeDto.ReadSelfLiveAnchorData = employee.AmiyaPositionInfo.ReadSelfLiveAnchorData;
+                employeeDto.ReadTakeGoodsData = employee.AmiyaPositionInfo.ReadTakeGoodsData;
                 return employeeDto;
             }
             catch (Exception ex)

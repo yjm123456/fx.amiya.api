@@ -14,5 +14,10 @@ namespace Fx.Amiya.IService
     {
         Task AddListAsync(List<AddTikTokShortVideoDataDto> adddList);
         Task<FxPageInfo<TikTokShortVideoDataInfoDto>> GetShortVideoDataByPageAsync(ShortVideoDataQueryDto query);
+        Task AddCommentsListAsync(List<AddTikTokShortVideoCommentsDto> adddList);
+        Task<FxPageInfo<TikTokShortVideoCommentsDataInfoDto>> GetShortVideoCommentsDataByPageAsync(ShortVideoDataQueryDto query);
+        Task AddFansListAsync(List<AddTikTokFansDataDto> adddList);
+        Task<FxPageInfo<TikTokFansDataInfoDto>> GetShortVideoFansDataByPageAsync(ShortVideoDataQueryDto query);
+
     }
 }

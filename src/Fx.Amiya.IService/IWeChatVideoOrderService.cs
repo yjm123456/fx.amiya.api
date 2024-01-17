@@ -29,5 +29,11 @@ namespace Fx.Amiya.IService
         /// <param name="takeGoodsType"></param>
         /// <returns></returns>
         Task<AutoCompleteDataDto> AutoCompleteDataAsync(DateTime date,int liveAnchorId,string goodsName,int takeGoodsType);
+        /// <summary>
+        /// 视频号手机号解密
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        Task<string>  EncryptPhoneAsync(string orderId);
     }
 }

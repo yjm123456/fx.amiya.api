@@ -19,9 +19,9 @@ namespace Fx.Amiya.SyncFeishuMultidimensionalTable.FeishuAppConfig
             this.dalFeishuAppinfo = dalFeishuAppinfo;
         }
 
-        public async Task<List<int>> GetBindLiveAnchorIdsAsync()
+        public async Task<List<BindLiveAnchorInfo>> GetBindLiveAnchorIdsAsync()
         {
-            return await dalFeishuAppinfo.GetAll().Where(e=>e.Valid==true).Select(e=>e.BelongLiveAnchorId).ToListAsync();
+            return await dalFeishuAppinfo.GetAll().Where(e=>e.Valid==true).Select(e=>new BindLiveAnchorInfo { LiveAnchorId= e.BelongLiveAnchorId ,AppId=e.Id}).ToListAsync();
         }
 
         public async Task<FeishuAppinfo> GetFeishuAppInfoAsync(int liveAnchorId)
@@ -35,6 +35,7 @@ namespace Fx.Amiya.SyncFeishuMultidimensionalTable.FeishuAppConfig
             feishuAppinfo.AccessToken = appinfo.AccessToken;
             feishuAppinfo.ExpireDate = appinfo.ExpireDate;
             feishuAppinfo.BelongLiveAnchorId = appinfo.BelongLiveAnchorId;
+            feishuAppinfo.Id = appinfo.Id;
             return feishuAppinfo;
         }
     }

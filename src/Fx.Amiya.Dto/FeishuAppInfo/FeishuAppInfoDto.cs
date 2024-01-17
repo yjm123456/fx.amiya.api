@@ -8,6 +8,7 @@ namespace Fx.Amiya.Dto.FeishuAppInfo
 {
     public class FeishuAppInfoDto
     {
+        public string Id { get; set; }
         /// <summary>
         /// 应用id
         /// </summary>

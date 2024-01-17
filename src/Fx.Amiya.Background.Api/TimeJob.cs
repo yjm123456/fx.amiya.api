@@ -27,6 +27,7 @@ using Fx.Infrastructure.DataAccess;
 using Fx.Amiya.SyncFeishuMultidimensionalTable;
 using Fx.Amiya.Dto.TikTokShortVideoData;
 using Fx.Amiya.SyncFeishuMultidimensionalTable.FeishuAppConfig;
+using Fx.Amiya.Dto.TikTokShortVideoData.Input;
 
 namespace Fx.Amiya.Background.Api
 {
@@ -626,8 +627,12 @@ namespace Fx.Amiya.Background.Api
             List<ShortVideoDataInfo> list = new List<ShortVideoDataInfo>();
             foreach (var id in liveAnchorIds)
             {
-                var dataList = await syncFeishuMultidimensionalTable.GetShortVideoDataByCodeAsync(id);
-                list.AddRange(dataList);
+                var tableLiveAnchors = await syncFeishuMultidimensionalTable.GetTableLiveAnchorIdsAsync(id.AppId, FeishuTableType.VideoData);
+                foreach (var tableid in tableLiveAnchors)
+                {
+                    var dataList = await syncFeishuMultidimensionalTable.GetShortVideoDataByCodeAsync(id.LiveAnchorId, tableid);
+                    list.AddRange(dataList);
+                }
             }
 
             if (list.Count > 0)
@@ -642,6 +647,71 @@ namespace Fx.Amiya.Background.Api
                     BelongLiveAnchorId = e.BelongLiveAnchorId
                 }).ToList();
                 await tikTokShortVideoDataService.AddListAsync(data);
+            }
+        }
+        /// <summary>
+        /// 同步多维表格短视频评论数据
+        /// </summary>
+        /// <returns></returns>
+        [Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 60 * 6, SkipWhileExecuting = true)]//每6小时运行一次
+        public async Task SyncMultidimensionalTableCommentsDataAsync()
+        {
+            var liveAnchorIds = await syncFeishuMultidimensionalTable.GetLiveAnchorIdsAsync();
+            List<ShortVideocommentsInfo> list = new List<ShortVideocommentsInfo>();
+            foreach (var id in liveAnchorIds)
+            {
+                var tableLiveAnchors = await syncFeishuMultidimensionalTable.GetTableLiveAnchorIdsAsync(id.AppId, FeishuTableType.Comments);
+                foreach (var tableid in tableLiveAnchors)
+                {
+                    var dataList = await syncFeishuMultidimensionalTable.GetShortVideoCommentsAsync(id.LiveAnchorId, tableid);
+                    list.AddRange(dataList);
+                }
+            }
+
+            if (list.Count > 0)
+            {
+                var data = list.Select(e => new AddTikTokShortVideoCommentsDto
+                {
+                    CommentsId = e.CommentsId,
+                    CommentsUserId = e.CommentsUserId,
+                    CommentsUserName = e.CommentsUserName,
+                    LikeCount = e.LikeCount,
+                    CommentsDate = e.CommentsDate,
+                    Comments = e.Comments,
+                    BelongLiveAnchorId = e.BelongLiveAnchorId.Value
+                }).ToList();
+                await tikTokShortVideoDataService.AddCommentsListAsync(data);
+            }
+        }
+        /// <summary>
+        /// 同步多维表格短视频粉丝数据
+        /// </summary>
+        /// <returns></returns>
+        [Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 60 * 6, SkipWhileExecuting = true)]//每6小时运行一次
+        public async Task SyncMultidimensionalTableFansDataAsync()
+        {
+            var liveAnchorIds = await syncFeishuMultidimensionalTable.GetLiveAnchorIdsAsync();
+            List<ShortVideoFansDataInfo> list = new List<ShortVideoFansDataInfo>();
+            foreach (var id in liveAnchorIds)
+            {
+                var tableLiveAnchors = await syncFeishuMultidimensionalTable.GetTableLiveAnchorIdsAsync(id.AppId, FeishuTableType.FansData);
+                foreach (var tableid in tableLiveAnchors)
+                {
+                    var dataList = await syncFeishuMultidimensionalTable.GetShortVideoFansDataAsync(id.LiveAnchorId, tableid);
+                    list.AddRange(dataList);
+                }
+            }
+
+            if (list.Count > 0)
+            {
+                var data = list.Select(e => new AddTikTokFansDataDto
+                {
+                    StatsDate = e.StatsDate,
+                    NewFansCount = e.NewFansCount,
+                    TotalFansCount = e.TotalFansCount,
+                    BelongLiveAnchorId = e.BelongLiveAnchorId.Value
+                }).ToList();
+                await tikTokShortVideoDataService.AddFansListAsync(data);
             }
         }
 

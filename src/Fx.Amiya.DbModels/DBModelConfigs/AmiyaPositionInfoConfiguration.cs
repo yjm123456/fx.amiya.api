@@ -22,6 +22,9 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.DepartmentId).HasColumnName("department_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.ReadDataCenter).HasColumnName("read_datacenter").HasColumnType("bit").IsRequired();
             builder.Property(t => t.ReadLiveAnchorData).HasColumnName("read_live_anchor_data").HasColumnType("bit").IsRequired();
+            builder.Property(t => t.ReadSelfLiveAnchorData).HasColumnName("read_self_liveanchor_data").HasColumnType("bit").IsRequired();
+            builder.Property(t => t.ReadCooperateLiveAnchorData).HasColumnName("read_cooperate_liveanchor_data").HasColumnType("bit").IsRequired();
+            builder.Property(t => t.ReadTakeGoodsData).HasColumnName("read_take_goods_data").HasColumnType("bit").IsRequired();
 
 
             builder.HasOne(t => t.UpdateByAmiyaEmployee).WithMany(t => t.UpdateByAmiyaPositionInfoList).HasForeignKey(t=>t.UpdateBy);

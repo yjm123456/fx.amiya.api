@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.SyncFeishuMultidimensionalTable.FeishuAppConfig
 {
-    public interface IFeishuAppinfoReader
+    public class FeishuTableInfo
     {
-        Task<FeishuAppinfo> GetFeishuAppInfoAsync(int liveAnchorId);
-        Task<List<BindLiveAnchorInfo>> GetBindLiveAnchorIdsAsync();
+        public string Apptoken { get; set; }
+        public string TableId{ get; set; }
     }
 }

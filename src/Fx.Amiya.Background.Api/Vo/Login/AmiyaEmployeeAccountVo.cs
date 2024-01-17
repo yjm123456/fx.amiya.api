@@ -24,5 +24,17 @@ namespace Fx.Amiya.Background.Api.Vo.Login
         public int DepartmentId { get; set; }
         public string DepartmentName { get; set; }
         public bool ReadDataCenter { get; set; }
+        /// <summary>
+        /// 读取数据中心直播达人数据
+        /// </summary>
+        public bool ReadSelfLiveAnchorData { get; set; }
+        /// <summary>
+        /// 读取数据中心合作达人数据
+        /// </summary>
+        public bool ReadCooperateLiveAnchorData { get; set; }
+        /// <summary>
+        /// 读取数据中心带货板块数据
+        /// </summary>
+        public bool ReadTakeGoodsData { get; set; }
     }
 }

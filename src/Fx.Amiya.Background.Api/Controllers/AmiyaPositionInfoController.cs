@@ -58,6 +58,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                         DepartmentName = d.DepartmentName,
                                         ReadDataCenter=d.ReadDataCenter,
                                         ReadLiveAnchorData=d.ReadLiveAnchorData,
+                                        ReadCooperateLiveAnchorData=d.ReadCooperateLiveAnchorData,
+                                        ReadSelfLiveAnchorData=d.ReadSelfLiveAnchorData,
+                                        ReadTakeGoodsData=d.ReadTakeGoodsData
                                     };
                 return ResultData<List<AmiyaPositionInfoVo>>.Success().AddData("positionInfo", positionInfos.ToList());
             }
@@ -85,6 +88,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.IsDirector = addVo.IsDirector;
                 addDto.ReadDataCenter = addVo.ReadDataCenter;
                 addDto.ReadLiveAnchorData = addVo.ReadLiveAnchorData;
+                addDto.ReadSelfLiveAnchorData=addVo.ReadSelfLiveAnchorData;
+                addDto.ReadCooperateLiveAnchorData = addVo.ReadCooperateLiveAnchorData;
+                addDto.ReadTakeGoodsData= addVo.ReadTakeGoodsData;
                 await amiyaPositionInfoService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -119,7 +125,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 positionInfoVo.DepartmentName = position.DepartmentName;
                 positionInfoVo.ReadDataCenter = position.ReadDataCenter;
                 positionInfoVo.ReadLiveAnchorData = position.ReadLiveAnchorData;
-
+                positionInfoVo.ReadSelfLiveAnchorData = position.ReadSelfLiveAnchorData;
+                positionInfoVo.ReadCooperateLiveAnchorData = position.ReadCooperateLiveAnchorData;
+                positionInfoVo.ReadTakeGoodsData = position.ReadTakeGoodsData;
                 return ResultData<AmiyaPositionInfoVo>.Success().AddData("positionInfo", positionInfoVo);
             }
             catch (Exception ex)
@@ -154,6 +162,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                     positionInfoVo.DepartmentName = x.DepartmentName;
                     positionInfoVo.ReadDataCenter = x.ReadDataCenter;
                     positionInfoVo.ReadLiveAnchorData = x.ReadLiveAnchorData;
+                    positionInfoVo.ReadSelfLiveAnchorData = x.ReadSelfLiveAnchorData;
+                    positionInfoVo.ReadCooperateLiveAnchorData = x.ReadCooperateLiveAnchorData;
+                    positionInfoVo.ReadTakeGoodsData = x.ReadTakeGoodsData;
                     amiyaPositionInfoVos.Add(positionInfoVo);
                 }
 
@@ -185,6 +196,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.IsDirector = updateVo.IsDirector;
                 updateDto.ReadDataCenter = updateVo.ReadDataCenter;
                 updateDto.ReadLiveAnchorData = updateVo.ReadLiveAnchorData;
+                updateDto.ReadTakeGoodsData=updateVo.ReadTakeGoodsData;
+                updateDto.ReadCooperateLiveAnchorData = updateVo.ReadCooperateLiveAnchorData;
+                updateDto.ReadSelfLiveAnchorData = updateVo.ReadSelfLiveAnchorData;
                 await amiyaPositionInfoService.UpdateAsync(updateDto, employeeId);
                 return ResultData.Success();
             }

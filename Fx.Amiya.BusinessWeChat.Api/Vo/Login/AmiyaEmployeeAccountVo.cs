@@ -29,5 +29,17 @@ namespace Fx.Amiya.BusinessWechat.Api.Vo.Login
         public bool ReadLiveAnchorData { get; set; }
         public string UserId { get; set; }
         public string Code { get; set; }
+        /// <summary>
+        /// 读取数据中心自播达人数据
+        /// </summary>
+        public bool ReadSelfLiveAnchorData { get; set; }
+        /// <summary>
+        /// 读取数据中心合作达人数据
+        /// </summary>
+        public bool ReadCooperateLiveAnchorData { get; set; }
+        /// <summary>
+        /// 读取数据中心带货板块数据
+        /// </summary>
+        public bool ReadTakeGoodsData { get; set; }
     }
 }

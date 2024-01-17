@@ -41,6 +41,9 @@ namespace Fx.Amiya.Service
                                    DepartmentName = d.AmiyaDepartment.Name,
                                    ReadDataCenter = d.ReadDataCenter,
                                    ReadLiveAnchorData=d.ReadLiveAnchorData,
+                                   ReadCooperateLiveAnchorData=d.ReadCooperateLiveAnchorData,
+                                   ReadSelfLiveAnchorData=d.ReadSelfLiveAnchorData,
+                                   ReadTakeGoodsData=d.ReadTakeGoodsData
                                };
                 return await position.ToListAsync();
             }
@@ -62,6 +65,9 @@ namespace Fx.Amiya.Service
                 positionInfo.IsDirector = addDto.IsDirector;
                 positionInfo.ReadDataCenter = addDto.ReadDataCenter;
                 positionInfo.ReadLiveAnchorData = addDto.ReadLiveAnchorData;
+                positionInfo.ReadSelfLiveAnchorData = addDto.ReadSelfLiveAnchorData;
+                positionInfo.ReadCooperateLiveAnchorData = addDto.ReadCooperateLiveAnchorData;
+                positionInfo.ReadTakeGoodsData = addDto.ReadTakeGoodsData;
                 await dalAmiyaPositionInfo.AddAsync(positionInfo, true);
             }
             catch (Exception ex)
@@ -95,6 +101,9 @@ namespace Fx.Amiya.Service
                 positionDto.DepartmentName = position.AmiyaDepartment.Name;
                 positionDto.ReadDataCenter = position.ReadDataCenter;
                 positionDto.ReadLiveAnchorData = position.ReadLiveAnchorData;
+                positionDto.ReadTakeGoodsData = position.ReadTakeGoodsData;
+                positionDto.ReadCooperateLiveAnchorData = position.ReadCooperateLiveAnchorData;
+                positionDto.ReadSelfLiveAnchorData = position.ReadSelfLiveAnchorData;
                 return positionDto;
             }
             catch (Exception ex)
@@ -129,6 +138,9 @@ namespace Fx.Amiya.Service
                     positionDto.DepartmentName = x.AmiyaDepartment.Name;
                     positionDto.ReadDataCenter = x.ReadDataCenter;
                     positionDto.ReadLiveAnchorData = x.ReadLiveAnchorData;
+                    positionDto.ReadSelfLiveAnchorData = x.ReadSelfLiveAnchorData;
+                    positionDto.ReadCooperateLiveAnchorData = x.ReadCooperateLiveAnchorData;
+                    positionDto.ReadTakeGoodsData = x.ReadTakeGoodsData;
                     amiyaPositionInfoDtos.Add(positionDto);
                 }
                 return amiyaPositionInfoDtos;
@@ -155,6 +167,9 @@ namespace Fx.Amiya.Service
                 position.IsDirector = updateDto.IsDirector;
                 position.ReadDataCenter = updateDto.ReadDataCenter;
                 position.ReadLiveAnchorData = updateDto.ReadLiveAnchorData;
+                position.ReadTakeGoodsData = updateDto.ReadTakeGoodsData;
+                position.ReadCooperateLiveAnchorData = updateDto.ReadCooperateLiveAnchorData;
+                position.ReadSelfLiveAnchorData = updateDto.ReadSelfLiveAnchorData;
                 await dalAmiyaPositionInfo.UpdateAsync(position, true);
             }
             catch (Exception ex)
