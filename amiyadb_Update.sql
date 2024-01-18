@@ -93,10 +93,9 @@ ALTER TABLE `amiyadb`.`tbl_content_platform_order`
 ADD COLUMN `customer_source` INT NOT NULL DEFAULT 0 AFTER `get_customer_type`,
 ADD COLUMN `customer_type` INT NOT NULL DEFAULT 0 AFTER `customer_source`;
 ------------------------------------------------余建明 2023/12/6 END--------------------------------------------
---------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 
-----------------------------------------------王健 2023/1/4 BEGIN----------------------------------------
+----------------------------------------------王健 2024/1/4 BEGIN----------------------------------------
 ---员工表添加提成信息
 ALTER TABLE `tbl_amiya_employee`
 	ADD COLUMN `new_customer_commission` DECIMAL(10,2) NULL DEFAULT 0 AFTER `bind_base_live_anchor_id`,
@@ -116,7 +115,7 @@ ALTER TABLE `tbl_customer_service_compensation`
 	ADD COLUMN `target_finish_reword` DECIMAL(12,2) NOT NULL DEFAULT 0 AFTER `old_customer_to_hospital_reword`,
 	ADD COLUMN `other_chargebacks` DECIMAL(12,2) NOT NULL DEFAULT 0 AFTER `target_finish_reword`;
 
-----------------------------------------------王健 2023/1/4 END----------------------------------------
+----------------------------------------------王健 2024/1/4 END----------------------------------------
  
 ----------------------------------------------余建明 2024/1/4 BEGIN----------------------------------------
 --助理薪资审核新增提成点数与提成业绩
@@ -128,58 +127,12 @@ ADD COLUMN `customer_service_performance` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AF
 
 
 
-------------------------------------------王健  2023/1/18 BEGIN------------------------------------------
-
---飞书表格信息
-CREATE TABLE `tbl_feishu_table` (
-	`id` VARCHAR(50) NOT NULL,
-	`app_token` VARCHAR(100) NOT NULL,
-	`table_id` VARCHAR(100) NOT NULL DEFAULT '',
-	`belong_app_id` VARCHAR(100) NOT NULL DEFAULT '',
-	`table_type` INT NOT NULL,
-	`live_anchorId` INT NOT NULL,
-	`create_date` DATETIME NOT NULL,
-	`update_date` DATETIME NULL DEFAULT NULL,
-	`valid` BIT NOT NULL,
-	`delete_date` DATETIME NULL DEFAULT NULL
-);
-
-
---短视频评论数据
-CREATE TABLE `tbl_short_video_comments` (
-	`id` VARCHAR(50) NOT NULL,
-	`comments_id` VARCHAR(500) NULL DEFAULT NULL,
-	`comments_user_id` VARCHAR(500) NULL DEFAULT NULL,
-	`comments_user_name` VARCHAR(500) NULL DEFAULT NULL,
-	`like_count` INT NOT NULL DEFAULT 0,
-	`comments` VARCHAR(1000) NULL DEFAULT NULL,
-	`comments_date` DATETIME NULL DEFAULT NULL,
-	`belong_live_anchor_id` INT NOT NULL DEFAULT 0,
-	`create_date` DATETIME NOT NULL,
-	`update_date` DATETIME NULL DEFAULT NULL,
-	`valid` BIT NOT NULL DEFAULT 0,
-	`delete_date` DATETIME NULL DEFAULT NULL,
-	PRIMARY KEY (`id`)
-);
-
-
----短视频粉丝数据
-CREATE TABLE `tbl_short_video_fans_data` (
-	`id` VARCHAR(50) NOT NULL,
-	`stats_date` DATETIME NOT NULL,
-	`new_fans_count` INT NOT NULL DEFAULT 0,
-	`total_fans_count` INT NOT NULL DEFAULT 0,
-	`belong_live_anchor_id` INT NULL DEFAULT 0,
-	`create_date` DATETIME NOT NULL,
-	`update_date` DATETIME NULL DEFAULT NULL,
-	`valid` BIT NOT NULL DEFAULT 0,
-	`delete_date` DATETIME NULL DEFAULT NULL
-);
-
+------------------------------------------王健  2024/1/18 BEGIN------------------------------------------
 ---职位信息添加字段
 ALTER TABLE `tbl_amiya_position_info`
 	ADD COLUMN `read_self_liveanchor_data` BIT NOT NULL AFTER `read_live_anchor_data`,
 	ADD COLUMN `read_cooperate_liveanchor_data` BIT NOT NULL AFTER `read_self_liveanchor_data`,
 	ADD COLUMN `read_take_goods_data` BIT NOT NULL AFTER `read_cooperate_liveanchor_data`;
 
-------------------------------------------王健  2023/1/18 END------------------------------------------
+------------------------------------------王健  2024/1/18 END------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
