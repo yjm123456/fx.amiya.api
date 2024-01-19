@@ -136,3 +136,17 @@ ALTER TABLE `tbl_amiya_position_info`
 
 ------------------------------------------王健  2024/1/18 END------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+
+----------------------------------------王健  2024/1/19 BEGIN------------------------------------------
+
+
+---员工表添加行政客服提成信息
+ALTER TABLE `tbl_amiya_employee`
+	ADD COLUMN `administrative_inspection_commission` DECIMAL(10,2) NULL DEFAULT 0 AFTER `inspection_commission`,
+	ADD COLUMN `cooperate_liveanchor_new_customer_commission` DECIMAL(10,2) NULL DEFAULT 0 AFTER `administrative_inspection_commission`,
+	ADD COLUMN `cooperate_liveanchor_old_customer_commission` DECIMAL(10,2) NULL DEFAULT 0 AFTER `cooperate_liveanchor_new_customer_commission`;
+	ADD COLUMN `tmall_order_commission` DECIMAL(10,2) NULL DEFAULT 0 AFTER `cooperate_liveanchor_old_customer_commission`;
+
+
+----------------------------------------王健  2024/1/19 END------------------------------------------

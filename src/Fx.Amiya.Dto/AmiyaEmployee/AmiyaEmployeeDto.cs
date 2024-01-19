@@ -54,5 +54,21 @@ namespace Fx.Amiya.Dto.AmiyaEmployee
         /// 读取数据中心带货板块数据
         /// </summary>
         public bool ReadTakeGoodsData { get; set; }
+        /// <summary>
+        /// 行政客户稽查提成比例
+        /// </summary>
+        public decimal AdministrativeInspectionCommission { get; set; }
+        /// <summary>
+        /// 达人新客提成比例
+        /// </summary>
+        public decimal CooperateLiveanchorNewCustomerCommission { get; set; }
+        /// <summary>
+        /// 达人老客提成比例
+        /// </summary>
+        public decimal CooperateLiveanchorOldCustomerCommission { get; set; }
+        /// <summary>
+        /// 天猫升单比例
+        /// </summary>
+        public decimal TmallOrderCommission { get; set; }
     }
 }

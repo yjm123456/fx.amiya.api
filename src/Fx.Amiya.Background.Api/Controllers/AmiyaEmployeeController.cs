@@ -80,6 +80,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.OldCustomerCommission= addVo.OldCustomerCommission;
                 addDto.NewCustomerCommission=addVo.NewCustomerCommission;
                 addDto.InspectionCommission= addVo.InspectionCommission;
+                addDto.AdministrativeInspectionCommission = addVo.AdministrativeInspectionCommission;
+                addDto.CooperateLiveanchorNewCustomerCommission = addVo.CooperateLiveanchorNewCustomerCommission;
+                addDto.CooperateLiveanchorOldCustomerCommission = addVo.CooperateLiveanchorOldCustomerCommission;
+                addDto.TmallOrderCommission = addVo.TmallOrderCommission;
                 await employeeService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -203,6 +207,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                     employeeVo.OldCustomerCommission=q.OldCustomerCommission;
                     employeeVo.NewCustomerCommission= q.NewCustomerCommission;
                     employeeVo.InspectionCommission=q.InspectionCommission;
+                    employeeVo.AdministrativeInspectionCommission = q.AdministrativeInspectionCommission;
+                    employeeVo.CooperateLiveanchorNewCustomerCommission = q.CooperateLiveanchorNewCustomerCommission;
+                    employeeVo.CooperateLiveanchorOldCustomerCommission = q.CooperateLiveanchorOldCustomerCommission;
+                    employeeVo.TmallOrderCommission = q.TmallOrderCommission;
 
                 }
                 return ResultData<AmiyaEmployeeVo>.Success().AddData("employeeInfo", employeeVo);
@@ -238,6 +246,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.InspectionCommission=updateVo.InspectionCommission;
                 updateDto.OldCustomerCommission=updateVo.OldCustomerCommission;
                 updateDto.NewCustomerCommission=updateVo.NewCustomerCommission;
+                updateDto.AdministrativeInspectionCommission = updateVo.AdministrativeInspectionCommission;
+                updateDto.CooperateLiveanchorNewCustomerCommission = updateVo.CooperateLiveanchorNewCustomerCommission;
+                updateDto.CooperateLiveanchorOldCustomerCommission = updateVo.CooperateLiveanchorOldCustomerCommission;
+                updateDto.TmallOrderCommission = updateVo.TmallOrderCommission;
                 await employeeService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }
