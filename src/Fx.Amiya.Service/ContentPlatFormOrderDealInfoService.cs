@@ -1349,7 +1349,7 @@ namespace Fx.Amiya.Service
             //选定的月份
             DateTime currentDate = recordDate.Date;
             var result = await dalContentPlatFormOrderDealInfo.GetAll()
-                .Where(o => o.IsToHospital == true && o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= currentDate && o.ToHospitalDate < endDate)
+                .Where(o => o.IsToHospital == true  && o.CreateDate >= currentDate && o.CreateDate < endDate)
                 .Where(o => hospitalIds.Count == 0 || hospitalIds.Contains(o.LastDealHospitalId.Value))
                 .ToListAsync();
             var returnInfo = result.Select(
@@ -1379,7 +1379,7 @@ namespace Fx.Amiya.Service
         public async Task<List<ContentPlatFormOrderDealInfoDto>> GetMonthSendPerformanceByHospitalIdListAsync(List<int> hospitalIds, DateTime recordStartDate, DateTime recordEndDate)
         {
             var result = await dalContentPlatFormOrderDealInfo.GetAll()
-                .Where(o => o.IsToHospital == true && o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= recordStartDate && o.ToHospitalDate < recordEndDate)
+                .Where(o => o.IsToHospital == true &&  o.CreateDate >= recordStartDate && o.CreateDate < recordEndDate)
                 .Where(o => hospitalIds.Count == 0 || hospitalIds.Contains(o.LastDealHospitalId.Value))
                 .ToListAsync();
             var returnInfo = result.Select(
