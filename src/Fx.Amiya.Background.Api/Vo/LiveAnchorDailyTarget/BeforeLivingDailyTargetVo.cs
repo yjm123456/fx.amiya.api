@@ -37,7 +37,7 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
 
         public int SendNum { get; set; }
         /// <summary>
-        /// 今日抖音橱窗收入
+        /// 今日橱窗收入
         /// </summary>
         public decimal TikTokShowcaseIncome { get; set; }
         /// <summary>
@@ -65,5 +65,22 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// </summary>
 
         public decimal PerformanceNum { get; set; }
+        /// <summary>
+        /// 今日涨粉
+        /// </summary>
+        public int IncreaseFans { get; set; }
+        /// <summary>
+        /// 今日涨粉费用
+        /// </summary>
+        public decimal IncreaseFansFees { get; set; }
+        /// <summary>
+        /// 今日线索量
+        /// </summary>
+        public int Clues { get; set; }
+        /// <summary>
+        /// 橱窗付费
+        /// </summary>
+        public decimal ShowCaseFee { get; set; }
+
     }
 }

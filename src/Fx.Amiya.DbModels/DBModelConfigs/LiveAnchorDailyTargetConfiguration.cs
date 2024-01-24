@@ -23,6 +23,10 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.TikTokSendNum).HasColumnName("tiktok_send_num").HasColumnType("int").IsRequired();
             builder.Property(t => t.TikTokFlowInvestmentNum).HasColumnName("tiktok_flow_investment_num").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t=>t.TikTokShowcaseIncome).HasColumnName("tiktok_showcase_income").HasColumnType("decimal(12,2)").IsRequired();
+            //builder.Property(t => t.TikTokClues).HasColumnName("tiktok_clues").HasColumnType("int").IsRequired();
+            //builder.Property(t=>t.TikTokIncreaseFans).HasColumnName("tiktok_increase_fans").HasColumnType("int").IsRequired();
+            //builder.Property(t=>t.TikTokIncreaseFansFees).HasColumnName("tiktok_increase_fans_fees").HasColumnType("decimal(12,2)").IsRequired();
+            //builder.Property(t=>t.TikTokIncreaseFansFeesCost).HasColumnName("tiktok_increase_fans_fees_cost").HasColumnType("decimal(12,2)").IsRequired();
 
             builder.Property(t => t.ZhihuOperationEmployeeId).HasColumnName("zhihu_operation_employee_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.ZhihuSendNum).HasColumnName("zhihu_send_num").HasColumnType("int").IsRequired();
@@ -31,10 +35,20 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.XiaoHongShuOperationEmployeeId).HasColumnName("xiaohongshu_operation_employee_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.XiaoHongShuSendNum).HasColumnName("xiaohongshu_send_num").HasColumnType("int").IsRequired();
             builder.Property(t => t.XiaoHongShuFlowInvestmentNum).HasColumnName("xiaohongshu_flow_investment_num").HasColumnType("decimal(12,2)").IsRequired();
+            //builder.Property(t => t.XiaoHongShuClues).HasColumnName("xiaohongshu_clues").HasColumnType("int").IsRequired();
+            //builder.Property(t => t.XiaoHongShuIncreaseFans).HasColumnName("xiaohongshu_increase_fans").HasColumnType("int").IsRequired();
+            //builder.Property(t => t.XiaoHongShuIncreaseFansFees).HasColumnName("xiaohongshu_increase_fans_fees").HasColumnType("decimal(12,2)").IsRequired();
+            //builder.Property(t => t.XiaoHongShuIncreaseFansFeesCost).HasColumnName("xiaohongshu_increase_fans_fees_cost").HasColumnType("decimal(12,2)").IsRequired();
+            //builder.Property(t=>t.XiaoHongShuShowcaseIncome).HasColumnName("xiaohongshu_showcase_income").HasColumnType("decimal(12, 2)").IsRequired();
 
             builder.Property(t => t.VideoOperationEmployeeId).HasColumnName("video_operation_employee_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.VideoSendNum).HasColumnName("video_send_num").HasColumnType("int").IsRequired();
             builder.Property(t => t.VideoFlowInvestmentNum).HasColumnName("video_flow_investment_num").HasColumnType("decimal(12,2)").IsRequired();
+            //builder.Property(t => t.VideoClues).HasColumnName("video_clues").HasColumnType("int").IsRequired();
+            //builder.Property(t => t.VideoIncreaseFans).HasColumnName("video_increase_fans").HasColumnType("int").IsRequired();
+            //builder.Property(t => t.VideoIncreaseFansFees).HasColumnName("video_increase_fans_fees").HasColumnType("decimal(12,2)").IsRequired();
+            //builder.Property(t => t.VideoIncreaseFansFeesCost).HasColumnName("video_increase_fans_fees_cost").HasColumnType("decimal(12,2)").IsRequired();
+            //builder.Property(t => t.VideoShowcaseIncome).HasColumnName("video_showcase_income").HasColumnType("decimal(12, 2)").IsRequired();
 
             builder.Property(t => t.SinaWeiBoOperationEmployeeId).HasColumnName("sina_weibo_operation_employee_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.SinaWeiBoSendNum).HasColumnName("sinaweibo_send_num").HasColumnType("int").IsRequired();

@@ -89,9 +89,10 @@ namespace Fx.Amiya.Service
                                                               TikTokFlowinvestmentTarget = d.TikTokFlowinvestmentTarget,
                                                               CumulativeTikTokFlowinvestment = d.CumulativeTikTokFlowinvestment,
                                                               TikTokFlowinvestmentCompleteRate = d.TikTokFlowinvestmentCompleteRate,
-                                                              TikTokShowcaseIncomeTarget=d.TikTokShowcaseIncomeTarget,
-                                                              CumulativeTikTokShowcaseIncome=d.CumulativeTikTokShowcaseIncome,
-                                                              TikTokShowcaseIncomeCompleteRate=d.TikTokShowcaseIncomeCompleteRate,
+                                                              TikTokShowcaseIncomeTarget = d.TikTokShowcaseIncomeTarget,
+                                                              CumulativeTikTokShowcaseIncome = d.CumulativeTikTokShowcaseIncome,
+                                                              TikTokShowcaseIncomeCompleteRate = d.TikTokShowcaseIncomeCompleteRate,
+                                                              
 
 
                                                               XiaoHongShuReleaseTarget = d.XiaoHongShuReleaseTarget,
@@ -115,6 +116,58 @@ namespace Fx.Amiya.Service
                                                               CumulativeFlowInvestment = d.CumulativeFlowInvestment,
                                                               FlowInvestmentCompleteRate = d.FlowInvestmentCompleteRate,
                                                               CreateDate = d.CreateDate,
+                                                              TikTokCluesTarget = d.TikTokCluesTarget,
+                                                              CumulativeTikTokClues = d.CumulativeTikTokClues,
+                                                              TikTokCluesCompleteRate = d.TikTokCluesCompleteRate,
+                                                              TikTokIncreaseFansTarget = d.TikTokIncreaseFansTarget,
+                                                              CumulativeTikTokIncreaseFans = d.CumulativeTikTokIncreaseFans,
+                                                              TikTokIncreaseFanseCompleteRate = d.TikTokIncreaseFanseCompleteRate,
+                                                              TikTokIncreaseFansFeesCostTarget = d.TikTokIncreaseFansFeesCostTarget,
+                                                              CumulativeTikTokIncreaseFansFeesCost = d.CumulativeTikTokIncreaseFansFeesCost,
+                                                              TikTokIncreaseFansFeesCostCompleteRate = d.TikTokIncreaseFansFeesCostCompleteRate,
+                                                              TikTokIncreaseFansFeesTarget = d.TikTokIncreaseFansFeesTarget,
+                                                              CumulativeTikTokIncreaseFansFees = d.CumulativeTikTokIncreaseFansFees,
+                                                              TikTokIncreaseFansFeesCompleteRate = d.TikTokIncreaseFansFeesCompleteRate,
+                                                              XiaoHongShuShowcaseIncomeTarget = d.XiaoHongShuShowcaseIncomeTarget,
+                                                              CumulativeXiaoHongShuShowcaseIncome = d.CumulativeXiaoHongShuShowcaseIncome,
+                                                              XiaoHongShuShowcaseIncomeCompleteRate = d.XiaoHongShuShowcaseIncomeCompleteRate,
+                                                              XiaoHongShuCluesTarget = d.XiaoHongShuCluesTarget,
+                                                              CumulativeXiaoHongShuClues = d.CumulativeXiaoHongShuClues,
+                                                              XiaoHongShuCluesCompleteRate = d.XiaoHongShuCluesCompleteRate,
+                                                              XiaoHongShuIncreaseFansTarget = d.XiaoHongShuIncreaseFansTarget,
+                                                              CumulativeXiaoHongShuIncreaseFans = d.CumulativeXiaoHongShuIncreaseFans,
+                                                              XiaoHongShuIncreaseFanseCompleteRate = d.XiaoHongShuIncreaseFanseCompleteRate,
+                                                              XiaoHongShuIncreaseFansFeesCostTarget = d.XiaoHongShuIncreaseFansFeesCostTarget,
+                                                              CumulativeXiaoHongShuIncreaseFansFeesCost = d.CumulativeXiaoHongShuIncreaseFansFeesCost,
+                                                              XiaoHongShuIncreaseFansFeesCostCompleteRate = d.XiaoHongShuIncreaseFansFeesCostCompleteRate,
+                                                              XiaoHongShuIncreaseFansFeesTarget = d.XiaoHongShuIncreaseFansFeesTarget,
+                                                              CumulativeXiaoHongShuIncreaseFansFees = d.CumulativeXiaoHongShuIncreaseFansFees,
+                                                              XiaoHongShuIncreaseFansFeesCompleteRate = d.XiaoHongShuIncreaseFansFeesCompleteRate,
+                                                              VideoShowcaseIncomeTarget = d.VideoShowcaseIncomeTarget,
+                                                              CumulativeVideoShowcaseIncome = d.CumulativeVideoShowcaseIncome,
+                                                              VideoShowcaseIncomeCompleteRate = d.VideoShowcaseIncomeCompleteRate,
+                                                              VideoCluesTarget = d.VideoCluesTarget,
+                                                              CumulativeVideoClues = d.CumulativeVideoClues,
+                                                              VideoCluesCompleteRate = d.VideoCluesCompleteRate,
+                                                              VideoIncreaseFansTarget = d.VideoIncreaseFansTarget,
+                                                              CumulativeVideoIncreaseFans = d.CumulativeVideoIncreaseFans,
+                                                              VideoIncreaseFanseCompleteRate = d.VideoIncreaseFanseCompleteRate,
+                                                              VideoIncreaseFansFeesCostTarget = d.VideoIncreaseFansFeesCostTarget,
+                                                              CumulativeVideoIncreaseFansFeesCost = d.CumulativeVideoIncreaseFansFeesCost,
+                                                              VideoIncreaseFansFeesCostCompleteRate = d.VideoIncreaseFansFeesCostCompleteRate,
+                                                              VideoIncreaseFansFeesTarget = d.VideoIncreaseFansFeesTarget,
+                                                              CumulativeVideoIncreaseFansFees = d.CumulativeVideoIncreaseFansFees,
+                                                              VideoIncreaseFansFeesCompleteRate = d.VideoIncreaseFansFeesCompleteRate,
+                                                              TikTokShowCaseFeeTarget = d.TikTokShowCaseFeeTarget,
+                                                              CumulativeTikTokShowCaseFee = d.CumulativeTikTokShowCaseFee,
+                                                              TikTokShowCaseFeeCompleteRate = d.TikTokShowCaseFeeCompleteRate,
+                                                              XiaoHongShuShowCaseFeeTarget = d.XiaoHongShuShowCaseFeeTarget,
+                                                              CumulativeXiaoHongShuShowCaseFee = d.CumulativeXiaoHongShuShowCaseFee,
+                                                              XiaoHongShuShowCaseFeeCompleteRate = d.XiaoHongShuShowCaseFeeCompleteRate,
+                                                              VideoShowCaseFeeTarget = d.VideoShowCaseFeeTarget,
+                                                              CumulativeVideoShowCaseFee = d.CumulativeVideoShowCaseFee,
+                                                              VideoShowCaseFeeCompleteRate = d.VideoShowCaseFeeCompleteRate,
+
                                                           };
 
                 FxPageInfo<LiveAnchorMonthlyTargetBeforeLivingDto> liveAnchorMonthlyTargetBeforeLivingPageInfo = new FxPageInfo<LiveAnchorMonthlyTargetBeforeLivingDto>();
@@ -187,6 +240,59 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.FlowInvestmentTarget = addDto.FlowInvestmentTarget;
                 liveAnchorMonthlyTarget.CumulativeFlowInvestment = 0;
                 liveAnchorMonthlyTarget.FlowInvestmentCompleteRate = 0.00M;
+
+                liveAnchorMonthlyTarget.TikTokCluesTarget = addDto.TikTokCluesTarget;
+                liveAnchorMonthlyTarget.CumulativeTikTokClues = 0;
+                liveAnchorMonthlyTarget.TikTokCluesCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.TikTokIncreaseFansTarget = addDto.TikTokIncreaseFansTarget;
+                liveAnchorMonthlyTarget.CumulativeTikTokIncreaseFans = 0;
+                liveAnchorMonthlyTarget.TikTokIncreaseFanseCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.TikTokIncreaseFansFeesTarget = addDto.TikTokIncreaseFansFeesTarget;
+                liveAnchorMonthlyTarget.CumulativeTikTokIncreaseFansFees = 0;
+                liveAnchorMonthlyTarget.TikTokIncreaseFansFeesCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.TikTokIncreaseFansFeesCostTarget = Math.Round(addDto.TikTokIncreaseFansFeesTarget / addDto.TikTokIncreaseFansTarget, 2);
+                liveAnchorMonthlyTarget.CumulativeTikTokIncreaseFansFeesCost = 0;
+                liveAnchorMonthlyTarget.TikTokIncreaseFansFeesCostCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.XiaoHongShuShowcaseIncomeTarget = addDto.XiaoHongShuShowcaseIncomeTarget;
+                liveAnchorMonthlyTarget.CumulativeXiaoHongShuShowcaseIncome = 0;
+                liveAnchorMonthlyTarget.XiaoHongShuShowcaseIncomeCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.XiaoHongShuCluesTarget = addDto.XiaoHongShuCluesTarget;
+                liveAnchorMonthlyTarget.CumulativeXiaoHongShuClues = 0;
+                liveAnchorMonthlyTarget.XiaoHongShuCluesCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.XiaoHongShuIncreaseFansTarget = addDto.XiaoHongShuIncreaseFansTarget;
+                liveAnchorMonthlyTarget.CumulativeXiaoHongShuIncreaseFans = 0;
+                liveAnchorMonthlyTarget.XiaoHongShuIncreaseFanseCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.XiaoHongShuIncreaseFansFeesTarget = addDto.XiaoHongShuIncreaseFansFeesTarget;
+                liveAnchorMonthlyTarget.CumulativeXiaoHongShuIncreaseFansFees = 0;
+                liveAnchorMonthlyTarget.XiaoHongShuIncreaseFansFeesCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.XiaoHongShuIncreaseFansFeesCostTarget = Math.Round(addDto.XiaoHongShuIncreaseFansFeesTarget / addDto.XiaoHongShuIncreaseFansTarget, 2);
+                liveAnchorMonthlyTarget.CumulativeXiaoHongShuIncreaseFansFeesCost = 0;
+                liveAnchorMonthlyTarget.XiaoHongShuIncreaseFansFeesCostCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.VideoShowcaseIncomeTarget = addDto.VideoShowcaseIncomeTarget;
+                liveAnchorMonthlyTarget.CumulativeVideoShowcaseIncome = 0;
+                liveAnchorMonthlyTarget.VideoShowcaseIncomeCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.VideoCluesTarget = addDto.VideoCluesTarget;
+                liveAnchorMonthlyTarget.CumulativeVideoClues = 0;
+                liveAnchorMonthlyTarget.VideoCluesCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.VideoIncreaseFansTarget = addDto.VideoIncreaseFansTarget;
+                liveAnchorMonthlyTarget.CumulativeVideoIncreaseFans = 0;
+                liveAnchorMonthlyTarget.VideoIncreaseFanseCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.VideoIncreaseFansFeesTarget = addDto.VideoIncreaseFansFeesTarget;
+                liveAnchorMonthlyTarget.CumulativeVideoIncreaseFansFees = 0;
+                liveAnchorMonthlyTarget.VideoIncreaseFansFeesCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.VideoIncreaseFansFeesCostTarget = Math.Round(addDto.VideoIncreaseFansFeesTarget / addDto.VideoIncreaseFansTarget, 2);
+                liveAnchorMonthlyTarget.CumulativeVideoIncreaseFansFeesCost = 0;
+                liveAnchorMonthlyTarget.VideoIncreaseFansFeesCostCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.TikTokShowCaseFeeTarget = addDto.TikTokShowCaseFeeTarget;
+                liveAnchorMonthlyTarget.CumulativeTikTokShowCaseFee = 0;
+                liveAnchorMonthlyTarget.TikTokShowCaseFeeCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.XiaoHongShuShowCaseFeeTarget = addDto.XiaoHongShuShowCaseFeeTarget;
+                liveAnchorMonthlyTarget.CumulativeXiaoHongShuShowCaseFee = 0;
+                liveAnchorMonthlyTarget.XiaoHongShuShowCaseFeeCompleteRate = 0.00M;
+                liveAnchorMonthlyTarget.VideoShowCaseFeeTarget = addDto.VideoShowCaseFeeTarget;
+                liveAnchorMonthlyTarget.CumulativeVideoShowCaseFee = 0;
+                liveAnchorMonthlyTarget.VideoShowCaseFeeCompleteRate = 0.00M;
+
                 liveAnchorMonthlyTarget.CreateDate = DateTime.Now;
 
                 await dalLiveAnchorMonthlyTargetBeforeLiving.AddAsync(liveAnchorMonthlyTarget, true);
@@ -243,6 +349,31 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTargetDto.TikTokShowcaseIncomeTarget = liveAnchorMonthlyTarget.TikTokShowcaseIncomeTarget;
                 liveAnchorMonthlyTargetDto.CumulativeTikTokShowcaseIncome = liveAnchorMonthlyTarget.CumulativeTikTokShowcaseIncome;
                 liveAnchorMonthlyTargetDto.TikTokShowcaseIncomeCompleteRate = liveAnchorMonthlyTarget.TikTokShowcaseIncomeCompleteRate;
+                liveAnchorMonthlyTargetDto.TikTokCluesTarget = liveAnchorMonthlyTarget.TikTokCluesTarget;
+                liveAnchorMonthlyTargetDto.CumulativeTikTokClues = liveAnchorMonthlyTarget.CumulativeTikTokClues;
+                liveAnchorMonthlyTargetDto.TikTokCluesCompleteRate = liveAnchorMonthlyTarget.TikTokCluesCompleteRate;
+                liveAnchorMonthlyTargetDto.TikTokIncreaseFansTarget = liveAnchorMonthlyTarget.TikTokIncreaseFansTarget;
+                liveAnchorMonthlyTargetDto.CumulativeTikTokIncreaseFans = liveAnchorMonthlyTarget.CumulativeTikTokIncreaseFans;
+                liveAnchorMonthlyTargetDto.TikTokIncreaseFanseCompleteRate = liveAnchorMonthlyTarget.TikTokIncreaseFanseCompleteRate;
+                liveAnchorMonthlyTargetDto.TikTokIncreaseFansFeesCostTarget = Math.Round(liveAnchorMonthlyTarget.TikTokIncreaseFansFeesTarget / liveAnchorMonthlyTarget.TikTokIncreaseFansTarget, 2);
+                if (liveAnchorMonthlyTarget.CumulativeTikTokIncreaseFansFees <= 0)
+                {
+                    liveAnchorMonthlyTargetDto.CumulativeTikTokIncreaseFansFeesCost = liveAnchorMonthlyTarget.CumulativeTikTokIncreaseFansFees;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetDto.CumulativeTikTokIncreaseFansFeesCost = Math.Round(liveAnchorMonthlyTarget.CumulativeTikTokIncreaseFansFees / liveAnchorMonthlyTarget.CumulativeTikTokIncreaseFans, 2);
+                }
+
+                liveAnchorMonthlyTargetDto.TikTokIncreaseFansFeesCostCompleteRate = Math.Round(liveAnchorMonthlyTargetDto.CumulativeTikTokIncreaseFansFeesCost / liveAnchorMonthlyTargetDto.TikTokIncreaseFansFeesCostTarget, 2); ;
+                liveAnchorMonthlyTargetDto.TikTokIncreaseFansFeesTarget = liveAnchorMonthlyTarget.TikTokIncreaseFansFeesTarget;
+                liveAnchorMonthlyTargetDto.CumulativeTikTokIncreaseFansFees = liveAnchorMonthlyTarget.CumulativeTikTokIncreaseFansFees;
+                liveAnchorMonthlyTargetDto.TikTokIncreaseFansFeesCompleteRate = liveAnchorMonthlyTarget.TikTokIncreaseFansFeesCompleteRate;
+                liveAnchorMonthlyTargetDto.TikTokShowCaseFeeTarget = liveAnchorMonthlyTarget.TikTokShowCaseFeeTarget;
+                liveAnchorMonthlyTargetDto.CumulativeTikTokShowCaseFee = liveAnchorMonthlyTarget.CumulativeTikTokShowCaseFee;
+                liveAnchorMonthlyTargetDto.TikTokShowCaseFeeCompleteRate = liveAnchorMonthlyTarget.TikTokShowCaseFeeCompleteRate;
+
+
 
                 liveAnchorMonthlyTargetDto.XiaoHongShuReleaseTarget = liveAnchorMonthlyTarget.XiaoHongShuReleaseTarget;
                 liveAnchorMonthlyTargetDto.CumulativeXiaoHongShuRelease = liveAnchorMonthlyTarget.CumulativeXiaoHongShuRelease;
@@ -250,6 +381,33 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTargetDto.XiaoHongShuFlowinvestmentTarget = liveAnchorMonthlyTarget.XiaoHongShuFlowinvestmentTarget;
                 liveAnchorMonthlyTargetDto.CumulativeXiaoHongShuFlowinvestment = liveAnchorMonthlyTarget.CumulativeXiaoHongShuFlowinvestment;
                 liveAnchorMonthlyTargetDto.XiaoHongShuFlowinvestmentCompleteRate = liveAnchorMonthlyTarget.XiaoHongShuFlowinvestmentCompleteRate;
+                liveAnchorMonthlyTargetDto.XiaoHongShuShowcaseIncomeTarget = liveAnchorMonthlyTarget.XiaoHongShuShowcaseIncomeTarget;
+                liveAnchorMonthlyTargetDto.CumulativeXiaoHongShuShowcaseIncome = liveAnchorMonthlyTarget.CumulativeXiaoHongShuShowcaseIncome;
+                liveAnchorMonthlyTargetDto.XiaoHongShuShowcaseIncomeCompleteRate = liveAnchorMonthlyTarget.XiaoHongShuShowcaseIncomeCompleteRate;
+                liveAnchorMonthlyTargetDto.XiaoHongShuCluesTarget = liveAnchorMonthlyTarget.XiaoHongShuCluesTarget;
+                liveAnchorMonthlyTargetDto.CumulativeXiaoHongShuClues = liveAnchorMonthlyTarget.CumulativeXiaoHongShuClues;
+                liveAnchorMonthlyTargetDto.XiaoHongShuCluesCompleteRate = liveAnchorMonthlyTarget.XiaoHongShuCluesCompleteRate;
+                liveAnchorMonthlyTargetDto.XiaoHongShuIncreaseFansTarget = liveAnchorMonthlyTarget.XiaoHongShuIncreaseFansTarget;
+                liveAnchorMonthlyTargetDto.CumulativeXiaoHongShuIncreaseFans = liveAnchorMonthlyTarget.CumulativeXiaoHongShuIncreaseFans;
+                liveAnchorMonthlyTargetDto.XiaoHongShuIncreaseFanseCompleteRate = liveAnchorMonthlyTarget.XiaoHongShuIncreaseFanseCompleteRate;
+                liveAnchorMonthlyTargetDto.XiaoHongShuIncreaseFansFeesCostTarget = Math.Round(liveAnchorMonthlyTarget.XiaoHongShuIncreaseFansFeesTarget / liveAnchorMonthlyTarget.XiaoHongShuIncreaseFansTarget, 2);
+                if (liveAnchorMonthlyTarget.CumulativeXiaoHongShuIncreaseFansFees <= 0)
+                {
+                    liveAnchorMonthlyTargetDto.CumulativeXiaoHongShuIncreaseFansFeesCost = liveAnchorMonthlyTarget.CumulativeXiaoHongShuIncreaseFansFees;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetDto.CumulativeXiaoHongShuIncreaseFansFeesCost = Math.Round(liveAnchorMonthlyTarget.CumulativeXiaoHongShuIncreaseFansFees / liveAnchorMonthlyTarget.CumulativeXiaoHongShuIncreaseFans, 2);
+                }
+
+                liveAnchorMonthlyTargetDto.XiaoHongShuIncreaseFansFeesCostCompleteRate = Math.Round(liveAnchorMonthlyTargetDto.CumulativeXiaoHongShuIncreaseFansFeesCost / liveAnchorMonthlyTargetDto.XiaoHongShuIncreaseFansFeesCostTarget, 2); ;
+                liveAnchorMonthlyTargetDto.XiaoHongShuIncreaseFansFeesTarget = liveAnchorMonthlyTarget.XiaoHongShuIncreaseFansFeesTarget;
+                liveAnchorMonthlyTargetDto.XiaoHongShuIncreaseFansFeesTarget = liveAnchorMonthlyTarget.XiaoHongShuIncreaseFansFeesTarget;
+                liveAnchorMonthlyTargetDto.CumulativeXiaoHongShuIncreaseFansFees = liveAnchorMonthlyTarget.CumulativeXiaoHongShuIncreaseFansFees;
+                liveAnchorMonthlyTargetDto.XiaoHongShuIncreaseFansFeesCompleteRate = liveAnchorMonthlyTarget.XiaoHongShuIncreaseFansFeesCompleteRate;
+                liveAnchorMonthlyTargetDto.XiaoHongShuShowCaseFeeTarget = liveAnchorMonthlyTarget.XiaoHongShuShowCaseFeeTarget;
+                liveAnchorMonthlyTargetDto.CumulativeXiaoHongShuShowCaseFee = liveAnchorMonthlyTarget.CumulativeXiaoHongShuShowCaseFee;
+                liveAnchorMonthlyTargetDto.XiaoHongShuShowCaseFeeCompleteRate = liveAnchorMonthlyTarget.XiaoHongShuShowCaseFeeCompleteRate;
 
                 liveAnchorMonthlyTargetDto.SinaWeiBoReleaseTarget = liveAnchorMonthlyTarget.SinaWeiBoReleaseTarget;
                 liveAnchorMonthlyTargetDto.CumulativeSinaWeiBoRelease = liveAnchorMonthlyTarget.CumulativeSinaWeiBoRelease;
@@ -271,6 +429,33 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTargetDto.VideoFlowinvestmentTarget = liveAnchorMonthlyTarget.VideoFlowinvestmentTarget;
                 liveAnchorMonthlyTargetDto.CumulativeVideoFlowinvestment = liveAnchorMonthlyTarget.CumulativeVideoFlowinvestment;
                 liveAnchorMonthlyTargetDto.VideoFlowinvestmentCompleteRate = liveAnchorMonthlyTarget.VideoFlowinvestmentCompleteRate;
+                liveAnchorMonthlyTargetDto.VideoShowcaseIncomeTarget = liveAnchorMonthlyTarget.VideoShowcaseIncomeTarget;
+                liveAnchorMonthlyTargetDto.CumulativeVideoShowcaseIncome = liveAnchorMonthlyTarget.CumulativeVideoShowcaseIncome;
+                liveAnchorMonthlyTargetDto.VideoShowcaseIncomeCompleteRate = liveAnchorMonthlyTarget.VideoShowcaseIncomeCompleteRate;
+                liveAnchorMonthlyTargetDto.VideoCluesTarget = liveAnchorMonthlyTarget.VideoCluesTarget;
+                liveAnchorMonthlyTargetDto.CumulativeVideoClues = liveAnchorMonthlyTarget.CumulativeVideoClues;
+                liveAnchorMonthlyTargetDto.VideoCluesCompleteRate = liveAnchorMonthlyTarget.VideoCluesCompleteRate;
+                liveAnchorMonthlyTargetDto.VideoIncreaseFansTarget = liveAnchorMonthlyTarget.VideoIncreaseFansTarget;
+                liveAnchorMonthlyTargetDto.CumulativeVideoIncreaseFans = liveAnchorMonthlyTarget.CumulativeVideoIncreaseFans;
+                liveAnchorMonthlyTargetDto.VideoIncreaseFanseCompleteRate = liveAnchorMonthlyTarget.VideoIncreaseFanseCompleteRate;
+                liveAnchorMonthlyTargetDto.VideoIncreaseFansFeesCostTarget = Math.Round(liveAnchorMonthlyTarget.VideoIncreaseFansFeesTarget / liveAnchorMonthlyTarget.VideoIncreaseFansTarget, 2);
+                if (liveAnchorMonthlyTarget.CumulativeVideoIncreaseFansFees <= 0)
+                {
+                    liveAnchorMonthlyTargetDto.CumulativeVideoIncreaseFansFeesCost = liveAnchorMonthlyTarget.CumulativeVideoIncreaseFansFees;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetDto.CumulativeVideoIncreaseFansFeesCost = Math.Round(liveAnchorMonthlyTarget.CumulativeVideoIncreaseFansFees / liveAnchorMonthlyTarget.CumulativeVideoIncreaseFans, 2);
+                }
+
+                liveAnchorMonthlyTargetDto.VideoIncreaseFansFeesCostCompleteRate = Math.Round(liveAnchorMonthlyTargetDto.CumulativeVideoIncreaseFansFeesCost / liveAnchorMonthlyTargetDto.VideoIncreaseFansFeesCostTarget, 2); ;
+               
+                liveAnchorMonthlyTargetDto.VideoIncreaseFansFeesTarget = liveAnchorMonthlyTarget.VideoIncreaseFansFeesTarget;
+                liveAnchorMonthlyTargetDto.CumulativeVideoIncreaseFansFees = liveAnchorMonthlyTarget.CumulativeVideoIncreaseFansFees;
+                liveAnchorMonthlyTargetDto.VideoIncreaseFansFeesCompleteRate = liveAnchorMonthlyTarget.VideoIncreaseFansFeesCompleteRate;
+                liveAnchorMonthlyTargetDto.VideoShowCaseFeeTarget = liveAnchorMonthlyTarget.VideoShowCaseFeeTarget;
+                liveAnchorMonthlyTargetDto.CumulativeVideoShowCaseFee = liveAnchorMonthlyTarget.CumulativeVideoShowCaseFee;
+                liveAnchorMonthlyTargetDto.VideoShowCaseFeeCompleteRate = liveAnchorMonthlyTarget.VideoShowCaseFeeCompleteRate;
 
                 liveAnchorMonthlyTargetDto.ReleaseTarget = liveAnchorMonthlyTarget.ReleaseTarget;
                 liveAnchorMonthlyTargetDto.CumulativeRelease = liveAnchorMonthlyTarget.CumulativeRelease;
@@ -318,6 +503,23 @@ namespace Fx.Amiya.Service
 
                 liveAnchorMonthlyTarget.ReleaseTarget = updateDto.ReleaseTarget;
                 liveAnchorMonthlyTarget.FlowInvestmentTarget = updateDto.FlowInvestmentTarget;
+                liveAnchorMonthlyTarget.XiaoHongShuShowcaseIncomeTarget = updateDto.XiaoHongShuShowcaseIncomeTarget;
+                liveAnchorMonthlyTarget.XiaoHongShuCluesTarget = updateDto.XiaoHongShuCluesTarget;
+                liveAnchorMonthlyTarget.XiaoHongShuIncreaseFansTarget = updateDto.XiaoHongShuIncreaseFansTarget;
+                liveAnchorMonthlyTarget.XiaoHongShuIncreaseFansFeesTarget = updateDto.XiaoHongShuIncreaseFansFeesTarget;
+                liveAnchorMonthlyTarget.XiaoHongShuIncreaseFansFeesCostTarget = updateDto.XiaoHongShuIncreaseFansFeesCostTarget;
+                liveAnchorMonthlyTarget.VideoShowcaseIncomeTarget = updateDto.VideoShowcaseIncomeTarget;
+                liveAnchorMonthlyTarget.VideoCluesTarget = updateDto.VideoCluesTarget;
+                liveAnchorMonthlyTarget.VideoIncreaseFansTarget = updateDto.VideoIncreaseFansTarget;
+                liveAnchorMonthlyTarget.VideoIncreaseFansFeesTarget = updateDto.VideoIncreaseFansFeesTarget;
+                liveAnchorMonthlyTarget.VideoIncreaseFansFeesCostTarget = updateDto.VideoIncreaseFansFeesCostTarget;
+                liveAnchorMonthlyTarget.TikTokCluesTarget = updateDto.TikTokCluesTarget;
+                liveAnchorMonthlyTarget.TikTokIncreaseFansTarget = updateDto.TikTokIncreaseFansTarget;
+                liveAnchorMonthlyTarget.TikTokIncreaseFansFeesTarget = updateDto.TikTokIncreaseFansFeesTarget;
+                liveAnchorMonthlyTarget.TikTokIncreaseFansFeesCostTarget = updateDto.TikTokIncreaseFansFeesCostTarget;
+                liveAnchorMonthlyTarget.TikTokShowCaseFeeTarget = updateDto.TikTokShowcaseFeeTarget;
+                liveAnchorMonthlyTarget.XiaoHongShuShowCaseFeeTarget = updateDto.XiaoHongShuShowcaseFeeTarget;
+                liveAnchorMonthlyTarget.VideoShowCaseFeeTarget = updateDto.VideoShowcaseFeeTarget;
                 await dalLiveAnchorMonthlyTargetBeforeLiving.UpdateAsync(liveAnchorMonthlyTarget, true);
             }
             catch (Exception ex)
@@ -384,7 +586,73 @@ namespace Fx.Amiya.Service
                     liveAnchorMonthlyTargetBeforeLiving.VideoFlowinvestmentCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeVideoFlowinvestment) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.VideoFlowinvestmentTarget)) * 100, 2);
                 }
                 #endregion
-
+                #region 视频号橱窗收入
+                liveAnchorMonthlyTargetBeforeLiving.CumulativeVideoShowcaseIncome += editDto.CumulativeVideoShowcaseIncome;
+                if (liveAnchorMonthlyTargetBeforeLiving.CumulativeVideoShowcaseIncome <= 0)
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.VideoShowcaseIncomeCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.VideoShowcaseIncomeCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeVideoShowcaseIncome) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.VideoShowcaseIncomeTarget)) * 100, 2);
+                }
+                #endregion
+                #region 视频号涨粉
+                liveAnchorMonthlyTargetBeforeLiving.CumulativeVideoIncreaseFans += editDto.CumulativeVideoIncreaseFans;
+                if (liveAnchorMonthlyTargetBeforeLiving.CumulativeVideoIncreaseFans <= 0)
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.VideoIncreaseFanseCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.VideoIncreaseFanseCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeVideoIncreaseFans) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.VideoIncreaseFansTarget)) * 100, 2);
+                }
+                #endregion
+                #region 视频号涨粉费用
+                liveAnchorMonthlyTargetBeforeLiving.CumulativeVideoIncreaseFansFees += editDto.CumulativeVideoIncreaseFansFees;
+                if (liveAnchorMonthlyTargetBeforeLiving.CumulativeVideoIncreaseFansFees <= 0)
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.VideoIncreaseFansFeesCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.VideoIncreaseFansFeesCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeVideoIncreaseFansFees) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.VideoIncreaseFansFeesTarget)) * 100, 2);
+                }
+                #endregion
+                #region 视频号线索
+                liveAnchorMonthlyTargetBeforeLiving.CumulativeVideoClues += editDto.CumulativeVideoClues;
+                if (liveAnchorMonthlyTargetBeforeLiving.CumulativeVideoClues <= 0)
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.VideoCluesCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.VideoCluesCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeVideoClues) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.VideoCluesTarget)) * 100, 2);
+                }
+                #endregion
+                #region 视频号涨粉成本
+                if (liveAnchorMonthlyTargetBeforeLiving.CumulativeVideoIncreaseFansFees == 0 || liveAnchorMonthlyTargetBeforeLiving.CumulativeVideoIncreaseFans == 0)
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.CumulativeVideoIncreaseFansFeesCost = 0;
+                    liveAnchorMonthlyTargetBeforeLiving.VideoIncreaseFansFeesCostCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.CumulativeVideoIncreaseFansFeesCost = Math.Round(liveAnchorMonthlyTargetBeforeLiving.CumulativeVideoIncreaseFansFees / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeVideoIncreaseFans), 2);
+                    liveAnchorMonthlyTargetBeforeLiving.VideoIncreaseFansFeesCostCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeVideoIncreaseFansFeesCost) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.VideoIncreaseFansFeesCostTarget)) * 100, 2);
+                }
+                #endregion
+                #region 视频号橱窗付费
+                liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuShowCaseFee += editDto.CumulativeXiaoHongShuShowCaseFee;
+                if (liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuShowCaseFee <= 0)
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuShowCaseFeeCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuShowCaseFeeCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuShowCaseFee) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuShowCaseFeeTarget)) * 100, 2);
+                }
+                #endregion
                 #region #抖音发布
                 liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokRelease += editDto.CumulativeTikTokRelease;
                 if (liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokRelease <= 0)
@@ -396,6 +664,7 @@ namespace Fx.Amiya.Service
                     liveAnchorMonthlyTargetBeforeLiving.TikTokReleaseCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokRelease) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.TikTokReleaseTarget)) * 100, 2);
                 }
                 #endregion
+
                 #region #抖音投流
                 liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokFlowinvestment += editDto.CumulativeTikTokFlowinvestment;
                 if (liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokFlowinvestment <= 0)
@@ -419,6 +688,64 @@ namespace Fx.Amiya.Service
                     liveAnchorMonthlyTargetBeforeLiving.TikTokShowcaseIncomeCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokShowcaseIncome) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.TikTokShowcaseIncomeTarget)) * 100, 2);
                 }
                 #endregion
+                #region 抖音涨粉
+                liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokIncreaseFans += editDto.CumulativeTikTokIncreaseFans;
+                if (liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokIncreaseFans <= 0)
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.TikTokIncreaseFanseCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.TikTokIncreaseFanseCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokIncreaseFans) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.TikTokIncreaseFansTarget)) * 100, 2);
+                }
+                #endregion
+                #region 抖音涨粉费用
+                liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokIncreaseFansFees += editDto.CumulativeTikTokIncreaseFansFees;
+                if (liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokIncreaseFansFees <= 0)
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.TikTokIncreaseFansFeesCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.TikTokIncreaseFansFeesCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokIncreaseFansFees) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.TikTokIncreaseFansFeesTarget)) * 100, 2);
+                }
+                #endregion
+                #region 抖音线索
+                liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokClues += editDto.CumulativeTikTokClues;
+                if (liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokClues <= 0)
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.TikTokCluesCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.TikTokCluesCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokClues) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.TikTokCluesTarget)) * 100, 2);
+                }
+                #endregion
+                #region 抖音涨粉成本
+                if (liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokIncreaseFansFees == 0 || liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokIncreaseFans == 0)
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokIncreaseFansFeesCost = 0;
+                    liveAnchorMonthlyTargetBeforeLiving.TikTokIncreaseFansFeesCostCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokIncreaseFansFeesCost = Math.Round(liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokIncreaseFansFees / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokIncreaseFans), 2);
+                    liveAnchorMonthlyTargetBeforeLiving.TikTokIncreaseFansFeesCostCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokIncreaseFansFeesCost) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.TikTokIncreaseFansFeesCostTarget)) * 100, 2);
+                }
+
+                #endregion
+                #region 抖音橱窗付费
+                liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokShowCaseFee += editDto.CumulativeTikTokShowCaseFee;
+                if (liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokShowCaseFee <= 0)
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokShowCaseFee = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.TikTokShowCaseFeeCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokShowCaseFee) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.TikTokShowCaseFeeTarget)) * 100, 2);
+                }
+                #endregion
+
                 #region #小红书发布
                 liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuRelease += editDto.CumulativeXiaoHongShuRelease;
                 if (liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuRelease <= 0)
@@ -440,6 +767,76 @@ namespace Fx.Amiya.Service
                 {
                     liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuFlowinvestmentCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuFlowinvestment) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuFlowinvestmentTarget)) * 100, 2);
                 }
+                #endregion
+                #region 小红书橱窗收入
+                liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuShowcaseIncome += editDto.CumulativeXiaoHongShuShowcaseIncome;
+                if (liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuShowcaseIncome <= 0)
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuShowcaseIncomeCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuShowcaseIncomeCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuShowcaseIncome) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuShowcaseIncomeTarget)) * 100, 2);
+                }
+                #endregion
+
+                #region 小红书涨粉
+                liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuIncreaseFans += editDto.CumulativeXiaoHongShuIncreaseFans;
+                if (liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuIncreaseFans <= 0)
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuIncreaseFanseCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuIncreaseFanseCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuIncreaseFans) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuIncreaseFansTarget)) * 100, 2);
+                }
+                #endregion
+                #region 小红书涨粉费用
+                liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuIncreaseFansFees += editDto.CumulativeXiaoHongShuIncreaseFansFees;
+                if (liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuIncreaseFansFees <= 0)
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuIncreaseFansFeesCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuIncreaseFansFeesCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuIncreaseFansFees) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuIncreaseFansFeesTarget)) * 100, 2);
+                }
+                #endregion
+                #region 小红书线索
+                liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuClues += editDto.CumulativeXiaoHongShuClues;
+                if (liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuClues <= 0)
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuCluesCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuCluesCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuClues) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuCluesTarget)) * 100, 2);
+                }
+                #endregion
+                #region 小红书涨粉成本
+                if (liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuIncreaseFansFees == 0 || liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuIncreaseFans == 0)
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuIncreaseFansFeesCost = 0;
+                    liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuIncreaseFansFeesCostCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuIncreaseFansFeesCost = Math.Round(liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuIncreaseFansFees / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuIncreaseFans), 2);
+                    liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuIncreaseFansFeesCostCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuIncreaseFansFeesCost) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuIncreaseFansFeesCostTarget)) * 100, 2);
+                }
+
+                #endregion
+                #region 小红书橱窗付费
+                liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuShowCaseFee += editDto.CumulativeXiaoHongShuShowCaseFee;
+                if (liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuShowCaseFee <= 0)
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuShowCaseFeeCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuShowCaseFeeCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuShowCaseFee) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuShowCaseFeeTarget)) * 100, 2);
+                }
+
                 #endregion
 
                 #region #微博发布

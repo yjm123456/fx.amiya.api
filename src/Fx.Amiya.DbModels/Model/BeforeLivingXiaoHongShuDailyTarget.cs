@@ -17,6 +17,31 @@ namespace Fx.Amiya.DbModels.Model
         public int SendNum { get; set; }
 
         public DateTime RecordDate { get; set; }
+        /// <summary>
+        /// 小红书涨粉
+        /// </summary>
+
+        public int XiaoHongShuIncreaseFans { get; set; }
+        /// <summary>
+        /// 小红书涨粉付费
+        /// </summary>
+        public decimal XiaoHongShuIncreaseFansFees { get; set; }
+        /// <summary>
+        /// 小红书涨粉成本
+        /// </summary>
+        public decimal XiaoHongShuIncreaseFansFeesCost { get; set; }
+        /// <summary>
+        /// 小红书线索量
+        /// </summary>
+        public int XiaoHongShuClues { get; set; }
+        /// <summary>
+        /// 小红书今日橱窗收入
+        /// </summary>
+        public decimal XiaoHongShuShowcaseIncome { get; set; }
+        /// <summary>
+        /// 小红书橱窗付费
+        /// </summary>
+        public decimal XiaoHongShuShowCaseFee { get; set; }
 
         public LiveAnchorMonthlyTargetBeforeLiving LiveAnchorMonthlyTargetBeforeLiving { get; set; }
 

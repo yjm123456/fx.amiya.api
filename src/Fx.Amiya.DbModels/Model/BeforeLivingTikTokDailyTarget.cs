@@ -21,6 +21,27 @@ namespace Fx.Amiya.DbModels.Model
         /// 今日抖音橱窗收入
         /// </summary>
         public decimal TikTokShowcaseIncome { get; set; }
+        /// <summary>
+        /// 抖音涨粉
+        /// </summary>
+
+        public int TikTokIncreaseFans { get; set; }
+        /// <summary>
+        /// 抖音涨粉付费
+        /// </summary>
+        public decimal TikTokIncreaseFansFees { get; set; }
+        /// <summary>
+        /// 抖音涨粉成本
+        /// </summary>
+        public decimal TikTokIncreaseFansFeesCost { get; set; }
+        /// <summary>
+        /// 抖音橱窗付费
+        /// </summary>
+        public decimal TikTokShowCaseFee { get; set; }
+        /// <summary>
+        /// 抖音线索量
+        /// </summary>
+        public int TikTokClues { get; set; }
 
         public LiveAnchorMonthlyTargetBeforeLiving LiveAnchorMonthlyTargetBeforeLiving { get; set; }
 

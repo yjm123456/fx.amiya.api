@@ -26,6 +26,77 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 当日抖音橱窗收入
         /// </summary>
         public decimal CumulativeTikTokShowcaseIncome { get; set; }
+
+        /// <summary>
+        /// 抖音涨粉累计
+        /// </summary>
+
+        public int CumulativeTikTokIncreaseFans { get; set; }
+     
+        /// <summary>
+        /// 抖音涨粉付费累计
+        /// </summary>
+
+        public decimal CumulativeTikTokIncreaseFansFees { get; set; }
+    
+        
+  
+        /// <summary>
+        /// 抖音线索累计
+        /// </summary>
+
+        public int CumulativeTikTokClues { get; set; }
+
+
+        /// <summary>
+        /// 当日小红书橱窗收入
+        /// </summary>
+        public decimal CumulativeXiaoHongShuShowcaseIncome { get; set; }
+
+        /// <summary>
+        /// 小红书涨粉累计
+        /// </summary>
+
+        public int CumulativeXiaoHongShuIncreaseFans { get; set; }
+
+        /// <summary>
+        /// 小红书涨粉付费累计
+        /// </summary>
+
+        public decimal CumulativeXiaoHongShuIncreaseFansFees { get; set; }
+
+
+
+        /// <summary>
+        /// 小红书线索累计
+        /// </summary>
+
+        public int CumulativeXiaoHongShuClues { get; set; }
+        /// <summary>
+        /// 当日视频号橱窗收入
+        /// </summary>
+        public decimal CumulativeVideoShowcaseIncome { get; set; }
+
+        /// <summary>
+        /// 视频号涨粉累计
+        /// </summary>
+
+        public int CumulativeVideoIncreaseFans { get; set; }
+
+        /// <summary>
+        /// 视频号涨粉付费累计
+        /// </summary>
+
+        public decimal CumulativeVideoIncreaseFansFees { get; set; }
+
+
+
+        /// <summary>
+        /// 视频号线索累计
+        /// </summary>
+
+        public int CumulativeVideoClues { get; set; }
+
         /// <summary>
         /// 当日视频号发布条数
         /// </summary>
@@ -73,5 +144,17 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 当日运营渠道投流数量
         /// </summary>
         public decimal CumulativeFlowInvestment { get; set; }
+        /// <summary>
+        /// 当日抖音橱窗付费
+        /// </summary>
+        public decimal CumulativeTikTokShowCaseFee { get; set; }
+        /// <summary>
+        /// 当日小红书橱窗付费
+        /// </summary>
+        public decimal CumulativeXiaoHongShuShowCaseFee { get; set; }
+        /// <summary>
+        /// 当日视频号橱窗付费
+        /// </summary>
+        public decimal CumulativeVideoShowCaseFee { get; set; }
     }
 }

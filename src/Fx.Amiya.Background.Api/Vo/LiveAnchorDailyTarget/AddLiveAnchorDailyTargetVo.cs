@@ -212,6 +212,27 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         ///// 今日涨粉量
         ///// </summary>
         //public int AddFansNum { get; set; }
+
+        /// <summary>
+        /// 抖音涨粉
+        /// </summary>
+
+        public int TikTokIncreaseFans { get; set; }
+        /// <summary>
+        /// 抖音涨粉付费
+        /// </summary>
+        public decimal TikTokIncreaseFansFees { get; set; }
+        
+        /// <summary>
+        /// 抖音线索量
+        /// </summary>
+        public int TikTokClues { get; set; }
+        /// <summary>
+        /// 抖音橱窗付费
+        /// </summary>
+        public decimal TikTokShowCaseFee { get; set; }
+
+
         /// <summary>
         /// 填报日期
         /// </summary>
@@ -311,6 +332,28 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 填报日期
         /// </summary>
         public DateTime RecordDate { get; set; }
+        /// <summary>
+        /// 视频号涨粉
+        /// </summary>
+
+        public int VideoIncreaseFans { get; set; }
+        /// <summary>
+        /// 视频号涨粉付费
+        /// </summary>
+        public decimal VideoIncreaseFansFees { get; set; }
+
+        /// <summary>
+        /// 视频号线索量
+        /// </summary>
+        public int VideoClues { get; set; }
+        /// <summary>
+        /// 视频号今日橱窗收入
+        /// </summary>
+        public decimal VideoShowcaseIncome { get; set; }
+        /// <summary>
+        /// 视频号今日橱窗付费
+        /// </summary>
+        public decimal VideoShowcaseFee { get; set; }
     }
 
 
@@ -407,6 +450,28 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 填报日期
         /// </summary>
         public DateTime RecordDate { get; set; }
+        /// <summary>
+        /// 小红书涨粉
+        /// </summary>
+
+        public int XiaoHongShuIncreaseFans { get; set; }
+        /// <summary>
+        /// 小红书涨粉付费
+        /// </summary>
+        public decimal XiaoHongShuIncreaseFansFees { get; set; }
+       
+        /// <summary>
+        /// 小红书线索量
+        /// </summary>
+        public int XiaoHongShuClues { get; set; }
+        /// <summary>
+        /// 小红书今日橱窗收入
+        /// </summary>
+        public decimal XiaoHongShuShowcaseIncome { get; set; }
+        /// <summary>
+        /// 小红书今日橱窗付费
+        /// </summary>
+        public decimal XiaoHongShuShowcaseFee { get; set; }
     }
 
 

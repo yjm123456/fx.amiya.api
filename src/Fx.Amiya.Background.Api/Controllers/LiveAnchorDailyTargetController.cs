@@ -81,14 +81,31 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 TikTokSendNum = d.TikTokSendNum,
                                                 TikTokFlowInvestmentNum = d.TikTokFlowInvestmentNum,
                                                 TikTokShowcaseIncome=d.TikTokShowcaseIncome,
+                                                TikTokClues=d.TikTokClues,
+                                                TikTokIncreaseFans = d.TikTokIncreaseFans,
+                                                TikTokIncreaseFansFeesCost = d.TikTokIncreaseFansFeesCost,
+                                                TikTokIncreaseFansFees = d.TikTokIncreaseFansFees,
+                                                TikTokShowcaseFee= d.TikTokShowcaseFee,
 
                                                 VideoOperationEmployeeName = d.VideoOperationEmployeeName,
                                                 VideoSendNum = d.VideoSendNum,
                                                 VideoFlowInvestmentNum = d.VideoFlowInvestmentNum,
+                                                VideoShowcaseIncome = d.VideoShowcaseIncome,
+                                                VideoClues = d.VideoClues,
+                                                VideoIncreaseFans = d.VideoIncreaseFans,
+                                                VideoIncreaseFansFeesCost = d.VideoIncreaseFansFeesCost,
+                                                VideoIncreaseFansFees = d.VideoIncreaseFansFees,
+                                                VideoShowcaseFee=d.VideoShowcaseFee,
 
                                                 XiaoHongShuOperationEmployeeName = d.XiaoHongShuOperationEmployeeName,
                                                 XiaoHongShuSendNum = d.XiaoHongShuSendNum,
                                                 XiaoHongShuFlowInvestmentNum = d.XiaoHongShuFlowInvestmentNum,
+                                                XiaoHongShuShowcaseIncome = d.XiaoHongShuShowcaseIncome,
+                                                XiaoHongShuClues = d.XiaoHongShuClues,
+                                                XiaoHongShuIncreaseFans = d.XiaoHongShuIncreaseFans,
+                                                XiaoHongShuIncreaseFansFeesCost = d.XiaoHongShuIncreaseFansFeesCost,
+                                                XiaoHongShuIncreaseFansFees = d.XiaoHongShuIncreaseFansFees,
+                                                XiaoHongShuShowcaseFee=d.XiaoHongShuShowcaseFee,
 
                                                 ZhihuOperationEmployeeName = d.ZhihuOperationEmployeeName,
                                                 ZhihuSendNum = d.ZhihuSendNum,
@@ -177,7 +194,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 SendOrderNum = d.SendOrderNum,
                                                 DealNum = d.DealNum,
                                                 PerformanceNum = d.PerformanceNum,
-                                                TikTokShowcaseIncome=d.TikTokShowcaseIncome
+                                                TikTokShowcaseIncome=d.TikTokShowcaseIncome,
+                                                IncreaseFans=d.IncreaseFans,
+                                                IncreaseFansFees=d.IncreaseFansFees,
+                                                Clues=d.Clues,
+                                                ShowCaseFee=d.ShowCaseFee
                                             };
 
                 FxPageInfo<BeforeLivingDailyTargetVo> liveAnchorDailyTargetPageInfo = new FxPageInfo<BeforeLivingDailyTargetVo>();
@@ -339,6 +360,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorDailyTargetVo.TikTokSendNum = liveAnchorDailyTarget.TikTokSendNum;
                 liveAnchorDailyTargetVo.TikTokFlowInvestmentNum = liveAnchorDailyTarget.TikTokFlowInvestmentNum;
                 liveAnchorDailyTargetVo.TikTokShowcaseIncome = liveAnchorDailyTarget.TikTokShowcaseIncome;
+                liveAnchorDailyTargetVo.TikTokClues = liveAnchorDailyTarget.TikTokClues;
+                liveAnchorDailyTargetVo.TikTokIncreaseFans = liveAnchorDailyTarget.TikTokIncreaseFans;
+                liveAnchorDailyTargetVo.TikTokIncreaseFansFees = liveAnchorDailyTarget.TikTokIncreaseFansFees;
+                liveAnchorDailyTargetVo.TikTokIncreaseFansFeesCost = liveAnchorDailyTarget.TikTokIncreaseFansFeesCost;
+                liveAnchorDailyTargetVo.TikTokShowcaseFee= liveAnchorDailyTarget.TikTokShowcaseFee;
+
 
                 liveAnchorDailyTargetVo.ZhihuOperationEmployeeId = liveAnchorDailyTarget.ZhihuOperationEmployeeId;
                 liveAnchorDailyTargetVo.ZhihuSendNum = liveAnchorDailyTarget.ZhihuSendNum;
@@ -347,6 +374,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorDailyTargetVo.XiaoHongShuOperationEmployeeId = liveAnchorDailyTarget.XiaoHongShuOperationEmployeeId;
                 liveAnchorDailyTargetVo.XiaoHongShuSendNum = liveAnchorDailyTarget.XiaoHongShuSendNum;
                 liveAnchorDailyTargetVo.XiaoHongShuFlowInvestmentNum = liveAnchorDailyTarget.XiaoHongShuFlowInvestmentNum;
+                liveAnchorDailyTargetVo.XiaoHongShuShowcaseIncome = liveAnchorDailyTarget.XiaoHongShuShowcaseIncome;
+                liveAnchorDailyTargetVo.XiaoHongShuClues = liveAnchorDailyTarget.XiaoHongShuClues;
+                liveAnchorDailyTargetVo.XiaoHongShuIncreaseFans = liveAnchorDailyTarget.XiaoHongShuIncreaseFans;
+                liveAnchorDailyTargetVo.XiaoHongShuIncreaseFansFees = liveAnchorDailyTarget.XiaoHongShuIncreaseFansFees;
+                liveAnchorDailyTargetVo.XiaoHongShuIncreaseFansFeesCost = liveAnchorDailyTarget.XiaoHongShuIncreaseFansFeesCost;
+                liveAnchorDailyTargetVo.XiaoHongShuShowcaseFee = liveAnchorDailyTarget.XiaoHongShuShowcaseFee;
 
                 liveAnchorDailyTargetVo.SinaWeiBoOperationEmployeeId = liveAnchorDailyTarget.SinaWeiBoOperationEmployeeId;
                 liveAnchorDailyTargetVo.SinaWeiBoSendNum = liveAnchorDailyTarget.SinaWeiBoSendNum;
@@ -354,6 +387,12 @@ namespace Fx.Amiya.Background.Api.Controllers
 
                 liveAnchorDailyTargetVo.VideoOperationEmployeeId = liveAnchorDailyTarget.VideoOperationEmployeeId;
                 liveAnchorDailyTargetVo.VideoSendNum = liveAnchorDailyTarget.VideoSendNum;
+                liveAnchorDailyTargetVo.VideoShowcaseIncome = liveAnchorDailyTarget.VideoShowcaseIncome;
+                liveAnchorDailyTargetVo.VideoClues = liveAnchorDailyTarget.VideoClues;
+                liveAnchorDailyTargetVo.VideoIncreaseFans = liveAnchorDailyTarget.VideoIncreaseFans;
+                liveAnchorDailyTargetVo.VideoIncreaseFansFees = liveAnchorDailyTarget.VideoIncreaseFansFees;
+                liveAnchorDailyTargetVo.VideoIncreaseFansFeesCost = liveAnchorDailyTarget.VideoIncreaseFansFeesCost;
+                liveAnchorDailyTargetVo.VideoShowcaseFee = liveAnchorDailyTarget.VideoShowcaseFee;
                 liveAnchorDailyTargetVo.VideoFlowInvestmentNum = liveAnchorDailyTarget.VideoFlowInvestmentNum;
                 liveAnchorDailyTargetVo.TodaySendNum = liveAnchorDailyTarget.TodaySendNum;
                 liveAnchorDailyTargetVo.FlowInvestmentNum = liveAnchorDailyTarget.FlowInvestmentNum;
@@ -435,6 +474,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.FlowInvestmentNum = addVo.FlowInvestmentNum;
                     addDto.RecordDate = addVo.RecordDate;
                     addDto.TikTokShowcaseIncome = addVo.TikTokShowcaseIncome;
+                    addDto.TikTokClues = addVo.TikTokClues;
+                    addDto.TikTokIncreaseFans = addVo.TikTokIncreaseFans;
+                    addDto.TikTokIncreaseFansFees = addVo.TikTokIncreaseFansFees;
+                    addDto.TikTokShowCaseFee = addVo.TikTokShowCaseFee;
                     await _liveAnchorDailyTargetService.BeforeLivingTikTokAddAsync(addDto);
                 }
                 return ResultData.Success();
@@ -463,10 +506,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.TikTokOperationEmployeeId = updateVo.TikTokOperationEmployeeId;
                 updateDto.TikTokSendNum = updateVo.TikTokSendNum;
                 updateDto.TikTokFlowInvestmentNum = updateVo.TikTokFlowInvestmentNum;
-                updateDto.TikTokShowcaseIncome = updateVo.TikTokShowcaseIncome;
+                updateDto.TikTokShowCaseFee = updateVo.TikTokShowCaseFee;
                 updateDto.TodaySendNum = updateVo.TodaySendNum;
                 updateDto.FlowInvestmentNum = updateVo.FlowInvestmentNum;
                 updateDto.RecordDate = updateVo.RecordDate;
+                updateDto.TikTokShowcaseIncome = updateVo.TikTokShowcaseIncome;
+                updateDto.TikTokClues = updateVo.TikTokClues;
+                updateDto.TikTokIncreaseFans = updateVo.TikTokIncreaseFans;
+                updateDto.TikTokIncreaseFansFees = updateVo.TikTokIncreaseFansFees;
                 await _liveAnchorDailyTargetService.BeforeLivingTikTokUpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -645,6 +692,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.TodaySendNum = addVo.TodaySendNum;
                     addDto.FlowInvestmentNum = addVo.FlowInvestmentNum;
                     addDto.RecordDate = addVo.RecordDate;
+                    addDto.XiaoHongShuShowcaseIncome = addVo.XiaoHongShuShowcaseIncome;
+                    addDto.XiaoHongShuClues = addVo.XiaoHongShuClues;
+                    addDto.XiaoHongShuIncreaseFans = addVo.XiaoHongShuIncreaseFans;
+                    addDto.XiaoHongShuIncreaseFansFees = addVo.XiaoHongShuIncreaseFansFees;
+                    addDto.XiaoHongShuShowCaseFee = addVo.XiaoHongShuShowcaseFee;
                     await _liveAnchorDailyTargetService.BeforeLivingXiaoHongShuAddAsync(addDto);
                 }
                 return ResultData.Success();
@@ -677,7 +729,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.FlowInvestmentNum = updateVo.FlowInvestmentNum;
                 //updateDto.CluesNum = updateVo.CluesNum;
                 //updateDto.AddFansNum = updateVo.AddFansNum;
+                updateDto.XiaoHongShuShowcaseIncome = updateVo.XiaoHongShuShowcaseIncome;
+                updateDto.XiaoHongShuClues = updateVo.XiaoHongShuClues;
+                updateDto.XiaoHongShuIncreaseFans = updateVo.XiaoHongShuIncreaseFans;
+                updateDto.XiaoHongShuIncreaseFansFees = updateVo.XiaoHongShuIncreaseFansFees;
                 updateDto.RecordDate = updateVo.RecordDate;
+                updateDto.XiaoHongShuShowCaseFee = updateDto.XiaoHongShuShowCaseFee;
                 await _liveAnchorDailyTargetService.BeforeLivingXiaoHongShuUpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -713,6 +770,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.VideoFlowInvestmentNum = addVo.VideoFlowInvestmentNum;
                     addDto.TodaySendNum = addVo.TodaySendNum;
                     addDto.FlowInvestmentNum = addVo.FlowInvestmentNum;
+                    addDto.VideoShowcaseIncome = addVo.VideoShowcaseIncome;
+                    addDto.VideoClues = addVo.VideoClues;
+                    addDto.VideoIncreaseFans = addVo.VideoIncreaseFans;
+                    addDto.VideoIncreaseFansFees = addVo.VideoIncreaseFansFees;
+                    addDto.VideoShowCaseFee = addVo.VideoShowcaseFee;
                     //addDto.CluesNum = addVo.CluesNum;
                     //addDto.AddFansNum = addVo.AddFansNum;
                     addDto.RecordDate = addVo.RecordDate;
@@ -746,6 +808,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.VideoFlowInvestmentNum = updateVo.VideoFlowInvestmentNum;
                 updateDto.TodaySendNum = updateVo.TodaySendNum;
                 updateDto.FlowInvestmentNum = updateVo.FlowInvestmentNum;
+                updateDto.VideoShowcaseIncome = updateVo.VideoShowcaseIncome;
+                updateDto.VideoClues = updateVo.VideoClues;
+                updateDto.VideoIncreaseFans = updateVo.VideoIncreaseFans;
+                updateDto.VideoIncreaseFansFees = updateVo.VideoIncreaseFansFees;
+                updateDto.VideoShowCaseFee = updateVo.VideoShowCaseFee;
                 //updateDto.CluesNum = updateVo.CluesNum;
                 //updateDto.AddFansNum = updateVo.AddFansNum;
                 updateDto.RecordDate = updateVo.RecordDate;

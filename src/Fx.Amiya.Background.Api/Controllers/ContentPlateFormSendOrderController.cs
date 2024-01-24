@@ -522,8 +522,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxTenantAuthorize]
         public async Task<ResultData<FxPageInfo<ContentPlatFormOrderDealInfoVo>>> GetHospitalDealInfo(string contentPlatFormOrderId, int pageNum, int pageSize)
         {
-
-            var result = await orderDealInfoService.GetListWithPageAsync(contentPlatFormOrderId, pageNum, pageSize);
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
+            int hospitalId = employee.HospitalId;
+            var result = await orderDealInfoService.HospitalGetListWithPageAsync(contentPlatFormOrderId, pageNum, pageSize, hospitalId);
 
             var contentPlatformOrders = from d in result.List
                                         select new ContentPlatFormOrderDealInfoVo

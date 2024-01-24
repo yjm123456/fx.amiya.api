@@ -23,6 +23,15 @@ namespace Fx.Amiya.IService
         Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetContentPlatFormOrderDealInfoByReconciliationDocumentsIdAsync(string reconciliationDocumentsId, int pageNum, int pageSize);
         Task<List<ContentPlatFormOrderDealInfoDto>> GetOrderDealInfoListReportAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? consultationType, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, DateTime? checkStartDate, DateTime? checkEndDate, bool? isCreateBill, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string belongCompanyId, string keyWord, int employeeId, bool hidePhone, int? consumptionType,List<int?> liveAnchorIds);
         Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetListWithPageAsync(string contentPlafFormOrderId, int pageNum, int pageSize);
+        /// <summary>
+        /// 医院端获取成交情况
+        /// </summary>
+        /// <param name="contentPlafFormOrderId"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="hodpitalId"></param>
+        /// <returns></returns>
+        Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> HospitalGetListWithPageAsync(string contentPlafFormOrderId, int pageNum, int pageSize,int hospitalId);
         Task AddAsync(AddContentPlatFormOrderDealInfoDto addDto);
         Task<ContentPlatFormOrderDealInfoDto> GetByIdAsync(string id);
 

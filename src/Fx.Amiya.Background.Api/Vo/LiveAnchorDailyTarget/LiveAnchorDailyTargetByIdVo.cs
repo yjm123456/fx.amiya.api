@@ -282,6 +282,77 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 今日潜在业绩
         /// </summary>
         public decimal PotentialPerformance { get; set; }
+        /// <summary>
+        /// 抖音今日涨粉
+        /// </summary>
+        public int TikTokIncreaseFans { get; set; }
+        /// <summary>
+        /// 小红书今日涨粉
+        /// </summary>
+        public int XiaoHongShuIncreaseFans { get; set; }
+        /// <summary>
+        /// 视频号今日涨粉
+        /// </summary>
+        public int VideoIncreaseFans { get; set; }
+
+        /// <summary>
+        /// 抖音今日涨粉费用
+        /// </summary>
+        public decimal TikTokIncreaseFansFees { get; set; }
+        /// <summary>
+        /// 小红书今日涨粉费用
+        /// </summary>
+        public decimal XiaoHongShuIncreaseFansFees { get; set; }
+        /// <summary>
+        /// 视频号今日涨粉费用
+        /// </summary>
+        public decimal VideoIncreaseFansFees { get; set; }
+
+        /// <summary>
+        /// 抖音今日线索量
+        /// </summary>
+        public int TikTokClues { get; set; }
+        /// <summary>
+        /// 小红书今日线索量
+        /// </summary>
+        public int XiaoHongShuClues { get; set; }
+        /// <summary>
+        /// 视频号今日线索量
+        /// </summary>
+        public int VideoClues { get; set; }
+
+        /// <summary>
+        /// 抖音涨粉成本
+        /// </summary>
+        public decimal TikTokIncreaseFansFeesCost { get; set; }
+        /// <summary>
+        /// 小红书涨粉成本
+        /// </summary>
+        public decimal XiaoHongShuIncreaseFansFeesCost { get; set; }
+        /// <summary>
+        /// 视频号涨粉成本
+        /// </summary>
+        public decimal VideoIncreaseFansFeesCost { get; set; }
+        /// <summary>
+        /// 今日小红书橱窗收入
+        /// </summary>
+        public decimal XiaoHongShuShowcaseIncome { get; set; }
+        /// <summary>
+        /// 视频号橱窗收入
+        /// </summary>
+        public decimal VideoShowcaseIncome { get; set; }
+        /// <summary>
+        /// 视频号橱窗付费
+        /// </summary>
+        public decimal VideoShowcaseFee { get; set; }
+        /// <summary>
+        /// 抖音橱窗付费
+        /// </summary>
+        public decimal TikTokShowcaseFee { get; set; }
+        /// <summary>
+        /// 小红书橱窗付费
+        /// </summary>
+        public decimal XiaoHongShuShowcaseFee { get; set; }
 
     }
 }

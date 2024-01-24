@@ -22,6 +22,12 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.UpdateDate).HasColumnName("update_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(e => e.Valid).HasColumnName("valid").HasColumnType("bit").IsRequired();
             builder.Property(e => e.DeleteDate).HasColumnName("delete_date").HasColumnType("datetime").IsRequired(false);
+            builder.Property(t => t.XiaoHongShuClues).HasColumnName("xiaohongshu_clues").HasColumnType("int").IsRequired();
+            builder.Property(t => t.XiaoHongShuIncreaseFans).HasColumnName("xiaohongshu_increase_fans").HasColumnType("int").IsRequired();
+            builder.Property(t => t.XiaoHongShuIncreaseFansFees).HasColumnName("xiaohongshu_increase_fans_fees").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(t => t.XiaoHongShuIncreaseFansFeesCost).HasColumnName("xiaohongshu_increase_fans_fees_cost").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(t => t.XiaoHongShuShowcaseIncome).HasColumnName("xiaohongshu_showcase_income").HasColumnType("decimal(12, 2)").IsRequired();
+            builder.Property(t => t.XiaoHongShuShowCaseFee).HasColumnName("xiaohongshu_showcase_fee").HasColumnType("decimal(12,2)").IsRequired();
             builder.HasOne(e => e.LiveAnchorMonthlyTargetBeforeLiving).WithMany(e => e.beforeLivingXiaoHongShuDailyTraget).HasForeignKey(e => e.LiveAnchorMonthlyTargetId);
             builder.HasOne(e => e.AmiyaEmployee).WithMany(e => e.beforeLivingXiaoHongShuDailyTragets).HasForeignKey(e => e.OperationEmpId);
         }

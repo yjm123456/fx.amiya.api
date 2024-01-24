@@ -235,5 +235,252 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 主播归属平台id
         /// </summary>
         public string ContentPlatFormId { get; set; }
+        /// <summary>
+        /// 抖音涨粉目标
+        /// </summary>
+
+        public int TikTokIncreaseFansTarget { get; set; }
+        /// <summary>
+        /// 抖音涨粉累计
+        /// </summary>
+
+        public int CumulativeTikTokIncreaseFans { get; set; }
+        /// <summary>
+        /// 抖音涨粉目标完成率
+        /// </summary>
+
+        public decimal TikTokIncreaseFanseCompleteRate { get; set; }
+        /// <summary>
+        /// 抖音涨粉付费目标
+        /// </summary>
+        public decimal TikTokIncreaseFansFeesTarget { get; set; }
+        /// <summary>
+        /// 抖音涨粉付费累计
+        /// </summary>
+
+        public decimal CumulativeTikTokIncreaseFansFees { get; set; }
+        /// <summary>
+        /// 抖音涨粉付费目标完成率
+        /// </summary>
+
+        public decimal TikTokIncreaseFansFeesCompleteRate { get; set; }
+        /// <summary>
+        /// 抖音涨粉成本目标
+        /// </summary>
+        public decimal TikTokIncreaseFansFeesCostTarget { get; set; }
+        /// <summary>
+        /// 抖音涨粉成本累计
+        /// </summary>
+
+        public decimal CumulativeTikTokIncreaseFansFeesCost { get; set; }
+        /// <summary>
+        /// 抖音涨粉成本完成率
+        /// </summary>
+
+        public decimal TikTokIncreaseFansFeesCostCompleteRate { get; set; }
+        /// <summary>
+        /// 抖音线索量目标
+        /// </summary>
+        public decimal TikTokCluesTarget { get; set; }
+        /// <summary>
+        /// 抖音线索累计
+        /// </summary>
+
+        public int CumulativeTikTokClues { get; set; }
+        /// <summary>
+        /// 抖音线索目标完成率
+        /// </summary>
+
+        public decimal TikTokCluesCompleteRate { get; set; }
+        /// <summary>
+        /// 小红书涨粉目标
+        /// </summary>
+
+        public int XiaoHongShuIncreaseFansTarget { get; set; }
+        /// <summary>
+        /// 小红书涨粉累计
+        /// </summary>
+
+        public int CumulativeXiaoHongShuIncreaseFans { get; set; }
+        /// <summary>
+        /// 小红书涨粉目标完成率
+        /// </summary>
+
+        public decimal XiaoHongShuIncreaseFanseCompleteRate { get; set; }
+        /// <summary>
+        /// 小红书涨粉付费目标
+        /// </summary>
+        public decimal XiaoHongShuIncreaseFansFeesTarget { get; set; }
+        /// <summary>
+        /// 小红书涨粉付费累计
+        /// </summary>
+
+        public decimal CumulativeXiaoHongShuIncreaseFansFees { get; set; }
+        /// <summary>
+        /// 小红书涨粉付费目标完成率
+        /// </summary>
+
+        public decimal XiaoHongShuIncreaseFansFeesCompleteRate { get; set; }
+        /// <summary>
+        /// 小红书涨粉成本目标
+        /// </summary>
+        public decimal XiaoHongShuIncreaseFansFeesCostTarget { get; set; }
+        /// <summary>
+        /// 小红书涨粉成本累计
+        /// </summary>
+
+        public decimal CumulativeXiaoHongShuIncreaseFansFeesCost { get; set; }
+        /// <summary>
+        /// 小红书涨粉成本完成率
+        /// </summary>
+
+        public decimal XiaoHongShuIncreaseFansFeesCostCompleteRate { get; set; }
+        /// <summary>
+        /// 小红书线索量目标
+        /// </summary>
+        public decimal XiaoHongShuCluesTarget { get; set; }
+        /// <summary>
+        /// 小红书线索累计
+        /// </summary>
+
+        public int CumulativeXiaoHongShuClues { get; set; }
+        /// <summary>
+        /// 小红书线索目标完成率
+        /// </summary>
+
+        public decimal XiaoHongShuCluesCompleteRate { get; set; }
+        /// <summary>
+        /// 小红书橱窗收入目标
+        /// </summary>
+        public decimal XiaoHongShuShowcaseIncomeTarget { get; set; }
+        /// <summary>
+        /// 小红书橱窗收入累计
+        /// </summary>
+
+        public decimal CumulativeXiaoHongShuShowcaseIncome { get; set; }
+        /// <summary>
+        /// 小红书橱窗收入目标完成率
+        /// </summary>
+
+        public decimal XiaoHongShuShowcaseIncomeCompleteRate { get; set; }
+        /// <summary>
+        /// 视频号涨粉目标
+        /// </summary>
+
+        public int VideoIncreaseFansTarget { get; set; }
+        /// <summary>
+        /// 视频号涨粉累计
+        /// </summary>
+
+        public int CumulativeVideoIncreaseFans { get; set; }
+        /// <summary>
+        /// 视频号涨粉目标完成率
+        /// </summary>
+
+        public decimal VideoIncreaseFanseCompleteRate { get; set; }
+        /// <summary>
+        /// 视频号涨粉付费目标
+        /// </summary>
+        public decimal VideoIncreaseFansFeesTarget { get; set; }
+        /// <summary>
+        /// 视频号涨粉付费累计
+        /// </summary>
+
+        public decimal CumulativeVideoIncreaseFansFees { get; set; }
+        /// <summary>
+        /// 视频号涨粉付费目标完成率
+        /// </summary>
+
+        public decimal VideoIncreaseFansFeesCompleteRate { get; set; }
+        /// <summary>
+        /// 视频号涨粉成本目标
+        /// </summary>
+        public decimal VideoIncreaseFansFeesCostTarget { get; set; }
+        /// <summary>
+        /// 视频号涨粉成本累计
+        /// </summary>
+
+        public decimal CumulativeVideoIncreaseFansFeesCost { get; set; }
+        /// <summary>
+        /// 视频号涨粉成本完成率
+        /// </summary>
+
+        public decimal VideoIncreaseFansFeesCostCompleteRate { get; set; }
+        /// <summary>
+        /// 视频号线索量目标
+        /// </summary>
+        public decimal VideoCluesTarget { get; set; }
+        /// <summary>
+        /// 视频号线索累计
+        /// </summary>
+
+        public int CumulativeVideoClues { get; set; }
+        /// <summary>
+        /// 视频号线索目标完成率
+        /// </summary>
+
+        public decimal VideoCluesCompleteRate { get; set; }
+        /// <summary>
+        /// 视频号橱窗收入目标
+        /// </summary>
+        public decimal VideoShowcaseIncomeTarget { get; set; }
+        /// <summary>
+        /// 视频号橱窗收入累计
+        /// </summary>
+
+        public decimal CumulativeVideoShowcaseIncome { get; set; }
+        /// <summary>
+        /// 视频号橱窗收入目标完成率
+        /// </summary>
+
+        public decimal VideoShowcaseIncomeCompleteRate { get; set; }
+        
+
+        /// <summary>
+        /// 抖音橱窗付费目标
+        /// </summary>
+        public decimal TikTokShowCaseFeeTarget { get; set; }
+        /// <summary>
+        /// 抖音橱窗付费累计
+        /// </summary>
+
+        public decimal CumulativeTikTokShowCaseFee { get; set; }
+        /// <summary>
+        /// 抖音橱窗付费目标完成率
+        /// </summary>
+
+        public decimal TikTokShowCaseFeeCompleteRate { get; set; }
+
+
+        /// <summary>
+        /// 小红书橱窗付费目标
+        /// </summary>
+        public decimal XiaoHongShuShowCaseFeeTarget { get; set; }
+        /// <summary>
+        /// 小红书橱窗付费累计
+        /// </summary>
+
+        public decimal CumulativeXiaoHongShuShowCaseFee { get; set; }
+        /// <summary>
+        /// 小红书橱窗付费目标完成率
+        /// </summary>
+
+        public decimal XiaoHongShuShowCaseFeeCompleteRate { get; set; }
+
+
+        /// <summary>
+        /// 视频号橱窗付费目标
+        /// </summary>
+        public decimal VideoShowCaseFeeTarget { get; set; }
+        /// <summary>
+        /// 视频号橱窗付费累计
+        /// </summary>
+
+        public decimal CumulativeVideoShowCaseFee { get; set; }
+        /// <summary>
+        /// 视频号橱窗付费目标完成率
+        /// </summary>
+
+        public decimal VideoShowCaseFeeCompleteRate { get; set; }
     }
 }

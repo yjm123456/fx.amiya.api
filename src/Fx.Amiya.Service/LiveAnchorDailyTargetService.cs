@@ -114,7 +114,12 @@ namespace Fx.Amiya.Service
                                           OperationEmpName = d.AmiyaEmployee.Name,
                                           FlowInvestmentNum = d.FlowInvestmentNum,
                                           SendNum = d.SendNum,
-                                          TikTokShowcaseIncome=d.TikTokShowcaseIncome
+                                          TikTokShowcaseIncome = d.TikTokShowcaseIncome,
+                                          TikTokClues = d.TikTokClues,
+                                          TikTokIncreaseFans = d.TikTokIncreaseFans,
+                                          TikTokIncreaseFansFees = d.TikTokIncreaseFansFees,
+                                          TikTokIncreaseFansFeesCost = d.TikTokIncreaseFansFeesCost,
+                                          TikTokShowCaseFee = d.TikTokShowCaseFee
                                       };
                 var tikTokDailyInfoList = await tikTokDailyInfo.ToListAsync();
 
@@ -134,6 +139,12 @@ namespace Fx.Amiya.Service
                                                OperationEmpName = d.AmiyaEmployee.Name,
                                                FlowInvestmentNum = d.FlowInvestmentNum,
                                                SendNum = d.SendNum,
+                                               XiaoHongShuShowcaseIncome = d.XiaoHongShuShowcaseIncome,
+                                               XiaoHongShuClues = d.XiaoHongShuClues,
+                                               XiaoHongShuIncreaseFans = d.XiaoHongShuIncreaseFans,
+                                               XiaoHongShuIncreaseFansFees = d.XiaoHongShuIncreaseFansFees,
+                                               XiaoHongShuIncreaseFansFeesCost = d.XiaoHongShuIncreaseFansFeesCost,
+                                               XiaoHongShuShowCaseFee = d.XiaoHongShuShowCaseFee
                                            };
                 var xiaohongshuDailyInfoList = await xiaohongshuDailyInfo.ToListAsync();
 
@@ -153,6 +164,12 @@ namespace Fx.Amiya.Service
                                          OperationEmpName = d.AmiyaEmployee.Name,
                                          FlowInvestmentNum = d.FlowInvestmentNum,
                                          SendNum = d.SendNum,
+                                         VideoShowcaseIncome = d.VideoShowcaseIncome,
+                                         VideoClues = d.VideoClues,
+                                         VideoIncreaseFans = d.VideoIncreaseFans,
+                                         VideoIncreaseFansFees = d.VideoIncreaseFansFees,
+                                         VideoIncreaseFansFeesCost = d.VideoIncreaseFansFeesCost,
+                                         VideoShowCaseFee = d.VideoShowCaseFee
                                      };
                 var videoDailyInfoList = await videoDailyInfo.ToListAsync();
 
@@ -271,6 +288,11 @@ namespace Fx.Amiya.Service
                     liveAnchorDailyTargetDto.TikTokFlowInvestmentNum = x.FlowInvestmentNum;
                     liveAnchorDailyTargetDto.UpdateDate = x.UpdateDate;
                     liveAnchorDailyTargetDto.TikTokShowcaseIncome = x.TikTokShowcaseIncome;
+                    liveAnchorDailyTargetDto.TikTokIncreaseFans = x.TikTokIncreaseFans;
+                    liveAnchorDailyTargetDto.TikTokIncreaseFansFees = x.TikTokIncreaseFansFees;
+                    liveAnchorDailyTargetDto.TikTokIncreaseFansFeesCost = x.TikTokIncreaseFansFeesCost;
+                    liveAnchorDailyTargetDto.TikTokClues = x.TikTokClues;
+                    liveAnchorDailyTargetDto.TikTokShowcaseFee = x.TikTokShowCaseFee;
                     ///小红书
                     var xiaohongshuThisDayDataInfo = xiaohongshuDailyInfoList.Where(k => k.RecordDate == x.RecordDate && k.LiveAnchorMonthlyTargetId == x.LiveAnchorMonthlyTargetId).FirstOrDefault();
                     if (xiaohongshuThisDayDataInfo == null)
@@ -278,12 +300,24 @@ namespace Fx.Amiya.Service
                         liveAnchorDailyTargetDto.XiaoHongShuOperationEmployeeName = "未填写";
                         liveAnchorDailyTargetDto.XiaoHongShuSendNum = 0;
                         liveAnchorDailyTargetDto.XiaoHongShuFlowInvestmentNum = 0;
+                        liveAnchorDailyTargetDto.XiaoHongShuShowcaseIncome = 0;
+                        liveAnchorDailyTargetDto.XiaoHongShuIncreaseFans = 0;
+                        liveAnchorDailyTargetDto.XiaoHongShuIncreaseFansFees = 0;
+                        liveAnchorDailyTargetDto.XiaoHongShuIncreaseFansFeesCost = 0;
+                        liveAnchorDailyTargetDto.XiaoHongShuClues = 0;
+                        liveAnchorDailyTargetDto.XiaoHongShuShowcaseFee = 0;
                     }
                     else
                     {
                         liveAnchorDailyTargetDto.XiaoHongShuOperationEmployeeName = xiaohongshuThisDayDataInfo.OperationEmpName;
                         liveAnchorDailyTargetDto.XiaoHongShuSendNum = xiaohongshuThisDayDataInfo.SendNum;
                         liveAnchorDailyTargetDto.XiaoHongShuFlowInvestmentNum = xiaohongshuThisDayDataInfo.FlowInvestmentNum;
+                        liveAnchorDailyTargetDto.XiaoHongShuShowcaseIncome = x.XiaoHongShuShowcaseIncome;
+                        liveAnchorDailyTargetDto.XiaoHongShuIncreaseFans = x.XiaoHongShuIncreaseFans;
+                        liveAnchorDailyTargetDto.XiaoHongShuIncreaseFansFees = x.XiaoHongShuIncreaseFansFees;
+                        liveAnchorDailyTargetDto.XiaoHongShuIncreaseFansFeesCost = x.XiaoHongShuIncreaseFansFeesCost;
+                        liveAnchorDailyTargetDto.XiaoHongShuClues = x.XiaoHongShuClues;
+                        liveAnchorDailyTargetDto.XiaoHongShuShowcaseFee = x.TikTokShowCaseFee;
                     }
                     ///视频号
                     var videoThisDayDataInfo = videoDailyInfoList.Where(k => k.RecordDate == x.RecordDate && k.LiveAnchorMonthlyTargetId == x.LiveAnchorMonthlyTargetId).FirstOrDefault();
@@ -292,12 +326,24 @@ namespace Fx.Amiya.Service
                         liveAnchorDailyTargetDto.VideoOperationEmployeeName = "未填写";
                         liveAnchorDailyTargetDto.VideoSendNum = 0;
                         liveAnchorDailyTargetDto.VideoFlowInvestmentNum = 0;
+                        liveAnchorDailyTargetDto.VideoShowcaseIncome = 0;
+                        liveAnchorDailyTargetDto.VideoIncreaseFans = 0;
+                        liveAnchorDailyTargetDto.VideoIncreaseFansFees = 0;
+                        liveAnchorDailyTargetDto.VideoIncreaseFansFeesCost = 0;
+                        liveAnchorDailyTargetDto.VideoClues = 0;
+                        liveAnchorDailyTargetDto.VideoShowcaseFee = 0;
                     }
                     else
                     {
                         liveAnchorDailyTargetDto.VideoOperationEmployeeName = videoThisDayDataInfo.OperationEmpName;
                         liveAnchorDailyTargetDto.VideoSendNum = videoThisDayDataInfo.SendNum;
                         liveAnchorDailyTargetDto.VideoFlowInvestmentNum = videoThisDayDataInfo.FlowInvestmentNum;
+                        liveAnchorDailyTargetDto.VideoShowcaseIncome = x.VideoShowcaseIncome;
+                        liveAnchorDailyTargetDto.VideoIncreaseFans = x.VideoIncreaseFans;
+                        liveAnchorDailyTargetDto.VideoIncreaseFansFees = x.VideoIncreaseFansFees;
+                        liveAnchorDailyTargetDto.VideoIncreaseFansFeesCost = x.VideoIncreaseFansFeesCost;
+                        liveAnchorDailyTargetDto.VideoClues = x.VideoClues;
+                        liveAnchorDailyTargetDto.VideoShowcaseFee = x.TikTokShowCaseFee;
                     }
 
                     ///微博
@@ -471,7 +517,11 @@ namespace Fx.Amiya.Service
                                               OperationEmpName = d.AmiyaEmployee.Name,
                                               FlowInvestmentNum = d.FlowInvestmentNum,
                                               SendNum = d.SendNum,
-                                              TikTokShowcaseIncome=d.TikTokShowcaseIncome
+                                              TikTokShowcaseIncome = d.TikTokShowcaseIncome,
+                                              Clues = d.TikTokClues,
+                                              IncreaseFans = d.TikTokIncreaseFans,
+                                              IncreaseFansFees = d.TikTokIncreaseFansFees,
+                                              ShowCaseFee = d.TikTokShowCaseFee
                                           };
                     BeforeLivingDailyTargetDtoList = await tikTokDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
                 }
@@ -538,6 +588,11 @@ namespace Fx.Amiya.Service
                                                    OperationEmpName = d.AmiyaEmployee.Name,
                                                    FlowInvestmentNum = d.FlowInvestmentNum,
                                                    SendNum = d.SendNum,
+                                                   TikTokShowcaseIncome = d.XiaoHongShuShowcaseIncome,
+                                                   Clues = d.XiaoHongShuClues,
+                                                   IncreaseFans = d.XiaoHongShuIncreaseFans,
+                                                   IncreaseFansFees = d.XiaoHongShuIncreaseFansFees,
+                                                   ShowCaseFee = d.XiaoHongShuShowCaseFee
                                                };
                     BeforeLivingDailyTargetDtoList = await xiaohongshuDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
                 }
@@ -560,6 +615,11 @@ namespace Fx.Amiya.Service
                                              OperationEmpName = d.AmiyaEmployee.Name,
                                              FlowInvestmentNum = d.FlowInvestmentNum,
                                              SendNum = d.SendNum,
+                                             TikTokShowcaseIncome = d.VideoShowcaseIncome,
+                                             Clues = d.VideoClues,
+                                             IncreaseFans = d.VideoIncreaseFans,
+                                             IncreaseFansFees = d.VideoIncreaseFansFees,
+                                             VideoShowCaseFee = d.VideoShowCaseFee
                                          };
                     BeforeLivingDailyTargetDtoList = await videoDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
                 }
@@ -642,10 +702,10 @@ namespace Fx.Amiya.Service
                                           GMV = d.GMV,
                                           EliminateCardGMV = d.EliminateCardGMV,
                                           RefundGMV = d.RefundGMV,
-                                          TikTokPlusNum=d.TikTokPlusNum,
-                                          QianChuanNum=d.QianChuanNum,
-                                          ShuiXinTuiNum=d.ShuiXinTuiNum,
-                                          WeiXinDou=d.WeiXinDou
+                                          TikTokPlusNum = d.TikTokPlusNum,
+                                          QianChuanNum = d.QianChuanNum,
+                                          ShuiXinTuiNum = d.ShuiXinTuiNum,
+                                          WeiXinDou = d.WeiXinDou
                                       };
                 var result = await tikTokDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
 
@@ -785,6 +845,19 @@ namespace Fx.Amiya.Service
                     liveAnchorDailyTargetDto.TikTokFlowInvestmentNum = liveAnchorDailyTarget.FlowInvestmentNum;
                     liveAnchorDailyTargetDto.RecordDate = liveAnchorDailyTarget.RecordDate;
                     liveAnchorDailyTargetDto.TikTokShowcaseIncome = liveAnchorDailyTarget.TikTokShowcaseIncome;
+                    liveAnchorDailyTargetDto.TikTokIncreaseFans = liveAnchorDailyTarget.TikTokIncreaseFans;
+                    liveAnchorDailyTargetDto.TikTokIncreaseFansFees = liveAnchorDailyTarget.TikTokIncreaseFansFees;
+                    if (liveAnchorDailyTarget.TikTokIncreaseFans <= 0)
+                    {
+                        liveAnchorDailyTargetDto.TikTokIncreaseFansFeesCost = liveAnchorDailyTarget.TikTokIncreaseFansFees;
+                    }
+                    else
+                    {
+                        liveAnchorDailyTargetDto.TikTokIncreaseFansFeesCost = Math.Round(liveAnchorDailyTarget.TikTokIncreaseFansFees / Convert.ToDecimal(liveAnchorDailyTarget.TikTokIncreaseFans), 2);
+                    }
+                    //liveAnchorDailyTargetDto.TikTokIncreaseFansFeesCost = liveAnchorDailyTarget.TikTokIncreaseFansFeesCost;
+                    liveAnchorDailyTargetDto.TikTokClues = liveAnchorDailyTarget.TikTokClues;
+                    liveAnchorDailyTargetDto.TikTokShowcaseFee= liveAnchorDailyTarget.TikTokShowcaseFee;
                 }
                 if (type == 2)
                 {
@@ -835,6 +908,20 @@ namespace Fx.Amiya.Service
                     liveAnchorDailyTargetDto.XiaoHongShuSendNum = liveAnchorDailyTarget.SendNum;
                     liveAnchorDailyTargetDto.XiaoHongShuFlowInvestmentNum = liveAnchorDailyTarget.FlowInvestmentNum;
                     liveAnchorDailyTargetDto.RecordDate = liveAnchorDailyTarget.RecordDate;
+                    liveAnchorDailyTargetDto.XiaoHongShuShowcaseIncome = liveAnchorDailyTarget.XiaoHongShuShowcaseIncome;
+                    liveAnchorDailyTargetDto.XiaoHongShuIncreaseFans = liveAnchorDailyTarget.XiaoHongShuIncreaseFans;
+                    liveAnchorDailyTargetDto.XiaoHongShuIncreaseFansFees = liveAnchorDailyTarget.XiaoHongShuIncreaseFansFees;
+                    if (liveAnchorDailyTarget.XiaoHongShuIncreaseFans <= 0)
+                    {
+                        liveAnchorDailyTargetDto.XiaoHongShuIncreaseFansFeesCost = liveAnchorDailyTarget.XiaoHongShuIncreaseFansFees;
+                    }
+                    else
+                    {
+                        liveAnchorDailyTargetDto.XiaoHongShuIncreaseFansFeesCost = Math.Round(liveAnchorDailyTarget.XiaoHongShuIncreaseFansFees / Convert.ToDecimal(liveAnchorDailyTarget.XiaoHongShuIncreaseFans), 2);
+                    }
+                    //liveAnchorDailyTargetDto.XiaoHongShuIncreaseFansFeesCost = liveAnchorDailyTarget.XiaoHongShuIncreaseFansFeesCost;
+                    liveAnchorDailyTargetDto.XiaoHongShuClues = liveAnchorDailyTarget.XiaoHongShuClues;
+                    liveAnchorDailyTargetDto.XiaoHongShuShowcaseFee = liveAnchorDailyTarget.XiaoHongShuShowCaseFee;
                 }
 
                 if (type == 5)
@@ -852,6 +939,20 @@ namespace Fx.Amiya.Service
                     liveAnchorDailyTargetDto.VideoSendNum = liveAnchorDailyTarget.SendNum;
                     liveAnchorDailyTargetDto.VideoFlowInvestmentNum = liveAnchorDailyTarget.FlowInvestmentNum;
                     liveAnchorDailyTargetDto.RecordDate = liveAnchorDailyTarget.RecordDate;
+                    liveAnchorDailyTargetDto.VideoShowcaseIncome = liveAnchorDailyTarget.VideoShowcaseIncome;
+                    liveAnchorDailyTargetDto.VideoIncreaseFans = liveAnchorDailyTarget.VideoIncreaseFans;
+                    liveAnchorDailyTargetDto.VideoIncreaseFansFees = liveAnchorDailyTarget.VideoIncreaseFansFees;
+                    //liveAnchorDailyTargetDto.VideoIncreaseFansFeesCost = liveAnchorDailyTarget.VideoIncreaseFansFeesCost;
+                    if (liveAnchorDailyTarget.VideoIncreaseFans <= 0)
+                    {
+                        liveAnchorDailyTargetDto.VideoIncreaseFansFeesCost = liveAnchorDailyTarget.VideoIncreaseFansFees;
+                    }
+                    else
+                    {
+                        liveAnchorDailyTargetDto.VideoIncreaseFansFeesCost = Math.Round(liveAnchorDailyTarget.VideoIncreaseFansFees / Convert.ToDecimal(liveAnchorDailyTarget.VideoIncreaseFans), 2);
+                    }
+                    liveAnchorDailyTargetDto.VideoClues = liveAnchorDailyTarget.VideoClues;
+                    liveAnchorDailyTargetDto.VideoShowcaseFee = liveAnchorDailyTarget.VideoShowCaseFee;
                 }
 
 
@@ -1211,11 +1312,25 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.FlowInvestmentNum = addDto.TikTokFlowInvestmentNum;
                 liveAnchorDailyTarget.SendNum = addDto.TikTokSendNum;
                 liveAnchorDailyTarget.FlowInvestmentNum = addDto.FlowInvestmentNum;
-                liveAnchorDailyTarget.TikTokShowcaseIncome = addDto.TikTokShowcaseIncome;
+
                 liveAnchorDailyTarget.CreateDate = DateTime.Now;
                 liveAnchorDailyTarget.Valid = true;
                 liveAnchorDailyTarget.UpdateDate = DateTime.Now;
                 liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
+                liveAnchorDailyTarget.TikTokShowcaseIncome = addDto.TikTokShowcaseIncome;
+                liveAnchorDailyTarget.TikTokClues = addDto.TikTokClues;
+                liveAnchorDailyTarget.TikTokIncreaseFans = addDto.TikTokIncreaseFans;
+                liveAnchorDailyTarget.TikTokIncreaseFansFees = addDto.TikTokIncreaseFansFees;
+                liveAnchorDailyTarget.TikTokIncreaseFansFeesCost = addDto.TikTokIncreaseFansFeesCost;
+                liveAnchorDailyTarget.TikTokShowCaseFee = addDto.TikTokShowCaseFee;
+                if (liveAnchorDailyTarget.TikTokIncreaseFans == 0 || liveAnchorDailyTarget.TikTokIncreaseFansFees == 0)
+                {
+                    liveAnchorDailyTarget.TikTokIncreaseFansFeesCost = 0;
+                }
+                else
+                {
+                    liveAnchorDailyTarget.TikTokIncreaseFansFeesCost = Math.Round(liveAnchorDailyTarget.TikTokIncreaseFansFees / Convert.ToDecimal(liveAnchorDailyTarget.TikTokIncreaseFans), 2);
+                }
                 await _beforeLivingTikTokDailyTraget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto();
@@ -1225,6 +1340,10 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTarget.CumulativeRelease = addDto.TodaySendNum;
                 editLiveAnchorMonthlyTarget.CumulativeFlowInvestment = addDto.FlowInvestmentNum;
                 editLiveAnchorMonthlyTarget.CumulativeTikTokShowcaseIncome = addDto.TikTokShowcaseIncome;
+                editLiveAnchorMonthlyTarget.CumulativeTikTokClues = addDto.TikTokClues;
+                editLiveAnchorMonthlyTarget.CumulativeTikTokIncreaseFans = addDto.TikTokIncreaseFans;
+                editLiveAnchorMonthlyTarget.CumulativeTikTokIncreaseFansFees = addDto.TikTokIncreaseFansFees;
+                editLiveAnchorMonthlyTarget.CumulativeTikTokShowCaseFee = addDto.TikTokShowCaseFee;
                 await _liveAnchorMonthlyTargetService.EditAsync(editLiveAnchorMonthlyTarget);
                 unitOfWork.Commit();
             }
@@ -1263,6 +1382,10 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTarget.CumulativeRelease = -liveAnchorDailyTarget.SendNum;
                 editLiveAnchorMonthlyTarget.CumulativeFlowInvestment = -liveAnchorDailyTarget.FlowInvestmentNum;
                 editLiveAnchorMonthlyTarget.CumulativeTikTokShowcaseIncome = -liveAnchorDailyTarget.TikTokShowcaseIncome;
+                editLiveAnchorMonthlyTarget.CumulativeTikTokIncreaseFans = -liveAnchorDailyTarget.TikTokIncreaseFans;
+                editLiveAnchorMonthlyTarget.CumulativeTikTokIncreaseFansFees = -liveAnchorDailyTarget.TikTokIncreaseFansFees;
+                editLiveAnchorMonthlyTarget.CumulativeTikTokClues = -liveAnchorDailyTarget.TikTokClues;
+                editLiveAnchorMonthlyTarget.CumulativeTikTokShowCaseFee = -liveAnchorDailyTarget.TikTokShowCaseFee;
                 await _liveAnchorMonthlyTargetService.EditAsync(editLiveAnchorMonthlyTarget);
 
                 liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
@@ -1271,8 +1394,13 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.SendNum = updateDto.TikTokSendNum;
                 liveAnchorDailyTarget.FlowInvestmentNum = updateDto.FlowInvestmentNum;
                 liveAnchorDailyTarget.TikTokShowcaseIncome = updateDto.TikTokShowcaseIncome;
+                liveAnchorDailyTarget.TikTokIncreaseFans = updateDto.TikTokIncreaseFans;
+                liveAnchorDailyTarget.TikTokIncreaseFansFees = updateDto.TikTokIncreaseFansFees;
+                liveAnchorDailyTarget.TikTokClues = updateDto.TikTokClues;
+                liveAnchorDailyTarget.TikTokShowCaseFee = updateDto.TikTokShowCaseFee;
                 liveAnchorDailyTarget.RecordDate = updateDto.RecordDate;
                 liveAnchorDailyTarget.UpdateDate = DateTime.Now;
+
                 await _beforeLivingTikTokDailyTraget.UpdateAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto lasteditLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto();
@@ -1282,6 +1410,11 @@ namespace Fx.Amiya.Service
                 lasteditLiveAnchorMonthlyTarget.CumulativeRelease = updateDto.TodaySendNum;
                 lasteditLiveAnchorMonthlyTarget.CumulativeFlowInvestment = updateDto.FlowInvestmentNum;
                 lasteditLiveAnchorMonthlyTarget.CumulativeTikTokShowcaseIncome = updateDto.TikTokShowcaseIncome;
+                lasteditLiveAnchorMonthlyTarget.CumulativeTikTokClues = updateDto.TikTokClues;
+                lasteditLiveAnchorMonthlyTarget.CumulativeTikTokIncreaseFansFees = updateDto.TikTokIncreaseFansFees;
+                lasteditLiveAnchorMonthlyTarget.CumulativeTikTokIncreaseFans = updateDto.TikTokIncreaseFans;
+                lasteditLiveAnchorMonthlyTarget.CumulativeTikTokShowCaseFee = updateDto.TikTokShowCaseFee;
+
                 await _liveAnchorMonthlyTargetService.EditAsync(lasteditLiveAnchorMonthlyTarget);
                 unitOfWork.Commit();
             }
@@ -1450,6 +1583,19 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.Valid = true;
                 liveAnchorDailyTarget.UpdateDate = DateTime.Now;
                 liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
+                liveAnchorDailyTarget.XiaoHongShuShowcaseIncome = addDto.XiaoHongShuShowcaseIncome;
+                liveAnchorDailyTarget.XiaoHongShuClues = addDto.XiaoHongShuClues;
+                liveAnchorDailyTarget.XiaoHongShuIncreaseFans = addDto.XiaoHongShuIncreaseFans;
+                liveAnchorDailyTarget.XiaoHongShuIncreaseFansFees = addDto.XiaoHongShuIncreaseFansFees;
+                liveAnchorDailyTarget.XiaoHongShuShowCaseFee = addDto.XiaoHongShuShowCaseFee;
+                if (liveAnchorDailyTarget.XiaoHongShuIncreaseFans == 0 || liveAnchorDailyTarget.XiaoHongShuIncreaseFansFees == 0)
+                {
+                    liveAnchorDailyTarget.XiaoHongShuIncreaseFansFeesCost = 0;
+                }
+                else
+                {
+                    liveAnchorDailyTarget.XiaoHongShuIncreaseFansFeesCost = Math.Round(liveAnchorDailyTarget.XiaoHongShuIncreaseFansFees / Convert.ToDecimal(liveAnchorDailyTarget.XiaoHongShuIncreaseFans), 2);
+                }
                 await _beforeLivingXiaoHongShuDailyTraget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto();
@@ -1458,8 +1604,11 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTarget.CumulativeXiaoHongShuFlowinvestment = addDto.XiaoHongShuFlowInvestmentNum;
                 editLiveAnchorMonthlyTarget.CumulativeRelease = addDto.TodaySendNum;
                 editLiveAnchorMonthlyTarget.CumulativeFlowInvestment = addDto.FlowInvestmentNum;
-                //editLiveAnchorMonthlyTarget.CumulativeCluesNum = addDto.CluesNum;
-                //editLiveAnchorMonthlyTarget.CumulativeAddFansNum = addDto.AddFansNum;
+                editLiveAnchorMonthlyTarget.CumulativeXiaoHongShuShowcaseIncome = addDto.XiaoHongShuShowcaseIncome;
+                editLiveAnchorMonthlyTarget.CumulativeXiaoHongShuClues = addDto.XiaoHongShuClues;
+                editLiveAnchorMonthlyTarget.CumulativeXiaoHongShuIncreaseFans = addDto.XiaoHongShuIncreaseFans;
+                editLiveAnchorMonthlyTarget.CumulativeXiaoHongShuIncreaseFansFees = addDto.XiaoHongShuIncreaseFansFees;
+                editLiveAnchorMonthlyTarget.CumulativeXiaoHongShuShowCaseFee = addDto.XiaoHongShuShowCaseFee;
                 await _liveAnchorMonthlyTargetService.EditAsync(editLiveAnchorMonthlyTarget);
                 unitOfWork.Commit();
             }
@@ -1497,6 +1646,12 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTarget.CumulativeXiaoHongShuFlowinvestment = -liveAnchorDailyTarget.FlowInvestmentNum;
                 editLiveAnchorMonthlyTarget.CumulativeRelease = -liveAnchorDailyTarget.SendNum;
                 editLiveAnchorMonthlyTarget.CumulativeFlowInvestment = -liveAnchorDailyTarget.FlowInvestmentNum;
+                editLiveAnchorMonthlyTarget.CumulativeXiaoHongShuShowcaseIncome = -liveAnchorDailyTarget.XiaoHongShuShowcaseIncome;
+                editLiveAnchorMonthlyTarget.CumulativeXiaoHongShuIncreaseFans = -liveAnchorDailyTarget.XiaoHongShuIncreaseFans;
+                editLiveAnchorMonthlyTarget.CumulativeXiaoHongShuIncreaseFansFees = -liveAnchorDailyTarget.XiaoHongShuIncreaseFansFees;
+                editLiveAnchorMonthlyTarget.CumulativeXiaoHongShuClues = -liveAnchorDailyTarget.XiaoHongShuClues;
+                editLiveAnchorMonthlyTarget.CumulativeXiaoHongShuShowCaseFee = -liveAnchorDailyTarget.XiaoHongShuShowCaseFee;
+
                 await _liveAnchorMonthlyTargetService.EditAsync(editLiveAnchorMonthlyTarget);
 
 
@@ -1507,6 +1662,11 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.FlowInvestmentNum = updateDto.FlowInvestmentNum;
                 liveAnchorDailyTarget.RecordDate = updateDto.RecordDate;
                 liveAnchorDailyTarget.UpdateDate = DateTime.Now;
+                liveAnchorDailyTarget.XiaoHongShuShowcaseIncome = updateDto.XiaoHongShuShowcaseIncome;
+                liveAnchorDailyTarget.XiaoHongShuIncreaseFans = updateDto.XiaoHongShuIncreaseFans;
+                liveAnchorDailyTarget.XiaoHongShuIncreaseFansFees = updateDto.XiaoHongShuIncreaseFansFees;
+                liveAnchorDailyTarget.XiaoHongShuClues = updateDto.XiaoHongShuClues;
+                liveAnchorDailyTarget.XiaoHongShuShowCaseFee = updateDto.XiaoHongShuShowCaseFee;
                 await _beforeLivingXiaoHongShuDailyTraget.UpdateAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto lasteditLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto();
@@ -1515,6 +1675,11 @@ namespace Fx.Amiya.Service
                 lasteditLiveAnchorMonthlyTarget.CumulativeXiaoHongShuFlowinvestment = updateDto.XiaoHongShuFlowInvestmentNum;
                 lasteditLiveAnchorMonthlyTarget.CumulativeRelease = updateDto.TodaySendNum;
                 lasteditLiveAnchorMonthlyTarget.CumulativeFlowInvestment = updateDto.FlowInvestmentNum;
+                lasteditLiveAnchorMonthlyTarget.CumulativeXiaoHongShuShowcaseIncome = updateDto.XiaoHongShuShowcaseIncome;
+                lasteditLiveAnchorMonthlyTarget.CumulativeXiaoHongShuIncreaseFans = updateDto.XiaoHongShuIncreaseFans;
+                lasteditLiveAnchorMonthlyTarget.CumulativeXiaoHongShuIncreaseFansFees = updateDto.XiaoHongShuIncreaseFansFees;
+                lasteditLiveAnchorMonthlyTarget.CumulativeXiaoHongShuClues = updateDto.XiaoHongShuClues;
+                lasteditLiveAnchorMonthlyTarget.CumulativeXiaoHongShuShowCaseFee = updateDto.XiaoHongShuShowCaseFee;
                 await _liveAnchorMonthlyTargetService.EditAsync(lasteditLiveAnchorMonthlyTarget);
                 unitOfWork.Commit();
             }
@@ -1686,6 +1851,19 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.Valid = true;
                 liveAnchorDailyTarget.UpdateDate = DateTime.Now;
                 liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
+                liveAnchorDailyTarget.VideoShowcaseIncome = addDto.VideoShowcaseIncome;
+                liveAnchorDailyTarget.VideoClues = addDto.VideoClues;
+                liveAnchorDailyTarget.VideoIncreaseFans = addDto.VideoIncreaseFans;
+                liveAnchorDailyTarget.VideoIncreaseFansFees = addDto.VideoIncreaseFansFees;
+                liveAnchorDailyTarget.VideoShowCaseFee = addDto.VideoShowCaseFee;
+                if (liveAnchorDailyTarget.VideoIncreaseFans == 0 || liveAnchorDailyTarget.VideoIncreaseFansFees == 0)
+                {
+                    liveAnchorDailyTarget.VideoIncreaseFansFeesCost = 0;
+                }
+                else
+                {
+                    liveAnchorDailyTarget.VideoIncreaseFansFeesCost = Math.Round(liveAnchorDailyTarget.VideoIncreaseFansFees / Convert.ToDecimal(liveAnchorDailyTarget.VideoIncreaseFans), 2);
+                }
                 await _beforeLivingVideoDailyTraget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto();
@@ -1694,6 +1872,11 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTarget.CumulativeVideoFlowinvestment = addDto.VideoFlowInvestmentNum;
                 editLiveAnchorMonthlyTarget.CumulativeRelease = addDto.TodaySendNum;
                 editLiveAnchorMonthlyTarget.CumulativeFlowInvestment = addDto.FlowInvestmentNum;
+                editLiveAnchorMonthlyTarget.CumulativeVideoShowcaseIncome = addDto.VideoShowcaseIncome;
+                editLiveAnchorMonthlyTarget.CumulativeVideoClues = addDto.VideoClues;
+                editLiveAnchorMonthlyTarget.CumulativeVideoIncreaseFans = addDto.VideoIncreaseFans;
+                editLiveAnchorMonthlyTarget.CumulativeVideoIncreaseFansFees = addDto.VideoIncreaseFansFees;
+                editLiveAnchorMonthlyTarget.CumulativeXiaoHongShuShowCaseFee = addDto.VideoShowCaseFee;
                 //editLiveAnchorMonthlyTarget.CumulativeCluesNum = addDto.CluesNum;
                 //editLiveAnchorMonthlyTarget.CumulativeAddFansNum = addDto.AddFansNum;
                 await _liveAnchorMonthlyTargetService.EditAsync(editLiveAnchorMonthlyTarget);
@@ -1735,6 +1918,11 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTarget.CumulativeFlowInvestment = -liveAnchorDailyTarget.FlowInvestmentNum;
                 //editLiveAnchorMonthlyTarget.CumulativeCluesNum = -liveAnchorDailyTarget.CluesNum;
                 //editLiveAnchorMonthlyTarget.CumulativeAddFansNum = -liveAnchorDailyTarget.AddFansNum;
+                editLiveAnchorMonthlyTarget.CumulativeVideoShowcaseIncome = -liveAnchorDailyTarget.VideoShowcaseIncome;
+                editLiveAnchorMonthlyTarget.CumulativeVideoIncreaseFans = -liveAnchorDailyTarget.VideoIncreaseFans;
+                editLiveAnchorMonthlyTarget.CumulativeVideoIncreaseFansFees = -liveAnchorDailyTarget.VideoIncreaseFansFees;
+                editLiveAnchorMonthlyTarget.CumulativeVideoClues = -liveAnchorDailyTarget.VideoClues;
+                editLiveAnchorMonthlyTarget.CumulativeVideoShowCaseFee = -liveAnchorDailyTarget.VideoShowCaseFee;
                 await _liveAnchorMonthlyTargetService.EditAsync(editLiveAnchorMonthlyTarget);
 
                 liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
@@ -1744,6 +1932,11 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.FlowInvestmentNum = updateDto.FlowInvestmentNum;
                 liveAnchorDailyTarget.RecordDate = updateDto.RecordDate;
                 liveAnchorDailyTarget.UpdateDate = DateTime.Now;
+                liveAnchorDailyTarget.VideoShowcaseIncome = updateDto.VideoShowcaseIncome;
+                liveAnchorDailyTarget.VideoIncreaseFans = updateDto.VideoIncreaseFans;
+                liveAnchorDailyTarget.VideoIncreaseFansFees = updateDto.VideoIncreaseFansFees;
+                liveAnchorDailyTarget.VideoClues = updateDto.VideoClues;
+                liveAnchorDailyTarget.VideoShowCaseFee = updateDto.VideoShowCaseFee;
                 await _beforeLivingVideoDailyTraget.UpdateAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto lasteditLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto();
@@ -1752,6 +1945,11 @@ namespace Fx.Amiya.Service
                 lasteditLiveAnchorMonthlyTarget.CumulativeVideoFlowinvestment = updateDto.VideoFlowInvestmentNum;
                 lasteditLiveAnchorMonthlyTarget.CumulativeRelease = updateDto.TodaySendNum;
                 lasteditLiveAnchorMonthlyTarget.CumulativeFlowInvestment = updateDto.FlowInvestmentNum;
+                lasteditLiveAnchorMonthlyTarget.CumulativeVideoShowcaseIncome = updateDto.VideoShowcaseIncome;
+                lasteditLiveAnchorMonthlyTarget.CumulativeVideoIncreaseFans = updateDto.VideoIncreaseFans;
+                lasteditLiveAnchorMonthlyTarget.CumulativeVideoIncreaseFansFees = updateDto.VideoIncreaseFansFees;
+                lasteditLiveAnchorMonthlyTarget.CumulativeVideoClues = updateDto.VideoClues;
+                lasteditLiveAnchorMonthlyTarget.CumulativeVideoShowCaseFee = updateDto.VideoShowCaseFee;
                 //editLiveAnchorMonthlyTarget.CumulativeCluesNum = updateDto.CluesNum;
                 //editLiveAnchorMonthlyTarget.CumulativeAddFansNum = updateDto.AddFansNum;
                 await _liveAnchorMonthlyTargetService.EditAsync(lasteditLiveAnchorMonthlyTarget);
@@ -1874,7 +2072,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.GMV = updateDto.GMV;
                 liveAnchorDailyTarget.EliminateCardGMV = updateDto.EliminateCardGMV;
                 liveAnchorDailyTarget.RefundGMV = updateDto.RefundGMV;
-                liveAnchorDailyTarget.TikTokPlusNum=updateDto.TikTokPlusNum;
+                liveAnchorDailyTarget.TikTokPlusNum = updateDto.TikTokPlusNum;
                 liveAnchorDailyTarget.QianChuanNum = updateDto.QianChuanNum;
                 liveAnchorDailyTarget.ShuiXinTuiNum = updateDto.ShuiXinTuiNum;
                 liveAnchorDailyTarget.WeiXinDou = updateDto.WeiXinDou;
@@ -2196,10 +2394,10 @@ namespace Fx.Amiya.Service
                                           FlowinvestmentTarget = d.LiveAnchorMonthlyTargetBeforeLiving.ZhihuFlowinvestmentTarget,
                                           CumulativeFlowinvestment = d.LiveAnchorMonthlyTargetBeforeLiving.CumulativeZhihuFlowinvestment,
                                           FlowinvestmentCompleteRate = d.LiveAnchorMonthlyTargetBeforeLiving.ZhihuFlowinvestmentCompleteRate.ToString() + "%",
-                                          TikTokShowcaseIncome=d.TikTokShowcaseIncome,
-                                          TikTokShowcaseIncomeTarget=d.LiveAnchorMonthlyTargetBeforeLiving.TikTokShowcaseIncomeTarget,
-                                          CumulativeTikTokShowcaseIncome=d.LiveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokShowcaseIncome,
-                                          TikTokShowcaseIncomeCompleteRate=d.LiveAnchorMonthlyTargetBeforeLiving.TikTokShowcaseIncomeCompleteRate.ToString()+"%",
+                                          TikTokShowcaseIncome = d.TikTokShowcaseIncome,
+                                          TikTokShowcaseIncomeTarget = d.LiveAnchorMonthlyTargetBeforeLiving.TikTokShowcaseIncomeTarget,
+                                          CumulativeTikTokShowcaseIncome = d.LiveAnchorMonthlyTargetBeforeLiving.CumulativeTikTokShowcaseIncome,
+                                          TikTokShowcaseIncomeCompleteRate = d.LiveAnchorMonthlyTargetBeforeLiving.TikTokShowcaseIncomeCompleteRate.ToString() + "%",
 
                                           OperationFlowinvestmentTarget = d.LiveAnchorMonthlyTargetBeforeLiving.FlowInvestmentTarget,
                                           CumulativeOperationFlowinvestment = d.LiveAnchorMonthlyTargetBeforeLiving.CumulativeFlowInvestment,
@@ -2823,10 +3021,10 @@ namespace Fx.Amiya.Service
                 {
                     GMV = e.GMV,
                     RefundGMV = e.RefundGMV,
-                    TikTokPlusNum=e.TikTokPlusNum,
-                    QianChuanNum=e.QianChuanNum,
-                    WeiXinDou=e.WeiXinDou,
-                    ShuiXinTuiNum=e.ShuiXinTuiNum,
+                    TikTokPlusNum = e.TikTokPlusNum,
+                    QianChuanNum = e.QianChuanNum,
+                    WeiXinDou = e.WeiXinDou,
+                    ShuiXinTuiNum = e.ShuiXinTuiNum,
                     LivingRoomCumulativeFlowInvestment = e.LivingRoomFlowInvestmentNum,
 
                 }).ToList();

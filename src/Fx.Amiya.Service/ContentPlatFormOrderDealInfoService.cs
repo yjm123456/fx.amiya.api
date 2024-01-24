@@ -788,6 +788,91 @@ namespace Fx.Amiya.Service
                 throw new Exception(ex.Message.ToString());
             }
         }
+
+        
+        /// <summary>
+        /// 根据订单号展示成交情况
+        /// </summary>
+        /// <param name="contentPlafFormOrderId"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> HospitalGetListWithPageAsync(string contentPlafFormOrderId, int pageNum, int pageSize, int hospitalId)
+        {
+            try
+            {
+                var ContentPlatFOrmOrderDealInfo = from d in dalContentPlatFormOrderDealInfo.GetAll().Where(e=>e.LastDealHospitalId== hospitalId)
+                                                   where (string.IsNullOrEmpty(contentPlafFormOrderId) || d.ContentPlatFormOrderId == contentPlafFormOrderId)
+                                                   
+                                                   select new ContentPlatFormOrderDealInfoDto
+                                                   {
+                                                       Id = d.Id,
+                                                       ContentPlatFormOrderId = d.ContentPlatFormOrderId,
+                                                       CreateDate = d.CreateDate,
+                                                       IsDeal = d.IsDeal,
+                                                       IsOldCustomer = d.IsOldCustomer,
+                                                       IsAcompanying = d.IsAcompanying,
+                                                       CommissionRatio = d.CommissionRatio,
+                                                       IsToHospital = d.IsToHospital,
+                                                       ToHospitalType = d.ToHospitalType,
+                                                       ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ToHospitalType),
+                                                       ToHospitalDate = d.ToHospitalDate,
+                                                       LastDealHospitalId = d.LastDealHospitalId,
+                                                       DealPicture = d.DealPicture,
+                                                       DealPerformanceType = d.DealPerformanceType,
+                                                       DealPerformanceTypeText = ServiceClass.GetContentPlateFormOrderDealPerformanceType(d.DealPerformanceType),
+                                                       Remark = d.Remark,
+                                                       Price = d.Price,
+                                                       DealDate = d.DealDate,
+                                                       OtherAppOrderId = d.OtherAppOrderId,
+                                                       CheckState = d.CheckState,
+                                                       CheckStateText = ServiceClass.GetCheckTypeText(d.CheckState.Value),
+                                                       CheckPrice = d.CheckPrice,
+                                                       CheckDate = d.CheckDate,
+                                                       CheckBy = d.CheckBy,
+                                                       InformationPrice = d.InformationPrice,
+                                                       SystemUpdatePrice = d.SystemUpdatePrice,
+                                                       SettlePrice = d.SettlePrice,
+                                                       CheckRemark = d.CheckRemark,
+                                                       IsReturnBackPrice = d.IsReturnBackPrice,
+                                                       ReturnBackDate = d.ReturnBackDate,
+                                                       ReturnBackPrice = d.ReturnBackPrice,
+                                                       CreateBy = d.CreateBy,
+                                                       ReconciliationDocumentsId = d.ReconciliationDocumentsId,
+                                                       IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
+                                                       ConsumptionType = d.ConsumptionType,
+                                                       ConsumptionTypeText = ServiceClass.GetConsumptionTypeText(d.ConsumptionType)
+                                                   };
+
+                FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();
+                ContentPlatFOrmOrderDealInfoPageInfo.TotalCount = await ContentPlatFOrmOrderDealInfo.CountAsync();
+                ContentPlatFOrmOrderDealInfoPageInfo.List = await ContentPlatFOrmOrderDealInfo.OrderByDescending(x => x.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+                foreach (var z in ContentPlatFOrmOrderDealInfoPageInfo.List)
+                {
+                    if (z.LastDealHospitalId.HasValue)
+                    {
+                        var dealHospital = await _hospitalInfoService.GetBaseByIdAsync(z.LastDealHospitalId.Value);
+                        z.LastDealHospital = dealHospital.Name;
+                    }
+                    if (z.CreateBy == 0)
+                    {
+                        z.CreateByEmpName = "医院添加";
+                    }
+                    else
+                    {
+                        var empInfo = await _amiyaEmployeeService.GetByIdAsync(z.CreateBy);
+                        z.CreateByEmpName = empInfo.Name;
+                    }
+                }
+                return ContentPlatFOrmOrderDealInfoPageInfo;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message.ToString());
+            }
+        }
+
+
         public async Task AddAsync(AddContentPlatFormOrderDealInfoDto addDto)
         {
             try

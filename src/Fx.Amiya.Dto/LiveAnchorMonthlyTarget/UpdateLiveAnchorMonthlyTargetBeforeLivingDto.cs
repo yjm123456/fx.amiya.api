@@ -91,6 +91,89 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 运营渠道投流目标
         /// </summary>
         public decimal FlowInvestmentTarget { get; set; }
+        /// <summary>
+        /// 抖音涨粉目标
+        /// </summary>
+
+        public int TikTokIncreaseFansTarget { get; set; }
+        /// <summary>
+        /// 抖音涨粉付费目标
+        /// </summary>
+        public decimal TikTokIncreaseFansFeesTarget { get; set; }
+
+        /// <summary>
+        /// 抖音涨粉成本目标
+        /// </summary>
+        public decimal TikTokIncreaseFansFeesCostTarget { get; set; }
+
+        /// <summary>
+        /// 抖音线索量目标
+        /// </summary>
+        public int TikTokCluesTarget { get; set; }
+
+        /// <summary>
+        /// 小红书涨粉目标
+        /// </summary>
+
+        public int XiaoHongShuIncreaseFansTarget { get; set; }
+
+        /// <summary>
+        /// 小红书涨粉付费目标
+        /// </summary>
+        public decimal XiaoHongShuIncreaseFansFeesTarget { get; set; }
+
+        /// <summary>
+        /// 小红书涨粉成本目标
+        /// </summary>
+        public decimal XiaoHongShuIncreaseFansFeesCostTarget { get; set; }
+
+        /// <summary>
+        /// 小红书线索量目标
+        /// </summary>
+        public int XiaoHongShuCluesTarget { get; set; }
+
+        /// <summary>
+        /// 小红书橱窗收入目标
+        /// </summary>
+        public decimal XiaoHongShuShowcaseIncomeTarget { get; set; }
+
+        /// <summary>
+        /// 视频号涨粉目标
+        /// </summary>
+
+        public int VideoIncreaseFansTarget { get; set; }
+
+        /// <summary>
+        /// 视频号涨粉付费目标
+        /// </summary>
+        public decimal VideoIncreaseFansFeesTarget { get; set; }
+
+        /// <summary>
+        /// 视频号涨粉成本目标
+        /// </summary>
+        public decimal VideoIncreaseFansFeesCostTarget { get; set; }
+
+        /// <summary>
+        /// 视频号线索量目标
+        /// </summary>
+        public int VideoCluesTarget { get; set; }
+
+        /// <summary>
+        /// 视频号橱窗收入目标
+        /// </summary>
+        public decimal VideoShowcaseIncomeTarget { get; set; }
+        /// <summary>
+        /// 视频号橱窗付费
+        /// </summary>
+        public decimal VideoShowcaseFeeTarget { get; set; }
+        /// <summary>
+        /// 小红书橱窗付费
+        /// </summary>
+        public decimal XiaoHongShuShowcaseFeeTarget { get; set; }
+        /// <summary>
+        /// 抖音橱窗付费
+        /// </summary>
+        public decimal TikTokShowcaseFeeTarget { get; set; }
 
     }
 }

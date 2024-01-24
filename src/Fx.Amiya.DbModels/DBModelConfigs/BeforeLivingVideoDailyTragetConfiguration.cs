@@ -22,6 +22,12 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.UpdateDate).HasColumnName("update_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(e => e.Valid).HasColumnName("valid").HasColumnType("bit").IsRequired();
             builder.Property(e => e.DeleteDate).HasColumnName("delete_date").HasColumnType("datetime").IsRequired(false);
+            builder.Property(t => t.VideoClues).HasColumnName("video_clues").HasColumnType("int").IsRequired();
+            builder.Property(t => t.VideoIncreaseFans).HasColumnName("video_increase_fans").HasColumnType("int").IsRequired();
+            builder.Property(t => t.VideoIncreaseFansFees).HasColumnName("video_increase_fans_fees").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(t => t.VideoIncreaseFansFeesCost).HasColumnName("video_increase_fans_fees_cost").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(t => t.VideoShowcaseIncome).HasColumnName("video_showcase_income").HasColumnType("decimal(12, 2)").IsRequired();
+            builder.Property(t => t.VideoShowCaseFee).HasColumnName("video_showcase_fee").HasColumnType("decimal(12,2)").IsRequired();
             builder.HasOne(e => e.LiveAnchorMonthlyTargetBeforeLiving).WithMany(e => e.beforeLivingVideoDailyTarget).HasForeignKey(e => e.LiveAnchorMonthlyTargetId);
             builder.HasOne(e => e.AmiyaEmployee).WithMany(e => e.beforeLivingVideoDailyTarget).HasForeignKey(e => e.OperationEmpId);
         }
