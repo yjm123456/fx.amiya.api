@@ -857,7 +857,7 @@ namespace Fx.Amiya.Service
                     }
                     //liveAnchorDailyTargetDto.TikTokIncreaseFansFeesCost = liveAnchorDailyTarget.TikTokIncreaseFansFeesCost;
                     liveAnchorDailyTargetDto.TikTokClues = liveAnchorDailyTarget.TikTokClues;
-                    liveAnchorDailyTargetDto.TikTokShowcaseFee= liveAnchorDailyTarget.TikTokShowcaseFee;
+                    liveAnchorDailyTargetDto.TikTokShowcaseFee= liveAnchorDailyTarget.TikTokShowCaseFee;
                 }
                 if (type == 2)
                 {
