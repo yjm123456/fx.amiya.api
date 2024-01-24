@@ -1238,6 +1238,32 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
+        /// 获取对账单审核记录生成薪资时的审核类型
+        /// </summary>
+        /// <param name="BuyAgainType"></param>
+        /// <returns></returns>
+        public static string GetReconciliationDocumentSettleCheckType(int CheckType)
+        {
+            string CheckTypeText = "";
+            switch (CheckType)
+            {
+                case 0:
+                    CheckTypeText = "其他";
+                    break;
+                case 1:
+                    CheckTypeText = "自播达人审核";
+                    break;
+                case 2:
+                    CheckTypeText = "供应链达人审核";
+                    break;
+                case 3:
+                    CheckTypeText = "三方订单升单审核";
+                    break;
+            }
+            return CheckTypeText;
+        }
+
+        /// <summary>
         /// 获取接口访问类型
         /// </summary>
         /// <param name="type"></param>
@@ -2362,9 +2388,11 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static string GiftSendTypeText(int type) {
+        public static string GiftSendTypeText(int type)
+        {
             string text = "";
-            switch (type) {
+            switch (type)
+            {
                 case 0:
                     text = "自行领取";
                     break;

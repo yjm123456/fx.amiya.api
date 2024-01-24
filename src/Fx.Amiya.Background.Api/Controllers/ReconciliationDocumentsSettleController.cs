@@ -213,10 +213,24 @@ namespace Fx.Amiya.Background.Api.Controllers
             checkReconciliationDocumentSettleDto.CheckBy = employeeId;
             checkReconciliationDocumentSettleDto.CheckRemark = query.CheckRemark;
             checkReconciliationDocumentSettleDto.CheckState = query.CheckState;
+            checkReconciliationDocumentSettleDto.CheckType = query.CheckType;
+            checkReconciliationDocumentSettleDto.IsInspectPerformance = query.IsInspectPerformance;
             checkReconciliationDocumentSettleDto.Id = query.Id;
+
+
+            #region 助理业绩
+            checkReconciliationDocumentSettleDto.CustomerServiceOrderPerformance = query.CustomerServiceOrderPerformance;
             checkReconciliationDocumentSettleDto.CheckBelongEmpId = query.CheckBelongEmpId;
-            checkReconciliationDocumentSettleDto.CustomerServicePerformance = query.CustomerServicePerformance;
             checkReconciliationDocumentSettleDto.PerformancePercent = query.PerformancePercent;
+            checkReconciliationDocumentSettleDto.CustomerServicePerformance = query.CustomerServicePerformance;
+            #endregion
+
+
+            #region 稽查人员业绩
+            checkReconciliationDocumentSettleDto.InspectEmpId = query.InspectEmpId;
+            checkReconciliationDocumentSettleDto.InspectPercent = query.InspectPercent;
+            checkReconciliationDocumentSettleDto.InspectPrice = query.InspectPrice;
+            #endregion
             await billService.CheckReconciliationDocumentsSettleAsync(checkReconciliationDocumentSettleDto);
             return ResultData.Success();
 
@@ -286,7 +300,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                         CheckBelongEmpName = d.CheckBelongEmpName,
                                                         CustomerServiceCompensationId = d.CustomerServiceCompensationId,
                                                         PerformancePercent=d.PerformancePercent,
-                                                        CustomerServicePerformance=d.CustomerServicePerformance
+                                                        CustomerServicePerformance=d.CustomerServicePerformance,
+                                                        CheckTypeText =d.CheckTypeText,
+                                                        IsInspectPerformance = d.IsInspectPerformance,
+                                                        CustomerServiceOrderPerformance = d.CustomerServiceOrderPerformance,
                                                     };
 
                 FxPageInfo<ReconciliationDocumentsSettleVo> reconciliationDocumentsSettleResult = new FxPageInfo<ReconciliationDocumentsSettleVo>();
@@ -301,6 +318,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 return ResultData<FxPageInfo<ReconciliationDocumentsSettleVo>>.Fail(ex.Message);
             }
         }
+
+
+
         /// <summary>
         /// 获取上传人名称列表
         /// </summary>

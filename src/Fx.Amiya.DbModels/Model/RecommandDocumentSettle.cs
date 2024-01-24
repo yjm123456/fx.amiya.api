@@ -28,7 +28,7 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public decimal ReturnBackPrice { get; set; }
         /// <summary>
-        /// 审核客服结算金额
+        /// 审核客服结算金额-财务定
         /// </summary>
 
         public decimal CustomerServiceSettlePrice { get; set; }
@@ -68,9 +68,14 @@ namespace Fx.Amiya.DbModels.Model
 
         public AmiyaEmployee AmiyaEmployee { get; set; }
         /// <summary>
-        /// 薪资审核状态
+        /// 薪资审核状态-薪资审核时产生
         /// </summary>
         public int CompensationCheckState { get; set; }
+
+        /// <summary>
+        /// 审核类型（0：自播达人审核，1：供应链达人审核，2：天猫升单审核）薪资审核时生成
+        /// </summary>
+        public int CheckType { get; set; }
 
         /// <summary>
         /// 审核人
@@ -91,18 +96,48 @@ namespace Fx.Amiya.DbModels.Model
         /// 审核归属客服
         /// </summary>
         public int? CheckBelongEmpId { get; set; }
+
+        /// <summary>
+        /// 是否为稽查业绩
+        /// </summary>
+        public bool IsInspectPerformance { get; set; }
         /// <summary>
         /// 薪资单据id
         /// </summary>
         public string CustomerServiceCompensationId { get; set; }
 
         /// <summary>
-        /// 提成点数
+        /// 稽查薪资单据id
+        /// </summary>
+        public string InspectCustomerServiceCompensationId { get; set; }
+
+        /// <summary>
+        /// 助理确认业绩-薪资审核时产生
+        /// </summary>
+        public decimal CustomerServiceOrderPerformance { get; set; }
+
+        /// <summary>
+        /// 稽查人员id
+        /// </summary>
+        public int? InspectEmpId { get; set; }
+
+        /// <summary>
+        /// 稽查比例-稽查人员
+        /// </summary>
+        public decimal InspectPercent { get; set; }
+
+        /// <summary>
+        /// 稽查金额-稽查人员
+        /// </summary>
+        public decimal InspectPrice { get; set; }
+
+        /// <summary>
+        /// 提成点数-助理
         /// </summary>
         public decimal PerformancePercent { get; set; }
 
         /// <summary>
-        /// 提成金额
+        /// 提成金额-助理
         /// </summary>
         public decimal CustomerServicePerformance { get; set; }
         /// <summary>

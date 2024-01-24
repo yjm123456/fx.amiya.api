@@ -38,11 +38,18 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.HospitalId).HasColumnName("hospital_id").HasColumnType("int").IsRequired();
             builder.HasOne(e => e.AmiyaEmployee).WithMany(e => e.RecommandDocumentSettleList).HasForeignKey(e => e.CreateBy);
             builder.Property(e => e.CompensationCheckState).HasColumnName("compensation_check_state").HasColumnType("int").IsRequired();
+            builder.Property(e => e.CheckType).HasColumnName("check_type").HasColumnType("int").IsRequired();
             builder.Property(e => e.CheckBy).HasColumnName("check_by").HasColumnType("int").IsRequired(false);
             builder.Property(e => e.CheckDate).HasColumnName("check_date").HasColumnType("DATETIME").IsRequired(false);
             builder.Property(e => e.CheckRemark).HasColumnName("check_remark").HasColumnType("varchar(1000)").IsRequired(false);
             builder.Property(e => e.CheckBelongEmpId).HasColumnName("check_belong_empid").HasColumnType("int").IsRequired(false);
+            builder.Property(e => e.IsInspectPerformance).HasColumnName("is_inspect_performance").HasColumnType("bit").IsRequired();
+            builder.Property(e => e.InspectEmpId).HasColumnName("inspect_empid").HasColumnType("int").IsRequired(false);
+            builder.Property(e => e.InspectPercent).HasColumnName("inspect_percent").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.InspectPrice).HasColumnName("inspect_price").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.CustomerServiceCompensationId).HasColumnName("customer_service_compensation_id").HasColumnType("varchar(50)").IsRequired(false);
+            builder.Property(e => e.InspectCustomerServiceCompensationId).HasColumnName("inspect_customer_service_compensation_id").HasColumnType("varchar(50)").IsRequired(false);
+            builder.Property(e => e.CustomerServiceOrderPerformance).HasColumnName("customer_service_order_performance").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.PerformancePercent).HasColumnName("performance_percent").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.CustomerServicePerformance).HasColumnName("customer_service_performance").HasColumnType("decimal(12,2)").IsRequired();
             //builder.HasOne(e => e.ReconciliationDocuments).WithMany(e => e.RecommandDocumentSettleList).HasForeignKey(e => e.RecommandDocumentId);

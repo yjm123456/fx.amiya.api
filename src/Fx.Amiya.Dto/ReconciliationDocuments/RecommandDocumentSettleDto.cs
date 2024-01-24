@@ -49,6 +49,11 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         /// </summary>
 
         public decimal CustomerServiceSettlePrice { get; set; }
+        /// <summary>
+        /// 助理确认业绩-薪资审核时产生
+        /// </summary>
+        public decimal CustomerServiceOrderPerformance { get; set; }
+
         public DateTime CreateDate { get; set; }
         public bool IsSettle { get; set; }
         public DateTime? SettleDate { get; set; }
@@ -93,6 +98,15 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         /// 薪资审核状态文本
         /// </summary>
         public string CompensationCheckStateText { get; set; }
+
+        /// <summary>
+        /// 薪资审核类型文本
+        /// </summary>
+        public string CheckTypeText { get; set; }
+        /// <summary>
+        /// 是否为稽查订单
+        /// </summary>
+        public bool IsInspectPerformance { get; set; }
 
         /// <summary>
         /// 审核日期

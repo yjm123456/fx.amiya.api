@@ -1783,7 +1783,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 }
                 else if (updateVo.HospitalId == "test")
                 {
-                    hospitalId = 4;
+                    hospitalId = 124;
                 }
                 else
                 {

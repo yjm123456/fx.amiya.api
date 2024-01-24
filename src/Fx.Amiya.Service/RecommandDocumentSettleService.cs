@@ -83,7 +83,7 @@ namespace Fx.Amiya.Service
               .Where(e => !query.IsOldCustoemr.HasValue || e.IsOldCustomer == query.IsOldCustoemr)
               .Where(e => !query.CheckState.HasValue || e.CompensationCheckState == query.CheckState)
               .Where(e => !query.BelongEmpId.HasValue || e.BelongEmpId == query.BelongEmpId).OrderByDescending(x => x.CreateDate)
-              .Where(e=>!query.CreateEmpId.HasValue||e.CreateEmpId==query.CreateEmpId)            
+              .Where(e => !query.CreateEmpId.HasValue || e.CreateEmpId == query.CreateEmpId)
               .Select(e => new RecommandDocumentSettleDto
               {
                   Id = e.Id,
@@ -106,14 +106,18 @@ namespace Fx.Amiya.Service
                   CustomerServiceSettlePrice = e.CustomerServiceSettlePrice,
                   CheckBelongEmpId = e.CheckBelongEmpId,
                   CheckRemark = e.CheckRemark,
+                  CheckTypeText = ServiceClass.GetReconciliationDocumentSettleCheckType(e.CheckType),
+                  IsInspectPerformance = e.IsInspectPerformance,
+                  CustomerServiceOrderPerformance = e.CustomerServiceOrderPerformance,
                   CheckDate = e.CheckDate,
                   CompensationCheckState = e.CompensationCheckState,
                   CompensationCheckStateText = ServiceClass.GetCheckTypeText(e.CompensationCheckState),
                   CustomerServiceCompensationId = e.CustomerServiceCompensationId,
-                  CustomerServicePerformance =e.CustomerServicePerformance,
-                  PerformancePercent=e.PerformancePercent,
+                  CustomerServicePerformance = e.CustomerServicePerformance,
+                  PerformancePercent = e.PerformancePercent,
               });
-            if (query.IsGenerateSalry.HasValue) {
+            if (query.IsGenerateSalry.HasValue)
+            {
                 record = record.Where(e => query.IsGenerateSalry == 1 ? string.IsNullOrEmpty(e.CustomerServiceCompensationId) : !string.IsNullOrEmpty(e.CustomerServiceCompensationId));
             }
             FxPageInfo<RecommandDocumentSettleDto> resultPageInfo = new FxPageInfo<RecommandDocumentSettleDto>();
@@ -162,11 +166,16 @@ namespace Fx.Amiya.Service
             recommandDocumentSettle.IsOldCustomer = addRecommandDocumentSettleDto.IsOldCustomer;
             recommandDocumentSettle.DealInfoId = addRecommandDocumentSettleDto.DealInfoId;
             recommandDocumentSettle.ReturnBackPrice = addRecommandDocumentSettleDto.ReturnBackPrice;
+            recommandDocumentSettle.CheckType = (int)ReconciliationDocumentSettleCheckType.Others;
             recommandDocumentSettle.CustomerServiceSettlePrice = addRecommandDocumentSettleDto.CustomerServiceSettlePrice;
             recommandDocumentSettle.CreateDate = DateTime.Now;
             recommandDocumentSettle.CreateEmpId = addRecommandDocumentSettleDto.CreateEmpId;
             recommandDocumentSettle.IsSettle = false;
             recommandDocumentSettle.BelongEmpId = addRecommandDocumentSettleDto.BelongEmpId;
+            recommandDocumentSettle.IsInspectPerformance = false;
+            recommandDocumentSettle.InspectPercent = 0.00M;
+            recommandDocumentSettle.InspectPrice = 0.00M;
+            recommandDocumentSettle.CustomerServiceOrderPerformance = 0.00M;
             recommandDocumentSettle.BelongLiveAnchorAccount = addRecommandDocumentSettleDto.BelongLiveAnchorAccount;
             recommandDocumentSettle.CreateBy = addRecommandDocumentSettleDto.CreateBy;
             recommandDocumentSettle.AccountType = addRecommandDocumentSettleDto.AccountType;
@@ -193,11 +202,23 @@ namespace Fx.Amiya.Service
             {
                 result.CompensationCheckState = checkDto.CheckState;
                 result.CheckBy = checkDto.CheckBy;
-                result.CheckBelongEmpId = checkDto.CheckBelongEmpId;
                 result.CheckRemark = checkDto.CheckRemark;
                 result.CheckDate = DateTime.Now;
+                result.IsInspectPerformance = checkDto.IsInspectPerformance;
+                result.CheckType = checkDto.CheckType;
+
+                #region 助理业绩
+                result.CustomerServiceOrderPerformance = checkDto.CustomerServiceOrderPerformance;
+                result.CheckBelongEmpId = checkDto.CheckBelongEmpId;
                 result.PerformancePercent = checkDto.PerformancePercent;
                 result.CustomerServicePerformance = checkDto.CustomerServicePerformance;
+                #endregion
+
+                #region 稽查人员业绩
+                result.InspectEmpId = checkDto.InspectEmpId;
+                result.InspectPercent = checkDto.InspectPercent;
+                result.InspectPrice = checkDto.InspectPrice;
+                #endregion
                 await _dalRecommandDocumentSettle.UpdateAsync(result, true);
             }
         }
@@ -284,7 +305,7 @@ namespace Fx.Amiya.Service
         public async Task<List<BaseIdAndNameDto<int>>> GetCreateEmpNameListAsync()
         {
             var idList = _dalRecommandDocumentSettle.GetAll().Select(e => e.CreateEmpId).ToList();
-            var nameList =await dalAmiyaEmployee.GetAll().Where(e => idList.Contains(e.Id)).Select(e => new BaseIdAndNameDto<int>
+            var nameList = await dalAmiyaEmployee.GetAll().Where(e => idList.Contains(e.Id)).Select(e => new BaseIdAndNameDto<int>
             {
                 Id = e.Id,
                 Name = e.Name,

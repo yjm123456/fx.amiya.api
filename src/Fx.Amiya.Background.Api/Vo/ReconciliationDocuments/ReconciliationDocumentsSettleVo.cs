@@ -188,5 +188,17 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
         /// 提成金额
         /// </summary>
         public decimal CustomerServicePerformance { get; set; }
+        /// <summary>
+        /// 薪资审核类型
+        /// </summary>
+        public string CheckTypeText { get; set; }
+        /// <summary>
+        /// 是否为稽查订单
+        /// </summary>
+        public bool IsInspectPerformance { get; set; }
+        /// <summary>
+        /// 助理确认业绩-薪资审核时产生
+        /// </summary>
+        public decimal CustomerServiceOrderPerformance { get; set; }
     }
 }

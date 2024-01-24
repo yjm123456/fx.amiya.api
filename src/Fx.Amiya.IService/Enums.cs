@@ -101,6 +101,29 @@ namespace Fx.Amiya.IService
     }
 
     /// <summary>
+    /// 对账单审核记录生成薪资时的审核类型
+    /// </summary>
+    public enum ReconciliationDocumentSettleCheckType
+    {
+        /// <summary>
+        /// 其他
+        /// </summary>
+        Others = 0,
+        /// <summary>
+        /// 自播达人审核
+        /// </summary>
+        SelfLiveAnchorCheck = 1,
+        /// <summary>
+        /// 供应链达人审核
+        /// </summary>
+        CooperationLiveAnchorCheck = 2,
+        /// <summary>
+        /// 三方订单升单审核
+        /// </summary>
+        OtherPlatformBuyAgainCheck = 3
+    }
+
+    /// <summary>
     /// 请求类型
     /// </summary>
     public enum RequestType
@@ -128,11 +151,11 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 支付回调
         /// </summary>
-        Pay=5,
+        Pay = 5,
         /// <summary>
         /// 用户登陆
         /// </summary>
-        Login=6
+        Login = 6
 
     }
 
@@ -398,7 +421,7 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 抖音本地生活
         /// </summary>
-        TikTokLocal=8
+        TikTokLocal = 8
     }
 
     #region 内容平台相关枚举
@@ -1454,15 +1477,16 @@ namespace Fx.Amiya.IService
     /// <summary>
     /// 礼品发放类型
     /// </summary>
-    public enum GiftSendType { 
+    public enum GiftSendType
+    {
         /// <summary>
         /// 客户自己领取
         /// </summary>
-        CustomerRecieve=0,
+        CustomerRecieve = 0,
         /// <summary>
         /// 客服发送
         /// </summary>
-        CustomerServiceSend=1
+        CustomerServiceSend = 1
     }
     /// <summary>
     /// 飞书多维表格类型
@@ -1480,6 +1504,6 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 粉丝数据
         /// </summary>
-        FansData=3
+        FansData = 3
     }
 }
