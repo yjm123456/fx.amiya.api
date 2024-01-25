@@ -60,8 +60,9 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="ids"></param>
         /// <param name="customerServiceCompensationId"></param>
+        /// <param name="CustomerServiceCompensationEmpId">生成人员id</param>
         /// <returns></returns>
-        Task AddCustomerServiceCompensationIdAsync(List<string> ids, string customerServiceCompensationId);
+        Task AddCustomerServiceCompensationIdAsync(List<string> ids, string customerServiceCompensationId, int CustomerServiceCompensationEmpId);
         /// <summary>
         /// 薪资单作废时移除薪资单
         /// </summary>

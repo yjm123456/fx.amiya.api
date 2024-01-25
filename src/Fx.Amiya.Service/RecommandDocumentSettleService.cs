@@ -232,15 +232,33 @@ namespace Fx.Amiya.Service
         /// <param name="ids"></param>
         /// <param name="customerServiceCompensationId"></param>
         /// <returns></returns>
-        public async Task AddCustomerServiceCompensationIdAsync(List<string> ids, string customerServiceCompensationId)
+        public async Task AddCustomerServiceCompensationIdAsync(List<string> ids, string customerServiceCompensationId, int CustomerServiceCompensationEmpId)
         {
             foreach (var z in ids)
             {
                 var result = await _dalRecommandDocumentSettle.GetAll().Where(x => x.Id == z).FirstOrDefaultAsync();
                 if (result != null)
                 {
-                    result.CustomerServiceCompensationId = customerServiceCompensationId;
-                    await _dalRecommandDocumentSettle.UpdateAsync(result, true);
+                    if (result.IsInspectPerformance == false)
+                    {
+                        result.CustomerServiceCompensationId = customerServiceCompensationId;
+                        await _dalRecommandDocumentSettle.UpdateAsync(result, true);
+                    }
+                    else if (result.IsInspectPerformance == true)
+                    {
+                        //当该薪资单最终归属客服与当前生成薪资人员相等时则录入薪资单据id
+                        if (result.CheckBelongEmpId == CustomerServiceCompensationEmpId)
+                        {
+                            result.CustomerServiceCompensationId = customerServiceCompensationId;
+                            await _dalRecommandDocumentSettle.UpdateAsync(result, true);
+                        }
+                        //当该薪资单最终归属客服与当前生成薪资人员不等时则录入稽查薪资单据id
+                        else
+                        {
+                            result.InspectCustomerServiceCompensationId = customerServiceCompensationId;
+                            await _dalRecommandDocumentSettle.UpdateAsync(result, true);
+                        }
+                    }
                 }
             }
         }

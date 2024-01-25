@@ -114,7 +114,7 @@ namespace Fx.Amiya.Service
                 await dalCustomerServiceCompensation.AddAsync(customerServiceCompensation, true);
 
                 //对账单审核记录加入id
-                await recommandDocumentSettleService.AddCustomerServiceCompensationIdAsync(addDto.RecommandDocumentSettleIdList, customerServiceCompensation.Id);
+                await recommandDocumentSettleService.AddCustomerServiceCompensationIdAsync(addDto.RecommandDocumentSettleIdList, customerServiceCompensation.Id,addDto.BelongEmpId);
                 unitOfWork.Commit();
             }
             catch (Exception err)
