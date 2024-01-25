@@ -643,6 +643,11 @@ namespace Fx.Amiya.Service
                     var empInfo = await amiyaEmployeeService.GetByIdAsync(x.BelongEmpId.Value);
                     x.BelongEmpName = empInfo.Name;
                 }
+                if (x.InspectBy.HasValue)
+                {
+                    var empInfo = await amiyaEmployeeService.GetByIdAsync(x.InspectBy.Value);
+                    x.InspectEmpName = empInfo.Name;
+                }
                 if (x.CreateEmpId.HasValue)
                 {
                     var empInfo = await amiyaEmployeeService.GetByIdAsync(x.CreateEmpId.Value);

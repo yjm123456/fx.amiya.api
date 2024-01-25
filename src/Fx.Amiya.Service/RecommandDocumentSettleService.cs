@@ -76,7 +76,7 @@ namespace Fx.Amiya.Service
         public async Task<FxPageInfo<RecommandDocumentSettleDto>> GetListWithPageAsync(QueryReconciliationDocumentsSettleDto query)
         {
             var record = _dalRecommandDocumentSettle.GetAll().Include(x => x.AmiyaEmployee)
-              .Where(e => (string.IsNullOrEmpty(query.KeyWord) || e.RecommandDocumentId.Contains(query.KeyWord) || e.OrderId.Contains(query.KeyWord) || e.DealInfoId.Contains(query.KeyWord) || e.CustomerServiceCompensationId == query.KeyWord || e.CheckRemark.Contains(query.KeyWord)))
+              .Where(e => (string.IsNullOrEmpty(query.KeyWord) || e.RecommandDocumentId.Contains(query.KeyWord) || e.OrderId.Contains(query.KeyWord) || e.DealInfoId.Contains(query.KeyWord) || e.CustomerServiceCompensationId == query.KeyWord || e.InspectCustomerServiceCompensationId == query.KeyWord || e.CheckRemark.Contains(query.KeyWord)))
               .Where(e => !query.StartDate.HasValue || e.CreateDate >= query.StartDate)
               .Where(e => !query.EndDate.HasValue || e.CreateDate <= query.EndDate.Value.AddDays(1).AddMilliseconds(-1))
               .Where(e => !query.ChooseHospitalId.HasValue || e.HospitalId == query.ChooseHospitalId)
@@ -84,6 +84,8 @@ namespace Fx.Amiya.Service
               .Where(e => !query.CheckState.HasValue || e.CompensationCheckState == query.CheckState)
               .Where(e => !query.BelongEmpId.HasValue || e.BelongEmpId == query.BelongEmpId).OrderByDescending(x => x.CreateDate)
               .Where(e => !query.CreateEmpId.HasValue || e.CreateEmpId == query.CreateEmpId)
+              .Where(e => !query.IsInspectOrder.HasValue || e.IsInspectPerformance == query.IsInspectOrder.Value)
+              .Where(e => !query.InspectEmpId.HasValue || e.InspectEmpId == query.InspectEmpId.Value)
               .Select(e => new RecommandDocumentSettleDto
               {
                   Id = e.Id,
@@ -108,6 +110,8 @@ namespace Fx.Amiya.Service
                   CheckRemark = e.CheckRemark,
                   CheckTypeText = ServiceClass.GetReconciliationDocumentSettleCheckType(e.CheckType),
                   IsInspectPerformance = e.IsInspectPerformance,
+                  InspectPrice = e.InspectPrice,
+                  InspectBy = e.InspectEmpId,
                   CustomerServiceOrderPerformance = e.CustomerServiceOrderPerformance,
                   CheckDate = e.CheckDate,
                   CompensationCheckState = e.CompensationCheckState,
@@ -311,6 +315,26 @@ namespace Fx.Amiya.Service
                 Name = e.Name,
             }).ToListAsync();
             return nameList;
+        }
+
+
+        /// <summary>
+        /// 获取薪资审核类型
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<BaseKeyValueDto>> GeReconciliationtCheckTypeAsync()
+        {
+            var consumptionVoucherTypes = Enum.GetValues(typeof(ReconciliationDocumentSettleCheckType));
+
+            List<BaseKeyValueDto> consumptionVoucherTypeList = new List<BaseKeyValueDto>();
+            foreach (var item in consumptionVoucherTypes)
+            {
+                BaseKeyValueDto baseKeyValueDto = new BaseKeyValueDto();
+                baseKeyValueDto.Key = Convert.ToInt32(item).ToString();
+                baseKeyValueDto.Value = ServiceClass.GetReconciliationDocumentSettleCheckType(Convert.ToInt32(item));
+                consumptionVoucherTypeList.Add(baseKeyValueDto);
+            }
+            return consumptionVoucherTypeList;
         }
     }
 }

@@ -21,6 +21,10 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments.Input
         /// </summary>
         public int? BelongEmpId { get; set; }
         /// <summary>
+        /// 稽查客服
+        /// </summary>
+        public int? InspectEmpId { get; set; }
+        /// <summary>
         /// 上传人
         /// </summary>
         public int? CreateEmpId { get; set; }

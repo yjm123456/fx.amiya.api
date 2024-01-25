@@ -24,6 +24,10 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         /// 归属客服
         /// </summary>
         public int? BelongEmpId { get; set; }
+        /// <summary>
+        /// 稽查客服
+        /// </summary>
+        public int? InspectEmpId { get; set; }
 
         /// <summary>
         /// 审核状态
@@ -41,5 +45,10 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         /// 是否生成薪资单(1,未生成,2已生成)
         /// </summary>
         public int? IsGenerateSalry { get; set; }
+
+        /// <summary>
+        /// 是否为稽查订单
+        /// </summary>
+        public bool? IsInspectOrder { get; set; }
     }
 }

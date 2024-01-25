@@ -81,5 +81,12 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<List<BaseIdAndNameDto<int>>> GetCreateEmpNameListAsync();
+
+
+        /// <summary>
+        /// 获取薪资审核类型
+        /// </summary>
+        /// <returns></returns>
+        Task<List<BaseKeyValueDto>> GeReconciliationtCheckTypeAsync();
     }
 }

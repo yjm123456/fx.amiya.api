@@ -319,6 +319,91 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// 分页获取稽查业绩对账单审核记录(助理薪资审核相关数据)
+        /// </summary>
+        /// <param name="query">查询条件</param>
+        /// <returns></returns>
+        [HttpGet("getListWithPageByCustomerInspectData")]
+        [FxInternalOrTenantAuthroize]
+        public async Task<ResultData<FxPageInfo<ReconciliationDocumentsSettleVo>>> GetListWithPageByCustomerInspectDataAsync([FromQuery] QueryReconciliationDocumentsSettleVo query)
+        {
+            try
+            {
+
+                QueryReconciliationDocumentsSettleDto queryReconciliationDocumentsSettleDto = new QueryReconciliationDocumentsSettleDto();
+                queryReconciliationDocumentsSettleDto.ChooseHospitalId = query.ChooseHospitalId;
+                queryReconciliationDocumentsSettleDto.IsOldCustoemr = query.IsOldCustoemr;
+                queryReconciliationDocumentsSettleDto.CheckState = query.CheckState;
+                queryReconciliationDocumentsSettleDto.BelongEmpId = query.BelongEmpId;
+                queryReconciliationDocumentsSettleDto.InspectEmpId = query.InspectEmpId;
+                queryReconciliationDocumentsSettleDto.KeyWord = query.KeyWord;
+                queryReconciliationDocumentsSettleDto.StartDate = query.StartDate;
+                queryReconciliationDocumentsSettleDto.EndDate = query.EndDate;
+                queryReconciliationDocumentsSettleDto.PageNum = query.PageNum;
+                queryReconciliationDocumentsSettleDto.PageSize = query.PageSize;
+                queryReconciliationDocumentsSettleDto.CreateEmpId = query.CreateEmpId;
+                queryReconciliationDocumentsSettleDto.IsGenerateSalry = query.IsGenerateSalry;
+                queryReconciliationDocumentsSettleDto.IsInspectOrder = true;
+                var q = await billService.GetSettleListWithPageByCustomerCompensationAsync(queryReconciliationDocumentsSettleDto);
+
+                var reconciliationDocumentsSettle = from d in q.List
+                                                    select new ReconciliationDocumentsSettleVo
+                                                    {
+                                                        Id = d.Id,
+
+                                                        RecommandDocumentId = d.RecommandDocumentId,
+                                                        HospitalName = d.HospitalName,
+                                                        OrderId = d.OrderId,
+                                                        DealInfoId = d.DealInfoId,
+                                                        IsCerateBill = d.IsCerateBill == true ? "是" : "否",
+                                                        BelongCompany = d.BelongCompany,
+                                                        BelongCompany2 = d.BelongCompany2,
+                                                        DealDate = d.DealDate,
+                                                        GoodsName = d.GoodsName,
+                                                        Phone = d.Phone,
+                                                        OrderFromText = d.OrderFromText,
+                                                        OrderPrice = d.OrderPrice,
+                                                        IsOldCustomerText = d.IsOldCustomerText,
+                                                        InformationPrice = d.InformationPrice,
+                                                        SystemUpdatePrice = d.SystemUpdatePrice,
+                                                        ReturnBackPrice = d.ReturnBackPrice,
+                                                        CreateDate = d.CreateDate,
+                                                        IsSettle = d.IsSettle == true ? "是" : "否",
+                                                        SettleDate = d.SettleDate,
+                                                        RecolicationPrice = d.RecolicationPrice,
+                                                        CreateEmpName = d.CreateEmpName,
+                                                        CreateByEmpName = d.CreateByEmpName,
+                                                        AccountTypeText = d.AccountTypeText,
+                                                        AccountPrice = d.AccountPrice,
+                                                        BelongEmpName = d.BelongEmpName,
+                                                        BelongLiveAnchor = d.BelongLiveAnchor,
+                                                        CustomerServiceSettlePrice = d.CustomerServiceSettlePrice,
+                                                        CompensationCheckStateText = d.CompensationCheckStateText,
+                                                        CheckDate = d.CheckDate,
+                                                        CheckRemark = d.CheckRemark,
+                                                        CheckBelongEmpName = d.CheckBelongEmpName,
+                                                        CustomerServiceCompensationId = d.CustomerServiceCompensationId,
+                                                        PerformancePercent = d.PerformancePercent,
+                                                        CustomerServicePerformance = d.CustomerServicePerformance,
+                                                        CheckTypeText = d.CheckTypeText,
+                                                        IsInspectPerformance = d.IsInspectPerformance,
+                                                        CustomerServiceOrderPerformance = d.CustomerServiceOrderPerformance,
+                                                    };
+
+                FxPageInfo<ReconciliationDocumentsSettleVo> reconciliationDocumentsSettleResult = new FxPageInfo<ReconciliationDocumentsSettleVo>();
+                reconciliationDocumentsSettleResult.List = reconciliationDocumentsSettle.ToList();
+                reconciliationDocumentsSettleResult.TotalCount = q.TotalCount;
+                reconciliationDocumentsSettleResult.PageSize = query.PageSize.Value;
+                reconciliationDocumentsSettleResult.CurrentPageIndex = query.PageNum.Value;
+                return ResultData<FxPageInfo<ReconciliationDocumentsSettleVo>>.Success().AddData("reconciliationDocumentsSettleInfo", reconciliationDocumentsSettleResult);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<FxPageInfo<ReconciliationDocumentsSettleVo>>.Fail(ex.Message);
+            }
+        }
+
 
 
         /// <summary>
@@ -333,6 +418,21 @@ namespace Fx.Amiya.Background.Api.Controllers
                 Name=e.Name
             }).ToList();
             return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("creteEmpNameList", nameList);
+        }
+
+        /// <summary>
+        /// 获取薪资审核类型
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("geReconciliationtCheckType")]
+        public async Task<ResultData<List<BaseIdAndNameVo>>> GeReconciliationtCheckTypeAsync()
+        {
+            var list = (await reconciliationDocumentsSettleService.GeReconciliationtCheckTypeAsync()).Select(c => new BaseIdAndNameVo
+            {
+                Id = c.Key,
+                Name = c.Value
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo>>.Success().AddData("reconciliationtCheckType", list);
         }
     }
 }

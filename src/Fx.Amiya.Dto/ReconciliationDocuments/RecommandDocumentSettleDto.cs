@@ -109,6 +109,21 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         public bool IsInspectPerformance { get; set; }
 
         /// <summary>
+        /// 行政客服稽查金额
+        /// </summary>
+        public decimal InspectPrice { get; set; }
+
+        /// <summary>
+        /// 稽查人员
+        /// </summary>
+        public int? InspectBy { get; set; }
+
+        /// <summary>
+        /// 稽查人员名称
+        /// </summary>
+        public string InspectEmpName { get; set; }
+
+        /// <summary>
         /// 审核日期
         /// </summary>
         public DateTime? CheckDate { get; set; }
