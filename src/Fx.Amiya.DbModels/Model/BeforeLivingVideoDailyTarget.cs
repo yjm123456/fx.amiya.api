@@ -26,10 +26,7 @@ namespace Fx.Amiya.DbModels.Model
         /// 视频号涨粉付费
         /// </summary>
         public decimal VideoIncreaseFansFees { get; set; }
-        /// <summary>
-        /// 视频号涨粉成本
-        /// </summary>
-        public decimal VideoIncreaseFansFeesCost { get; set; }
+        
         /// <summary>
         /// 视频号线索量
         /// </summary>

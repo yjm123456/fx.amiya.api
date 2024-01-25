@@ -267,17 +267,61 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// <summary>
         /// 抖音涨粉成本目标
         /// </summary>
-        public decimal TikTokIncreaseFansFeesCostTarget { get; set; }
+        public decimal TikTokIncreaseFansFeesCostTarget
+        {
+            get
+            {
+                if (TikTokIncreaseFansFeesTarget == 0 || TikTokIncreaseFansTarget == 0)
+                {
+                    return 0;
+                }
+                return Math.Round(TikTokIncreaseFansFeesTarget / TikTokIncreaseFansTarget, 2);
+            }
+        }
         /// <summary>
         /// 抖音涨粉成本累计
         /// </summary>
 
-        public decimal CumulativeTikTokIncreaseFansFeesCost { get; set; }
+        public decimal CumulativeTikTokIncreaseFansFeesCost
+        {
+            get
+            {
+                if (CumulativeTikTokIncreaseFans <= 0)
+                {
+                    return CumulativeTikTokIncreaseFansFees;
+                }
+                else
+                {
+                    return Math.Round(CumulativeTikTokIncreaseFansFees / CumulativeTikTokIncreaseFans, 2);
+                }
+
+            }
+        }
         /// <summary>
         /// 抖音涨粉成本完成率
         /// </summary>
 
-        public decimal TikTokIncreaseFansFeesCostCompleteRate { get; set; }
+        public decimal TikTokIncreaseFansFeesCostCompleteRate
+        {
+            get
+            {
+
+                decimal cumulative = 0;
+                if (CumulativeTikTokIncreaseFans <= 0)
+                {
+                    cumulative = CumulativeTikTokIncreaseFansFees;
+                }
+                else
+                {
+                    cumulative = Math.Round(CumulativeTikTokIncreaseFansFees / Convert.ToDecimal(CumulativeTikTokIncreaseFans), 2);
+                }
+                if (TikTokIncreaseFansFeesCostTarget == 0)
+                {
+                    return 0;
+                }
+                return Math.Round((cumulative / TikTokIncreaseFansFeesCostTarget) * 100, 2);
+            }
+        }
         /// <summary>
         /// 抖音线索量目标
         /// </summary>
@@ -324,17 +368,62 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// <summary>
         /// 小红书涨粉成本目标
         /// </summary>
-        public decimal XiaoHongShuIncreaseFansFeesCostTarget { get; set; }
+        public decimal XiaoHongShuIncreaseFansFeesCostTarget
+        {
+            get
+            {
+                if (XiaoHongShuIncreaseFansFeesTarget == 0 || XiaoHongShuIncreaseFansTarget == 0)
+                {
+                    return 0;
+                }
+                return Math.Round(XiaoHongShuIncreaseFansFeesTarget / XiaoHongShuIncreaseFansTarget, 2);
+            }
+        }
         /// <summary>
         /// 小红书涨粉成本累计
         /// </summary>
 
-        public decimal CumulativeXiaoHongShuIncreaseFansFeesCost { get; set; }
+        public decimal CumulativeXiaoHongShuIncreaseFansFeesCost
+        {
+            get
+            {
+
+                decimal cumulative = 0;
+                if (CumulativeXiaoHongShuIncreaseFans <= 0)
+                {
+                    cumulative = CumulativeXiaoHongShuIncreaseFansFees;
+                }
+                else
+                {
+                    cumulative = Math.Round(CumulativeXiaoHongShuIncreaseFansFees / Convert.ToDecimal(CumulativeXiaoHongShuIncreaseFans), 2);
+                }
+                if (XiaoHongShuIncreaseFansFeesCostTarget == 0)
+                {
+                    return 0;
+                }
+                return Math.Round((cumulative / XiaoHongShuIncreaseFansFeesCostTarget) * 100, 2);
+            }
+        }
         /// <summary>
         /// 小红书涨粉成本完成率
         /// </summary>
 
-        public decimal XiaoHongShuIncreaseFansFeesCostCompleteRate { get; set; }
+        public decimal XiaoHongShuIncreaseFansFeesCostCompleteRate
+        {
+            get
+            {
+                decimal cumulative = 0;
+                if (CumulativeXiaoHongShuIncreaseFans <= 0)
+                {
+                    cumulative = CumulativeXiaoHongShuIncreaseFansFees;
+                }
+                else
+                {
+                    cumulative = Math.Round(CumulativeXiaoHongShuIncreaseFansFees / CumulativeXiaoHongShuIncreaseFans, 2);
+                }
+                return Math.Round(cumulative / XiaoHongShuIncreaseFansFeesCostTarget);
+            }
+        }
         /// <summary>
         /// 小红书线索量目标
         /// </summary>
@@ -395,17 +484,61 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// <summary>
         /// 视频号涨粉成本目标
         /// </summary>
-        public decimal VideoIncreaseFansFeesCostTarget { get; set; }
+        public decimal VideoIncreaseFansFeesCostTarget
+        {
+            get
+            {
+                if (VideoIncreaseFansFeesTarget == 0 || VideoIncreaseFansTarget == 0)
+                {
+                    return 0;
+                }
+                return Math.Round(VideoIncreaseFansFeesTarget / VideoIncreaseFansTarget, 2);
+            }
+        }
         /// <summary>
         /// 视频号涨粉成本累计
         /// </summary>
 
-        public decimal CumulativeVideoIncreaseFansFeesCost { get; set; }
+        public decimal CumulativeVideoIncreaseFansFeesCost
+        {
+            get
+            {
+                if (CumulativeVideoIncreaseFans <= 0)
+                {
+                    return CumulativeVideoIncreaseFansFees;
+                }
+                else
+                {
+                    return Math.Round(CumulativeVideoIncreaseFansFees / CumulativeVideoIncreaseFans, 2);
+                }
+
+            }
+        }
         /// <summary>
         /// 视频号涨粉成本完成率
         /// </summary>
 
-        public decimal VideoIncreaseFansFeesCostCompleteRate { get; set; }
+        public decimal VideoIncreaseFansFeesCostCompleteRate
+        {
+            get
+            {
+
+                decimal cumulative = 0;
+                if (CumulativeVideoIncreaseFans <= 0)
+                {
+                    cumulative = CumulativeVideoIncreaseFansFees;
+                }
+                else
+                {
+                    cumulative = Math.Round(CumulativeVideoIncreaseFansFees / Convert.ToDecimal(CumulativeVideoIncreaseFans), 2);
+                }
+                if (VideoIncreaseFansFeesCostTarget == 0)
+                {
+                    return 0;
+                }
+                return Math.Round((cumulative / VideoIncreaseFansFeesCostTarget) * 100, 2);
+            }
+        }
         /// <summary>
         /// 视频号线索量目标
         /// </summary>
@@ -434,7 +567,7 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// </summary>
 
         public decimal VideoShowcaseIncomeCompleteRate { get; set; }
-        
+
 
         /// <summary>
         /// 抖音橱窗付费目标

@@ -30,10 +30,7 @@ namespace Fx.Amiya.DbModels.Model
         /// 抖音涨粉付费
         /// </summary>
         public decimal TikTokIncreaseFansFees { get; set; }
-        /// <summary>
-        /// 抖音涨粉成本
-        /// </summary>
-        public decimal TikTokIncreaseFansFeesCost { get; set; }
+      
         /// <summary>
         /// 抖音橱窗付费
         /// </summary>

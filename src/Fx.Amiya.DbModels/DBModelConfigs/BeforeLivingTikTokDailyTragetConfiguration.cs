@@ -26,7 +26,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.TikTokClues).HasColumnName("tiktok_clues").HasColumnType("int").IsRequired();
             builder.Property(t => t.TikTokIncreaseFans).HasColumnName("tiktok_increase_fans").HasColumnType("int").IsRequired();
             builder.Property(t => t.TikTokIncreaseFansFees).HasColumnName("tiktok_increase_fans_fees").HasColumnType("decimal(12,2)").IsRequired();
-            builder.Property(t => t.TikTokIncreaseFansFeesCost).HasColumnName("tiktok_increase_fans_fees_cost").HasColumnType("decimal(12,2)").IsRequired();
+            
             builder.Property(t => t.TikTokShowCaseFee).HasColumnName("tiktok_showcase_fee").HasColumnType("decimal(12,2)").IsRequired();
             builder.HasOne(e => e.LiveAnchorMonthlyTargetBeforeLiving).WithMany(e => e.beforeLivingTikTokDailyTragets).HasForeignKey(e => e.LiveAnchorMonthlyTargetId);
             builder.HasOne(e => e.AmiyaEmployee).WithMany(e => e.beforeLivingTikTokDailyTragets).HasForeignKey(e => e.OperationEmpId);

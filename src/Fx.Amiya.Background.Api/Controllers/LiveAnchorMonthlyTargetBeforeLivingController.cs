@@ -229,41 +229,31 @@ namespace Fx.Amiya.Background.Api.Controllers
 
                 addDto.ZhihuReleaseTarget = addVo.ZhihuReleaseTarget;
                 addDto.ZhihuFlowinvestmentTarget = addVo.ZhihuFlowinvestmentTarget;
-
                 addDto.VideoReleaseTarget = addVo.VideoReleaseTarget;
                 addDto.VideoFlowinvestmentTarget = addVo.VideoFlowinvestmentTarget;
                 addDto.VideoShowcaseIncomeTarget = addVo.VideoShowcaseIncomeTarget;
                 addDto.VideoCluesTarget = addVo.VideoCluesTarget;
                 addDto.VideoIncreaseFansTarget = addVo.VideoIncreaseFansTarget;
-                addDto.VideoIncreaseFansFeesTarget = addVo.VideoIncreaseFansFeesTarget;
-                
+                addDto.VideoIncreaseFansFeesTarget = addVo.VideoIncreaseFansFeesTarget;              
                 addDto.VideoShowCaseFeeTarget = addVo.VideoShowCaseFeeTarget;
-
                 addDto.TikTokReleaseTarget = addVo.TikTokReleaseTarget;
                 addDto.TikTokFlowinvestmentTarget = addVo.TikTokFlowinvestmentTarget;
                 addDto.TikTokShowcaseIncomeTarget = addVo.TikTokShowcaseIncomeTarget;
                 addDto.TikTokCluesTarget = addVo.TikTokCluesTarget;
                 addDto.TikTokIncreaseFansTarget = addVo.TikTokIncreaseFansTarget;
-                addDto.TikTokIncreaseFansFeesTarget = addVo.TikTokIncreaseFansFeesTarget;
-                
+                addDto.TikTokIncreaseFansFeesTarget = addVo.TikTokIncreaseFansFeesTarget;              
                 addDto.TikTokShowCaseFeeTarget = addVo.TikTokShowCaseFeeTarget;
-
                 addDto.XiaoHongShuReleaseTarget = addVo.XiaoHongShuReleaseTarget;
                 addDto.XiaoHongShuFlowinvestmentTarget = addVo.XiaoHongShuFlowinvestmentTarget;
                 addDto.XiaoHongShuShowcaseIncomeTarget = addVo.XiaoHongShuShowcaseIncomeTarget;
                 addDto.XiaoHongShuCluesTarget = addVo.XiaoHongShuCluesTarget;
                 addDto.XiaoHongShuIncreaseFansTarget = addVo.XiaoHongShuIncreaseFansTarget;
-                addDto.XiaoHongShuIncreaseFansFeesTarget = addVo.XiaoHongShuIncreaseFansFeesTarget;
-                
+                addDto.XiaoHongShuIncreaseFansFeesTarget = addVo.XiaoHongShuIncreaseFansFeesTarget;               
                 addDto.XiaoHongShuShowCaseFeeTarget = addVo.XiaoHongShuShowCaseFeeTarget;
-
                 addDto.SinaWeiBoReleaseTarget = addVo.SinaWeiBoReleaseTarget;
                 addDto.SinaWeiBoFlowinvestmentTarget = addVo.SinaWeiBoFlowinvestmentTarget;
-
                 addDto.ReleaseTarget = addVo.ReleaseTarget;
-                addDto.FlowInvestmentTarget = addVo.FlowInvestmentTarget;
-
-                addDto.FlowInvestmentTarget = addVo.FlowInvestmentTarget;
+                addDto.FlowInvestmentTarget = addVo.FlowInvestmentTarget;               
                 await _liveAnchorMonthlyTargetBeforeLivingService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -416,36 +406,30 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.Month = updateVo.Month;
                 updateDto.MonthlyTargetName = updateVo.MonthlyTargetName;
                 updateDto.LiveAnchorId = updateVo.LiveAnchorId;
-
                 updateDto.TikTokReleaseTarget = updateVo.TikTokReleaseTarget;
                 updateDto.ZhihuReleaseTarget = updateVo.ZhihuReleaseTarget;
                 updateDto.XiaoHongShuReleaseTarget = updateVo.XiaoHongShuReleaseTarget;
                 updateDto.SinaWeiBoReleaseTarget = updateVo.SinaWeiBoReleaseTarget;
                 updateDto.VideoReleaseTarget = updateVo.VideoReleaseTarget;
-
                 updateDto.TikTokShowcaseIncomeTarget = updateVo.TikTokShowcaseIncomeTarget;
                 updateDto.TikTokCluesTarget = updateVo.TikTokCluesTarget;
                 updateDto.TikTokIncreaseFansTarget = updateVo.TikTokIncreaseFansTarget;
-                updateDto.TikTokIncreaseFansFeesTarget = updateVo.TikTokIncreaseFansFeesTarget;
-                updateDto.TikTokIncreaseFansFeesCostTarget = updateVo.TikTokIncreaseFansFeesCostTarget;
+                updateDto.TikTokIncreaseFansFeesTarget = updateVo.TikTokIncreaseFansFeesTarget;               
                 updateDto.TikTokFlowinvestmentTarget = updateVo.TikTokFlowinvestmentTarget;
                 updateDto.ZhihuFlowinvestmentTarget = updateVo.ZhihuFlowinvestmentTarget;
                 updateDto.XiaoHongShuFlowinvestmentTarget = updateVo.XiaoHongShuFlowinvestmentTarget;
                 updateDto.SinaWeiBoFlowinvestmentTarget = updateVo.SinaWeiBoFlowinvestmentTarget;
                 updateDto.VideoFlowinvestmentTarget = updateVo.VideoFlowinvestmentTarget;
-
                 updateDto.ReleaseTarget = updateVo.ReleaseTarget;
                 updateDto.FlowInvestmentTarget = updateVo.FlowInvestmentTarget;
                 updateDto.XiaoHongShuShowcaseIncomeTarget = updateVo.XiaoHongShuShowcaseIncomeTarget;
                 updateDto.XiaoHongShuCluesTarget = updateVo.XiaoHongShuCluesTarget;
                 updateDto.XiaoHongShuIncreaseFansTarget = updateVo.XiaoHongShuIncreaseFansTarget;
-                updateDto.XiaoHongShuIncreaseFansFeesTarget = updateVo.XiaoHongShuIncreaseFansFeesTarget;
-                updateDto.XiaoHongShuIncreaseFansFeesCostTarget = updateVo.XiaoHongShuIncreaseFansFeesCostTarget;
+                updateDto.XiaoHongShuIncreaseFansFeesTarget = updateVo.XiaoHongShuIncreaseFansFeesTarget;              
                 updateDto.VideoShowcaseIncomeTarget = updateVo.VideoShowcaseIncomeTarget;
                 updateDto.VideoCluesTarget = updateVo.VideoCluesTarget;
                 updateDto.VideoIncreaseFansTarget = updateVo.VideoIncreaseFansTarget;
-                updateDto.VideoIncreaseFansFeesTarget = updateVo.VideoIncreaseFansFeesTarget;
-                updateDto.VideoIncreaseFansFeesCostTarget = updateVo.VideoIncreaseFansFeesCostTarget;
+                updateDto.VideoIncreaseFansFeesTarget = updateVo.VideoIncreaseFansFeesTarget;               
                 updateDto.VideoShowcaseFeeTarget=updateVo.VideoShowcaseFeeTarget;
                 updateDto.TikTokShowcaseFeeTarget = updateVo.TikTokShowcaseFeeTarget;
                 updateDto.XiaoHongShuShowcaseFeeTarget = updateVo.XiaoHongShuShowcaseFeeTarget;

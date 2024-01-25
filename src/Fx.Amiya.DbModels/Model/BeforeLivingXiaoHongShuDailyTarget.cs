@@ -26,10 +26,7 @@ namespace Fx.Amiya.DbModels.Model
         /// 小红书涨粉付费
         /// </summary>
         public decimal XiaoHongShuIncreaseFansFees { get; set; }
-        /// <summary>
-        /// 小红书涨粉成本
-        /// </summary>
-        public decimal XiaoHongShuIncreaseFansFeesCost { get; set; }
+     
         /// <summary>
         /// 小红书线索量
         /// </summary>

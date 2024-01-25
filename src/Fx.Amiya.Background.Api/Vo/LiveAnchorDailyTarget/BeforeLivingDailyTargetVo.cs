@@ -81,6 +81,10 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 橱窗付费
         /// </summary>
         public decimal ShowCaseFee { get; set; }
+        /// <summary>
+        /// 今日涨粉费用
+        /// </summary>
+        public decimal IncreaseFansFeesCost { get; set; }
 
     }
 }

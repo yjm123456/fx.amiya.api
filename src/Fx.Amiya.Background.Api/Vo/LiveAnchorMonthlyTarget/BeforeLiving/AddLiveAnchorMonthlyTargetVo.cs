@@ -99,10 +99,7 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.BeforeLiving
         /// </summary>
         public decimal TikTokIncreaseFansFeesTarget { get; set; }
 
-        /// <summary>
-        /// 抖音涨粉成本目标
-        /// </summary>
-        public decimal TikTokIncreaseFansFeesCostTarget { get; set; }
+        
 
         /// <summary>
         /// 抖音线索量目标

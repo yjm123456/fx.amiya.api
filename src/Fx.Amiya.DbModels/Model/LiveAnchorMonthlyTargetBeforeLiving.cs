@@ -111,20 +111,7 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
 
         public decimal TikTokIncreaseFansFeesCompleteRate { get; set; }
-        /// <summary>
-        /// 抖音涨粉成本目标
-        /// </summary>
-        public decimal TikTokIncreaseFansFeesCostTarget { get; set; }
-        /// <summary>
-        /// 抖音涨粉成本累计
-        /// </summary>
-
-        public decimal CumulativeTikTokIncreaseFansFeesCost { get; set; }
-        /// <summary>
-        /// 抖音涨粉成本完成率
-        /// </summary>
-
-        public decimal TikTokIncreaseFansFeesCostCompleteRate { get; set; }
+        
         /// <summary>
         /// 抖音线索量目标
         /// </summary>
@@ -228,20 +215,7 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
 
         public decimal XiaoHongShuIncreaseFansFeesCompleteRate { get; set; }
-        /// <summary>
-        /// 小红书涨粉成本目标
-        /// </summary>
-        public decimal XiaoHongShuIncreaseFansFeesCostTarget { get; set; }
-        /// <summary>
-        /// 小红书涨粉成本累计
-        /// </summary>
-
-        public decimal CumulativeXiaoHongShuIncreaseFansFeesCost { get; set; }
-        /// <summary>
-        /// 小红书涨粉成本完成率
-        /// </summary>
-
-        public decimal XiaoHongShuIncreaseFansFeesCostCompleteRate { get; set; }
+        
         /// <summary>
         /// 小红书线索量目标
         /// </summary>
@@ -359,20 +333,7 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
 
         public decimal VideoIncreaseFansFeesCompleteRate { get; set; }
-        /// <summary>
-        /// 视频号涨粉成本目标
-        /// </summary>
-        public decimal VideoIncreaseFansFeesCostTarget { get; set; }
-        /// <summary>
-        /// 视频号涨粉成本累计
-        /// </summary>
-
-        public decimal CumulativeVideoIncreaseFansFeesCost { get; set; }
-        /// <summary>
-        /// 视频号涨粉成本完成率
-        /// </summary>
-
-        public decimal VideoIncreaseFansFeesCostCompleteRate { get; set; }
+        
         /// <summary>
         /// 视频号线索量目标
         /// </summary>

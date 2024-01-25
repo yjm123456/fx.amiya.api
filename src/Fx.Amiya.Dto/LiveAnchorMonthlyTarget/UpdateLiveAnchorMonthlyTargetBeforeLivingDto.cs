@@ -101,10 +101,7 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// </summary>
         public decimal TikTokIncreaseFansFeesTarget { get; set; }
 
-        /// <summary>
-        /// 抖音涨粉成本目标
-        /// </summary>
-        public decimal TikTokIncreaseFansFeesCostTarget { get; set; }
+       
 
         /// <summary>
         /// 抖音线索量目标
@@ -122,10 +119,7 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// </summary>
         public decimal XiaoHongShuIncreaseFansFeesTarget { get; set; }
 
-        /// <summary>
-        /// 小红书涨粉成本目标
-        /// </summary>
-        public decimal XiaoHongShuIncreaseFansFeesCostTarget { get; set; }
+ 
 
         /// <summary>
         /// 小红书线索量目标
@@ -148,10 +142,7 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// </summary>
         public decimal VideoIncreaseFansFeesTarget { get; set; }
 
-        /// <summary>
-        /// 视频号涨粉成本目标
-        /// </summary>
-        public decimal VideoIncreaseFansFeesCostTarget { get; set; }
+      
 
         /// <summary>
         /// 视频号线索量目标

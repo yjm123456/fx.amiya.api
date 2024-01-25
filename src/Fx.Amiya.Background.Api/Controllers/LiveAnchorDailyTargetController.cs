@@ -80,12 +80,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 TikTokOperationEmployeeName = d.TikTokOperationEmployeeName,
                                                 TikTokSendNum = d.TikTokSendNum,
                                                 TikTokFlowInvestmentNum = d.TikTokFlowInvestmentNum,
-                                                TikTokShowcaseIncome=d.TikTokShowcaseIncome,
-                                                TikTokClues=d.TikTokClues,
+                                                TikTokShowcaseIncome = d.TikTokShowcaseIncome,
+                                                TikTokClues = d.TikTokClues,
                                                 TikTokIncreaseFans = d.TikTokIncreaseFans,
                                                 TikTokIncreaseFansFeesCost = d.TikTokIncreaseFansFeesCost,
                                                 TikTokIncreaseFansFees = d.TikTokIncreaseFansFees,
-                                                TikTokShowcaseFee= d.TikTokShowcaseFee,
+                                                TikTokShowcaseFee = d.TikTokShowcaseFee,
 
                                                 VideoOperationEmployeeName = d.VideoOperationEmployeeName,
                                                 VideoSendNum = d.VideoSendNum,
@@ -95,7 +95,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 VideoIncreaseFans = d.VideoIncreaseFans,
                                                 VideoIncreaseFansFeesCost = d.VideoIncreaseFansFeesCost,
                                                 VideoIncreaseFansFees = d.VideoIncreaseFansFees,
-                                                VideoShowcaseFee=d.VideoShowcaseFee,
+                                                VideoShowcaseFee = d.VideoShowcaseFee,
 
                                                 XiaoHongShuOperationEmployeeName = d.XiaoHongShuOperationEmployeeName,
                                                 XiaoHongShuSendNum = d.XiaoHongShuSendNum,
@@ -105,7 +105,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 XiaoHongShuIncreaseFans = d.XiaoHongShuIncreaseFans,
                                                 XiaoHongShuIncreaseFansFeesCost = d.XiaoHongShuIncreaseFansFeesCost,
                                                 XiaoHongShuIncreaseFansFees = d.XiaoHongShuIncreaseFansFees,
-                                                XiaoHongShuShowcaseFee=d.XiaoHongShuShowcaseFee,
+                                                XiaoHongShuShowcaseFee = d.XiaoHongShuShowcaseFee,
 
                                                 ZhihuOperationEmployeeName = d.ZhihuOperationEmployeeName,
                                                 ZhihuSendNum = d.ZhihuSendNum,
@@ -187,18 +187,19 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 CreateDate = d.CreateDate,
                                                 RecordDate = d.RecordDate,
                                                 UpdateDate = d.UpdateDate,
-                                                OperationEmpName=d.OperationEmpName,
+                                                OperationEmpName = d.OperationEmpName,
                                                 SendNum = d.SendNum,
                                                 FlowInvestmentNum = d.FlowInvestmentNum,
                                                 AddWechatNum = d.AddWechatNum,
                                                 SendOrderNum = d.SendOrderNum,
                                                 DealNum = d.DealNum,
                                                 PerformanceNum = d.PerformanceNum,
-                                                TikTokShowcaseIncome=d.TikTokShowcaseIncome,
-                                                IncreaseFans=d.IncreaseFans,
-                                                IncreaseFansFees=d.IncreaseFansFees,
-                                                Clues=d.Clues,
-                                                ShowCaseFee=d.ShowCaseFee
+                                                TikTokShowcaseIncome = d.TikTokShowcaseIncome,
+                                                IncreaseFans = d.IncreaseFans,
+                                                IncreaseFansFees = d.IncreaseFansFees,
+                                                Clues = d.Clues,
+                                                ShowCaseFee = d.ShowCaseFee,
+                                                IncreaseFansFeesCost = d.IncreaseFansFeesCost
                                             };
 
                 FxPageInfo<BeforeLivingDailyTargetVo> liveAnchorDailyTargetPageInfo = new FxPageInfo<BeforeLivingDailyTargetVo>();
@@ -223,13 +224,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("livingListWithPage")]
-        public async Task<ResultData<FxPageInfo<LivingDailyTargetVo>>> GetLivingListWithPageAsync(DateTime startDate, DateTime endDate,int? liveAnchorId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<LivingDailyTargetVo>>> GetLivingListWithPageAsync(DateTime startDate, DateTime endDate, int? liveAnchorId, int pageNum, int pageSize)
         {
             try
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await _liveAnchorDailyTargetService.GetLivingListWithPageAsync(startDate, endDate,  liveAnchorId, pageNum, pageSize, employeeId);
+                var q = await _liveAnchorDailyTargetService.GetLivingListWithPageAsync(startDate, endDate, liveAnchorId, pageNum, pageSize, employeeId);
 
                 var liveAnchorDailyTarget = from d in q.List
                                             select new LivingDailyTargetVo
@@ -247,14 +248,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 Consultation = d.Consultation,
                                                 Consultation2 = d.Consultation2,
                                                 CargoSettlementCommission = d.CargoSettlementCommission,
-                                                RefundCard=d.RefundCard,
-                                                GMV=d.GMV,
-                                                EliminateCardGMV=d.EliminateCardGMV,
-                                                RefundGMV=d.RefundGMV,
-                                                TikTokPlusNum=d.TikTokPlusNum,
-                                                QianChuanNum=d.QianChuanNum,
-                                                ShuiXinTuiNum=d.ShuiXinTuiNum,
-                                                WeiXinDou=d.WeiXinDou
+                                                RefundCard = d.RefundCard,
+                                                GMV = d.GMV,
+                                                EliminateCardGMV = d.EliminateCardGMV,
+                                                RefundGMV = d.RefundGMV,
+                                                TikTokPlusNum = d.TikTokPlusNum,
+                                                QianChuanNum = d.QianChuanNum,
+                                                ShuiXinTuiNum = d.ShuiXinTuiNum,
+                                                WeiXinDou = d.WeiXinDou
                                             };
 
                 FxPageInfo<LivingDailyTargetVo> liveAnchorDailyTargetPageInfo = new FxPageInfo<LivingDailyTargetVo>();
@@ -319,8 +320,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 PerformanceNum = d.PerformanceNum,
                                                 MinivanRefund = d.MinivanRefund,
                                                 MiniVanBadReviews = d.MiniVanBadReviews,
-                                                EffectivePerformance=d.EffectivePerformance,
-                                                PotentialPerformance=d.PotentialPerformance
+                                                EffectivePerformance = d.EffectivePerformance,
+                                                PotentialPerformance = d.PotentialPerformance
                                             };
 
                 FxPageInfo<AfterLivingDailyTargetVo> liveAnchorDailyTargetPageInfo = new FxPageInfo<AfterLivingDailyTargetVo>();
@@ -364,7 +365,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorDailyTargetVo.TikTokIncreaseFans = liveAnchorDailyTarget.TikTokIncreaseFans;
                 liveAnchorDailyTargetVo.TikTokIncreaseFansFees = liveAnchorDailyTarget.TikTokIncreaseFansFees;
                 liveAnchorDailyTargetVo.TikTokIncreaseFansFeesCost = liveAnchorDailyTarget.TikTokIncreaseFansFeesCost;
-                liveAnchorDailyTargetVo.TikTokShowcaseFee= liveAnchorDailyTarget.TikTokShowcaseFee;
+                liveAnchorDailyTargetVo.TikTokShowcaseFee = liveAnchorDailyTarget.TikTokShowcaseFee;
 
 
                 liveAnchorDailyTargetVo.ZhihuOperationEmployeeId = liveAnchorDailyTarget.ZhihuOperationEmployeeId;
@@ -858,10 +859,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.GMV = addVo.GMV;
                     addDto.EliminateCardGMV = addVo.EliminateCardGMV;
                     addDto.RefundGMV = addVo.RefundGMV;
-                    addDto.TikTokPlusNum=addVo.TikTokPlusNum;
-                    addDto.QianChuanNum=addVo.QianChuanNum;
+                    addDto.TikTokPlusNum = addVo.TikTokPlusNum;
+                    addDto.QianChuanNum = addVo.QianChuanNum;
                     addDto.ShuiXinTuiNum = addVo.ShuiXinTuiNum;
-                    addDto.WeiXinDou=addVo.WeiXinDou;
+                    addDto.WeiXinDou = addVo.WeiXinDou;
                     await _liveAnchorDailyTargetService.LivingAddAsync(addDto);
                 }
                 return ResultData.Success();

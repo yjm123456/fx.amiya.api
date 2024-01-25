@@ -117,8 +117,8 @@ namespace Fx.Amiya.Service
                                           TikTokShowcaseIncome = d.TikTokShowcaseIncome,
                                           TikTokClues = d.TikTokClues,
                                           TikTokIncreaseFans = d.TikTokIncreaseFans,
-                                          TikTokIncreaseFansFees = d.TikTokIncreaseFansFees,
-                                          TikTokIncreaseFansFeesCost = d.TikTokIncreaseFansFeesCost,
+                                          TikTokIncreaseFansFees = d.TikTokIncreaseFansFees,                                          
+                                          TikTokIncreaseFansFeesCost = d.TikTokIncreaseFans <= 0 ? d.TikTokIncreaseFansFees : Math.Round(d.TikTokIncreaseFansFees / Convert.ToDecimal(d.TikTokIncreaseFans), 2),
                                           TikTokShowCaseFee = d.TikTokShowCaseFee
                                       };
                 var tikTokDailyInfoList = await tikTokDailyInfo.ToListAsync();
@@ -143,7 +143,7 @@ namespace Fx.Amiya.Service
                                                XiaoHongShuClues = d.XiaoHongShuClues,
                                                XiaoHongShuIncreaseFans = d.XiaoHongShuIncreaseFans,
                                                XiaoHongShuIncreaseFansFees = d.XiaoHongShuIncreaseFansFees,
-                                               XiaoHongShuIncreaseFansFeesCost = d.XiaoHongShuIncreaseFansFeesCost,
+                                               XiaoHongShuIncreaseFansFeesCost = d.XiaoHongShuIncreaseFans <= 0 ? d.XiaoHongShuIncreaseFansFees : Math.Round(d.XiaoHongShuIncreaseFansFees / Convert.ToDecimal(d.XiaoHongShuIncreaseFans), 2),
                                                XiaoHongShuShowCaseFee = d.XiaoHongShuShowCaseFee
                                            };
                 var xiaohongshuDailyInfoList = await xiaohongshuDailyInfo.ToListAsync();
@@ -168,7 +168,7 @@ namespace Fx.Amiya.Service
                                          VideoClues = d.VideoClues,
                                          VideoIncreaseFans = d.VideoIncreaseFans,
                                          VideoIncreaseFansFees = d.VideoIncreaseFansFees,
-                                         VideoIncreaseFansFeesCost = d.VideoIncreaseFansFeesCost,
+                                         VideoIncreaseFansFeesCost = d.VideoIncreaseFans <= 0 ? d.VideoIncreaseFansFees : Math.Round(d.VideoIncreaseFansFees / Convert.ToDecimal(d.VideoIncreaseFans), 2),
                                          VideoShowCaseFee = d.VideoShowCaseFee
                                      };
                 var videoDailyInfoList = await videoDailyInfo.ToListAsync();
@@ -521,7 +521,8 @@ namespace Fx.Amiya.Service
                                               Clues = d.TikTokClues,
                                               IncreaseFans = d.TikTokIncreaseFans,
                                               IncreaseFansFees = d.TikTokIncreaseFansFees,
-                                              ShowCaseFee = d.TikTokShowCaseFee
+                                              ShowCaseFee = d.TikTokShowCaseFee,
+                                              IncreaseFansFeesCost=d.TikTokIncreaseFans<=0?d.TikTokIncreaseFansFees:Math.Round(d.TikTokIncreaseFansFees/Convert.ToDecimal(d.TikTokIncreaseFans),2)
                                           };
                     BeforeLivingDailyTargetDtoList = await tikTokDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
                 }
@@ -592,7 +593,8 @@ namespace Fx.Amiya.Service
                                                    Clues = d.XiaoHongShuClues,
                                                    IncreaseFans = d.XiaoHongShuIncreaseFans,
                                                    IncreaseFansFees = d.XiaoHongShuIncreaseFansFees,
-                                                   ShowCaseFee = d.XiaoHongShuShowCaseFee
+                                                   ShowCaseFee = d.XiaoHongShuShowCaseFee,
+                                                   IncreaseFansFeesCost = d.XiaoHongShuIncreaseFans <= 0 ? d.XiaoHongShuIncreaseFansFees : Math.Round(d.XiaoHongShuIncreaseFansFees / Convert.ToDecimal(d.XiaoHongShuIncreaseFans), 2)
                                                };
                     BeforeLivingDailyTargetDtoList = await xiaohongshuDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
                 }
@@ -619,7 +621,8 @@ namespace Fx.Amiya.Service
                                              Clues = d.VideoClues,
                                              IncreaseFans = d.VideoIncreaseFans,
                                              IncreaseFansFees = d.VideoIncreaseFansFees,
-                                             VideoShowCaseFee = d.VideoShowCaseFee
+                                             ShowCaseFee = d.VideoShowCaseFee,
+                                             IncreaseFansFeesCost = d.VideoIncreaseFans <= 0 ? d.VideoIncreaseFansFees : Math.Round(d.VideoIncreaseFansFees / Convert.ToDecimal(d.VideoIncreaseFans), 2)
                                          };
                     BeforeLivingDailyTargetDtoList = await videoDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
                 }
@@ -1321,16 +1324,8 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.TikTokClues = addDto.TikTokClues;
                 liveAnchorDailyTarget.TikTokIncreaseFans = addDto.TikTokIncreaseFans;
                 liveAnchorDailyTarget.TikTokIncreaseFansFees = addDto.TikTokIncreaseFansFees;
-                liveAnchorDailyTarget.TikTokIncreaseFansFeesCost = addDto.TikTokIncreaseFansFeesCost;
-                liveAnchorDailyTarget.TikTokShowCaseFee = addDto.TikTokShowCaseFee;
-                if (liveAnchorDailyTarget.TikTokIncreaseFans == 0 || liveAnchorDailyTarget.TikTokIncreaseFansFees == 0)
-                {
-                    liveAnchorDailyTarget.TikTokIncreaseFansFeesCost = 0;
-                }
-                else
-                {
-                    liveAnchorDailyTarget.TikTokIncreaseFansFeesCost = Math.Round(liveAnchorDailyTarget.TikTokIncreaseFansFees / Convert.ToDecimal(liveAnchorDailyTarget.TikTokIncreaseFans), 2);
-                }
+                
+                liveAnchorDailyTarget.TikTokShowCaseFee = addDto.TikTokShowCaseFee;               
                 await _beforeLivingTikTokDailyTraget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto();
@@ -1588,14 +1583,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.XiaoHongShuIncreaseFans = addDto.XiaoHongShuIncreaseFans;
                 liveAnchorDailyTarget.XiaoHongShuIncreaseFansFees = addDto.XiaoHongShuIncreaseFansFees;
                 liveAnchorDailyTarget.XiaoHongShuShowCaseFee = addDto.XiaoHongShuShowCaseFee;
-                if (liveAnchorDailyTarget.XiaoHongShuIncreaseFans == 0 || liveAnchorDailyTarget.XiaoHongShuIncreaseFansFees == 0)
-                {
-                    liveAnchorDailyTarget.XiaoHongShuIncreaseFansFeesCost = 0;
-                }
-                else
-                {
-                    liveAnchorDailyTarget.XiaoHongShuIncreaseFansFeesCost = Math.Round(liveAnchorDailyTarget.XiaoHongShuIncreaseFansFees / Convert.ToDecimal(liveAnchorDailyTarget.XiaoHongShuIncreaseFans), 2);
-                }
+                
                 await _beforeLivingXiaoHongShuDailyTraget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto();
@@ -1856,14 +1844,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.VideoIncreaseFans = addDto.VideoIncreaseFans;
                 liveAnchorDailyTarget.VideoIncreaseFansFees = addDto.VideoIncreaseFansFees;
                 liveAnchorDailyTarget.VideoShowCaseFee = addDto.VideoShowCaseFee;
-                if (liveAnchorDailyTarget.VideoIncreaseFans == 0 || liveAnchorDailyTarget.VideoIncreaseFansFees == 0)
-                {
-                    liveAnchorDailyTarget.VideoIncreaseFansFeesCost = 0;
-                }
-                else
-                {
-                    liveAnchorDailyTarget.VideoIncreaseFansFeesCost = Math.Round(liveAnchorDailyTarget.VideoIncreaseFansFees / Convert.ToDecimal(liveAnchorDailyTarget.VideoIncreaseFans), 2);
-                }
+                
                 await _beforeLivingVideoDailyTraget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto();
