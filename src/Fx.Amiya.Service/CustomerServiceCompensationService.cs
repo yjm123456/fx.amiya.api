@@ -62,7 +62,7 @@ namespace Fx.Amiya.Service
                                                    TotalPrice = d.TotalPrice,
                                                    OtherPrice = d.OtherPrice,
                                                    Remark = d.Remark,
-                                                   Salary = d.Salary,                                                  
+                                                   Salary = d.Salary,
                                                    CustomerServicePerformance = d.CustomerServicePerformance,
                                                    ToHospitalRate = d.ToHospitalRate,
                                                    ToHospitalRateReword = d.ToHospitalRateReword,
@@ -72,6 +72,12 @@ namespace Fx.Amiya.Service
                                                    OldCustomerToHospitalReword = d.OldCustomerToHospitalReword,
                                                    TargetFinishReword = d.TargetFinishReword,
                                                    OtherChargebacks = d.OtherChargebacks,
+                                                   BeautyAddWechatPrice = d.BeautyAddWechatPrice,
+                                                   TakeGoodsAddWechatPrice = d.TakeGoodsAddWechatPrice,
+                                                   ConsulationCardPrice = d.ConsulationCardPrice,
+                                                   ConsulationCardAddWechatPrice = d.ConsulationCardAddWechatPrice,
+                                                   CooperationLiveAnchorToHospitalPrice = d.CooperationLiveAnchorToHospitalPrice,
+                                                   CooperationLiveAnchorSendOrderPrice = d.CooperationLiveAnchorSendOrderPrice,
                                                };
             FxPageInfo<CustomerServiceCompensationDto> customerServiceCompensationPageInfo = new FxPageInfo<CustomerServiceCompensationDto>();
             customerServiceCompensationPageInfo.TotalCount = await customerServiceCompensations.CountAsync();
@@ -111,10 +117,18 @@ namespace Fx.Amiya.Service
                 customerServiceCompensation.OldCustomerToHospitalReword = addDto.OldCustomerToHospitalReword;
                 customerServiceCompensation.TargetFinishReword = addDto.TargetFinishReword;
                 customerServiceCompensation.OtherChargebacks = addDto.OtherChargebacks;
+
+
+                customerServiceCompensation.BeautyAddWechatPrice = addDto.BeautyAddWechatPrice;
+                customerServiceCompensation.TakeGoodsAddWechatPrice = addDto.TakeGoodsAddWechatPrice;
+                customerServiceCompensation.ConsulationCardPrice = addDto.ConsulationCardPrice;
+                customerServiceCompensation.ConsulationCardAddWechatPrice = addDto.ConsulationCardAddWechatPrice;
+                customerServiceCompensation.CooperationLiveAnchorToHospitalPrice = addDto.CooperationLiveAnchorToHospitalPrice;
+                customerServiceCompensation.CooperationLiveAnchorSendOrderPrice = addDto.CooperationLiveAnchorSendOrderPrice;
                 await dalCustomerServiceCompensation.AddAsync(customerServiceCompensation, true);
 
                 //对账单审核记录加入id
-                await recommandDocumentSettleService.AddCustomerServiceCompensationIdAsync(addDto.RecommandDocumentSettleIdList, customerServiceCompensation.Id,addDto.BelongEmpId);
+                await recommandDocumentSettleService.AddCustomerServiceCompensationIdAsync(addDto.RecommandDocumentSettleIdList, customerServiceCompensation.Id, addDto.BelongEmpId);
                 unitOfWork.Commit();
             }
             catch (Exception err)
@@ -161,6 +175,14 @@ namespace Fx.Amiya.Service
             returnResult.TargetFinishReword = result.TargetFinishReword;
             returnResult.OtherChargebacks = result.OtherChargebacks;
 
+
+            returnResult.BeautyAddWechatPrice = result.BeautyAddWechatPrice;
+            returnResult.TakeGoodsAddWechatPrice = result.TakeGoodsAddWechatPrice;
+            returnResult.ConsulationCardPrice = result.ConsulationCardPrice;
+            returnResult.ConsulationCardAddWechatPrice = result.ConsulationCardAddWechatPrice;
+            returnResult.CooperationLiveAnchorToHospitalPrice = result.CooperationLiveAnchorToHospitalPrice;
+            returnResult.CooperationLiveAnchorSendOrderPrice = result.CooperationLiveAnchorSendOrderPrice;
+
             return returnResult;
         }
 
@@ -193,6 +215,14 @@ namespace Fx.Amiya.Service
             result.OldCustomerToHospitalReword = updateDto.OldCustomerToHospitalReword;
             result.TargetFinishReword = updateDto.TargetFinishReword;
             result.OtherChargebacks = updateDto.OtherChargebacks;
+
+
+            result.BeautyAddWechatPrice = updateDto.BeautyAddWechatPrice;
+            result.TakeGoodsAddWechatPrice = updateDto.TakeGoodsAddWechatPrice;
+            result.ConsulationCardPrice = updateDto.ConsulationCardPrice;
+            result.ConsulationCardAddWechatPrice = updateDto.ConsulationCardAddWechatPrice;
+            result.CooperationLiveAnchorToHospitalPrice = updateDto.CooperationLiveAnchorToHospitalPrice;
+            result.CooperationLiveAnchorSendOrderPrice = updateDto.CooperationLiveAnchorSendOrderPrice;
             await dalCustomerServiceCompensation.UpdateAsync(result, true);
         }
 

@@ -72,6 +72,39 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerServiceCompensation.Input
         /// 目标达成奖励
         /// </summary>
         public decimal TargetFinishReword { get; set; }
+
+
+        #region 行政客服
+        /// <summary>
+        /// 医美客资加V业绩
+        /// </summary>
+        public decimal BeautyAddWechatPrice { get; set; }
+        /// <summary>
+        /// 带货客资加V业绩
+        /// </summary>
+        public decimal TakeGoodsAddWechatPrice { get; set; }
+
+        /// <summary>
+        /// 引导面诊卡下单金额
+        /// </summary>
+        public decimal ConsulationCardPrice { get; set; }
+
+        /// <summary>
+        /// 引导面诊卡下单加v金额
+        /// </summary>
+        public decimal ConsulationCardAddWechatPrice { get; set; }
+
+        /// <summary>
+        /// 供应链达人派单提成金额
+        /// </summary>
+        public decimal CooperationLiveAnchorSendOrderPrice { get; set; }
+
+        /// <summary>
+        /// 供应链达人上门提成金额
+        /// </summary>
+        public decimal CooperationLiveAnchorToHospitalPrice { get; set; }
+
+        #endregion
         /// <summary>
         /// 其他扣款
         /// </summary>

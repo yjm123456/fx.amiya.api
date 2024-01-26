@@ -85,6 +85,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       OldCustomerToHospitalReword = d.OldCustomerToHospitalReword,
                                                       TargetFinishReword = d.TargetFinishReword,
                                                       OtherChargebacks = d.OtherChargebacks,
+                                                      BeautyAddWechatPrice = d.BeautyAddWechatPrice,
+                                                      TakeGoodsAddWechatPrice = d.TakeGoodsAddWechatPrice,
+                                                      ConsulationCardPrice = d.ConsulationCardPrice,
+                                                      ConsulationCardAddWechatPrice = d.ConsulationCardAddWechatPrice,
+                                                      CooperationLiveAnchorToHospitalPrice = d.CooperationLiveAnchorToHospitalPrice,
+                                                      CooperationLiveAnchorSendOrderPrice = d.CooperationLiveAnchorSendOrderPrice,
                                                   };
 
                 FxPageInfo<CustomerServiceCompensationVo> pageInfo = new FxPageInfo<CustomerServiceCompensationVo>();
@@ -134,6 +140,13 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.OldCustomerToHospitalReword = addVo.OldCustomerToHospitalReword;
                 addDto.TargetFinishReword = addVo.TargetFinishReword;
                 addDto.OtherChargebacks = addVo.OtherChargebacks;
+
+                addDto.BeautyAddWechatPrice = addVo.BeautyAddWechatPrice;
+                addDto.TakeGoodsAddWechatPrice = addVo.TakeGoodsAddWechatPrice;
+                addDto.ConsulationCardPrice = addVo.ConsulationCardPrice;
+                addDto.ConsulationCardAddWechatPrice = addVo.ConsulationCardAddWechatPrice;
+                addDto.CooperationLiveAnchorToHospitalPrice = addVo.CooperationLiveAnchorToHospitalPrice;
+                addDto.CooperationLiveAnchorSendOrderPrice = addVo.CooperationLiveAnchorSendOrderPrice;
                 await customerServiceCompensationService.AddAsync(addDto);
 
                 return ResultData.Success();
@@ -182,6 +195,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                 customerServiceCompensationVo.OldCustomerToHospitalReword = customerServiceCompensation.OldCustomerToHospitalReword;
                 customerServiceCompensationVo.TargetFinishReword = customerServiceCompensation.TargetFinishReword;
                 customerServiceCompensationVo.OtherChargebacks = customerServiceCompensation.OtherChargebacks;
+
+
+                customerServiceCompensationVo.BeautyAddWechatPrice = customerServiceCompensation.BeautyAddWechatPrice;
+                customerServiceCompensationVo.TakeGoodsAddWechatPrice = customerServiceCompensation.TakeGoodsAddWechatPrice;
+                customerServiceCompensationVo.ConsulationCardPrice = customerServiceCompensation.ConsulationCardPrice;
+                customerServiceCompensationVo.ConsulationCardAddWechatPrice = customerServiceCompensation.ConsulationCardAddWechatPrice;
+                customerServiceCompensationVo.CooperationLiveAnchorToHospitalPrice = customerServiceCompensation.CooperationLiveAnchorToHospitalPrice;
+                customerServiceCompensationVo.CooperationLiveAnchorSendOrderPrice = customerServiceCompensation.CooperationLiveAnchorSendOrderPrice;
                 return ResultData<CustomerServiceCompensationVo>.Success().AddData("customerServiceCompensation", customerServiceCompensationVo);
             }
             catch (Exception ex)
@@ -221,6 +242,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.OldCustomerToHospitalReword = updateVo.OldCustomerToHospitalReword;
                 updateDto.TargetFinishReword = updateVo.TargetFinishReword;
                 updateDto.OtherChargebacks = updateVo.OtherChargebacks;
+
+
+                updateDto.BeautyAddWechatPrice = updateVo.BeautyAddWechatPrice;
+                updateDto.TakeGoodsAddWechatPrice = updateVo.TakeGoodsAddWechatPrice;
+                updateDto.ConsulationCardPrice = updateVo.ConsulationCardPrice;
+                updateDto.ConsulationCardAddWechatPrice = updateVo.ConsulationCardAddWechatPrice;
+                updateDto.CooperationLiveAnchorToHospitalPrice = updateVo.CooperationLiveAnchorToHospitalPrice;
+                updateDto.CooperationLiveAnchorSendOrderPrice = updateVo.CooperationLiveAnchorSendOrderPrice;
                 await customerServiceCompensationService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

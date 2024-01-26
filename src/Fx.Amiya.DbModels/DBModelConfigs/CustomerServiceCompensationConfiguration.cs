@@ -32,6 +32,15 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.OldCustomerToHospitalReword).HasColumnName("old_customer_to_hospital_reword").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.TargetFinishReword).HasColumnName("target_finish_reword").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.OtherChargebacks).HasColumnName("other_chargebacks").HasColumnType("decimal(12,2)").IsRequired();
+
+
+            builder.Property(e => e.BeautyAddWechatPrice).HasColumnName("beauty_add_wechat_price").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.TakeGoodsAddWechatPrice).HasColumnName("take_goods_add_wechat_price").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.ConsulationCardPrice).HasColumnName("consulation_card_price").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.ConsulationCardAddWechatPrice).HasColumnName("consulation_card_add_wechat_price").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.CooperationLiveAnchorSendOrderPrice).HasColumnName("cooperation_live_anchor_send_order_price").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.CooperationLiveAnchorToHospitalPrice).HasColumnName("cooperation_live_anchor_to_hospital_price").HasColumnType("decimal(12,2)").IsRequired();
+
             builder.Property(e => e.CreateDate).HasColumnName("create_date").HasColumnType("DATETIME").IsRequired();
             builder.Property(e => e.CreateBy).HasColumnName("create_by").HasColumnType("INT").IsRequired();
             builder.Property(e => e.UpdateDate).HasColumnName("update_date").HasColumnType("DATETIME").IsRequired(false);

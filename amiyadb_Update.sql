@@ -67,7 +67,17 @@ ADD COLUMN `inspect_percent` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `inspect_
 ADD COLUMN `inspect_price` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `inspect_empid`,
 ADD COLUMN `inspect_customer_service_compensation_id` VARCHAR(50) NULL AFTER `customer_service_compensation_id`,
 ADD COLUMN `customer_service_order_performance` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `inspect_customer_service_compensation_id`;
-----------------------------------------------余建明 2024/1/22 END----------------------------------------
+
+--生成薪资新增行政客服板块业务
+ALTER TABLE `amiyadb`.`tbl_customer_service_compensation` 
+ADD COLUMN `beauty_add_wechat_price` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `other_chargebacks`,
+ADD COLUMN `take_goods_add_wechat_price` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `beauty_add_wechat_price`,
+ADD COLUMN `consulation_card_price` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `take_goods_add_wechat_price`,
+ADD COLUMN `consulation_card_add_wechat_price` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `consulation_card_price`,
+ADD COLUMN `cooperation_live_anchor_send_order_price` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `consulation_card_add_wechat_price`,
+ADD COLUMN `cooperation_live_anchor_to_hospital_price` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cooperation_live_anchor_send_order_price`;
+
+----------------------------------------------余建明 2024/1/26 END----------------------------------------
 
 
 ----------------------------------------王健  2024/1/25 BEGIN------------------------------------------
