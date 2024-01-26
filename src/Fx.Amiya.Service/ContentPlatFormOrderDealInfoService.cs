@@ -789,7 +789,7 @@ namespace Fx.Amiya.Service
             }
         }
 
-        
+
         /// <summary>
         /// 根据订单号展示成交情况
         /// </summary>
@@ -801,9 +801,9 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var ContentPlatFOrmOrderDealInfo = from d in dalContentPlatFormOrderDealInfo.GetAll().Where(e=>e.LastDealHospitalId== hospitalId)
+                var ContentPlatFOrmOrderDealInfo = from d in dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.LastDealHospitalId == hospitalId)
                                                    where (string.IsNullOrEmpty(contentPlafFormOrderId) || d.ContentPlatFormOrderId == contentPlafFormOrderId)
-                                                   
+
                                                    select new ContentPlatFormOrderDealInfoDto
                                                    {
                                                        Id = d.Id,
@@ -1434,7 +1434,7 @@ namespace Fx.Amiya.Service
             //选定的月份
             DateTime currentDate = recordDate.Date;
             var result = await dalContentPlatFormOrderDealInfo.GetAll()
-                .Where(o => o.IsToHospital == true  && o.CreateDate >= currentDate && o.CreateDate < endDate)
+                .Where(o => o.IsToHospital == true && o.CreateDate >= currentDate && o.CreateDate < endDate)
                 .Where(o => hospitalIds.Count == 0 || hospitalIds.Contains(o.LastDealHospitalId.Value))
                 .ToListAsync();
             var returnInfo = result.Select(
@@ -1464,7 +1464,7 @@ namespace Fx.Amiya.Service
         public async Task<List<ContentPlatFormOrderDealInfoDto>> GetMonthSendPerformanceByHospitalIdListAsync(List<int> hospitalIds, DateTime recordStartDate, DateTime recordEndDate)
         {
             var result = await dalContentPlatFormOrderDealInfo.GetAll()
-                .Where(o => o.IsToHospital == true &&  o.CreateDate >= recordStartDate && o.CreateDate < recordEndDate)
+                .Where(o => o.IsToHospital == true && o.CreateDate >= recordStartDate && o.CreateDate < recordEndDate)
                 .Where(o => hospitalIds.Count == 0 || hospitalIds.Contains(o.LastDealHospitalId.Value))
                 .ToListAsync();
             var returnInfo = result.Select(
@@ -2333,7 +2333,9 @@ namespace Fx.Amiya.Service
             }
             if (query.AssistantId.HasValue)
             {
-                performance = performance.Where(e => e.ContentPlatFormOrder.BelongEmpId == query.AssistantId.Value);
+                //需优化获取辅助客服
+                performance = performance.Where(e => e.ContentPlatFormOrder.BelongEmpId == query.AssistantId.Value || e.ContentPlatFormOrder.SupportEmpId == query.AssistantId.Value)
+                    .Where(d => d.ContentPlatFormOrder.IsSupportOrder == false || d.ContentPlatFormOrder.SupportEmpId == query.AssistantId.Value);
             }
             monthData.CompletedPerformance = performance.Sum(e => e.Price);
             monthData.NewCustomerPerformance = performance.Where(e => e.IsOldCustomer == false).Sum(e => e.Price);

@@ -1602,7 +1602,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 Id = e.Id,
                 AppointmentHospital = e.AppointmentHospital,
                 OrderStatus = e.OrderStatus,
-                ConsultContent = e.ConsultContent,
+                SendHospital=e.SendHospital,
+                //ConsultContent = e.ConsultContent,
                 IsToHospital = e.IsToHosiotal
             }).ToList();
             return ResultData<FxPageInfo<ContentPlateformOrderSimpleInfoVo>>.Success().AddData("data", fxPageInfo);

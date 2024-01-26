@@ -2801,10 +2801,12 @@ namespace Fx.Amiya.Service
             /*var config = await _dalConfig.GetAll().SingleOrDefaultAsync();
             var confgiInfo= JsonConvert.DeserializeObject<WxAppConfigDto>(config.ConfigJson).CallCenterConfig;
             string phone = ServiceClass.Decrypto(encryptPhone, confgiInfo.PhoneEncryptKey);*/
-            var result = _dalContentPlatformOrder.GetAll().Where(e => e.Phone == phone).Select(e => new ContentPlateformOrderSimpleInfoDto
+            var result = _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList).Where(e => e.Phone == phone).Select(e => new ContentPlateformOrderSimpleInfoDto
             {
                 Id = e.Id,
                 AppointmentHospital = e.AppointmentHospitalId.HasValue ? dalHospitalInfo.GetAll().Where(h => h.Id == e.AppointmentHospitalId.Value).FirstOrDefault().Name : "未知医院",
+                SendHospital = e.ContentPlatformOrderSendList.Count > 0 ? dalHospitalInfo.GetAll().Where(h => h.Id == e.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate).FirstOrDefault().HospitalId).FirstOrDefault().Name : "未知医院",
+
                 OrderStatus = ServiceClass.GetContentPlateFormOrderStatusText((byte)e.OrderStatus),
                 ConsultContent = e.ConsultingContent,
                 IsToHosiotal = e.IsToHospital

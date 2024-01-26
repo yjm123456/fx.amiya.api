@@ -10,6 +10,10 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
     {
         public string Id { get; set; }
         public string AppointmentHospital { get; set; }
+        /// <summary>
+        /// 派单医院
+        /// </summary>
+        public string SendHospital { get; set; }
         public string OrderStatus { get; set; }
         public string ConsultContent { get; set; }
         public bool IsToHosiotal { get; set; }

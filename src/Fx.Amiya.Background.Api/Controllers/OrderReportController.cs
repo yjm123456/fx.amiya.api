@@ -234,7 +234,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                
+
                 operationAddDto.Parameters = JsonConvert.SerializeObject(query);
                 operationAddDto.RequestType = (int)RequestType.Export;
                 operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -318,7 +318,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                
+
                 operationAddDto.Parameters = JsonConvert.SerializeObject(query);
                 operationAddDto.RequestType = (int)RequestType.Export;
                 operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -404,7 +404,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                
+
                 operationAddDto.Parameters = JsonConvert.SerializeObject(query);
                 operationAddDto.RequestType = (int)RequestType.Export;
                 operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -424,7 +424,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
-            var q = await _shoppingCartRegistrationService.GetShoppingCartRegistrationReportAsync(query.StartDate, query.EndDate, query.emergencyLevel, query.LiveAnchorId, query.IsCreateOrder, query.IsSendOrder, employeeId, query.IsAddWechat, query.IsWriteOff, query.IsConsultation, query.IsReturnBackPrice, query.KeyWord, query.ContentPlatFormId, true,query.BaseLiveAnchorId,query.Source);
+            var q = await _shoppingCartRegistrationService.GetShoppingCartRegistrationReportAsync(query.StartDate, query.EndDate, query.emergencyLevel, query.LiveAnchorId, query.IsCreateOrder, query.IsSendOrder, employeeId, query.IsAddWechat, query.IsWriteOff, query.IsConsultation, query.IsReturnBackPrice, query.KeyWord, query.ContentPlatFormId, true, query.BaseLiveAnchorId, query.Source);
             var res = from d in q
                       select new ShoppingCartRegistrationReportVo()
                       {
@@ -474,7 +474,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 {
                     isHidePhone = false;
                 }
-                var q = await _shoppingCartRegistrationService.GetShoppingCartRegistrationReportAsync(query.StartDate, query.EndDate, query.emergencyLevel, query.LiveAnchorId, query.IsCreateOrder, query.IsSendOrder, employeeId, query.IsAddWechat, query.IsWriteOff, query.IsConsultation, query.IsReturnBackPrice, query.KeyWord, query.ContentPlatFormId, isHidePhone,query.BaseLiveAnchorId,query.Source);
+                var q = await _shoppingCartRegistrationService.GetShoppingCartRegistrationReportAsync(query.StartDate, query.EndDate, query.emergencyLevel, query.LiveAnchorId, query.IsCreateOrder, query.IsSendOrder, employeeId, query.IsAddWechat, query.IsWriteOff, query.IsConsultation, query.IsReturnBackPrice, query.KeyWord, query.ContentPlatFormId, isHidePhone, query.BaseLiveAnchorId, query.Source);
                 var res = from d in q
                           select new ShoppingCartRegistrationReportVo()
                           {
@@ -484,8 +484,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                               EmergencyLevelText = ServiceClass.GetShopCartRegisterEmergencyLevelText(d.EmergencyLevel),
                               LiveAnchorName = d.LiveAnchorName,
                               IsAddWechat = d.IsAddWeChat == true ? "是" : "否",
-                              BaseLiveAnchorName=d.BaseLiveAnchorName,
-                              SourceText=d.SourceText,
+                              BaseLiveAnchorName = d.BaseLiveAnchorName,
+                              SourceText = d.SourceText,
                               IsCreateOrder = d.IsCreateOrder == true ? "是" : "否",
                               IsSendOrder = d.IsSendOrder == true ? "是" : "否",
                               LiveAnchorWechatNo = d.LiveAnchorWechatNo,
@@ -499,7 +499,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                               Remark = d.Remark,
                               CreateBy = d.CreateByName,
                               CreateDate = d.CreateDate,
-                              ProductTypeText=d.ProductTypeText
+                              ProductTypeText = d.ProductTypeText
                           };
                 var exportOrderWriteOff = res.ToList();
                 var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
@@ -514,7 +514,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                
+
                 operationAddDto.Parameters = JsonConvert.SerializeObject(query);
                 operationAddDto.RequestType = (int)RequestType.Export;
                 operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -647,7 +647,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                
+
                 operationAddDto.Parameters = JsonConvert.SerializeObject(query);
                 operationAddDto.RequestType = (int)RequestType.Export;
                 operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -670,7 +670,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             if (!string.IsNullOrEmpty(query.BaseLiveAnchorId))
             {
                 var list = (await liveAnchorService.GetLiveAnchorListByBaseInfoId(query.BaseLiveAnchorId)).Select(e => e.Id).ToList();
-                if (list.Count<=0) {
+                if (list.Count <= 0)
+                {
                     List<ContentPlatFormOrderDealInfoReportVo> emptyInfo = new List<ContentPlatFormOrderDealInfoReportVo>();
                     return ResultData<List<ContentPlatFormOrderDealInfoReportVo>>.Success().AddData("contentPlatFormOrderDealInfo", emptyInfo);
                 }
@@ -679,8 +680,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                     liveAnchorIds.Add(item);
                 }
             }
-            
-            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(query.StartDate, query.EndDate, query.SendStartDate, query.SendEndDate, query.MinAddOrderPrice, query.MaxAddOrderPrice, query.ConsultationType, query.IsToHospital, query.TohospitalStartDate, query.ToHospitalEndDate, query.ToHospitalType, query.IsDeal, query.LastDealHospitalId, query.IsAccompanying, query.IsOldCustomer, query.CheckState, query.CheckStartDate, query.CheckEndDate, query.IsCreateBill, query.IsReturnBakcPrice, query.ReturnBackPriceStartDate, query.ReturnBackPriceEndDate, query.CustomerServiceId, query.BelongCompanyId, query.KeyWord, employeeId, true,query.ConsumptionType, liveAnchorIds);
+
+            var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(query.StartDate, query.EndDate, query.SendStartDate, query.SendEndDate, query.MinAddOrderPrice, query.MaxAddOrderPrice, query.ConsultationType, query.IsToHospital, query.TohospitalStartDate, query.ToHospitalEndDate, query.ToHospitalType, query.IsDeal, query.LastDealHospitalId, query.IsAccompanying, query.IsOldCustomer, query.CheckState, query.CheckStartDate, query.CheckEndDate, query.IsCreateBill, query.IsReturnBakcPrice, query.ReturnBackPriceStartDate, query.ReturnBackPriceEndDate, query.CustomerServiceId, query.BelongCompanyId, query.KeyWord, employeeId, true, query.ConsumptionType, liveAnchorIds);
 
             var contentPlatformOrders = from d in result
                                         select new ContentPlatFormOrderDealInfoReportVo
@@ -724,9 +725,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             ReturnBackDate = d.ReturnBackDate,
                                             ReturnBackPrice = d.ReturnBackPrice,
                                             CreateByEmpName = d.CreateByEmpName,
-                                            ConsumptionTypeText=d.ConsumptionTypeText,
+                                            ConsumptionTypeText = d.ConsumptionTypeText,
                                             IsRepeatProfundityOrder = d.IsRepeatProfundityOrder == true ? "是" : "否",
-                                            CustomerServiceSettlePrice=d.CustomerServiceSettlePrice
+                                            CustomerServiceSettlePrice = d.CustomerServiceSettlePrice
                                         };
             List<ContentPlatFormOrderDealInfoReportVo> pageInfo = new List<ContentPlatFormOrderDealInfoReportVo>();
             pageInfo = contentPlatformOrders.ToList();
@@ -757,7 +758,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 if (!string.IsNullOrEmpty(query.BaseLiveAnchorId))
                 {
                     var list = (await liveAnchorService.GetLiveAnchorListByBaseInfoId(query.BaseLiveAnchorId)).Select(e => e.Id).ToList();
-                    if (list.Count<=0) {
+                    if (list.Count <= 0)
+                    {
                         var emptyStream = ExportExcelHelper.ExportExcel(new List<ContentPlatFormOrderDealInfoReportVo>());
                         var emptyExportInfo = File(emptyStream, "application/vnd.ms-excel", $"" + query.StartDate.Value.ToString("yyyy年MM月dd日") + "-" + query.EndDate.Value.ToString("yyyy年MM月dd日") + "内容平台成交情况报表.xls");
                         return emptyExportInfo;
@@ -768,7 +770,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     }
                 }
 
-                var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(query.StartDate, query.EndDate, query.SendStartDate, query.SendEndDate, query.MinAddOrderPrice, query.MaxAddOrderPrice, query.ConsultationType, query.IsToHospital, query.TohospitalStartDate, query.ToHospitalEndDate, query.ToHospitalType, query.IsDeal, query.LastDealHospitalId, query.IsAccompanying, query.IsOldCustomer, query.CheckState, query.CheckStartDate, query.CheckEndDate, query.IsCreateBill, query.IsReturnBakcPrice, query.ReturnBackPriceStartDate, query.ReturnBackPriceEndDate, query.CustomerServiceId, query.BelongCompanyId, query.KeyWord, employeeId, isHidePhone,query.ConsumptionType,liveAnchorIds);
+                var result = await _contentPlatFormOrderDealInfoService.GetOrderDealInfoListReportAsync(query.StartDate, query.EndDate, query.SendStartDate, query.SendEndDate, query.MinAddOrderPrice, query.MaxAddOrderPrice, query.ConsultationType, query.IsToHospital, query.TohospitalStartDate, query.ToHospitalEndDate, query.ToHospitalType, query.IsDeal, query.LastDealHospitalId, query.IsAccompanying, query.IsOldCustomer, query.CheckState, query.CheckStartDate, query.CheckEndDate, query.IsCreateBill, query.IsReturnBakcPrice, query.ReturnBackPriceStartDate, query.ReturnBackPriceEndDate, query.CustomerServiceId, query.BelongCompanyId, query.KeyWord, employeeId, isHidePhone, query.ConsumptionType, liveAnchorIds);
 
                 var contentPlatformOrders = from d in result
                                             select new ContentPlatFormOrderDealInfoReportVo
@@ -797,7 +799,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 Remark = d.Remark,
                                                 Price = d.Price,
                                                 DealDate = d.DealDate,
-                                                ConsumptionTypeText=d.ConsumptionTypeText,
+                                                ConsumptionTypeText = d.ConsumptionTypeText,
                                                 OtherOrderId = d.OtherAppOrderId,
                                                 BelongCompanyName = d.BelongCompanyName,
                                                 IsCreateBill = d.IsCreateBill == true ? "是" : "否",
@@ -814,7 +816,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 ReturnBackPrice = d.ReturnBackPrice,
                                                 CreateByEmpName = d.CreateByEmpName,
                                                 IsRepeatProfundityOrder = d.IsRepeatProfundityOrder == true ? "是" : "否",
-                                                CustomerServiceSettlePrice=d.CustomerServiceSettlePrice
+                                                CustomerServiceSettlePrice = d.CustomerServiceSettlePrice
                                             };
                 var exportContentPlatFormDealOrder = contentPlatformOrders.ToList();
                 var stream = ExportExcelHelper.ExportExcel(exportContentPlatFormDealOrder);
@@ -829,7 +831,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                
+
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -919,7 +921,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                
+
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -999,7 +1001,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                
+
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -1087,7 +1089,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                
+
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -1165,7 +1167,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                
+
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -1274,7 +1276,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                
+
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -1372,7 +1374,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                
+
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -1501,7 +1503,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                
+
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -1619,7 +1621,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                
+
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -1740,7 +1742,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                
+
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -1856,7 +1858,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                
+
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -1958,7 +1960,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                
+
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -2096,7 +2098,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                
+
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -2131,8 +2133,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                           CumulativeTikTokFlowinvestment = d.CumulativeTikTokFlowinvestment,
                           TikTokFlowinvestmentCompleteRate = d.TikTokFlowinvestmentCompleteRate,
                           TikTokShowcaseIncome = d.TikTokShowcaseIncome,
-                          CumulativeTikTokShowcaseIncome=d.CumulativeTikTokShowcaseIncome,
-                          TikTokShowcaseIncomeCompleteRate=d.TikTokShowcaseIncomeCompleteRate,
+                          CumulativeTikTokShowcaseIncome = d.CumulativeTikTokShowcaseIncome,
+                          TikTokShowcaseIncomeCompleteRate = d.TikTokShowcaseIncomeCompleteRate,
 
                           ZhihuOperationEmployeeName = d.ZhihuOperationEmployeeName,
                           ZhihuSendNum = d.ZhihuSendNum,
@@ -2297,7 +2299,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                               CumulativeTikTokFlowinvestment = d.CumulativeTikTokFlowinvestment,
                               TikTokFlowinvestmentCompleteRate = d.TikTokFlowinvestmentCompleteRate,
                               TikTokShowcaseIncome = d.TikTokShowcaseIncome,
-                              TikTokShowcaseIncomeTarget=d.TikTokShowcaseIncomeTarget,
+                              TikTokShowcaseIncomeTarget = d.TikTokShowcaseIncomeTarget,
                               CumulativeTikTokShowcaseIncome = d.CumulativeTikTokShowcaseIncome,
                               TikTokShowcaseIncomeCompleteRate = d.TikTokShowcaseIncomeCompleteRate,
 
@@ -2442,7 +2444,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                
+
                 operationLog.Parameters = JsonConvert.SerializeObject(query);
                 operationLog.RequestType = (int)RequestType.Export;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -3297,3 +3299,6 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
     }
 }
+
+
+

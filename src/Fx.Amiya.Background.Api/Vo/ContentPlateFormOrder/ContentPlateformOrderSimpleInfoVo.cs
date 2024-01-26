@@ -16,10 +16,14 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 订单状态
         /// </summary>
         public string OrderStatus { get; set; }
+        ///// <summary>
+        ///// 咨询内容
+        ///// </summary>
+        //public string ConsultContent { get; set; }
         /// <summary>
-        /// 咨询内容
+        /// 派单医院
         /// </summary>
-        public string ConsultContent { get; set; }
+        public string SendHospital { get; set; }
         /// <summary>
         /// 是否到院
         /// </summary>
