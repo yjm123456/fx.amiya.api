@@ -196,6 +196,16 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
         /// 是否为稽查订单
         /// </summary>
         public bool IsInspectPerformance { get; set; }
+
+        /// <summary>
+        /// 行政客服稽查金额
+        /// </summary>
+        public decimal InspectPrice { get; set; }
+
+        /// <summary>
+        /// 稽查人员名称
+        /// </summary>
+        public string InspectEmpName { get; set; }
         /// <summary>
         /// 助理确认业绩-薪资审核时产生
         /// </summary>

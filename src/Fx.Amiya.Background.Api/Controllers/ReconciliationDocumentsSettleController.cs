@@ -304,6 +304,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                         CheckTypeText =d.CheckTypeText,
                                                         IsInspectPerformance = d.IsInspectPerformance,
                                                         CustomerServiceOrderPerformance = d.CustomerServiceOrderPerformance,
+                                                        InspectPrice = d.InspectPrice,
+                                                        InspectEmpName=d.InspectEmpName,
                                                     };
 
                 FxPageInfo<ReconciliationDocumentsSettleVo> reconciliationDocumentsSettleResult = new FxPageInfo<ReconciliationDocumentsSettleVo>();
