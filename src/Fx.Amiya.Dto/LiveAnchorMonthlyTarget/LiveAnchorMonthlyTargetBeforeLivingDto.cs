@@ -415,7 +415,11 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
                 {
                     cumulative = Math.Round(CumulativeXiaoHongShuIncreaseFansFees / CumulativeXiaoHongShuIncreaseFans, 2);
                 }
-                return Math.Round(cumulative / XiaoHongShuIncreaseFansFeesCostTarget);
+                if (XiaoHongShuIncreaseFansFeesCostTarget == 0)
+                {
+                    return 0;
+                }
+                return Math.Round((cumulative / XiaoHongShuIncreaseFansFeesCostTarget) * 100,2);
             }
         }
         /// <summary>

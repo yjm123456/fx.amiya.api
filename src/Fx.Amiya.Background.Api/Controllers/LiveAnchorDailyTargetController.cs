@@ -735,7 +735,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.XiaoHongShuIncreaseFans = updateVo.XiaoHongShuIncreaseFans;
                 updateDto.XiaoHongShuIncreaseFansFees = updateVo.XiaoHongShuIncreaseFansFees;
                 updateDto.RecordDate = updateVo.RecordDate;
-                updateDto.XiaoHongShuShowCaseFee = updateDto.XiaoHongShuShowCaseFee;
+                updateDto.XiaoHongShuShowCaseFee = updateVo.XiaoHongShuShowcaseFee;
                 await _liveAnchorDailyTargetService.BeforeLivingXiaoHongShuUpdateAsync(updateDto);
                 return ResultData.Success();
             }

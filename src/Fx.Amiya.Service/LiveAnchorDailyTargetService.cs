@@ -1857,7 +1857,7 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTarget.CumulativeVideoClues = addDto.VideoClues;
                 editLiveAnchorMonthlyTarget.CumulativeVideoIncreaseFans = addDto.VideoIncreaseFans;
                 editLiveAnchorMonthlyTarget.CumulativeVideoIncreaseFansFees = addDto.VideoIncreaseFansFees;
-                editLiveAnchorMonthlyTarget.CumulativeXiaoHongShuShowCaseFee = addDto.VideoShowCaseFee;
+                editLiveAnchorMonthlyTarget.CumulativeVideoShowCaseFee = addDto.VideoShowCaseFee;
                 //editLiveAnchorMonthlyTarget.CumulativeCluesNum = addDto.CluesNum;
                 //editLiveAnchorMonthlyTarget.CumulativeAddFansNum = addDto.AddFansNum;
                 await _liveAnchorMonthlyTargetService.EditAsync(editLiveAnchorMonthlyTarget);
