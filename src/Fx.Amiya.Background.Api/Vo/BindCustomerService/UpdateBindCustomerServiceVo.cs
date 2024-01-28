@@ -16,6 +16,10 @@ namespace Fx.Amiya.Background.Api.Vo.BindCustomerService
         /// 加密手机号
         /// </summary>
         public List<string> EncryptPhoneList { get; set; }
+        /// <summary>
+        /// 订单原来的归属客服
+        /// </summary>
+        public string? OriginalCustomerServiceIds { get; set; }
 
     }
 }

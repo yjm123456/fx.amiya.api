@@ -370,11 +370,12 @@ namespace Fx.Amiya.Service
         /// <param name="updateDto"></param>
         /// <param name="employeeId"></param>
         /// <returns></returns>
-        public async Task UpdateAsync(UpdateBindCustomerServiceDto updateDto, int employeeId)
+        public async Task<string?> UpdateAsync(UpdateBindCustomerServiceDto updateDto, int employeeId)
         {
             DateTime date = DateTime.Now;
             List<string> encryptPhoneList = updateDto.EncryptPhoneList.Distinct().ToList();
             var config = await GetCallCenterConfig();
+            List<int?> empIds=new List<int?>();
             foreach (var encryptPhone in encryptPhoneList)
             {
                 string phone = ServiceClass.Decrypto(encryptPhone, config.PhoneEncryptKey);
@@ -383,11 +384,13 @@ namespace Fx.Amiya.Service
                 var bindCustomerServiceInfo = await dalBindCustomerService.GetAll().SingleOrDefaultAsync(e => e.BuyerPhone == phone);
                 if (bindCustomerServiceInfo != null)
                 {
+                    empIds.Add(bindCustomerServiceInfo.CustomerServiceId);
                     bindCustomerServiceInfo.CustomerServiceId = updateDto.CustomerServiceId;
                     bindCustomerServiceInfo.UserId = customer?.UserId;
                     //bindCustomerServiceInfo.CreateDate = date;
                     //bindCustomerServiceInfo.CreateBy = employeeId;
                     await dalBindCustomerService.UpdateAsync(bindCustomerServiceInfo, true);
+                    
                 }
                 else
                 {
@@ -402,6 +405,7 @@ namespace Fx.Amiya.Service
                 }
 
             }
+            return string.Join(",", empIds);
 
         }
 

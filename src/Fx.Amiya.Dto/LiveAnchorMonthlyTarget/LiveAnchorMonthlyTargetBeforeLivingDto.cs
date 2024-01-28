@@ -387,21 +387,15 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         {
             get
             {
-
-                decimal cumulative = 0;
                 if (CumulativeXiaoHongShuIncreaseFans <= 0)
                 {
-                    cumulative = CumulativeXiaoHongShuIncreaseFansFees;
+                    return CumulativeXiaoHongShuIncreaseFansFees;
                 }
                 else
                 {
-                    cumulative = Math.Round(CumulativeXiaoHongShuIncreaseFansFees / Convert.ToDecimal(CumulativeXiaoHongShuIncreaseFans), 2);
+                    return Math.Round(CumulativeXiaoHongShuIncreaseFansFees / CumulativeXiaoHongShuIncreaseFans, 2);
                 }
-                if (XiaoHongShuIncreaseFansFeesCostTarget == 0)
-                {
-                    return 0;
-                }
-                return Math.Round((cumulative / XiaoHongShuIncreaseFansFeesCostTarget) * 100, 2);
+
             }
         }
         /// <summary>

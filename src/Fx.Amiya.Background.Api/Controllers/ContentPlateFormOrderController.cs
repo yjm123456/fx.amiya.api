@@ -55,7 +55,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IHttpContextAccessor _httpContextAccessor;
         private IOperationLogService operationLogService;
         private ILiveAnchorService liveAnchorService;
-        
+
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -196,7 +196,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 await operationLogService.AddOperationLogAsync(operationLog);
             }
 
-            
+
         }
 
 
@@ -462,7 +462,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 UpdateBelongEmpInfoOrderDto dto = new UpdateBelongEmpInfoOrderDto();
                 dto.OrderId = input.OrderId;
                 dto.BelongEmpId = input.BelongEmpInfo;
-                await _orderService.UpdateOrderBelongEmpIdAsync(dto);
+                input.OriginalCustomerServiceIds = await _orderService.UpdateOrderBelongEmpIdAsync(dto);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -1169,7 +1169,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             operationLog.Code = 0;
             try
             {
-                
+
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
                 operationLog.OperationBy = employeeId;
@@ -1358,7 +1358,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData> FinishOrderByEmployeeAsync(ContentPlateFormOrderFinishVo updateVo)
         {
             OperationAddDto operationLog = new OperationAddDto();
-            try {
+            try
+            {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
                 operationLog.OperationBy = employeeId;
@@ -1423,11 +1424,15 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.AddContentPlatFormOrderDealDetailsDtoList = addContentPlatFormOrderDealDetailsDtos;
                 await _orderService.FinishContentPlateFormOrderAsync(updateDto);
                 return ResultData.Success();
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 operationLog.Message = ex.Message;
                 operationLog.Code = -1;
                 throw ex;
-            } finally {
+            }
+            finally
+            {
                 operationLog.Parameters = JsonConvert.SerializeObject(updateVo);
                 operationLog.RequestType = (int)RequestType.Add;
                 operationLog.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
@@ -1446,7 +1451,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData> UpdateFinishOrderByEmployeeAsync(UpdateContentPlateFormOrderFinishVo updateVo)
         {
-            OperationAddDto operationLog=new OperationAddDto();
+            OperationAddDto operationLog = new OperationAddDto();
             try
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
@@ -1514,12 +1519,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                 await _orderService.UpdateFinishContentPlateFormOrderAsync(updateDto);
                 return ResultData.Success();
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 operationLog.Message = ex.Message;
                 operationLog.Code = -1;
                 throw ex;
             }
-            finally {
+            finally
+            {
                 operationLog.Parameters = JsonConvert.SerializeObject(updateVo);
                 operationLog.RequestType = (int)RequestType.Update;
                 operationLog.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;

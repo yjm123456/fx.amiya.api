@@ -96,7 +96,7 @@ namespace Fx.Amiya.IService
         /// <param name="contentPlatFormId"></param>
         /// <returns></returns>
         Task<List<UnSendContentPlatFormOrderInfoDto>> GetUnSendOrderReportListAsync(int? liveAnchorId, DateTime? startDate, DateTime? endDate, int employeeId, int statusCode, string contentPlatFormId, bool isHidePhone);
-        Task UpdateOrderBelongEmpIdAsync(UpdateBelongEmpInfoOrderDto input);
+        Task<string?> UpdateOrderBelongEmpIdAsync(UpdateBelongEmpInfoOrderDto input);
         /// <summary>
         /// 获取内容平台订单已派单七/十五/三十日信息列表
         /// </summary>

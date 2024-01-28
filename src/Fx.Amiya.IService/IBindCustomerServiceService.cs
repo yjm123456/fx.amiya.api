@@ -60,7 +60,7 @@ namespace Fx.Amiya.IService
         /// <param name="phone"></param>
         /// <returns></returns>
         Task<string> GetBindCustomerServiceNameByPhone(string phone);
-        Task UpdateAsync(UpdateBindCustomerServiceDto updateDto, int employeeId);
+        Task<string?> UpdateAsync(UpdateBindCustomerServiceDto updateDto, int employeeId);
 
         /// <summary>
         /// 小程序绑定客户时修改绑定客服的userId

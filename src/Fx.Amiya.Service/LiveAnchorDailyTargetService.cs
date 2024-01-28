@@ -312,12 +312,12 @@ namespace Fx.Amiya.Service
                         liveAnchorDailyTargetDto.XiaoHongShuOperationEmployeeName = xiaohongshuThisDayDataInfo.OperationEmpName;
                         liveAnchorDailyTargetDto.XiaoHongShuSendNum = xiaohongshuThisDayDataInfo.SendNum;
                         liveAnchorDailyTargetDto.XiaoHongShuFlowInvestmentNum = xiaohongshuThisDayDataInfo.FlowInvestmentNum;
-                        liveAnchorDailyTargetDto.XiaoHongShuShowcaseIncome = x.XiaoHongShuShowcaseIncome;
-                        liveAnchorDailyTargetDto.XiaoHongShuIncreaseFans = x.XiaoHongShuIncreaseFans;
-                        liveAnchorDailyTargetDto.XiaoHongShuIncreaseFansFees = x.XiaoHongShuIncreaseFansFees;
-                        liveAnchorDailyTargetDto.XiaoHongShuIncreaseFansFeesCost = x.XiaoHongShuIncreaseFansFeesCost;
-                        liveAnchorDailyTargetDto.XiaoHongShuClues = x.XiaoHongShuClues;
-                        liveAnchorDailyTargetDto.XiaoHongShuShowcaseFee = x.TikTokShowCaseFee;
+                        liveAnchorDailyTargetDto.XiaoHongShuShowcaseIncome = xiaohongshuThisDayDataInfo.XiaoHongShuShowcaseIncome;
+                        liveAnchorDailyTargetDto.XiaoHongShuIncreaseFans = xiaohongshuThisDayDataInfo.XiaoHongShuIncreaseFans;
+                        liveAnchorDailyTargetDto.XiaoHongShuIncreaseFansFees = xiaohongshuThisDayDataInfo.XiaoHongShuIncreaseFansFees;
+                        liveAnchorDailyTargetDto.XiaoHongShuIncreaseFansFeesCost = xiaohongshuThisDayDataInfo.XiaoHongShuIncreaseFansFeesCost;
+                        liveAnchorDailyTargetDto.XiaoHongShuClues = xiaohongshuThisDayDataInfo.XiaoHongShuClues;
+                        liveAnchorDailyTargetDto.XiaoHongShuShowcaseFee = xiaohongshuThisDayDataInfo.TikTokShowCaseFee;
                     }
                     ///视频号
                     var videoThisDayDataInfo = videoDailyInfoList.Where(k => k.RecordDate == x.RecordDate && k.LiveAnchorMonthlyTargetId == x.LiveAnchorMonthlyTargetId).FirstOrDefault();
@@ -338,12 +338,12 @@ namespace Fx.Amiya.Service
                         liveAnchorDailyTargetDto.VideoOperationEmployeeName = videoThisDayDataInfo.OperationEmpName;
                         liveAnchorDailyTargetDto.VideoSendNum = videoThisDayDataInfo.SendNum;
                         liveAnchorDailyTargetDto.VideoFlowInvestmentNum = videoThisDayDataInfo.FlowInvestmentNum;
-                        liveAnchorDailyTargetDto.VideoShowcaseIncome = x.VideoShowcaseIncome;
-                        liveAnchorDailyTargetDto.VideoIncreaseFans = x.VideoIncreaseFans;
-                        liveAnchorDailyTargetDto.VideoIncreaseFansFees = x.VideoIncreaseFansFees;
-                        liveAnchorDailyTargetDto.VideoIncreaseFansFeesCost = x.VideoIncreaseFansFeesCost;
-                        liveAnchorDailyTargetDto.VideoClues = x.VideoClues;
-                        liveAnchorDailyTargetDto.VideoShowcaseFee = x.TikTokShowCaseFee;
+                        liveAnchorDailyTargetDto.VideoShowcaseIncome = videoThisDayDataInfo.VideoShowcaseIncome;
+                        liveAnchorDailyTargetDto.VideoIncreaseFans = videoThisDayDataInfo.VideoIncreaseFans;
+                        liveAnchorDailyTargetDto.VideoIncreaseFansFees = videoThisDayDataInfo.VideoIncreaseFansFees;
+                        liveAnchorDailyTargetDto.VideoIncreaseFansFeesCost = videoThisDayDataInfo.VideoIncreaseFansFeesCost;
+                        liveAnchorDailyTargetDto.VideoClues = videoThisDayDataInfo.VideoClues;
+                        liveAnchorDailyTargetDto.VideoShowcaseFee = videoThisDayDataInfo.TikTokShowCaseFee;
                     }
 
                     ///微博

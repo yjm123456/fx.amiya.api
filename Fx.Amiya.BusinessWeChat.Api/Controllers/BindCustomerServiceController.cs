@@ -142,7 +142,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 UpdateBindCustomerServiceDto updateDto = new UpdateBindCustomerServiceDto();
                 updateDto.CustomerServiceId = updateVo.CustomerServiceId;
                 updateDto.EncryptPhoneList = updateVo.EncryptPhoneList;
-                await bindCustomerService.UpdateAsync(updateDto, employeeId);
+                updateVo.OriginalCustomerServiceIds= await bindCustomerService.UpdateAsync(updateDto, employeeId);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -179,7 +179,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 UpdateBindCustomerServiceDto updateDto = new UpdateBindCustomerServiceDto();
                 updateDto.CustomerServiceId = updateVo.CustomerServiceId;
                 updateDto.EncryptPhoneList = updateVo.EncryptPhoneList;
-                await bindCustomerService.UpdateAsync(updateDto, employeeId);
+                updateVo.OriginalCustomerServiceIds= await bindCustomerService.UpdateAsync(updateDto, employeeId);
 
                 foreach (var x in updateVo.EncryptPhoneList)
                 {
@@ -189,7 +189,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                     UpdateBelongEmpInfoOrderDto updateOrderBelongEmpIdDto = new UpdateBelongEmpInfoOrderDto();
                     updateOrderBelongEmpIdDto.OrderId = orderIdList;
                     updateOrderBelongEmpIdDto.BelongEmpId = updateVo.CustomerServiceId;
-                    await _contentPlatFormOrderService.UpdateOrderBelongEmpIdAsync(updateOrderBelongEmpIdDto);
+                    updateVo.OriginalCustomerServiceIds= await _contentPlatFormOrderService.UpdateOrderBelongEmpIdAsync(updateOrderBelongEmpIdDto);
                 }
                 return ResultData.Success();
             }

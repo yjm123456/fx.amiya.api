@@ -1016,14 +1016,16 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="updateListDto"></param>
         /// <returns></returns>
-        public async Task UpdateOrderBelongEmpIdAsync(UpdateBelongEmpInfoOrderDto input)
+        public async Task<string?> UpdateOrderBelongEmpIdAsync(UpdateBelongEmpInfoOrderDto input)
         {
             try
             {
                 unitOfWork.BeginTransaction();
+                List<int?> empIds = new List<int?>();
                 foreach (var x in input.OrderId)
                 {
                     var orderInfo = await _dalContentPlatformOrder.GetAll().SingleOrDefaultAsync(e => e.Id == x);
+                    empIds.Add(orderInfo.BelongEmpId);
                     if (orderInfo == null)
                     { throw new Exception("未找到该订单，改绑归属客服失败！"); }
                     orderInfo.BelongEmpId = input.BelongEmpId;
@@ -1036,8 +1038,10 @@ namespace Fx.Amiya.Service
                         }
                     }
                     await _dalContentPlatformOrder.UpdateAsync(orderInfo, true);
+                    
                 }
                 unitOfWork.Commit();
+                return string.Join(",", empIds.Distinct());
             }
             catch (Exception e)
             {

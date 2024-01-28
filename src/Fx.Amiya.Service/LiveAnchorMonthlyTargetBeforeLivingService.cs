@@ -605,14 +605,14 @@ namespace Fx.Amiya.Service
                 #endregion
 
                 #region 视频号橱窗付费
-                liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuShowCaseFee += editDto.CumulativeXiaoHongShuShowCaseFee;
-                if (liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuShowCaseFee <= 0)
+                liveAnchorMonthlyTargetBeforeLiving.CumulativeVideoShowCaseFee += editDto.CumulativeVideoShowCaseFee;
+                if (liveAnchorMonthlyTargetBeforeLiving.CumulativeVideoShowCaseFee <= 0)
                 {
-                    liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuShowCaseFeeCompleteRate = 0.00M;
+                    liveAnchorMonthlyTargetBeforeLiving.VideoShowCaseFeeCompleteRate = 0.00M;
                 }
                 else
                 {
-                    liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuShowCaseFeeCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuShowCaseFee) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuShowCaseFeeTarget)) * 100, 2);
+                    liveAnchorMonthlyTargetBeforeLiving.VideoShowCaseFeeCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeVideoShowCaseFee) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.VideoShowCaseFeeTarget)) * 100, 2);
                 }
                 #endregion
                 #region #抖音发布

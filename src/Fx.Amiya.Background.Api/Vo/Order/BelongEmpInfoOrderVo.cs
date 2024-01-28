@@ -19,5 +19,9 @@ namespace Fx.Amiya.Background.Api.Vo.Order
         /// 客服id
         /// </summary>
         public int BelongEmpInfo { get; set; }
+        /// <summary>
+        /// 订单原本绑定的客服
+        /// </summary>
+        public string? OriginalCustomerServiceIds { get; set; }
     }
 }

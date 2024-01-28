@@ -127,7 +127,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 UpdateBindCustomerServiceDto updateDto = new UpdateBindCustomerServiceDto();
                 updateDto.CustomerServiceId = updateVo.CustomerServiceId;
                 updateDto.EncryptPhoneList = updateVo.EncryptPhoneList;
-                await bindCustomerServiceService.UpdateAsync(updateDto, employeeId);
+                updateVo.OriginalCustomerServiceIds= await bindCustomerServiceService.UpdateAsync(updateDto, employeeId);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -136,7 +136,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 operationLog.Code = -1;
                 throw ex;
             }
-            finally {
+            finally
+            {
                 operationLog.Parameters = JsonConvert.SerializeObject(updateVo);
                 operationLog.RequestType = (int)RequestType.Update;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -190,7 +191,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 UpdateBindCustomerServiceDto updateDto = new UpdateBindCustomerServiceDto();
                 updateDto.CustomerServiceId = updateVo.CustomerServiceId;
                 updateDto.EncryptPhoneList = updateVo.EncryptPhoneList;
-                await bindCustomerServiceService.UpdateAsync(updateDto, employeeId);
+                updateVo.OriginalCustomerServiceIds= await bindCustomerServiceService.UpdateAsync(updateDto, employeeId);
 
                 foreach (var x in updateVo.EncryptPhoneList)
                 {
@@ -210,7 +211,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 operationLog.Code = -1;
                 throw ex;
             }
-            finally {
+            finally
+            {
                 operationLog.Parameters = JsonConvert.SerializeObject(updateVo);
                 operationLog.RequestType = (int)RequestType.Update;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -236,7 +238,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 UpdateBindCustomerServiceDto updateDto = new UpdateBindCustomerServiceDto();
                 updateDto.CustomerServiceId = updateVo.CustomerServiceId;
                 updateDto.EncryptPhoneList = updateVo.EncryptPhoneList;
-                await bindCustomerServiceService.UpdateAsync(updateDto, employeeId);
+                updateVo.OriginalCustomerServiceIds= await bindCustomerServiceService.UpdateAsync(updateDto, employeeId);
 
                 foreach (var x in updateVo.EncryptPhoneList)
                 {
@@ -246,7 +248,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     UpdateBelongEmpInfoOrderDto updateOrderBelongEmpIdDto = new UpdateBelongEmpInfoOrderDto();
                     updateOrderBelongEmpIdDto.OrderId = orderIdList;
                     updateOrderBelongEmpIdDto.BelongEmpId = updateVo.CustomerServiceId;
-                    await _contentPlatFormOrderService.UpdateOrderBelongEmpIdAsync(updateOrderBelongEmpIdDto);
+                    updateVo.OriginalCustomerServiceIds = await _contentPlatFormOrderService.UpdateOrderBelongEmpIdAsync(updateOrderBelongEmpIdDto);
                 }
                 return ResultData.Success();
             }
@@ -256,7 +258,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 operationLog.Code = -1;
                 throw ex;
             }
-            finally {
+            finally
+            {
                 operationLog.Parameters = JsonConvert.SerializeObject(updateVo);
                 operationLog.RequestType = (int)RequestType.Update;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
@@ -294,9 +297,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 BindCustomerServiceRfmDataVo bindCustomerServiceRFMData = new BindCustomerServiceRfmDataVo();
                 bindCustomerServiceRFMData.RFMType = x;
                 bindCustomerServiceRFMData.RFMTypeText = ServiceClass.GetRFMTagText(x);
-                bindCustomerServiceRFMData.CustomerCount=0;
+                bindCustomerServiceRFMData.CustomerCount = 0;
                 bindCustomerServiceRFMData.CustomerIncreaseFromYesterday = 0;
-                bindCustomerServiceRFMData.TotalConsumptionPrice =0.00M;
+                bindCustomerServiceRFMData.TotalConsumptionPrice = 0.00M;
                 bindResult.Add(bindCustomerServiceRFMData);
             }
             foreach (var x in result)
@@ -352,7 +355,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                   ConsumptionDate = d.ConsumptionDate,
                                                   RfmType = d.RfmType,
                                                   RfmTypeText = d.RfmTypeText,
-                                                  ConsumerCycle=d.ConsumerCycle
+                                                  ConsumerCycle = d.ConsumerCycle
                                               };
 
                 FxPageInfo<BindCustomerInfoVo> pageInfo = new FxPageInfo<BindCustomerInfoVo>();
@@ -378,14 +381,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var q = await bindCustomerServiceService.GetCustomerRFMTypeUpdateDataAsync(query.StartDate.Value, query.EndDate.Value,query.KeyWord,query.customerServiceId, query.PageNum.Value, query.PageSize.Value);
+                var q = await bindCustomerServiceService.GetCustomerRFMTypeUpdateDataAsync(query.StartDate.Value, query.EndDate.Value, query.KeyWord, query.customerServiceId, query.PageNum.Value, query.PageSize.Value);
                 var billReturnBackPriceData = from d in q.List
                                               select new BindCustomerRFMLevelUpdateLogVo
                                               {
                                                   Id = d.Id,
                                                   CustomerServiceName = d.CustomerServiceName,
-                                                  Phone =d.Phone,
-                                                  EncryptPhone =d.EncryptPhone,
+                                                  Phone = d.Phone,
+                                                  EncryptPhone = d.EncryptPhone,
                                                   From = d.From,
                                                   To = d.To,
                                                   CreateDate = d.CreateDate,

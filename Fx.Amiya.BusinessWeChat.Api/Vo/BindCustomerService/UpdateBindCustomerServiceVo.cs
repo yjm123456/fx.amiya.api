@@ -16,5 +16,9 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.BindCustomerService
         /// 加密手机号
         /// </summary>
         public List<string> EncryptPhoneList { get; set; }
+        /// <summary>
+        /// 订单原来的绑定客服
+        /// </summary>
+        public string? OriginalCustomerServiceIds { get; set; }
     }
 }
