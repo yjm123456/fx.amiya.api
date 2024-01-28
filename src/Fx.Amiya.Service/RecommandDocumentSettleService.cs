@@ -117,12 +117,14 @@ namespace Fx.Amiya.Service
                   CompensationCheckState = e.CompensationCheckState,
                   CompensationCheckStateText = ServiceClass.GetCheckTypeText(e.CompensationCheckState),
                   CustomerServiceCompensationId = e.CustomerServiceCompensationId,
+                  InspectCustomerServiceCompensationId = e.InspectCustomerServiceCompensationId,
                   CustomerServicePerformance = e.CustomerServicePerformance,
                   PerformancePercent = e.PerformancePercent,
               });
+            var re = await record.ToListAsync();
             if (query.IsGenerateSalry.HasValue)
             {
-                record = record.Where(e => query.IsGenerateSalry == 1 ? string.IsNullOrEmpty(e.CustomerServiceCompensationId) : !string.IsNullOrEmpty(e.CustomerServiceCompensationId));
+                record = record.Where(e => query.IsGenerateSalry == 1 ? string.IsNullOrEmpty(e.CustomerServiceCompensationId) || string.IsNullOrEmpty(e.InspectCustomerServiceCompensationId) : !string.IsNullOrEmpty(e.CustomerServiceCompensationId) || !string.IsNullOrEmpty(e.InspectCustomerServiceCompensationId));
             }
             FxPageInfo<RecommandDocumentSettleDto> resultPageInfo = new FxPageInfo<RecommandDocumentSettleDto>();
             resultPageInfo.TotalCount = await record.CountAsync();
@@ -270,11 +272,15 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task RemoveCustomerServiceCompensationIdAsync(string customerServiceCompensationId)
         {
-            var list = _dalRecommandDocumentSettle.GetAll().Where(e => e.CustomerServiceCompensationId == customerServiceCompensationId);
-            foreach (var item in list)
+            var list = await _dalRecommandDocumentSettle.GetAll().Where(e => e.CustomerServiceCompensationId == customerServiceCompensationId || e.InspectCustomerServiceCompensationId == customerServiceCompensationId).ToListAsync();
+            var result = list.Count();
+            if (result > 0)
             {
-                item.CustomerServiceCompensationId = null;
-                await _dalRecommandDocumentSettle.UpdateAsync(item, true);
+                foreach (var item in list)
+                {
+                    item.CustomerServiceCompensationId = null;
+                    await _dalRecommandDocumentSettle.UpdateAsync(item, true);
+                }
             }
         }
 

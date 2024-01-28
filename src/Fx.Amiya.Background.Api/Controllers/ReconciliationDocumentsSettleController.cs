@@ -390,6 +390,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                         CustomerServicePerformance = d.CustomerServicePerformance,
                                                         CheckTypeText = d.CheckTypeText,
                                                         IsInspectPerformance = d.IsInspectPerformance,
+                                                        InspectEmpName=d.InspectEmpName,
+                                                        InspectPrice=d.InspectPrice,
                                                         CustomerServiceOrderPerformance = d.CustomerServiceOrderPerformance,
                                                     };
 
