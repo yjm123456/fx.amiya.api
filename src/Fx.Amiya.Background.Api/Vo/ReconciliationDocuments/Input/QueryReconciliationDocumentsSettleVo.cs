@@ -36,5 +36,10 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments.Input
         /// 是否生成薪资单(1,未生成,2已生成)
         /// </summary>
         public int? IsGenerateSalry { get; set; }
+
+        /// <summary>
+        /// 是否生成稽查薪资单(1,未生成,2已生成)
+        /// </summary>
+        public int? IsGenerateInspectSalry { get; set; }
     }
 }

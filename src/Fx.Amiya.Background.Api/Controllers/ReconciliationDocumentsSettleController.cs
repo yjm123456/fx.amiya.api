@@ -260,6 +260,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryReconciliationDocumentsSettleDto.PageSize = query.PageSize;
                 queryReconciliationDocumentsSettleDto.CreateEmpId = query.CreateEmpId;
                 queryReconciliationDocumentsSettleDto.IsGenerateSalry = query.IsGenerateSalry;
+                queryReconciliationDocumentsSettleDto.IsGenerateInspectSalry = query.IsGenerateInspectSalry;
                 var q = await billService.GetSettleListWithPageByCustomerCompensationAsync(queryReconciliationDocumentsSettleDto);
 
                 var reconciliationDocumentsSettle = from d in q.List
@@ -346,6 +347,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryReconciliationDocumentsSettleDto.PageSize = query.PageSize;
                 queryReconciliationDocumentsSettleDto.CreateEmpId = query.CreateEmpId;
                 queryReconciliationDocumentsSettleDto.IsGenerateSalry = query.IsGenerateSalry;
+                queryReconciliationDocumentsSettleDto.IsGenerateInspectSalry = query.IsGenerateInspectSalry;
                 queryReconciliationDocumentsSettleDto.IsInspectOrder = true;
                 var q = await billService.GetSettleListWithPageByCustomerCompensationAsync(queryReconciliationDocumentsSettleDto);
 
@@ -393,6 +395,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                         InspectEmpName=d.InspectEmpName,
                                                         InspectPrice=d.InspectPrice,
                                                         CustomerServiceOrderPerformance = d.CustomerServiceOrderPerformance,
+                                                        InspectCustomerServiceCompensationId=d.InspectCustomerServiceCompensationId,
                                                     };
 
                 FxPageInfo<ReconciliationDocumentsSettleVo> reconciliationDocumentsSettleResult = new FxPageInfo<ReconciliationDocumentsSettleVo>();

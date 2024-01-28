@@ -47,6 +47,11 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         public int? IsGenerateSalry { get; set; }
 
         /// <summary>
+        /// 是否生成稽查薪资单(1,未生成,2已生成)
+        /// </summary>
+        public int? IsGenerateInspectSalry { get; set; }
+
+        /// <summary>
         /// 是否为稽查订单
         /// </summary>
         public bool? IsInspectOrder { get; set; }

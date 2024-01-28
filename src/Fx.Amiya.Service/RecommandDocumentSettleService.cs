@@ -82,10 +82,9 @@ namespace Fx.Amiya.Service
               .Where(e => !query.ChooseHospitalId.HasValue || e.HospitalId == query.ChooseHospitalId)
               .Where(e => !query.IsOldCustoemr.HasValue || e.IsOldCustomer == query.IsOldCustoemr)
               .Where(e => !query.CheckState.HasValue || e.CompensationCheckState == query.CheckState)
-              .Where(e => !query.BelongEmpId.HasValue || e.BelongEmpId == query.BelongEmpId).OrderByDescending(x => x.CreateDate)
               .Where(e => !query.CreateEmpId.HasValue || e.CreateEmpId == query.CreateEmpId)
               .Where(e => !query.IsInspectOrder.HasValue || e.IsInspectPerformance == query.IsInspectOrder.Value)
-              .Where(e => !query.InspectEmpId.HasValue || e.InspectEmpId == query.InspectEmpId.Value)
+              .Where(e => !query.InspectEmpId.HasValue || e.InspectEmpId == query.InspectEmpId.Value).OrderByDescending(x => x.CreateDate)
               .Select(e => new RecommandDocumentSettleDto
               {
                   Id = e.Id,
@@ -121,10 +120,21 @@ namespace Fx.Amiya.Service
                   CustomerServicePerformance = e.CustomerServicePerformance,
                   PerformancePercent = e.PerformancePercent,
               });
-            var re = await record.ToListAsync();
+            if (query.CheckState != (int)CheckType.CheckedSuccess)
+            {
+                record = record.Where(e => !query.BelongEmpId.HasValue || e.BelongEmpId == query.BelongEmpId);
+            }
+            else
+            {
+                record = record.Where(e => !query.BelongEmpId.HasValue || e.CheckBelongEmpId == query.BelongEmpId);
+            }
             if (query.IsGenerateSalry.HasValue)
             {
-                record = record.Where(e => query.IsGenerateSalry == 1 ? string.IsNullOrEmpty(e.CustomerServiceCompensationId) || string.IsNullOrEmpty(e.InspectCustomerServiceCompensationId) : !string.IsNullOrEmpty(e.CustomerServiceCompensationId) || !string.IsNullOrEmpty(e.InspectCustomerServiceCompensationId));
+                record = record.Where(e => query.IsGenerateSalry == 1 ? string.IsNullOrEmpty(e.CustomerServiceCompensationId)  : !string.IsNullOrEmpty(e.CustomerServiceCompensationId) );
+            }
+            if (query.IsGenerateInspectSalry.HasValue)
+            {
+                record = record.Where(e => query.IsGenerateInspectSalry == 1 ? string.IsNullOrEmpty(e.InspectCustomerServiceCompensationId) : !string.IsNullOrEmpty(e.InspectCustomerServiceCompensationId));
             }
             FxPageInfo<RecommandDocumentSettleDto> resultPageInfo = new FxPageInfo<RecommandDocumentSettleDto>();
             resultPageInfo.TotalCount = await record.CountAsync();
