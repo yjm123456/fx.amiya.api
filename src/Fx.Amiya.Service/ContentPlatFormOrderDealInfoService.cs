@@ -467,6 +467,7 @@ namespace Fx.Amiya.Service
                                                        CreateBy = d.CreateBy,
                                                        ReturnBackPrice = d.ReturnBackPrice,
                                                        LiveAnchorName = d.ContentPlatFormOrder.LiveAnchor.Name,
+                                                       LastDealHospitalId=d.LastDealHospitalId,
                                                        IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
                                                        ConsumptionTypeText = ServiceClass.GetConsumptionTypeText(d.ConsumptionType)
                                                    };
