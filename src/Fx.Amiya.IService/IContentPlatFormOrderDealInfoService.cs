@@ -142,7 +142,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="hospitalId"></param>
         /// <returns></returns>
-        Task<FxPageInfo<FinancialHospitalDealPriceBoardDto>> GetHospitalDealPriceDataAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, int pageNum, int pageSize);
+        Task<List<FinancialHospitalDealPriceBoardDto>> GetHospitalDealPriceDataAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, int pageNum, int pageSize);
         /// <summary>
         /// 获取消费类型
         /// </summary>

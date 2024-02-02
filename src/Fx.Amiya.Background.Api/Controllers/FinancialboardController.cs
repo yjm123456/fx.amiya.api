@@ -24,6 +24,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         private readonly IBillService billService;
         private readonly IFinancialboardService financialboardSerice;
 
+
         public FinancialboardController(IBillService billService, IFinancialboardService financialboardSerice)
         {
             this.billService = billService;

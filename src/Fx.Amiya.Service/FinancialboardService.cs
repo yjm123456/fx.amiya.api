@@ -139,7 +139,26 @@ namespace Fx.Amiya.Service
 
         public async Task<FxPageInfo<FinancialHospitalDealPriceBoardDto>> GetHospitalDealPriceDataAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, int pageNum, int pageSize)
         {
-            return await contentPlatFormOrderDealInfoService.GetHospitalDealPriceDataAsync(startDate,endDate,hospitalId,pageNum,pageSize);
+            List<FinancialHospitalDealPriceBoardDto> unionList = new List<FinancialHospitalDealPriceBoardDto>();
+            var dealList= await contentPlatFormOrderDealInfoService.GetHospitalDealPriceDataAsync(startDate,endDate,hospitalId,pageNum,pageSize);
+            var consumerList= await customerHospitalConsumeService.GetHospitalDealPriceDataAsync(startDate, endDate, hospitalId, pageNum, pageSize);
+            unionList.AddRange(dealList);
+            unionList.AddRange(consumerList);
+            var res= unionList.GroupBy(e => e.HospitalName).Select(e => new FinancialHospitalDealPriceBoardDto
+            {
+                HospitalName = e.Key,
+                DealPrice = e.Sum(item => item.DealPrice),
+                TotalServicePrice = e.Sum(item => item.TotalServicePrice),
+                InformationPrice = e.Sum(item => item.InformationPrice),
+                SystemUsePrice = e.Sum(item => item.SystemUsePrice),
+                ReturnBackPrice = e.Sum(item => item.ReturnBackPrice),
+
+            }).OrderByDescending(e=>e.DealPrice);
+            FxPageInfo<FinancialHospitalDealPriceBoardDto> fxPageInfo = new FxPageInfo<FinancialHospitalDealPriceBoardDto>();
+            fxPageInfo.TotalCount = res.Count();
+            fxPageInfo.List=res.Skip((pageNum - 1)*pageSize).Take(pageSize).ToList();
+            return fxPageInfo;
+
         }
     }
 }

@@ -38,6 +38,8 @@ namespace Fx.Amiya.Service
         private IDalRecommandDocumentSettle dalRecommandDocumentSettle;
         private IDalLiveAnchor dalLiveAnchor;
         private IDalCompanyBaseInfo dalCompanyBaseInfo;
+        private IDalHospitalInfo dalHospitalInfo;
+        private IDalReconciliationDocuments dalReconciliationDocuments;
         public CustomerHospitalConsumeService(IDalCustomerHospitalConsume dalCustomerHospitalConsume,
             IDalConfig dalConfig,
             IDalAmiyaEmployee dalAmiyaEmployee,
@@ -48,7 +50,7 @@ namespace Fx.Amiya.Service
             ILiveAnchorService liveAnchorService,
             IDalBindCustomerService dalBindCustomerService,
             IOrderCheckPictureService orderCheckPictureService,
-            IDalCustomerBaseInfo dalCustomerBaseInfo, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalLiveAnchor dalLiveAnchor, IDalCompanyBaseInfo dalCompanyBaseInfo)
+            IDalCustomerBaseInfo dalCustomerBaseInfo, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalLiveAnchor dalLiveAnchor, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalHospitalInfo dalHospitalInfo, IDalReconciliationDocuments dalReconciliationDocuments)
         {
             this.dalCustomerHospitalConsume = dalCustomerHospitalConsume;
             this.dalConfig = dalConfig;
@@ -64,6 +66,8 @@ namespace Fx.Amiya.Service
             this.dalRecommandDocumentSettle = dalRecommandDocumentSettle;
             this.dalLiveAnchor = dalLiveAnchor;
             this.dalCompanyBaseInfo = dalCompanyBaseInfo;
+            this.dalHospitalInfo = dalHospitalInfo;
+            this.dalReconciliationDocuments = dalReconciliationDocuments;
         }
 
         public async Task AddAsync(AddCustomerHospitalConsumeDto addDto, int hospitalId)
@@ -549,7 +553,7 @@ namespace Fx.Amiya.Service
             result.IsConfirmOrder = selectResult.IsConfirmOrder;
             result.IsReceiveAdditionalPurchase = selectResult.IsReceiveAdditionalPurchase;
             result.IsCreateBill = selectResult.IsCreateBill;
-            result.BelongCompanyName= dalCompanyBaseInfo.GetAll().Where(e => e.Id == selectResult.BelongCompany).SingleOrDefault()?.Name;
+            result.BelongCompanyName = dalCompanyBaseInfo.GetAll().Where(e => e.Id == selectResult.BelongCompany).SingleOrDefault()?.Name;
             return result;
         }
 
@@ -729,7 +733,7 @@ namespace Fx.Amiya.Service
         {
 
             var config = await GetCallCenterConfig();
-            if (dataFrom.HasValue&& dataFrom.Value == true)
+            if (dataFrom.HasValue && dataFrom.Value == true)
             {
                 config.HidePhoneNumber = false;
             }
@@ -1323,7 +1327,7 @@ namespace Fx.Amiya.Service
             startDate = startDate == null ? DateTime.Now.Date : startDate.Value.Date;
             endDate = endDate == null ? DateTime.Now.AddDays(1).Date : endDate.Value.AddDays(1).Date;
             var dataList = dalCustomerHospitalConsume.GetAll().Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CheckState == 2)
-                .Where(e => liveAnchorIds.Count==0 || liveAnchorIds.Contains(e.LiveAnchorId))
+                .Where(e => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(e.LiveAnchorId))
                 .GroupBy(e => new { e.LiveAnchorId, e.BelongCompany })
                 .Select(e => new LiveAnchorBoardDataDto
                 {
@@ -1354,9 +1358,9 @@ namespace Fx.Amiya.Service
         {
             startDate = startDate == null ? DateTime.Now.Date : startDate.Value.Date;
             endDate = endDate == null ? DateTime.Now.AddDays(1).Date : endDate.Value.AddDays(1).Date;
-            var dealData =await dalCustomerHospitalConsume.GetAll()
-                .Where(e => e.CheckDate >= startDate && e.CheckDate < endDate  && e.CheckState == 2)
-                .Where(e=>!customerServiceId.HasValue||e.AddedBy==customerServiceId)
+            var dealData = await dalCustomerHospitalConsume.GetAll()
+                .Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CheckState == 2)
+                .Where(e => !customerServiceId.HasValue || e.AddedBy == customerServiceId)
                 .GroupBy(e => e.AddedBy)
                 .Select(e => new CustomerServiceBoardDataDto
                 {
@@ -1400,6 +1404,57 @@ namespace Fx.Amiya.Service
             order.IsCreateBill = update.IsCreateBill;
             order.BelongCompany = update.CreateBillCompanyId;
             await dalCustomerHospitalConsume.UpdateAsync(order, true);
+        }
+        /// <summary>
+        /// 获取医院对账业绩
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="hospitalId"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<List<FinancialHospitalDealPriceBoardDto>> GetHospitalDealPriceDataAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, int pageNum, int pageSize)
+        {
+            startDate = startDate.HasValue ? startDate.Value.Date : DateTime.Now.Date;
+            endDate = endDate.HasValue ? endDate.Value.AddDays(1).Date : DateTime.Now.Date.AddDays(1).Date;
+            var dealInfo = dalCustomerHospitalConsume.GetAll().Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CheckState == (int)CheckType.CheckedSuccess).Select(e => new HospitalConsumerBoardDataDto
+            {
+                HospitalId = e.HospitalId,
+                DealPrice = e.CheckBuyAgainPrice ?? 0m,
+                TotalServicePrice = e.CheckSettlePrice ?? 0m,
+                InformationPrice = 0m,
+                SystemUsePrice = 0m,
+                ReturnBackPrice = e.ReturnBackPrice ?? 0m,
+                ReconciliationDocumentsId=e.ReconciliationDocumentsId
+            });
+            if (hospitalId.HasValue && hospitalId != -1)
+            {
+                dealInfo = dealInfo.Where(e => e.HospitalId == hospitalId);
+            }
+            foreach (var item in dealInfo.ToList())
+            {
+                if (!string.IsNullOrEmpty(item.ReconciliationDocumentsId)) {
+                    var reconciliationDocuments = await dalReconciliationDocuments.GetAll().Where(e => e.Id == item.ReconciliationDocumentsId).FirstOrDefaultAsync();
+                    if (reconciliationDocuments.ReturnBackPricePercent.HasValue)
+                        item.InformationPrice = Math.Round(item.DealPrice * reconciliationDocuments.ReturnBackPricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
+                    if (reconciliationDocuments.SystemUpdatePricePercent.HasValue)
+                        item.SystemUsePrice = Math.Round(item.DealPrice * reconciliationDocuments.SystemUpdatePricePercent.Value / 100, 2, MidpointRounding.AwayFromZero);
+                }
+               
+            }
+
+            var consumerInfoResult = dealInfo.GroupBy(e => e.HospitalId).Select(e => new FinancialHospitalDealPriceBoardDto
+            {
+                HospitalName = dalHospitalInfo.GetAll().Where(h => h.Id == e.Key).FirstOrDefault() == null ? "未知(订单未归属医院)" : dalHospitalInfo.GetAll().Where(h => h.Id == e.Key).FirstOrDefault().Name,
+                DealPrice = e.Sum(item => item.DealPrice),
+                TotalServicePrice = e.Sum(item => item.TotalServicePrice),
+                InformationPrice=e.Sum(item=>item.InformationPrice),
+                SystemUsePrice = e.Sum(item => item.SystemUsePrice),
+                ReturnBackPrice = e.Sum(item => item.ReturnBackPrice)
+            }).OrderByDescending(e => e.DealPrice);
+            return consumerInfoResult.ToList();
+
         }
     }
 }

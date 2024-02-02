@@ -2170,7 +2170,7 @@ namespace Fx.Amiya.Service
         /// <param name="endDate"></param>
         /// <param name="hospitalId"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<FinancialHospitalDealPriceBoardDto>> GetHospitalDealPriceDataAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, int pageNum, int pageSize)
+        public async Task<List<FinancialHospitalDealPriceBoardDto>> GetHospitalDealPriceDataAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, int pageNum, int pageSize)
         {
             startDate = startDate.HasValue ? startDate.Value.Date : DateTime.Now.Date;
             endDate = endDate.HasValue ? endDate.Value.AddDays(1).Date : DateTime.Now.Date.AddDays(1).Date;
@@ -2188,10 +2188,7 @@ namespace Fx.Amiya.Service
                 SystemUsePrice = e.Sum(item => item.SystemUpdatePrice ?? 0m),
                 ReturnBackPrice = e.Sum(item => item.ReturnBackPrice ?? 0m)
             }).OrderByDescending(e => e.DealPrice);
-            FxPageInfo<FinancialHospitalDealPriceBoardDto> fxPageInfo = new FxPageInfo<FinancialHospitalDealPriceBoardDto>();
-            fxPageInfo.TotalCount = dealInfoResult.Count();
-            fxPageInfo.List = dealInfoResult.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
-            return fxPageInfo;
+            return dealInfoResult.ToList();
 
         }
 

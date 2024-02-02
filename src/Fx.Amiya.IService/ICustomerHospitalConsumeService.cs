@@ -89,7 +89,16 @@ namespace Fx.Amiya.IService
         /// <param name="update"></param>
         /// <returns></returns>
         Task UpdateCreateBillAndBelongCompany(UpdateCreateBillAndCompanyDto update);
-
+        /// <summary>
+        /// 获取医院对账业绩
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="hospitalId"></param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        Task<List<FinancialHospitalDealPriceBoardDto>> GetHospitalDealPriceDataAsync(DateTime? startDate, DateTime? endDate, int? hospitalId, int pageNum, int pageSize);
         #region 报表相关
         Task<List<CustomerHospitalConsumeDto>> GetCustomerHospitalConsuleReportAsync(int? channel, DateTime? checkDateStart, DateTime? checkDateEnd, int? CheckState, int? hospitalId, bool? isCreateBill, string belongCompanyId, string customerName, DateTime startDate, DateTime endDate, bool IsHidePhone);
 
