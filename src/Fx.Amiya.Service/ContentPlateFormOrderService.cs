@@ -8,6 +8,7 @@ using Fx.Amiya.Dto.FinancialBoard;
 using Fx.Amiya.Dto.HospitalBindCustomerService;
 using Fx.Amiya.Dto.HospitalBoard;
 using Fx.Amiya.Dto.HospitalCustomerInfo;
+using Fx.Amiya.Dto.MessageNotice.Input;
 using Fx.Amiya.Dto.OrderCheckPicture;
 using Fx.Amiya.Dto.OrderRemark;
 using Fx.Amiya.Dto.OrderReport;
@@ -62,6 +63,7 @@ namespace Fx.Amiya.Service
         private IDalConfig _dalConfig;
         private IWxAppConfigService _wxAppConfigService;
         private IDalLiveAnchor dalLiveAnchor;
+        private IMessageNoticeService messageNoticeService;
         private IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo;
         private IDalCompanyBaseInfo dalCompanyBaseInfo;
         private IDalAmiyaHospitalDepartment dalAmiyaHospitalDepartment;
@@ -78,6 +80,7 @@ namespace Fx.Amiya.Service
            ILiveAnchorWeChatInfoService liveAnchorWeChatInfoService,
             ILiveAnchorService liveAnchorService,
             IOrderRemarkService orderRemarkService,
+            IMessageNoticeService messageNoticeService,
             IEmployeeBindLiveAnchorService employeeBindLiveAnchorService,
             IHospitalCustomerInfoService hospitalCustomerInfoService,
             IHospitalInfoService hospitalInfoService,
@@ -112,6 +115,7 @@ namespace Fx.Amiya.Service
             this.amiyaGoodsDemandService = amiyaGoodsDemandService;
             this.employeeBindLiveAnchorService = employeeBindLiveAnchorService;
             _liveAnchorService = liveAnchorService;
+            this.messageNoticeService = messageNoticeService;
             _contentPlatformService = contentPlatformService;
             _amiyaEmployeeService = amiyaEmployeeService;
             _dalConfig = dalConfig;
@@ -1038,7 +1042,7 @@ namespace Fx.Amiya.Service
                         }
                     }
                     await _dalContentPlatformOrder.UpdateAsync(orderInfo, true);
-                    
+
                 }
                 unitOfWork.Commit();
                 return string.Join(",", empIds.Distinct());
@@ -2413,7 +2417,7 @@ namespace Fx.Amiya.Service
                 await _contentPlatFormOrderDalService.AddAsync(orderDealDto);
 
                 unitOfWork.Commit();
-
+                //成交后加入待回访数据
                 try
                 {
                     if (input.EmpId != 0 && input.IsFinish && order.HospitalDepartmentId == "7f9b164b-8560-4d32-bdbf-f7c28c55e0ae")
@@ -2427,8 +2431,47 @@ namespace Fx.Amiya.Service
                 }
                 catch (Exception ex)
                 {
-
-
+                    throw new Exception("成交录入成功，但生成回访数据失败，请联系管理员！");
+                }
+                //成交金额大于10w加入消息推送
+                try
+                {
+                    if (input.DealAmount >= 100000)
+                    {
+                        //判断订单归属
+                        int empId = 0;
+                        string empName = "";
+                        if (order.IsSupportOrder == true)
+                        {
+                            if (order.SupportEmpId != 0)
+                            {
+                                empId = order.SupportEmpId;
+                                var empInfo = await _amiyaEmployeeService.GetByIdAsync(order.SupportEmpId);
+                                empName = empInfo.Name.ToString();
+                            }
+                        }
+                        else
+                        {
+                            if (order.BelongEmpId.HasValue)
+                            {
+                                empId = order.BelongEmpId.Value;
+                                var empInfo = await _amiyaEmployeeService.GetByIdAsync(order.BelongEmpId.Value);
+                                empName = empInfo.Name.ToString();
+                            }
+                        }
+                        if (!string.IsNullOrEmpty(empName))
+                        {
+                            AddMessageNoticeDto addMessageNoticeDto = new AddMessageNoticeDto();
+                            addMessageNoticeDto.AcceptBy = empId;
+                            addMessageNoticeDto.NoticeType = (int)MessageNoticeMessageTextEnum.BannerNotice;
+                            addMessageNoticeDto.NoticeContent = "喜报：恭喜 " + empName + " 同学爆单，业绩成交" + input.DealAmount + "元！";
+                            await messageNoticeService.AddAsync(addMessageNoticeDto);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("成交录入成功，但生成推送数据失败，请联系管理员！");
                 }
             }
             catch (Exception err)

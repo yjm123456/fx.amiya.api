@@ -119,6 +119,41 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
 
+
+        /// <summary>
+        /// 根据时间，消息类型-获取消息通知列表（非分页）
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("bannerList")]
+        public async Task<ResultData<List<MessageNoticeDetails>>> GetBannerListWithPageAsync([FromQuery] QueryMessageNoticeListVo query)
+        {
+            try
+            {
+                QueryMessageNoticeDto queryCustomerAppointSchedulePageListDto = new QueryMessageNoticeDto();
+                queryCustomerAppointSchedulePageListDto.NoticeType = query.NoticeType;
+                queryCustomerAppointSchedulePageListDto.AcceptBy = query.AcceptBy;
+                queryCustomerAppointSchedulePageListDto.StartDate = query.StartDate;
+                queryCustomerAppointSchedulePageListDto.EndDate = query.EndDate;
+                var q = await messageNoticeService.GetBannerListAsync(queryCustomerAppointSchedulePageListDto);
+
+                var messageNotice = from d in q
+                                    select new MessageNoticeDetails
+                                    {
+                                        Id = d.Id,
+                                        NoticeTypeText = d.NoticeTypeText,
+                                        NoticeContent = d.NoticeContent,
+                                    };
+
+                var result = messageNotice.ToList();
+                return ResultData<List<MessageNoticeDetails>>.Success().AddData("messageNoticeInfo", result);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<List<MessageNoticeDetails>>.Fail(ex.Message);
+            }
+        }
+
         /// <summary>
         /// 修改消息通知信息
         /// </summary>

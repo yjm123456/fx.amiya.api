@@ -1308,6 +1308,10 @@ namespace Fx.Amiya.IService
         /// 分诊通知
         /// </summary>
         DistributeInterviewNotice = 4,
+        /// <summary>
+        /// 系统消息
+        /// </summary>
+        BannerNotice = 5,
     }
 
 

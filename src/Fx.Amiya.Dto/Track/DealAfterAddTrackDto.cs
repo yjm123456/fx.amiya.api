@@ -13,7 +13,7 @@ namespace Fx.Amiya.Dto.Track
         /// </summary>
         public int EmployeeId { get; set; }
         /// <summary>
-        /// 成交但创建时间
+        /// 成交的创建时间
         /// </summary>
         public DateTime CreateDate { get; set; }
         /// <summary>

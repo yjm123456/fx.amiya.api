@@ -17,6 +17,7 @@ namespace Fx.Amiya.IService
     public interface IMessageNoticeService
     {
         Task<List<MessageNoticeDto>> GetListAsync(QueryMessageNoticeDto query);
+        Task<List<MessageNoticeDto>> GetBannerListAsync(QueryMessageNoticeDto query);
         Task<int> GetMyUnReadAsync(int employeeId);
         Task AddAsync(AddMessageNoticeDto addDto);
         Task UpdateToReadAsync(UpdateMessageNoticeToReadDto updateDto);

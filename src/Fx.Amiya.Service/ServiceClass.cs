@@ -1925,6 +1925,9 @@ namespace Fx.Amiya.Service
                     inventoryStateText = "分诊通知";
                     break;
 
+                case 5:
+                    inventoryStateText = "系统消息";
+                    break;
             }
             return inventoryStateText;
         }

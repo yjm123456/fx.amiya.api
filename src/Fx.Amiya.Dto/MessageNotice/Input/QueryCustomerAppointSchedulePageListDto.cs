@@ -16,5 +16,6 @@ namespace Fx.Amiya.Dto.MessageNotice.Input
         /// 通知类型
         /// </summary>
         public int? NoticeType { get; set; }
+
     }
 }

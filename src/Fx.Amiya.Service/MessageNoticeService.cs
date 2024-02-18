@@ -73,6 +73,31 @@ namespace Fx.Amiya.Service
                 throw new Exception(ex.Message.ToString());
             }
         }
+        public async Task<List<MessageNoticeDto>> GetBannerListAsync(QueryMessageNoticeDto query)
+        {
+            try
+            {
+                var messageNoticeService = from d in dalMessageNoticeService.GetAll().Include(x => x.AmiyaEmployeeInfo)
+                                           where (!query.NoticeType.HasValue || d.NoticeType == query.NoticeType.Value)
+                                           && (!query.StartDate.HasValue || d.CreateDate >= query.StartDate.Value)
+                                           && (!query.EndDate.HasValue || d.CreateDate <= query.EndDate.Value.AddDays(1).AddMilliseconds(-1))
+                                           && (d.Valid == true)
+                                           select new MessageNoticeDto
+                                           {
+                                               Id = d.Id,
+                                               NoticeTypeText = ServiceClass.GetNoticeTypeText(d.NoticeType),
+                                               NoticeContent = d.NoticeContent,
+                                               CreateDate = d.CreateDate
+                                           };
+                List<MessageNoticeDto> messageNoticeServicePageInfo = new List<MessageNoticeDto>();
+                messageNoticeServicePageInfo = await messageNoticeService.OrderByDescending(x => x.CreateDate).ToListAsync();
+                return messageNoticeServicePageInfo;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message.ToString());
+            }
+        }
 
         public async Task<int> GetMyUnReadAsync(int employeeId)
         {

@@ -10,12 +10,12 @@ namespace Fx.Amiya.Dto.MessageNotice.Result
     {
 
         /// <summary>
-        /// 发送人
+        /// 接收人
         /// </summary>
         public int AcceptBy { get; set; }
 
         /// <summary>
-        /// 发送人名称
+        /// 接收人名称
         /// </summary>
         public string AcceptByEmpName { get; set; }
 
