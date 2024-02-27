@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto.LiveAnchorMonthlyTarget;
+using Fx.Amiya.Dto.NewBusinessDashboard;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -510,6 +511,43 @@ namespace Fx.Amiya.Service
         public async Task<List<string>> GetTargetIdsAsync(int year, int month, List<int> liveAnchorIds)
         {
             return dalLiveAnchorMonthlyTargetLiving.GetAll().Where(e => e.Year == year && e.Month == month && liveAnchorIds.Contains(e.LiveAnchorId)).Select(e => e.Id).ToList();
+        }
+        /// <summary>
+        /// 获取直播中目标信息
+        /// </summary>
+        /// <param name="queryDto"></param>
+        /// <returns></returns>
+        public async Task<LivingTargetDto> GetTargetAsync(QueryLivingBusinessDataDto queryDto)
+        {
+            var res = dalLiveAnchorMonthlyTargetLiving.GetAll().Where(e => e.Year == queryDto.Year && e.Month == queryDto.Month);
+            if (!string.IsNullOrEmpty(queryDto.BaseLiveAnchorId))
+            {
+                res = res.Where(e => e.LiveAnchor.LiveAnchorBaseId == queryDto.BaseLiveAnchorId);
+            }
+            if (res.ToList().Count == 0) return null;
+            LivingTargetDto livingTargetDto = new LivingTargetDto();
+            if (queryDto.ShowTikokData)
+            {
+                res= res.Where(e => e.LiveAnchor.ContentPlateFormId == "");
+                livingTargetDto.OrderGMVTarget += res.Sum(e => e.GMVTarget);
+                livingTargetDto.RefundGMVTarget += res.Sum(e => e.RefundGMVTarget);
+                livingTargetDto.ActualReturnBackMoneyTarget += res.Sum(e => e.CumulativeCargoSettlementCommission);
+                livingTargetDto.InvestFlowTarget += res.Sum(e => e.LivingRoomFlowInvestmentTarget);
+                livingTargetDto.DesignCardOrderTarget += res.Sum(e => e.ConsultationTarget) + res.Sum(e => e.ConsultationTarget2);
+                livingTargetDto.DesignCardRefundTarget += res.Sum(e=>e.LivingRefundCardTarget);
+            }
+            if (queryDto.ShowWechatVideoData)
+            {
+                res = res.Where(e => e.LiveAnchor.ContentPlateFormId == "");
+                livingTargetDto.OrderGMVTarget += res.Sum(e => e.GMVTarget);
+                livingTargetDto.RefundGMVTarget += res.Sum(e => e.RefundGMVTarget);
+                livingTargetDto.ActualReturnBackMoneyTarget += res.Sum(e => e.CumulativeCargoSettlementCommission);
+                livingTargetDto.InvestFlowTarget += res.Sum(e => e.LivingRoomFlowInvestmentTarget);
+                livingTargetDto.DesignCardOrderTarget += res.Sum(e => e.ConsultationTarget) + res.Sum(e => e.ConsultationTarget2);
+                livingTargetDto.DesignCardRefundTarget += res.Sum(e => e.LivingRefundCardTarget);
+            }
+            
+            return livingTargetDto;
         }
     }
 }

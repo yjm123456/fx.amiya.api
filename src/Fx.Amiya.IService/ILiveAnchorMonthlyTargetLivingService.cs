@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.Dto.LiveAnchorMonthlyTarget;
+using Fx.Amiya.Dto.NewBusinessDashboard;
 using Fx.Amiya.Dto.Performance;
 using Fx.Common;
 using System;
@@ -38,5 +39,10 @@ namespace Fx.Amiya.IService
         /// <param name="liveAnchorIds"></param>
         /// <returns></returns>
         Task<List<string>> GetTargetIdsAsync(int year, int month,List<int> liveAnchorIds);
+        /// <summary>
+        /// 获取直播中目标信息
+        /// </summary>
+        /// <returns></returns>
+        Task<LivingTargetDto> GetTargetAsync(QueryLivingBusinessDataDto queryDto);
     }
 }

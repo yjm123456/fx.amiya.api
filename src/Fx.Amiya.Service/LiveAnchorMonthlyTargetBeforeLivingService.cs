@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto.LiveAnchorMonthlyTarget;
+using Fx.Amiya.Dto.NewBusinessDashboard;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -20,6 +21,7 @@ namespace Fx.Amiya.Service
         private ILiveAnchorService _liveanchorService;
         private IAmiyaEmployeeService _amiyaEmployeeService;
         private IEmployeeBindLiveAnchorService employeeBindLiveAnchorService;
+        
 
         public LiveAnchorMonthlyTargetBeforeLivingService(IDalLiveAnchorMonthlyTargetBeforeLiving dalLiveAnchorMonthlyTargetBeforeLiving,
             ILiveAnchorService liveAnchorService,
@@ -853,6 +855,47 @@ namespace Fx.Amiya.Service
                 throw new Exception(ex.Message.ToString());
             }
         }
+        /// <summary>
+        /// 获取直播前目标数据
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        public async Task<LiveAnchorBeforeLivingTargetDto?> GetBeforeLivingTargetByYearAndMonthAsync(QueryBeforeLivingBusinessDataDto query)
+        {
+            var res = dalLiveAnchorMonthlyTargetBeforeLiving.GetAll().Where(e => e.Year == query.Year && e.Month == query.Month);
+            if (!string.IsNullOrEmpty(query.BaseLiveAnchorId)) {
+                res = res.Where(e=>e.LiveAnchor.LiveAnchorBaseId==query.BaseLiveAnchorId);
+            }
+            if (res.ToList().Count == 0) return null;
+            LiveAnchorBeforeLivingTargetDto liveAnchorBeforeLivingTargetDto = new LiveAnchorBeforeLivingTargetDto();
+            if (query.ShowTikokData) {
+                liveAnchorBeforeLivingTargetDto.IncreaseFansFeesTarget += res.Sum(e=>e.TikTokIncreaseFansFeesTarget);
+                liveAnchorBeforeLivingTargetDto.IncreaseFansTarget += res.Sum(e=>e.TikTokIncreaseFansTarget);
+                liveAnchorBeforeLivingTargetDto.ShowcaseIncomeTarget += res.Sum(e=>e.TikTokShowcaseIncomeTarget);
+                liveAnchorBeforeLivingTargetDto.ShowcaseFeeTarget += res.Sum(e=>e.TikTokShowCaseFeeTarget);
+                liveAnchorBeforeLivingTargetDto.CluesTarget += res.Sum(e=>e.TikTokCluesTarget);
+                liveAnchorBeforeLivingTargetDto.SendNumTarget += res.Sum(e=>e.TikTokReleaseTarget);
+            }
+            if (query.ShowWechatVideoData) {
+                liveAnchorBeforeLivingTargetDto.IncreaseFansFeesTarget += res.Sum(e => e.VideoIncreaseFansFeesTarget);
+                liveAnchorBeforeLivingTargetDto.IncreaseFansTarget += res.Sum(e => e.VideoIncreaseFansTarget);
+                liveAnchorBeforeLivingTargetDto.ShowcaseIncomeTarget += res.Sum(e => e.VideoShowcaseIncomeTarget);
+                liveAnchorBeforeLivingTargetDto.ShowcaseFeeTarget += res.Sum(e => e.VideoShowCaseFeeTarget);
+                liveAnchorBeforeLivingTargetDto.CluesTarget += res.Sum(e => e.VideoCluesTarget);
+                liveAnchorBeforeLivingTargetDto.SendNumTarget += res.Sum(e => e.VideoReleaseTarget);
+            }
+            if (query.ShowXiaoHongShuData) {
+                liveAnchorBeforeLivingTargetDto.IncreaseFansFeesTarget += res.Sum(e => e.XiaoHongShuIncreaseFansFeesTarget);
+                liveAnchorBeforeLivingTargetDto.IncreaseFansTarget += res.Sum(e => e.XiaoHongShuIncreaseFansTarget);
+                liveAnchorBeforeLivingTargetDto.ShowcaseIncomeTarget += res.Sum(e => e.XiaoHongShuShowcaseIncomeTarget);
+                liveAnchorBeforeLivingTargetDto.ShowcaseFeeTarget += res.Sum(e => e.XiaoHongShuShowCaseFeeTarget);
+                liveAnchorBeforeLivingTargetDto.CluesTarget += res.Sum(e => e.XiaoHongShuCluesTarget);
+                liveAnchorBeforeLivingTargetDto.SendNumTarget += res.Sum(e => e.XiaoHongShuReleaseTarget);
+            }
+            return liveAnchorBeforeLivingTargetDto;
+        }
+
 
         ///// <summary>
         ///// 获取带货业绩
