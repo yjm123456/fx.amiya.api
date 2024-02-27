@@ -150,9 +150,10 @@ namespace Fx.Amiya.Background.Api
                     //var douYinOrderResult3 = await _syncTikTokOrder.TranslateTradesSoldChangedOrders(date.AddMinutes(-15), date, 5);
                     //tikTokOrderList.AddRange(douYinOrderResult3);
 
-                    //吉娜-吉娜气质美学
+                    //吉娜-吉娜JINA
                     var douYinOrderResult4 = await _syncTikTokOrder.TranslateTradesSoldChangedOrders(date.AddMinutes(-15), date, 1);
                     tikTokOrderList.AddRange(douYinOrderResult4);
+
                 }
                 List<WechatVideoOrder> wechatVideoOrderList = new List<WechatVideoOrder>();
                 if (_fxAppGlobal.AppConfig.SyncOrderConfig.WechatVideo == true)

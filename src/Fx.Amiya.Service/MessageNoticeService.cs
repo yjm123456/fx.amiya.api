@@ -128,7 +128,14 @@ namespace Fx.Amiya.Service
                 messageNoticeService.AcceptBy = addDto.AcceptBy;
                 messageNoticeService.NoticeType = addDto.NoticeType;
                 messageNoticeService.NoticeContent = addDto.NoticeContent;
-                messageNoticeService.IsRead = false;
+                if (messageNoticeService.NoticeType == (int)MessageNoticeMessageTextEnum.BannerNotice)
+                {
+                    messageNoticeService.IsRead = true;
+                }
+                else
+                {
+                    messageNoticeService.IsRead = false;
+                }
                 messageNoticeService.Valid = true;
                 messageNoticeService.CreateDate = DateTime.Now;
 
