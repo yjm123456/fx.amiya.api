@@ -316,7 +316,7 @@ namespace Fx.Amiya.Service
             LivingBusinessDataDto livingBusinessDataDto = new LivingBusinessDataDto();
             if (showTikTokData)
             {
-                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "86db9937-dc47-45ff-a061-610bdef13c5b");
+                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1");
                 if (!string.IsNullOrEmpty(baseLiveAnchorId))
                 {
                     res = res.Where(e => e.LiveAnchorMonthlyTargetLiving.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId);
@@ -329,7 +329,7 @@ namespace Fx.Amiya.Service
             }
             if (showWechatVideoData)
             {
-                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "0f3be741-2f51-47d9-b4bc-aa8e65d2e58f");
+                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878");
                 if (!string.IsNullOrEmpty(baseLiveAnchorId))
                 {
                     res = res.Where(e => e.LiveAnchorMonthlyTargetLiving.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId);
@@ -356,7 +356,7 @@ namespace Fx.Amiya.Service
             var endDate = startDate.AddYears(1);
             if (queryDto.ShowTikokData)
             {
-                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "86db9937-dc47-45ff-a061-610bdef13c5b").Select(e => new LivingBrokenDataItemDto
+                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Select(e => new LivingBrokenDataItemDto
                 {
                     OrderGMV = e.GMV,
                     RefundGMV = e.RefundGMV,
@@ -374,7 +374,7 @@ namespace Fx.Amiya.Service
             }
             if (queryDto.ShowWechatVideoData)
             {
-                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "0f3be741-2f51-47d9-b4bc-aa8e65d2e58f").Select(e => new LivingBrokenDataItemDto
+                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Select(e => new LivingBrokenDataItemDto
                 {
                     OrderGMV = e.GMV,
                     RefundGMV = e.RefundGMV,
@@ -469,7 +469,7 @@ namespace Fx.Amiya.Service
             LivingAestheticMedicineBusinessDataDto livingBusinessDataDto = new LivingAestheticMedicineBusinessDataDto();
             if (showTikTokData)
             {
-                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "86db9937-dc47-45ff-a061-610bdef13c5b");
+                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1");
                 if (!string.IsNullOrEmpty(baseLiveAnchorId))
                 {
                     res = res.Where(e => e.LiveAnchorMonthlyTargetLiving.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId);
@@ -482,7 +482,7 @@ namespace Fx.Amiya.Service
             }
             if (showWechatVideoData)
             {
-                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "0f3be741-2f51-47d9-b4bc-aa8e65d2e58f");
+                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878");
                 if (!string.IsNullOrEmpty(baseLiveAnchorId))
                 {
                     res = res.Where(e => e.LiveAnchorMonthlyTargetLiving.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId);
@@ -507,7 +507,7 @@ namespace Fx.Amiya.Service
             var endDate = startDate.AddYears(1);
             if (queryDto.ShowTikokData)
             {
-                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "86db9937-dc47-45ff-a061-610bdef13c5b").Select(e => new LivingAestheticMedicineBrokenDataItemDto
+                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Select(e => new LivingAestheticMedicineBrokenDataItemDto
                 {
                     DesignCardOrder = e.Consultation + e.Consultation2,
                     DesignCardRefund = e.RefundCard,
@@ -524,7 +524,7 @@ namespace Fx.Amiya.Service
             }
             if (queryDto.ShowWechatVideoData)
             {
-                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "0f3be741-2f51-47d9-b4bc-aa8e65d2e58f").Select(e => new LivingAestheticMedicineBrokenDataItemDto
+                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Select(e => new LivingAestheticMedicineBrokenDataItemDto
                 {
                     DesignCardOrder = e.Consultation + e.Consultation2,
                     DesignCardRefund = e.RefundCard,
