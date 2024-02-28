@@ -115,7 +115,7 @@ namespace Fx.Amiya.Service
             var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(queryDto.Year, queryDto.Month == 0 ? 1 : queryDto.Month);
             if (queryDto.ShowTikokData)
             {
-                var res = dalBeforeLivingTikTokDailyTarget.GetAll().Where(e => e.RecordDate >= sequentialDate.StartDate && e.RecordDate < sequentialDate.EndDate).Select(e => new BeforeLivingBrokenDataItemDto
+                var res = dalBeforeLivingTikTokDailyTarget.GetAll().Where(e => e.RecordDate >= sequentialDate.StartDate && e.RecordDate < sequentialDate.EndDate && e.Valid == true).Select(e => new BeforeLivingBrokenDataItemDto
                 {
                     IncreaseFans = e.TikTokIncreaseFans,
                     IncreaseFansFees = e.TikTokIncreaseFansFees,
@@ -135,7 +135,7 @@ namespace Fx.Amiya.Service
             }
             if (queryDto.ShowWechatVideoData)
             {
-                var res = dalBeforeLivingVideoDailyTarget.GetAll().Where(e => e.RecordDate >= sequentialDate.StartDate && e.RecordDate < sequentialDate.EndDate).Select(e => new BeforeLivingBrokenDataItemDto
+                var res = dalBeforeLivingVideoDailyTarget.GetAll().Where(e => e.RecordDate >= sequentialDate.StartDate && e.RecordDate < sequentialDate.EndDate && e.Valid == true).Select(e => new BeforeLivingBrokenDataItemDto
                 {
                     IncreaseFans = e.VideoIncreaseFans,
                     IncreaseFansFees = e.VideoIncreaseFansFees,
@@ -154,7 +154,7 @@ namespace Fx.Amiya.Service
             }
             if (queryDto.ShowXiaoHongShuData)
             {
-                var res = dalBeforeLivingXiaoHongShuDailyTarget.GetAll().Where(e => e.RecordDate >= sequentialDate.StartDate && e.RecordDate < sequentialDate.EndDate).Select(e => new BeforeLivingBrokenDataItemDto
+                var res = dalBeforeLivingXiaoHongShuDailyTarget.GetAll().Where(e => e.RecordDate >= sequentialDate.StartDate && e.RecordDate < sequentialDate.EndDate && e.Valid == true).Select(e => new BeforeLivingBrokenDataItemDto
                 {
                     IncreaseFans = e.XiaoHongShuIncreaseFans,
                     IncreaseFansFees = e.XiaoHongShuIncreaseFansFees,
@@ -217,7 +217,7 @@ namespace Fx.Amiya.Service
             BeforeLivingBusinessDataDto beforeLivingBusinessDataDto = new BeforeLivingBusinessDataDto();
             if (showTikTokData)
             {
-                var res = dalBeforeLivingTikTokDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate);
+                var res = dalBeforeLivingTikTokDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.Valid == true);
                 if (!string.IsNullOrEmpty(baseLiveAnchorId))
                 {
                     res = res.Where(e => e.LiveAnchorMonthlyTargetBeforeLiving.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId);
@@ -231,7 +231,7 @@ namespace Fx.Amiya.Service
             }
             if (showWechatvideoData)
             {
-                var res = dalBeforeLivingVideoDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate);
+                var res = dalBeforeLivingVideoDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.Valid == true);
                 if (!string.IsNullOrEmpty(baseLiveAnchorId))
                 {
                     res = res.Where(e => e.LiveAnchorMonthlyTargetBeforeLiving.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId);
@@ -245,7 +245,7 @@ namespace Fx.Amiya.Service
             }
             if (showXiaoHongShuData)
             {
-                var res = dalBeforeLivingXiaoHongShuDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate);
+                var res = dalBeforeLivingXiaoHongShuDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.Valid == true);
                 if (!string.IsNullOrEmpty(baseLiveAnchorId))
                 {
                     res = res.Where(e => e.LiveAnchorMonthlyTargetBeforeLiving.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId);
@@ -316,26 +316,26 @@ namespace Fx.Amiya.Service
             LivingBusinessDataDto livingBusinessDataDto = new LivingBusinessDataDto();
             if (showTikTokData)
             {
-                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1");
+                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1"&&e.Valid==true);
                 if (!string.IsNullOrEmpty(baseLiveAnchorId))
                 {
                     res = res.Where(e => e.LiveAnchorMonthlyTargetLiving.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId);
                 }
                 livingBusinessDataDto.OrderGMV += res.Sum(e => e.GMV);
-                livingBusinessDataDto.RefundGMV += res.Sum(e => e.RefundCard);
+                livingBusinessDataDto.RefundGMV += res.Sum(e => e.RefundGMV);
                 livingBusinessDataDto.ActualReturnBackMoney += res.Sum(e => e.CargoSettlementCommission);
                 livingBusinessDataDto.InvestFlow += res.Sum(e => e.QianChuanNum) + res.Sum(e => e.TikTokPlusNum) + res.Sum(e => e.ShuiXinTuiNum);
 
             }
             if (showWechatVideoData)
             {
-                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878");
+                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878" && e.Valid == true);
                 if (!string.IsNullOrEmpty(baseLiveAnchorId))
                 {
                     res = res.Where(e => e.LiveAnchorMonthlyTargetLiving.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId);
                 }
                 livingBusinessDataDto.OrderGMV += res.Sum(e => e.GMV);
-                livingBusinessDataDto.RefundGMV += res.Sum(e => e.RefundCard);
+                livingBusinessDataDto.RefundGMV += res.Sum(e => e.RefundGMV);
                 livingBusinessDataDto.ActualReturnBackMoney += res.Sum(e => e.CargoSettlementCommission);
                 livingBusinessDataDto.InvestFlow += res.Sum(e => e.WeiXinDou);
             }
@@ -356,7 +356,7 @@ namespace Fx.Amiya.Service
             var endDate = startDate.AddYears(1);
             if (queryDto.ShowTikokData)
             {
-                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Select(e => new LivingBrokenDataItemDto
+                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1" && e.Valid == true).Select(e => new LivingBrokenDataItemDto
                 {
                     OrderGMV = e.GMV,
                     RefundGMV = e.RefundGMV,
@@ -374,7 +374,7 @@ namespace Fx.Amiya.Service
             }
             if (queryDto.ShowWechatVideoData)
             {
-                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Select(e => new LivingBrokenDataItemDto
+                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878" && e.Valid == true).Select(e => new LivingBrokenDataItemDto
                 {
                     OrderGMV = e.GMV,
                     RefundGMV = e.RefundGMV,
@@ -469,7 +469,7 @@ namespace Fx.Amiya.Service
             LivingAestheticMedicineBusinessDataDto livingBusinessDataDto = new LivingAestheticMedicineBusinessDataDto();
             if (showTikTokData)
             {
-                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1");
+                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1" && e.Valid == true);
                 if (!string.IsNullOrEmpty(baseLiveAnchorId))
                 {
                     res = res.Where(e => e.LiveAnchorMonthlyTargetLiving.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId);
@@ -482,7 +482,7 @@ namespace Fx.Amiya.Service
             }
             if (showWechatVideoData)
             {
-                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878");
+                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878" && e.Valid == true);
                 if (!string.IsNullOrEmpty(baseLiveAnchorId))
                 {
                     res = res.Where(e => e.LiveAnchorMonthlyTargetLiving.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId);
@@ -507,7 +507,7 @@ namespace Fx.Amiya.Service
             var endDate = startDate.AddYears(1);
             if (queryDto.ShowTikokData)
             {
-                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Select(e => new LivingAestheticMedicineBrokenDataItemDto
+                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1" && e.Valid == true).Select(e => new LivingAestheticMedicineBrokenDataItemDto
                 {
                     DesignCardOrder = e.Consultation + e.Consultation2,
                     DesignCardRefund = e.RefundCard,
@@ -524,7 +524,7 @@ namespace Fx.Amiya.Service
             }
             if (queryDto.ShowWechatVideoData)
             {
-                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Select(e => new LivingAestheticMedicineBrokenDataItemDto
+                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878" && e.Valid == true).Select(e => new LivingAestheticMedicineBrokenDataItemDto
                 {
                     DesignCardOrder = e.Consultation + e.Consultation2,
                     DesignCardRefund = e.RefundCard,
@@ -578,7 +578,11 @@ namespace Fx.Amiya.Service
             var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(queryDto.Year, queryDto.Month == 0 ? 1 : queryDto.Month);
             //获取各个平台的主播ID
             List<int> LiveAnchorInfo = new List<int>();
-            LiveAnchorInfo = await this.GetLiveAnchorIdsByBaseIdAndIsSelfLiveAnchorAsync(queryDto.BaseLiveAnchorId, queryDto.IsSelfLiveanchor);
+            if (!string.IsNullOrEmpty(queryDto.BaseLiveAnchorId)||(queryDto.IsSelfLiveanchor.HasValue&&queryDto.IsSelfLiveanchor==false))
+            {
+                LiveAnchorInfo = await this.GetLiveAnchorIdsByBaseIdAndIsSelfLiveAnchorAsync(queryDto.BaseLiveAnchorId, queryDto.IsSelfLiveanchor);
+            }
+
 
             //获取目标
             var target = await liveAnchorMonthlyTargetAfterLivingService.GetPerformanceTargetAsync(queryDto.Year, queryDto.Month, LiveAnchorInfo);
@@ -660,7 +664,7 @@ namespace Fx.Amiya.Service
             #endregion
             #region 新客潜在业绩
             var curNewCustomerPotential = order.Where(o => o.AddOrderPrice == 0 && o.IsOldCustomer == false).Sum(o => o.Price);
-            var NewCustomerPotentialYearOnYear = orderYearOnYear.Where(o => o.AddOrderPrice ==0 && o.IsOldCustomer == false).Sum(o => o.Price);
+            var NewCustomerPotentialYearOnYear = orderYearOnYear.Where(o => o.AddOrderPrice == 0 && o.IsOldCustomer == false).Sum(o => o.Price);
             var NewCustomerPotentialChainRatio = orderChain.Where(o => o.AddOrderPrice == 0 && o.IsOldCustomer == false).Sum(o => o.Price);
             afterLivingBusinessDataDto.NewCustomerPotentialPerformance = curNewCustomerPotential;
             afterLivingBusinessDataDto.NewCustomerPotentialPerformanceChain = CalculateChainratio(curNewCustomerPotential, NewCustomerPotentialChainRatio);
@@ -697,9 +701,11 @@ namespace Fx.Amiya.Service
             AfterLivingBrokenDataDto amiyaAchievementDetailDataDto = new AfterLivingBrokenDataDto();
             //获取各个平台的主播ID
             List<int> LiveAnchorInfo = new List<int>();
-            LiveAnchorInfo = await this.GetLiveAnchorIdsByBaseIdAndIsSelfLiveAnchorAsync(queryDto.BaseLiveAnchorId, queryDto.IsSelfLiveanchor);
+            if (!string.IsNullOrEmpty(queryDto.BaseLiveAnchorId) || (queryDto.IsSelfLiveanchor.HasValue && queryDto.IsSelfLiveanchor == false))
+            {
+                LiveAnchorInfo = await this.GetLiveAnchorIdsByBaseIdAndIsSelfLiveAnchorAsync(queryDto.BaseLiveAnchorId, queryDto.IsSelfLiveanchor);
+            }
             var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(queryDto.Year, queryDto.Month == 0 ? 1 : queryDto.Month);
-
             var order = await contentPlatFormOrderDealInfoService.GetPerformanceDetailByDateAsync(sequentialDate.StartDate, sequentialDate.EndDate, LiveAnchorInfo);
             List<AfterLivingBrokenItemDataDto> dataList = new List<AfterLivingBrokenItemDataDto>();
             dataList = order.GroupBy(e => e.CreateDate.Day)
