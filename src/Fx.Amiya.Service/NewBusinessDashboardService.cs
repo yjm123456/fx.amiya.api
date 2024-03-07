@@ -476,7 +476,7 @@ namespace Fx.Amiya.Service
                 }
                 livingBusinessDataDto.DesignCardOrder += res.Sum(e => e.Consultation) + res.Sum(e => e.Consultation2);
                 livingBusinessDataDto.DesignCardRefund += res.Sum(e => e.RefundCard);
-                livingBusinessDataDto.DesignCardActual += livingBusinessDataDto.DesignCardOrder - livingBusinessDataDto.DesignCardRefund;
+                livingBusinessDataDto.DesignCardActual = livingBusinessDataDto.DesignCardOrder - livingBusinessDataDto.DesignCardRefund;
 
 
             }
@@ -489,7 +489,7 @@ namespace Fx.Amiya.Service
                 }
                 livingBusinessDataDto.DesignCardOrder += res.Sum(e => e.Consultation) + res.Sum(e => e.Consultation2);
                 livingBusinessDataDto.DesignCardRefund += res.Sum(e => e.RefundCard);
-                livingBusinessDataDto.DesignCardActual += livingBusinessDataDto.DesignCardOrder - livingBusinessDataDto.DesignCardRefund;
+                livingBusinessDataDto.DesignCardActual = livingBusinessDataDto.DesignCardOrder - livingBusinessDataDto.DesignCardRefund;
             }
 
             return livingBusinessDataDto;

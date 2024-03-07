@@ -528,23 +528,23 @@ namespace Fx.Amiya.Service
             LivingTargetDto livingTargetDto = new LivingTargetDto();
             if (queryDto.ShowTikokData)
             {
-                res= res.Where(e => e.LiveAnchor.ContentPlateFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1");
-                livingTargetDto.OrderGMVTarget += res.Sum(e => e.EliminateCardGMVTarget);
-                livingTargetDto.RefundGMVTarget += res.Sum(e => e.RefundGMVTarget);
-                livingTargetDto.ActualReturnBackMoneyTarget += res.Sum(e => e.CumulativeCargoSettlementCommission);
-                livingTargetDto.InvestFlowTarget += res.Sum(e => e.LivingRoomFlowInvestmentTarget);
-                livingTargetDto.DesignCardOrderTarget += res.Sum(e => e.ConsultationTarget) + res.Sum(e => e.ConsultationTarget2);
-                livingTargetDto.DesignCardRefundTarget += res.Sum(e=>e.LivingRefundCardTarget);
+                var tiktok= res.Where(e => e.LiveAnchor.ContentPlateFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1");
+                livingTargetDto.OrderGMVTarget += tiktok.Sum(e => e.EliminateCardGMVTarget);
+                livingTargetDto.RefundGMVTarget += tiktok.Sum(e => e.RefundGMVTarget);
+                livingTargetDto.ActualReturnBackMoneyTarget += tiktok.Sum(e => e.CumulativeCargoSettlementCommission);
+                livingTargetDto.InvestFlowTarget += tiktok.Sum(e => e.LivingRoomFlowInvestmentTarget);
+                livingTargetDto.DesignCardOrderTarget += tiktok.Sum(e => e.ConsultationTarget) + res.Sum(e => e.ConsultationTarget2);
+                livingTargetDto.DesignCardRefundTarget += tiktok.Sum(e=>e.LivingRefundCardTarget);
             }
             if (queryDto.ShowWechatVideoData)
             {
-                res = res.Where(e => e.LiveAnchor.ContentPlateFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878");
-                livingTargetDto.OrderGMVTarget += res.Sum(e => e.EliminateCardGMVTarget);
-                livingTargetDto.RefundGMVTarget += res.Sum(e => e.RefundGMVTarget);
-                livingTargetDto.ActualReturnBackMoneyTarget += res.Sum(e => e.CumulativeCargoSettlementCommission);
-                livingTargetDto.InvestFlowTarget += res.Sum(e => e.LivingRoomFlowInvestmentTarget);
-                livingTargetDto.DesignCardOrderTarget += res.Sum(e => e.ConsultationTarget) + res.Sum(e => e.ConsultationTarget2);
-                livingTargetDto.DesignCardRefundTarget += res.Sum(e => e.LivingRefundCardTarget);
+                var wechat = res.Where(e => e.LiveAnchor.ContentPlateFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878");
+                livingTargetDto.OrderGMVTarget += wechat.Sum(e => e.EliminateCardGMVTarget);
+                livingTargetDto.RefundGMVTarget += wechat.Sum(e => e.RefundGMVTarget);
+                livingTargetDto.ActualReturnBackMoneyTarget += wechat.Sum(e => e.CumulativeCargoSettlementCommission);
+                livingTargetDto.InvestFlowTarget += wechat.Sum(e => e.LivingRoomFlowInvestmentTarget);
+                livingTargetDto.DesignCardOrderTarget += wechat.Sum(e => e.ConsultationTarget) + wechat.Sum(e => e.ConsultationTarget2);
+                livingTargetDto.DesignCardRefundTarget += wechat.Sum(e => e.LivingRefundCardTarget);
             }
             
             return livingTargetDto;
