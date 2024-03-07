@@ -528,8 +528,8 @@ namespace Fx.Amiya.Service
             LivingTargetDto livingTargetDto = new LivingTargetDto();
             if (queryDto.ShowTikokData)
             {
-                res= res.Where(e => e.LiveAnchor.ContentPlateFormId == "");
-                livingTargetDto.OrderGMVTarget += res.Sum(e => e.GMVTarget);
+                res= res.Where(e => e.LiveAnchor.ContentPlateFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1");
+                livingTargetDto.OrderGMVTarget += res.Sum(e => e.EliminateCardGMVTarget);
                 livingTargetDto.RefundGMVTarget += res.Sum(e => e.RefundGMVTarget);
                 livingTargetDto.ActualReturnBackMoneyTarget += res.Sum(e => e.CumulativeCargoSettlementCommission);
                 livingTargetDto.InvestFlowTarget += res.Sum(e => e.LivingRoomFlowInvestmentTarget);
@@ -538,8 +538,8 @@ namespace Fx.Amiya.Service
             }
             if (queryDto.ShowWechatVideoData)
             {
-                res = res.Where(e => e.LiveAnchor.ContentPlateFormId == "");
-                livingTargetDto.OrderGMVTarget += res.Sum(e => e.GMVTarget);
+                res = res.Where(e => e.LiveAnchor.ContentPlateFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878");
+                livingTargetDto.OrderGMVTarget += res.Sum(e => e.EliminateCardGMVTarget);
                 livingTargetDto.RefundGMVTarget += res.Sum(e => e.RefundGMVTarget);
                 livingTargetDto.ActualReturnBackMoneyTarget += res.Sum(e => e.CumulativeCargoSettlementCommission);
                 livingTargetDto.InvestFlowTarget += res.Sum(e => e.LivingRoomFlowInvestmentTarget);

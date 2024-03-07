@@ -439,7 +439,7 @@ namespace Fx.Amiya.Service
 
 
         /// <summary>
-        /// 获取绑定了客服的客户列表
+        /// 获取绑定了客服的客户列表(弃用)
         /// </summary>
         /// <returns></returns>
         public async Task<FxPageInfo<BindCustomerInfoDto>> GetBindCustomerServiceListAsync(CustomerSearchParamDto customerSearchParam)
@@ -569,6 +569,50 @@ namespace Fx.Amiya.Service
             return customerPageInfo;
         }
 
+        /// <summary>
+        /// 获取绑定了客服的客户列表(新)
+        /// </summary>
+        /// <returns></returns>
+        public async Task<FxPageInfo<BindCustomerInfoDto>> GetNewBindCustomerServiceListAsync(CustomerSearchParamDto customerSearchParam)
+        {
+            var bindCustomerSerices = from d in dalBindCustomerService.GetAll()
+                                      where customerSearchParam.EmployeeId == -1 || d.CustomerServiceId == customerSearchParam.EmployeeId
+                                      select d;
+            if (!string.IsNullOrEmpty(customerSearchParam.Keyword))
+            {
+                bindCustomerSerices = bindCustomerSerices.Where(e => e.BuyerPhone.Contains(customerSearchParam.Keyword));
+            }
+            if (customerSearchParam.MinAmount.HasValue)
+            {
+                bindCustomerSerices = bindCustomerSerices.Where(e => e.AllPrice >= customerSearchParam.MinAmount);
+            }
+            if (customerSearchParam.MaxAmount.HasValue)
+            {
+                bindCustomerSerices = bindCustomerSerices.Where(e => e.AllPrice <= customerSearchParam.MinAmount);
+            }
+            if (customerSearchParam.StartDate.HasValue)
+            {
+                bindCustomerSerices = bindCustomerSerices.Where(e => e.CreateDate >= customerSearchParam.StartDate);
+            }
+            if (customerSearchParam.EndDate.HasValue)
+            {
+                bindCustomerSerices = bindCustomerSerices.Where(e => e.CreateDate <= customerSearchParam.EndDate);
+            }
+            int pageNum = customerSearchParam.PageNum;
+            int pageSize = customerSearchParam.PageSize;
+            var config = await GetCallCenterConfig();
+            FxPageInfo<BindCustomerInfoDto> customerPageInfo = new FxPageInfo<BindCustomerInfoDto>();
+            customerPageInfo.TotalCount = await bindCustomerSerices.CountAsync();
+            customerPageInfo.List = await bindCustomerSerices.OrderByDescending(e => e.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).Select(e => new BindCustomerInfoDto
+            {
+                CreateDate = e.CreateDate,
+                Phone = config.EnablePhoneEncrypt == true ? ServiceClass.GetIncompletePhone(e.BuyerPhone) : e.BuyerPhone,
+                EncryptPhone = ServiceClass.Encrypt(e.BuyerPhone, config.PhoneEncryptKey),
+                CustomerServiceId = e.CustomerServiceId,
+                CustomerServiceName = e.CustomerServiceAmiyaEmployee.Name,
+            }).ToListAsync();
+            return customerPageInfo;
+        }
 
 
         /// <summary>

@@ -76,10 +76,15 @@ namespace Fx.Amiya.IService
         Task<FxPageInfo<CustomerInfoDto>> GetWxCustomerListAsync(CustomerSearchParamDto customerSearchParamDto);
 
         /// <summary>
-        /// 获取绑定了客服的客户列表
+        /// 获取绑定了客服的客户列表(弃用)
         /// </summary>
         /// <returns></returns>
         Task<FxPageInfo<BindCustomerInfoDto>> GetBindCustomerServiceListAsync(CustomerSearchParamDto customerSearchParam);
+        /// <summary>
+        /// 获取绑定了客服的客户列表(新)
+        /// </summary>
+        /// <returns></returns>
+        Task<FxPageInfo<BindCustomerInfoDto>> GetNewBindCustomerServiceListAsync(CustomerSearchParamDto customerSearchParam);
 
         /// <summary>
         /// 根据条件获取客户消费列表

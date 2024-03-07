@@ -232,6 +232,54 @@ namespace Fx.Amiya.Background.Api.Controllers
 
         }
 
+        /// <summary>
+        /// 获取绑定了客服的客户列表(新)
+        /// </summary>
+        /// <param name="employeeId">-1查全部</param>
+        /// <param name="keyword"></param>
+        /// <param name="type">0=全部，1=已注册小程序，2=未注册小程序</param>
+        /// <param name="isUnTrack">是否未回访</param>
+        /// <param name="unTrackStartDate">未回访开始时间</param>
+        /// <param name="unTrackEndDate">未回访结束时间</param>
+        /// <param name="amountType">订单总额类型，0=下单总额，1=核销总额</param>
+        /// <returns></returns>
+        [HttpGet("newBindCustomerServerList")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<FxPageInfo<NewCustomerInfoVo>>> GetNewBindCustomerServiceListAsync([FromQuery]QueryBIndCustomerServicePageVo query)
+        {
+            if (query.EmployeeId == null)
+            {
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                query.EmployeeId = Convert.ToInt32(employee.Id);
+            }
+
+            CustomerSearchParamDto customerSearchParamDto = new CustomerSearchParamDto();
+            customerSearchParamDto.Keyword = query.KeyWord;
+            customerSearchParamDto.StartDate = query.StartDate;
+            customerSearchParamDto.EndDate = query.EndDate;
+            customerSearchParamDto.EmployeeId = (int)query.EmployeeId;
+            customerSearchParamDto.MinAmount = query.MinAmount;
+            customerSearchParamDto.MaxAmount = query.MaxAmount; 
+            customerSearchParamDto.PageNum = query.PageNum.Value;
+            customerSearchParamDto.PageSize = query.PageSize.Value;
+            var q = await customerService.GetNewBindCustomerServiceListAsync(customerSearchParamDto);
+            var customer = from d in q.List
+                           select new NewCustomerInfoVo
+                           {
+                               Phone = d.Phone,
+                               EncryptPhone = d.EncryptPhone,
+                               CreateDate=d.CreateDate,
+                               CustomerServiceId = d.CustomerServiceId,
+                               CustomerServiceName = d.CustomerServiceName,
+                              
+                           };
+            FxPageInfo<NewCustomerInfoVo> customerPageInfo = new FxPageInfo<NewCustomerInfoVo>();
+            customerPageInfo.TotalCount = q.TotalCount;
+            customerPageInfo.List = customer;
+            return ResultData<FxPageInfo<NewCustomerInfoVo>>.Success().AddData("customer", customerPageInfo);
+
+        }
+
 
         /// <summary>
         /// 获取绑定了客服的客户消费列表
@@ -780,7 +828,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
 
 
-            return ResultData<decimal>.Success().AddData("percent",integrationPercent*100);
+            return ResultData<decimal>.Success().AddData("percent", integrationPercent * 100);
         }
 
         /// <summary>

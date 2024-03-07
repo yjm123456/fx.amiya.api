@@ -316,14 +316,14 @@ namespace Fx.Amiya.Service
             LivingBusinessDataDto livingBusinessDataDto = new LivingBusinessDataDto();
             if (showTikTokData)
             {
-                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1"&&e.Valid==true);
+                var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1" && e.Valid == true);
                 if (!string.IsNullOrEmpty(baseLiveAnchorId))
                 {
                     res = res.Where(e => e.LiveAnchorMonthlyTargetLiving.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId);
                 }
-                livingBusinessDataDto.OrderGMV += res.Sum(e => e.GMV);
+                livingBusinessDataDto.OrderGMV += res.Sum(e => e.EliminateCardGMV);
                 livingBusinessDataDto.RefundGMV += res.Sum(e => e.RefundGMV);
-                livingBusinessDataDto.ActualReturnBackMoney += res.Sum(e => e.CargoSettlementCommission);
+                livingBusinessDataDto.ActualReturnBackMoney += 0;
                 livingBusinessDataDto.InvestFlow += res.Sum(e => e.QianChuanNum) + res.Sum(e => e.TikTokPlusNum) + res.Sum(e => e.ShuiXinTuiNum);
 
             }
@@ -334,9 +334,9 @@ namespace Fx.Amiya.Service
                 {
                     res = res.Where(e => e.LiveAnchorMonthlyTargetLiving.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId);
                 }
-                livingBusinessDataDto.OrderGMV += res.Sum(e => e.GMV);
+                livingBusinessDataDto.OrderGMV += res.Sum(e => e.EliminateCardGMV);
                 livingBusinessDataDto.RefundGMV += res.Sum(e => e.RefundGMV);
-                livingBusinessDataDto.ActualReturnBackMoney += res.Sum(e => e.CargoSettlementCommission);
+                livingBusinessDataDto.ActualReturnBackMoney += 0;
                 livingBusinessDataDto.InvestFlow += res.Sum(e => e.WeiXinDou);
             }
 
@@ -358,9 +358,9 @@ namespace Fx.Amiya.Service
             {
                 var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1" && e.Valid == true).Select(e => new LivingBrokenDataItemDto
                 {
-                    OrderGMV = e.GMV,
+                    OrderGMV = e.EliminateCardGMV,
                     RefundGMV = e.RefundGMV,
-                    ActualReturnBackMoney = e.CargoSettlementCommission,
+                    ActualReturnBackMoney = 0,
                     InvestFlow = e.TikTokPlusNum + e.QianChuanNum + e.ShuiXinTuiNum,
                     Time = e.RecordDate.Month.ToString(),
                     BaseLiveAnchorId = e.LiveAnchorMonthlyTargetLiving.LiveAnchor.LiveAnchorBaseId
@@ -376,10 +376,10 @@ namespace Fx.Amiya.Service
             {
                 var res = dalLivingDailyTarget.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.LiveAnchorMonthlyTargetLiving.LiveAnchor.ContentPlateFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878" && e.Valid == true).Select(e => new LivingBrokenDataItemDto
                 {
-                    OrderGMV = e.GMV,
+                    OrderGMV = e.EliminateCardGMV,
                     RefundGMV = e.RefundGMV,
-                    ActualReturnBackMoney = e.CargoSettlementCommission,
-                    InvestFlow = e.TikTokPlusNum + e.QianChuanNum + e.ShuiXinTuiNum,
+                    ActualReturnBackMoney = 0,
+                    InvestFlow = e.WeiXinDou,
                     Time = e.RecordDate.Month.ToString(),
                     BaseLiveAnchorId = e.LiveAnchorMonthlyTargetLiving.LiveAnchor.LiveAnchorBaseId
                 });
@@ -578,7 +578,7 @@ namespace Fx.Amiya.Service
             var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(queryDto.Year, queryDto.Month == 0 ? 1 : queryDto.Month);
             //获取各个平台的主播ID
             List<int> LiveAnchorInfo = new List<int>();
-            if (!string.IsNullOrEmpty(queryDto.BaseLiveAnchorId)||(queryDto.IsSelfLiveanchor.HasValue&&queryDto.IsSelfLiveanchor==false))
+            if (!string.IsNullOrEmpty(queryDto.BaseLiveAnchorId) || (queryDto.IsSelfLiveanchor.HasValue && queryDto.IsSelfLiveanchor == false))
             {
                 LiveAnchorInfo = await this.GetLiveAnchorIdsByBaseIdAndIsSelfLiveAnchorAsync(queryDto.BaseLiveAnchorId, queryDto.IsSelfLiveanchor);
             }
@@ -917,7 +917,7 @@ namespace Fx.Amiya.Service
         /// 填充直播后趋势图数据
         /// </summary>
         /// <param name="year"></param>
-        /// <param name="month"></param>
+        /// <param name="month"></param>                   
         /// <param name="dataList"></param>
         /// <returns></returns>
         private List<AfterLivingBrokenItemDataDto> FillAfterLivingDate(int year, int month, List<AfterLivingBrokenItemDataDto> dataList)
