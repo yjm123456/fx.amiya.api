@@ -26,7 +26,6 @@ namespace Fx.Amiya.Background.Api.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [FxInternalAuthorize]
     public class GoodsInfoController : ControllerBase
     {
         private IGoodsInfo goodsInfoService;
@@ -55,6 +54,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("list")]
+        [FxInternalAuthorize]
         public async Task<ResultData<FxPageInfo<GoodsInfoForListVo>>> GetListAsync(string keyword, int? exchangeType, int? categoryId, bool? valid,string appId, int pageNum, int pageSize)
         {
             var q = await goodsInfoService.GetListAsync(keyword, exchangeType, categoryId, valid,appId, pageNum, pageSize);
@@ -111,6 +111,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
+        [FxInternalAuthorize]
         public async Task<ResultData<GoodsInfoForSingleVo>> GetByIdAsync(string id)
         {
             var goodsInfo = await goodsInfoService.GetByIdAsync(id);
@@ -209,7 +210,112 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<GoodsInfoForSingleVo>.Success().AddData("goodsInfo", goods);
         }
 
-       
+
+
+        /// <summary>
+        /// 根据编号获取商品信息(外部使用）
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("getByIdUsedByPartner/{id}")]
+        public async Task<ResultData<GoodsInfoForSingleVo>> GetByIdUsedByPartnerAsync(string id)
+        {
+            var goodsInfo = await goodsInfoService.GetByIdAsync(id);
+
+            List<GoodsHospitalPriceVo> goodsHospitalPriceVoList = new List<GoodsHospitalPriceVo>();
+            foreach (var x in goodsInfo.GoodsHospitalPrice)
+            {
+                GoodsHospitalPriceVo goodsHospitalPriceVo = new GoodsHospitalPriceVo();
+                goodsHospitalPriceVo.HospitalId = x.HospitalId;
+                var hospitalResult = await _hospitalInfoService.GetBaseByIdAsync(x.HospitalId);
+                if (hospitalResult == null)
+                {
+                    continue;
+                }
+                else
+                {
+                    goodsHospitalPriceVo.HospitalName = hospitalResult.Name.ToString();
+                    goodsHospitalPriceVo.Price = x.Price;
+                    goodsHospitalPriceVoList.Add(goodsHospitalPriceVo);
+                }
+            }
+            List<GoodsStandardsPriceAddVo> goodsStandardsPriceVoList = new List<GoodsStandardsPriceAddVo>();
+            foreach (var x in goodsInfo.GoodsStandardsPrice)
+            {
+                GoodsStandardsPriceAddVo goodsStandardsPriceVo = new GoodsStandardsPriceAddVo();
+                goodsStandardsPriceVo.Standards = x.Standards;
+                goodsStandardsPriceVo.Price = x.Price;
+                goodsStandardsPriceVo.StandardsImg = x.StandardsImg;
+                goodsStandardsPriceVo.IntegralAmount = x.IntegralAmount;
+                goodsStandardsPriceVoList.Add(goodsStandardsPriceVo);
+
+            }
+            List<string> goodsTagList = new List<string>();
+            foreach (var tag in goodsInfo.Tags)
+            {
+                goodsTagList.Add(tag.TagId);
+            }
+            GoodsInfoForSingleVo goods = new GoodsInfoForSingleVo()
+            {
+                Id = goodsInfo.Id,
+                Name = goodsInfo.Name,
+                SimpleCode = goodsInfo.SimpleCode,
+                Description = goodsInfo.Description,
+                Standard = goodsInfo.Standard,
+                Unit = goodsInfo.Unit,
+                SalePrice = goodsInfo.SalePrice,
+                InventoryQuantity = goodsInfo.InventoryQuantity,
+                Valid = goodsInfo.Valid,
+                ExchangeType = goodsInfo.ExchangeType,
+                ExchangeTypeText = goodsInfo.ExchangeTypeText,
+                IntegrationQuantity = goodsInfo.IntegrationQuantity,
+                ThumbPicUrl = goodsInfo.ThumbPicUrl,
+                IsMaterial = goodsInfo.IsMaterial,
+                GoodsType = goodsInfo.GoodsType,
+                GoodsTypeName = goodsInfo.GoodsTypeName,
+                IsLimitBuy = goodsInfo.IsLimitBuy,
+                LimitBuyQuantity = goodsInfo.LimitBuyQuantity,
+                CategoryIds = goodsInfo.CategoryIds,
+                CreateBy = goodsInfo.CreateBy,
+                CreateDate = goodsInfo.CreateDate,
+                UpdateBy = goodsInfo.UpdateBy,
+                UpdatedDate = goodsInfo.UpdatedDate,
+                GoodsDetailId = goodsInfo.GoodsDetailId,
+                GoodsDetailHtml = goodsInfo.GoodsDetailHtml,
+                DetailsDescription = goodsInfo.DetailsDescription,
+                MaxShowPrice = goodsInfo.MaxShowPrice,
+                MinShowPrice = goodsInfo.MinShowPrice,
+                ShowSaleCount = goodsInfo.ShowSaleCount,
+                VisitCount = goodsInfo.VisitCount,
+                GoodsHospitalPrice = goodsHospitalPriceVoList,
+                GoodsStandardPrice = goodsStandardsPriceVoList,
+                GoodsTags = goodsTagList,
+                Sort = goodsInfo.Sort,
+                AppId = goodsInfo.AppId,
+                IsHot = goodsInfo.IsHot,
+                GoodsMemberRankPrices = goodsInfo.GoodsMemberRankPrice.Select(e => new GoodsMemberRankPriceVo
+                {
+                    MemberRankId = e.MemberRankId,
+                    MemberCardName = e.MemberRankName,
+                    Price = e.Price
+                }).ToList(),
+                GoodsConsumptionVoucher = goodsInfo.GoodsConsumptionVoucher.Select(e => new GoodsConsumptionVoucherVo
+                {
+                    ConsumptionVoucherId = e.ConsumptionVoucherId,
+                    ConsumptionName = e.ConsumptionVoucherName
+                }).ToList(),
+                CarouselImageUrls = (from d in goodsInfo.CarouselImageUrls
+                                     select new GoodsInfoCarouselImageVo
+                                     {
+                                         Id = d.Id,
+                                         PicUrl = d.PicUrl,
+                                         DisplayIndex = d.DisplayIndex
+                                     }).ToList()
+            };
+
+            return ResultData<GoodsInfoForSingleVo>.Success().AddData("goodsInfo", goods);
+        }
+
 
         /// <summary>
         /// 添加商品信息
@@ -217,6 +323,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="goodsInfoAdd"></param>
         /// <returns></returns>
         [HttpPost]
+        [FxInternalAuthorize]
         public async Task<ResultData> AddAsync(GoodsInfoAddVo goodsInfoAdd)
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
@@ -296,6 +403,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="goodsInfoUpdate"></param>
         /// <returns></returns>
         [HttpPut]
+        [FxInternalAuthorize]
         public async Task<ResultData> UpdateAsync(GoodsInfoUpdateVo goodsInfoUpdate)
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
@@ -382,6 +490,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
+        [FxInternalAuthorize]
         public async Task<ResultData> DeleteAsync(string id)
         {
             await goodsInfoService.DeleteAsync(id);
@@ -397,6 +506,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="valid">是否有效</param>
         /// <returns></returns>
         [HttpPut("valid/{id}/{valid}")]
+        [FxInternalAuthorize]
         public async Task<ResultData> UpdateValidAsync(string id, bool valid)
         {
             await goodsInfoService.UpdateValidAsync(id, valid);
@@ -409,6 +519,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("exchangeTypeList")]
+        [FxInternalAuthorize]
         public ResultData<List<ExchangeTypeVo>> GetExchangeTypeList()
         {
             var exchangeTypes = from d in goodsInfoService.GetExchangeTypeList()
@@ -424,6 +535,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("tagList")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<BaseIdAndNameVo>>> GetTagListAsync()
         {
             var tags = await customerTagInfoService.GetGoodsTagNameListAsync();
