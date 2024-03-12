@@ -49,5 +49,11 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task CheckOrderStatus(string transNo);
+        /// <summary>
+        /// 官网支付下单接口
+        /// </summary>
+        /// <param name="huiShouQianPayRequestInfo"></param>
+        /// <returns></returns>
+        Task<OfficialWebsiteHuiShouQianOrderResult> CreateOfficialWebsiteHuiShouQianOrder(OffcialWebSiteHuiShouQianPayRequestInfo huiShouQianPayRequestInfo);
     }
 }

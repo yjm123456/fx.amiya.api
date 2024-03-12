@@ -421,7 +421,11 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 抖音本地生活
         /// </summary>
-        TikTokLocal = 8
+        TikTokLocal = 8,
+        /// <summary>
+        /// 官网
+        /// </summary>
+        OfficialWebsite=9
     }
 
     #region 内容平台相关枚举

@@ -985,7 +985,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task EditAsync(EditCustomerDto editDto)
         {
-            unitOfWork.BeginTransaction();
+            
             try
             {
                 var config = await GetCallCenterConfig();
@@ -1013,11 +1013,11 @@ namespace Fx.Amiya.Service
                     customerBaseInfo.City = editDto.City;
                     await dalCustomerBaseInfo.UpdateAsync(customerBaseInfo, true);
                 }
-                unitOfWork.Commit();
+                
             }
             catch (Exception err)
             {
-                unitOfWork.RollBack();
+                
                 throw new Exception(err.Message.ToString()); ;
             }
         }

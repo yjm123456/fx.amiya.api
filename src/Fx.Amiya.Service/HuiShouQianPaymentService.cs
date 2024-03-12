@@ -113,6 +113,8 @@ namespace Fx.Amiya.Service
             }
             return result;
         }
+        #region 小程序慧收钱下单
+
         /// <summary>
         /// 创建慧收钱支付订单
         /// </summary>
@@ -128,6 +130,39 @@ namespace Fx.Amiya.Service
             var commonParam = BuildCommonParam(huiShouQianPayRequestInfo, openId, customerId);
             return PostData(huiShouQianPackageInfo.OrderUrl + "?" + commonParam, "");
 
+        }
+        /// <summary>
+        /// 创建公共请求参数
+        /// </summary>
+        /// <returns></returns>
+        private string BuildCommonParam(HuiShouQianPayRequestInfo huiShouQianPayRequestInfo, string openId, string customerId)
+        {
+            var customerInfo = dalCustomerInfo.GetAll().Where(e => e.Id == customerId).SingleOrDefault();
+            if (customerInfo == null) throw new Exception("用户编号错误！");
+            HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
+            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
+            huiShouQianPackageInfo.Key = payInfo.PartnerKey;
+            huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
+            huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;
+            HuiShouQianCommonInfo huiShouQianCommonInfo = new HuiShouQianCommonInfo();
+            huiShouQianCommonInfo.MerchantNo = payInfo.AppId;
+            var serializerSettings = new JsonSerializerSettings();
+            serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            HuiShouQianMemoInfo huiShouQianMemoInfo = new HuiShouQianMemoInfo();
+            huiShouQianMemoInfo.SpbillCreateIp = payInfo.AppSecret;
+            huiShouQianMemoInfo.openid = openId;
+            huiShouQianMemoInfo.appid = customerInfo.AppId;
+            string memoContent = JsonConvert.SerializeObject(huiShouQianMemoInfo, serializerSettings);
+            huiShouQianPayRequestInfo.Memo = huiShouQianMemoInfo;
+            string signContent = JsonConvert.SerializeObject(huiShouQianPayRequestInfo, serializerSettings);
+            huiShouQianCommonInfo.SignContent = signContent;
+            var signData = BuildPayParamString(huiShouQianCommonInfo.Method, huiShouQianCommonInfo.Version, huiShouQianCommonInfo.Format, huiShouQianCommonInfo.MerchantNo, huiShouQianCommonInfo.SignType, signContent, huiShouQianPackageInfo.Key);
+            RSAHelper rsa = new RSAHelper(RSAType.RSA2, Encoding.UTF8, huiShouQianPackageInfo.PrivateKey, "");
+            var sign = rsa.Sign(signData);
+            huiShouQianCommonInfo.Sign = sign.ToLower();
+            var length = sign.Length;
+            var query = BuildQueryParamString(huiShouQianCommonInfo.Method, huiShouQianCommonInfo.Version, huiShouQianCommonInfo.Format, huiShouQianCommonInfo.MerchantNo, huiShouQianCommonInfo.SignType, signContent, sign);
+            return query;
         }
         [Obsolete]
         internal HuiShouQianOrderResult PostData(string url, string postData)
@@ -165,7 +200,7 @@ namespace Fx.Amiya.Service
                     if (response.success == "true" && response.result.orderStatus != "FAIL")
                     {
                         HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
-                        var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();                       
+                        var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
                         huiShouQianPackageInfo.Key = payInfo.PartnerKey;
                         huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
                         huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;
@@ -200,6 +235,124 @@ namespace Fx.Amiya.Service
             /*result = text;
             return result;*/
         }
+
+        #endregion
+
+        #region 官网慧收钱下单
+
+        /// <summary>
+        /// 创建慧收钱支付订单
+        /// </summary>
+        /// <returns></returns>
+        [Obsolete]
+        public async Task<OfficialWebsiteHuiShouQianOrderResult> CreateOfficialWebsiteHuiShouQianOrder(OffcialWebSiteHuiShouQianPayRequestInfo huiShouQianPayRequestInfo)
+        {
+            HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
+            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
+            huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
+            huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;
+            huiShouQianPackageInfo.Key = payInfo.PartnerKey;
+            var commonParam = OfficialWebsiteBuildCommonParam(huiShouQianPayRequestInfo);
+            return OfficialWebsitePostData(huiShouQianPackageInfo.OrderUrl + "?" + commonParam, "");
+
+        }
+        /// <summary>
+        /// 创建公共请求参数
+        /// </summary>
+        /// <returns></returns>
+        private string OfficialWebsiteBuildCommonParam(OffcialWebSiteHuiShouQianPayRequestInfo huiShouQianPayRequestInfo)
+        {
+
+            HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
+            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
+            huiShouQianPackageInfo.Key = payInfo.PartnerKey;
+            huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
+            huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;
+            HuiShouQianCommonInfo huiShouQianCommonInfo = new HuiShouQianCommonInfo();
+            huiShouQianCommonInfo.MerchantNo = payInfo.AppId;
+            var serializerSettings = new JsonSerializerSettings();
+            serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            OfficialWebSiteHuiShouQianMemoInfo huiShouQianMemoInfo = new OfficialWebSiteHuiShouQianMemoInfo();
+            huiShouQianMemoInfo.SpbillCreateIp = payInfo.AppSecret;
+            string memoContent = JsonConvert.SerializeObject(huiShouQianMemoInfo, serializerSettings);
+            huiShouQianPayRequestInfo.Memo = huiShouQianMemoInfo;
+            string signContent = JsonConvert.SerializeObject(huiShouQianPayRequestInfo, serializerSettings);
+            huiShouQianCommonInfo.SignContent = signContent;
+            var signData = BuildPayParamString(huiShouQianCommonInfo.Method, huiShouQianCommonInfo.Version, huiShouQianCommonInfo.Format, huiShouQianCommonInfo.MerchantNo, huiShouQianCommonInfo.SignType, signContent, huiShouQianPackageInfo.Key);
+            RSAHelper rsa = new RSAHelper(RSAType.RSA2, Encoding.UTF8, huiShouQianPackageInfo.PrivateKey, "");
+            var sign = rsa.Sign(signData);
+            huiShouQianCommonInfo.Sign = sign.ToLower();
+            var length = sign.Length;
+            var query = BuildQueryParamString(huiShouQianCommonInfo.Method, huiShouQianCommonInfo.Version, huiShouQianCommonInfo.Format, huiShouQianCommonInfo.MerchantNo, huiShouQianCommonInfo.SignType, signContent, sign);
+            return query;
+        }
+        [Obsolete]
+        internal OfficialWebsiteHuiShouQianOrderResult OfficialWebsitePostData(string url, string postData)
+        {
+            string text = string.Empty;
+            Uri requestUri = new Uri(url, false);
+            HttpWebRequest httpWebRequest;
+            httpWebRequest = (HttpWebRequest)WebRequest.Create(requestUri);
+            Encoding uTF = Encoding.UTF8;
+            byte[] bytes = uTF.GetBytes(postData);
+            httpWebRequest.Method = "POST";
+            httpWebRequest.ContentType = "application/x-www-form-urlencoded";
+            httpWebRequest.KeepAlive = true;
+            Stream requestStream = httpWebRequest.GetRequestStream();
+            requestStream.Write(bytes, 0, bytes.Length);
+            requestStream.Close();
+            requestStream.Dispose();
+            using (HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+            {
+                using (Stream responseStream = httpWebResponse.GetResponseStream())
+                {
+                    Encoding uTF2 = Encoding.UTF8;
+                    StreamReader streamReader = new StreamReader(responseStream, uTF2);
+                    text = streamReader.ReadToEnd();
+                    text = text.Replace("\\\"{", "{");
+                    text = text.TrimStart('\"');
+                    text = text.TrimEnd('\"');
+                    text = text.Replace("\\", "");
+                    text = text.Replace("\"{", "{");
+                    text = text.Replace("\"}\"", "\"}");
+                    var response = JsonConvert.DeserializeObject<OfficialWebsiteHuiShouQianCommonResponseResult>(text, new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore
+                    });
+                    if (response.success == "true" && response.result.orderStatus != "FAIL")
+                    {
+                        HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
+                        var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
+                        huiShouQianPackageInfo.Key = payInfo.PartnerKey;
+                        huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
+                        huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;
+                        string signContent = OfficialWebsiteBuildPayResponseParamString(response, huiShouQianPackageInfo.Key);
+                        OfficialWebsiteHuiShouQianOrderResult huiShouQianOrderResult = new OfficialWebsiteHuiShouQianOrderResult();
+                        huiShouQianOrderResult.Success = true;
+                        var payParam = response.result;
+                        huiShouQianOrderResult.PayUrl = response.result.qrCode;
+                        huiShouQianOrderResult.TransNo = response.result.transNo;
+                        return huiShouQianOrderResult;
+
+                    }
+                    else
+                    {
+                        OfficialWebsiteHuiShouQianOrderResult huiShouQianOrderResult = new OfficialWebsiteHuiShouQianOrderResult();
+                        huiShouQianOrderResult.Success = false;
+                        huiShouQianOrderResult.ErrorCode = response.errorCode;
+                        huiShouQianOrderResult.ErrorMsg = response.success == "true" ? response.result.respMsg : response.errorMsg;
+                        return huiShouQianOrderResult;
+                    }
+                }
+            }
+
+
+            /*result = text;
+            return result;*/
+        }
+
+        #endregion
+
         [Obsolete]
 
         /// <summary>
@@ -226,7 +379,7 @@ namespace Fx.Amiya.Service
             huiShouQianRefundRequestParam.RefundReason = "退款";
             huiShouQianRefundRequestParam.Extend = order.Id;
             HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
-            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();          
+            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
             huiShouQianPackageInfo.Key = payInfo.PartnerKey;
             huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
             huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;
@@ -236,39 +389,7 @@ namespace Fx.Amiya.Service
 
             return result;
         }
-        /// <summary>
-        /// 创建公共请求参数
-        /// </summary>
-        /// <returns></returns>
-        private string BuildCommonParam(HuiShouQianPayRequestInfo huiShouQianPayRequestInfo, string openId, string customerId)
-        {
-            var customerInfo = dalCustomerInfo.GetAll().Where(e => e.Id == customerId).SingleOrDefault();
-            if (customerInfo == null) throw new Exception("用户编号错误！");
-            HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
-            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();            
-            huiShouQianPackageInfo.Key = payInfo.PartnerKey;
-            huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
-            huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;
-            HuiShouQianCommonInfo huiShouQianCommonInfo = new HuiShouQianCommonInfo();
-            huiShouQianCommonInfo.MerchantNo = payInfo.AppId;
-            var serializerSettings = new JsonSerializerSettings();
-            serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            HuiShouQianMemoInfo huiShouQianMemoInfo = new HuiShouQianMemoInfo();
-            huiShouQianMemoInfo.SpbillCreateIp = payInfo.AppSecret;
-            huiShouQianMemoInfo.openid = openId;
-            huiShouQianMemoInfo.appid = customerInfo.AppId;
-            string memoContent = JsonConvert.SerializeObject(huiShouQianMemoInfo, serializerSettings);
-            huiShouQianPayRequestInfo.Memo = huiShouQianMemoInfo;
-            string signContent = JsonConvert.SerializeObject(huiShouQianPayRequestInfo, serializerSettings);
-            huiShouQianCommonInfo.SignContent = signContent;
-            var signData = BuildPayParamString(huiShouQianCommonInfo.Method, huiShouQianCommonInfo.Version, huiShouQianCommonInfo.Format, huiShouQianCommonInfo.MerchantNo, huiShouQianCommonInfo.SignType, signContent, huiShouQianPackageInfo.Key);
-            RSAHelper rsa = new RSAHelper(RSAType.RSA2, Encoding.UTF8, huiShouQianPackageInfo.PrivateKey, "");
-            var sign = rsa.Sign(signData);
-            huiShouQianCommonInfo.Sign = sign.ToLower();
-            var length = sign.Length;
-            var query = BuildQueryParamString(huiShouQianCommonInfo.Method, huiShouQianCommonInfo.Version, huiShouQianCommonInfo.Format, huiShouQianCommonInfo.MerchantNo, huiShouQianCommonInfo.SignType, signContent, sign);
-            return query;
-        }
+
 
         /// <summary>
         /// 创建退款公共请求参数
@@ -277,7 +398,7 @@ namespace Fx.Amiya.Service
         private string BuildRefundCommonParam(HuiShouQianRefundRequestParam huiShouQianRefundRequestParam)
         {
             HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
-            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();          
+            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
             huiShouQianPackageInfo.Key = payInfo.PartnerKey;
             huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
             huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;
@@ -297,9 +418,9 @@ namespace Fx.Amiya.Service
         [Obsolete]
         internal async Task<RefundOrderResult> PostRefundData(string url, string postData)
         {
-            
+
             string text = string.Empty;
-            
+
             Uri requestUri = new Uri(url, false);
             HttpWebRequest httpWebRequest;
 
@@ -310,7 +431,7 @@ namespace Fx.Amiya.Service
             httpWebRequest.Method = "POST";
             httpWebRequest.ContentType = "application/x-www-form-urlencoded";
             httpWebRequest.KeepAlive = true;
-            
+
             Stream requestStream = httpWebRequest.GetRequestStream();
             requestStream.Write(bytes, 0, bytes.Length);
             requestStream.Close();
@@ -469,6 +590,39 @@ namespace Fx.Amiya.Service
             }
             return builder.ToString();
         }
+
+        /// <summary>
+        /// 拼接下单返回参数
+        /// </summary>
+        /// <param name="huiShouQianCommon"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        private string OfficialWebsiteBuildPayResponseParamString(OfficialWebsiteHuiShouQianCommonResponseResult huiShouQianCommon, string key)
+        {
+            StringBuilder builder = new StringBuilder();
+            if (huiShouQianCommon.success == "true")
+            {
+                builder.Append("result=");
+                builder.Append(JsonConvert.SerializeObject(huiShouQianCommon.result));
+                builder.Append("&success=");
+                builder.Append(huiShouQianCommon.success);
+                builder.Append("&key=");
+                builder.Append(key);
+            }
+            else
+            {
+                builder.Append("errorCode=");
+                builder.Append(huiShouQianCommon.errorCode);
+                builder.Append("&errorMsg=");
+                builder.Append(huiShouQianCommon.errorMsg);
+                builder.Append("&success=");
+                builder.Append(huiShouQianCommon.success);
+                builder.Append("&key=");
+                builder.Append(key);
+            }
+            return builder.ToString();
+        }
+
         /// <summary>
         /// 拼接下单返回参数
         /// </summary>
@@ -541,7 +695,7 @@ namespace Fx.Amiya.Service
             huiShouQianRefundRequestParam.RefundReason = "退款";
             huiShouQianRefundRequestParam.Extend = order.Id;
             HuiShouQianPackageInfo huiShouQianPackageInfo = new HuiShouQianPackageInfo();
-            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();           
+            var payInfo = dalWechatPayInfo.GetAll().Where(e => e.Id == "202306281235").FirstOrDefault();
             huiShouQianPackageInfo.Key = payInfo.PartnerKey;
             huiShouQianPackageInfo.PrivateKey = payInfo.PrivateKey;
             huiShouQianPackageInfo.PublicKey = payInfo.PublickKey;

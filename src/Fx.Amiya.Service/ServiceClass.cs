@@ -300,6 +300,9 @@ namespace Fx.Amiya.Service
                 case 8:
                     typeText = "抖音本地生活";
                     break;
+                case 9:
+                    typeText = "官网下单";
+                    break;
             }
             return typeText;
         }
