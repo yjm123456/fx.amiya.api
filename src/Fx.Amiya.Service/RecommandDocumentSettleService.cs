@@ -282,13 +282,25 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task RemoveCustomerServiceCompensationIdAsync(string customerServiceCompensationId)
         {
-            var list = await _dalRecommandDocumentSettle.GetAll().Where(e => e.CustomerServiceCompensationId == customerServiceCompensationId || e.InspectCustomerServiceCompensationId == customerServiceCompensationId).ToListAsync();
+            //回退薪资单
+            var list = await _dalRecommandDocumentSettle.GetAll().Where(e => e.CustomerServiceCompensationId == customerServiceCompensationId ).ToListAsync();
             var result = list.Count();
             if (result > 0)
             {
                 foreach (var item in list)
                 {
                     item.CustomerServiceCompensationId = null;
+                    await _dalRecommandDocumentSettle.UpdateAsync(item, true);
+                }
+            }
+            //回退稽查单
+            var list2 = await _dalRecommandDocumentSettle.GetAll().Where(e => e.InspectCustomerServiceCompensationId == customerServiceCompensationId).ToListAsync();
+            var result2 = list2.Count();
+            if (result > 0)
+            {
+                foreach (var item in list)
+                {
+                    item.InspectCustomerServiceCompensationId = null;
                     await _dalRecommandDocumentSettle.UpdateAsync(item, true);
                 }
             }

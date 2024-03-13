@@ -24,13 +24,16 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
     {
         private readonly static string s_templateName = "send_validate_code";
         private IValidateCodeService validateCodeService;
+        private IHttpContextAccessor httpContextAccessor;
         private IFxSmsBasedTemplateSender smsSender;
         public ValidateCodeController(
             IValidateCodeService validateCodeService,
+            IHttpContextAccessor httpContextAccessor,
             IFxSmsBasedTemplateSender smsSender)
         {
             this.validateCodeService = validateCodeService;
             this.smsSender = smsSender;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
 
@@ -44,6 +47,11 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         {
             try
             {
+                //var url = httpContextAccessor.HttpContext.Request.Host.Value;
+                //if (url != "www.ameiy.com")
+                //{
+                //    throw new Exception("非法调用，数据获取失败！");
+                //}
                 AddValidateCodeDto addDto = new AddValidateCodeDto();
                 addDto.PhoneNumber = phoneNumber;
                 addDto.ExpireInSeconds = 60 * 15;
@@ -62,35 +70,5 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 return ResultData.Fail(ex.Message);
             }
         }
-
-
-        /// <summary>
-        /// 验证验证码是否有效
-        /// </summary>
-        /// <param name="phone"></param>
-        /// <param name="code"></param>
-        /// <returns></returns>
-        [HttpGet("validate")]
-        public async Task<ResultData> ValidateAsync(string phone, string code)
-        {
-            try
-            {
-                var validateSuccess = await validateCodeService.ValidateAsync(phone, code);
-                if (validateSuccess)
-                {
-                    return ResultData.Success();
-                }
-                else
-                {
-
-                    return ResultData.Fail("验证码错误或已经失效！");
-                }
-            }
-            catch (Exception ex)
-            {
-                return ResultData.Fail(ex.Message);
-            }
-        }
-
     }
 }

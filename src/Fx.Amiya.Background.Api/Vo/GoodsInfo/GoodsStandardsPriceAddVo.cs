@@ -10,6 +10,7 @@ namespace Fx.Amiya.Background.Api.Vo.GoodsInfo
     /// </summary>
     public class GoodsStandardsPriceAddVo
     {
+        public string Id { get; set; }
         /// <summary>
         /// 规格
         /// </summary>

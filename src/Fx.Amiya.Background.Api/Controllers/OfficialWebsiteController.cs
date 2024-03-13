@@ -42,7 +42,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             string token = HttpContext.Request.Headers["Token"];
             var session = offcialWebUserSessionStorage.GetSession(token);
             var phone = session?.Phone;
-            if (string.IsNullOrEmpty(phone)) throw new Exception("登录过期请重新登录");
+            if (string.IsNullOrEmpty(phone)) throw new Exception("登录过期！请重新登录");
             OrderSignVo sign = new OrderSignVo();
             GetDesignOrderSignDto getDto = new GetDesignOrderSignDto();
             getDto.NickName = getSign.NickName;
@@ -68,7 +68,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             string token = HttpContext.Request.Headers["Token"];
             var session = offcialWebUserSessionStorage.GetSession(token);
             var phone = session?.Phone;
-            if (string.IsNullOrEmpty(phone)) throw new Exception("登录过期请重新登录");
+            if (string.IsNullOrEmpty(phone)) throw new Exception("登录过期！请重新登录");
             DesignOrderDto orderDto = new DesignOrderDto();
             orderDto.NickName = order.NickName;
             orderDto.Phone = phone;
@@ -96,7 +96,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             string token = HttpContext.Request.Headers["Token"];
             var session = offcialWebUserSessionStorage.GetSession(token);
             var phone = session?.Phone;
-            if (string.IsNullOrEmpty(phone)) throw new Exception("登录过期请重新登录");
+            if (string.IsNullOrEmpty(phone)) throw new Exception("登录过期！请重新登录");
             OrderSignVo sign = new OrderSignVo();
             GetGoodsOrderSignDto getDto = new GetGoodsOrderSignDto();
             getDto.GoodsId = getSign.GoodsId;
@@ -122,7 +122,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             string token = HttpContext.Request.Headers["Token"];
             var session=offcialWebUserSessionStorage.GetSession(token);
             var phone = session?.Phone;
-            if (string.IsNullOrEmpty(phone)) throw new Exception("登录过期请重新登录");
+            if (string.IsNullOrEmpty(phone)) throw new Exception("登录过期！请重新登录");
             GoodsOrderDto orderDto = new GoodsOrderDto();
             orderDto.GoodsId = goodsOrder.GoodsId;
             orderDto.Quantity = goodsOrder.Quantity;
