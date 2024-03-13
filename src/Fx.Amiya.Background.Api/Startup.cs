@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Fx.Amiya.Background.Api.Filters;
 using Fx.Amiya.Background.Api.Vo.CallRecord;
 using Fx.Amiya.Common;
 using Fx.Amiya.Core.Services;
@@ -66,6 +67,8 @@ namespace Fx.Amiya.Background.Api
             services.AddFxJwtTokenAuthenticationServices();
             services.AddScoped<IFxIdentityRepository, FxIdentityRepository>();
             services.AddFxAuthroizationServices();
+            services.AddSingleton<IOffcialWebUserSessionStorage,OfficialWebUserSessionStorage>();
+            services.AddSingleton<ValidateLoginAttribute>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -86,7 +89,7 @@ namespace Fx.Amiya.Background.Api
             {
                 app.UseFxSwagger();
             }
-            //app.UseTimedJob();
+            app.UseTimedJob();
             app.UseFxExceptionHandler();
 
             app.UseEndpoints(endpoints =>

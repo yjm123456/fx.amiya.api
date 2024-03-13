@@ -1067,6 +1067,7 @@ namespace Fx.Amiya.Service
                         order.ExchangeType = orderItem.ExchangeType;
                         order.TradeId = orderItem.TradeId;
                         order.WriteOffCode = "";
+                        order.Standard = orderItem.Standard;
                         order.AlreadyWriteOffAmount = 0;
                         order.LiveAnchorId = orderItem.LiveAnchorId;
                         order.BelongEmpId = orderItem.BelongEmpId;

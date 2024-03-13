@@ -17,8 +17,7 @@ namespace Fx.Amiya.Background.Api.Vo.OfficialWebsite.Input
         /// <summary>
         /// 手机号
         /// </summary>
-        [Required]
-        [RegularExpression("^1[345789]\\d{9}$", ErrorMessage = "手机号格式错误")]
+       
         public string Phone { get; set; }
         /// <summary>
         /// 性别(1:男,2:女)

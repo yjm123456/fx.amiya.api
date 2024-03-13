@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,10 +11,12 @@ namespace Fx.Amiya.Background.Api.Vo.OfficialWebsite.Input
         /// <summary>
         /// 商品id
         /// </summary>
+        [Required(ErrorMessage ="商品id不能为空")]
         public string GoodsId { get; set; }
         /// <summary>
         /// 手机号
         /// </summary>
+       
         public string Phone { get; set; }
         /// <summary>
         /// 购买数量
@@ -26,6 +29,7 @@ namespace Fx.Amiya.Background.Api.Vo.OfficialWebsite.Input
         /// <summary>
         /// 商品规格id
         /// </summary>
+        [Required(ErrorMessage ="商品规格不能为空")]
         public string StandardId { get; set; }
         /// <summary>
         /// 备注
@@ -38,6 +42,7 @@ namespace Fx.Amiya.Background.Api.Vo.OfficialWebsite.Input
         /// <summary>
         /// 签名
         /// </summary>
+        [Required(ErrorMessage ="签名数据不能为空")]
         public string Sign { get; set; }
     }
 }

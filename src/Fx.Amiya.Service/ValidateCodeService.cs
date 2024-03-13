@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Service
 {
-    public class ValidateCodeService: IValidateCodeService
+    public class ValidateCodeService : IValidateCodeService
     {
         private IDalValidateCode dalValidateCode;
         public ValidateCodeService(IDalValidateCode dalValidateCode)
@@ -53,8 +53,8 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var q = dalValidateCode.GetAll().Where(e => e.PhoneNumber == phone && e.Code == code && e.Valid);
-                return await q.CountAsync()>0;
+                var q = dalValidateCode.GetAll().Where(e => e.PhoneNumber == phone && e.Code == code && e.Valid && e.ExpiredTime > DateTime.Now);
+                return await q.CountAsync() > 0;
             }
             catch (Exception ex)
             {

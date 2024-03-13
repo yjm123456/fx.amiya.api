@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Background.Api.Vo.OfficialWebsite.Input;
+﻿using Fx.Amiya.Background.Api.Filters;
+using Fx.Amiya.Background.Api.Vo.OfficialWebsite.Input;
 using Fx.Amiya.Background.Api.Vo.OfficialWebsite.Result;
 using Fx.Amiya.Dto.OfficialWebsite.Input;
 using Fx.Amiya.IService;
@@ -20,10 +21,13 @@ namespace Fx.Amiya.Background.Api.Controllers
     public class OfficialWebsiteController : ControllerBase
     {
         private readonly IOfficialWebsiteService officialWebsiteService;
-
-        public OfficialWebsiteController(IOfficialWebsiteService officialWebsiteService)
+        private readonly IValidateCodeService validateCodeService;
+        private readonly IOffcialWebUserSessionStorage offcialWebUserSessionStorage;
+        public OfficialWebsiteController(IOfficialWebsiteService officialWebsiteService, IValidateCodeService validateCodeService, IOffcialWebUserSessionStorage offcialWebUserSessionStorage)
         {
             this.officialWebsiteService = officialWebsiteService;
+            this.validateCodeService = validateCodeService;
+            this.offcialWebUserSessionStorage = offcialWebUserSessionStorage;
         }
 
         /// <summary>
@@ -32,12 +36,17 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="getSign"></param>
         /// <returns></returns>
         [HttpPost("getSign")]
+        [ServiceFilter(typeof(ValidateLoginAttribute))]
         public async Task<ResultData<OrderSignVo>> GetSignAsync(GetDesignOrderSignVo getSign)
         {
+            string token = HttpContext.Request.Headers["Token"];
+            var session = offcialWebUserSessionStorage.GetSession(token);
+            var phone = session?.Phone;
+            if (string.IsNullOrEmpty(phone)) throw new Exception("登录过期请重新登录");
             OrderSignVo sign = new OrderSignVo();
             GetDesignOrderSignDto getDto = new GetDesignOrderSignDto();
             getDto.NickName = getSign.NickName;
-            getDto.Phone = getSign.Phone;
+            getDto.Phone = phone;
             getDto.Gender = getSign.Gender;
             getDto.BirthDay = getSign.BirthDay;
             getDto.Profession = getSign.Profession;
@@ -53,11 +62,16 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="order"></param>
         /// <returns></returns>
         [HttpPost("designOrder")]
+        [ServiceFilter(typeof(ValidateLoginAttribute))]
         public async Task<ResultData> DesignOrderAsync(DesignOrderVo order)
         {
+            string token = HttpContext.Request.Headers["Token"];
+            var session = offcialWebUserSessionStorage.GetSession(token);
+            var phone = session?.Phone;
+            if (string.IsNullOrEmpty(phone)) throw new Exception("登录过期请重新登录");
             DesignOrderDto orderDto = new DesignOrderDto();
             orderDto.NickName = order.NickName;
-            orderDto.Phone = order.Phone;
+            orderDto.Phone = phone;
             orderDto.Gender = order.Gender;
             orderDto.BirthDay = order.BirthDay;
             orderDto.Profession = order.Profession;
@@ -68,7 +82,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             OrderPayInfoVo orderPayInfoVo = new OrderPayInfoVo();
             orderPayInfoVo.PayUrl = res.PayUrl;
             return ResultData<OrderPayInfoVo>.Success().AddData("pay", orderPayInfoVo);
-            
+
         }
         /// <summary>
         /// 获取商品下单签名
@@ -76,12 +90,17 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="getSign"></param>
         /// <returns></returns>
         [HttpPost("getGoodsOrderSign")]
+        [ServiceFilter(typeof(ValidateLoginAttribute))]
         public async Task<ResultData<OrderSignVo>> GetGoodsOrderSignAsync(GetGoodsOrderSignVo getSign)
         {
+            string token = HttpContext.Request.Headers["Token"];
+            var session = offcialWebUserSessionStorage.GetSession(token);
+            var phone = session?.Phone;
+            if (string.IsNullOrEmpty(phone)) throw new Exception("登录过期请重新登录");
             OrderSignVo sign = new OrderSignVo();
             GetGoodsOrderSignDto getDto = new GetGoodsOrderSignDto();
             getDto.GoodsId = getSign.GoodsId;
-            getDto.Phone = getSign.Phone;
+            getDto.Phone = phone;
             getDto.Quantity = getSign.Quantity;
             getDto.HospitalName = getSign.HospitalName;
             getDto.StandardId = getSign.StandardId;
@@ -97,8 +116,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="goodsOrder"></param>
         /// <returns></returns>
         [HttpPost("goodsOrder")]
+        [ServiceFilter(typeof(ValidateLoginAttribute))]
         public async Task<ResultData> GoodsOrderAsync(GoodsOrderVo goodsOrder)
         {
+            string token = HttpContext.Request.Headers["Token"];
+            var session=offcialWebUserSessionStorage.GetSession(token);
+            var phone = session?.Phone;
+            if (string.IsNullOrEmpty(phone)) throw new Exception("登录过期请重新登录");
             GoodsOrderDto orderDto = new GoodsOrderDto();
             orderDto.GoodsId = goodsOrder.GoodsId;
             orderDto.Quantity = goodsOrder.Quantity;
@@ -106,12 +130,32 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderDto.StandardId = goodsOrder.StandardId;
             orderDto.Remark = goodsOrder.Remark;
             orderDto.AppointmentDate = goodsOrder.AppointmentDate;
-            orderDto.Phone = goodsOrder.Phone;
+            orderDto.Phone = phone;
             orderDto.Sign = goodsOrder.Sign;
             var res = await officialWebsiteService.AddGoodsOrderAsync(orderDto);
             OrderPayInfoVo orderPayInfoVo = new OrderPayInfoVo();
             orderPayInfoVo.PayUrl = res.PayUrl;
             return ResultData<OrderPayInfoVo>.Success();
+        }
+        /// <summary>
+        /// 登录
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns></returns>
+        [HttpPost("login")]
+        public async Task<ResultData<string>> LoginAsync(LoginVo login)
+        {
+            var validateRes = await validateCodeService.ValidateAsync(login.Phone, login.Code);
+            if (!validateRes)
+            {
+                throw new Exception("验证码错误");
+            }
+            var token = Guid.NewGuid().ToString().Replace("-", "");
+            offcialWebUserSessionStorage.SetSession(token,new OffcialWebUserSession{
+                Phone= login.Phone, 
+                ExpireTime=DateTime.Now.AddDays(1)
+            });
+            return ResultData<string>.Success().AddData(token);
         }
     }
 }
