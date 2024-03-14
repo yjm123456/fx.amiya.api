@@ -88,14 +88,14 @@ namespace Fx.Amiya.Service
 
                 ContentPlateFormOrderAddDto input = new ContentPlateFormOrderAddDto();
                 input.Phone = orderDto.Phone;
-                input.ContentPlateFormId = "0f3be741-2f51-47d9-b4bc-aa8e65d2e58f";
+                input.ContentPlateFormId = "b0e992ad-1b7b-4397-a5fe-1bfbc1f0130e";
                 input.EmployeeId = 188;
-                input.LiveAnchorId = 18;
-                input.LiveAnchorWeChatNo = "0df45a75-181b-43d1-a597-47b177c4d4e6";
+                input.LiveAnchorId = 160;
+                input.LiveAnchorWeChatNo = "aac69783-0865-4ed9-ba0e-6d4b5f7668ea";
                 input.Id = CreateOrderIdHelper.GetNextNumber();
                 input.OrderType = 2;
                 input.CreateDate = DateTime.Now;
-                input.GoodsId = "50b26137-3962-49bb-a960-a5c095d4d089";
+                input.GoodsId = "0270a0f5-47b8-4fcd-80d1-e1a3ae9b5d51";
                 input.ConsultationType = 2;
                 input.CustomerName = orderDto.NickName;
                 input.AddOrderPrice = 199;
@@ -108,10 +108,10 @@ namespace Fx.Amiya.Service
                 input.IsSupportOrder = false;
                 input.SupportEmpId = 0;
                 input.AcceptConsulting = null;
-                input.HospitalDepartmentId = "99138ad8-a96b-40c2-b27c-c7e13d41d47b";
+                input.HospitalDepartmentId = "7f9b164b-8560-4d32-bdbf-f7c28c55e0ae";
                 input.GetCustomerType = 0;
                 input.AppointmentDate = null;
-                input.AppointmentHospitalId = 1;
+                input.AppointmentHospitalId = 124;
                 input.OrderStatus = 1;
                 input.DepositAmount = 199;
                 input.LateProjectStage = "";

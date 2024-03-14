@@ -104,6 +104,8 @@ namespace Fx.Amiya.Service
         private IDalExpressManage dalExpressManage;
         private IHttpContextAccessor httpContextAccessor;
         private IOperationLogService operationLogService;
+        private IDalAddress dalAddress;
+
         public OrderService(
             IDalContentPlatformOrder dalContentPlatFormOrder,
             IDalOrderInfo dalOrderInfo,
@@ -134,7 +136,7 @@ namespace Fx.Amiya.Service
             IExpressManageService expressManageService,
             IFxSmsBasedTemplateSender smsSender,
              IMemberRankInfo memberRankInfoService,
-            IIntegrationAccount integrationAccountService, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalLiveAnchor dalLiveAnchor, IGoodsInfoService goodsInfoService2, IHuiShouQianPaymentService huiShouQianPaymentService, IUserService userService, IDalWechatPayInfo dalWechatPayInfo, IShanDePayMentService shanDePayMentService, IOrderAppInfoService orderAppInfoService, IDockingHospitalCustomerInfoService dockingHospitalCustomerInfoService, IDalWxMiniUserInfo dalWxMpUser, IDalExpressManage dalExpressManage, IHttpContextAccessor httpContextAccessor, IOperationLogService operationLogService)
+            IIntegrationAccount integrationAccountService, ICustomerConsumptionVoucherService customerConsumptionVoucherService, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalLiveAnchor dalLiveAnchor, IGoodsInfoService goodsInfoService2, IHuiShouQianPaymentService huiShouQianPaymentService, IUserService userService, IDalWechatPayInfo dalWechatPayInfo, IShanDePayMentService shanDePayMentService, IOrderAppInfoService orderAppInfoService, IDockingHospitalCustomerInfoService dockingHospitalCustomerInfoService, IDalWxMiniUserInfo dalWxMpUser, IDalExpressManage dalExpressManage, IHttpContextAccessor httpContextAccessor, IOperationLogService operationLogService, IDalAddress dalAddress)
         {
             this.dalOrderInfo = dalOrderInfo;
             this.dalCustomerInfo = dalCustomerInfo;
@@ -181,6 +183,7 @@ namespace Fx.Amiya.Service
             this.dalExpressManage = dalExpressManage;
             this.httpContextAccessor = httpContextAccessor;
             this.operationLogService = operationLogService;
+            this.dalAddress = dalAddress;
         }
 
         /// <summary>
@@ -1341,7 +1344,7 @@ namespace Fx.Amiya.Service
                     orderTradeAddDto.OrderInfoAddList.First().IsUseCoupon = true;
                     orderTradeAddDto.OrderInfoAddList.First().CouponId = orderTradeAddDto.VoucherId;
                 }
-                orderTrade.TotalIntegration = orderTradeAddDto.OrderInfoAddList.Sum(e => e.IntegrationQuantity);
+                orderTrade.TotalIntegration = orderTradeAddDto.OrderInfoAddList.Sum(e => e.IntegrationQuantity) ?? 0m;
                 orderTrade.Remark = orderTradeAddDto.Remark;
                 orderTrade.IsAdminAdd = orderTradeAddDto.IsAdminAdd;
                 orderTrade.StatusCode = OrderStatusCode.WAIT_BUYER_PAY;
@@ -3193,8 +3196,8 @@ namespace Fx.Amiya.Service
             //        hidePhone = true;
             //    }
             //}
-            var orderTrades = from d in dalOrderTrade.GetAll()
-                              where d.OrderInfoList.Count(e => e.AppType == (byte)AppType.MiniProgram && e.OrderType == (byte)OrderType.MaterialOrder) > 0
+            var orderTrades = from d in dalOrderTrade.GetAll().Include(e => e.OrderInfoList).Include(e => e.Address).Include(e => e.SendGoodsRecord)
+                              where d.OrderInfoList.Where(e => (e.AppType == (byte)AppType.OfficialWebsite || e.AppType == (byte)AppType.MiniProgram) && e.OrderType == (byte)OrderType.MaterialOrder).Count() > 0
                               && (string.IsNullOrWhiteSpace(keyword) || d.CustomerInfo.Phone.Contains(keyword) || d.Address.Contact.Contains(keyword) || d.OrderInfoList.Count(e => e.GoodsName.Contains(keyword)) > 0)
                               && (d.CreateDate >= startDate && d.CreateDate <= endDate.AddDays(1))
                               select d;
@@ -3226,13 +3229,13 @@ namespace Fx.Amiya.Service
                               || d.StatusCode == OrderStatusCode.TRADE_CLOSED
                               select d;
             }
-
-            var orderTradeList = from d in orderTrades
+            var list = orderTrades.ToList();
+            var orderTradeList = from d in list
                                  select new OrderTradeDto
                                  {
                                      TradeId = d.TradeId,
                                      CustomerId = d.CustomerId,
-                                     Phone = hidePhone == true ? ServiceClass.GetIncompletePhone(d.CustomerInfo.Phone) : d.CustomerInfo.Phone,
+                                     Phone = d.OrderInfoList.First().AppType == (byte)AppType.OfficialWebsite ? d.OrderInfoList.First().Phone : ServiceClass.GetIncompletePhone(dalCustomerInfo.GetAll().Where(e => e.Id == d.CustomerId).FirstOrDefault()?.Phone),
                                      CreateDate = d.CreateDate,
                                      UpdateDate = d.UpdateDate,
                                      TotalAmount = d.TotalAmount,
@@ -3245,18 +3248,18 @@ namespace Fx.Amiya.Service
                                      IntergrationAccounts = d.OrderInfoList.Sum(x => x.IntegrationQuantity).Value,
                                      GoodsList = d.OrderInfoList.Select(x => x.GoodsName).ToList(),
                                      AddressId = d.AddressId,
-                                     Address = d.Address.Province + d.Address.City + d.Address.District + d.Address.Other,
-                                     ReceiveName = d.Address.Contact,
-                                     ReceivePhone = hidePhone == true ? ServiceClass.GetIncompletePhone(d.Address.Phone) : d.Address.Phone,
-                                     SendGoodsBy = d.SendGoodsRecord.HandleBy,
-                                     SendGoodsName = d.SendGoodsRecord.AmiyaEmployee.Name,
-                                     SendGoodsDate = d.SendGoodsRecord.Date,
-                                     CourierNumber = d.SendGoodsRecord.CourierNumber,
-                                     ExpressId = d.SendGoodsRecord.ExpressId,
+                                     Address = d.OrderInfoList.First().AppType == (byte)AppType.OfficialWebsite ? d.Remark : d.Address.Province + d.Address.City + d.Address.District + d.Address.Other,
+                                     ReceiveName = d.OrderInfoList.First().AppType == (byte)AppType.OfficialWebsite ? "" : d.Address.Contact,
+                                     ReceivePhone = d.OrderInfoList.First().AppType == (byte)AppType.OfficialWebsite ? d.OrderInfoList.First().Phone : ServiceClass.GetIncompletePhone(dalCustomerInfo.GetAll().Where(e => e.Id == d.CustomerId).FirstOrDefault()?.Phone),
+                                     SendGoodsBy = d.SendGoodsRecord?.HandleBy,
+                                     SendGoodsName = d.SendGoodsRecord?.AmiyaEmployee.Name,
+                                     SendGoodsDate = d.SendGoodsRecord?.Date,
+                                     CourierNumber = d.SendGoodsRecord?.CourierNumber,
+                                     ExpressId = d.SendGoodsRecord?.ExpressId,
                                  };
             FxPageInfo<OrderTradeDto> orderTradePageInfo = new FxPageInfo<OrderTradeDto>();
-            orderTradePageInfo.TotalCount = await orderTradeList.CountAsync();
-            var selectResult = await orderTradeList.OrderByDescending(e => e.CreateDate).ToListAsync();
+            orderTradePageInfo.TotalCount = orderTradeList.Count();
+            var selectResult = orderTradeList.OrderByDescending(e => e.CreateDate);
             orderTradePageInfo.List = selectResult.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
             foreach (var x in orderTradePageInfo.List)
             {
@@ -3303,8 +3306,8 @@ namespace Fx.Amiya.Service
                     hidePhone = true;
                 }
             }
-            var order = dalOrderInfo.GetAll().Include(e => e.OrderTrade).Where(e => e.AppType == (byte)AppType.MiniProgram && e.OrderType == (byte)OrderType.MaterialOrder && (e.CreateDate >= startDate && e.CreateDate <= endDate.AddDays(1)));
-            order = from d in order where string.IsNullOrWhiteSpace(keyword) || d.OrderTrade.CustomerInfo.Phone.Contains(keyword) || d.OrderTrade.Address.Contact.Contains(keyword) || d.GoodsName.Contains(keyword) select d;
+            var order = dalOrderInfo.GetAll().Include(e => e.OrderTrade).ThenInclude(e => e.SendGoodsRecord).Include(e => e.OrderTrade).ThenInclude(e => e.Address).Where(e => (e.AppType == (byte)AppType.MiniProgram || e.AppType == (byte)AppType.OfficialWebsite) && e.OrderType == (byte)OrderType.MaterialOrder && (e.CreateDate >= startDate && e.CreateDate <= endDate.AddDays(1)));
+            order = from d in order where string.IsNullOrWhiteSpace(keyword) || d.OrderTrade.OrderInfoList.Where(e => e.Phone.Contains(keyword)).Count() > 0 || d.GoodsName.Contains(keyword) select d;
             if (isSendGoods == null)
             {
                 order = from d in order
@@ -3328,29 +3331,30 @@ namespace Fx.Amiya.Service
                         || d.StatusCode == OrderStatusCode.TRADE_BUYER_PAID
                         select d;
             }
-            var orderList = order.Select(d => new MiniprogramOrderExportDto
+            var list = order.ToList();
+            var orderList = list.Select(d => new MiniprogramOrderExportDto
             {
                 TradeId = d.OrderTrade.TradeId,
                 OrderIds = d.Id,
                 CustomerId = d.OrderTrade.CustomerId,
-                Phone = hidePhone == true ? ServiceClass.GetIncompletePhone(d.OrderTrade.CustomerInfo.Phone) : d.OrderTrade.CustomerInfo.Phone,
+                Phone = d.Phone,
                 CreateDate = d.OrderTrade.CreateDate,
                 UpdateDate = d.OrderTrade.UpdateDate,
                 ActualPay = d.ActualPayment.Value,
-                IntergrationAccounts = d.IntegrationQuantity.Value,
+                IntergrationAccounts = d.IntegrationQuantity ?? 0m,
                 Remark = d.OrderTrade.Remark,
                 StatusCode = d.StatusCode,
                 StatusText = ServiceClass.GetOrderStatusText(d.StatusCode),
                 AddressId = d.OrderTrade.AddressId,
                 Quantities = d.Quantity.Value,
-                Address = d.OrderTrade.Address.Province + d.OrderTrade.Address.City + d.OrderTrade.Address.District + d.OrderTrade.Address.Other,
-                ReceiveName = d.OrderTrade.Address.Contact,
-                ReceivePhone = hidePhone == true ? ServiceClass.GetIncompletePhone(d.OrderTrade.Address.Phone) : d.OrderTrade.Address.Phone,
-                SendGoodsBy = d.OrderTrade.SendGoodsRecord.HandleBy,
-                SendGoodsName = d.OrderTrade.SendGoodsRecord.AmiyaEmployee.Name,
-                SendGoodsDate = d.OrderTrade.SendGoodsRecord.Date,
-                CourierNumber = d.OrderTrade.SendGoodsRecord.CourierNumber,
-                ExpressId = d.OrderTrade.SendGoodsRecord.ExpressId,
+                Address = d.AppType == (byte)AppType.OfficialWebsite ? d.OrderTrade.Remark : d.OrderTrade.Address?.Province + d.OrderTrade.Address?.City + d.OrderTrade.Address?.District + d.OrderTrade.Address?.Other,
+                ReceiveName = d.AppType == (byte)AppType.OfficialWebsite ? "" : d.OrderTrade.Address?.Contact,
+                ReceivePhone = d.AppType == (byte)AppType.OfficialWebsite ? d.Phone : d.OrderTrade.Address?.Phone,
+                SendGoodsBy = d.OrderTrade.SendGoodsRecord?.HandleBy,
+                SendGoodsName = d.OrderTrade.SendGoodsRecord?.AmiyaEmployee.Name,
+                SendGoodsDate = d.OrderTrade.SendGoodsRecord?.Date,
+                CourierNumber = d.OrderTrade.SendGoodsRecord?.CourierNumber,
+                ExpressId = d.OrderTrade.SendGoodsRecord?.ExpressId,
                 GoodsName = d.GoodsName,
                 Standard = d.Standard,
                 GoodsId = d.GoodsId,
@@ -3391,7 +3395,7 @@ namespace Fx.Amiya.Service
             }
 
             var orders = from d in dalOrderInfo.GetAll()
-                         where d.TradeId == tradeId && (d.StatusCode == OrderStatusCode.TRADE_BUYER_PAID || d.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || d.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS || d.StatusCode == OrderStatusCode.TRADE_FINISHED||d.StatusCode==OrderStatusCode.REFUNDING||d.StatusCode==OrderStatusCode.TRADE_CLOSED)
+                         where d.TradeId == tradeId && (d.StatusCode == OrderStatusCode.TRADE_BUYER_PAID || d.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || d.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS || d.StatusCode == OrderStatusCode.TRADE_FINISHED || d.StatusCode == OrderStatusCode.REFUNDING || d.StatusCode == OrderStatusCode.TRADE_CLOSED)
                          select new OrderInfoDto
                          {
                              Id = d.Id,
