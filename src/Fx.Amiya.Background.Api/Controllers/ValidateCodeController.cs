@@ -47,11 +47,11 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         {
             try
             {
-                //var url = httpContextAccessor.HttpContext.Request.Host.Value;
-                //if (url != "www.ameiy.com")
-                //{
-                //    throw new Exception("非法调用，数据获取失败！");
-                //}
+                var url = httpContextAccessor.HttpContext.Request.Host.Value;
+                if (url != "app.ameiyes.com:5620")
+                {
+                    throw new Exception("非法调用，数据获取失败");
+                }
                 AddValidateCodeDto addDto = new AddValidateCodeDto();
                 addDto.PhoneNumber = phoneNumber;
                 addDto.ExpireInSeconds = 60 * 15;

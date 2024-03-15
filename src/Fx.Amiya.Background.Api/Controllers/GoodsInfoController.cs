@@ -220,13 +220,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("getByIdUsedByPartner/{id}")]
         public async Task<ResultData<GoodsInfoForSingleVo>> GetByIdUsedByPartnerAsync(string id)
         {
-            //var url = httpContextAccessor.HttpContext.Request.Host.Value;
-            //if (url != "www.ameiy.com")
-            //{
-            //    throw new Exception("非法调用，数据获取失败！");
-            //}
+            var url = httpContextAccessor.HttpContext.Request.Host.Value;
+            if (url != "app.ameiyes.com:5620")
+            {
+                throw new Exception("非法调用，数据获取失败");
+            }
             var goodsInfo = await goodsInfoService.GetByIdAsync(id);
-
+            
             List<GoodsHospitalPriceVo> goodsHospitalPriceVoList = new List<GoodsHospitalPriceVo>();
             foreach (var x in goodsInfo.GoodsHospitalPrice)
             {
