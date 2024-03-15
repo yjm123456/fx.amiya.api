@@ -295,7 +295,7 @@ namespace Fx.Amiya.Service
                 throw new Exception("商品规格编号错误");
             }
             var bindCustomerId = 188;
-            var contentPlatForm = await _contentPlatformService.GetByIdAsync("");
+            var contentPlatForm = await _contentPlatformService.GetByIdAsync("b0e992ad-1b7b-4397-a5fe-1bfbc1f0130e");
             var bind = await _dalBindCustomerService.GetAll()
               .Include(e => e.CustomerServiceAmiyaEmployee)
               .FirstOrDefaultAsync(e => e.BuyerPhone == order.Phone);
