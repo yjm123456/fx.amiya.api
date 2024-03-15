@@ -3196,7 +3196,7 @@ namespace Fx.Amiya.Service
             //        hidePhone = true;
             //    }
             //}
-            var orderTrades = from d in dalOrderTrade.GetAll().Include(e => e.OrderInfoList).Include(e => e.Address).Include(e => e.SendGoodsRecord)
+            var orderTrades = from d in dalOrderTrade.GetAll().Include(e => e.OrderInfoList).Include(e => e.Address).Include(e => e.SendGoodsRecord).ThenInclude(e=>e.AmiyaEmployee)
                               where d.OrderInfoList.Where(e => (e.AppType == (byte)AppType.OfficialWebsite || e.AppType == (byte)AppType.MiniProgram) && e.OrderType == (byte)OrderType.MaterialOrder).Count() > 0
                               && (string.IsNullOrWhiteSpace(keyword) || d.CustomerInfo.Phone.Contains(keyword) || d.Address.Contact.Contains(keyword) || d.OrderInfoList.Count(e => e.GoodsName.Contains(keyword)) > 0)
                               && (d.CreateDate >= startDate && d.CreateDate <= endDate.AddDays(1))
@@ -3252,7 +3252,7 @@ namespace Fx.Amiya.Service
                                      ReceiveName = d.OrderInfoList.First().AppType == (byte)AppType.OfficialWebsite ? "" : d.Address.Contact,
                                      ReceivePhone = d.OrderInfoList.First().AppType == (byte)AppType.OfficialWebsite ? d.OrderInfoList.First().Phone : ServiceClass.GetIncompletePhone(dalCustomerInfo.GetAll().Where(e => e.Id == d.CustomerId).FirstOrDefault()?.Phone),
                                      SendGoodsBy = d.SendGoodsRecord?.HandleBy,
-                                     SendGoodsName = d.SendGoodsRecord?.AmiyaEmployee.Name,
+                                     SendGoodsName = d.SendGoodsRecord?.AmiyaEmployee?.Name,
                                      SendGoodsDate = d.SendGoodsRecord?.Date,
                                      CourierNumber = d.SendGoodsRecord?.CourierNumber,
                                      ExpressId = d.SendGoodsRecord?.ExpressId,
@@ -3306,7 +3306,7 @@ namespace Fx.Amiya.Service
                     hidePhone = true;
                 }
             }
-            var order = dalOrderInfo.GetAll().Include(e => e.OrderTrade).ThenInclude(e => e.SendGoodsRecord).Include(e => e.OrderTrade).ThenInclude(e => e.Address).Where(e => (e.AppType == (byte)AppType.MiniProgram || e.AppType == (byte)AppType.OfficialWebsite) && e.OrderType == (byte)OrderType.MaterialOrder && (e.CreateDate >= startDate && e.CreateDate <= endDate.AddDays(1)));
+            var order = dalOrderInfo.GetAll().Include(e => e.OrderTrade).ThenInclude(e => e.SendGoodsRecord).ThenInclude(e=>e.AmiyaEmployee).Include(e => e.OrderTrade).ThenInclude(e => e.Address).Where(e => (e.AppType == (byte)AppType.MiniProgram || e.AppType == (byte)AppType.OfficialWebsite) && e.OrderType == (byte)OrderType.MaterialOrder && (e.CreateDate >= startDate && e.CreateDate <= endDate.AddDays(1)));
             order = from d in order where string.IsNullOrWhiteSpace(keyword) || d.OrderTrade.OrderInfoList.Where(e => e.Phone.Contains(keyword)).Count() > 0 || d.GoodsName.Contains(keyword) select d;
             if (isSendGoods == null)
             {
@@ -3351,7 +3351,7 @@ namespace Fx.Amiya.Service
                 ReceiveName = d.AppType == (byte)AppType.OfficialWebsite ? "" : d.OrderTrade.Address?.Contact,
                 ReceivePhone = d.AppType == (byte)AppType.OfficialWebsite ? d.Phone : d.OrderTrade.Address?.Phone,
                 SendGoodsBy = d.OrderTrade.SendGoodsRecord?.HandleBy,
-                SendGoodsName = d.OrderTrade.SendGoodsRecord?.AmiyaEmployee.Name,
+                SendGoodsName = d.OrderTrade.SendGoodsRecord?.AmiyaEmployee?.Name,
                 SendGoodsDate = d.OrderTrade.SendGoodsRecord?.Date,
                 CourierNumber = d.OrderTrade.SendGoodsRecord?.CourierNumber,
                 ExpressId = d.OrderTrade.SendGoodsRecord?.ExpressId,
