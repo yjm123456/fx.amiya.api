@@ -35,5 +35,8 @@ namespace Fx.Amiya.Dto.Track
         /// 下次回访主题
         /// </summary>
         public string PlanTrackTheme { get; set; }
+        public string TrackPicture1 { get; set; }
+        public string TrackPicture2 { get; set; }
+        public string TrackPicture3 { get; set; }
     }
 }

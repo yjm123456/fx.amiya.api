@@ -258,7 +258,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 orderInfoResult.RefundOrderInfo = refundOrderInfo;
             }
             orderInfoResult.Quantity = (orderInfo.Quantity.HasValue) ? orderInfo.Quantity.Value : 0;
-            orderInfoResult.BuyerNick = orderInfo.BuyerNick;
+            orderInfoResult.BuyerNick = orderInfo.BuyerNick ?? "";
             orderInfoResult.DeductMoney = orderInfo.DeductMoney;
             return ResultData<OrderInfoMiniProgramDetailVo>.Success().AddData("orderDetailResult", orderInfoResult);
         }
@@ -814,7 +814,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     //await orderService.TradeAddTransNoAsync(tradeId, result.TransNo);
                     //await orderService.TradeAddChanelOrderNoAsync(tradeId,result.ChanelOrderNo);
                     await orderService.TradeAddTransNoAsync(tradeId, tradeId);
-                    
+
                 }
                 else if (appId == "wx695942e4818de445")
                 {
@@ -1018,7 +1018,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     payRequestInfo.nonceStr = payRequest.nonceStr;
                     payRequestInfo.paySign = payRequest.paySign;
                     orderPayResult.PayRequestInfo = payRequestInfo;
-                    
+
                 }
 
                 //ShanDeOrderInfo shanDeOrderInfo = new ShanDeOrderInfo();
@@ -1064,7 +1064,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
             }
             //交易信息添加支付交易订单号
             await orderService.TradeAddTransNoAsync(tradeId, transNo);
-            
+
             #endregion
 
 
@@ -1298,7 +1298,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                     //await orderService.TradeAddTransNoAsync(tradeId, result.TransNo);
                     //await orderService.TradeAddChanelOrderNoAsync(tradeId, result.ChanelOrderNo);
                     await orderService.TradeAddTransNoAsync(tradeId, tradeId);
-                    
+
                 }
 
                 #endregion
@@ -1616,7 +1616,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                                                   AppTypeText = o.AppTypeText,
                                                   StatusCode = o.StatusCode,
                                                   StatusCodeText = o.StatusText,
-                                                  
+
                                               }).ToList()
                          };
 
@@ -1792,7 +1792,8 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 List<UpdateOrderDto> updateOrderList = new List<UpdateOrderDto>();
                 foreach (var item in orderTrade.OrderInfoList)
                 {
-                    if (item.StatusCode==OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS||item.StatusCode==OrderStatusCode.WAIT_SELLER_SEND_GOODS||item.StatusCode==OrderStatusCode.TRADE_BUYER_PAID) {
+                    if (item.StatusCode == OrderStatusCode.WAIT_BUYER_CONFIRM_GOODS || item.StatusCode == OrderStatusCode.WAIT_SELLER_SEND_GOODS || item.StatusCode == OrderStatusCode.TRADE_BUYER_PAID)
+                    {
                         UpdateOrderDto updateOrder = new UpdateOrderDto();
                         updateOrder.OrderId = item.Id;
                         updateOrder.StatusCode = OrderStatusCode.TRADE_FINISHED;
@@ -1889,7 +1890,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 result.TradeId = orderTrade.TransNo;
                 result.TransactionId = orderTrade.TransactionId;
                 result.CreateDate = orderTrade.CreateDate.Value;
-                return ResultData<ReceiveInfoVo>.Success().AddData("result",result);
+                return ResultData<ReceiveInfoVo>.Success().AddData("result", result);
             }
             catch (Exception)
             {

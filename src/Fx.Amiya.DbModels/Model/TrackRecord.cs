@@ -22,8 +22,10 @@ namespace Fx.Amiya.DbModels.Model
         public int EmployeeId { get; set; }
         public bool Valid { get; set; }
         public string CallRecordId{get;set;}
+        public string   TrackPicture1 { get; set; }
+        public string TrackPicture2 { get; set; }
+        public string TrackPicture3 { get; set; }
 
-       
         public TrackType TrackType { get; set; }
         public TrackTool TrackTool { get; set; }
         public AmiyaEmployee AmiyaEmployee { get; set; }

@@ -20,6 +20,18 @@ namespace Fx.Amiya.Dto.Track
         public int? TrackThemeId { get; set; }
         public bool Valid { get; set; }
         public string CallRecordId { get; set; }
+        /// <summary>
+        /// 回访截图1
+        /// </summary>
+        public string TrackPicture1 { get; set; }
+        /// <summary>
+        /// 回访截图2
+        /// </summary>
+        public string TrackPicture2 { get; set; }
+        /// <summary>
+        /// 回访截图3
+        /// </summary>
+        public string TrackPicture3 { get; set; }
         public List<AddWaitTrackCustomerDto> AddWaitTrackCustomer { get; set; }
     }
 }

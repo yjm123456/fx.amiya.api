@@ -56,6 +56,18 @@ namespace Fx.Amiya.Background.Api.Vo.Track
         /// 通话记录编号（回访工具是电话时）
         /// </summary>
         public string CallRecordId { get; set; }
+        /// <summary>
+        /// 回访截图1
+        /// </summary>
+        public string TrackPicture1 { get; set; }
+        /// <summary>
+        /// 回访截图2
+        /// </summary>
+        public string TrackPicture2 { get; set; }
+        /// <summary>
+        /// 回访截图3
+        /// </summary>
+        public string TrackPicture3 { get; set; }
 
         /// <summary>
         /// 下次回访

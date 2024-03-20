@@ -340,7 +340,10 @@ namespace Fx.Amiya.Service
                                   EmployeeId = d.EmployeeId,
                                   EmployeeName = d.AmiyaEmployee.Name,
                                   Valid = d.Valid,
-                                  CallRecordId = d.CallRecordId
+                                  CallRecordId = d.CallRecordId,
+                                  TrackPicture1=d.TrackPicture1,
+                                  TrackPicture2=d.TrackPicture2,
+                                  TrackPicture3=d.TrackPicture3
                               };
 
 
@@ -386,7 +389,10 @@ namespace Fx.Amiya.Service
                                   Valid = d.Valid,
                                   CallRecordId = d.CallRecordId,
                                   IsPlanTrack = d.WaitTrackCustomer != null ? true : false,
-                                  PlanTrackTheme = d.WaitTrackCustomer.TrackThemeId != null ? d.WaitTrackCustomer.TrackThemeInfo.Name : d.WaitTrackCustomer.TrackTheme
+                                  PlanTrackTheme = d.WaitTrackCustomer.TrackThemeId != null ? d.WaitTrackCustomer.TrackThemeInfo.Name : d.WaitTrackCustomer.TrackTheme,
+                                  TrackPicture1=d.TrackPicture1,
+                                  TrackPicture2=d.TrackPicture2,
+                                  TrackPicture3=d.TrackPicture3
                               };
 
             FxPageInfo<TrackRecordDto> trackRecordPageInfo = new FxPageInfo<TrackRecordDto>();
@@ -434,6 +440,9 @@ namespace Fx.Amiya.Service
                 trackRecord.EmployeeId = employeeId;
                 trackRecord.Valid = addDto.Valid;
                 trackRecord.CallRecordId = addDto.CallRecordId;
+                trackRecord.TrackPicture1 = addDto.TrackPicture1;
+                trackRecord.TrackPicture2 = addDto.TrackPicture2;
+                trackRecord.TrackPicture3 = addDto.TrackPicture3;
                 await dalTrackRecord.AddAsync(trackRecord, true);
 
                 if (addDto.WaitTrackId != null)

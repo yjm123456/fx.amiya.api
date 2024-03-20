@@ -92,5 +92,17 @@ namespace Fx.Amiya.Background.Api.Vo.Track
         /// 下次回访主题
         /// </summary>
         public string PlanTrackTheme { get; set; }
+        /// <summary>
+        /// 回访截图1
+        /// </summary>
+        public string TrackPicture1 { get; set; }
+        /// <summary>
+        /// 回访截图2
+        /// </summary>
+        public string TrackPicture2 { get; set; }
+        /// <summary>
+        /// 回访截图3
+        /// </summary>
+        public string TrackPicture3 { get; set; }
     }
 }

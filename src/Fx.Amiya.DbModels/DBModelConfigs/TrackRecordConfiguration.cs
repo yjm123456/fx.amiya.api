@@ -25,8 +25,10 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.EmployeeId).HasColumnName("employee_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.Valid).HasColumnName("valid").HasColumnType("bit").IsRequired();
             builder.Property(t => t.CallRecordId).HasColumnName("call_record_id").HasColumnType("varchar(50)").IsRequired(false);
+            builder.Property(t => t.TrackPicture1).HasColumnName("track_picture1").HasColumnType("varchar(300)").IsRequired(false);
+            builder.Property(t => t.TrackPicture2).HasColumnName("track_picture2").HasColumnType("varchar(300)").IsRequired(false);
+            builder.Property(t => t.TrackPicture3).HasColumnName("track_picture3").HasColumnType("varchar(300)").IsRequired(false);
 
-           
             builder.HasOne(t => t.TrackType).WithMany(t => t.TrackRecordList).HasForeignKey(t=>t.TrackTypeId);
             builder.HasOne(t => t.TrackTool).WithMany(t => t.TrackRecordList).HasForeignKey(t=>t.TrackToolId);
             builder.HasOne(t => t.AmiyaEmployee).WithMany(t => t.TrackRecordList).HasForeignKey(t=>t.EmployeeId);

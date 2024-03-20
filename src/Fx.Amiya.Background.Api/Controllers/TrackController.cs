@@ -360,6 +360,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                       EmployeeName = d.EmployeeName,
                                       Valid = d.Valid,
                                       CallRecordId = d.CallRecordId,
+                                      TrackPicture1=d.TrackPicture1,
+                                      TrackPicture2=d.TrackPicture2,
+                                      TrackPicture3=d.TrackPicture3
                                   };
 
                 FxPageInfo<TrackRecordVo> trackRecordPageInfo = new FxPageInfo<TrackRecordVo>();
@@ -410,7 +413,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   Valid = d.Valid,
                                   CallRecordId = d.CallRecordId,
                                   IsPlanTrack = d.IsPlanTrack,
-                                  PlanTrackTheme = d.PlanTrackTheme
+                                  PlanTrackTheme = d.PlanTrackTheme,
+                                  TrackPicture1=d.TrackPicture1,
+                                  TrackPicture2 = d.TrackPicture2,
+                                  TrackPicture3 = d.TrackPicture3,
                               };
             FxPageInfo<TrackRecordVo> trackRecordPageInfo = new FxPageInfo<TrackRecordVo>();
             trackRecordPageInfo.TotalCount = q.TotalCount;
@@ -445,6 +451,9 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.TrackThemeId = addVo.TrackThemeId;
             addDto.Valid = addVo.Valid;
             addDto.CallRecordId = addVo.CallRecordId;
+            addDto.TrackPicture1 = addVo.TrackPicture1;
+            addDto.TrackPicture2 = addVo.TrackPicture2;
+            addDto.TrackPicture3 = addVo.TrackPicture3;
             List<AddWaitTrackCustomerDto> waitTrackRecordList = new List<AddWaitTrackCustomerDto>();
             if (addVo.AddWaitTrackCustomer != null)
             {

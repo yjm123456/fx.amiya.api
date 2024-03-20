@@ -176,3 +176,14 @@ ALTER TABLE `tbl_beforeliving_xiaohongshu_daily_target`
 
 	----------------------------------------王健  2024/1/25 END------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+
+----------------------------------------王健  2024/3/20 BEGIN------------------------------------------
+
+---回访记录添加回访截图
+ALTER TABLE `tbl_track_record`
+	ADD COLUMN `track_picture1` VARCHAR(300) NULL DEFAULT NULL AFTER `track_plan`,
+	ADD COLUMN `track_picture2` VARCHAR(300) NULL DEFAULT NULL AFTER `track_picture1`,
+	ADD COLUMN `track_picture3` VARCHAR(300) NULL DEFAULT NULL AFTER `track_picture2`;
+
+----------------------------------------王健  2024/3/20 END------------------------------------------
