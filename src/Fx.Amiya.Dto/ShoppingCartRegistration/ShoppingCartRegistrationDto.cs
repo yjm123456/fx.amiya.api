@@ -21,8 +21,31 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         public string LiveAnchorWeChatId { get; set; }
         public string LiveAnchorWechatNo { get; set; }
         public string CustomerNickName { get; set; }
+        /// <summary>
+        /// 手机号
+        /// </summary>
         public string Phone { get; set; }
+        /// <summary>
+        /// 隐藏手机号
+        /// </summary>
+        public string HiddenPhone{get;set; }
+        /// <summary>
+        /// 加密手机号
+        /// </summary>
+        public string EncryptPhone { get; set; }
+        /// <summary>
+        /// 辅助号码
+        /// </summary>
         public string SubPhone { get; set; }
+        /// <summary>
+        /// 隐藏辅助号码
+        /// </summary>
+        public string HiddenSubPhone { get; set; }
+        /// <summary>
+        /// 加密辅助号码
+        /// </summary>
+        public string EncryptSubPhone { get; set; }
+
         public decimal Price { get; set; }
         public int ConsultationType { get; set; }
         public string ConsultationTypeText { get; set; }

@@ -42,13 +42,29 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// </summary>
         public string CustomerNickName { get; set; }
         /// <summary>
-        /// 联系方式
+        /// 手机号
         /// </summary>
         public string Phone { get; set; }
         /// <summary>
-        /// 辅助手机号
+        /// 隐藏手机号
+        /// </summary>
+        public string HiddenPhone { get; set; }
+        /// <summary>
+        /// 加密手机号
+        /// </summary>
+        public string EncryptPhone { get; set; }
+        /// <summary>
+        /// 辅助号码
         /// </summary>
         public string SubPhone { get; set; }
+        /// <summary>
+        /// 隐藏辅助号码
+        /// </summary>
+        public string HiddenSubPhone { get; set; }
+        /// <summary>
+        /// 加密辅助号码
+        /// </summary>
+        public string EncryptSubPhone { get; set; }
         /// <summary>
         /// 下单金额
         /// </summary>

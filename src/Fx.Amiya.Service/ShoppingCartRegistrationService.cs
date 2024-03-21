@@ -61,6 +61,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
+                var config = await GetCallCenterConfig();
                 var shoppingCartRegistration = from d in dalShoppingCartRegistration.GetAll()
                                                where (keyword == null || d.Phone.Contains(keyword) || d.SubPhone.Contains(keyword) || d.CustomerNickName.Contains(keyword) || d.LiveAnchorWechatNo.Contains(keyword) || d.Remark.Contains(keyword))
                                                && ((!startDate.HasValue && !endDate.HasValue) || d.RecordDate >= startDate.Value.Date && d.RecordDate < endDate.Value.AddDays(1).Date)
@@ -94,8 +95,12 @@ namespace Fx.Amiya.Service
                                                    LiveAnchorId = d.LiveAnchorId,
                                                    LiveAnchorWechatNo = d.LiveAnchorWechatNo,
                                                    CustomerNickName = d.CustomerNickName,
-                                                   Phone = ServiceClass.GetIncompletePhone(d.Phone),
-                                                   SubPhone = string.IsNullOrEmpty(d.SubPhone) ? "" : ServiceClass.GetIncompletePhone(d.SubPhone),
+                                                   Phone = d.Phone,
+                                                   HiddenPhone = ServiceClass.GetIncompletePhone(d.Phone),
+                                                   EncryptPhone = ServiceClass.Encrypt(d.Phone, config.PhoneEncryptKey),
+                                                   SubPhone = d.SubPhone,
+                                                   HiddenSubPhone = string.IsNullOrEmpty(d.SubPhone) ? "" : ServiceClass.GetIncompletePhone(d.SubPhone),
+                                                   EncryptSubPhone = string.IsNullOrEmpty(d.SubPhone) ? "" : ServiceClass.Encrypt(d.SubPhone, config.PhoneEncryptKey),
                                                    Price = d.Price,
                                                    ConsultationType = d.ConsultationType,
                                                    ConsultationTypeText = ServiceClass.GetConsulationTypeText(d.ConsultationType),
