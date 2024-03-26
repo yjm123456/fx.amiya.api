@@ -341,9 +341,9 @@ namespace Fx.Amiya.Service
                                   EmployeeName = d.AmiyaEmployee.Name,
                                   Valid = d.Valid,
                                   CallRecordId = d.CallRecordId,
-                                  TrackPicture1=d.TrackPicture1,
-                                  TrackPicture2=d.TrackPicture2,
-                                  TrackPicture3=d.TrackPicture3
+                                  TrackPicture1 = d.TrackPicture1,
+                                  TrackPicture2 = d.TrackPicture2,
+                                  TrackPicture3 = d.TrackPicture3
                               };
 
 
@@ -364,13 +364,14 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<TrackRecordDto>> GetRecordListByEncryptPhoneWithPageAsync(string encryptPhone, int pageNum, int pageSize)
+        public async Task<FxPageInfo<TrackRecordDto>> GetRecordListByEncryptPhoneWithPageAsync(string encryptPhone, string shoppingCartRegistionId, int pageNum, int pageSize)
         {
             var config = await GetCallCenterConfig();
             string phone = ServiceClass.Decrypto(encryptPhone, config.PhoneEncryptKey);
 
             var trackRoceod = from d in dalTrackRecord.GetAll()
                               where d.Phone == phone
+                              where (string.IsNullOrEmpty(shoppingCartRegistionId) || d.ShoppingCartRegistionId == shoppingCartRegistionId)
                               select new TrackRecordDto
                               {
                                   Id = d.Id,
@@ -390,9 +391,9 @@ namespace Fx.Amiya.Service
                                   CallRecordId = d.CallRecordId,
                                   IsPlanTrack = d.WaitTrackCustomer != null ? true : false,
                                   PlanTrackTheme = d.WaitTrackCustomer.TrackThemeId != null ? d.WaitTrackCustomer.TrackThemeInfo.Name : d.WaitTrackCustomer.TrackTheme,
-                                  TrackPicture1=d.TrackPicture1,
-                                  TrackPicture2=d.TrackPicture2,
-                                  TrackPicture3=d.TrackPicture3
+                                  TrackPicture1 = d.TrackPicture1,
+                                  TrackPicture2 = d.TrackPicture2,
+                                  TrackPicture3 = d.TrackPicture3
                               };
 
             FxPageInfo<TrackRecordDto> trackRecordPageInfo = new FxPageInfo<TrackRecordDto>();
@@ -443,6 +444,7 @@ namespace Fx.Amiya.Service
                 trackRecord.TrackPicture1 = addDto.TrackPicture1;
                 trackRecord.TrackPicture2 = addDto.TrackPicture2;
                 trackRecord.TrackPicture3 = addDto.TrackPicture3;
+                trackRecord.ShoppingCartRegistionId = addDto.ShoppingCartRegistionId;
                 await dalTrackRecord.AddAsync(trackRecord, true);
 
                 if (addDto.WaitTrackId != null)
@@ -575,30 +577,35 @@ namespace Fx.Amiya.Service
         public async Task<FxPageInfo<TodayTrackDataDto>> GetTodayTrackDataAsync(QueryAssistantHomePageTrackDataDto query)
         {
             FxPageInfo<TodayTrackDataDto> fxPageInfo = new FxPageInfo<TodayTrackDataDto>();
-            if (!query.Date.HasValue) {
+            if (!query.Date.HasValue)
+            {
                 query.Date = DateTime.Now;
             }
-            var startDate= query.Date.Value.Date;
+            var startDate = query.Date.Value.Date;
             var endDate = query.Date.Value.AddDays(1).Date;
             var config = await GetCallCenterConfig();
-            if (query.Type == 1) {
-                var track = dalWaitTrackCustomer.GetAll().Where(e => e.Status == false).Include(e=>e.PlanTrackEmployee).Where(e => e.PlanTrackDate >= startDate && e.PlanTrackDate < endDate);
-                if (query.AssistantId.HasValue) {
+            if (query.Type == 1)
+            {
+                var track = dalWaitTrackCustomer.GetAll().Where(e => e.Status == false).Include(e => e.PlanTrackEmployee).Where(e => e.PlanTrackDate >= startDate && e.PlanTrackDate < endDate);
+                if (query.AssistantId.HasValue)
+                {
                     track = track.Where(e => e.PlanTrackEmployeeId == query.AssistantId);
                 }
-                fxPageInfo.TotalCount=await track.CountAsync();
+                fxPageInfo.TotalCount = await track.CountAsync();
                 fxPageInfo.List = track.Select(e => new TodayTrackDataDto
                 {
-                    Phone= config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(e.Phone) : e.Phone,
+                    Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(e.Phone) : e.Phone,
                     EncryptPhone = ServiceClass.Encrypt(e.Phone, config.PhoneEncryptKey),
-                    Status = e.Status ?"已回访":"未回访",
-                    TrackAssistantName=e.PlanTrackEmployee.Name,
-                    TrackPurpose=e.TrackPlan,
-                    Remark=""
-                }).Skip((query.PageNum.Value-1)*query.PageSize.Value).Take(query.PageSize.Value).ToList();
+                    Status = e.Status ? "已回访" : "未回访",
+                    TrackAssistantName = e.PlanTrackEmployee.Name,
+                    TrackPurpose = e.TrackPlan,
+                    Remark = ""
+                }).Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToList();
 
-            } else {
-                var track = dalTrackRecord.GetAll().Include(e =>e.AmiyaEmployee).Where(e => e.TrackDate >= startDate && e.TrackDate < endDate);
+            }
+            else
+            {
+                var track = dalTrackRecord.GetAll().Include(e => e.AmiyaEmployee).Where(e => e.TrackDate >= startDate && e.TrackDate < endDate);
                 if (query.AssistantId.HasValue)
                 {
                     track = track.Where(e => e.EmployeeId == query.AssistantId);

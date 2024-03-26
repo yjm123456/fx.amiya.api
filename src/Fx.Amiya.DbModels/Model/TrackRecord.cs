@@ -25,7 +25,7 @@ namespace Fx.Amiya.DbModels.Model
         public string   TrackPicture1 { get; set; }
         public string TrackPicture2 { get; set; }
         public string TrackPicture3 { get; set; }
-
+        public string ShoppingCartRegistionId { get; set; }
         public TrackType TrackType { get; set; }
         public TrackTool TrackTool { get; set; }
         public AmiyaEmployee AmiyaEmployee { get; set; }

@@ -33,5 +33,9 @@ namespace Fx.Amiya.Dto.Track
         /// </summary>
         public string TrackPicture3 { get; set; }
         public List<AddWaitTrackCustomerDto> AddWaitTrackCustomer { get; set; }
+        /// <summary>
+        /// 绑定小黄车id
+        /// </summary>
+        public string ShoppingCartRegistionId { get; set; }
     }
 }

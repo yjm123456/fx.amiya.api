@@ -385,14 +385,15 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 根据加密电话文本获取回访记录列表（分页）
         /// </summary>
         /// <param name="encryptPhone"></param>
+        /// <param name="shoppingCartRegistionId">小黄车登记列表id（可空）</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("recordListByEncryptPhone")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<TrackRecordVo>>> GetRecordListByEncryptPhoneWithPageAsync(string encryptPhone, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<TrackRecordVo>>> GetRecordListByEncryptPhoneWithPageAsync(string encryptPhone,string shoppingCartRegistionId, int pageNum, int pageSize)
         {
-            var q = await trackService.GetRecordListByEncryptPhoneWithPageAsync(encryptPhone, pageNum, pageSize);
+            var q = await trackService.GetRecordListByEncryptPhoneWithPageAsync(encryptPhone, shoppingCartRegistionId, pageNum, pageSize);
 
             var trackRecord = from d in q.List
                               select new TrackRecordVo
@@ -454,6 +455,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.TrackPicture1 = addVo.TrackPicture1;
             addDto.TrackPicture2 = addVo.TrackPicture2;
             addDto.TrackPicture3 = addVo.TrackPicture3;
+            addDto.ShoppingCartRegistionId = addVo.ShoppingCartRegistionId;
             List<AddWaitTrackCustomerDto> waitTrackRecordList = new List<AddWaitTrackCustomerDto>();
             if (addVo.AddWaitTrackCustomer != null)
             {

@@ -73,5 +73,10 @@ namespace Fx.Amiya.Background.Api.Vo.Track
         /// 下次回访
         /// </summary>
         public List<AddWaitTrackCustomerVo> AddWaitTrackCustomer { get; set; }
+
+        /// <summary>
+        /// 绑定小黄车id
+        /// </summary>
+        public string ShoppingCartRegistionId { get; set; }
     }
 }
