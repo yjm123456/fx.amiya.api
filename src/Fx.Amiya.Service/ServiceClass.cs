@@ -2411,5 +2411,45 @@ namespace Fx.Amiya.Service
             }
             return text;
         }
+        /// <summary>
+        /// 未加V原因
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static string UnAddWechatReasonText(int type)
+        {
+            string text = "";
+            switch (type)
+            {
+                case 0:
+                    text = "其他";
+                    break;
+                case 1:
+                    text = "号码未获取";
+                    break;
+                case 2:
+                    text = "未接/拒接电话";
+                    break;
+                case 3:
+                    text = "只要产品";
+                    break;
+                case 4:
+                    text = "不想咨询";
+                    break;
+                case 5:
+                    text = "加V未通过";
+                    break;
+                case 6:
+                    text = "错拍链接";
+                    break;
+                case 7:
+                    text = "非本人拍";
+                    break;              
+                default:
+                    text = "未知原因";
+                    break;
+            }
+            return text;
+        }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Fx.Amiya.Background.Api.Vo.TrackTheme;
+using Fx.Amiya.Background.Api.Vo.TrackTheme.Input;
 using Fx.Amiya.Dto.TrackTheme;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
@@ -32,9 +33,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("listWithPage")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<TrackThemeVo>>> GetListWithPageAsync(int? trackTypeId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<TrackThemeVo>>> GetListWithPageAsync([FromQuery]QueryTrackThemeVo query)
         {
-            var q = await trackThemeService.GetListWithPageAsync(trackTypeId, pageNum, pageSize);
+            var q = await trackThemeService.GetListWithPageAsync(query.TrackTypeId, query.PageNum.Value, query.PageSize.Value,query.Valid);
 
             var trackTheme = from d in q.List
                              select new TrackThemeVo

@@ -17,6 +17,7 @@ using Microsoft.Extensions.Logging;
 using Fx.Common;
 using Fx.Amiya.Dto.AssistantHomePage.Result;
 using Fx.Amiya.Dto.AssistantHomePage.Input;
+using Fx.Amiya.Dto;
 
 namespace Fx.Amiya.Service
 {
@@ -54,15 +55,17 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<TrackTypeDto>> GetTrackTypeListWithPageAsync(int pageNum, int pageSize)
+        public async Task<FxPageInfo<TrackTypeDto>> GetTrackTypeListWithPageAsync(bool? valid,int pageNum, int pageSize)
         {
             var trackType = from d in dalTrackType.GetAll()
+                            where (valid.HasValue?d.Valid==valid:d.Valid==true)
                             select new TrackTypeDto
                             {
                                 Id = d.Id,
                                 Name = d.Name,
                                 Valid = d.Valid,
                                 HasModel = d.HasModel,
+                                IsOldCustomer=d.IsOldCustomer
                             };
             FxPageInfo<TrackTypeDto> trackTypePageInfo = new FxPageInfo<TrackTypeDto>();
             trackTypePageInfo.TotalCount = await trackType.CountAsync();
@@ -76,10 +79,10 @@ namespace Fx.Amiya.Service
         /// 获取有效的回访类型列表
         /// </summary>
         /// <returns></returns>
-        public async Task<List<TrackTypeDto>> GetTrackTypeListAsync()
+        public async Task<List<TrackTypeDto>> GetTrackTypeListAsync(bool isOldCustomer)
         {
             var trackType = from d in dalTrackType.GetAll()
-                            where d.Valid
+                            where d.Valid &&d.IsOldCustomer==isOldCustomer
                             select new TrackTypeDto
                             {
                                 Id = d.Id,
@@ -108,6 +111,7 @@ namespace Fx.Amiya.Service
                 TrackType trackType = new TrackType();
                 trackType.Name = addDto.Name;
                 trackType.HasModel = addDto.HasModel;
+                trackType.IsOldCustomer = addDto.IsOldCustomer;
                 trackType.Valid = true;
                 await dalTrackType.AddAsync(trackType, true);
                 if (addDto.HasModel == true)
@@ -131,6 +135,7 @@ namespace Fx.Amiya.Service
             result.Name = model.Name;
             result.Valid = model.Valid;
             result.HasModel = model.HasModel;
+            result.IsOldCustomer = model.IsOldCustomer;
             var trackTypeThemeModel = await trackTypeThemeModelService.GetListAsync(Id);
             result.TrackTypeThemeModelDto = trackTypeThemeModel;
             return result;
@@ -154,6 +159,7 @@ namespace Fx.Amiya.Service
             trackType.Name = updateDto.Name;
             trackType.Valid = updateDto.Valid;
             trackType.HasModel = updateDto.HasModel;
+            trackType.IsOldCustomer = updateDto.IsOldCustomer;
             await dalTrackType.UpdateAsync(trackType, true);
             if (trackType.HasModel == true)
             {
@@ -173,10 +179,8 @@ namespace Fx.Amiya.Service
             var trackType = await dalTrackType.GetAll().Include(e => e.TrackRecordList).SingleOrDefaultAsync(e => e.Id == id);
             if (trackType == null)
                 throw new Exception("回访类型编号错误");
-            if (trackType.TrackRecordList.Count() > 0)
-                throw new Exception("删除失败，已有回访用到该回访类型");
-
-            await dalTrackType.DeleteAsync(trackType, true);
+            trackType.Valid = false;
+            await dalTrackType.UpdateAsync(trackType, true);
         }
 
 
@@ -190,9 +194,10 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<TrackToolDto>> GetTrackToolListWithPageAsync(int pageNum, int pageSize)
+        public async Task<FxPageInfo<TrackToolDto>> GetTrackToolListWithPageAsync(bool? valid,int pageNum, int pageSize)
         {
             var trackTool = from d in dalTrackTool.GetAll()
+                            where (valid.HasValue?d.Valid==valid:d.Valid==true)
                             select new TrackToolDto
                             {
                                 Id = d.Id,
@@ -276,9 +281,9 @@ namespace Fx.Amiya.Service
             var trackTool = await dalTrackTool.GetAll().Include(e => e.TrackRecordList).SingleOrDefaultAsync(e => e.Id == id);
             if (trackTool == null)
                 throw new Exception("回访工具编号错误");
-            if (trackTool.TrackRecordList.Count() > 0)
-                throw new Exception("删除失败，已有回访用到该工具");
-            await dalTrackTool.DeleteAsync(trackTool, true);
+            trackTool.Valid = false;
+            await dalTrackTool.UpdateAsync(trackTool, true);
+            
 
         }
 
@@ -709,6 +714,24 @@ namespace Fx.Amiya.Service
                 throw ex;
             }
 
+        }
+        /// <summary>
+        /// 获取未加V原因名称列表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<BaseKeyValueDto<int>>> GetUnAddWechatReasonNameListAsync()
+        {
+            var unAddWechatReasonTexts = Enum.GetValues(typeof(UnAddWechatReason));
+
+            List<BaseKeyValueDto<int>> unAddWechatReasonTextList = new List<BaseKeyValueDto<int>>();
+            foreach (var item in unAddWechatReasonTexts)
+            {
+                BaseKeyValueDto<int> baseKeyValueDto = new BaseKeyValueDto<int>();
+                baseKeyValueDto.Key = Convert.ToInt32(item);
+                baseKeyValueDto.Value = ServiceClass.UnAddWechatReasonText(Convert.ToInt32(item));
+                unAddWechatReasonTextList.Add(baseKeyValueDto);
+            }
+            return unAddWechatReasonTextList;
         }
     }
 }

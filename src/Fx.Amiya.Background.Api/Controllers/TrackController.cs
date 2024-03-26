@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.CallRecord;
 using Fx.Amiya.Background.Api.Vo.Track;
+using Fx.Amiya.Background.Api.Vo.Track.Input;
 using Fx.Amiya.Dto.Track;
 using Fx.Amiya.Dto.TrackTypeThemeModel;
 using Fx.Amiya.IService;
@@ -45,16 +47,17 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("typeListWithPage")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<TrackTypeVo>>> GetTrackTypeListWithPageAsync(int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<TrackTypeVo>>> GetTrackTypeListWithPageAsync([FromQuery]QueryTarckVo query)
         {
-            var q = await trackService.GetTrackTypeListWithPageAsync(pageNum, pageSize);
+            var q = await trackService.GetTrackTypeListWithPageAsync(query.Valid, query.PageNum.Value, query.PageSize.Value);
             var trackType = from d in q.List
                             select new TrackTypeVo
                             {
                                 Id = d.Id,
                                 Name = d.Name,
                                 Valid = d.Valid,
-                                HasModel = d.HasModel
+                                HasModel = d.HasModel,
+                                IsOldCustomer=d.IsOldCustomer
                             };
             FxPageInfo<TrackTypeVo> trackTypePageInfo = new FxPageInfo<TrackTypeVo>();
             trackTypePageInfo.TotalCount = q.TotalCount;
@@ -70,13 +73,14 @@ namespace Fx.Amiya.Background.Api.Controllers
 
         /// <summary>
         /// 获取有效的回访类型列表
+        ///  <param name="isOldCustomer">true:老客,false:新客</param>
         /// </summary>
         /// <returns></returns>
         [HttpGet("typeList")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData<List<TrackTypeVo>>> GetTrackTypeListAsync()
+        public async Task<ResultData<List<TrackTypeVo>>> GetTrackTypeListAsync(bool isOldCustomer)
         {
-            var trackType = from d in await trackService.GetTrackTypeListAsync()
+            var trackType = from d in await trackService.GetTrackTypeListAsync(isOldCustomer)
                             select new TrackTypeVo
                             {
                                 Id = d.Id,
@@ -103,6 +107,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             AddTrackTypeDto addDto = new AddTrackTypeDto();
             addDto.Name = addVo.Name;
             addDto.HasModel = addVo.HasModel;
+            addDto.IsOldCustomer = addVo.IsOldCustomer;
             if (addVo.HasModel == true)
             {
                 List<AddTrackTypeThemeModelDto> trackTypeThemeModelDto = new List<AddTrackTypeThemeModelDto>();
@@ -135,6 +140,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             trackTypeVo.Id = trackType.Id;
             trackTypeVo.Name = trackType.Name;
             trackTypeVo.HasModel = trackType.HasModel;
+            trackTypeVo.IsOldCustomer=trackType.IsOldCustomer;
             trackTypeVo.Valid = trackType.Valid;
             List<TrackTypeThemeModelVo> trackTypeThemeModel = new List<TrackTypeThemeModelVo>();
             foreach (var x in trackType.TrackTypeThemeModelDto)
@@ -169,6 +175,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.Name = updateVo.Name;
             updateDto.Valid = updateVo.Valid;
             updateDto.HasModel = updateVo.HasModel;
+            updateDto.IsOldCustomer = updateVo.IsOldCustomer;
             if (updateVo.HasModel == true)
             {
                 List<AddTrackTypeThemeModelDto> trackTypeThemeModelDto = new List<AddTrackTypeThemeModelDto>();
@@ -217,9 +224,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("toolListWithPage")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<TrackToolVo>>> GetTrackToolListWithPageAsync(int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<TrackToolVo>>> GetTrackToolListWithPageAsync([FromQuery]QueryTarckVo query)
         {
-            var q = await trackService.GetTrackToolListWithPageAsync(pageNum, pageSize);
+            var q = await trackService.GetTrackToolListWithPageAsync(query.Valid,query.PageNum.Value, query.PageSize.Value);
             var trackTool = from d in q.List
                             select new TrackToolVo
                             {
@@ -529,6 +536,26 @@ namespace Fx.Amiya.Background.Api.Controllers
             waitTrackPageInfo.List = waitTrack;
             return ResultData<FxPageInfo<WaitTrackCustomerVo>>.Success().AddData("waitTrack", waitTrackPageInfo);
         }
-
+        /// <summary>
+        /// 未加V原因
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="employeeId">-1查全部</param>
+        /// <param name="pageNum"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("unAddWechatReasonNameList")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetUnAddWechatReasonNameListAsync() {
+            var res = await trackService.GetUnAddWechatReasonNameListAsync();
+            var nameList = res.Select(e => new BaseIdAndNameVo<int>
+            {
+                Id = e.Key,
+                Name = e.Value
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("nameList", nameList);
+        }
     }
 }

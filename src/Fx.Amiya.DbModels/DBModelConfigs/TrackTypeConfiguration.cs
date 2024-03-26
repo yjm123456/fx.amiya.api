@@ -16,6 +16,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t=>t.Name).HasColumnName("name").HasColumnType("varchar(150)").IsRequired();
             builder.Property(t=>t.Valid).HasColumnName("valid").HasColumnType("bit").IsRequired();
             builder.Property(t => t.HasModel).HasColumnName("has_model").HasColumnType("bit").IsRequired();
+            builder.Property(t => t.IsOldCustomer).HasColumnName("is_old_customer").HasColumnType("bit").IsRequired();
         }
     }
 }

@@ -28,10 +28,11 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<TrackThemeDto>> GetListWithPageAsync(int? trackTypeId,int pageNum, int pageSize)
+        public async Task<FxPageInfo<TrackThemeDto>> GetListWithPageAsync(int? trackTypeId,int pageNum, int pageSize, bool? valid)
         {
             var trackTheme = from d in dalTrackTheme.GetAll()
                              where trackTypeId==null||d.TrackTypeId== trackTypeId
+                             where valid.HasValue ?d.Valid==valid:d.Valid==true
                              select new TrackThemeDto
                              { 
                                 Id=d.Id,
@@ -129,7 +130,10 @@ namespace Fx.Amiya.Service
         public async Task DeleteAsync(int id)
         {
             var trackTheme = await dalTrackTheme.GetAll().SingleOrDefaultAsync(e => e.Id == id);
-            await dalTrackTheme.DeleteAsync(trackTheme,true);
+            if (trackTheme == null)
+                throw new Exception("回访主题编号错误");
+            trackTheme.Valid = false;
+            await dalTrackTheme.UpdateAsync(trackTheme,true);
         }
     }
 }

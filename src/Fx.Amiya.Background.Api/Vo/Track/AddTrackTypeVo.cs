@@ -18,6 +18,10 @@ namespace Fx.Amiya.Background.Api.Vo.Track
         /// 是否需要模板
         /// </summary>
         public bool HasModel { get; set; }
+        /// <summary>
+        /// true:老客 false:新客
+        /// </summary>
+        public bool IsOldCustomer { get; set; }
 
         /// <summary>
         /// 回访模板

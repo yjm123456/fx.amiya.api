@@ -10,7 +10,7 @@ namespace Fx.Amiya.DbModels.Model
         public string Name { get; set; }
         public bool Valid { get; set; }
         public bool HasModel { get; set; }
-
+        public bool IsOldCustomer { get; set; }
         public List<TrackRecord> TrackRecordList { get; set; }
         public List<TrackTheme> TrackThemeList { get; set; }
         public List<WaitTrackCustomer> WaitTrackCustomerList { get; set; }

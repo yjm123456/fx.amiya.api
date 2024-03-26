@@ -192,3 +192,11 @@ ALTER TABLE `tbl_track_record`
 ALTER TABLE `amiyadb`.`tbl_track_record` 
 ADD COLUMN `shpping_cart_registration_id` VARCHAR(30) NULL AFTER `track_picture3`;
 ----------------------------------------------余建明 2024/3/26 END----------------------------------------
+
+----------------------------------------------王健 2024/3/26 BEGIN----------------------------------------
+
+---回访类型添加新老客
+ALTER TABLE `tbl_track_type`
+	ADD COLUMN `is_old_customer` BIT NOT NULL AFTER `has_model`;
+
+----------------------------------------------王健 2024/3/26 END----------------------------------------

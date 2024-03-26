@@ -17,7 +17,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<TrackThemeDto>> GetListWithPageAsync(int? trackTypeId,int pageNum, int pageSize);
+        Task<FxPageInfo<TrackThemeDto>> GetListWithPageAsync(int? trackTypeId,int pageNum, int pageSize,bool?valid);
 
 
 

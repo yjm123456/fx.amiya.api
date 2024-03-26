@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.AssistantHomePage.Input;
+﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.AssistantHomePage.Input;
 using Fx.Amiya.Dto.AssistantHomePage.Result;
 using Fx.Amiya.Dto.Track;
 using Fx.Common;
@@ -18,7 +19,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<TrackTypeDto>> GetTrackTypeListWithPageAsync(int pageNum, int pageSize);
+        Task<FxPageInfo<TrackTypeDto>> GetTrackTypeListWithPageAsync(bool? valid,int pageNum, int pageSize);
 
 
 
@@ -26,7 +27,7 @@ namespace Fx.Amiya.IService
         /// 获取有效的回访类型列表
         /// </summary>
         /// <returns></returns>
-        Task<List<TrackTypeDto>> GetTrackTypeListAsync();
+        Task<List<TrackTypeDto>> GetTrackTypeListAsync(bool isOldCustomer);
 
 
         /// <summary>
@@ -67,7 +68,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<TrackToolDto>> GetTrackToolListWithPageAsync(int pageNum, int pageSize);
+        Task<FxPageInfo<TrackToolDto>> GetTrackToolListWithPageAsync(bool? valid,int pageNum, int pageSize);
 
 
         /// <summary>
@@ -150,6 +151,11 @@ namespace Fx.Amiya.IService
         /// <param name="pageSize"></param>
         /// <returns></returns>
         Task<FxPageInfo<WaitTrackCustomerDto>> GetWaitTrackListWithPageAsync(string keyword, DateTime? startDate, DateTime? endDate, int employeeId,int pageNum, int pageSize);
+        /// <summary>
+        /// 获取未加V原因名称列表
+        /// </summary>
+        /// <returns></returns>
+        Task<List<BaseKeyValueDto<int>>> GetUnAddWechatReasonNameListAsync();
 
         #region 助理首页
 
