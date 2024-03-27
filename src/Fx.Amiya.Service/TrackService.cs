@@ -405,7 +405,7 @@ namespace Fx.Amiya.Service
                                   IsOldCustomerTrack = d.IsOldCustomerTrack,
                                   IsAddWechat=d.IsAddWechat,
                                   UnAddWechatReasonId = d.UnAddWechatReasonId,
-                                  //UnAddWechatReason=
+                                  UnAddWechatReason=ServiceClass.UnAddWechatReasonText(d.UnAddWechatReasonId),
                               };
 
             FxPageInfo<TrackRecordDto> trackRecordPageInfo = new FxPageInfo<TrackRecordDto>();
