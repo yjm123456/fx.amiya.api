@@ -37,5 +37,19 @@ namespace Fx.Amiya.Dto.Track
         /// 绑定小黄车id
         /// </summary>
         public string ShoppingCartRegistionId { get; set; }
+        /// <summary>
+        /// 新/老客回访
+        /// </summary>
+        public bool IsOldCustomerTrack { get; set; }
+
+        /// <summary>
+        /// 是否加v
+        /// </summary>
+        public bool IsAddWechat { get; set; }
+        /// <summary>
+        /// 未加v原因id
+        /// </summary>
+
+        public int UnAddWechatReasonId { get; set; }
     }
 }

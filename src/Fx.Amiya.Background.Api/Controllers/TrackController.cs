@@ -330,13 +330,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="keyword"></param>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
+        /// <param name="isOldCustomerTrack">新/老客回访</param>
         /// <param name="employeeId">-1查全部</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("recordListWithPage")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<TrackRecordVo>>> GetRecordListWithPageAsync(string keyword, DateTime? startDate, DateTime? endDate, int? employeeId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<TrackRecordVo>>> GetRecordListWithPageAsync(string keyword, DateTime? startDate, DateTime? endDate, int? employeeId, bool? isOldCustomerTrack, int pageNum, int pageSize)
         {
             try
             {
@@ -346,7 +347,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     employeeId = Convert.ToInt32(employee.Id);
                 }
 
-                var q = await trackService.GetRecordListWithPageAsync(keyword, startDate, endDate, (int)employeeId, pageNum, pageSize);
+                var q = await trackService.GetRecordListWithPageAsync(keyword, startDate, endDate, (int)employeeId, isOldCustomerTrack, pageNum, pageSize);
 
                 var trackRecord = from d in q.List
                                   select new TrackRecordVo
@@ -367,9 +368,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                       EmployeeName = d.EmployeeName,
                                       Valid = d.Valid,
                                       CallRecordId = d.CallRecordId,
-                                      TrackPicture1=d.TrackPicture1,
-                                      TrackPicture2=d.TrackPicture2,
-                                      TrackPicture3=d.TrackPicture3
+                                      TrackPicture1 = d.TrackPicture1,
+                                      TrackPicture2 = d.TrackPicture2,
+                                      TrackPicture3 = d.TrackPicture3
                                   };
 
                 FxPageInfo<TrackRecordVo> trackRecordPageInfo = new FxPageInfo<TrackRecordVo>();
@@ -398,7 +399,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("recordListByEncryptPhone")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<TrackRecordVo>>> GetRecordListByEncryptPhoneWithPageAsync(string encryptPhone,string shoppingCartRegistionId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<TrackRecordVo>>> GetRecordListByEncryptPhoneWithPageAsync(string encryptPhone, string shoppingCartRegistionId, int pageNum, int pageSize)
         {
             var q = await trackService.GetRecordListByEncryptPhoneWithPageAsync(encryptPhone, shoppingCartRegistionId, pageNum, pageSize);
 
@@ -422,9 +423,13 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   CallRecordId = d.CallRecordId,
                                   IsPlanTrack = d.IsPlanTrack,
                                   PlanTrackTheme = d.PlanTrackTheme,
-                                  TrackPicture1=d.TrackPicture1,
+                                  TrackPicture1 = d.TrackPicture1,
                                   TrackPicture2 = d.TrackPicture2,
                                   TrackPicture3 = d.TrackPicture3,
+                                  IsOldCustomerTrack = d.IsOldCustomerTrack,
+                                  IsAddWechat = d.IsAddWechat,
+                                  UnAddWechatReason = d.UnAddWechatReason,
+                                  UnAddWechatReasonId = d.UnAddWechatReasonId
                               };
             FxPageInfo<TrackRecordVo> trackRecordPageInfo = new FxPageInfo<TrackRecordVo>();
             trackRecordPageInfo.TotalCount = q.TotalCount;
@@ -463,6 +468,9 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.TrackPicture2 = addVo.TrackPicture2;
             addDto.TrackPicture3 = addVo.TrackPicture3;
             addDto.ShoppingCartRegistionId = addVo.ShoppingCartRegistionId;
+            addDto.IsOldCustomerTrack = addVo.IsOldCustomerTrack;
+            addDto.IsAddWechat = addVo.IsAddWechat;
+            addDto.UnAddWechatReasonId = addVo.UnAddWechatReasonId;
             List<AddWaitTrackCustomerDto> waitTrackRecordList = new List<AddWaitTrackCustomerDto>();
             if (addVo.AddWaitTrackCustomer != null)
             {

@@ -29,6 +29,9 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.TrackPicture2).HasColumnName("track_picture2").HasColumnType("varchar(300)").IsRequired(false);
             builder.Property(t => t.TrackPicture3).HasColumnName("track_picture3").HasColumnType("varchar(300)").IsRequired(false);
             builder.Property(t => t.ShoppingCartRegistionId).HasColumnName("shpping_cart_registration_id").HasColumnType("varchar(30)").IsRequired(false);
+            builder.Property(t => t.IsOldCustomerTrack).HasColumnName("is_old_customer_track").HasColumnType("bit").IsRequired();
+            builder.Property(t => t.IsAddWechat).HasColumnName("is_add_wechat").HasColumnType("bit").IsRequired();
+            builder.Property(t => t.UnAddWechatReasonId).HasColumnName("un_add_wechat_reasonid").HasColumnType("int").IsRequired();
 
             builder.HasOne(t => t.TrackType).WithMany(t => t.TrackRecordList).HasForeignKey(t=>t.TrackTypeId);
             builder.HasOne(t => t.TrackTool).WithMany(t => t.TrackRecordList).HasForeignKey(t=>t.TrackToolId);

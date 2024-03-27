@@ -111,10 +111,11 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="keyword"></param>
         /// <param name="employeeId">-1查全部</param>
+        /// <param name="isOldCustomerTrack">新/老客回访</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<TrackRecordDto>> GetRecordListWithPageAsync(string keyword, DateTime? startDate, DateTime? endDate, int employeeId, int pageNum, int pageSize);
+        Task<FxPageInfo<TrackRecordDto>> GetRecordListWithPageAsync(string keyword, DateTime? startDate, DateTime? endDate, int employeeId, bool? isOldCustomerTrack, int pageNum, int pageSize);
 
 
 

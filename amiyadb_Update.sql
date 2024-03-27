@@ -186,11 +186,22 @@ ALTER TABLE `tbl_track_record`
 	ADD COLUMN `track_picture3` VARCHAR(300) NULL DEFAULT NULL AFTER `track_picture2`;
 
 ----------------------------------------王健  2024/3/20 END------------------------------------------
---------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 ----------------------------------------------余建明 2024/3/26 BEGIN----------------------------------------
 ALTER TABLE `amiyadb`.`tbl_track_record` 
 ADD COLUMN `shpping_cart_registration_id` VARCHAR(30) NULL AFTER `track_picture3`;
+----------------------------------------------余建明 2024/3/26 END----------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+----------------------------------------------余建明 2024/3/26 BEGIN----------------------------------------
+--追踪回访记录表新增新老客回访区分
+ALTER TABLE `amiyadb`.`tbl_track_record` 
+ADD COLUMN `is_old_customer_track` BIT(1) NOT NULL DEFAULT 0 AFTER `shpping_cart_registration_id`;
+
+--追踪回访记录表新增是否加v，未加v原因
+ALTER TABLE `amiyadb`.`tbl_track_record` 
+ADD COLUMN `is_add_wechat` BIT(1) NOT NULL DEFAULT 0 AFTER `is_old_customer_track`,
+ADD COLUMN `un_add_wechat_reasonid` INT NOT NULL DEFAULT 0 AFTER `is_add_wechat`;
+
 ----------------------------------------------余建明 2024/3/26 END----------------------------------------
 
 ----------------------------------------------王健 2024/3/26 BEGIN----------------------------------------

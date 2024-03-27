@@ -301,13 +301,15 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="keyword"></param>
         /// <param name="employeeId">-1查全部</param>
+        /// <param name="isOldCustomerTrack">新/老客回访</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<TrackRecordDto>> GetRecordListWithPageAsync(string keyword, DateTime? startDate, DateTime? endDate, int employeeId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<TrackRecordDto>> GetRecordListWithPageAsync(string keyword, DateTime? startDate, DateTime? endDate, int employeeId, bool? isOldCustomerTrack, int pageNum, int pageSize)
         {
             var q = from d in dalTrackRecord.GetAll()
                     where string.IsNullOrWhiteSpace(keyword) || d.Phone == keyword || d.TrackTheme == keyword
+                    where (!isOldCustomerTrack.HasValue || d.IsOldCustomerTrack == isOldCustomerTrack.Value)
                     select d;
             if (startDate != null && endDate != null)
             {
@@ -348,7 +350,8 @@ namespace Fx.Amiya.Service
                                   CallRecordId = d.CallRecordId,
                                   TrackPicture1 = d.TrackPicture1,
                                   TrackPicture2 = d.TrackPicture2,
-                                  TrackPicture3 = d.TrackPicture3
+                                  TrackPicture3 = d.TrackPicture3,
+                                  IsOldCustomerTrack = d.IsOldCustomerTrack,
                               };
 
 
@@ -398,7 +401,11 @@ namespace Fx.Amiya.Service
                                   PlanTrackTheme = d.WaitTrackCustomer.TrackThemeId != null ? d.WaitTrackCustomer.TrackThemeInfo.Name : d.WaitTrackCustomer.TrackTheme,
                                   TrackPicture1 = d.TrackPicture1,
                                   TrackPicture2 = d.TrackPicture2,
-                                  TrackPicture3 = d.TrackPicture3
+                                  TrackPicture3 = d.TrackPicture3,
+                                  IsOldCustomerTrack = d.IsOldCustomerTrack,
+                                  IsAddWechat=d.IsAddWechat,
+                                  UnAddWechatReasonId = d.UnAddWechatReasonId,
+                                  //UnAddWechatReason=
                               };
 
             FxPageInfo<TrackRecordDto> trackRecordPageInfo = new FxPageInfo<TrackRecordDto>();
@@ -450,6 +457,9 @@ namespace Fx.Amiya.Service
                 trackRecord.TrackPicture2 = addDto.TrackPicture2;
                 trackRecord.TrackPicture3 = addDto.TrackPicture3;
                 trackRecord.ShoppingCartRegistionId = addDto.ShoppingCartRegistionId;
+                trackRecord.IsOldCustomerTrack = addDto.IsOldCustomerTrack;
+                trackRecord.IsAddWechat = addDto.IsAddWechat;
+                trackRecord.UnAddWechatReasonId = addDto.UnAddWechatReasonId;
                 await dalTrackRecord.AddAsync(trackRecord, true);
 
                 if (addDto.WaitTrackId != null)
@@ -505,11 +515,6 @@ namespace Fx.Amiya.Service
             }
 
         }
-
-
-
-
-
 
 
         /// <summary>

@@ -38,5 +38,23 @@ namespace Fx.Amiya.Dto.Track
         public string TrackPicture1 { get; set; }
         public string TrackPicture2 { get; set; }
         public string TrackPicture3 { get; set; }
+        /// <summary>
+        /// 新/老客回访
+        /// </summary>
+        public bool IsOldCustomerTrack { get; set; }
+
+        /// <summary>
+        /// 是否加v
+        /// </summary>
+        public bool IsAddWechat { get; set; }
+        /// <summary>
+        /// 未加v原因id
+        /// </summary>
+
+        public int UnAddWechatReasonId { get; set; }
+        /// <summary>
+        /// 未加v原因说明
+        /// </summary>
+        public string UnAddWechatReason { get; set; }
     }
 }
