@@ -78,7 +78,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("typeList")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData<List<TrackTypeVo>>> GetTrackTypeListAsync(bool isOldCustomer)
+        public async Task<ResultData<List<TrackTypeVo>>> GetTrackTypeListAsync(bool? isOldCustomer)
         {
             var trackType = from d in await trackService.GetTrackTypeListAsync(isOldCustomer)
                             select new TrackTypeVo

@@ -27,7 +27,7 @@ namespace Fx.Amiya.IService
         /// 获取有效的回访类型列表
         /// </summary>
         /// <returns></returns>
-        Task<List<TrackTypeDto>> GetTrackTypeListAsync(bool isOldCustomer);
+        Task<List<TrackTypeDto>> GetTrackTypeListAsync(bool? isOldCustomer);
 
 
         /// <summary>
