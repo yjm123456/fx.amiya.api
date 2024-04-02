@@ -547,15 +547,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 未加V原因
         /// </summary>
-        /// <param name="keyword"></param>
-        /// <param name="startDate"></param>
-        /// <param name="endDate"></param>
-        /// <param name="employeeId">-1查全部</param>
-        /// <param name="pageNum"></param>
-        /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("unAddWechatReasonNameList")]
-        [FxInternalAuthorize]
+        [FxInternalOrPartnerAuthorize]
         public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetUnAddWechatReasonNameListAsync() {
             var res = await trackService.GetUnAddWechatReasonNameListAsync();
             var nameList = res.Select(e => new BaseIdAndNameVo<int>

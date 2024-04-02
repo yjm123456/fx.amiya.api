@@ -2772,7 +2772,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<BindCustomerServiceContentPlatformOrderDto>> GetBindCustomerServieContentPlatformOrdersAsync(int? customerServiceId, int? liveAnchorId, DateTime? startDate, DateTime? endDate, string keyword, string liveAnchorWechatNoId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<BindCustomerServiceContentPlatformOrderDto>> GetBindCustomerServieContentPlatformOrdersAsync(int? customerServiceId, int? orderStatus, int? liveAnchorId, DateTime? startDate, DateTime? endDate, string keyword, string liveAnchorWechatNoId, int pageNum, int pageSize)
         {
             var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
             var orders = from d in _dalContentPlatformOrder.GetAll()
@@ -2780,6 +2780,7 @@ namespace Fx.Amiya.Service
                          where (string.IsNullOrWhiteSpace(keyword) || d.Id == keyword || d.Phone == keyword || d.CustomerName.Contains(keyword))
                          && (customerServiceId == null || c.CustomerServiceId == customerServiceId)
                          && (liveAnchorId == null || d.LiveAnchorId == liveAnchorId)
+                         && (orderStatus == null || d.OrderStatus == orderStatus)
                          && (string.IsNullOrWhiteSpace(liveAnchorWechatNoId) || d.LiveAnchorWeChatNo == liveAnchorWechatNoId)
                          && (startDate == null && endDate == null || d.CreateDate >= startDate.Value && d.CreateDate < endDate.Value.AddDays(1))
                          select new BindCustomerServiceContentPlatformOrderDto
