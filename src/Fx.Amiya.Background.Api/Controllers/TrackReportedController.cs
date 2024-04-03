@@ -341,6 +341,9 @@ namespace Fx.Amiya.Background.Api.Controllers
             addTrackRecordDto.IsOldCustomerTrack = addVo.addTrackRecord.IsOldCustomerTrack;
             addTrackRecordDto.IsAddWechat = addVo.addTrackRecord.IsAddWechat;
             addTrackRecordDto.UnAddWechatReasonId = addVo.addTrackRecord.UnAddWechatReasonId;
+            addTrackRecordDto.TrackPicture1 = addVo.addTrackRecord.TrackPicture1;
+            addTrackRecordDto.TrackPicture2 = addVo.addTrackRecord.TrackPicture2;
+            addTrackRecordDto.TrackPicture3 = addVo.addTrackRecord.TrackPicture3;
             addDto.addTrackRecord = addTrackRecordDto;
            
             await _trackReportedService.HospitalConfirTrackRecordAsync(addDto);
