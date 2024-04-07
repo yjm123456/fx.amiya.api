@@ -325,7 +325,8 @@ namespace Fx.Amiya.Service
             List<HospitalPerformanceDto> resultList = new List<HospitalPerformanceDto>();
             var nowDate = DateTimeExtension.GetChooseDateStartDateAndEndDate(date);
             DateTime startDate = Convert.ToDateTime(date.Year + "-" + date.Month + "-01 0:00:00");
-            var contentPlatFormOrderSendList = await contentPlatformOrderSendService.GetTodayOrderSendDataAsync(startDate);
+            var contentPlatFormOrderSendList = await contentPlatformOrderSendService.GetOrderToHospitalDataByDateAsync(startDate);
+            var sendLtm = contentPlatFormOrderSendList.Where(x => x.SendHospitalId == 16).ToList();
             foreach (var x in contentPlatFormOrderSendList)
             {
                 var isExist = 0;
