@@ -89,7 +89,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                         {
                             Id = d.Id,
                             Name = d.Name,
-                            Valid = d.Valid
+                            Valid = d.Valid,
+                            Sort = d.Sort
                         };
             return ResultData<List<CooperativeHospitalCityVo>>.Success().AddData("citys", citys.ToList());
         }
