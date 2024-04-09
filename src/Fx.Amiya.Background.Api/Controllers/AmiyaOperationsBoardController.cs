@@ -19,6 +19,62 @@ namespace Fx.Amiya.Background.Api.Controllers
     [FxInternalAuthorize]
     public class AmiyaOperationsBoardController : ControllerBase
     {
+
+        #region  运营主看板
+        /// <summary>
+        /// 获取时间进度和总业绩
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getTotalAchievementAndDateSchedule")]
+        public async Task<ResultData<OperationTotalAchievementDataVo>> GetTotalAchievementAndDateScheduleAsync([FromQuery] QueryOperationDataVo query)
+        {
+            OperationTotalAchievementDataVo result = new OperationTotalAchievementDataVo();
+            return ResultData<OperationTotalAchievementDataVo>.Success().AddData("data", result);
+        }
+
+        /// <summary>
+        /// 获取获客情况数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getCustomerData")]
+        public async Task<ResultData<GetCustomerDataVo>> GetCustomerDataAsync([FromQuery] QueryOperationDataVo query)
+        {
+            return ResultData<GetCustomerDataVo>.Success().AddData("data", new GetCustomerDataVo());
+        }
+        
+        /// <summary>
+        /// 获取客户运营情况数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getCustomerAnalizeData")]
+        public async Task<ResultData<GetCustomerAnalizeDataVo>> GetCustomerAnalizeDataAsync([FromQuery] QueryOperationDataVo query)
+        {
+            return ResultData<GetCustomerAnalizeDataVo>.Success().AddData("data", new GetCustomerAnalizeDataVo());
+        }
+
+        /// <summary>
+        /// 获取客户指标转化数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getCustomerIndexTransformationData")]
+        public async Task<ResultData<GetCustomerIndexTransformationDataVo>> GetCustomerIndexTransformationDataAsync([FromQuery] QueryOperationDataVo query)
+        {
+            return ResultData<GetCustomerIndexTransformationDataVo>.Success().AddData("data", new GetCustomerIndexTransformationDataVo());
+        }
+
+        /// <summary>
+        /// 获取助理业绩分析数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getEmployeePerformanceAnalizeData")]
+        public async Task<ResultData<GetEmployeePerformanceAnalizeData>> GetEmployeePerformanceAnalizeDataAsync([FromQuery] QueryOperationDataVo query)
+        {
+            return ResultData<GetEmployeePerformanceAnalizeData>.Success().AddData("data", new GetEmployeePerformanceAnalizeData());
+        }
+
+
+        #endregion
+
         #region 公司看板
         /// <summary>
         /// 获取公司看板业绩情况数据
