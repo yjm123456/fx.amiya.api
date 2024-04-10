@@ -51,4 +51,31 @@ CREATE TABLE `tbl_short_video_fans_data` (
 ------------------------------------------王健  2024/1/18 END------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+--新增助理月度业绩目标
+CREATE TABLE `amiyadb`.`tbl_employee_performance_target` (
+  `id` VARCHAR(50) NOT NULL,
+  `belong_year` INT NOT NULL,
+  `belong_month` INT NOT NULL,
+  `employee_id` INT UNSIGNED NOT NULL,
+  `consulation_card_target` INT NOT NULL DEFAULT 0,
+  `add_wechat_target` INT NOT NULL DEFAULT 0,
+  `send_order_target` INT NOT NULL DEFAULT 0,
+  `visit_target` INT NOT NULL DEFAULT 0,
+  `new_customer_deal_target` INT NOT NULL DEFAULT 0,
+  `old_customer_deal_target` INT NOT NULL DEFAULT 0,
+  `new_customer_performance_target` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+  `old_customer_performance_target` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+  `performance_target` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `delete_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_employee_performance_idx` (`employee_id` ASC) VISIBLE,
+  CONSTRAINT `fk_employee_performance`
+    FOREIGN KEY (`employee_id`)
+    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
 

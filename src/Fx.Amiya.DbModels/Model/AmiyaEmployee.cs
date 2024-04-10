@@ -47,7 +47,7 @@ namespace Fx.Amiya.DbModels.Model
         /// 天猫升单比例
         /// </summary>
         public decimal TmallOrderCommission { get; set; }
-        
+
         public string LiveAnchorBaseId { get; set; }
         public AmiyaPositionInfo AmiyaPositionInfo { get; set; }
         public List<AmiyaPositionInfo> UpdateByAmiyaPositionInfoList { get; set; }
@@ -115,5 +115,7 @@ namespace Fx.Amiya.DbModels.Model
 
         public List<CustomerServiceCompensation> CustomerServiceCompensationCreateByList { get; set; }
         public List<CustomerServiceCompensation> CustomerServiceCompensationBelongEmpList { get; set; }
+
+        public List<EmployeePerformanceTarget> EmployeePerformanceTargetList { get; set; }
     }
 }
