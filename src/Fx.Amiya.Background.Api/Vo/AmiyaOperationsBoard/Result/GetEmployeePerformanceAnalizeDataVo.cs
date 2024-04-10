@@ -8,33 +8,33 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
     /// <summary>
     /// 获取助理业绩分析数据
     /// </summary>
-    public class GetEmployeePerformanceAnalizeData
+    public class GetEmployeePerformanceAnalizeDataVo
     {
         /// <summary>
         /// 助理业绩
         /// </summary>
-        public List<GetEmployeePerformanceData> EmployeeDatas { get; set; }
+        public List<GetEmployeePerformanceDataVo> EmployeeDatas { get; set; }
         /// <summary>
         /// 助理获客情况
         /// </summary>
-        public List<GetEmployeeDistributeConsulationNumAndAddWechat> EmployeeDistributeConsulationNumAndAddWechats { get; set; }
+        public List<GetEmployeeDistributeConsulationNumAndAddWechatVo> EmployeeDistributeConsulationNumAndAddWechats { get; set; }
 
         /// <summary>
         /// 助理客户运营情况
         /// </summary>
-        public List<GetEmployeeCustomerAnalize> GetEmployeeCustomerAnalizes { get; set; }
+        public List<GetEmployeeCustomerAnalizeVo> GetEmployeeCustomerAnalizes { get; set; }
 
         /// <summary>
         /// 助理业绩排名
         /// </summary>
-        public List<GetEmployeePerformanceRanking> GetEmployeePerformanceRankings { get; set; }
+        public List<GetEmployeePerformanceRankingVo> GetEmployeePerformanceRankings { get; set; }
 
     }
 
     /// <summary>
     /// 助理业绩
     /// </summary>
-    public class GetEmployeePerformanceData
+    public class GetEmployeePerformanceDataVo
     {
         /// <summary>
         /// 助理名称
@@ -53,7 +53,7 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
     /// <summary>
     /// 助理获客情况
     /// </summary>
-    public class GetEmployeeDistributeConsulationNumAndAddWechat
+    public class GetEmployeeDistributeConsulationNumAndAddWechatVo
     {
         /// <summary>
         /// 助理名称
@@ -73,7 +73,7 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
     /// <summary>
     /// 助理客户运营情况
     /// </summary>
-    public class GetEmployeeCustomerAnalize
+    public class GetEmployeeCustomerAnalizeVo
     {
         /// <summary>
         /// 助理名称
@@ -93,7 +93,7 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
         public int DealNum { get; set; }
     }
 
-    public class GetEmployeePerformanceRanking
+    public class GetEmployeePerformanceRankingVo
     {
         /// <summary>
         /// 助理名称

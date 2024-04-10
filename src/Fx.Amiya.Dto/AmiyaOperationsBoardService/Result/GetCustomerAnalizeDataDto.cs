@@ -1,35 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
+namespace Fx.Amiya.Dto.AmiyaOperationsBoardService
 {
-    /// <summary>
-    /// 获取客户运营情况输出数据
-    /// </summary>
-    public class GetCustomerAnalizeDataVo
+    public class GetCustomerAnalizeDataDto
     {
         /// <summary>
         /// 派单数据
         /// </summary>
-        public CustomerAnalizeByGroupVo SendNum { get; set; }
+        public CustomerAnalizeByGroupDto SendNum { get; set; }
 
         /// <summary>
         /// 上门数据
         /// </summary>
-        public CustomerAnalizeByGroupVo VisitNum { get; set; }
+        public CustomerAnalizeByGroupDto VisitNum { get; set; }
 
         /// <summary>
         /// 成交数据
         /// </summary>
-        public CustomerAnalizeByGroupVo DealNum { get; set; }
+        public CustomerAnalizeByGroupDto DealNum { get; set; }
     }
-
     /// <summary>
     /// 客户分组运营数据
     /// </summary>
-    public class CustomerAnalizeByGroupVo
+    public class CustomerAnalizeByGroupDto
     {
 
         /// <summary>

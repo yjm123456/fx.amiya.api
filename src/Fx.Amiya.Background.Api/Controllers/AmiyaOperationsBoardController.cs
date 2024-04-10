@@ -83,9 +83,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getEmployeePerformanceAnalizeData")]
-        public async Task<ResultData<GetEmployeePerformanceAnalizeData>> GetEmployeePerformanceAnalizeDataAsync([FromQuery] QueryOperationDataVo query)
+        public async Task<ResultData<GetEmployeePerformanceAnalizeDataVo>> GetEmployeePerformanceAnalizeDataAsync([FromQuery] QueryOperationDataVo query)
         {
-            return ResultData<GetEmployeePerformanceAnalizeData>.Success().AddData("data", new GetEmployeePerformanceAnalizeData());
+            return ResultData<GetEmployeePerformanceAnalizeDataVo>.Success().AddData("data", new GetEmployeePerformanceAnalizeDataVo());
         }
 
 
