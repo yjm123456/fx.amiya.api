@@ -159,7 +159,7 @@ namespace Fx.Amiya.IService
         /// <param name="isOldCustomer">新客/老客</param>
         /// <param name="LiveAnchorIds">各个平台主播id集合</param>
         /// <returns></returns>
-        Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceByYearAndMonth(int year, int month, bool? isCustomer, List<int> LiveAnchorIds);
+        Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceByYearAndMonth(int year, int month, bool? isOldCustomer, List<int> LiveAnchorIds);
 
         /// <summary>
         /// 获取派单成交业绩
@@ -227,7 +227,7 @@ namespace Fx.Amiya.IService
 
         #region 【新业绩板块】
         /// <summary>
-        /// 根据精确时间线主播获取啊美雅业绩
+        /// 根据精确时间线主播获取啊美雅业绩返回新老客等数据
         /// </summary>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
@@ -237,7 +237,7 @@ namespace Fx.Amiya.IService
         Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceByDateAsync(DateTime startDate, DateTime endDate, List<int> LiveAnchorIds);
 
         /// <summary>
-        /// 根据精确时间线主播获取啊美雅业绩
+        /// 根据精确时间线主播获取啊美雅业绩返回主播id和到院类型
         /// </summary>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
@@ -374,6 +374,16 @@ namespace Fx.Amiya.IService
         Task<MonthPerformanceCompleteSituationDataDto> GetAssistantMonthPerformanceDataAsync(QueryAssistantHomePageDataDto query);
 
         #endregion
+        #region【系统端运营看板】
+        /// <summary>
+        /// 根据时间获取简单的成交业绩（区分新老客）
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+        Task<List<ContentPlatFormOrderDealInfoDto>> GetSimplePerformanceDetailByDateAsync(DateTime startDate, DateTime endDate);
+        #endregion
+
         #region 【枚举下拉框】
         List<BaseIdAndNameDto> GetOrderDealPerformanceTypeList();
 

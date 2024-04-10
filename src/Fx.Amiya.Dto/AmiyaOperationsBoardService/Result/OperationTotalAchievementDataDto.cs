@@ -31,4 +31,24 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService
         /// </summary>
         public List<PeformanceBrokenLineListInfoDto> OldCustomerPerformanceBrokenLineList { get; set; }
     }
+    public class OerationTotalAchievementBrokenLineListDto
+    {
+        /// <summary>
+        /// 时间
+        /// </summary>
+        public int Time { get; set; }
+
+        /// <summary>
+        /// 总业绩折线图
+        /// </summary>
+        public decimal TotalCustomerPerformance { get; set; }
+        /// <summary>
+        /// 新客业绩折线图
+        /// </summary>
+        public decimal NewCustomerPerformance { get; set; }
+        /// <summary>
+        /// 老客业绩折线图
+        /// </summary>
+        public decimal OldCustomerPerformance { get; set; }
+    }
 }

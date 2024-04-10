@@ -467,7 +467,7 @@ namespace Fx.Amiya.Service
                                                        CreateBy = d.CreateBy,
                                                        ReturnBackPrice = d.ReturnBackPrice,
                                                        LiveAnchorName = d.ContentPlatFormOrder.LiveAnchor.Name,
-                                                       LastDealHospitalId=d.LastDealHospitalId,
+                                                       LastDealHospitalId = d.LastDealHospitalId,
                                                        IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
                                                        ConsumptionTypeText = ServiceClass.GetConsumptionTypeText(d.ConsumptionType)
                                                    };
@@ -2349,6 +2349,24 @@ namespace Fx.Amiya.Service
 
         #endregion
 
+        #region【系统端运营看板】
+
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetSimplePerformanceDetailByDateAsync(DateTime startDate, DateTime endDate)
+        {
+            return dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
+                .Where(o => o.CreateDate >= startDate && o.CreateDate < endDate && o.IsDeal == true && o.ContentPlatFormOrderId != null)
+                .Select(ContentPlatFOrmOrderDealInfo => new ContentPlatFormOrderDealInfoDto
+                {
+                    Id = ContentPlatFOrmOrderDealInfo.Id,
+                    Price = ContentPlatFOrmOrderDealInfo.Price,
+                    IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer,
+                    CreateDate = ContentPlatFOrmOrderDealInfo.CreateDate,
+                    DealDate = ContentPlatFOrmOrderDealInfo.DealDate
+                }
+                ).ToList();
+        }
+        #endregion
+
         #region 【枚举下拉框】
 
         public List<BaseIdAndNameDto> GetOrderDealPerformanceTypeList()
@@ -2378,5 +2396,7 @@ namespace Fx.Amiya.Service
 
 
         #endregion
+
+
     }
 }

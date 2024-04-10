@@ -45,6 +45,34 @@ namespace Fx.Amiya.Service
         public async Task<OperationTotalAchievementDataDto> GetTotalAchievementAndDateScheduleAsync(QueryOperationDataDto query)
         {
             OperationTotalAchievementDataDto result = new OperationTotalAchievementDataDto();
+            var dateSchedule = DateTimeExtension.GetDatetimeSchedule(query.endDate.Value).FirstOrDefault();
+            result.DateSchedule = dateSchedule.Value;
+            var orderDealInfo = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAndLiveAnchorIdsAsync(query.startDate.Value, query.endDate.Value, new List<int>());
+            //总业绩数据值
+            result.TotalAchievement = orderDealInfo.Sum(x => x.Price);
+            var order = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.startDate.Value, query.endDate.Value);
+
+            var dateList = order.GroupBy(x => x.CreateDate.Day).Select(x => new OerationTotalAchievementBrokenLineListDto
+            {
+                Time = x.Key,
+                TotalCustomerPerformance = x.Sum(e => e.Price),
+                NewCustomerPerformance = x.Where(e => e.IsOldCustomer == false).Sum(e => e.Price),
+                OldCustomerPerformance = x.Where(e => e.IsOldCustomer == true).Sum(e => e.Price),
+            });
+            List<OerationTotalAchievementBrokenLineListDto> GroupList = new List<OerationTotalAchievementBrokenLineListDto>();
+            for (int i = 1; i < dateSchedule.Key + 1; i++)
+            {
+                OerationTotalAchievementBrokenLineListDto item = new OerationTotalAchievementBrokenLineListDto();
+                item.Time = i;
+                item.TotalCustomerPerformance = dateList.Where(e => e.Time == i).Select(e => e.TotalCustomerPerformance).SingleOrDefault();
+                item.NewCustomerPerformance = dateList.Where(e => e.Time == i).Select(e => e.NewCustomerPerformance).SingleOrDefault();
+                item.OldCustomerPerformance = dateList.Where(e => e.Time == i).Select(e => e.OldCustomerPerformance).SingleOrDefault();
+
+                GroupList.Add(item);
+            }
+            result.TotalPerformanceBrokenLineList = GroupList.Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = DecimalExtension.ChangePriceToTenThousand(e.TotalCustomerPerformance) }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            result.NewCustomerPerformanceBrokenLineList = GroupList.Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = DecimalExtension.ChangePriceToTenThousand(e.NewCustomerPerformance) }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            result.OldCustomerPerformanceBrokenLineList = GroupList.Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = DecimalExtension.ChangePriceToTenThousand(e.OldCustomerPerformance) }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
             return result;
         }
 
@@ -169,5 +197,6 @@ namespace Fx.Amiya.Service
             return result;
         }
         #endregion
+
     }
 }
