@@ -408,5 +408,9 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 视频号橱窗付费
         /// </summary>
         public decimal TikTokShowcaseFee { get; set; }
+        /// <summary>
+        /// 今日分诊量
+        /// </summary>
+        public int DistributeConsulation { get; set; }
     }
 }

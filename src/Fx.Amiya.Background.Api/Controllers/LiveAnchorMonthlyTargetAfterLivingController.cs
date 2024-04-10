@@ -122,8 +122,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                         EffectivePerformanceCompleteRate=d.EffectivePerformanceCompleteRate,
                                                         PotentialPerformanceTarget = d.PotentialPerformanceTarget,
                                                         CumulativePotentialPerformance=d.CumulativePotentialPerformance,
-                                                        PotentialPerformanceCompleteRate=d.PotentialPerformanceCompleteRate
-
+                                                        PotentialPerformanceCompleteRate=d.PotentialPerformanceCompleteRate,
+                                                        DistributeConsulationTarget=d.DistributeConsulationTarget,
+                                                        DistributeConsulationCompleteRate=d.DistributeConsulationCompleteRate,
+                                                        CumulativeDistributeConsulation=d.CumulativeDistributeConsulation,
                                                     };
 
                 FxPageInfo<LiveAnchorMonthlyTargetAfterLivingVo> liveAnchorMonthlyTargetAfterLivingPageInfo = new FxPageInfo<LiveAnchorMonthlyTargetAfterLivingVo>();
@@ -207,6 +209,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.MinivanRefundTarget = addVo.MinivanRefundTarget;
                 addDto.EffectivePerformanceTarget = addVo.EffectivePerformanceTarget;
                 addDto.PotentialPerformanceTarget = addVo.PotentialPerformanceTarget;
+                addDto.DistributeConsulationTarget = addVo.DistributeConsulationTarget;
                 await _liveAnchorMonthlyTargetAfterLivingService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -309,6 +312,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorMonthlyTargetVo.CumulativePotentialPerformance = liveAnchorMonthlyTarget.CumulativePotentialPerformance;
                 liveAnchorMonthlyTargetVo.PotentialPerformanceCompleteRate = liveAnchorMonthlyTarget.PotentialPerformanceCompleteRate;
 
+                liveAnchorMonthlyTargetVo.DistributeConsulationTarget = liveAnchorMonthlyTarget.DistributeConsulationTarget;
+                liveAnchorMonthlyTargetVo.CumulativeDistributeConsulation = liveAnchorMonthlyTarget.CumulativeDistributeConsulation;
+                liveAnchorMonthlyTargetVo.DistributeConsulationCompleteRate = liveAnchorMonthlyTarget.DistributeConsulationCompleteRate;
 
                 return ResultData<LiveAnchorMonthlyTargetAfterLivingVo>.Success().AddData("liveAnchorMonthlyTargetAfterLivingInfo", liveAnchorMonthlyTargetVo);
             }
@@ -355,6 +361,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.MiniVanBadReviewsTarget = updateVo.MiniVanBadReviewsTarget;
                 updateDto.EffectivePerformanceTarget = updateVo.EffectivePerformanceTarget;
                 updateDto.PotentialPerformanceTarget = updateVo.PotentialPerformanceTarget;
+                updateDto.DistributeConsulationTarget=updateVo.DistributeConsulationTarget;
 
                 await _liveAnchorMonthlyTargetAfterLivingService.UpdateAsync(updateDto);
                 return ResultData.Success();

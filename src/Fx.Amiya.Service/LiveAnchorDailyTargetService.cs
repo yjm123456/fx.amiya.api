@@ -795,7 +795,8 @@ namespace Fx.Amiya.Service
                                           MinivanRefund = d.MinivanRefund,
                                           MiniVanBadReviews = d.MiniVanBadReviews,
                                           PotentialPerformance = d.PotentialPerformance,
-                                          EffectivePerformance = d.EffectivePerformance
+                                          EffectivePerformance = d.EffectivePerformance,
+                                          DistributeConsulation=d.DistributeConsulation
                                       };
                 var result = await tikTokDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
 
@@ -1022,6 +1023,7 @@ namespace Fx.Amiya.Service
                     liveAnchorDailyTargetDto.MiniVanBadReviews = liveAnchorDailyTarget.MiniVanBadReviews;
                     liveAnchorDailyTargetDto.EffectivePerformance = liveAnchorDailyTarget.EffectivePerformance;
                     liveAnchorDailyTargetDto.PotentialPerformance = liveAnchorDailyTarget.PotentialPerformance;
+                    liveAnchorDailyTargetDto.DistributeConsulation = liveAnchorDailyTarget.DistributeConsulation;
                 }
 
                 return liveAnchorDailyTargetDto;
@@ -2136,6 +2138,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.Valid = true;
                 liveAnchorDailyTarget.EffectivePerformance = addDto.EffectivePerformance;
                 liveAnchorDailyTarget.PotentialPerformance = addDto.PotentialPerformance;
+                liveAnchorDailyTarget.DistributeConsulation = addDto.DistributeConsulation;
                 await _afterLivingDailyTarget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyAfterLivingTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyAfterLivingTargetRateAndNumDto();
@@ -2161,6 +2164,7 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTarget.CumulativeMiniVanBadReviews = addDto.MiniVanBadReviews;
                 editLiveAnchorMonthlyTarget.EffectivePerformance = addDto.EffectivePerformance;
                 editLiveAnchorMonthlyTarget.PotentialPerformance = addDto.PotentialPerformance;
+                editLiveAnchorMonthlyTarget.DistributeConsulation=addDto.DistributeConsulation;
                 await _liveAnchorMonthlyTargetAfterLivingService.EditAsync(editLiveAnchorMonthlyTarget);
                 unitOfWork.Commit();
             }
@@ -2211,6 +2215,7 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTargetDel.CumulativeMiniVanBadReviews = -liveAnchorDailyTarget.MiniVanBadReviews;
                 editLiveAnchorMonthlyTargetDel.EffectivePerformance = -liveAnchorDailyTarget.EffectivePerformance;
                 editLiveAnchorMonthlyTargetDel.PotentialPerformance = -liveAnchorDailyTarget.PotentialPerformance;
+                editLiveAnchorMonthlyTargetDel.DistributeConsulation = -liveAnchorDailyTarget.DistributeConsulation;
                 await _liveAnchorMonthlyTargetAfterLivingService.EditAsync(editLiveAnchorMonthlyTargetDel);
 
                 liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
@@ -2239,6 +2244,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.UpdateDate = updateDto.AfterLivingUpdateDate;
                 liveAnchorDailyTarget.PotentialPerformance = updateDto.PotentialPerformance;
                 liveAnchorDailyTarget.EffectivePerformance = updateDto.EffectivePerformance;
+                liveAnchorDailyTarget.DistributeConsulation=updateDto.DistributeConsulation;
                 await _afterLivingDailyTarget.UpdateAsync(liveAnchorDailyTarget, true);
 
                 //添加修改后的
@@ -2270,6 +2276,7 @@ namespace Fx.Amiya.Service
 
                 editLiveAnchorMonthlyTargetAdd.EffectivePerformance = updateDto.EffectivePerformance;
                 editLiveAnchorMonthlyTargetAdd.PotentialPerformance = updateDto.PotentialPerformance;
+                editLiveAnchorMonthlyTargetAdd.DistributeConsulation = updateDto.DistributeConsulation;
 
                 await _liveAnchorMonthlyTargetAfterLivingService.EditAsync(editLiveAnchorMonthlyTargetAdd);
                 unitOfWork.Commit();

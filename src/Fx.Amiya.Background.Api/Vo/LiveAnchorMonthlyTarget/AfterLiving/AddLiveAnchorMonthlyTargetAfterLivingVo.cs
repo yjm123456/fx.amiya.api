@@ -119,5 +119,10 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AfterLiving
         /// 潜在业绩
         /// </summary>
         public decimal PotentialPerformanceTarget { get; set; }
+        /// <summary>
+        /// 分诊目标
+        /// </summary>
+        public int DistributeConsulationTarget { get; set; }
+
     }
 }

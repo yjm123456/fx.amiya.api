@@ -319,5 +319,17 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 创建日期
         /// </summary>
         public DateTime CreateDate { get; set; }
+        /// <summary>
+        /// 分诊目标
+        /// </summary>
+        public int DistributeConsulationTarget { get; set; }
+        /// <summary>
+        /// 累计分诊数量
+        /// </summary>
+        public int CumulativeDistributeConsulation { get; set; }
+        /// <summary>
+        /// 分诊目标完成率
+        /// </summary>
+        public decimal DistributeConsulationCompleteRate { get; set; }
     }
 }
