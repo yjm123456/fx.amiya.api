@@ -1813,6 +1813,7 @@ namespace Fx.Amiya.Service
                     throw new Exception("该订单没有手机号，不能绑定客服");
                 }
 
+                var order = await _dalContentPlatformOrder.GetAll().Where(x => x.Id == input.Id).SingleOrDefaultAsync();
                 var bind = await _dalBindCustomerService.GetAll()
                   .Include(e => e.CustomerServiceAmiyaEmployee)
                   .SingleOrDefaultAsync(e => e.BuyerPhone == input.Phone);
@@ -1821,7 +1822,10 @@ namespace Fx.Amiya.Service
                     var employee = await _dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == input.EmployeeId);
                     if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector && input.EmployeeId != bind.CustomerServiceId)
                     {
-                        throw new Exception("该客户已绑定给" + bind.CustomerServiceAmiyaEmployee.Name + ",请联系对应人员进行编辑！");
+                        if (input.EmployeeId != order.SupportEmpId)
+                        {
+                            throw new Exception("该客户已绑定给" + bind.CustomerServiceAmiyaEmployee.Name + ",请联系对应人员进行编辑！");
+                        }
                     }
                     //更新绑定客服列表bind_customer_info表的消费平台与主播微信数据
                     bind.NewConsumptionDate = DateTime.Now;
@@ -1856,7 +1860,6 @@ namespace Fx.Amiya.Service
                     bindCustomerService.AllOrderCount = 0;
                     await _dalBindCustomerService.AddAsync(bindCustomerService, true);
                 }
-                var order = await _dalContentPlatformOrder.GetAll().Where(x => x.Id == input.Id).SingleOrDefaultAsync();
                 if (order == null)
                 {
                     throw new Exception("未找到该订单的相关信息！");

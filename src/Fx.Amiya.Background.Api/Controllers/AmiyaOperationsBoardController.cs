@@ -57,9 +57,25 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getCustomerIndexTransformationData")]
-        public async Task<ResultData<GetCustomerIndexTransformationDataVo>> GetCustomerIndexTransformationDataAsync([FromQuery] QueryOperationDataVo query)
+        public async Task<ResultData<List<GetCustomerIndexTransformationResultVo>>> GetCustomerIndexTransformationDataAsync([FromQuery] QueryOperationDataVo query)
         {
-            return ResultData<GetCustomerIndexTransformationDataVo>.Success().AddData("data", new GetCustomerIndexTransformationDataVo());
+            GetCustomerIndexTransformationDataVo getData = new GetCustomerIndexTransformationDataVo();
+            List<GetCustomerIndexTransformationResultVo> result = new List<GetCustomerIndexTransformationResultVo>();
+            //参数转换赋值
+            GetCustomerIndexTransformationResultVo getAddCardNum = new GetCustomerIndexTransformationResultVo();
+            getAddCardNum.Name = "下卡量";
+            getAddCardNum.Value = 86;
+            result.Add(getAddCardNum);
+            GetCustomerIndexTransformationResultVo getRefundCardNum = new GetCustomerIndexTransformationResultVo();
+            getRefundCardNum.Name = "退卡量";
+            getRefundCardNum.Value = 6;
+            result.Add(getRefundCardNum);
+            GetCustomerIndexTransformationResultVo getDistributeConsulationNum = new GetCustomerIndexTransformationResultVo();
+            getDistributeConsulationNum.Name = "分诊量";
+            getDistributeConsulationNum.Value = 70;
+            result.Add(getDistributeConsulationNum);
+
+            return ResultData<List<GetCustomerIndexTransformationResultVo>>.Success().AddData("data", result);
         }
 
         /// <summary>
