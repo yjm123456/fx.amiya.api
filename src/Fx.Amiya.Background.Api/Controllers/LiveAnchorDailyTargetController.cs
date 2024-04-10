@@ -321,7 +321,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 MinivanRefund = d.MinivanRefund,
                                                 MiniVanBadReviews = d.MiniVanBadReviews,
                                                 EffectivePerformance = d.EffectivePerformance,
-                                                PotentialPerformance = d.PotentialPerformance
+                                                PotentialPerformance = d.PotentialPerformance,
+                                                DistributeConsulation=d.DistributeConsulation
                                             };
 
                 FxPageInfo<AfterLivingDailyTargetVo> liveAnchorDailyTargetPageInfo = new FxPageInfo<AfterLivingDailyTargetVo>();
@@ -436,6 +437,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorDailyTargetVo.EliminateCardGMV = liveAnchorDailyTarget.EliminateCardGMV;
                 liveAnchorDailyTargetVo.EffectivePerformance = liveAnchorDailyTarget.EffectivePerformance;
                 liveAnchorDailyTargetVo.PotentialPerformance = liveAnchorDailyTarget.PotentialPerformance;
+                liveAnchorDailyTargetVo.DistributeConsulation=liveAnchorDailyTarget.DistributeConsulation;
                 liveAnchorDailyTargetVo.RefundGMV = liveAnchorDailyTarget.RefundGMV;
 
                 return ResultData<LiveAnchorDailyTargetByIdVo>.Success().AddData("liveAnchorDailyTargetInfo", liveAnchorDailyTargetVo);
@@ -1006,6 +1008,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.RecordDate = addVo.RecordDate;
                     addDto.EffectivePerformance = addVo.EffectivePerformance;
                     addDto.PotentialPerformance = addVo.PotentialPerformance;
+                    addDto.DistributeConsulation=addVo.DistributeConsulation;
                     await _liveAnchorDailyTargetService.AfterLivingAddAsync(addDto);
                 }
                 return ResultData.Success();
@@ -1056,6 +1059,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.AfterLivingUpdateDate = DateTime.Now;
                 updateDto.PotentialPerformance = updateVo.PotentialPerformance;
                 updateDto.EffectivePerformance = updateVo.EffectivePerformance;
+                updateDto.DistributeConsulation = updateVo.DistributeConsulation;
                 await _liveAnchorDailyTargetService.AfterLivingUpdateAsync(updateDto);
                 return ResultData.Success();
             }

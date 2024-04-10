@@ -212,3 +212,19 @@ ALTER TABLE `tbl_track_type`
 
 ----------------------------------------------王健 2024/3/26 END----------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+
+---------------------------------------------王健 2024/04/10 BEGIN----------------------------------------
+
+----直播后月运营数据添加分诊数据维度
+ALTER TABLE `tbl_liveanchor_monthly_target_after_living`
+	ADD COLUMN `distribute_consulation_target` INT NOT NULL DEFAULT '0' AFTER `potential_performance_completeRate`,
+	ADD COLUMN `cumulative_distribute_consulation` DECIMAL(10,2) NOT NULL DEFAULT '0.00' AFTER `distribute_consulation_target`,
+	ADD COLUMN `distribute_consulation_completeRate` DECIMAL(10,2) NOT NULL DEFAULT '0.00' AFTER `cumulative_distribute_consulation`;
+
+----直播后日运营数据添加分诊数据维度
+ALTER TABLE `tbl_after_living_daily_target`
+	ADD COLUMN `distribute_consulation` INT NOT NULL DEFAULT '0' AFTER `potential_performance`;
+
+
+---------------------------------------------王健 2024/04/10 END----------------------------------------

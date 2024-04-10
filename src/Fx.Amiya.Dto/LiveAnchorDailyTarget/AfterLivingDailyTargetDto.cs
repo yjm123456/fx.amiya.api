@@ -276,5 +276,9 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 今日潜在业绩
         /// </summary>
         public decimal PotentialPerformance { get; set; }
+        /// <summary>
+        /// 今日分诊量
+        /// </summary>
+        public int DistributeConsulation { get; set; }
     }
 }

@@ -353,6 +353,10 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 小红书橱窗付费
         /// </summary>
         public decimal XiaoHongShuShowcaseFee { get; set; }
+        /// <summary>
+        /// 今日分诊量
+        /// </summary>
+        public int DistributeConsulation { get; set; }
 
     }
 }

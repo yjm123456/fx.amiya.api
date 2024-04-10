@@ -61,44 +61,44 @@ namespace Fx.Amiya.Service
             beforeLivingBusinessDataDto.IncreaseFans = thisMonthData.IncreaseFans;
             beforeLivingBusinessDataDto.IncreaseFansToDateSchedule = CalculateSchedule(target.IncreaseFansTarget, thisMonthData.IncreaseFans, queryDto.Year, queryDto.Month);
             beforeLivingBusinessDataDto.IncreaseFansTarget = target.IncreaseFansTarget;
-            beforeLivingBusinessDataDto.IncreaseFansTargetCompleteRate = CalculateTargetComplete(thisMonthData.IncreaseFans, target.IncreaseFansTarget);
-            beforeLivingBusinessDataDto.IncreaseFansChainRatio = CalculateChainratio(thisMonthData.IncreaseFans, lastMonthData.IncreaseFans);
-            beforeLivingBusinessDataDto.IncreaseFansYearOnYear = CalculateYearOnYear(thisMonthData.IncreaseFans, lastYearData.IncreaseFans);
+            beforeLivingBusinessDataDto.IncreaseFansTargetCompleteRate = DecimalExtension.CalculateTargetComplete(thisMonthData.IncreaseFans, target.IncreaseFansTarget);
+            beforeLivingBusinessDataDto.IncreaseFansChainRatio = DecimalExtension.CalculateChain(thisMonthData.IncreaseFans, lastMonthData.IncreaseFans);
+            beforeLivingBusinessDataDto.IncreaseFansYearOnYear = DecimalExtension.CalculateChain(thisMonthData.IncreaseFans, lastYearData.IncreaseFans);
             beforeLivingBusinessDataDto.IncreaseFansFees = thisMonthData.IncreaseFansFees;
             beforeLivingBusinessDataDto.IncreaseFansFeesToDateSchedule = CalculateSchedule(target.IncreaseFansFeesTarget, thisMonthData.IncreaseFansFees, queryDto.Year, queryDto.Month);
             beforeLivingBusinessDataDto.IncreaseFansFeesTarget = target.IncreaseFansFeesTarget;
-            beforeLivingBusinessDataDto.IncreaseFansFeesTargetCompleteRate = CalculateTargetComplete(thisMonthData.IncreaseFansFees, target.IncreaseFansFeesTarget);
-            beforeLivingBusinessDataDto.IncreaseFansFeesChainRatio = CalculateChainratio(thisMonthData.IncreaseFansFees, lastMonthData.IncreaseFansFees);
-            beforeLivingBusinessDataDto.IncreaseFansFeesYearOnYear = CalculateYearOnYear(thisMonthData.IncreaseFansFees, lastYearData.IncreaseFansFees);
+            beforeLivingBusinessDataDto.IncreaseFansFeesTargetCompleteRate = DecimalExtension.CalculateTargetComplete(thisMonthData.IncreaseFansFees, target.IncreaseFansFeesTarget);
+            beforeLivingBusinessDataDto.IncreaseFansFeesChainRatio = DecimalExtension.CalculateChain(thisMonthData.IncreaseFansFees, lastMonthData.IncreaseFansFees);
+            beforeLivingBusinessDataDto.IncreaseFansFeesYearOnYear = DecimalExtension.CalculateChain(thisMonthData.IncreaseFansFees, lastYearData.IncreaseFansFees);
             beforeLivingBusinessDataDto.IncreaseFansFeesCostToDateSchedule = CalculateSchedule(target.IncreaseFansFeesCostTarget, thisMonthData.IncreaseFansFeesCost, queryDto.Year, queryDto.Month);
             beforeLivingBusinessDataDto.IncreaseFansFeesCostTarget = target.IncreaseFansFeesCostTarget;
-            beforeLivingBusinessDataDto.IncreaseFansFeesCostTargetCompleteRate = CalculateTargetComplete(thisMonthData.IncreaseFansFeesCost, target.IncreaseFansFeesCostTarget);
-            beforeLivingBusinessDataDto.IncreaseFansFeesCostChainRatio = CalculateChainratio(thisMonthData.IncreaseFansFeesCost, lastMonthData.IncreaseFansFeesCostTarget);
-            beforeLivingBusinessDataDto.IncreaseFansFeesCostYearOnYear = CalculateYearOnYear(thisMonthData.IncreaseFansFeesCost, lastYearData.IncreaseFansFeesCostTarget);
+            beforeLivingBusinessDataDto.IncreaseFansFeesCostTargetCompleteRate = DecimalExtension.CalculateTargetComplete(thisMonthData.IncreaseFansFeesCost, target.IncreaseFansFeesCostTarget);
+            beforeLivingBusinessDataDto.IncreaseFansFeesCostChainRatio = DecimalExtension.CalculateChain(thisMonthData.IncreaseFansFeesCost, lastMonthData.IncreaseFansFeesCostTarget);
+            beforeLivingBusinessDataDto.IncreaseFansFeesCostYearOnYear = DecimalExtension.CalculateChain(thisMonthData.IncreaseFansFeesCost, lastYearData.IncreaseFansFeesCostTarget);
             beforeLivingBusinessDataDto.ShowcaseIncome = thisMonthData.ShowcaseIncome;
             beforeLivingBusinessDataDto.ShowcaseIncomeToDateSchedule = CalculateSchedule(target.ShowcaseIncomeTarget, thisMonthData.ShowcaseIncome, queryDto.Year, queryDto.Month);
             beforeLivingBusinessDataDto.ShowcaseIncomeTarget = target.ShowcaseIncomeTarget;
-            beforeLivingBusinessDataDto.ShowcaseIncomeTargetCompleteRate = CalculateTargetComplete(thisMonthData.ShowcaseIncome, target.ShowcaseIncomeTarget);
-            beforeLivingBusinessDataDto.ShowcaseIncomeChainRatio = CalculateChainratio(thisMonthData.ShowcaseIncome, lastMonthData.ShowcaseIncome);
-            beforeLivingBusinessDataDto.ShowcaseIncomeYearOnYear = CalculateYearOnYear(thisMonthData.ShowcaseIncome, lastYearData.ShowcaseIncome);
+            beforeLivingBusinessDataDto.ShowcaseIncomeTargetCompleteRate = DecimalExtension.CalculateTargetComplete(thisMonthData.ShowcaseIncome, target.ShowcaseIncomeTarget);
+            beforeLivingBusinessDataDto.ShowcaseIncomeChainRatio = DecimalExtension.CalculateChain(thisMonthData.ShowcaseIncome, lastMonthData.ShowcaseIncome);
+            beforeLivingBusinessDataDto.ShowcaseIncomeYearOnYear = DecimalExtension.CalculateChain(thisMonthData.ShowcaseIncome, lastYearData.ShowcaseIncome);
             beforeLivingBusinessDataDto.ShowcaseFee = thisMonthData.ShowcaseFee;
             beforeLivingBusinessDataDto.ShowcaseFeeToDateSchedule = CalculateSchedule(target.ShowcaseFeeTarget, thisMonthData.ShowcaseFee, queryDto.Year, queryDto.Month); ;
             beforeLivingBusinessDataDto.ShowcaseFeeTarget = target.ShowcaseFeeTarget;
-            beforeLivingBusinessDataDto.ShowcaseFeeTargetCompleteRate = CalculateTargetComplete(thisMonthData.ShowcaseFee, target.ShowcaseFeeTarget);
-            beforeLivingBusinessDataDto.ShowcaseFeeChainRatio = CalculateChainratio(thisMonthData.ShowcaseFee, lastMonthData.ShowcaseFee);
-            beforeLivingBusinessDataDto.ShowcaseFeeYearOnYear = CalculateYearOnYear(thisMonthData.ShowcaseFee, lastYearData.ShowcaseFee); ;
+            beforeLivingBusinessDataDto.ShowcaseFeeTargetCompleteRate = DecimalExtension.CalculateTargetComplete(thisMonthData.ShowcaseFee, target.ShowcaseFeeTarget);
+            beforeLivingBusinessDataDto.ShowcaseFeeChainRatio = DecimalExtension.CalculateChain(thisMonthData.ShowcaseFee, lastMonthData.ShowcaseFee);
+            beforeLivingBusinessDataDto.ShowcaseFeeYearOnYear = DecimalExtension.CalculateChain(thisMonthData.ShowcaseFee, lastYearData.ShowcaseFee); ;
             beforeLivingBusinessDataDto.Clues = thisMonthData.Clues;
             beforeLivingBusinessDataDto.CluesToDateSchedule = CalculateSchedule(target.CluesTarget, thisMonthData.Clues, queryDto.Year, queryDto.Month);
             beforeLivingBusinessDataDto.CluesTarget = target.CluesTarget;
-            beforeLivingBusinessDataDto.CluesTargetCompleteRate = CalculateTargetComplete(thisMonthData.Clues, target.CluesTarget);
-            beforeLivingBusinessDataDto.CluesChainRatio = CalculateChainratio(thisMonthData.Clues, lastMonthData.Clues);
-            beforeLivingBusinessDataDto.CluesYearOnYear = CalculateYearOnYear(thisMonthData.Clues, lastYearData.Clues);
+            beforeLivingBusinessDataDto.CluesTargetCompleteRate = DecimalExtension.CalculateTargetComplete(thisMonthData.Clues, target.CluesTarget);
+            beforeLivingBusinessDataDto.CluesChainRatio = DecimalExtension.CalculateChain(thisMonthData.Clues, lastMonthData.Clues);
+            beforeLivingBusinessDataDto.CluesYearOnYear = DecimalExtension.CalculateChain(thisMonthData.Clues, lastYearData.Clues);
             beforeLivingBusinessDataDto.SendNum = thisMonthData.SendNum;
             beforeLivingBusinessDataDto.SendNumToDateSchedule = CalculateSchedule(target.SendNumTarget, thisMonthData.SendNum, queryDto.Year, queryDto.Month);
             beforeLivingBusinessDataDto.SendNumTarget = target.SendNumTarget;
-            beforeLivingBusinessDataDto.SendNumTargetCompleteRate = CalculateTargetComplete(thisMonthData.SendNum, target.SendNumTarget);
-            beforeLivingBusinessDataDto.SendNumChainRatio = CalculateChainratio(thisMonthData.SendNum, lastMonthData.SendNum);
-            beforeLivingBusinessDataDto.SendNumYearOnYear = CalculateYearOnYear(thisMonthData.SendNum, lastYearData.SendNum);
+            beforeLivingBusinessDataDto.SendNumTargetCompleteRate = DecimalExtension.CalculateTargetComplete(thisMonthData.SendNum, target.SendNumTarget);
+            beforeLivingBusinessDataDto.SendNumChainRatio = DecimalExtension.CalculateChain(thisMonthData.SendNum, lastMonthData.SendNum);
+            beforeLivingBusinessDataDto.SendNumYearOnYear = DecimalExtension.CalculateChain(thisMonthData.SendNum, lastYearData.SendNum);
             return beforeLivingBusinessDataDto;
         }
         /// <summary>
@@ -277,27 +277,27 @@ namespace Fx.Amiya.Service
             livingBusinessDataDto.OrderGMV = thisMonthData.OrderGMV;
             livingBusinessDataDto.OrderGMVToDateSchedule = CalculateSchedule(target.OrderGMVTarget, thisMonthData.OrderGMV, queryDto.Year, queryDto.Month);
             livingBusinessDataDto.OrderGMVTarget = target.OrderGMVTarget;
-            livingBusinessDataDto.OrderGMVTargetCompleteRate = CalculateTargetComplete(thisMonthData.OrderGMV, target.OrderGMVTarget);
-            livingBusinessDataDto.OrderGMVChainRatio = CalculateChainratio(thisMonthData.OrderGMV, lastMonthData.OrderGMV);
-            livingBusinessDataDto.OrderGMVYearOnYear = CalculateYearOnYear(thisMonthData.OrderGMV, lastYearData.OrderGMV);
+            livingBusinessDataDto.OrderGMVTargetCompleteRate = DecimalExtension.CalculateTargetComplete(thisMonthData.OrderGMV, target.OrderGMVTarget);
+            livingBusinessDataDto.OrderGMVChainRatio = DecimalExtension.CalculateChain(thisMonthData.OrderGMV, lastMonthData.OrderGMV);
+            livingBusinessDataDto.OrderGMVYearOnYear = DecimalExtension.CalculateChain(thisMonthData.OrderGMV, lastYearData.OrderGMV);
             livingBusinessDataDto.RefundGMV = thisMonthData.RefundGMV;
             livingBusinessDataDto.RefundGMVToDateSchedule = CalculateSchedule(target.RefundGMVTarget, thisMonthData.RefundGMV, queryDto.Year, queryDto.Month);
             livingBusinessDataDto.RefundGMVTarget = target.RefundGMVTarget;
-            livingBusinessDataDto.RefundGMVTargetCompleteRate = CalculateTargetComplete(thisMonthData.RefundGMV, target.RefundGMVTarget);
-            livingBusinessDataDto.RefundGMVChainRatio = CalculateChainratio(thisMonthData.RefundGMV, lastMonthData.RefundGMV);
-            livingBusinessDataDto.RefundGMVYearOnYear = CalculateYearOnYear(thisMonthData.RefundGMV, lastYearData.RefundGMV);
+            livingBusinessDataDto.RefundGMVTargetCompleteRate = DecimalExtension.CalculateTargetComplete(thisMonthData.RefundGMV, target.RefundGMVTarget);
+            livingBusinessDataDto.RefundGMVChainRatio = DecimalExtension.CalculateChain(thisMonthData.RefundGMV, lastMonthData.RefundGMV);
+            livingBusinessDataDto.RefundGMVYearOnYear = DecimalExtension.CalculateChain(thisMonthData.RefundGMV, lastYearData.RefundGMV);
             livingBusinessDataDto.ActualReturnBackMoney = thisMonthData.ActualReturnBackMoney;
             livingBusinessDataDto.ActualReturnBackMoneyToDateSchedule = CalculateSchedule(target.ActualReturnBackMoneyTarget, thisMonthData.ActualReturnBackMoney, queryDto.Year, queryDto.Month);
             livingBusinessDataDto.ActualReturnBackMoneyTarget = target.ActualReturnBackMoneyTarget;
-            livingBusinessDataDto.ActualReturnBackMoneyTargetCompleteRate = CalculateTargetComplete(thisMonthData.ActualReturnBackMoney, target.ActualReturnBackMoneyTarget);
-            livingBusinessDataDto.ActualReturnBackMoneyChainRatio = CalculateChainratio(thisMonthData.ActualReturnBackMoney, lastMonthData.ActualReturnBackMoney);
-            livingBusinessDataDto.ActualReturnBackMoneyYearOnYear = CalculateYearOnYear(thisMonthData.ActualReturnBackMoney, lastYearData.ActualReturnBackMoney);
+            livingBusinessDataDto.ActualReturnBackMoneyTargetCompleteRate = DecimalExtension.CalculateTargetComplete(thisMonthData.ActualReturnBackMoney, target.ActualReturnBackMoneyTarget);
+            livingBusinessDataDto.ActualReturnBackMoneyChainRatio = DecimalExtension.CalculateChain(thisMonthData.ActualReturnBackMoney, lastMonthData.ActualReturnBackMoney);
+            livingBusinessDataDto.ActualReturnBackMoneyYearOnYear = DecimalExtension.CalculateChain(thisMonthData.ActualReturnBackMoney, lastYearData.ActualReturnBackMoney);
             livingBusinessDataDto.InvestFlow = thisMonthData.InvestFlow;
             livingBusinessDataDto.InvestFlowToDateSchedule = CalculateSchedule(target.InvestFlowTarget, thisMonthData.InvestFlow, queryDto.Year, queryDto.Month);
             livingBusinessDataDto.InvestFlowTarget = target.InvestFlowTarget;
-            livingBusinessDataDto.InvestFlowTargetCompleteRate = CalculateTargetComplete(thisMonthData.InvestFlow, target.InvestFlowTarget);
-            livingBusinessDataDto.InvestFlowChainRatio = CalculateChainratio(thisMonthData.InvestFlow, lastMonthData.InvestFlow);
-            livingBusinessDataDto.InvestFlowYearOnYear = CalculateYearOnYear(thisMonthData.InvestFlow, lastYearData.InvestFlow);
+            livingBusinessDataDto.InvestFlowTargetCompleteRate = DecimalExtension.CalculateTargetComplete(thisMonthData.InvestFlow, target.InvestFlowTarget);
+            livingBusinessDataDto.InvestFlowChainRatio = DecimalExtension.CalculateChain(thisMonthData.InvestFlow, lastMonthData.InvestFlow);
+            livingBusinessDataDto.InvestFlowYearOnYear = DecimalExtension.CalculateChain(thisMonthData.InvestFlow, lastYearData.InvestFlow);
             return livingBusinessDataDto;
 
 
@@ -438,21 +438,21 @@ namespace Fx.Amiya.Service
             livingAestheticMedicineBusinessDataDto.DesignCardOrder = thisMonthData.DesignCardOrder;
             livingAestheticMedicineBusinessDataDto.DesignCardOrderToDateSchedule = CalculateSchedule(target.DesignCardOrderTarget, thisMonthData.DesignCardOrder, queryDto.Year, queryDto.Month);
             livingAestheticMedicineBusinessDataDto.DesignCardOrderTarget = target.DesignCardOrderTarget;
-            livingAestheticMedicineBusinessDataDto.DesignCardOrderTargetCompleteRate = CalculateTargetComplete(thisMonthData.DesignCardOrder, target.DesignCardOrderTarget);
-            livingAestheticMedicineBusinessDataDto.DesignCardOrderChainRatio = CalculateChainratio(thisMonthData.DesignCardOrder, lastMonthData.DesignCardOrder);
-            livingAestheticMedicineBusinessDataDto.DesignCardOrderYearOnYear = CalculateYearOnYear(thisMonthData.DesignCardOrder, lastYearData.DesignCardOrder);
+            livingAestheticMedicineBusinessDataDto.DesignCardOrderTargetCompleteRate = DecimalExtension.CalculateTargetComplete(thisMonthData.DesignCardOrder, target.DesignCardOrderTarget);
+            livingAestheticMedicineBusinessDataDto.DesignCardOrderChainRatio = DecimalExtension.CalculateChain(thisMonthData.DesignCardOrder, lastMonthData.DesignCardOrder);
+            livingAestheticMedicineBusinessDataDto.DesignCardOrderYearOnYear = DecimalExtension.CalculateChain(thisMonthData.DesignCardOrder, lastYearData.DesignCardOrder);
             livingAestheticMedicineBusinessDataDto.DesignCardRefund = thisMonthData.DesignCardRefund;
             livingAestheticMedicineBusinessDataDto.DesignCardRefundToDateSchedule = CalculateSchedule(target.DesignCardRefundTarget, thisMonthData.DesignCardRefund, queryDto.Year, queryDto.Month);
             livingAestheticMedicineBusinessDataDto.DesignCardRefundTarget = target.DesignCardRefundTarget;
-            livingAestheticMedicineBusinessDataDto.DesignCardRefundTargetCompleteRate = CalculateTargetComplete(thisMonthData.DesignCardRefund, target.DesignCardRefundTarget);
-            livingAestheticMedicineBusinessDataDto.DesignCardRefundChainRatio = CalculateChainratio(thisMonthData.DesignCardRefund, lastMonthData.DesignCardRefund);
-            livingAestheticMedicineBusinessDataDto.DesignCardRefundYearOnYear = CalculateYearOnYear(thisMonthData.DesignCardRefund, lastYearData.DesignCardRefund);
+            livingAestheticMedicineBusinessDataDto.DesignCardRefundTargetCompleteRate = DecimalExtension.CalculateTargetComplete(thisMonthData.DesignCardRefund, target.DesignCardRefundTarget);
+            livingAestheticMedicineBusinessDataDto.DesignCardRefundChainRatio = DecimalExtension.CalculateChain(thisMonthData.DesignCardRefund, lastMonthData.DesignCardRefund);
+            livingAestheticMedicineBusinessDataDto.DesignCardRefundYearOnYear = DecimalExtension.CalculateChain(thisMonthData.DesignCardRefund, lastYearData.DesignCardRefund);
             livingAestheticMedicineBusinessDataDto.DesignCardActual = thisMonthData.DesignCardActual;
             livingAestheticMedicineBusinessDataDto.DesignCardActualToDateSchedule = CalculateSchedule(target.DesignCardOrderTarget - target.DesignCardRefundTarget, thisMonthData.DesignCardActual, queryDto.Year, queryDto.Month);
             livingAestheticMedicineBusinessDataDto.DesignCardActualTarget = target.DesignCardOrderTarget - target.DesignCardRefundTarget;
-            livingAestheticMedicineBusinessDataDto.DesignCardActualTargetCompleteRate = CalculateTargetComplete(thisMonthData.DesignCardActual, livingAestheticMedicineBusinessDataDto.DesignCardActualTarget);
-            livingAestheticMedicineBusinessDataDto.DesignCardActualChainRatio = CalculateChainratio(thisMonthData.DesignCardActual, lastMonthData.DesignCardActual);
-            livingAestheticMedicineBusinessDataDto.DesignCardActualYearOnYear = CalculateYearOnYear(thisMonthData.DesignCardActual, lastYearData.DesignCardActual);
+            livingAestheticMedicineBusinessDataDto.DesignCardActualTargetCompleteRate = DecimalExtension.CalculateTargetComplete(thisMonthData.DesignCardActual, livingAestheticMedicineBusinessDataDto.DesignCardActualTarget);
+            livingAestheticMedicineBusinessDataDto.DesignCardActualChainRatio = DecimalExtension.CalculateChain(thisMonthData.DesignCardActual, lastMonthData.DesignCardActual);
+            livingAestheticMedicineBusinessDataDto.DesignCardActualYearOnYear = DecimalExtension.CalculateChain(thisMonthData.DesignCardActual, lastYearData.DesignCardActual);
             return livingAestheticMedicineBusinessDataDto;
         }
         /// <summary>
@@ -597,9 +597,9 @@ namespace Fx.Amiya.Service
             orderChain = await contentPlatFormOrderDealInfoService.GetPerformanceDetailByDateAsync(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate, LiveAnchorInfo);
             afterLivingBusinessDataDto.TotalPerformance = curTotalPerformance;
             afterLivingBusinessDataDto.TotalPerformanceTarget = target.TotalPerformanceTarget;
-            afterLivingBusinessDataDto.TotalPerformanceCompleteRate = CalculateTargetComplete(curTotalPerformance, target.TotalPerformanceTarget);
-            afterLivingBusinessDataDto.TotalPerformanceChainRatio = CalculateChainratio(curTotalPerformance, orderChain.Sum(e => e.Price));
-            afterLivingBusinessDataDto.TotalPerformanceYearOnYear = CalculateYearOnYear(curTotalPerformance, orderYearOnYear.Sum(e => e.Price));
+            afterLivingBusinessDataDto.TotalPerformanceCompleteRate = DecimalExtension.CalculateTargetComplete(curTotalPerformance, target.TotalPerformanceTarget);
+            afterLivingBusinessDataDto.TotalPerformanceChainRatio = DecimalExtension.CalculateChain(curTotalPerformance, orderChain.Sum(e => e.Price));
+            afterLivingBusinessDataDto.TotalPerformanceYearOnYear = DecimalExtension.CalculateChain(curTotalPerformance, orderYearOnYear.Sum(e => e.Price));
             afterLivingBusinessDataDto.TotalPerformanceToDateSchedule = CalculateSchedule(target.TotalPerformanceTarget, curTotalPerformance, queryDto.Year, queryDto.Month);
 
             #endregion
@@ -610,9 +610,9 @@ namespace Fx.Amiya.Service
             var newOrderChainRatio = orderChain.Where(x => x.IsOldCustomer == false).Sum(o => o.Price);
             afterLivingBusinessDataDto.NewCustomerPerformance = curNewCustomer;
             afterLivingBusinessDataDto.NewCustomerPerformanceTarget = target.NewCustomerPerformanceTarget;
-            afterLivingBusinessDataDto.NewCustomerPerformanceCompleteRate = CalculateTargetComplete(curNewCustomer, target.NewCustomerPerformanceTarget);
-            afterLivingBusinessDataDto.NewCustomerPerformanceChainRatio = CalculateChainratio(curNewCustomer, newOrderChainRatio);
-            afterLivingBusinessDataDto.NewCustomerPerformanceYearOnYear = CalculateYearOnYear(curNewCustomer, newOrderYearOnYear);
+            afterLivingBusinessDataDto.NewCustomerPerformanceCompleteRate = DecimalExtension.CalculateTargetComplete(curNewCustomer, target.NewCustomerPerformanceTarget);
+            afterLivingBusinessDataDto.NewCustomerPerformanceChainRatio = DecimalExtension.CalculateChain(curNewCustomer, newOrderChainRatio);
+            afterLivingBusinessDataDto.NewCustomerPerformanceYearOnYear = DecimalExtension.CalculateChain(curNewCustomer, newOrderYearOnYear);
             afterLivingBusinessDataDto.NewCustomerPerformanceToDateSchedule = CalculateSchedule(target.NewCustomerPerformanceTarget, curNewCustomer, queryDto.Year, queryDto.Month);
             afterLivingBusinessDataDto.NewCustomerPerformanceRate = DecimalExtension.CalculateTargetComplete(curNewCustomer, curTotalPerformance).Value;
             #endregion
@@ -622,9 +622,9 @@ namespace Fx.Amiya.Service
             var OldOrderChainRatio = orderChain.Where(x => x.IsOldCustomer == true).Sum(o => o.Price);
             afterLivingBusinessDataDto.OldCustomerPerformance = curOldCustomer;
             afterLivingBusinessDataDto.OldCustomerPerformanceTarget = target.OldCustomerPerformanceTarget;
-            afterLivingBusinessDataDto.OldCustomerPerformanceCompleteRate = CalculateTargetComplete(curOldCustomer, target.OldCustomerPerformanceTarget);
-            afterLivingBusinessDataDto.OldCustomerPerformanceChainRatio = CalculateChainratio(curOldCustomer, OldOrderChainRatio);
-            afterLivingBusinessDataDto.OldCustomerPerformanceYearOnYear = CalculateYearOnYear(curOldCustomer, OldOrderYearOnYear);
+            afterLivingBusinessDataDto.OldCustomerPerformanceCompleteRate = DecimalExtension.CalculateTargetComplete(curOldCustomer, target.OldCustomerPerformanceTarget);
+            afterLivingBusinessDataDto.OldCustomerPerformanceChainRatio = DecimalExtension.CalculateChain(curOldCustomer, OldOrderChainRatio);
+            afterLivingBusinessDataDto.OldCustomerPerformanceYearOnYear = DecimalExtension.CalculateChain(curOldCustomer, OldOrderYearOnYear);
             afterLivingBusinessDataDto.OldCustomerPerformanceToDateSchedule = CalculateSchedule(target.OldCustomerPerformanceTarget, curOldCustomer, queryDto.Year, queryDto.Month);
             afterLivingBusinessDataDto.OldCustomerPerformanceRate = DecimalExtension.CalculateTargetComplete(curOldCustomer, curTotalPerformance).Value;
             #endregion
@@ -634,9 +634,9 @@ namespace Fx.Amiya.Service
             var EffectiveChainRatio = orderChain.Where(o => o.AddOrderPrice > 0).Sum(o => o.Price);
             afterLivingBusinessDataDto.EffectivePerformance = curEffective;
             afterLivingBusinessDataDto.EffectivePerformanceTarget = target.EffectivePerformance;
-            afterLivingBusinessDataDto.EffectivePerformanceCompleteRate = CalculateTargetComplete(curEffective, target.EffectivePerformance);
-            afterLivingBusinessDataDto.EffectivePerformanceChainRatio = CalculateChainratio(curEffective, EffectiveChainRatio);
-            afterLivingBusinessDataDto.EffectivePerformanceYearOnYear = CalculateYearOnYear(curEffective, EffectiveYearOnYear);
+            afterLivingBusinessDataDto.EffectivePerformanceCompleteRate = DecimalExtension.CalculateTargetComplete(curEffective, target.EffectivePerformance);
+            afterLivingBusinessDataDto.EffectivePerformanceChainRatio = DecimalExtension.CalculateChain(curEffective, EffectiveChainRatio);
+            afterLivingBusinessDataDto.EffectivePerformanceYearOnYear = DecimalExtension.CalculateChain(curEffective, EffectiveYearOnYear);
             afterLivingBusinessDataDto.EffectivePerformanceToDateSchedule = CalculateSchedule(target.EffectivePerformance, curEffective, queryDto.Year, queryDto.Month);
             afterLivingBusinessDataDto.EffectivePerformanceRate = DecimalExtension.CalculateTargetComplete(curEffective, curTotalPerformance).Value;
             #endregion
@@ -646,9 +646,9 @@ namespace Fx.Amiya.Service
             var PotentialChainRatio = orderChain.Where(o => o.AddOrderPrice == 0).Sum(o => o.Price);
             afterLivingBusinessDataDto.PotentialPerformance = curPotential;
             afterLivingBusinessDataDto.PotentialPerformanceTarget = target.PotentialPerformance;
-            afterLivingBusinessDataDto.PotentialPerformanceCompleteRate = CalculateTargetComplete(curPotential, target.PotentialPerformance);
-            afterLivingBusinessDataDto.PotentialPerformanceChainRatio = CalculateChainratio(curPotential, PotentialChainRatio);
-            afterLivingBusinessDataDto.PotentialPerformanceYearOnYear = CalculateYearOnYear(curPotential, PotentialYearOnYear);
+            afterLivingBusinessDataDto.PotentialPerformanceCompleteRate = DecimalExtension.CalculateTargetComplete(curPotential, target.PotentialPerformance);
+            afterLivingBusinessDataDto.PotentialPerformanceChainRatio = DecimalExtension.CalculateChain(curPotential, PotentialChainRatio);
+            afterLivingBusinessDataDto.PotentialPerformanceYearOnYear = DecimalExtension.CalculateChain(curPotential, PotentialYearOnYear);
             afterLivingBusinessDataDto.PotentialPerformanceToDateSchedule = CalculateSchedule(target.PotentialPerformance, curPotential, queryDto.Year, queryDto.Month);
             afterLivingBusinessDataDto.PotentialPerformanceRate = DecimalExtension.CalculateTargetComplete(curPotential, curTotalPerformance).Value;
             #endregion
@@ -658,8 +658,8 @@ namespace Fx.Amiya.Service
             var NewCustomerEffectiveYearOnYear = orderYearOnYear.Where(o => o.AddOrderPrice > 0 && o.IsOldCustomer == false).Sum(o => o.Price);
             var NewCustomerEffectiveChainRatio = orderChain.Where(o => o.AddOrderPrice > 0 && o.IsOldCustomer == false).Sum(o => o.Price);
             afterLivingBusinessDataDto.NewCustomerEffectivePerformance = curNewCustomerEffective;
-            afterLivingBusinessDataDto.NewCustomerEffectivePerformanceChain = CalculateChainratio(curNewCustomerEffective, NewCustomerEffectiveChainRatio);
-            afterLivingBusinessDataDto.NewCustomerEffectivePerformanceYearToYear = CalculateYearOnYear(curNewCustomerEffective, NewCustomerEffectiveYearOnYear);
+            afterLivingBusinessDataDto.NewCustomerEffectivePerformanceChain = DecimalExtension.CalculateChain(curNewCustomerEffective, NewCustomerEffectiveChainRatio);
+            afterLivingBusinessDataDto.NewCustomerEffectivePerformanceYearToYear = DecimalExtension.CalculateChain(curNewCustomerEffective, NewCustomerEffectiveYearOnYear);
             afterLivingBusinessDataDto.NewCustomerEffectivePerformanceRate = DecimalExtension.CalculateTargetComplete(curNewCustomerEffective, curNewCustomer).Value;
             #endregion
             #region 新客潜在业绩
@@ -667,8 +667,8 @@ namespace Fx.Amiya.Service
             var NewCustomerPotentialYearOnYear = orderYearOnYear.Where(o => o.AddOrderPrice == 0 && o.IsOldCustomer == false).Sum(o => o.Price);
             var NewCustomerPotentialChainRatio = orderChain.Where(o => o.AddOrderPrice == 0 && o.IsOldCustomer == false).Sum(o => o.Price);
             afterLivingBusinessDataDto.NewCustomerPotentialPerformance = curNewCustomerPotential;
-            afterLivingBusinessDataDto.NewCustomerPotentialPerformanceChain = CalculateChainratio(curNewCustomerPotential, NewCustomerPotentialChainRatio);
-            afterLivingBusinessDataDto.NewCustomerPotentialPerformanceYearToYear = CalculateYearOnYear(curNewCustomerPotential, NewCustomerPotentialYearOnYear);
+            afterLivingBusinessDataDto.NewCustomerPotentialPerformanceChain = DecimalExtension.CalculateChain(curNewCustomerPotential, NewCustomerPotentialChainRatio);
+            afterLivingBusinessDataDto.NewCustomerPotentialPerformanceYearToYear = DecimalExtension.CalculateChain(curNewCustomerPotential, NewCustomerPotentialYearOnYear);
             afterLivingBusinessDataDto.NewCustomerPotentialPerformanceRate = DecimalExtension.CalculateTargetComplete(curNewCustomerPotential, curNewCustomer).Value;
             #endregion
             #region 老客有效业绩
@@ -676,8 +676,8 @@ namespace Fx.Amiya.Service
             var OldCustomerEffectiveYearOnYear = orderYearOnYear.Where(o => o.AddOrderPrice > 0 && o.IsOldCustomer == true).Sum(o => o.Price);
             var OldCustomerEffectiveChainRatio = orderChain.Where(o => o.AddOrderPrice > 0 && o.IsOldCustomer == true).Sum(o => o.Price);
             afterLivingBusinessDataDto.OldCustomerEffectivePerformance = curOldCustomerEffective;
-            afterLivingBusinessDataDto.OldCustomerEffectivePerformanceChain = CalculateChainratio(curOldCustomerEffective, OldCustomerEffectiveChainRatio);
-            afterLivingBusinessDataDto.OldCustomerEffectivePerformanceYearToYear = CalculateYearOnYear(curOldCustomerEffective, OldCustomerEffectiveYearOnYear);
+            afterLivingBusinessDataDto.OldCustomerEffectivePerformanceChain = DecimalExtension.CalculateChain(curOldCustomerEffective, OldCustomerEffectiveChainRatio);
+            afterLivingBusinessDataDto.OldCustomerEffectivePerformanceYearToYear = DecimalExtension.CalculateChain(curOldCustomerEffective, OldCustomerEffectiveYearOnYear);
             afterLivingBusinessDataDto.OldCustomerEffectivePerformanceRate = DecimalExtension.CalculateTargetComplete(curOldCustomerEffective, curOldCustomer).Value;
             #endregion
             #region 老客潜在业绩
@@ -685,8 +685,8 @@ namespace Fx.Amiya.Service
             var OldCustomerPotentialYearOnYear = orderYearOnYear.Where(o => o.AddOrderPrice == 0 && o.IsOldCustomer == true).Sum(o => o.Price);
             var OldCustomerPotentialChainRatio = orderChain.Where(o => o.AddOrderPrice == 0 && o.IsOldCustomer == true).Sum(o => o.Price);
             afterLivingBusinessDataDto.OldCustomerPotentialPerformance = curOldCustomerPotential;
-            afterLivingBusinessDataDto.OldCustomerPotentialPerformanceChain = CalculateChainratio(curOldCustomerPotential, OldCustomerPotentialChainRatio);
-            afterLivingBusinessDataDto.OldCustomerPotentialPerformanceYearToYear = CalculateYearOnYear(curOldCustomerPotential, OldCustomerPotentialYearOnYear);
+            afterLivingBusinessDataDto.OldCustomerPotentialPerformanceChain = DecimalExtension.CalculateChain(curOldCustomerPotential, OldCustomerPotentialChainRatio);
+            afterLivingBusinessDataDto.OldCustomerPotentialPerformanceYearToYear = DecimalExtension.CalculateChain(curOldCustomerPotential, OldCustomerPotentialYearOnYear);
             afterLivingBusinessDataDto.OldCustomerPotentialPerformanceRate = DecimalExtension.CalculateTargetComplete(curOldCustomerPotential, curOldCustomer).Value;
             #endregion
             return afterLivingBusinessDataDto;
@@ -762,76 +762,76 @@ namespace Fx.Amiya.Service
         /// <param name="currentMonthPerformance">当前月业绩</param>
         /// <param name="performanceYearOnYear">同比业绩</param>
         /// <returns></returns>
-        private decimal? CalculateYearOnYear(decimal currentMonthPerformance, decimal performanceYearOnYear)
-        {
-            if (performanceYearOnYear == 0m)
-                return null;
-            var result = Math.Round((currentMonthPerformance - performanceYearOnYear) / performanceYearOnYear * 100, 2, MidpointRounding.AwayFromZero);
-            if (result > 99.99M)
-            {
-                result = Math.Round(result, 1, MidpointRounding.AwayFromZero);
-            }
-            if (result > 999.99M)
-            {
-                result = Math.Round(result, 0, MidpointRounding.AwayFromZero);
-            }
-            return result;
+        //private decimal? CalculateYearOnYear(decimal currentMonthPerformance, decimal performanceYearOnYear)
+        //{
+        //    if (performanceYearOnYear == 0m)
+        //        return null;
+        //    var result = Math.Round((currentMonthPerformance - performanceYearOnYear) / performanceYearOnYear * 100, 2, MidpointRounding.AwayFromZero);
+        //    if (result > 99.99M)
+        //    {
+        //        result = Math.Round(result, 1, MidpointRounding.AwayFromZero);
+        //    }
+        //    if (result > 999.99M)
+        //    {
+        //        result = Math.Round(result, 0, MidpointRounding.AwayFromZero);
+        //    }
+        //    return result;
 
-        }
+        //}
         /// <summary>
         /// 计算环比增长率
         /// </summary>
         /// <param name="currentMonthPerformance">当前月业绩</param>
         /// <param name="performanceChainRatio">环比业绩</param>
         /// <returns></returns>
-        private decimal? CalculateChainratio(decimal currentMonthPerformance, decimal performanceChainRatio)
-        {
-            if (performanceChainRatio == 0m)
-                return null;
-            var result = Math.Round((currentMonthPerformance - performanceChainRatio) / performanceChainRatio * 100, 2, MidpointRounding.AwayFromZero);
-            if (currentMonthPerformance > 0 && performanceChainRatio < 0)
-            {
-                result = Math.Abs(result);
-            }
-            if (result > 99.99M)
-            {
-                result = Math.Round(result, 1, MidpointRounding.AwayFromZero);
-            }
-            if (result > 999.99M)
-            {
-                result = Math.Round(result, 0, MidpointRounding.AwayFromZero);
-            }
-            if (result < 99.99M)
-            {
-                result = Math.Round(result, 1, MidpointRounding.AwayFromZero);
-            }
-            if (result < 999.99M)
-            {
-                result = Math.Round(result, 0, MidpointRounding.AwayFromZero);
-            }
-            return result;
-        }
+        //private decimal? CalculateChainratio(decimal currentMonthPerformance, decimal performanceChainRatio)
+        //{
+        //    if (performanceChainRatio == 0m)
+        //        return null;
+        //    var result = Math.Round((currentMonthPerformance - performanceChainRatio) / performanceChainRatio * 100, 2, MidpointRounding.AwayFromZero);
+        //    if (currentMonthPerformance > 0 && performanceChainRatio < 0)
+        //    {
+        //        result = Math.Abs(result);
+        //    }
+        //    if (result > 99.99M)
+        //    {
+        //        result = Math.Round(result, 1, MidpointRounding.AwayFromZero);
+        //    }
+        //    if (result > 999.99M)
+        //    {
+        //        result = Math.Round(result, 0, MidpointRounding.AwayFromZero);
+        //    }
+        //    if (result < 99.99M)
+        //    {
+        //        result = Math.Round(result, 1, MidpointRounding.AwayFromZero);
+        //    }
+        //    if (result < 999.99M)
+        //    {
+        //        result = Math.Round(result, 0, MidpointRounding.AwayFromZero);
+        //    }
+        //    return result;
+        //}
         /// <summary>
         /// 计算目标达成率
         /// </summary>
         /// <param name="completePerformance">已完成业绩</param>
         /// <param name="monthTarget">目标业绩</param>
         /// <returns></returns>
-        private decimal? CalculateTargetComplete(decimal completePerformance, decimal monthTarget)
-        {
-            if (monthTarget == 0m)
-                return null;
-            var result = Math.Round(completePerformance / monthTarget * 100, 2, MidpointRounding.AwayFromZero);
-            if (result > 99.99M)
-            {
-                result = Math.Round(result, 1, MidpointRounding.AwayFromZero);
-            }
-            if (result > 999.99M)
-            {
-                result = Math.Round(result, 0, MidpointRounding.AwayFromZero);
-            }
-            return result;
-        }
+        //private decimal? CalculateTargetComplete(decimal completePerformance, decimal monthTarget)
+        //{
+        //    if (monthTarget == 0m)
+        //        return null;
+        //    var result = Math.Round(completePerformance / monthTarget * 100, 2, MidpointRounding.AwayFromZero);
+        //    if (result > 99.99M)
+        //    {
+        //        result = Math.Round(result, 1, MidpointRounding.AwayFromZero);
+        //    }
+        //    if (result > 999.99M)
+        //    {
+        //        result = Math.Round(result, 0, MidpointRounding.AwayFromZero);
+        //    }
+        //    return result;
+        //}
         /// <summary>
         /// 计算对比时间进度
         /// </summary>

@@ -120,5 +120,9 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 潜在业绩目标
         /// </summary>
         public decimal PotentialPerformanceTarget { get; set; }
+        /// <summary>
+        /// 分诊目标
+        /// </summary>
+        public int DistributeConsulationTarget { get; set; }
     }
 }

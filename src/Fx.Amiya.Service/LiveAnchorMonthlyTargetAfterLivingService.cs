@@ -125,7 +125,10 @@ namespace Fx.Amiya.Service
                                                              EffectivePerformanceCompleteRate = d.EffectivePerformanceCompleteRate,
                                                              PotentialPerformanceTarget = d.PotentialPerformanceTarget,
                                                              CumulativePotentialPerformance = d.CumulativePotentialPerformance,
-                                                             PotentialPerformanceCompleteRate = d.PotentialPerformanceCompleteRate
+                                                             PotentialPerformanceCompleteRate = d.PotentialPerformanceCompleteRate,
+                                                             DistributeConsulationTarget=d.DistributeConsulationTarget,
+                                                             CumulativeDistributeConsulation=d.CumulativeDistributeConsulation,
+                                                             DistributeConsulationCompleteRate=d.DistributeConsulationCompleteRate
                                                          };
 
                 FxPageInfo<LiveAnchorMonthlyTargetAfterLivingDto> liveAnchorMonthlyTargetAfterLivingPageInfo = new FxPageInfo<LiveAnchorMonthlyTargetAfterLivingDto>();
@@ -223,6 +226,10 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.PotentialPerformanceTarget = addDto.PotentialPerformanceTarget;
                 liveAnchorMonthlyTarget.CumulativeEffectivePerformance = 0.00m;
                 liveAnchorMonthlyTarget.PotentialPerformanceCompleteRate = 0.00m;
+
+                liveAnchorMonthlyTarget.DistributeConsulationTarget = addDto.DistributeConsulationTarget;
+                liveAnchorMonthlyTarget.CumulativeDistributeConsulation = 0;
+                liveAnchorMonthlyTarget.DistributeConsulationCompleteRate = 0.00m;
 
                 liveAnchorMonthlyTarget.CreateDate = DateTime.Now;
 
@@ -343,6 +350,10 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTargetDto.CumulativePotentialPerformance = liveAnchorMonthlyTarget.CumulativePotentialPerformance;
                 liveAnchorMonthlyTargetDto.PotentialPerformanceCompleteRate = liveAnchorMonthlyTarget.PotentialPerformanceCompleteRate;
 
+                liveAnchorMonthlyTargetDto.DistributeConsulationTarget = liveAnchorMonthlyTarget.DistributeConsulationTarget;
+                liveAnchorMonthlyTargetDto.CumulativeDistributeConsulation = liveAnchorMonthlyTarget.CumulativeDistributeConsulation;
+                liveAnchorMonthlyTargetDto.DistributeConsulationCompleteRate = liveAnchorMonthlyTarget.DistributeConsulationCompleteRate;
+
                 var liveAnchor = await _liveanchorService.GetByIdAsync(liveAnchorMonthlyTargetDto.LiveAnchorId);
                 liveAnchorMonthlyTargetDto.ContentPlatFormId = liveAnchor.ContentPlateFormId;
                 liveAnchorMonthlyTargetDto.CreateDate = liveAnchorMonthlyTarget.CreateDate;
@@ -386,6 +397,7 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.PerformanceTarget = updateDto.PerformanceTarget;
                 liveAnchorMonthlyTarget.EffectivePerformanceTarget = updateDto.EffectivePerformanceTarget;
                 liveAnchorMonthlyTarget.PotentialPerformanceTarget = updateDto.PotentialPerformanceTarget;
+                liveAnchorMonthlyTarget.DistributeConsulationTarget = updateDto.DistributeConsulationTarget;
 
                 await dalLiveAnchorMonthlyTargetAfterLiving.UpdateAsync(liveAnchorMonthlyTarget, true);
             }
@@ -640,6 +652,17 @@ namespace Fx.Amiya.Service
                     liveAnchorMonthlyTargetAfterLiving.PotentialPerformanceCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetAfterLiving.CumulativePotentialPerformance) / Convert.ToDecimal(liveAnchorMonthlyTargetAfterLiving.PotentialPerformanceTarget)) * 100, 2);
                 }
 
+                #endregion
+                #region 分诊量
+                liveAnchorMonthlyTargetAfterLiving.CumulativeDistributeConsulation += editDto.DistributeConsulation;
+                if (liveAnchorMonthlyTargetAfterLiving.CumulativeDistributeConsulation <= 0)
+                {
+                    liveAnchorMonthlyTargetAfterLiving.DistributeConsulationCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetAfterLiving.DistributeConsulationCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetAfterLiving.CumulativeDistributeConsulation) / Convert.ToDecimal(liveAnchorMonthlyTargetAfterLiving.DistributeConsulationTarget)) * 100, 2);
+                }
                 #endregion
 
 
