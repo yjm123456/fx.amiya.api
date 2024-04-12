@@ -208,6 +208,11 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
         public decimal InspectPrice { get; set; }
 
         /// <summary>
+        /// 行政客服稽查点数
+        /// </summary>
+        public decimal InspectPercent { get; set; }
+
+        /// <summary>
         /// 稽查人员名称
         /// </summary>
         public string InspectEmpName { get; set; }

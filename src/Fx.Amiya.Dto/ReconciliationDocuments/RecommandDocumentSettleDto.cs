@@ -112,6 +112,10 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         /// 行政客服稽查金额
         /// </summary>
         public decimal InspectPrice { get; set; }
+        /// <summary>
+        /// 稽查比例-稽查人员
+        /// </summary>
+        public decimal InspectPercent { get; set; }
 
         /// <summary>
         /// 稽查人员

@@ -110,6 +110,7 @@ namespace Fx.Amiya.Service
                   CheckTypeText = ServiceClass.GetReconciliationDocumentSettleCheckType(e.CheckType),
                   IsInspectPerformance = e.IsInspectPerformance,
                   InspectPrice = e.InspectPrice,
+                  InspectPercent=e.InspectPercent,
                   InspectBy = e.InspectEmpId,
                   CustomerServiceOrderPerformance = e.CustomerServiceOrderPerformance,
                   CheckDate = e.CheckDate,
@@ -119,6 +120,7 @@ namespace Fx.Amiya.Service
                   InspectCustomerServiceCompensationId = e.InspectCustomerServiceCompensationId,
                   CustomerServicePerformance = e.CustomerServicePerformance,
                   PerformancePercent = e.PerformancePercent,
+
               });
             if (query.CheckState != (int)CheckType.CheckedSuccess)
             {
@@ -296,9 +298,9 @@ namespace Fx.Amiya.Service
             //回退稽查单
             var list2 = await _dalRecommandDocumentSettle.GetAll().Where(e => e.InspectCustomerServiceCompensationId == customerServiceCompensationId).ToListAsync();
             var result2 = list2.Count();
-            if (result > 0)
+            if (result2 > 0)
             {
-                foreach (var item in list)
+                foreach (var item in list2)
                 {
                     item.InspectCustomerServiceCompensationId = null;
                     await _dalRecommandDocumentSettle.UpdateAsync(item, true);

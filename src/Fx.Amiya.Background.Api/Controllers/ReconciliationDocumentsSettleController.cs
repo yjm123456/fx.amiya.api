@@ -300,13 +300,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                         CheckRemark = d.CheckRemark,
                                                         CheckBelongEmpName = d.CheckBelongEmpName,
                                                         CustomerServiceCompensationId = d.CustomerServiceCompensationId,
-                                                        PerformancePercent=d.PerformancePercent,
-                                                        CustomerServicePerformance=d.CustomerServicePerformance,
-                                                        CheckTypeText =d.CheckTypeText,
+                                                        PerformancePercent = d.PerformancePercent,
+                                                        CustomerServicePerformance = d.CustomerServicePerformance,
+                                                        CheckTypeText = d.CheckTypeText,
                                                         IsInspectPerformance = d.IsInspectPerformance,
                                                         CustomerServiceOrderPerformance = d.CustomerServiceOrderPerformance,
                                                         InspectPrice = d.InspectPrice,
-                                                        InspectEmpName=d.InspectEmpName,
+                                                        InspectPercent = d.InspectPercent,
+                                                        InspectEmpName = d.InspectEmpName,
                                                     };
 
                 FxPageInfo<ReconciliationDocumentsSettleVo> reconciliationDocumentsSettleResult = new FxPageInfo<ReconciliationDocumentsSettleVo>();
@@ -392,10 +393,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                         CustomerServicePerformance = d.CustomerServicePerformance,
                                                         CheckTypeText = d.CheckTypeText,
                                                         IsInspectPerformance = d.IsInspectPerformance,
-                                                        InspectEmpName=d.InspectEmpName,
-                                                        InspectPrice=d.InspectPrice,
+                                                        InspectEmpName = d.InspectEmpName,
+                                                        InspectPrice = d.InspectPrice,
+                                                        InspectPercent = d.InspectPercent,
                                                         CustomerServiceOrderPerformance = d.CustomerServiceOrderPerformance,
-                                                        InspectCustomerServiceCompensationId=d.InspectCustomerServiceCompensationId,
+                                                        InspectCustomerServiceCompensationId = d.InspectCustomerServiceCompensationId,
                                                     };
 
                 FxPageInfo<ReconciliationDocumentsSettleVo> reconciliationDocumentsSettleResult = new FxPageInfo<ReconciliationDocumentsSettleVo>();
@@ -418,11 +420,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("createEmpNameList")]
-        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetCreateEmpNameListAsync() {
-            var res=await reconciliationDocumentsSettleService.GetCreateEmpNameListAsync();
-            var nameList= res.Select(e=>new BaseIdAndNameVo<int> { 
-                Id=e.Id,
-                Name=e.Name
+        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetCreateEmpNameListAsync()
+        {
+            var res = await reconciliationDocumentsSettleService.GetCreateEmpNameListAsync();
+            var nameList = res.Select(e => new BaseIdAndNameVo<int>
+            {
+                Id = e.Id,
+                Name = e.Name
             }).ToList();
             return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("creteEmpNameList", nameList);
         }
