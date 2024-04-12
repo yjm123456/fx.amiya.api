@@ -36,31 +36,31 @@ namespace Fx.Amiya.Service
         public async Task<FxPageInfo<EmployeePerformanceTargetDto>> GetListAsync(QueryEmployeePerformanceTargetDto query)
         {
             var cmployeePerformanceTargets = from d in dalEmployeePerformanceTarget.GetAll().Include(x => x.AmiyaEmployee)
-                                               where (!query.EmployeeId.HasValue || d.EmployeeId == query.EmployeeId.Value)
-                                               && ( d.Valid == true)
-                                               && (!query.StartDate.HasValue || d.CreateDate >= query.StartDate.Value)
-                                               && (!query.EndDate.HasValue || d.CreateDate < query.EndDate.Value.AddDays(1).AddMilliseconds(-1))
-                                               select new EmployeePerformanceTargetDto
-                                               {
-                                                   Id = d.Id,
-                                                   CreateDate = d.CreateDate,
-                                                   EmployeeId = d.EmployeeId,
-                                                   EmployeeName = d.AmiyaEmployee.Name,
-                                                   UpdateDate = d.UpdateDate,
-                                                   Valid = d.Valid,
-                                                   DeleteDate = d.DeleteDate,
-                                                   BelongMonth = d.BelongMonth,
-                                                   BelongYear = d.BelongYear,
-                                                   ConsulationCardTarget = d.ConsulationCardTarget,
-                                                   AddWechatTarget = d.AddWechatTarget,
-                                                   SendOrderTarget = d.SendOrderTarget,
-                                                   VisitTarget = d.VisitTarget,
-                                                   NewCustomerDealTarget = d.NewCustomerDealTarget,
-                                                   OldCustomerDealTarget = d.OldCustomerDealTarget,
-                                                   NewCustomerPerformanceTarget = d.NewCustomerPerformanceTarget,
-                                                   OldCustomerPerformanceTarget = d.OldCustomerPerformanceTarget,
-                                                   PerformanceTarget = d.PerformanceTarget,
-                                               };
+                                             where (!query.EmployeeId.HasValue || d.EmployeeId == query.EmployeeId.Value)
+                                             && (d.Valid == true)
+                                             && (!query.StartDate.HasValue || d.CreateDate >= query.StartDate.Value)
+                                             && (!query.EndDate.HasValue || d.CreateDate < query.EndDate.Value.AddDays(1).AddMilliseconds(-1))
+                                             select new EmployeePerformanceTargetDto
+                                             {
+                                                 Id = d.Id,
+                                                 CreateDate = d.CreateDate,
+                                                 EmployeeId = d.EmployeeId,
+                                                 EmployeeName = d.AmiyaEmployee.Name,
+                                                 UpdateDate = d.UpdateDate,
+                                                 Valid = d.Valid,
+                                                 DeleteDate = d.DeleteDate,
+                                                 BelongMonth = d.BelongMonth,
+                                                 BelongYear = d.BelongYear,
+                                                 ConsulationCardTarget = d.ConsulationCardTarget,
+                                                 AddWechatTarget = d.AddWechatTarget,
+                                                 SendOrderTarget = d.SendOrderTarget,
+                                                 VisitTarget = d.VisitTarget,
+                                                 NewCustomerDealTarget = d.NewCustomerDealTarget,
+                                                 OldCustomerDealTarget = d.OldCustomerDealTarget,
+                                                 NewCustomerPerformanceTarget = d.NewCustomerPerformanceTarget,
+                                                 OldCustomerPerformanceTarget = d.OldCustomerPerformanceTarget,
+                                                 PerformanceTarget = d.PerformanceTarget,
+                                             };
             FxPageInfo<EmployeePerformanceTargetDto> cmployeePerformanceTargetPageInfo = new FxPageInfo<EmployeePerformanceTargetDto>();
             cmployeePerformanceTargetPageInfo.TotalCount = await cmployeePerformanceTargets.CountAsync();
             cmployeePerformanceTargetPageInfo.List = await cmployeePerformanceTargets.OrderByDescending(x => x.CreateDate).Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToListAsync();
@@ -77,6 +77,11 @@ namespace Fx.Amiya.Service
         {
             try
             {
+                var isExist = await dalEmployeePerformanceTarget.GetAll().Where(x => x.EmployeeId == addDto.EmployeeId && x.BelongMonth == addDto.BelongMonth && addDto.BelongYear == addDto.BelongYear).CountAsync();
+                if (isExist > 0)
+                {
+                    throw new Exception("已存在该员工的业绩目标，请勿重复添加！");
+                }
                 EmployeePerformanceTarget cmployeePerformanceTarget = new EmployeePerformanceTarget();
                 cmployeePerformanceTarget.Id = Guid.NewGuid().ToString();
                 cmployeePerformanceTarget.CreateDate = DateTime.Now;
@@ -145,7 +150,11 @@ namespace Fx.Amiya.Service
             var result = await dalEmployeePerformanceTarget.GetAll().Where(x => x.Id == updateDto.Id && x.Valid == true).FirstOrDefaultAsync();
             if (result == null)
                 throw new Exception("未找到助理业绩目标信息");
-
+            var isExist = await dalEmployeePerformanceTarget.GetAll().Where(x => x.EmployeeId == updateDto.EmployeeId && x.BelongMonth == updateDto.BelongMonth && updateDto.BelongYear == updateDto.BelongYear && x.Id != updateDto.Id).CountAsync();
+            if (isExist > 0)
+            {
+                throw new Exception("已存在该员工的业绩目标，请检查数据后重新提交！");
+            }
             result.EmployeeId = updateDto.EmployeeId;
             result.BelongYear = updateDto.BelongYear;
             result.BelongMonth = updateDto.BelongMonth;
@@ -183,6 +192,23 @@ namespace Fx.Amiya.Service
             {
                 throw new Exception(er.Message.ToString());
             }
+        }
+
+        /// <summary>
+        /// 根据年月和助理id获取有效的业绩目标
+        /// </summary>
+        /// <param name="employeeId"></param>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        public async Task<decimal> GetByEmpIdAndYearMonthAsync(int employeeId, int year, int month)
+        {
+            var result = await dalEmployeePerformanceTarget.GetAll().Include(x => x.AmiyaEmployee).Where(x => x.EmployeeId == employeeId && x.BelongYear == year && x.BelongMonth == month && x.Valid == true).FirstOrDefaultAsync();
+            if (result == null)
+            {
+                return 0.00M;
+            }
+            return result.PerformanceTarget;
         }
 
     }

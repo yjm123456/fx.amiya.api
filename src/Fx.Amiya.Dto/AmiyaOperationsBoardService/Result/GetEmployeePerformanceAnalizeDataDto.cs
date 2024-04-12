@@ -52,6 +52,7 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService
     /// </summary>
     public class GetEmployeeDistributeConsulationNumAndAddWechatDto
     {
+        public int EmployeeId { get; set; }
         /// <summary>
         /// 助理名称
         /// </summary>
@@ -97,7 +98,7 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService
         /// </summary>
         public string EmployeeName { get; set; }
         /// <summary>
-        /// 业绩
+        /// 业绩占比
         /// </summary>
         public decimal Performance { get; set; }
     }

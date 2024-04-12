@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.DbModels.Model;
+using Fx.Amiya.Dto.AmiyaOperationsBoardService;
 using Fx.Amiya.Dto.AssistantHomePage.Input;
 using Fx.Amiya.Dto.AssistantHomePage.Result;
 using Fx.Amiya.Dto.ContentPlateFormOrder;
@@ -3388,6 +3389,42 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
+        /// 根据客服id获取客服业绩信息【简介版】(只输出4条排名数据)
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="belongCustomerServiceIds"></param>
+        /// <returns></returns>
+        public async Task<List<CustomerServiceDetailsPerformanceDto>> GetFourCustomerServicePerformanceByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, List<int> belongCustomerServiceIds)
+        {
+            var dealData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
+                 .Where(e => e.IsSupportOrder == false)
+                .Where(e => belongCustomerServiceIds.Count == 0 || belongCustomerServiceIds.Contains(e.BelongEmpId.Value));
+            var dealResult = dealData
+                .SelectMany(e => e.ContentPlatformOrderDealInfoList)
+                .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true)
+                .GroupBy(e => e.ContentPlatFormOrder.BelongEmpId)
+                .Select(e => new CustomerServiceDetailsPerformanceDto
+                {
+                    CustomerServiceId = e.Key.Value,
+                    TotalServicePrice = e.Sum(e => e.Price),
+                }).Take(5).ToList();
+
+            foreach (var z in dealResult)
+            {
+                var supportData = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderDealInfoList)
+                .Where(e => e.IsSupportOrder == true && e.SupportEmpId == z.CustomerServiceId && e.SupportEmpId != e.BelongEmpId)
+                .SelectMany(k => k.ContentPlatformOrderDealInfoList)
+                .Where(u => u.CreateDate >= startDate && u.CreateDate < endDate && u.IsDeal == true);
+                var supp = await supportData.ToListAsync();
+                z.SupportPrice = supportData.Sum(x => x.Price);
+                z.TotalServicePrice += z.SupportPrice;
+                z.CustomerServiceName = await _dalAmiyaEmployee.GetAll().Where(e => e.Id == Convert.ToInt32(z.CustomerServiceId)).Select(e => e.Name).FirstOrDefaultAsync();
+            }
+            return dealResult.OrderByDescending(x => x.TotalServicePrice).ToList();
+        }
+
+        /// <summary>
         /// 获取时间段内达人助理业绩
         /// </summary>
         /// <param name="startDate"></param>
@@ -3596,10 +3633,11 @@ namespace Fx.Amiya.Service
         /// <param name="startDate">开始时间</param>
         /// <param name="endDate">结束时间</param>
         /// <returns></returns>
-        public async Task<OrderSendAndDealNumDto> GetOrderSendAndDealDataByMonthAsync(DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, string contentPlatFormId)
+        public async Task<OrderSendAndDealNumDto> GetOrderSendAndDealDataByMonthAsync(DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, string contentPlatFormId, List<int> liveAnchorIds)
         {
             OrderSendAndDealNumDto orderData = new OrderSendAndDealNumDto();
             orderData.SendOrderNum = await _dalContentPlatformOrder.GetAll()
+              .Where(e => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(e.LiveAnchorId.HasValue ? e.LiveAnchorId.Value : 0))
              .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
              .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsOldCustomer == false)
              .Where(o => string.IsNullOrEmpty(contentPlatFormId) || o.ContentPlateformId == contentPlatFormId)
@@ -3612,7 +3650,7 @@ namespace Fx.Amiya.Service
 
             var visitCount = await _dalContentPlatformOrder.GetAll()
              .Where(o => o.ToHospitalDate >= startDate && o.ToHospitalDate < endDate)
-             .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsToHospital == true && e.IsOldCustomer == false)
+             .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsToHospital == true)
              .Where(o => string.IsNullOrEmpty(contentPlatFormId) || o.ContentPlateformId == contentPlatFormId)
              .Where(o => isEffectiveCustomerData == true ? o.AddOrderPrice > 0 : o.AddOrderPrice == 0)
                 .ToListAsync();
@@ -3716,6 +3754,25 @@ namespace Fx.Amiya.Service
                 .Count();
 
             return orderData;
+        }
+
+        /// <summary>
+        /// 根据助理id获取上门和成交量
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        public async Task<GetEmployeeCustomerAnalizeDto> GetCustomerVisitAndIsDealByEmployeeIdAsync(DateTime startDate, DateTime endDate, int employeeId)
+        {
+            GetEmployeeCustomerAnalizeDto result = new GetEmployeeCustomerAnalizeDto();
+            var dealDate = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderDealInfoList).Where(x => x.IsToHospital == true && x.ToHospitalDate > startDate && x.ToHospitalDate < endDate.AddDays(1).AddMilliseconds(-1) && x.BelongEmpId == employeeId).ToListAsync();
+            result.VisitNum = dealDate.Count();
+            result.DealNum = dealDate.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder)
+                    .SelectMany(x => x.ContentPlatformOrderDealInfoList)
+                    .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate.AddDays(1).AddMilliseconds(-1) && e.IsDeal == true)
+                    .ToList().Count();
+            return result;
         }
 
         /// <summary>

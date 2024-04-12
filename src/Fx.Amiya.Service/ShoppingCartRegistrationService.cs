@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using Fx.Amiya.Dto;
 using System.Threading;
 using Fx.Amiya.Dto.AssistantHomePage.Input;
+using Fx.Amiya.Dto.AmiyaOperationsBoardService;
 
 namespace Fx.Amiya.Service
 {
@@ -1092,14 +1093,17 @@ namespace Fx.Amiya.Service
         /// <param name="isEffectiveCustomerData"></param>
         /// <param name="contentPlatFormId"></param>
         /// <returns></returns>
-        public async Task<List<ShoppingCartRegistrationDto>> GetNewBaseBusinessPerformanceByLiveAnchorNameAsync(DateTime startDate, DateTime endDate, bool isEffectiveCustomerData, string contentPlatFormId)
+        public async Task<List<ShoppingCartRegistrationDto>> GetNewBaseBusinessPerformanceByLiveAnchorNameAsync(DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, string contentPlatFormId)
         {
             var result = from d in dalShoppingCartRegistration.GetAll()
             .Where(o => string.IsNullOrEmpty(contentPlatFormId) || o.ContentPlatFormId == contentPlatFormId)
             .Where(o => o.RecordDate >= startDate && o.RecordDate < endDate)
-             .Where(o => isEffectiveCustomerData == true ? o.Price > 0 : o.Price == 0)
-                         select d;
 
+                         select d;
+            if (isEffectiveCustomerData.HasValue)
+            {
+                result = result.Where(o => isEffectiveCustomerData == true ? o.Price > 0 : o.Price == 0);
+            }
             var x = from d in result
                     select new ShoppingCartRegistrationDto
                     {
@@ -1309,6 +1313,24 @@ namespace Fx.Amiya.Service
 
             var returnResult = performanceInfoDateDto.GroupBy(x => x.Date.Month).Select(x => new PerformanceBrokenLine { Date = x.Key.ToString(), PerfomancePrice = x.Count() }).ToList();
             return returnResult;
+        }
+
+        /// <summary>
+        /// 根据时间获取下卡，退卡，分诊，加v数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+        public async Task<GetCustomerDataDto> GetCustomerDataAsync(DateTime? startDate, DateTime? endDate)
+        {
+            var list = await dalShoppingCartRegistration.GetAll()
+                .Where(o => o.RecordDate >= startDate && o.RecordDate < endDate.Value.AddDays(1).AddMilliseconds(-1)).ToListAsync();
+            GetCustomerDataDto result = new GetCustomerDataDto();
+            result.AddCardNum = list.Count();
+            result.RefundCardNum = list.Where(x => x.IsReturnBackPrice == true).Count();
+            result.DistributeConsulationNum = list.Where(x => x.AssignEmpId.HasValue).Count();
+            result.AddWechatNum = list.Where(x => x.IsAddWeChat).Count();
+            return result;
         }
         #endregion
 

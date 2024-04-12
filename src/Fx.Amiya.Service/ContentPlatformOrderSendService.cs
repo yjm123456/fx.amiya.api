@@ -1047,6 +1047,15 @@ namespace Fx.Amiya.Service
             return await _dalContentPlatformOrderSend.GetAll().CountAsync();
         }
 
+        /// <summary>
+        /// 根据派单人获取总派单量
+        /// </summary>
+        /// <returns></returns>
+        public async Task<int> GetTotalSendCountByEmployeeAsync(int employeeId)
+        {
+            return await _dalContentPlatformOrderSend.GetAll().Where(x=>x.Sender==employeeId).CountAsync();
+        }
+
         #region 全国机构运营数据
         /// <summary>
         /// 获取派单量前10的医院运营数据

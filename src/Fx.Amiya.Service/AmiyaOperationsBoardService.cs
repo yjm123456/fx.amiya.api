@@ -13,29 +13,30 @@ namespace Fx.Amiya.Service
 {
     public class AmiyaOperationsBoardServiceService : IAmiyaOperationsBoardServiceService
     {
-        private readonly ILiveAnchorMonthlyTargetBeforeLivingService liveAnchorMonthlyTargetBeforeLivingService;
-        private readonly ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService;
-        private readonly IDalBeforeLivingTikTokDailyTarget dalBeforeLivingTikTokDailyTarget;
-        private readonly IDalBeforeLivingVideoDailyTarget dalBeforeLivingVideoDailyTarget;
-        private readonly IDalBeforeLivingXiaoHongShuDailyTarget dalBeforeLivingXiaoHongShuDailyTarget;
-        private readonly IDalLivingDailyTarget dalLivingDailyTarget;
-        private readonly ILiveAnchorBaseInfoService liveAnchorBaseInfoService;
         private readonly IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService;
-        private readonly ILiveAnchorMonthlyTargetAfterLivingService liveAnchorMonthlyTargetAfterLivingService;
         private readonly ILiveAnchorService liveAnchorService;
+        private readonly IShoppingCartRegistrationService shoppingCartRegistrationService;
+        private readonly IContentPlateFormOrderService contentPlateFormOrderService;
+        private readonly IAmiyaEmployeeService amiyaEmployeeService;
+        private readonly IEmployeePerformanceTargetService employeePerformanceTargetService;
+        private readonly IContentPlatformOrderSendService contentPlatformOrderSendService;
 
-        public AmiyaOperationsBoardServiceService(ILiveAnchorMonthlyTargetBeforeLivingService liveAnchorMonthlyTargetBeforeLivingService, IDalBeforeLivingTikTokDailyTarget dalBeforeLivingTikTokDailyTarget, IDalBeforeLivingVideoDailyTarget dalBeforeLivingVideoDailyTarget, IDalBeforeLivingXiaoHongShuDailyTarget dalBeforeLivingXiaoHongShuDailyTarget, ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService, IDalLivingDailyTarget dalLivingDailyTarget, ILiveAnchorBaseInfoService liveAnchorBaseInfoService, IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService, ILiveAnchorMonthlyTargetAfterLivingService liveAnchorMonthlyTargetAfterLivingService, ILiveAnchorService liveAnchorService)
+        public AmiyaOperationsBoardServiceService(
+            IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService,
+            ILiveAnchorService liveAnchorService,
+            IContentPlateFormOrderService contentPlateFormOrderService,
+            IEmployeePerformanceTargetService employeePerformanceTargetService,
+            IAmiyaEmployeeService amiyaEmployeeService,
+            IContentPlatformOrderSendService contentPlatformOrderSendService,
+            ShoppingCartRegistrationService shoppingCartRegistrationService)
         {
-            this.liveAnchorMonthlyTargetBeforeLivingService = liveAnchorMonthlyTargetBeforeLivingService;
-            this.dalBeforeLivingTikTokDailyTarget = dalBeforeLivingTikTokDailyTarget;
-            this.dalBeforeLivingVideoDailyTarget = dalBeforeLivingVideoDailyTarget;
-            this.dalBeforeLivingXiaoHongShuDailyTarget = dalBeforeLivingXiaoHongShuDailyTarget;
-            this.liveAnchorMonthlyTargetLivingService = liveAnchorMonthlyTargetLivingService;
-            this.dalLivingDailyTarget = dalLivingDailyTarget;
-            this.liveAnchorBaseInfoService = liveAnchorBaseInfoService;
             this.contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
-            this.liveAnchorMonthlyTargetAfterLivingService = liveAnchorMonthlyTargetAfterLivingService;
             this.liveAnchorService = liveAnchorService;
+            this.shoppingCartRegistrationService = shoppingCartRegistrationService;
+            this.contentPlateFormOrderService = contentPlateFormOrderService;
+            this.amiyaEmployeeService = amiyaEmployeeService;
+            this.employeePerformanceTargetService = employeePerformanceTargetService;
+            this.contentPlatformOrderSendService = contentPlatformOrderSendService;
         }
         #region  运营主看板
         /// <summary>
@@ -82,8 +83,8 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<GetCustomerDataDto> GetCustomerDataAsync(QueryOperationDataDto query)
         {
-            GetCustomerDataDto result = new GetCustomerDataDto();
-            return result;
+            var shoppingCartRegistionDataResult = await shoppingCartRegistrationService.GetCustomerDataAsync(query.startDate, query.endDate);
+            return shoppingCartRegistionDataResult;
         }
 
         /// <summary>
@@ -93,6 +94,32 @@ namespace Fx.Amiya.Service
         public async Task<GetCustomerAnalizeDataDto> GetCustomerAnalizeDataAsync(QueryOperationDataDto query)
         {
             GetCustomerAnalizeDataDto result = new GetCustomerAnalizeDataDto();
+            List<int> LiveAnchorInfoDaoDao = new List<int>();
+            var liveAnchorDaoDao = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync("f0a77257-c905-4719-95c4-ad2c4f33855c");
+            LiveAnchorInfoDaoDao = liveAnchorDaoDao.Select(x => x.Id).ToList();
+            var contentPlatFormOrderDataDaoDao = await contentPlateFormOrderService.GetOrderSendAndDealDataByMonthAsync(query.startDate.Value, query.endDate.Value, null, "", LiveAnchorInfoDaoDao);
+
+            List<int> LiveAnchorInfoJiNa = new List<int>();
+            var liveAnchorJina = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync("af69dcf5-f749-41ea-8b50-fe685facdd8b");
+            LiveAnchorInfoJiNa = liveAnchorJina.Select(x => x.Id).ToList();
+            var contentPlatFormOrderDataJiNa = await contentPlateFormOrderService.GetOrderSendAndDealDataByMonthAsync(query.startDate.Value, query.endDate.Value, null, "", LiveAnchorInfoJiNa);
+            CustomerAnalizeByGroupDto SendGroupDto = new CustomerAnalizeByGroupDto();
+            SendGroupDto.GroupDaoDao = contentPlatFormOrderDataDaoDao.SendOrderNum;
+            SendGroupDto.GroupJiNa = contentPlatFormOrderDataJiNa.SendOrderNum;
+            SendGroupDto.TotalNum = SendGroupDto.GroupDaoDao + SendGroupDto.GroupJiNa;
+            result.SendNum = SendGroupDto;
+
+            CustomerAnalizeByGroupDto VisitGroupDto = new CustomerAnalizeByGroupDto();
+            VisitGroupDto.GroupDaoDao = contentPlatFormOrderDataDaoDao.VisitNum;
+            VisitGroupDto.GroupJiNa = contentPlatFormOrderDataJiNa.VisitNum;
+            VisitGroupDto.TotalNum = VisitGroupDto.GroupJiNa + VisitGroupDto.GroupDaoDao;
+            result.VisitNum = VisitGroupDto;
+
+            CustomerAnalizeByGroupDto DealGroupDto = new CustomerAnalizeByGroupDto();
+            DealGroupDto.GroupDaoDao = contentPlatFormOrderDataDaoDao.DealNum;
+            DealGroupDto.GroupJiNa = contentPlatFormOrderDataJiNa.DealNum;
+            DealGroupDto.TotalNum = DealGroupDto.GroupJiNa + DealGroupDto.GroupDaoDao;
+            result.DealNum = DealGroupDto;
             return result;
         }
 
@@ -103,6 +130,20 @@ namespace Fx.Amiya.Service
         public async Task<GetCustomerIndexTransformationResultDto> GetCustomerIndexTransformationDataAsync(QueryOperationDataDto query)
         {
             GetCustomerIndexTransformationResultDto result = new GetCustomerIndexTransformationResultDto();
+            //小黄车数据
+            var baseShoppingCartRegistionData = await shoppingCartRegistrationService.GetNewBaseBusinessPerformanceByLiveAnchorNameAsync(query.startDate.Value, query.endDate.Value, null, "");
+
+            //订单数据
+            var baseOrderPerformance = await contentPlateFormOrderService.GetOrderSendAndDealDataByMonthAsync(query.startDate.Value, query.endDate.Value, null, "", new List<int>());
+
+            result.AddCardNum = baseShoppingCartRegistionData.Count();
+            result.RefundCardNum = baseShoppingCartRegistionData.Where(x => x.IsReturnBackPrice == true).Count();
+            result.DistributeConsulationNum = baseShoppingCartRegistionData.Where(x => x.AssignEmpId.HasValue).Count();
+            result.AddWechatNum = baseShoppingCartRegistionData.Where(x => x.IsAddWeChat == true).Count();
+            result.SendOrderNum = baseOrderPerformance.SendOrderNum;
+            result.VisitNum = baseOrderPerformance.VisitNum;
+            result.DealNum = baseOrderPerformance.DealNum;
+
             return result;
         }
 
@@ -114,6 +155,73 @@ namespace Fx.Amiya.Service
         {
             GetEmployeePerformanceAnalizeDataDto result = new GetEmployeePerformanceAnalizeDataDto();
 
+            List<int> amiyaEmployeeIds = new List<int>();
+            //获取所有助理
+            var employeeInfos = await amiyaEmployeeService.GetemployeeByPositionIdAsync(4);
+            amiyaEmployeeIds = employeeInfos.Select(x => x.Id).ToList();
+
+            #region 【助理业绩】
+            var dealInfo = await contentPlateFormOrderService.GetFourCustomerServicePerformanceByCustomerServiceIdAsync(query.startDate.Value, query.endDate.Value, amiyaEmployeeIds);
+            List<GetEmployeePerformanceDataDto> employeeDataList = new List<GetEmployeePerformanceDataDto>();
+            foreach (var x in dealInfo)
+            {
+                GetEmployeePerformanceDataDto getEmployeePerformanceDataDto = new GetEmployeePerformanceDataDto();
+                getEmployeePerformanceDataDto.EmployeeName = x.CustomerServiceName;
+                getEmployeePerformanceDataDto.Performance = x.TotalServicePrice;
+                var employeeDataTarget = await employeePerformanceTargetService.GetByEmpIdAndYearMonthAsync(x.CustomerServiceId, query.endDate.Value.Year, query.endDate.Value.Month);
+                getEmployeePerformanceDataDto.CompleteRate = Math.Round(x.TotalServicePrice / employeeDataTarget * 100, 2, MidpointRounding.AwayFromZero);
+                employeeDataList.Add(getEmployeePerformanceDataDto);
+            }
+            result.EmployeeDatas = employeeDataList;
+            #endregion
+
+            #region 【助理获客情况】
+            var shoppingCartRegistionData = await shoppingCartRegistrationService.GetNewBaseBusinessPerformanceByLiveAnchorNameAsync(query.startDate.Value, query.endDate.Value, null, "");
+
+            result.EmployeeDistributeConsulationNumAndAddWechats = shoppingCartRegistionData.Where(x => x.AssignEmpId.HasValue).GroupBy(x => x.AssignEmpId).Select(x => new GetEmployeeDistributeConsulationNumAndAddWechatDto
+            {
+                EmployeeId = Convert.ToInt32(x.Key.ToString()),
+                DistributeConsulationNum = x.Count(),
+                AddWechatNum = x.Where(e => e.IsAddWeChat == true).Count(),
+            }).Take(10).ToList();
+            foreach (var x in result.EmployeeDistributeConsulationNumAndAddWechats)
+            {
+                var empInfo = await amiyaEmployeeService.GetByIdAsync(x.EmployeeId);
+                x.EmployeeName = empInfo.Name;
+            }
+            #endregion
+
+            #region 【助理客户运营情况】
+            List<GetEmployeeCustomerAnalizeDto> getEmployeeCustomerAnalizeDtos = new List<GetEmployeeCustomerAnalizeDto>();
+            foreach (var x in amiyaEmployeeIds)
+            {
+                GetEmployeeCustomerAnalizeDto getEmployeeCustomerAnalizeDto = new GetEmployeeCustomerAnalizeDto();
+                var empInfo = await amiyaEmployeeService.GetByIdAsync(x);
+                getEmployeeCustomerAnalizeDto.EmployeeName = empInfo.Name;
+                getEmployeeCustomerAnalizeDto.SendOrderNum = await contentPlatformOrderSendService.GetTotalSendCountByEmployeeAsync(x);
+                var contentPlatFormVisitAndDealNumData = await contentPlateFormOrderService.GetCustomerVisitAndIsDealByEmployeeIdAsync(query.startDate.Value, query.endDate.Value, x);
+                getEmployeeCustomerAnalizeDto.VisitNum = contentPlatFormVisitAndDealNumData.VisitNum;
+                getEmployeeCustomerAnalizeDto.DealNum = contentPlatFormVisitAndDealNumData.DealNum;
+                getEmployeeCustomerAnalizeDtos.Add(getEmployeeCustomerAnalizeDto);
+            }
+            result.GetEmployeeCustomerAnalizes = getEmployeeCustomerAnalizeDtos.OrderByDescending(x => x.SendOrderNum).Take(10).ToList();
+            #endregion
+
+            #region 【业绩贡献占比】
+            var orderDealInfo = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAndLiveAnchorIdsAsync(query.startDate.Value, query.endDate.Value, new List<int>());
+            //总业绩数据值
+            var totalAchievement = orderDealInfo.Sum(x => x.Price);
+            List<GetEmployeePerformanceRankingDto> getEmployeePerformanceRankingDtos = new List<GetEmployeePerformanceRankingDto>();
+            foreach (var x in employeeDataList)
+            {
+                GetEmployeePerformanceRankingDto getEmployeePerformanceRankingDto = new GetEmployeePerformanceRankingDto();
+                getEmployeePerformanceRankingDto.EmployeeName = x.EmployeeName;
+                getEmployeePerformanceRankingDto.Performance = DecimalExtension.CalculateTargetComplete(x.Performance, totalAchievement).Value;
+                getEmployeePerformanceRankingDtos.Add(getEmployeePerformanceRankingDto);
+            }
+            result.GetEmployeePerformanceRankings = getEmployeePerformanceRankingDtos.OrderByDescending(x => x.Performance).ToList();
+
+            #endregion
             return result;
         }
 

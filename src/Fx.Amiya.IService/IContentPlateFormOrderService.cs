@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.AssistantHomePage.Input;
+﻿using Fx.Amiya.Dto.AmiyaOperationsBoardService;
+using Fx.Amiya.Dto.AssistantHomePage.Input;
 using Fx.Amiya.Dto.AssistantHomePage.Result;
 using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
@@ -327,6 +328,7 @@ namespace Fx.Amiya.IService
         /// <param name="belongCustomerServiceId"></param>
         /// <returns></returns>
         Task<CustomerServiceSimplePerformanceDto> GetCustomerServiceSimpleByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, int belongCustomerServiceId);
+
         #endregion
 
         #region 【数据中心】
@@ -348,6 +350,14 @@ namespace Fx.Amiya.IService
         Task<List<HospitalOrderNumAndPriceDto>> GetLiveAnchorPerformanceInfoAsync(DateTime startDate, DateTime endDate);
         Task<List<HospitalOrderNumAndPriceDto>> GetConsultationPerformanceInfoAsync(DateTime startDate, DateTime endDate);
         Task<List<HospitalOrderNumAndPriceDto>> GetCustomerServicePerformanceInfoAsync(DateTime startDate, DateTime endDate);
+        /// <summary>
+        /// 根据客服id获取客服业绩信息【简介版】(只输出4条排名数据)
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="belongCustomerServiceIds"></param>
+        /// <returns></returns>
+        Task<List<CustomerServiceDetailsPerformanceDto>> GetFourCustomerServicePerformanceByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, List<int> belongCustomerServiceIds);
 
         #endregion
         #region 【业绩板块】
@@ -389,7 +399,7 @@ namespace Fx.Amiya.IService
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
         /// <returns></returns>
-        Task<OrderSendAndDealNumDto> GetOrderSendAndDealDataByMonthAsync (DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, string contentPlatFormId);
+        Task<OrderSendAndDealNumDto> GetOrderSendAndDealDataByMonthAsync (DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, string contentPlatFormId, List<int> LiveAnchorIds);
 
         /// <summary>
         /// 获取老客复购数据
@@ -398,6 +408,14 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<OldCustomerDealNumDto> GetOldCustomerBuyAgainByMonthAsync(DateTime date, bool isEffectiveCustomerData, string contentPlatFormId);
 
+        /// <summary>
+        /// 根据助理id获取上门和成交量
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        Task<GetEmployeeCustomerAnalizeDto> GetCustomerVisitAndIsDealByEmployeeIdAsync(DateTime startDate, DateTime endDate, int employeeId);
         /// <summary>
         /// 根据主播获取总订单数
         /// </summary>

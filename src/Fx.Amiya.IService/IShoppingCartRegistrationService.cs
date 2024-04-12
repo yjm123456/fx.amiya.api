@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.AmiyaOperationsBoardService;
 using Fx.Amiya.Dto.AssistantHomePage.Input;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.Dto.ShoppingCartRegistration;
@@ -143,7 +144,7 @@ namespace Fx.Amiya.IService
         /// <param name="isEffectiveCustomerData"></param>
         /// <param name="contentPlatFormId"></param>
         /// <returns></returns>
-        Task<List<ShoppingCartRegistrationDto>> GetNewBaseBusinessPerformanceByLiveAnchorNameAsync(DateTime startDate, DateTime endDate, bool isEffectiveCustomerData, string contentPlatFormId);
+        Task<List<ShoppingCartRegistrationDto>> GetNewBaseBusinessPerformanceByLiveAnchorNameAsync(DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, string contentPlatFormId);
 
         /// <summary>
         /// 根据条件获取小黄车照片/视频面诊业绩折线图
@@ -165,6 +166,14 @@ namespace Fx.Amiya.IService
         /// <param name="liveAnchorIds"></param>
         /// <returns></returns>
         Task<List<PerformanceBrokenLine>> GetBaseBusinessPerformanceByLiveAnchorNameBrokenLineAsync(int year, int month, bool? isHistoryConsulationCardConsumed, bool? isConsulationCardRefund, bool? isAddWechat, bool? isConsulation, List<int> liveAnchorIds);
+
+        /// <summary>
+        /// 根据时间获取下卡，退卡，分诊，加v数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+        Task<GetCustomerDataDto> GetCustomerDataAsync(DateTime? startDate, DateTime? endDate);
         #endregion
         #region 助理首页
 

@@ -230,6 +230,12 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<decimal> GetTotalSendCount();
+
+        /// <summary>
+        /// 根据派单人获取总派单量
+        /// </summary>
+        /// <returns></returns>
+        Task<int> GetTotalSendCountByEmployeeAsync(int employeeId);
         /// <summary>
         /// 根据内容平台id获取派单列表
         /// </summary>
