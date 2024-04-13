@@ -61,6 +61,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<CustomerIntegralOrderRefund> CustomerIntegralOrderRefund { get; set; }
         public virtual DbSet<MpUserSubscribeDetail> MpUserSubscribeDetail { get; set; }
         public virtual DbSet<HospitalInfo> HospitalInfo { get; set; }
+        public virtual DbSet<HospitalProject> HospitalProject { get; set; }
         public virtual DbSet<TrackReported> TrackReported { get; set; }
         public virtual DbSet<HospitalAppointmentNumer> HospitalAppointmentNumer { get; set; }
         public virtual DbSet<TagInfo> TagInfo { get; set; }
@@ -257,6 +258,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new BindCustomerRFMLevelUpdateLogConfiguration());
             modelBuilder.ApplyConfiguration(new GoodsInfoConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalInfoConfiguration());
+            modelBuilder.ApplyConfiguration(new HospitalProjectConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalEnvironmentConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalEnvironmentPictureConfiguration());
             modelBuilder.ApplyConfiguration(new DoctorConfiguration());

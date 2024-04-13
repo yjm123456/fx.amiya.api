@@ -15,6 +15,8 @@ using Fx.Amiya.Dto.HospitalEnvironmentPicture;
 using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.HospitalContract.Input;
 using Fx.Amiya.Dto.HospitalContract.Result;
+using Fx.Amiya.Dto.HospitalProject.Input;
+using Fx.Amiya.Dto.HospitalProject.Result;
 
 namespace Fx.Amiya.Service
 {
@@ -30,17 +32,20 @@ namespace Fx.Amiya.Service
         private IDalCompanyBaseInfo dalCompanyBaseInfo;
         private IDalHospitalContract dalHospitalContract;
         private IDalAmiyaEmployee dalAmiyaEmployee;
+        private IDalHospitalProject dalHospitalProject;
         public HospitalInfoService(IDalHospitalInfo dalHospitalInfo,
             IDalHospitalTagDetail dalHospitalTagDetail,
             IUnitOfWork unitOfWork,
             IHospitalEnvironmentPictureService hospitalEnvironmentPictureService,
             IDalHospitalPartakeItem dalHospitalQuotedPriceItemInfo,
             IAmiyaEmployeeService amiyaEmployeeService,
+            IDalHospitalProject dalHospitalProject,
             IDalItemInfo dalItemInfo, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalHospitalContract dalHospitalContract, IDalAmiyaEmployee dalAmiyaEmployee)
         {
             this.dalHospitalInfo = dalHospitalInfo;
             this.dalHospitalTagDetail = dalHospitalTagDetail;
             this.unitOfWork = unitOfWork;
+            this.dalHospitalProject = dalHospitalProject;
             this.dalHospitalQuotedPriceItemInfo = dalHospitalQuotedPriceItemInfo;
             this.dalItemInfo = dalItemInfo;
             _hospitalEnvironmentPictureService = hospitalEnvironmentPictureService;
@@ -1299,7 +1304,7 @@ namespace Fx.Amiya.Service
         }
 
 
-        #region 新的医院合同接口
+        #region 【新的医院合同接口】
 
         public async Task UpdateContractAsync(UpdateHospitalContractDto updateDto)
         {
@@ -1362,6 +1367,65 @@ namespace Fx.Amiya.Service
             hospitalContractInfoDto.StartDate = contract.StartDate;
             hospitalContractInfoDto.ExpireDate = contract.ExpireDate;
             return hospitalContractInfoDto;
+        }
+
+        #endregion
+
+        #region 【新的医院项目ppt接口】
+
+        public async Task UpdateProjectAsync(UpdateHospitalProjectDto updateDto)
+        {
+            var project = await dalHospitalProject.GetAll().Where(e => e.Id == updateDto.Id).FirstOrDefaultAsync();
+            if (project == null) throw new Exception("医院项目ppt编号错误!");
+            project.Name = updateDto.Name;
+            project.ProjectUrl = updateDto.ProjectUrl;
+            project.UpdateDate = DateTime.Now;
+            await dalHospitalProject.UpdateAsync(project, true);
+        }
+
+        public async Task AddHospitalProjectAsync(AddHospitalProjectDto addDto)
+        {
+            HospitalProject project = new HospitalProject();
+            project.Id = Guid.NewGuid().ToString().Replace("-", "");
+            project.Name = addDto.Name;
+            project.HospitalId = addDto.HospitalId;
+            project.ProjectUrl = addDto.ProjectUrl;
+            project.CreateDate = DateTime.Now;
+            project.Valid = true;
+            await dalHospitalProject.AddAsync(project, true);
+        }
+
+        public async Task DeleteHospitalProjectAsync(string id)
+        {
+            var project = await dalHospitalProject.GetAll().Where(e => e.Id == id).FirstOrDefaultAsync();
+            if (project == null) throw new Exception("医院项目ppt编号错误!");
+            project.Valid = false;
+            await dalHospitalProject.UpdateAsync(project, true);
+        }
+
+        public async Task<List<HospitalProjectInfoDto>> GetHospitalProjectListAsync(int hospitalId)
+        {
+            return await dalHospitalProject.GetAll()
+                .Where(e => e.HospitalId == hospitalId && e.Valid == true)
+                .Select(e => new HospitalProjectInfoDto
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    ProjectUrl = e.ProjectUrl,
+                }).ToListAsync();
+        }
+
+
+        public async Task<HospitalProjectInfoDto> GetHospitalProjectByIdAsync(string id)
+        {
+            HospitalProjectInfoDto hospitalProjectInfoDto = new HospitalProjectInfoDto();
+            var project = dalHospitalProject.GetAll()
+               .Where(e => e.Id == id).FirstOrDefault();
+            if (project == null) throw new Exception("医院项目ppt编号错误!");
+            hospitalProjectInfoDto.Id = project.Id;
+            hospitalProjectInfoDto.Name = project.Name;
+            hospitalProjectInfoDto.ProjectUrl = project.ProjectUrl;
+            return hospitalProjectInfoDto;
         }
 
         #endregion

@@ -171,5 +171,7 @@ namespace Fx.Amiya.DbModels.Model
         public List<ContentPlatFormOrderAddWork> ContentPlatFormOrderAddWork { get; set; }
 
         public List<CustomerHospitalDealInfo> CustomerHospitalDealInfoList { get; set; }
+
+        public List<HospitalProject> HospitalProjectList { get; set; }
     }
 }

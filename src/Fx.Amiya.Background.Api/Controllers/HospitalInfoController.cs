@@ -7,9 +7,12 @@ using Fx.Amiya.Background.Api.Vo.Doctor;
 using Fx.Amiya.Background.Api.Vo.HospitalContract.Input;
 using Fx.Amiya.Background.Api.Vo.HospitalContract.Result;
 using Fx.Amiya.Background.Api.Vo.HospitalInfo;
+using Fx.Amiya.Background.Api.Vo.HospitalProject.Input;
+using Fx.Amiya.Background.Api.Vo.HospitalProject.Result;
 using Fx.Amiya.Dto.HospitalContract.Input;
 using Fx.Amiya.Dto.HospitalEnvironmentPicture;
 using Fx.Amiya.Dto.HospitalInfo;
+using Fx.Amiya.Dto.HospitalProject.Input;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
@@ -749,7 +752,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("nameList", result);
 
         }
-
+        #region【医院合同】
         /// <summary>
         /// 新的修改合同接口
         /// </summary>
@@ -780,11 +783,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 新的合同添加接口
         /// </summary>
-        /// <param name="updateVo"></param>
+        /// <param name="addVo"></param>
         /// <returns></returns>
         [HttpPost("addContract")]
         [FxInternalAuthorize]
-        public async Task<ResultData> AddContractAsync(AddHospitalContractDto addVo)
+        public async Task<ResultData> AddContractAsync(AddHospitalContractVo addVo)
         {
             try
             {
@@ -861,9 +864,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="id">合同id</param>
         /// <returns></returns>
-        [HttpDelete("deleteById")]
+        [HttpDelete("deleteContractById")]
         [FxInternalAuthorize]
-        public async Task<ResultData> DeleteByIdAsync(string id)
+        public async Task<ResultData> DeleteContractByIdAsync(string id)
         {
             try
             {
@@ -875,5 +878,128 @@ namespace Fx.Amiya.Background.Api.Controllers
                 return ResultData<HospitalContractInfoVo>.Fail(ex.Message);
             }
         }
+
+        #endregion
+
+        #region【医院项目ppt】
+        /// <summary>
+        /// 新的修改项目ppt接口
+        /// </summary>
+        /// <param name="updateVo"></param>
+        /// <returns></returns>
+        [HttpPut("UpdateProject")]
+        [FxInternalAuthorize]
+        public async Task<ResultData> UpdateProjectAsync(UpdateHospitalProjectVo updateVo)
+        {
+            try
+            {
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                UpdateHospitalProjectDto updateHospitalProjectDto = new UpdateHospitalProjectDto();
+                updateHospitalProjectDto.Id = updateVo.Id;
+                updateHospitalProjectDto.Name = updateVo.Name;
+                updateHospitalProjectDto.ProjectUrl = updateVo.ProjectUrl;
+                await hospitalInfoService.UpdateProjectAsync(updateHospitalProjectDto);
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 新的项目ppt添加接口
+        /// </summary>
+        /// <param name="updateVo"></param>
+        /// <returns></returns>
+        [HttpPost("addProject")]
+        [FxInternalAuthorize]
+        public async Task<ResultData> AddProjectAsync(AddHospitalProjectVo addVo)
+        {
+            try
+            {
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                AddHospitalProjectDto addDto = new AddHospitalProjectDto();
+                addDto.HospitalId = addVo.HospitalId;
+                addDto.Name = addVo.Name;
+                addDto.ProjectUrl = addVo.ProjectUrl;
+                await hospitalInfoService.AddHospitalProjectAsync(addDto);
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 根据医院id获取项目ppt列表
+        /// </summary>
+        /// <param name="hospitalId">医院id</param>
+        /// <returns></returns>
+        [HttpGet("getProjectList")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<List<HospitalProjectInfoVo>>> GetProjectListAsync(int hospitalId)
+        {
+            try
+            {
+                var list = (await hospitalInfoService.GetHospitalProjectListAsync(hospitalId)).Select(e => new HospitalProjectInfoVo
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    ProjectUrl = e.ProjectUrl,
+                }).ToList();
+
+                return ResultData<List<HospitalProjectInfoVo>>.Success().AddData("projectList", list);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<List<HospitalProjectInfoVo>>.Fail(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 根据项目pptid获取项目ppt详情
+        /// </summary>
+        /// <param name="projectId">项目pptid</param>
+        /// <returns></returns>
+        [HttpGet("getInfoByProjectId")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<HospitalProjectInfoVo>> GetProjectInfobyIdAsync(string projectId)
+        {
+            try
+            {
+                HospitalProjectInfoVo hospitalProjectInfoVo = new HospitalProjectInfoVo();
+                var info = await hospitalInfoService.GetHospitalProjectByIdAsync(projectId);
+                hospitalProjectInfoVo.Id = info.Id;
+                hospitalProjectInfoVo.Name = info.Name;
+                hospitalProjectInfoVo.ProjectUrl = info.ProjectUrl;
+                return ResultData<HospitalProjectInfoVo>.Success().AddData("projectInfo", hospitalProjectInfoVo);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<HospitalProjectInfoVo>.Fail(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 根据项目pptid删除项目ppt
+        /// </summary>
+        /// <param name="id">项目pptid</param>
+        /// <returns></returns>
+        [HttpDelete("deleteProjectById")]
+        [FxInternalAuthorize]
+        public async Task<ResultData> DeleteProjectByIdAsync(string id)
+        {
+            try
+            {
+                await hospitalInfoService.DeleteHospitalProjectAsync(id);
+                return ResultData<HospitalProjectInfoVo>.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData<HospitalProjectInfoVo>.Fail(ex.Message);
+            }
+        }
+
+        #endregion
     }
 }
