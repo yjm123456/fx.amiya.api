@@ -1734,7 +1734,9 @@ namespace Fx.Amiya.Service
                     IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer,
                     ConsultationType = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.ConsultationType,
                     IsAcompanying = ContentPlatFOrmOrderDealInfo.IsAcompanying,
-                    AddOrderPrice = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.AddOrderPrice
+                    AddOrderPrice = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.AddOrderPrice,
+                    BaseLiveAnchorId= ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId,
+                    BaseLiveAnchorName= ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.LiveAnchor.Name,
                 }
                 ).ToListAsync();
         }

@@ -175,6 +175,17 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<GetCustomerDataDto> GetCustomerDataAsync(DateTime? startDate, DateTime? endDate);
         #endregion
+        #region 啊美雅运营看板
+        /// <summary>
+        /// /获取指标转化基础数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="baseLiveAnchorId"></param>
+        /// <param name="isEffective"></param>
+        /// <returns></returns>
+        Task<ShoppingCartRegistrationIndicatorBaseDataDto> GetIndicatorConversionDataAsync(DateTime startDate, DateTime endDate, string baseLiveAnchorId, bool? isEffective);
+        #endregion
         #region 助理首页
 
         Task<List<ShoppingCartRegistrationDto>> GetAsistantMonthPerformanceDataAsync(QueryAssistantHomePageDataDto query);

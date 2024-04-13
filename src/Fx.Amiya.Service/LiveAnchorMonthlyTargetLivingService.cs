@@ -502,6 +502,24 @@ namespace Fx.Amiya.Service
             return performanceInfoDto;
         }
         /// <summary>
+        /// 根据时间获取各主播下卡量目标
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorIds">各个平台的主播ID集合</param>
+        /// <returns></returns>
+        public async Task<List<LiveAnchorBaseBusinessMonthTargetPerformanceDto>> GetConsulationCardAddTargetByDateAsync(int year, int month,List<string> baseLiveAnchorIds)
+        {
+            var performance = dalLiveAnchorMonthlyTargetLiving.GetAll().Include(x => x.LiveAnchor).Where(t => t.Year == year && t.Month == month).Where(e=>baseLiveAnchorIds.Contains(e.LiveAnchor.LiveAnchorBaseId));
+            var dataList = performance.GroupBy(e => e.LiveAnchor.LiveAnchorBaseId).Select(e => new LiveAnchorBaseBusinessMonthTargetPerformanceDto
+            {
+                ConsulationCardTarget = performance.Sum(t => t.ConsultationTarget + t.ConsultationTarget2),
+                LivingRefundCardTarget = performance.Sum(t => t.LivingRefundCardTarget),
+                BaseLiveAnchorId = e.Key
+            }).ToList();            
+            return dataList;
+        }
+        /// <summary>
         /// 根据主播id集合获取指定月份的月目标id
         /// </summary>
         /// <param name="year"></param>

@@ -3672,6 +3672,47 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
+        /// 获取基础主播获取派单成交数据
+        /// </summary>
+        /// <param name="startDate">开始时间</param>
+        /// <param name="endDate">结束时间</param>
+        /// <returns></returns>
+        public async Task<OrderSendAndDealNumDto> GetOrderSendAndDealDataByMonthAndBaseLiveAnchorIdAsync(DateTime startDate, DateTime endDate, bool isOldCustomer, string baseLiveAbchorId)
+        {
+            OrderSendAndDealNumDto orderData = new OrderSendAndDealNumDto();
+            orderData.SendOrderNum = await _dalContentPlatformOrder.GetAll()
+             .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
+             .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsOldCustomer == false)
+             .Where(o => o.LiveAnchor.LiveAnchorBaseId==baseLiveAbchorId)
+                .Select(e => e.Phone)
+                .Distinct()
+                .CountAsync();
+
+
+
+            var visitCount = await _dalContentPlatformOrder.GetAll()
+             .Where(o => o.ToHospitalDate >= startDate && o.ToHospitalDate < endDate)
+             .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsToHospital == true && e.IsOldCustomer == isOldCustomer)
+             .Where(o => o.LiveAnchor.LiveAnchorBaseId == baseLiveAbchorId)
+                .ToListAsync();
+
+            orderData.VisitNum = visitCount
+                .Select(e => e.Phone)
+                .Distinct()
+                .Count();
+
+            orderData.DealNum = visitCount.Where(x => x.DealDate >= startDate && x.DealDate < endDate && x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete).Select(e => e.Phone)
+                .Distinct()
+                .Count();
+
+
+            orderData.DealPrice = visitCount.Where(x => x.DealDate >= startDate && x.DealDate < endDate && x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
+                .Sum(x => x.DealAmount);
+
+            return orderData;
+        }
+
+        /// <summary>
         /// 获取助理首页业绩完成情况数据
         /// </summary>
         /// <param name="startDate">开始时间</param>

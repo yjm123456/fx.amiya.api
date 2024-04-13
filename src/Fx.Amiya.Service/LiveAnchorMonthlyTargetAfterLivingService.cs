@@ -723,7 +723,8 @@ namespace Fx.Amiya.Service
                     EffectivePerformanceTarget = e.EffectivePerformanceTarget, 
                     PotentialPerformanceTarget = e.PotentialPerformanceTarget,
                     OldCustomerPerformanceTarget = e.OldCustomerPerformanceTarget,
-                    NewCustomerPerformanceTarget = e.NewCustomerPerformanceTarget
+                    NewCustomerPerformanceTarget = e.NewCustomerPerformanceTarget,
+                    BaseLiveAnchorId=e.LiveAnchor.LiveAnchorBaseId
                 })
                 .ToList();
             LiveAnchorMonthTargetPerformanceDto performanceInfoDto = new LiveAnchorMonthTargetPerformanceDto
@@ -736,7 +737,52 @@ namespace Fx.Amiya.Service
             };
             return performanceInfoDto;
         }
-
+        /// <summary>
+        /// 根据基础主播获取直播后月经营目标
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="baseLiveAnchorId"></param>
+        /// <returns></returns>
+        public async Task<List<LiveAnchorMonthTargetPerformanceDto>> GetPerformanceTargetByBaseLiveAnchorIdAsync(int year, int month, List<string> baseLiveAnchorIds)
+        {
+            var performance = dalLiveAnchorMonthlyTargetAfterLiving.GetAll().Include(x => x.LiveAnchor).Where(t => t.Year == year && t.Month == month)
+                .Where(t=> baseLiveAnchorIds.Contains(t.LiveAnchor.LiveAnchorBaseId))
+                .Select(e => new {
+                    PerformanceTarget = e.PerformanceTarget,
+                    EffectivePerformanceTarget = e.EffectivePerformanceTarget,
+                    PotentialPerformanceTarget = e.PotentialPerformanceTarget,
+                    OldCustomerPerformanceTarget = e.OldCustomerPerformanceTarget,
+                    NewCustomerPerformanceTarget = e.NewCustomerPerformanceTarget,
+                    DistributeConsulationTarget=e.DistributeConsulationTarget,
+                    AddWechatTarget=e.AddWechatTarget,
+                    BasbaseLiveAnchorId = e.LiveAnchor.LiveAnchorBaseId,
+                    SendOrderTarget=e.SendOrderTarget,
+                    NewCustomerVisitTarget = e.NewCustomerVisitTarget,
+                    OldCustomerVisitTarget = e.OldCustomerVisitTarget,
+                    NewCustomerDealTarget = e.NewCustomerDealTarget,
+                    OldCustomerDealTarget=e.OldCustomerDealTarget
+                })
+                .ToList();
+            var dataList= performance.GroupBy(e => e.BasbaseLiveAnchorId).Select(e => new LiveAnchorMonthTargetPerformanceDto
+            {
+                TotalPerformanceTarget = performance.Sum(t => t.PerformanceTarget),
+                OldCustomerPerformanceTarget = performance.Sum(t => t.OldCustomerPerformanceTarget),
+                NewCustomerPerformanceTarget = performance.Sum(t => t.NewCustomerPerformanceTarget),
+                EffectivePerformance = performance.Sum(t => t.EffectivePerformanceTarget),
+                PotentialPerformance = performance.Sum(t => t.PotentialPerformanceTarget),
+                DistributeConsulationTarget=performance.Sum(t => t.DistributeConsulationTarget),
+                AddWechatTarget=performance.Sum(e=>e.AddWechatTarget),
+                SendOrderTarget=performance.Sum(e=>e.SendOrderTarget),
+                NewCustomerVisitTarget=performance.Sum(e=>e.NewCustomerVisitTarget),
+                OldCustomerVisitTarget=performance.Sum(e=>e.OldCustomerVisitTarget),
+                NewCustomerDealTarget=performance.Sum(e=>e.NewCustomerDealTarget),
+                OldCustomerDealTarget=performance.Sum(e=>e.OldCustomerDealTarget),
+                BaseLiveAbchorId =e.Key
+            }).ToList();
+            
+            return dataList;
+        }
 
         /// <summary>
         /// 根据主播基础id按年月获取数据

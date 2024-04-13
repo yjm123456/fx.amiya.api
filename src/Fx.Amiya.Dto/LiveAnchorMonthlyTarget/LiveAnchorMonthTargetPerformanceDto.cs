@@ -36,6 +36,38 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 潜在业绩
         /// </summary>
         public decimal PotentialPerformance { get; set; }
+        /// <summary>
+        /// 加v目标
+        /// </summary>
+        public int AddWechatTarget { get; set; }
+        /// <summary>
+        /// 分诊目标
+        /// </summary>
+        public int DistributeConsulationTarget { get; set; }
+        /// <summary>
+        /// 派单目标
+        /// </summary>
+        public int SendOrderTarget { get; set; }
+        /// <summary>
+        /// 新客上门目标
+        /// </summary>
+        public int NewCustomerVisitTarget { get; set; }
+        /// <summary>
+        /// 老客上门目标
+        /// </summary>
+        public int OldCustomerVisitTarget { get; set; }
+        /// <summary>
+        /// 新客成交目标
+        /// </summary>
+        public int NewCustomerDealTarget { get; set; }
+        /// <summary>
+        /// 老客成交目标
+        /// </summary>
+        public int OldCustomerDealTarget { get; set; }
+        /// <summary>
+        /// 主播基础id
+        /// </summary>
+        public string BaseLiveAbchorId { get; set; }
     }
 
     public class GroupPerformanceListDto
@@ -108,6 +140,10 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 退款GMV目标
         /// </summary>
         public decimal RefundGMVTarget { get; set; }
+        /// <summary>
+        /// 基础主播id
+        /// </summary>
+        public string BaseLiveAnchorId { get; set; }
 
     }
 

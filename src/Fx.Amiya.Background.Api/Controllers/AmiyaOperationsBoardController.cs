@@ -1,5 +1,7 @@
 ﻿using Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Input;
 using Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result;
+using Fx.Amiya.Dto.AmiyaOperationsBoardService;
+using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Open.Infrastructure.Web;
 using Microsoft.AspNetCore.Http;
@@ -19,7 +21,13 @@ namespace Fx.Amiya.Background.Api.Controllers
     [FxInternalAuthorize]
     public class AmiyaOperationsBoardController : ControllerBase
     {
-
+        private readonly IAmiyaOperationsBoardServiceService amiyaOperationsBoardServiceService;
+        private readonly ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService;
+        public AmiyaOperationsBoardController(IAmiyaOperationsBoardServiceService amiyaOperationsBoardServiceService, ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService)
+        {
+            this.amiyaOperationsBoardServiceService = amiyaOperationsBoardServiceService;
+            this.liveAnchorMonthlyTargetLivingService = liveAnchorMonthlyTargetLivingService;
+        }
         #region  运营主看板
         /// <summary>
         /// 获取时间进度和总业绩
@@ -99,7 +107,25 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("companyPerformanceData")]
         public async Task<ResultData<List<CompanyPerformanceDataVo>>> GetCompanyPerformanceDataAsync([FromQuery] QueryAmiyaCompanyOperationsDataVo query)
         {
-            return ResultData<List<CompanyPerformanceDataVo>>.Success().AddData("data", new List<CompanyPerformanceDataVo>());
+            QueryAmiyaCompanyOperationsDataDto querDto = new QueryAmiyaCompanyOperationsDataDto();
+            querDto.StartDate = query.StartDate;
+            querDto.EndDate= query.EndDate;
+            querDto.Unit = query.Unit;
+            querDto.LiveAnchorIds = query.LiveAnchorIds;
+            var data=await amiyaOperationsBoardServiceService.GetCompanyPerformanceDataAsync(querDto);
+            var res = data.Select(e => new CompanyPerformanceDataVo {
+                GroupName = e.GroupName,
+                CurrentMonthNewCustomerPerformance = e.CurrentMonthNewCustomerPerformance,
+                NewCustomerPerformanceTarget=e.NewCustomerPerformanceTarget,
+                NewCustomerPerformanceTargetComplete=e.NewCustomerPerformanceTargetComplete,
+                CurrentMonthOldCustomerPerformance=e.CurrentMonthOldCustomerPerformance,
+                OldCustomerTarget=e.OldCustomerTarget,
+                OldCustomerTargetComplete=e.OldCustomerTargetComplete,
+                TotalPerformance=e.TotalPerformance,
+                TotalPerformanceTarget=e.TotalPerformanceTarget,
+                TotalPerformanceTargetComplete=e.TotalPerformanceTargetComplete
+            }).ToList();
+            return ResultData<List<CompanyPerformanceDataVo>>.Success().AddData("data", res);
         }
         /// <summary>
         /// 获取公司看板获客情况数据
@@ -108,6 +134,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("companyCustomerAcquisition")]
         public async Task<ResultData<List<CompanyCustomerAcquisitionDataVo>>> GetCompanyCustomerAcquisitionDataAsync([FromQuery] QueryAmiyaCompanyOperationsDataVo query)
         {
+            
             return ResultData<List<CompanyCustomerAcquisitionDataVo>>.Success().AddData("data", new List<CompanyCustomerAcquisitionDataVo>());
         }
         /// <summary>
@@ -117,7 +144,25 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("companyOperationsData")]
         public async Task<ResultData<List<CompanyOperationsDataVo>>> GetCompanyOperationsDataAsync([FromQuery] QueryAmiyaCompanyOperationsDataVo query)
         {
-            return ResultData<List<CompanyOperationsDataVo>>.Success().AddData("data", new List<CompanyOperationsDataVo>());
+            QueryAmiyaCompanyOperationsDataDto querDto = new QueryAmiyaCompanyOperationsDataDto();
+            querDto.StartDate = query.StartDate;
+            querDto.EndDate = query.EndDate;
+            querDto.Unit = query.Unit;
+            querDto.LiveAnchorIds = query.LiveAnchorIds;
+            var data = await amiyaOperationsBoardServiceService.GetCompanyOperationsDataAsync(querDto);
+            var res = data.Select(e => new CompanyOperationsDataVo {
+                GroupName=e.GroupName,
+                SendOrder = e.SendOrder,
+                SendOrderTarget = e.SendOrderTarget,
+                SendOrderTargetComplete = e.SendOrderTargetComplete,
+                ToHospital = e.ToHospital,
+                ToHospitalTarget = e.ToHospitalTarget,
+                ToHospitalTargetComplete = e.ToHospitalTargetComplete,
+                Deal = e.Deal,
+                DealTarget = e.DealTarget,
+                DealTargetComplete = e.DealTargetComplete,
+            }).ToList();
+            return ResultData<List<CompanyOperationsDataVo>>.Success().AddData("data", res);
         }
         /// <summary>
         /// 获取公司看板指标转化情况数据
@@ -126,6 +171,25 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("companyIndicatorConversionData")]
         public async Task<ResultData<List<CompanyIndicatorConversionDataVo>>> GetCompanyIndicatorConversionDataAsync([FromQuery] QueryAmiyaCompanyOperationsDataVo query)
         {
+            QueryAmiyaCompanyOperationsDataDto querDto = new QueryAmiyaCompanyOperationsDataDto();
+            querDto.StartDate = query.StartDate;
+            querDto.EndDate = query.EndDate;
+            querDto.Unit = query.Unit;
+            querDto.LiveAnchorIds = query.LiveAnchorIds;
+            var data = await amiyaOperationsBoardServiceService.GetCompanyIndicatorConversionDataAsync(querDto);
+            var res = data.Select(e=>new CompanyIndicatorConversionDataVo { 
+                GroupName=e.GroupName,
+                SevenDaySendOrderRate = e.SevenDaySendOrderRate,
+                FifteenDaySendOrderRate = e.FifteenDaySendOrderRate,
+                OldCustomerToHospitalRate = e.OldCustomerToHospitalRate,
+                RePurchaseRate = e.RePurchaseRate,
+                AddWechatRate = e.AddWechatRate,
+                SendOrderRate = e.SendOrderRate,
+                ToHospitalRate = e.ToHospitalRate,
+                NewCustomerDealRate = e.NewCustomerDealRate,
+                NewCustomerUnitPrice = e.NewCustomerUnitPrice,
+                OldCustomerUnitPrice = e.OldCustomerUnitPrice,
+            }).ToList();
             return ResultData<List<CompanyIndicatorConversionDataVo>>.Success().AddData("data", new List<CompanyIndicatorConversionDataVo>());
         }
         #endregion

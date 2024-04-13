@@ -285,5 +285,13 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 订单来源
         /// </summary>
         public string ContentPlatFormId { get; set; }
+        /// <summary>
+        /// 基础主播id
+        /// </summary>
+        public string BaseLiveAnchorId { get; set; }
+        /// <summary>
+        /// 基础主播名称
+        /// </summary>
+        public string BaseLiveAnchorName { get; set; }
     }
 }

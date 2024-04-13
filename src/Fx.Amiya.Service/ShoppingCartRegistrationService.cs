@@ -34,6 +34,8 @@ namespace Fx.Amiya.Service
         private IAmiyaEmployeeService _amiyaEmployeeService;
         private IDalAmiyaEmployee dalAmiyaEmployee;
         private IDalLiveAnchorBaseInfo dalLiveAnchorBaseInfo;
+        private IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo;
+        private IDalContentPlatformOrder dalContentPlatformOrder;
         public ShoppingCartRegistrationService(IDalShoppingCartRegistration dalShoppingCartRegistration,
             IContentPlatformService contentPlatformService,
              IMessageNoticeService messageNoticeService,
@@ -42,7 +44,7 @@ namespace Fx.Amiya.Service
             ILiveAnchorService liveAnchorService,
              ILiveAnchorWeChatInfoService liveAnchorWeChatInfoService,
             IDalConfig dalConfig,
-            IDalAmiyaEmployee dalAmiyaEmployee, IDalLiveAnchorBaseInfo dalLiveAnchorBaseInfo)
+            IDalAmiyaEmployee dalAmiyaEmployee, IDalLiveAnchorBaseInfo dalLiveAnchorBaseInfo, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo, IDalContentPlatformOrder dalContentPlatformOrder)
         {
             this.dalShoppingCartRegistration = dalShoppingCartRegistration;
             _contentPlatformService = contentPlatformService;
@@ -54,6 +56,8 @@ namespace Fx.Amiya.Service
             _amiyaEmployeeService = amiyaEmployeeService;
             this.dalAmiyaEmployee = dalAmiyaEmployee;
             this.dalLiveAnchorBaseInfo = dalLiveAnchorBaseInfo;
+            this.dalContentPlatFormOrderDealInfo = dalContentPlatFormOrderDealInfo;
+            this.dalContentPlatformOrder = dalContentPlatformOrder;
         }
 
 
@@ -1334,6 +1338,51 @@ namespace Fx.Amiya.Service
         }
         #endregion
 
+        #region 啊美雅运营看板
+
+        public async Task<ShoppingCartRegistrationIndicatorBaseDataDto> GetIndicatorConversionDataAsync(DateTime startDate,DateTime endDate,string baseLiveAnchorId,bool? isEffective) {
+            ShoppingCartRegistrationIndicatorBaseDataDto data = new ShoppingCartRegistrationIndicatorBaseDataDto();
+            var liveanchorIds =(await _liveAnchorService.GetLiveAnchorListByBaseInfoId(baseLiveAnchorId)).Select(e=>e.Id);
+            var baseData= dalShoppingCartRegistration.GetAll().Where(e => e.CreateDate >= startDate && e.CreateDate < endDate&&liveanchorIds.Contains(e.LiveAnchorId)&&(!isEffective.HasValue||(isEffective.Value?e.Price>0:e.Price<=0))).Select(e=>new {
+                IsSendOrder=e.IsSendOrder,
+                Phone=e.Phone,
+                CreateDate=e.CreateDate,
+                IsAddWeChat = e.IsAddWeChat,             
+            }).ToList();
+            data.TotalCount = baseData.Count();
+            data.SendOrderCount = baseData.Where(e => e.IsSendOrder == true).Count();
+            var phoneList = baseData.Select(e => e.Phone).Distinct().ToList();
+            var contentOrderList = dalContentPlatformOrder.GetAll().Where(e => phoneList.Contains(e.Phone) && e.CreateDate >= startDate).Select(e => new {
+                SendDate=e.SendDate,
+                Phone=e.Phone,
+                ToHospitalDate=e.ToHospitalDate,
+                IsOldCustomer=e.IsOldCustomer,
+                Price=e.AddOrderPrice,
+                IsToHospital=e.IsToHospital,
+                DealPrice=e.ContentPlatformOrderDealInfoList.Where(e=>e.IsDeal==true).Sum(e=>e.Price),
+                IsDeal=e.ContentPlatformOrderDealInfoList.Where(e=>e.IsDeal==true).Count()>0,
+                IsRePurchase= e.ContentPlatformOrderDealInfoList.Where(e => e.IsDeal == true).Count() > 1,
+            });
+            data.SevenDaySendOrderCount = (from c in contentOrderList
+                                           from s in baseData
+                                           where s.Phone == c.Phone && c.SendDate <= s.CreateDate.AddDays(7) select s).Count();                          
+            data.FifteenToHospitalCount= (from c in contentOrderList
+                                          from s in baseData
+                                          where s.Phone == c.Phone && c.ToHospitalDate <= s.CreateDate.AddDays(15)
+                                          select s).Count();
+            data.OldCustomerCount = contentOrderList.Where(e => e.IsOldCustomer == true).Count();
+            data.OldCustomerToHospitalCount = contentOrderList.Where(e => e.IsOldCustomer == true && e.IsToHospital == true).Count();
+            data.OldCustomerRepurchase = contentOrderList.Where(e => e.IsOldCustomer == true && e.IsRePurchase == true).Count();
+            data.AddWechatCount = baseData.Where(e => e.IsAddWeChat).Count();
+            data.ToHospitalCount = contentOrderList.Where(e => e.IsToHospital == true).Count();
+            data.NewCustomerCount = contentOrderList.Where(e => e.IsOldCustomer == false).Count();
+            data.NewCustomerDealCount = contentOrderList.Where(e => e.IsOldCustomer == false && e.IsDeal == true).Count();
+            data.NewCustomerTotalPerformance = contentOrderList.Where(e => e.IsOldCustomer == true).Sum(e => e.DealPrice);
+            data.OldCustomerTotalPerformance = contentOrderList.Where(e => e.IsOldCustomer == false).Sum(e => e.DealPrice);
+            return data;
+        }
+
+        #endregion
 
         private async Task<CallCenterConfigDto> GetCallCenterConfig()
         {

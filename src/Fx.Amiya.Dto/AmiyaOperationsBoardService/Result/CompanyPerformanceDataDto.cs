@@ -56,7 +56,7 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService
         /// <summary>
         /// 总业绩目标完成率
         /// </summary>
-        public decimal TotalPerformanceTargetComplete { get; set; }
+        public decimal? TotalPerformanceTargetComplete { get; set; }
         #endregion
     }
 }

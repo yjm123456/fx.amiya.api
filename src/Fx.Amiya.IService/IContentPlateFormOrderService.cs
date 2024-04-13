@@ -399,6 +399,14 @@ namespace Fx.Amiya.IService
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
         /// <returns></returns>
+        Task<OrderSendAndDealNumDto> GetOrderSendAndDealDataByMonthAsync (DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, string contentPlatFormId);
+        /// <summary>
+        /// 获取基础主播获取派单成交数据
+        /// </summary>
+        /// <param name="startDate">开始时间</param>
+        /// <param name="endDate">结束时间</param>
+        /// <returns></returns>
+        Task<OrderSendAndDealNumDto> GetOrderSendAndDealDataByMonthAndBaseLiveAnchorIdAsync(DateTime startDate, DateTime endDate, bool isOldCustomer, string baseLiveAbchorId);
         Task<OrderSendAndDealNumDto> GetOrderSendAndDealDataByMonthAsync (DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, string contentPlatFormId, List<int> LiveAnchorIds);
 
         /// <summary>

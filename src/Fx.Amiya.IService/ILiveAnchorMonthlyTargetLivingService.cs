@@ -31,6 +31,8 @@ namespace Fx.Amiya.IService
         Task<LiveAnchorBaseBusinessMonthTargetPerformanceDto> GetBasePerformanceTargetAsync(int year, int month, List<int> liveAnchorIds);
 
         Task<LiveAnchorBaseBusinessMonthTargetPerformanceDto> GetConsulationCardAddTargetByDateAsync(int year, int month);
+
+        Task<List<LiveAnchorBaseBusinessMonthTargetPerformanceDto>> GetConsulationCardAddTargetByDateAsync(int year, int month, List<string> baseLiveAnchorIds);
         /// <summary>
         /// 根据主播id集合获取指定月份的月目标id
         /// </summary>
