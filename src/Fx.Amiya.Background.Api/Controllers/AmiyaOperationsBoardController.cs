@@ -124,7 +124,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 TotalPerformance=e.TotalPerformance,
                 TotalPerformanceTarget=e.TotalPerformanceTarget,
                 TotalPerformanceTargetComplete=e.TotalPerformanceTargetComplete
-            }).ToList();
+            }).OrderBy(e=>e.GroupName).ToList();
             return ResultData<List<CompanyPerformanceDataVo>>.Success().AddData("data", res);
         }
         /// <summary>
@@ -134,8 +134,27 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("companyCustomerAcquisition")]
         public async Task<ResultData<List<CompanyCustomerAcquisitionDataVo>>> GetCompanyCustomerAcquisitionDataAsync([FromQuery] QueryAmiyaCompanyOperationsDataVo query)
         {
-            
-            return ResultData<List<CompanyCustomerAcquisitionDataVo>>.Success().AddData("data", new List<CompanyCustomerAcquisitionDataVo>());
+            QueryAmiyaCompanyOperationsDataDto querDto = new QueryAmiyaCompanyOperationsDataDto();
+            querDto.StartDate = query.StartDate;
+            querDto.EndDate = query.EndDate;
+            querDto.Unit = query.Unit;
+            querDto.LiveAnchorIds = query.LiveAnchorIds;
+            var data = await amiyaOperationsBoardServiceService.GetCompanyCustomerAcquisitionDataAsync(querDto);
+            var res = data.Select(e => new CompanyCustomerAcquisitionDataVo {
+                GroupName=e.GroupName,
+                OrderCard = e.OrderCard,
+                OrderCardTarget = e.OrderCardTarget,
+                OrderCardTargetComplete = e.OrderCardTargetComplete,
+                RefundCard = e.RefundCard,
+                OrderCardError = e.OrderCardError,
+                AllocationConsulation = e.AllocationConsulation,
+                AllocationConsulationTarget = e.AllocationConsulationTarget,
+                AllocationConsulationTargetComplete = e.AllocationConsulationTargetComplete,
+                AddWechat = e.AddWechat,
+                AddWechatTarget = e.AddWechatTarget,
+                AddWechatTargetComplete = e.AddWechatTargetComplete,
+            }).OrderBy(e => e.GroupName).ToList();
+            return ResultData<List<CompanyCustomerAcquisitionDataVo>>.Success().AddData("data", res);
         }
         /// <summary>
         /// 获取公司看板运营情况数据
@@ -149,6 +168,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             querDto.EndDate = query.EndDate;
             querDto.Unit = query.Unit;
             querDto.LiveAnchorIds = query.LiveAnchorIds;
+            querDto.IsOldCustomer = query.IsOldCustomer;
             var data = await amiyaOperationsBoardServiceService.GetCompanyOperationsDataAsync(querDto);
             var res = data.Select(e => new CompanyOperationsDataVo {
                 GroupName=e.GroupName,
@@ -161,7 +181,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 Deal = e.Deal,
                 DealTarget = e.DealTarget,
                 DealTargetComplete = e.DealTargetComplete,
-            }).ToList();
+            }).OrderBy(e => e.GroupName).ToList();
             return ResultData<List<CompanyOperationsDataVo>>.Success().AddData("data", res);
         }
         /// <summary>
@@ -189,8 +209,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 NewCustomerDealRate = e.NewCustomerDealRate,
                 NewCustomerUnitPrice = e.NewCustomerUnitPrice,
                 OldCustomerUnitPrice = e.OldCustomerUnitPrice,
-            }).ToList();
-            return ResultData<List<CompanyIndicatorConversionDataVo>>.Success().AddData("data", new List<CompanyIndicatorConversionDataVo>());
+            }).OrderBy(e => e.GroupName).ToList();
+            return ResultData<List<CompanyIndicatorConversionDataVo>>.Success().AddData("data", res);
         }
         #endregion
 

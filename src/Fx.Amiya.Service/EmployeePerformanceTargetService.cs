@@ -21,9 +21,11 @@ namespace Fx.Amiya.Service
     public class EmployeePerformanceTargetService : IEmployeePerformanceTargetService
     {
         private readonly IDalEmployeePerformanceTarget dalEmployeePerformanceTarget;
-        public EmployeePerformanceTargetService(IDalEmployeePerformanceTarget dalEmployeePerformanceTarget)
+        private readonly IAmiyaEmployeeService amiyaEmployeeService;
+        public EmployeePerformanceTargetService(IDalEmployeePerformanceTarget dalEmployeePerformanceTarget, IAmiyaEmployeeService amiyaEmployeeService)
         {
             this.dalEmployeePerformanceTarget = dalEmployeePerformanceTarget;
+            this.amiyaEmployeeService = amiyaEmployeeService;
         }
 
 
@@ -51,8 +53,10 @@ namespace Fx.Amiya.Service
                                                  DeleteDate = d.DeleteDate,
                                                  BelongMonth = d.BelongMonth,
                                                  BelongYear = d.BelongYear,
-                                                 ConsulationCardTarget = d.ConsulationCardTarget,
-                                                 AddWechatTarget = d.AddWechatTarget,
+                                                 EffectiveConsulationCardTarget = d.EffectiveConsulationCardTarget,
+                                                 PotentialConsulationCardTarget = d.PotentialConsulationCardTarget,
+                                                 EffectiveAddWechatTarget= d.EffectiveAddWechatTarget,
+                                                 PotentialAddWechatTarget=d.PotentialAddWechatTarget,
                                                  SendOrderTarget = d.SendOrderTarget,
                                                  VisitTarget = d.VisitTarget,
                                                  NewCustomerDealTarget = d.NewCustomerDealTarget,
@@ -89,8 +93,10 @@ namespace Fx.Amiya.Service
                 cmployeePerformanceTarget.Valid = true;
                 cmployeePerformanceTarget.BelongYear = addDto.BelongYear;
                 cmployeePerformanceTarget.BelongMonth = addDto.BelongMonth;
-                cmployeePerformanceTarget.ConsulationCardTarget = addDto.ConsulationCardTarget;
-                cmployeePerformanceTarget.AddWechatTarget = addDto.AddWechatTarget;
+                cmployeePerformanceTarget.EffectiveConsulationCardTarget = addDto.EffectiveConsulationCardTarget;
+                cmployeePerformanceTarget.PotentialConsulationCardTarget = addDto.PotentialConsulationCardTarget;
+                cmployeePerformanceTarget.EffectiveAddWechatTarget=addDto.EffectiveAddWechatTarget;
+                cmployeePerformanceTarget.PotentialAddWechatTarget=addDto.PotentialAddWechatTarget;
                 cmployeePerformanceTarget.SendOrderTarget = addDto.SendOrderTarget;
                 cmployeePerformanceTarget.VisitTarget = addDto.VisitTarget;
                 cmployeePerformanceTarget.NewCustomerDealTarget = addDto.NewCustomerDealTarget;
@@ -125,8 +131,10 @@ namespace Fx.Amiya.Service
             returnResult.Valid = result.Valid;
             returnResult.BelongYear = result.BelongYear;
             returnResult.BelongMonth = result.BelongMonth;
-            returnResult.ConsulationCardTarget = result.ConsulationCardTarget;
-            returnResult.AddWechatTarget = result.AddWechatTarget;
+            returnResult.EffectiveAddWechatTarget = result.EffectiveAddWechatTarget;
+            returnResult.PotentialAddWechatTarget = result.PotentialAddWechatTarget;
+            returnResult.EffectiveConsulationCardTarget = result.EffectiveConsulationCardTarget;
+            returnResult.PotentialConsulationCardTarget = result.PotentialConsulationCardTarget;
             returnResult.SendOrderTarget = result.SendOrderTarget;
             returnResult.VisitTarget = result.VisitTarget;
             returnResult.NewCustomerDealTarget = result.NewCustomerDealTarget;
@@ -158,8 +166,10 @@ namespace Fx.Amiya.Service
             result.EmployeeId = updateDto.EmployeeId;
             result.BelongYear = updateDto.BelongYear;
             result.BelongMonth = updateDto.BelongMonth;
-            result.ConsulationCardTarget = updateDto.ConsulationCardTarget;
-            result.AddWechatTarget = updateDto.AddWechatTarget;
+            result.EffectiveConsulationCardTarget = updateDto.EffectiveConsulationCardTarget;
+            result.PotentialConsulationCardTarget = updateDto.PotentialConsulationCardTarget;
+            result.EffectiveAddWechatTarget = updateDto.EffectiveAddWechatTarget;
+            result.PotentialAddWechatTarget = updateDto.PotentialAddWechatTarget;
             result.SendOrderTarget = updateDto.SendOrderTarget;
             result.VisitTarget = updateDto.VisitTarget;
             result.NewCustomerDealTarget = updateDto.NewCustomerDealTarget;
@@ -210,6 +220,22 @@ namespace Fx.Amiya.Service
             }
             return result.PerformanceTarget;
         }
-
+        /// <summary>
+        /// 根据基础主播id获取有效/潜在 分诊,加v目标
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="baseLiveAnchorId"></param>
+        /// <returns></returns>
+        public async Task<EmployeeTargetInfoDto> GetEmployeeTargetByBaseLiveAnchorIdAsync(int year,int month,string baseLiveAnchorId) {
+            var ids =(await amiyaEmployeeService.GetByLiveAnchorBaseIdAsync(baseLiveAnchorId)).Select(e=>e.Id);
+            var target= dalEmployeePerformanceTarget.GetAll().Where(e => e.Valid == true && e.BelongMonth == month && e.BelongYear == year && ids.Contains(e.EmployeeId));
+            EmployeeTargetInfoDto targetInfo = new EmployeeTargetInfoDto();
+            targetInfo.EffectiveAddWechatTarget = target.Sum(e => e.EffectiveAddWechatTarget);
+            targetInfo.PotentialAddWechatTarget = target.Sum(e => e.PotentialAddWechatTarget);
+            targetInfo.EffectiveConsulationCardTarget = target.Sum(e => e.EffectiveConsulationCardTarget);
+            targetInfo.PotentialConsulationCardTarget = target.Sum(e => e.PotentialConsulationCardTarget);
+            return targetInfo;
+        }
     }
 }

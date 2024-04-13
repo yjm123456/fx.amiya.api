@@ -54,5 +54,17 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService
         /// </summary>
 
         public decimal AddWechatTargetComplete { get; set; }
+        /// <summary>
+        /// 基础主播id
+        /// </summary>
+        public string BaseLiveAnchorId { get; set; }
+        /// <summary>
+        /// 是否为有效客资
+        /// </summary>
+        public bool IsEffective { get; set; }
+        /// <summary>
+        /// 主播名称
+        /// </summary>
+        public string LiveAnchorName { get; set; }
     }
 }

@@ -21,11 +21,24 @@ namespace Fx.Amiya.DbModels.Model
         /// <summary>
         /// 分诊目标
         /// </summary>
-        public int ConsulationCardTarget { get; set; }
+        //public int ConsulationCardTarget { get; set; }
         /// <summary>
-        /// 加v目标
+        /// 有效分诊
         /// </summary>
-        public int AddWechatTarget { get; set; }
+        public int EffectiveConsulationCardTarget { get; set; }
+        /// <summary>
+        /// 潜在分诊
+        /// </summary>
+        public int PotentialConsulationCardTarget { get; set; }
+       
+        /// <summary>
+        /// 有效加V
+        /// </summary>
+        public int EffectiveAddWechatTarget { get; set; }
+        /// <summary>
+        /// 潜在加V
+        /// </summary>
+        public int PotentialAddWechatTarget { get; set; }
         /// <summary>
         /// 派单目标
         /// </summary>

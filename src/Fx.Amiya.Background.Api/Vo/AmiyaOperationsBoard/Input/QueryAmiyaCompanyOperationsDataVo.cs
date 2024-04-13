@@ -27,9 +27,5 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Input
         /// 是否是新/老客(true:老客,false:新客,传null不筛选)
         /// </summary>
         public bool? IsOldCustomer { get; set; }
-        /// <summary>
-        /// 是否是有效或潜在客资(true:潜在.false:有效,传null不筛选)
-        /// </summary>
-        public bool? IsPotential { get; set; }
     }
 }

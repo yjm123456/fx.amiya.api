@@ -1119,6 +1119,35 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
+        /// 根据基础主播获取获取潜在/有效 加v,分诊
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isEffectiveCustomerData"></param>
+        /// <param name="contentPlatFormId"></param>
+        /// <returns></returns>
+        public async Task<List<ShoppingCartRegistrationDto>> GetPerformanceByBaseLiveAnchorIdAsync(DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, string baseLiveAnchorId)
+        {
+            var employeeIdList =(await _amiyaEmployeeService.GetByLiveAnchorBaseIdAsync(baseLiveAnchorId)).Select(e=>e.Id).ToList();
+            var result = from d in dalShoppingCartRegistration.GetAll()
+            .Where(o => o.RecordDate >= startDate && o.RecordDate < endDate)
+            .Where(o=>employeeIdList.Contains(o.AssignEmpId.Value))
+                         select d;
+            if (isEffectiveCustomerData.HasValue)
+            {
+                result = result.Where(o => isEffectiveCustomerData == true ? o.Price > 0 : o.Price == 0);
+            }
+            var x = from d in result
+                    select new ShoppingCartRegistrationDto
+                    {
+                        IsReturnBackPrice = d.IsReturnBackPrice,
+                        AssignEmpId = d.AssignEmpId,
+                        IsAddWeChat = d.IsAddWeChat,
+                    };
+            return await x.ToListAsync();
+        }
+
+        /// <summary>
         /// 根据条件获取助理月业绩完成情况数据
         /// </summary>
         /// <param name="year"></param>
@@ -1362,7 +1391,7 @@ namespace Fx.Amiya.Service
                 DealPrice=e.ContentPlatformOrderDealInfoList.Where(e=>e.IsDeal==true).Sum(e=>e.Price),
                 IsDeal=e.ContentPlatformOrderDealInfoList.Where(e=>e.IsDeal==true).Count()>0,
                 IsRePurchase= e.ContentPlatformOrderDealInfoList.Where(e => e.IsDeal == true).Count() > 1,
-            });
+            }).ToList();
             data.SevenDaySendOrderCount = (from c in contentOrderList
                                            from s in baseData
                                            where s.Phone == c.Phone && c.SendDate <= s.CreateDate.AddDays(7) select s).Count();                          

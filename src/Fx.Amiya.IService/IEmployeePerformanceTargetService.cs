@@ -25,5 +25,13 @@ namespace Fx.Amiya.IService
         /// <param name="month"></param>
         /// <returns></returns>
         Task<decimal> GetByEmpIdAndYearMonthAsync(int employeeId, int year, int month);
+        /// <summary>
+        /// 根据基础主播id获取有效/潜在 分诊,加v目标
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="baseLiveAnchorId"></param>
+        /// <returns></returns>
+        Task<EmployeeTargetInfoDto> GetEmployeeTargetByBaseLiveAnchorIdAsync(int year, int month, string baseLiveAnchorId);
     }
 }

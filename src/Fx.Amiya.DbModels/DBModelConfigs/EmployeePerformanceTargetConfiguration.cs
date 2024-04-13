@@ -19,8 +19,10 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.BelongYear).HasColumnName("belong_year").HasColumnType("int").IsRequired();
             builder.Property(e => e.BelongMonth).HasColumnName("belong_month").HasColumnType("int").IsRequired();
             builder.Property(e => e.EmployeeId).HasColumnName("employee_id").HasColumnType("int").IsRequired();
-            builder.Property(e => e.ConsulationCardTarget).HasColumnName("consulation_card_target").HasColumnType("int").IsRequired();
-            builder.Property(e => e.AddWechatTarget).HasColumnName("add_wechat_target").HasColumnType("int").IsRequired();
+            builder.Property(e => e.EffectiveAddWechatTarget).HasColumnName("effective_add_wechat_target").HasColumnType("int").IsRequired();
+            builder.Property(e => e.PotentialAddWechatTarget).HasColumnName("potential_add_wechat_target").HasColumnType("int").IsRequired();
+            builder.Property(e => e.EffectiveConsulationCardTarget).HasColumnName("effective_consulation_card_target").HasColumnType("int").IsRequired();
+            builder.Property(e => e.PotentialConsulationCardTarget).HasColumnName("potential_consulation_card_target").HasColumnType("int").IsRequired();
             builder.Property(e => e.SendOrderTarget).HasColumnName("send_order_target").HasColumnType("int").IsRequired();
             builder.Property(e => e.VisitTarget).HasColumnName("visit_target").HasColumnType("int").IsRequired();
             builder.Property(e => e.NewCustomerDealTarget).HasColumnName("new_customer_deal_target").HasColumnType("int").IsRequired();

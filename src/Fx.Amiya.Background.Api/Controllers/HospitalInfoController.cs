@@ -917,9 +917,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData> AddProjectAsync(AddHospitalProjectVo addVo)
         {
             try
-            {
-                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-                int employeeId = Convert.ToInt32(employee.Id);
+            {              
                 AddHospitalProjectDto addDto = new AddHospitalProjectDto();
                 addDto.HospitalId = addVo.HospitalId;
                 addDto.Name = addVo.Name;
