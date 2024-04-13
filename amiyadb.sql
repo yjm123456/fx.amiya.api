@@ -78,4 +78,23 @@ CREATE TABLE `amiyadb`.`tbl_employee_performance_target` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
+	--新增医院项目介绍ppt存储表
+	CREATE TABLE `amiyadb`.`tbl_hospital_project` (
+  `id` VARCHAR(50) NOT NULL,
+  `hospital_id` INT UNSIGNED NOT NULL,
+  `name` VARCHAR(500) NOT NULL,
+  `project_url` VARCHAR(45) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_hospital_project_hospitalinfo_idx` (`hospital_id` ASC) VISIBLE,
+  CONSTRAINT `fk_hospital_project_hospitalinfo`
+    FOREIGN KEY (`hospital_id`)
+    REFERENCES `amiyadb`.`tbl_hospital_info` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
 

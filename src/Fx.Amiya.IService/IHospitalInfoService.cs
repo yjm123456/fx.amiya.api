@@ -3,6 +3,8 @@ using Fx.Amiya.Dto.HospitalContract.Input;
 using Fx.Amiya.Dto.HospitalContract.Result;
 using Fx.Amiya.Dto.HospitalEnvironmentPicture;
 using Fx.Amiya.Dto.HospitalInfo;
+using Fx.Amiya.Dto.HospitalProject.Input;
+using Fx.Amiya.Dto.HospitalProject.Result;
 using Fx.Common;
 using Fx.Infrastructure;
 using System;
@@ -190,7 +192,7 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<List<BaseKeyValueDto<int>>> GetYearServiceStatusAsync();
 
-        #region 新的医院合同接口
+        #region 【新的医院合同接口】
 
         /// <summary>
         /// 新的医院合同修改接口
@@ -224,6 +226,44 @@ namespace Fx.Amiya.IService
         /// <param name="id"></param>
         /// <returns></returns>
         Task<HospitalContractInfoDto> GetHospitalContractByIdAsync(string id);
+
+        #endregion
+
+
+        #region 【新的医院项目ppt接口】
+
+        /// <summary>
+        /// 新的医院项目ppt修改接口
+        /// </summary>
+        /// <param name="contractUrl"></param>
+        /// <param name="hospitalId"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        Task UpdateProjectAsync(UpdateHospitalProjectDto updateDto);
+        /// <summary>
+        /// 新的医院项目ppt添加接口
+        /// </summary>
+        /// <param name="addDto"></param>
+        /// <returns></returns>
+        Task AddHospitalProjectAsync(AddHospitalProjectDto addDto);
+        /// <summary>
+        /// 新的删除医院项目ppt接口
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task DeleteHospitalProjectAsync(string id);
+        /// <summary>
+        /// 根据医院id获取项目ppt列表
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        Task<List<HospitalProjectInfoDto>> GetHospitalProjectListAsync(int hospitalId);
+        /// <summary>
+        /// 根据id获取项目ppt详情
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<HospitalProjectInfoDto> GetHospitalProjectByIdAsync(string id);
 
         #endregion
 
