@@ -351,7 +351,7 @@ namespace Fx.Amiya.IService
         Task<List<HospitalOrderNumAndPriceDto>> GetConsultationPerformanceInfoAsync(DateTime startDate, DateTime endDate);
         Task<List<HospitalOrderNumAndPriceDto>> GetCustomerServicePerformanceInfoAsync(DateTime startDate, DateTime endDate);
         /// <summary>
-        /// 根据客服id获取客服业绩信息【简介版】(只输出4条排名数据)
+        /// 根据客服id获取客服业绩信息【简介版】(只输出5条排名数据)
         /// </summary>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>

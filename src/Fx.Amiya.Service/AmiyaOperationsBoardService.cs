@@ -12,14 +12,9 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Service
 {
-    public class AmiyaOperationsBoardServiceService : IAmiyaOperationsBoardServiceService
+    public class AmiyaOperationsBoardServiceService : IAmiyaOperationsBoardService
     {
-        private readonly ILiveAnchorMonthlyTargetBeforeLivingService liveAnchorMonthlyTargetBeforeLivingService;
         private readonly ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService;
-        private readonly IDalBeforeLivingTikTokDailyTarget dalBeforeLivingTikTokDailyTarget;
-        private readonly IDalBeforeLivingVideoDailyTarget dalBeforeLivingVideoDailyTarget;
-        private readonly IDalBeforeLivingXiaoHongShuDailyTarget dalBeforeLivingXiaoHongShuDailyTarget;
-        private readonly IDalLivingDailyTarget dalLivingDailyTarget;
         private readonly ILiveAnchorBaseInfoService liveAnchorBaseInfoService;
         private readonly IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService;
         private readonly ILiveAnchorService liveAnchorService;
@@ -30,14 +25,19 @@ namespace Fx.Amiya.Service
         private readonly IContentPlatformOrderSendService contentPlatformOrderSendService;
         private readonly ILiveAnchorMonthlyTargetAfterLivingService liveAnchorMonthlyTargetAfterLivingService;
 
-        public AmiyaOperationsBoardServiceService(ILiveAnchorMonthlyTargetBeforeLivingService liveAnchorMonthlyTargetBeforeLivingService, ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService, IDalBeforeLivingTikTokDailyTarget dalBeforeLivingTikTokDailyTarget, IDalBeforeLivingVideoDailyTarget dalBeforeLivingVideoDailyTarget, IDalBeforeLivingXiaoHongShuDailyTarget dalBeforeLivingXiaoHongShuDailyTarget, IDalLivingDailyTarget dalLivingDailyTarget, ILiveAnchorBaseInfoService liveAnchorBaseInfoService, IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService, ILiveAnchorService liveAnchorService, IShoppingCartRegistrationService shoppingCartRegistrationService, IContentPlateFormOrderService contentPlateFormOrderService, IAmiyaEmployeeService amiyaEmployeeService, IEmployeePerformanceTargetService employeePerformanceTargetService, IContentPlatformOrderSendService contentPlatformOrderSendService, ILiveAnchorMonthlyTargetAfterLivingService liveAnchorMonthlyTargetAfterLivingService)
+        public AmiyaOperationsBoardServiceService(
+            ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService, 
+            ILiveAnchorBaseInfoService liveAnchorBaseInfoService, 
+            IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService, 
+            ILiveAnchorService liveAnchorService,
+            IShoppingCartRegistrationService shoppingCartRegistrationService,
+            IContentPlateFormOrderService contentPlateFormOrderService, 
+            IAmiyaEmployeeService amiyaEmployeeService, 
+            IEmployeePerformanceTargetService employeePerformanceTargetService,
+            IContentPlatformOrderSendService contentPlatformOrderSendService,
+            ILiveAnchorMonthlyTargetAfterLivingService liveAnchorMonthlyTargetAfterLivingService)
         {
-            this.liveAnchorMonthlyTargetBeforeLivingService = liveAnchorMonthlyTargetBeforeLivingService;
             this.liveAnchorMonthlyTargetLivingService = liveAnchorMonthlyTargetLivingService;
-            this.dalBeforeLivingTikTokDailyTarget = dalBeforeLivingTikTokDailyTarget;
-            this.dalBeforeLivingVideoDailyTarget = dalBeforeLivingVideoDailyTarget;
-            this.dalBeforeLivingXiaoHongShuDailyTarget = dalBeforeLivingXiaoHongShuDailyTarget;
-            this.dalLivingDailyTarget = dalLivingDailyTarget;
             this.liveAnchorBaseInfoService = liveAnchorBaseInfoService;
             this.contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
             this.liveAnchorService = liveAnchorService;
@@ -171,7 +171,7 @@ namespace Fx.Amiya.Service
             var employeeInfos = await amiyaEmployeeService.GetemployeeByPositionIdAsync(4);
             amiyaEmployeeIds = employeeInfos.Select(x => x.Id).ToList();
 
-            #region 【助理业绩】
+            #region 【助理业绩-5条】
             var dealInfo = await contentPlateFormOrderService.GetFourCustomerServicePerformanceByCustomerServiceIdAsync(query.startDate.Value, query.endDate.Value, amiyaEmployeeIds);
             List<GetEmployeePerformanceDataDto> employeeDataList = new List<GetEmployeePerformanceDataDto>();
             foreach (var x in dealInfo)
@@ -186,7 +186,7 @@ namespace Fx.Amiya.Service
             result.EmployeeDatas = employeeDataList;
             #endregion
 
-            #region 【助理获客情况】
+            #region 【助理获客情况-10条】
             var shoppingCartRegistionData = await shoppingCartRegistrationService.GetNewBaseBusinessPerformanceByLiveAnchorNameAsync(query.startDate.Value, query.endDate.Value, null, "");
 
             result.EmployeeDistributeConsulationNumAndAddWechats = shoppingCartRegistionData.Where(x => x.AssignEmpId.HasValue).GroupBy(x => x.AssignEmpId).Select(x => new GetEmployeeDistributeConsulationNumAndAddWechatDto
@@ -202,7 +202,7 @@ namespace Fx.Amiya.Service
             }
             #endregion
 
-            #region 【助理客户运营情况】
+            #region 【助理客户运营情况-10条】
             List<GetEmployeeCustomerAnalizeDto> getEmployeeCustomerAnalizeDtos = new List<GetEmployeeCustomerAnalizeDto>();
             foreach (var x in amiyaEmployeeIds)
             {
@@ -218,7 +218,7 @@ namespace Fx.Amiya.Service
             result.GetEmployeeCustomerAnalizes = getEmployeeCustomerAnalizeDtos.OrderByDescending(x => x.SendOrderNum).Take(10).ToList();
             #endregion
 
-            #region 【业绩贡献占比】
+            #region 【业绩贡献占比-根据助理业绩获取条数输出】
             var orderDealInfo = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAndLiveAnchorIdsAsync(query.startDate.Value, query.endDate.Value, new List<int>());
             //总业绩数据值
             var totalAchievement = orderDealInfo.Sum(x => x.Price);

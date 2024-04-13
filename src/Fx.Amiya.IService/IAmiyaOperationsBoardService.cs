@@ -8,7 +8,7 @@ using Fx.Amiya.Dto.AmiyaOperationsBoardService;
 
 namespace Fx.Amiya.IService
 {
-    public interface IAmiyaOperationsBoardServiceService
+    public interface IAmiyaOperationsBoardService
     {
         #region  运营主看板
         /// <summary>

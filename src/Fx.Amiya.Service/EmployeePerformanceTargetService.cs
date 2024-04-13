@@ -81,10 +81,10 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var isExist = await dalEmployeePerformanceTarget.GetAll().Where(x => x.EmployeeId == addDto.EmployeeId && x.BelongMonth == addDto.BelongMonth && addDto.BelongYear == addDto.BelongYear).CountAsync();
+                var isExist = await dalEmployeePerformanceTarget.GetAll().Where(x => x.EmployeeId == addDto.EmployeeId && x.BelongMonth == addDto.BelongMonth && addDto.BelongYear == addDto.BelongYear && x.Valid == true).CountAsync();
                 if (isExist > 0)
                 {
-                    throw new Exception("已存在该员工的业绩目标，请勿重复添加！");
+                    throw new Exception("已存在该员工选择月份的业绩目标，请勿重复添加！");
                 }
                 EmployeePerformanceTarget cmployeePerformanceTarget = new EmployeePerformanceTarget();
                 cmployeePerformanceTarget.Id = Guid.NewGuid().ToString();
@@ -158,10 +158,10 @@ namespace Fx.Amiya.Service
             var result = await dalEmployeePerformanceTarget.GetAll().Where(x => x.Id == updateDto.Id && x.Valid == true).FirstOrDefaultAsync();
             if (result == null)
                 throw new Exception("未找到助理业绩目标信息");
-            var isExist = await dalEmployeePerformanceTarget.GetAll().Where(x => x.EmployeeId == updateDto.EmployeeId && x.BelongMonth == updateDto.BelongMonth && updateDto.BelongYear == updateDto.BelongYear && x.Id != updateDto.Id).CountAsync();
+            var isExist = await dalEmployeePerformanceTarget.GetAll().Where(x => x.EmployeeId == updateDto.EmployeeId && x.BelongMonth == updateDto.BelongMonth && updateDto.BelongYear == updateDto.BelongYear && x.Id != updateDto.Id && x.Valid == true).CountAsync();
             if (isExist > 0)
             {
-                throw new Exception("已存在该员工的业绩目标，请检查数据后重新提交！");
+                throw new Exception("已存在该员工选择月份的业绩目标，请检查数据后重新提交！");
             }
             result.EmployeeId = updateDto.EmployeeId;
             result.BelongYear = updateDto.BelongYear;

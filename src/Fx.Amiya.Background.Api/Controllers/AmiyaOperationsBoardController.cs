@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Input;
 using Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result;
+using Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result;
 using Fx.Amiya.Dto.AmiyaOperationsBoardService;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
@@ -21,11 +22,11 @@ namespace Fx.Amiya.Background.Api.Controllers
     [FxInternalAuthorize]
     public class AmiyaOperationsBoardController : ControllerBase
     {
-        private readonly IAmiyaOperationsBoardServiceService amiyaOperationsBoardServiceService;
+        private readonly IAmiyaOperationsBoardService amiyaOperationsBoardService;
         private readonly ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService;
-        public AmiyaOperationsBoardController(IAmiyaOperationsBoardServiceService amiyaOperationsBoardServiceService, ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService)
+        public AmiyaOperationsBoardController(IAmiyaOperationsBoardService amiyaOperationsBoardService, ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService)
         {
-            this.amiyaOperationsBoardServiceService = amiyaOperationsBoardServiceService;
+            this.amiyaOperationsBoardService = amiyaOperationsBoardService;
             this.liveAnchorMonthlyTargetLivingService = liveAnchorMonthlyTargetLivingService;
         }
         #region  运营主看板
@@ -37,6 +38,27 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<OperationTotalAchievementDataVo>> GetTotalAchievementAndDateScheduleAsync([FromQuery] QueryOperationDataVo query)
         {
             OperationTotalAchievementDataVo result = new OperationTotalAchievementDataVo();
+            QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
+            queryOperationDataVo.startDate = query.startDate;
+            queryOperationDataVo.endDate = query.endDate;
+            var data = await amiyaOperationsBoardService.GetTotalAchievementAndDateScheduleAsync(queryOperationDataVo);
+            result.DateSchedule = data.DateSchedule;
+            result.TotalAchievement = data.TotalAchievement;
+            result.TotalPerformanceBrokenLineList = data.TotalPerformanceBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
+            {
+                date = x.date,
+                Performance = x.Performance
+            }).ToList();
+            result.NewCustomerPerformanceBrokenLineList = data.NewCustomerPerformanceBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
+            {
+                date = x.date,
+                Performance = x.Performance
+            }).ToList();
+            result.OldCustomerPerformanceBrokenLineList = data.OldCustomerPerformanceBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
+            {
+                date = x.date,
+                Performance = x.Performance
+            }).ToList();
             return ResultData<OperationTotalAchievementDataVo>.Success().AddData("data", result);
         }
 
@@ -47,9 +69,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("getCustomerData")]
         public async Task<ResultData<GetCustomerDataVo>> GetCustomerDataAsync([FromQuery] QueryOperationDataVo query)
         {
-            return ResultData<GetCustomerDataVo>.Success().AddData("data", new GetCustomerDataVo());
+            QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
+            queryOperationDataVo.startDate = query.startDate;
+            queryOperationDataVo.endDate = query.endDate;
+            var data = await amiyaOperationsBoardService.GetCustomerDataAsync(queryOperationDataVo);
+            GetCustomerDataVo result = new GetCustomerDataVo();
+            result.AddCardNum = data.AddCardNum;
+            result.RefundCardNum = data.RefundCardNum;
+            result.DistributeConsulationNum = data.DistributeConsulationNum;
+            result.AddCardNum = data.AddCardNum;
+            return ResultData<GetCustomerDataVo>.Success().AddData("data", result);
         }
-        
+
         /// <summary>
         /// 获取客户运营情况数据
         /// </summary>
@@ -57,7 +88,29 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("getCustomerAnalizeData")]
         public async Task<ResultData<GetCustomerAnalizeDataVo>> GetCustomerAnalizeDataAsync([FromQuery] QueryOperationDataVo query)
         {
-            return ResultData<GetCustomerAnalizeDataVo>.Success().AddData("data", new GetCustomerAnalizeDataVo());
+            QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
+            queryOperationDataVo.startDate = query.startDate;
+            queryOperationDataVo.endDate = query.endDate;
+            var data = await amiyaOperationsBoardService.GetCustomerAnalizeDataAsync(queryOperationDataVo);
+            GetCustomerAnalizeDataVo result = new GetCustomerAnalizeDataVo();
+            CustomerAnalizeByGroupVo sendNum = new CustomerAnalizeByGroupVo();
+            sendNum.TotalNum = data.SendNum.TotalNum;
+            sendNum.GroupDaoDao = data.SendNum.GroupDaoDao;
+            sendNum.GroupJiNa = data.SendNum.GroupJiNa;
+            result.SendNum = sendNum;
+
+            CustomerAnalizeByGroupVo visitNum = new CustomerAnalizeByGroupVo();
+            visitNum.TotalNum = data.VisitNum.TotalNum;
+            visitNum.GroupDaoDao = data.VisitNum.GroupDaoDao;
+            visitNum.GroupJiNa = data.VisitNum.GroupJiNa;
+            result.VisitNum = visitNum;
+
+            CustomerAnalizeByGroupVo dealNum = new CustomerAnalizeByGroupVo();
+            dealNum.TotalNum = data.DealNum.TotalNum;
+            dealNum.GroupDaoDao = data.DealNum.GroupDaoDao;
+            dealNum.GroupJiNa = data.DealNum.GroupJiNa;
+            result.DealNum = dealNum;
+            return ResultData<GetCustomerAnalizeDataVo>.Success().AddData("data", result);
         }
 
         /// <summary>
@@ -67,21 +120,48 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("getCustomerIndexTransformationData")]
         public async Task<ResultData<List<GetCustomerIndexTransformationResultVo>>> GetCustomerIndexTransformationDataAsync([FromQuery] QueryOperationDataVo query)
         {
-            GetCustomerIndexTransformationDataVo getData = new GetCustomerIndexTransformationDataVo();
+            QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
+            queryOperationDataVo.startDate = query.startDate;
+            queryOperationDataVo.endDate = query.endDate;
+            var data = await amiyaOperationsBoardService.GetCustomerIndexTransformationDataAsync(queryOperationDataVo);
+
             List<GetCustomerIndexTransformationResultVo> result = new List<GetCustomerIndexTransformationResultVo>();
             //参数转换赋值
             GetCustomerIndexTransformationResultVo getAddCardNum = new GetCustomerIndexTransformationResultVo();
+
             getAddCardNum.Name = "下卡量";
-            getAddCardNum.Value = 86;
+            getAddCardNum.Value = data.AddCardNum;
             result.Add(getAddCardNum);
+
             GetCustomerIndexTransformationResultVo getRefundCardNum = new GetCustomerIndexTransformationResultVo();
             getRefundCardNum.Name = "退卡量";
-            getRefundCardNum.Value = 6;
+            getRefundCardNum.Value = data.RefundCardNum;
             result.Add(getRefundCardNum);
+
             GetCustomerIndexTransformationResultVo getDistributeConsulationNum = new GetCustomerIndexTransformationResultVo();
             getDistributeConsulationNum.Name = "分诊量";
-            getDistributeConsulationNum.Value = 70;
+            getDistributeConsulationNum.Value = data.DistributeConsulationNum;
             result.Add(getDistributeConsulationNum);
+
+            GetCustomerIndexTransformationResultVo getAddWechatNum = new GetCustomerIndexTransformationResultVo();
+            getAddWechatNum.Name = "加v量";
+            getAddWechatNum.Value = data.AddWechatNum;
+            result.Add(getAddWechatNum);
+
+            GetCustomerIndexTransformationResultVo getSendOrderNum = new GetCustomerIndexTransformationResultVo();
+            getSendOrderNum.Name = "派单量";
+            getSendOrderNum.Value = data.SendOrderNum;
+            result.Add(getSendOrderNum);
+
+            GetCustomerIndexTransformationResultVo getVisitNum = new GetCustomerIndexTransformationResultVo();
+            getVisitNum.Name = "上门量";
+            getVisitNum.Value = data.VisitNum;
+            result.Add(getVisitNum);
+
+            GetCustomerIndexTransformationResultVo getDealNum = new GetCustomerIndexTransformationResultVo();
+            getDealNum.Name = "成交量";
+            getDealNum.Value = data.DealNum;
+            result.Add(getDealNum);
 
             return ResultData<List<GetCustomerIndexTransformationResultVo>>.Success().AddData("data", result);
         }
@@ -93,6 +173,35 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("getEmployeePerformanceAnalizeData")]
         public async Task<ResultData<GetEmployeePerformanceAnalizeDataVo>> GetEmployeePerformanceAnalizeDataAsync([FromQuery] QueryOperationDataVo query)
         {
+            QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
+            queryOperationDataVo.startDate = query.startDate;
+            queryOperationDataVo.endDate = query.endDate;
+            var data = await amiyaOperationsBoardService.GetEmployeePerformanceAnalizeDataAsync(queryOperationDataVo);
+            GetEmployeePerformanceAnalizeDataVo result = new GetEmployeePerformanceAnalizeDataVo();
+            result.EmployeeDatas = data.EmployeeDatas.Select(x => new GetEmployeePerformanceDataVo
+            {
+                EmployeeName = x.EmployeeName,
+                Performance = x.Performance,
+                CompleteRate = x.CompleteRate,
+            }).ToList();
+            result.EmployeeDistributeConsulationNumAndAddWechats = data.EmployeeDistributeConsulationNumAndAddWechats.Select(x => new GetEmployeeDistributeConsulationNumAndAddWechatVo
+            {
+                EmployeeName = x.EmployeeName,
+                DistributeConsulationNum = x.DistributeConsulationNum,
+                AddWechatNum = x.AddWechatNum,
+            }).ToList();
+            result.GetEmployeeCustomerAnalizes = data.GetEmployeeCustomerAnalizes.Select(x => new GetEmployeeCustomerAnalizeVo
+            {
+                EmployeeName = x.EmployeeName,
+                SendOrderNum = x.SendOrderNum,
+                VisitNum = x.VisitNum,
+                DealNum = x.DealNum
+            }).ToList();
+            result.GetEmployeePerformanceRankings = data.GetEmployeePerformanceRankings.Select(x => new GetEmployeePerformanceRankingVo
+            {
+                EmployeeName = x.EmployeeName,
+                Performance = x.Performance,
+            }).ToList();
             return ResultData<GetEmployeePerformanceAnalizeDataVo>.Success().AddData("data", new GetEmployeePerformanceAnalizeDataVo());
         }
 
@@ -109,22 +218,23 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             QueryAmiyaCompanyOperationsDataDto querDto = new QueryAmiyaCompanyOperationsDataDto();
             querDto.StartDate = query.StartDate;
-            querDto.EndDate= query.EndDate;
+            querDto.EndDate = query.EndDate;
             querDto.Unit = query.Unit;
             querDto.LiveAnchorIds = query.LiveAnchorIds;
-            var data=await amiyaOperationsBoardServiceService.GetCompanyPerformanceDataAsync(querDto);
-            var res = data.Select(e => new CompanyPerformanceDataVo {
+            var data = await amiyaOperationsBoardService.GetCompanyPerformanceDataAsync(querDto);
+            var res = data.Select(e => new CompanyPerformanceDataVo
+            {
                 GroupName = e.GroupName,
                 CurrentMonthNewCustomerPerformance = e.CurrentMonthNewCustomerPerformance,
-                NewCustomerPerformanceTarget=e.NewCustomerPerformanceTarget,
-                NewCustomerPerformanceTargetComplete=e.NewCustomerPerformanceTargetComplete,
-                CurrentMonthOldCustomerPerformance=e.CurrentMonthOldCustomerPerformance,
-                OldCustomerTarget=e.OldCustomerTarget,
-                OldCustomerTargetComplete=e.OldCustomerTargetComplete,
-                TotalPerformance=e.TotalPerformance,
-                TotalPerformanceTarget=e.TotalPerformanceTarget,
-                TotalPerformanceTargetComplete=e.TotalPerformanceTargetComplete
-            }).OrderBy(e=>e.GroupName).ToList();
+                NewCustomerPerformanceTarget = e.NewCustomerPerformanceTarget,
+                NewCustomerPerformanceTargetComplete = e.NewCustomerPerformanceTargetComplete,
+                CurrentMonthOldCustomerPerformance = e.CurrentMonthOldCustomerPerformance,
+                OldCustomerTarget = e.OldCustomerTarget,
+                OldCustomerTargetComplete = e.OldCustomerTargetComplete,
+                TotalPerformance = e.TotalPerformance,
+                TotalPerformanceTarget = e.TotalPerformanceTarget,
+                TotalPerformanceTargetComplete = e.TotalPerformanceTargetComplete
+            }).OrderBy(e => e.GroupName).ToList();
             return ResultData<List<CompanyPerformanceDataVo>>.Success().AddData("data", res);
         }
         /// <summary>
@@ -139,9 +249,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             querDto.EndDate = query.EndDate;
             querDto.Unit = query.Unit;
             querDto.LiveAnchorIds = query.LiveAnchorIds;
-            var data = await amiyaOperationsBoardServiceService.GetCompanyCustomerAcquisitionDataAsync(querDto);
-            var res = data.Select(e => new CompanyCustomerAcquisitionDataVo {
-                GroupName=e.GroupName,
+            var data = await amiyaOperationsBoardService.GetCompanyCustomerAcquisitionDataAsync(querDto);
+            var res = data.Select(e => new CompanyCustomerAcquisitionDataVo
+            {
+                GroupName = e.GroupName,
                 OrderCard = e.OrderCard,
                 OrderCardTarget = e.OrderCardTarget,
                 OrderCardTargetComplete = e.OrderCardTargetComplete,
@@ -169,9 +280,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             querDto.Unit = query.Unit;
             querDto.LiveAnchorIds = query.LiveAnchorIds;
             querDto.IsOldCustomer = query.IsOldCustomer;
-            var data = await amiyaOperationsBoardServiceService.GetCompanyOperationsDataAsync(querDto);
-            var res = data.Select(e => new CompanyOperationsDataVo {
-                GroupName=e.GroupName,
+            var data = await amiyaOperationsBoardService.GetCompanyOperationsDataAsync(querDto);
+            var res = data.Select(e => new CompanyOperationsDataVo
+            {
+                GroupName = e.GroupName,
                 SendOrder = e.SendOrder,
                 SendOrderTarget = e.SendOrderTarget,
                 SendOrderTargetComplete = e.SendOrderTargetComplete,
@@ -196,9 +308,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             querDto.EndDate = query.EndDate;
             querDto.Unit = query.Unit;
             querDto.LiveAnchorIds = query.LiveAnchorIds;
-            var data = await amiyaOperationsBoardServiceService.GetCompanyIndicatorConversionDataAsync(querDto);
-            var res = data.Select(e=>new CompanyIndicatorConversionDataVo { 
-                GroupName=e.GroupName,
+            var data = await amiyaOperationsBoardService.GetCompanyIndicatorConversionDataAsync(querDto);
+            var res = data.Select(e => new CompanyIndicatorConversionDataVo
+            {
+                GroupName = e.GroupName,
                 SevenDaySendOrderRate = e.SevenDaySendOrderRate,
                 FifteenDaySendOrderRate = e.FifteenDaySendOrderRate,
                 OldCustomerToHospitalRate = e.OldCustomerToHospitalRate,
