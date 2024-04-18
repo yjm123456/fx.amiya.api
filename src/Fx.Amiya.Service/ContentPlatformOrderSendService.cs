@@ -218,7 +218,7 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="addDto"></param>
         /// <returns></returns>
-        public async Task AddMultiAsync(AddContentPlatFormSendOrderInfoDto addDto,bool isMain)
+        public async Task AddMultiAsync(AddContentPlatFormSendOrderInfoDto addDto, bool isMain)
         {
             ContentPlatformOrderSend sendOrderInfo = new ContentPlatformOrderSend();
             sendOrderInfo.ContentPlatformOrderId = addDto.OrderId;
@@ -231,7 +231,8 @@ namespace Fx.Amiya.Service
             {
                 sendOrderInfo.IsMainHospital = true;
             }
-            else {
+            else
+            {
                 sendOrderInfo.IsMainHospital = false;
             }
             if (!addDto.IsUncertainDate)
@@ -609,7 +610,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<FxPageInfo<SendContentPlatformOrderDto>> GetSendOrderList(List<int?> liveAnchorIds, int? consultationEmpId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, string keyword, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int loginEmployeeId, int belongEmployeeId, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int pageNum, int pageSize)
         {
-            
+
             var orders = _dalContentPlatformOrderSend.GetAll().Include(x => x.ContentPlatformOrder)
                        .Where(e => string.IsNullOrWhiteSpace(keyword) || e.ContentPlatformOrderId == keyword || e.ContentPlatformOrder.Phone.Contains(keyword) || e.ContentPlatformOrder.LiveAnchorWeChatNo.Contains(keyword))
                        .Where(e => hospitalId == 0 || e.HospitalId == hospitalId)
@@ -721,7 +722,7 @@ namespace Fx.Amiya.Service
                                             OrderSourceText = ServiceClass.GerContentPlatFormOrderSourceText(d.ContentPlatformOrder.OrderSource.Value),
                                             AcceptConsulting = d.ContentPlatformOrder.AcceptConsulting,
                                             IsRepeatProfundityOrder = d.ContentPlatformOrder.IsRepeatProfundityOrder,
-                                            IsMainHospital=d.IsMainHospital
+                                            IsMainHospital = d.IsMainHospital
                                         };
 
             FxPageInfo<SendContentPlatformOrderDto> pageInfo = new FxPageInfo<SendContentPlatformOrderDto>();
@@ -1051,9 +1052,9 @@ namespace Fx.Amiya.Service
         /// 根据派单人获取总派单量
         /// </summary>
         /// <returns></returns>
-        public async Task<int> GetTotalSendCountByEmployeeAsync(int employeeId)
+        public async Task<int> GetTotalSendCountByEmployeeAsync(int employeeId, DateTime startDate, DateTime endDate)
         {
-            return await _dalContentPlatformOrderSend.GetAll().Where(x=>x.Sender==employeeId).CountAsync();
+            return await _dalContentPlatformOrderSend.GetAll().Where(x => x.Sender == employeeId && x.SendDate > startDate && x.SendDate < endDate).CountAsync();
         }
 
         #region 全国机构运营数据
@@ -1142,7 +1143,7 @@ namespace Fx.Amiya.Service
         public async Task<FxPageInfo<SimpleSendOrderInfoDto>> GetSendOrderInfoListByContentplateformIdAsync(QuerySendOrderInfoListDto query)
         {
             FxPageInfo<SimpleSendOrderInfoDto> pageInfo = new FxPageInfo<SimpleSendOrderInfoDto>();
-            var res =  _dalContentPlatformOrderSend.GetAll()
+            var res = _dalContentPlatformOrderSend.GetAll()
                       .Where(e => e.ContentPlatformOrderId == query.ContentPlatformId)
                       .Include(e => e.ContentPlatformOrder)
                       .Include(e => e.HospitalInfo)
@@ -1158,7 +1159,7 @@ namespace Fx.Amiya.Service
                           SendDate = e.ContentPlatformOrder.SendDate,
                           SenderName = e.AmiyaEmployee.Name
                       });
-            pageInfo.TotalCount=await res.CountAsync();
+            pageInfo.TotalCount = await res.CountAsync();
             pageInfo.List = res.Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToList();
             return pageInfo;
 

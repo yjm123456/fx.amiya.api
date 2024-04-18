@@ -1128,10 +1128,10 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<ShoppingCartRegistrationDto>> GetPerformanceByBaseLiveAnchorIdAsync(DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, string baseLiveAnchorId)
         {
-            var employeeIdList =(await _amiyaEmployeeService.GetByLiveAnchorBaseIdAsync(baseLiveAnchorId)).Select(e=>e.Id).ToList();
+            var employeeIdList = (await _amiyaEmployeeService.GetByLiveAnchorBaseIdAsync(baseLiveAnchorId)).Select(e => e.Id).ToList();
             var result = from d in dalShoppingCartRegistration.GetAll()
             .Where(o => o.RecordDate >= startDate && o.RecordDate < endDate)
-            .Where(o=>employeeIdList.Contains(o.AssignEmpId.Value))
+            .Where(o => employeeIdList.Contains(o.AssignEmpId.Value))
                          select d;
             if (isEffectiveCustomerData.HasValue)
             {
@@ -1357,48 +1357,52 @@ namespace Fx.Amiya.Service
         public async Task<GetCustomerDataDto> GetCustomerDataAsync(DateTime? startDate, DateTime? endDate)
         {
             var list = await dalShoppingCartRegistration.GetAll()
-                .Where(o => o.RecordDate >= startDate && o.RecordDate < endDate.Value.AddDays(1).AddMilliseconds(-1)).ToListAsync();
+                .Where(o => o.RecordDate >= startDate && o.RecordDate < endDate.Value).ToListAsync();
             GetCustomerDataDto result = new GetCustomerDataDto();
             result.AddCardNum = list.Count();
             result.RefundCardNum = list.Where(x => x.IsReturnBackPrice == true).Count();
             result.DistributeConsulationNum = list.Where(x => x.AssignEmpId.HasValue).Count();
-            result.AddWechatNum = list.Where(x => x.IsAddWeChat).Count();
+            result.AddWechatNum = list.Where(x => x.IsAddWeChat == true).Count();
             return result;
         }
         #endregion
 
         #region 啊美雅运营看板
 
-        public async Task<ShoppingCartRegistrationIndicatorBaseDataDto> GetIndicatorConversionDataAsync(DateTime startDate,DateTime endDate,string baseLiveAnchorId,bool? isEffective) {
+        public async Task<ShoppingCartRegistrationIndicatorBaseDataDto> GetIndicatorConversionDataAsync(DateTime startDate, DateTime endDate, string baseLiveAnchorId, bool? isEffective)
+        {
             ShoppingCartRegistrationIndicatorBaseDataDto data = new ShoppingCartRegistrationIndicatorBaseDataDto();
-            var liveanchorIds =(await _liveAnchorService.GetLiveAnchorListByBaseInfoId(baseLiveAnchorId)).Select(e=>e.Id);
-            var baseData= dalShoppingCartRegistration.GetAll().Where(e => e.CreateDate >= startDate && e.CreateDate < endDate&&liveanchorIds.Contains(e.LiveAnchorId)&&(!isEffective.HasValue||(isEffective.Value?e.Price>0:e.Price<=0))).Select(e=>new {
-                IsSendOrder=e.IsSendOrder,
-                Phone=e.Phone,
-                CreateDate=e.CreateDate,
-                IsAddWeChat = e.IsAddWeChat,             
+            var liveanchorIds = (await _liveAnchorService.GetLiveAnchorListByBaseInfoId(baseLiveAnchorId)).Select(e => e.Id);
+            var baseData = dalShoppingCartRegistration.GetAll().Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && liveanchorIds.Contains(e.LiveAnchorId) && (!isEffective.HasValue || (isEffective.Value ? e.Price > 0 : e.Price <= 0))).Select(e => new
+            {
+                IsSendOrder = e.IsSendOrder,
+                Phone = e.Phone,
+                CreateDate = e.CreateDate,
+                IsAddWeChat = e.IsAddWeChat,
             }).ToList();
             data.TotalCount = baseData.Count();
             data.SendOrderCount = baseData.Where(e => e.IsSendOrder == true).Count();
             var phoneList = baseData.Select(e => e.Phone).Distinct().ToList();
-            var contentOrderList = dalContentPlatformOrder.GetAll().Where(e => phoneList.Contains(e.Phone) && e.CreateDate >= startDate).Select(e => new {
-                SendDate=e.SendDate,
-                Phone=e.Phone,
-                ToHospitalDate=e.ToHospitalDate,
-                IsOldCustomer=e.IsOldCustomer,
-                Price=e.AddOrderPrice,
-                IsToHospital=e.IsToHospital,
-                DealPrice=e.ContentPlatformOrderDealInfoList.Where(e=>e.IsDeal==true).Sum(e=>e.Price),
-                IsDeal=e.ContentPlatformOrderDealInfoList.Where(e=>e.IsDeal==true).Count()>0,
-                IsRePurchase= e.ContentPlatformOrderDealInfoList.Where(e => e.IsDeal == true).Count() > 1,
+            var contentOrderList = dalContentPlatformOrder.GetAll().Where(e => phoneList.Contains(e.Phone) && e.CreateDate >= startDate).Select(e => new
+            {
+                SendDate = e.SendDate,
+                Phone = e.Phone,
+                ToHospitalDate = e.ToHospitalDate,
+                IsOldCustomer = e.IsOldCustomer,
+                Price = e.AddOrderPrice,
+                IsToHospital = e.IsToHospital,
+                DealPrice = e.ContentPlatformOrderDealInfoList.Where(e => e.IsDeal == true).Sum(e => e.Price),
+                IsDeal = e.ContentPlatformOrderDealInfoList.Where(e => e.IsDeal == true).Count() > 0,
+                IsRePurchase = e.ContentPlatformOrderDealInfoList.Where(e => e.IsDeal == true).Count() > 1,
             }).ToList();
             data.SevenDaySendOrderCount = (from c in contentOrderList
                                            from s in baseData
-                                           where s.Phone == c.Phone && c.SendDate <= s.CreateDate.AddDays(7) select s).Count();                          
-            data.FifteenToHospitalCount= (from c in contentOrderList
-                                          from s in baseData
-                                          where s.Phone == c.Phone && c.ToHospitalDate <= s.CreateDate.AddDays(15)
-                                          select s).Count();
+                                           where s.Phone == c.Phone && c.SendDate <= s.CreateDate.AddDays(7)
+                                           select s).Count();
+            data.FifteenToHospitalCount = (from c in contentOrderList
+                                           from s in baseData
+                                           where s.Phone == c.Phone && c.ToHospitalDate <= s.CreateDate.AddDays(15)
+                                           select s).Count();
             data.OldCustomerCount = contentOrderList.Where(e => e.IsOldCustomer == true).Count();
             data.OldCustomerToHospitalCount = contentOrderList.Where(e => e.IsOldCustomer == true && e.IsToHospital == true).Count();
             data.OldCustomerRepurchase = contentOrderList.Where(e => e.IsOldCustomer == true && e.IsRePurchase == true).Count();

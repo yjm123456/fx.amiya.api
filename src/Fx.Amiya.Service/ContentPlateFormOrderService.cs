@@ -3408,7 +3408,7 @@ namespace Fx.Amiya.Service
                 {
                     CustomerServiceId = e.Key.Value,
                     TotalServicePrice = e.Sum(e => e.Price),
-                }).Take(5).ToList();
+                }).OrderByDescending(x => x.TotalServicePrice).Take(5).ToList();
 
             foreach (var z in dealResult)
             {
@@ -3683,7 +3683,7 @@ namespace Fx.Amiya.Service
             orderData.SendOrderNum = await _dalContentPlatformOrder.GetAll()
              .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
              .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsOldCustomer == false)
-             .Where(o => o.LiveAnchor.LiveAnchorBaseId==baseLiveAbchorId)
+             .Where(o => o.LiveAnchor.LiveAnchorBaseId == baseLiveAbchorId)
                 .Select(e => e.Phone)
                 .Distinct()
                 .CountAsync();
@@ -3811,7 +3811,7 @@ namespace Fx.Amiya.Service
             result.VisitNum = dealDate.Count();
             result.DealNum = dealDate.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder)
                     .SelectMany(x => x.ContentPlatformOrderDealInfoList)
-                    .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate.AddDays(1).AddMilliseconds(-1) && e.IsDeal == true)
+                    .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true)
                     .ToList().Count();
             return result;
         }

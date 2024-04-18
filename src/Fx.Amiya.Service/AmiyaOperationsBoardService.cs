@@ -26,13 +26,13 @@ namespace Fx.Amiya.Service
         private readonly ILiveAnchorMonthlyTargetAfterLivingService liveAnchorMonthlyTargetAfterLivingService;
 
         public AmiyaOperationsBoardServiceService(
-            ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService, 
-            ILiveAnchorBaseInfoService liveAnchorBaseInfoService, 
-            IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService, 
+            ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService,
+            ILiveAnchorBaseInfoService liveAnchorBaseInfoService,
+            IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService,
             ILiveAnchorService liveAnchorService,
             IShoppingCartRegistrationService shoppingCartRegistrationService,
-            IContentPlateFormOrderService contentPlateFormOrderService, 
-            IAmiyaEmployeeService amiyaEmployeeService, 
+            IContentPlateFormOrderService contentPlateFormOrderService,
+            IAmiyaEmployeeService amiyaEmployeeService,
             IEmployeePerformanceTargetService employeePerformanceTargetService,
             IContentPlatformOrderSendService contentPlatformOrderSendService,
             ILiveAnchorMonthlyTargetAfterLivingService liveAnchorMonthlyTargetAfterLivingService)
@@ -180,7 +180,14 @@ namespace Fx.Amiya.Service
                 getEmployeePerformanceDataDto.EmployeeName = x.CustomerServiceName;
                 getEmployeePerformanceDataDto.Performance = x.TotalServicePrice;
                 var employeeDataTarget = await employeePerformanceTargetService.GetByEmpIdAndYearMonthAsync(x.CustomerServiceId, query.endDate.Value.Year, query.endDate.Value.Month);
-                getEmployeePerformanceDataDto.CompleteRate = Math.Round(x.TotalServicePrice / employeeDataTarget * 100, 2, MidpointRounding.AwayFromZero);
+                if (employeeDataTarget != 0)
+                {
+                    getEmployeePerformanceDataDto.CompleteRate = Math.Round(x.TotalServicePrice / employeeDataTarget * 100, 2, MidpointRounding.AwayFromZero);
+                }
+                else
+                {
+                    getEmployeePerformanceDataDto.CompleteRate = 0;
+                }
                 employeeDataList.Add(getEmployeePerformanceDataDto);
             }
             result.EmployeeDatas = employeeDataList;
@@ -194,7 +201,7 @@ namespace Fx.Amiya.Service
                 EmployeeId = Convert.ToInt32(x.Key.ToString()),
                 DistributeConsulationNum = x.Count(),
                 AddWechatNum = x.Where(e => e.IsAddWeChat == true).Count(),
-            }).Take(10).ToList();
+            }).Where(x => x.DistributeConsulationNum > 0).Take(10).ToList();
             foreach (var x in result.EmployeeDistributeConsulationNumAndAddWechats)
             {
                 var empInfo = await amiyaEmployeeService.GetByIdAsync(x.EmployeeId);
@@ -209,13 +216,13 @@ namespace Fx.Amiya.Service
                 GetEmployeeCustomerAnalizeDto getEmployeeCustomerAnalizeDto = new GetEmployeeCustomerAnalizeDto();
                 var empInfo = await amiyaEmployeeService.GetByIdAsync(x);
                 getEmployeeCustomerAnalizeDto.EmployeeName = empInfo.Name;
-                getEmployeeCustomerAnalizeDto.SendOrderNum = await contentPlatformOrderSendService.GetTotalSendCountByEmployeeAsync(x);
+                getEmployeeCustomerAnalizeDto.SendOrderNum = await contentPlatformOrderSendService.GetTotalSendCountByEmployeeAsync(x, query.startDate.Value, query.endDate.Value);
                 var contentPlatFormVisitAndDealNumData = await contentPlateFormOrderService.GetCustomerVisitAndIsDealByEmployeeIdAsync(query.startDate.Value, query.endDate.Value, x);
                 getEmployeeCustomerAnalizeDto.VisitNum = contentPlatFormVisitAndDealNumData.VisitNum;
                 getEmployeeCustomerAnalizeDto.DealNum = contentPlatFormVisitAndDealNumData.DealNum;
                 getEmployeeCustomerAnalizeDtos.Add(getEmployeeCustomerAnalizeDto);
             }
-            result.GetEmployeeCustomerAnalizes = getEmployeeCustomerAnalizeDtos.OrderByDescending(x => x.SendOrderNum).Take(10).ToList();
+            result.GetEmployeeCustomerAnalizes = getEmployeeCustomerAnalizeDtos.Where(x => x.SendOrderNum > 0).OrderByDescending(x => x.SendOrderNum).Take(10).ToList();
             #endregion
 
             #region 【业绩贡献占比-根据助理业绩获取条数输出】
@@ -301,7 +308,7 @@ namespace Fx.Amiya.Service
                 var liveanchorName = nameList.Where(e => e.Id == liveanchor.Id).Select(e => e.LiveAnchorName).FirstOrDefault();
                 CompanyCustomerAcquisitionDataDto dataItem = new CompanyCustomerAcquisitionDataDto();
                 dataItem.GroupName = $"{liveanchorName}组-有效业绩";
-                dataItem.OrderCard = data.Where(e=>e.IsReturnBackPrice==false).Count();
+                dataItem.OrderCard = data.Where(e => e.IsReturnBackPrice == false).Count();
                 dataItem.OrderCardTarget = livingTarget?.Sum(e => e.ConsulationCardTarget) ?? 0;
                 dataItem.OrderCardTargetComplete = DecimalExtension.CalculateTargetComplete(dataItem.OrderCard, dataItem.OrderCardTarget).Value;
                 dataItem.RefundCard = data.Where(x => x.IsReturnBackPrice == true).Count();
@@ -369,7 +376,7 @@ namespace Fx.Amiya.Service
             totalData.AddWechat = dataList.Sum(e => e.AddWechat);
             totalData.AddWechatTarget = dataList.Sum(e => e.AddWechatTarget);
             totalData.AddWechatTargetComplete = DecimalExtension.CalculateTargetComplete(dataList.Sum(e => e.AddWechat), dataList.Sum(e => e.AddWechatTarget)).Value;
-            dataList.Add(totalData);          
+            dataList.Add(totalData);
             return dataList;
         }
         /// <summary>

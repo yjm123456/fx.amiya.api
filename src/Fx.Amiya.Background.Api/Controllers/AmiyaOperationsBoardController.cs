@@ -40,7 +40,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             OperationTotalAchievementDataVo result = new OperationTotalAchievementDataVo();
             QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
             queryOperationDataVo.startDate = query.startDate;
-            queryOperationDataVo.endDate = query.endDate;
+            queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
             var data = await amiyaOperationsBoardService.GetTotalAchievementAndDateScheduleAsync(queryOperationDataVo);
             result.DateSchedule = data.DateSchedule;
             result.TotalAchievement = data.TotalAchievement;
@@ -71,13 +71,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
             queryOperationDataVo.startDate = query.startDate;
-            queryOperationDataVo.endDate = query.endDate;
+            queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
             var data = await amiyaOperationsBoardService.GetCustomerDataAsync(queryOperationDataVo);
             GetCustomerDataVo result = new GetCustomerDataVo();
             result.AddCardNum = data.AddCardNum;
             result.RefundCardNum = data.RefundCardNum;
             result.DistributeConsulationNum = data.DistributeConsulationNum;
-            result.AddCardNum = data.AddCardNum;
+            result.AddWechatNum = data.AddWechatNum;
             return ResultData<GetCustomerDataVo>.Success().AddData("data", result);
         }
 
@@ -90,7 +90,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
             queryOperationDataVo.startDate = query.startDate;
-            queryOperationDataVo.endDate = query.endDate;
+            queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
             var data = await amiyaOperationsBoardService.GetCustomerAnalizeDataAsync(queryOperationDataVo);
             GetCustomerAnalizeDataVo result = new GetCustomerAnalizeDataVo();
             CustomerAnalizeByGroupVo sendNum = new CustomerAnalizeByGroupVo();
@@ -122,7 +122,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
             queryOperationDataVo.startDate = query.startDate;
-            queryOperationDataVo.endDate = query.endDate;
+            queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
             var data = await amiyaOperationsBoardService.GetCustomerIndexTransformationDataAsync(queryOperationDataVo);
 
             List<GetCustomerIndexTransformationResultVo> result = new List<GetCustomerIndexTransformationResultVo>();
@@ -175,7 +175,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
             queryOperationDataVo.startDate = query.startDate;
-            queryOperationDataVo.endDate = query.endDate;
+            queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
             var data = await amiyaOperationsBoardService.GetEmployeePerformanceAnalizeDataAsync(queryOperationDataVo);
             GetEmployeePerformanceAnalizeDataVo result = new GetEmployeePerformanceAnalizeDataVo();
             result.EmployeeDatas = data.EmployeeDatas.Select(x => new GetEmployeePerformanceDataVo
@@ -189,7 +189,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 EmployeeName = x.EmployeeName,
                 DistributeConsulationNum = x.DistributeConsulationNum,
                 AddWechatNum = x.AddWechatNum,
-            }).ToList();
+            }).OrderByDescending(x=>x.DistributeConsulationNum).ToList();
             result.GetEmployeeCustomerAnalizes = data.GetEmployeeCustomerAnalizes.Select(x => new GetEmployeeCustomerAnalizeVo
             {
                 EmployeeName = x.EmployeeName,
@@ -202,7 +202,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 EmployeeName = x.EmployeeName,
                 Performance = x.Performance,
             }).ToList();
-            return ResultData<GetEmployeePerformanceAnalizeDataVo>.Success().AddData("data", new GetEmployeePerformanceAnalizeDataVo());
+            return ResultData<GetEmployeePerformanceAnalizeDataVo>.Success().AddData("data", result);
         }
 
 
