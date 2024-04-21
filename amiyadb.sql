@@ -103,3 +103,65 @@ CREATE TABLE `amiyadb`.`tbl_employee_performance_target` (
 
 	
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+
+------------------------------------------余建明  2024/04/21 BEGIN------------------------------------------
+--新增粉丝见面会基础信息表
+CREATE TABLE `amiyadb`.`tbl_fans_meeting` (
+  `id` VARCHAR(50) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `name` VARCHAR(100) NOT NULL,
+  `start_date` DATETIME NOT NULL,
+  `end_date` DATETIME NOT NULL,
+  `hospital_id` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_fansmeeting_hospitalinfo_idx` (`hospital_id` ASC) VISIBLE,
+  CONSTRAINT `fk_fansmeeting_hospitalinfo`
+    FOREIGN KEY (`hospital_id`)
+    REFERENCES `amiyadb`.`tbl_hospital_info` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+	--新增粉丝见面会详情信息表
+	CREATE TABLE `amiyadb`.`tbl_fans_meeting_details` (
+  `id` VARCHAR(50) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `fans_meeting_id` VARCHAR(50) NOT NULL,
+  `order_id` VARCHAR(50) NULL,
+  `appointment_date` DATETIME NULL,
+  `appointment_details_date` VARCHAR(45) NULL,
+  `customer_name` VARCHAR(100) NULL,
+  `phone` VARCHAR(30) NULL,
+  `customer_quantity` INT NOT NULL,
+  `is_old_customer` BIT(1) NOT NULL,
+  `amiya_consulation_id` INT UNSIGNED NOT NULL,
+  `hospital_consulation_name` VARCHAR(30) NULL,
+  `city` VARCHAR(45) NULL,
+  `travel_information` VARCHAR(500) NULL,
+  `is_need_driver` BIT(1) NOT NULL,
+  `hotel_plan` VARCHAR(500) NULL,
+  `plan_consumption` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+  `remark` VARCHAR(500) NULL,
+  `customer_picture_url` VARCHAR(300) NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_fans_meeting_info_idx` (`fans_meeting_id` ASC) VISIBLE,
+  INDEX `fk_amiya_employee_info_idx` (`amiya_consulation_id` ASC) VISIBLE,
+  CONSTRAINT `fk_fans_meeting_info`
+    FOREIGN KEY (`fans_meeting_id`)
+    REFERENCES `amiyadb`.`tbl_fans_meeting` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_amiya_employee_info`
+    FOREIGN KEY (`amiya_consulation_id`)
+    REFERENCES `amiyadb`.`tbl_amiya_employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+------------------------------------------余建明  2024/04/21 END------------------------------------------

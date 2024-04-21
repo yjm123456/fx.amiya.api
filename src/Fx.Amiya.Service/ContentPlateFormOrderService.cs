@@ -1541,13 +1541,6 @@ namespace Fx.Amiya.Service
             result.ConsultationType = order.ConsultationType;
             result.CommissionRatio = order.CommissionRatio;
             result.BelongMonth = order.BelongMonth;
-            result.IsSupportOrder = order.IsSupportOrder;
-            result.SupportEmpId = order.SupportEmpId;
-            if (result.SupportEmpId != 0)
-            {
-                var empInfo = await _amiyaEmployeeService.GetByIdAsync(result.SupportEmpId);
-                result.SupportEmpName = empInfo.Name;
-            }
             result.AddOrderPrice = order.AddOrderPrice;
             result.UnSendReason = order.UnSendReason;
             result.OrderTypeText = ServiceClass.GetContentPlateFormOrderTypeText((byte)order.OrderType);
@@ -1601,6 +1594,13 @@ namespace Fx.Amiya.Service
                 var empInfo = await _amiyaEmployeeService.GetByIdAsync(result.BelongEmpId.Value);
                 result.BelongEmpName = empInfo.Name;
             }
+            result.IsSupportOrder = order.IsSupportOrder;
+            result.SupportEmpId = order.SupportEmpId;
+            if (result.SupportEmpId != 0)
+            {
+                var empInfo = await _amiyaEmployeeService.GetByIdAsync(result.SupportEmpId);
+                result.SupportEmpName = empInfo.Name;
+            }
             result.SettlePrice = order.SettlePrice;
             result.OrderSource = order.OrderSource;
             result.SceneConsulationName = order.SceneConsulationName;
@@ -1651,6 +1651,8 @@ namespace Fx.Amiya.Service
             result.IsCreateBill = order.IsCreateBill;
             result.CreateBillCompany = dalCompanyBaseInfo.GetAll().Where(e => e.Id == order.BelongCompany).SingleOrDefault()?.Name;
             result.CustomerServiceSettlePrice = order.CustomerServiceSettlePrice;
+            var pictures = await _contentPlatFormCustomerPictureService.GetListAsync(order.Id, null);
+            result.CustomerPictures = pictures.Select(x => x.CustomerPicture).ToList();
             return result;
         }
 

@@ -2411,6 +2411,29 @@ namespace Fx.Amiya.Service
             }
             return text;
         }
+
+        /// <summary>
+        /// 顾客质量
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static string CustomerQuantityText(int type)
+        {
+            string text = "";
+            switch (type)
+            {
+                case 0:
+                    text = "一般";
+                    break;
+                case 1:
+                    text = "优质";
+                    break;
+                default:
+                    text = "其他";
+                    break;
+            }
+            return text;
+        }
         /// <summary>
         /// 未加V原因
         /// </summary>
