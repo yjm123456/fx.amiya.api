@@ -260,10 +260,10 @@ namespace Fx.Amiya.Service
                     Email = addDto.Email,
                     IsCustomerService = addDto.IsCustomerService,
                     LiveAnchorBaseId = addDto.LiveAnchorBaseId,
-                    OldCustomerCommission=addDto.OldCustomerCommission,
-                    NewCustomerCommission=addDto.NewCustomerCommission,
-                    InspectionCommission=addDto.InspectionCommission,
-                    AdministrativeInspectionCommission=addDto.AdministrativeInspectionCommission,
+                    OldCustomerCommission = addDto.OldCustomerCommission,
+                    NewCustomerCommission = addDto.NewCustomerCommission,
+                    InspectionCommission = addDto.InspectionCommission,
+                    AdministrativeInspectionCommission = addDto.AdministrativeInspectionCommission,
                     CooperateLiveanchorNewCustomerCommission = addDto.CooperateLiveanchorNewCustomerCommission,
                     CooperateLiveanchorOldCustomerCommission = addDto.CooperateLiveanchorOldCustomerCommission,
                     TmallOrderCommission = addDto.TmallOrderCommission,
@@ -307,9 +307,9 @@ namespace Fx.Amiya.Service
                     DepartmentId = employee.AmiyaPositionInfo.DepartmentId,
                     DepartmentName = employee.AmiyaPositionInfo.AmiyaDepartment.Name,
                     LiveAnchorBaseId = employee.LiveAnchorBaseId,
-                    OldCustomerCommission=employee.OldCustomerCommission,
-                    NewCustomerCommission=employee.NewCustomerCommission,
-                    InspectionCommission=employee.InspectionCommission,
+                    OldCustomerCommission = employee.OldCustomerCommission,
+                    NewCustomerCommission = employee.NewCustomerCommission,
+                    InspectionCommission = employee.InspectionCommission,
                     AdministrativeInspectionCommission = employee.AdministrativeInspectionCommission,
                     CooperateLiveanchorNewCustomerCommission = employee.CooperateLiveanchorNewCustomerCommission,
                     CooperateLiveanchorOldCustomerCommission = employee.CooperateLiveanchorOldCustomerCommission,
@@ -438,9 +438,9 @@ namespace Fx.Amiya.Service
                                     PositionName = d.AmiyaPositionInfo.Name,
                                     IsCustomerService = d.IsCustomerService,
                                     LiveAnchorBaseId = d.LiveAnchorBaseId,
-                                    OldCustomerCommission=d.OldCustomerCommission,
-                                    NewCustomerCommission=d.NewCustomerCommission,
-                                    InspectionCommission=d.InspectionCommission
+                                    OldCustomerCommission = d.OldCustomerCommission,
+                                    NewCustomerCommission = d.NewCustomerCommission,
+                                    InspectionCommission = d.InspectionCommission
                                 };
                 FxPageInfo<AmiyaEmployeeDto> employeePageInfo = new FxPageInfo<AmiyaEmployeeDto>();
                 employeePageInfo.TotalCount = await employees.CountAsync();
@@ -522,9 +522,9 @@ namespace Fx.Amiya.Service
                 employee.AmiyaPositionId = updateDto.PositionId;
                 employee.IsCustomerService = updateDto.IsCustomerService;
                 employee.LiveAnchorBaseId = updateDto.LiveAnchorBaseId;
-                employee.OldCustomerCommission=updateDto.OldCustomerCommission;
-                employee.NewCustomerCommission=updateDto.NewCustomerCommission;
-                employee.InspectionCommission=updateDto.InspectionCommission;
+                employee.OldCustomerCommission = updateDto.OldCustomerCommission;
+                employee.NewCustomerCommission = updateDto.NewCustomerCommission;
+                employee.InspectionCommission = updateDto.InspectionCommission;
                 employee.AdministrativeInspectionCommission = updateDto.AdministrativeInspectionCommission;
                 employee.CooperateLiveanchorNewCustomerCommission = updateDto.CooperateLiveanchorNewCustomerCommission;
                 employee.CooperateLiveanchorOldCustomerCommission = updateDto.CooperateLiveanchorOldCustomerCommission;
@@ -807,6 +807,28 @@ namespace Fx.Amiya.Service
             var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).Where(e => e.Id == employeeId && (e.AmiyaPositionInfo.ReadDataCenter == true || e.AmiyaPositionId == 1)).SingleOrDefaultAsync();
             if (employee != null) return true;
             return false;
+        }
+
+        public async Task<List<AmiyaEmployeeDto>> GetByLiveAnchorBaseIdListAsync(List<string> liveAnchorBaseId)
+        {
+            try
+            {
+                List<AmiyaEmployeeDto> amiyaEmployeeDtos = new List<AmiyaEmployeeDto>();
+                var employeeInfo = dalAmiyaEmployee.GetAll()
+                    .Include(e => e.AmiyaPositionInfo).ThenInclude(e => e.AmiyaDepartment)
+                    .Where(e => (liveAnchorBaseId==null || liveAnchorBaseId.Contains(e.LiveAnchorBaseId)) && e.IsCustomerService == true);
+                var employee = await employeeInfo.Select(e => new AmiyaEmployeeDto
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                }).ToListAsync();
+                return employee;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message.ToString());
+            }
         }
     }
 }

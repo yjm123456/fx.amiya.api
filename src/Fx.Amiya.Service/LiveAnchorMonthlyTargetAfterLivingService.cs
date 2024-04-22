@@ -766,18 +766,18 @@ namespace Fx.Amiya.Service
                 .ToList();
             var dataList= performance.GroupBy(e => e.BasbaseLiveAnchorId).Select(e => new LiveAnchorMonthTargetPerformanceDto
             {
-                TotalPerformanceTarget = performance.Sum(t => t.PerformanceTarget),
-                OldCustomerPerformanceTarget = performance.Sum(t => t.OldCustomerPerformanceTarget),
-                NewCustomerPerformanceTarget = performance.Sum(t => t.NewCustomerPerformanceTarget),
-                EffectivePerformance = performance.Sum(t => t.EffectivePerformanceTarget),
-                PotentialPerformance = performance.Sum(t => t.PotentialPerformanceTarget),
-                DistributeConsulationTarget=performance.Sum(t => t.DistributeConsulationTarget),
-                AddWechatTarget=performance.Sum(e=>e.AddWechatTarget),
-                SendOrderTarget=performance.Sum(e=>e.SendOrderTarget),
-                NewCustomerVisitTarget=performance.Sum(e=>e.NewCustomerVisitTarget),
-                OldCustomerVisitTarget=performance.Sum(e=>e.OldCustomerVisitTarget),
-                NewCustomerDealTarget=performance.Sum(e=>e.NewCustomerDealTarget),
-                OldCustomerDealTarget=performance.Sum(e=>e.OldCustomerDealTarget),
+                TotalPerformanceTarget = e.Sum(t => t.PerformanceTarget),
+                OldCustomerPerformanceTarget = e.Sum(t => t.OldCustomerPerformanceTarget),
+                NewCustomerPerformanceTarget = e.Sum(t => t.NewCustomerPerformanceTarget),
+                EffectivePerformance = e.Sum(t => t.EffectivePerformanceTarget),
+                PotentialPerformance = e.Sum(t => t.PotentialPerformanceTarget),
+                DistributeConsulationTarget=e.Sum(t => t.DistributeConsulationTarget),
+                AddWechatTarget=e.Sum(e=>e.AddWechatTarget),
+                SendOrderTarget=e.Sum(e=>e.SendOrderTarget),
+                NewCustomerVisitTarget=e.Sum(e=>e.NewCustomerVisitTarget),
+                OldCustomerVisitTarget=e.Sum(e=>e.OldCustomerVisitTarget),
+                NewCustomerDealTarget=e.Sum(e=>e.NewCustomerDealTarget),
+                OldCustomerDealTarget=e.Sum(e=>e.OldCustomerDealTarget),
                 BaseLiveAbchorId =e.Key
             }).ToList();
             

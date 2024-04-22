@@ -21,7 +21,7 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         /// </summary>
         public int SevenDaySendOrderCount { get; set; }
         /// <summary>
-        /// 15日上门率
+        /// 15日上门数
         /// </summary>
         public int FifteenToHospitalCount { get; set; }
         /// <summary>
@@ -60,5 +60,6 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         /// 老客总业绩
         /// </summary>
         public decimal OldCustomerTotalPerformance { get; set; }
+        public int EmpId { get; set; }
     }
 }

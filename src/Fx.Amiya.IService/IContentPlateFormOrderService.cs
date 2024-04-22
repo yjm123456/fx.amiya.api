@@ -464,6 +464,15 @@ namespace Fx.Amiya.IService
         /// <param name="endDate">结束时间</param>
         /// <returns></returns>
         Task<OrderSendAndDealNumDto> GetOrderSendAndDealDataByMonthAndBaseLiveAnchorIdAsync(DateTime startDate, DateTime endDate, bool isOldCustomer, string baseLiveAbchorId);
+        /// <summary>
+        /// 根据助理id集合获取助理客户运营情况
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="isOldCustomer"></param>
+        /// <param name="baseLiveAbchorId"></param>
+        /// <returns></returns>
+        Task<List<OrderSendAndDealNumDto>> GetOrderSendAndDealDataByMonthAndBaseLiveAnchorIdAsync(DateTime startDate, DateTime endDate, bool isOldCustomer, List<int> assistantIds);
         #endregion
         #region 医院看板
 

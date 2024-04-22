@@ -21,11 +21,11 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService
         /// <summary>
         /// 新客业绩目标
         /// </summary>
-        public decimal? NewCustomerPerformanceTarget { get; set; }
+        public decimal NewCustomerPerformanceTarget { get; set; }
         /// <summary>
         /// 新客业绩目标达成率
         /// </summary>
-        public decimal? NewCustomerPerformanceTargetComplete { get; set; }
+        public decimal NewCustomerPerformanceTargetComplete { get; set; }
         #endregion
 
         #region【老客业绩】
@@ -37,11 +37,11 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService
         /// <summary>
         /// 老客业绩目标
         /// </summary>
-        public decimal? OldCustomerTarget { get; set; }
+        public decimal OldCustomerTarget { get; set; }
         /// <summary>
         /// 老客业绩目标达成率
         /// </summary>
-        public decimal? OldCustomerTargetComplete { get; set; }
+        public decimal OldCustomerTargetComplete { get; set; }
         #endregion
 
         #region 总业绩

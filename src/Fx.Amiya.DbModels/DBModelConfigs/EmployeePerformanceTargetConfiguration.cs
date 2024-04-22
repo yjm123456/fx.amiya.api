@@ -24,7 +24,8 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.EffectiveConsulationCardTarget).HasColumnName("effective_consulation_card_target").HasColumnType("int").IsRequired();
             builder.Property(e => e.PotentialConsulationCardTarget).HasColumnName("potential_consulation_card_target").HasColumnType("int").IsRequired();
             builder.Property(e => e.SendOrderTarget).HasColumnName("send_order_target").HasColumnType("int").IsRequired();
-            builder.Property(e => e.VisitTarget).HasColumnName("visit_target").HasColumnType("int").IsRequired();
+            builder.Property(e => e.OldCustomerVisitTarget).HasColumnName("old_customer_visit_target").HasColumnType("int").IsRequired();
+            builder.Property(e => e.NewCustomerVisitTarget).HasColumnName("new_customer_visit_target").HasColumnType("int").IsRequired();
             builder.Property(e => e.NewCustomerDealTarget).HasColumnName("new_customer_deal_target").HasColumnType("int").IsRequired();
             builder.Property(e => e.OldCustomerDealTarget).HasColumnName("old_customer_deal_target").HasColumnType("int").IsRequired();
             builder.Property(e => e.NewCustomerPerformanceTarget).HasColumnName("new_customer_performance_target").HasColumnType("DECIMAL(12,2)").IsRequired();

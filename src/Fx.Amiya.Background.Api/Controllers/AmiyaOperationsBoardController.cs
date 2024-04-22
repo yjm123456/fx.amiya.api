@@ -335,7 +335,27 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("assistantPerformanceData")]
         public async Task<ResultData<List<AssistantPerformanceDataVo>>> GetAssistantPerformanceDataAsync([FromQuery] QueryAmiyaAssistantOperationsDataVo query)
         {
-            return ResultData<List<AssistantPerformanceDataVo>>.Success().AddData("data", new List<AssistantPerformanceDataVo>());
+            QueryAmiyaAssistantOperationsDataDto queryDto = new QueryAmiyaAssistantOperationsDataDto();
+            queryDto.Unit = query.Unit;
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.LiveAnchorIds = query.LiveAnchorIds;
+            queryDto.IsOldCustomer = query.IsOldCustomer;
+            queryDto.IsEffective = query.IsEffective;
+            var data = await amiyaOperationsBoardService.GetAssistantPerformanceDataAsync(queryDto);
+            var res = data.Select(e => new AssistantPerformanceDataVo {
+                AssistantName=e.AssistantName,
+                CurrentMonthNewCustomerPerformance = e.CurrentMonthNewCustomerPerformance,
+                NewCustomerPerformanceTarget = e.NewCustomerPerformanceTarget,
+                NewCustomerPerformanceTargetComplete = e.NewCustomerPerformanceTargetComplete,
+                CurrentMonthOldCustomerPerformance = e.CurrentMonthOldCustomerPerformance,
+                OldCustomerTarget = e.OldCustomerTarget,
+                OldCustomerTargetComplete = e.OldCustomerTargetComplete,
+                TotalPerformance = e.TotalPerformance,
+                TotalPerformanceTarget = e.TotalPerformanceTarget,
+                TotalPerformanceTargetComplete = e.TotalPerformanceTargetComplete,
+            }).ToList();
+            return ResultData<List<AssistantPerformanceDataVo>>.Success().AddData("data", res);
         }
         /// <summary>
         /// 获取助理看板获客情况数据
@@ -344,7 +364,30 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("assistantCustomerAcquisition")]
         public async Task<ResultData<List<AssistantCustomerAcquisitionDataVo>>> GetAssistantCustomerAcquisitionDataAsync([FromQuery] QueryAmiyaAssistantOperationsDataVo query)
         {
-            return ResultData<List<AssistantCustomerAcquisitionDataVo>>.Success().AddData("data", new List<AssistantCustomerAcquisitionDataVo>());
+            QueryAmiyaAssistantOperationsDataDto queryDto = new QueryAmiyaAssistantOperationsDataDto();
+            queryDto.Unit = query.Unit;
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.LiveAnchorIds = query.LiveAnchorIds;
+            queryDto.IsOldCustomer = query.IsOldCustomer;
+            queryDto.IsEffective = query.IsEffective;
+            var data = await amiyaOperationsBoardService.GetAssistantCustomerAcquisitionDataAsync(queryDto);
+            var res = data.Select(e => new AssistantCustomerAcquisitionDataVo {
+                AssistantName = e.AssistantName,
+                PotentialAllocationConsulation = e.PotentialAllocationConsulation,
+                PotentialAllocationConsulationTarget = e.PotentialAllocationConsulationTarget,
+                PotentialAllocationConsulationTargetComplete = e.PotentialAllocationConsulationTargetComplete,
+                PotentialAddWechat = e.PotentialAddWechat,
+                PotentialAddWechatTarget = e.PotentialAddWechatTarget,
+                PotentialAddWechatTargetComplete = e.PotentialAddWechatTargetComplete,
+                EffectiveAllocationConsulation = e.EffectiveAllocationConsulation,
+                EffectiveAllocationConsulationTarget = e.EffectiveAllocationConsulationTarget,
+                EffectiveAllocationConsulationTargetComplete = e.EffectiveAllocationConsulationTargetComplete,
+                EffectiveAddWechat = e.EffectiveAddWechat,
+                EffectiveAddWechatTarget = e.EffectiveAddWechatTarget,
+                EffectiveAddWechatTargetComplete = e.EffectiveAddWechatTargetComplete,
+            }).ToList();
+            return ResultData<List<AssistantCustomerAcquisitionDataVo>>.Success().AddData("data", res);
         }
         /// <summary>
         /// 获取助理看板运营情况数据
@@ -353,7 +396,27 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("assistantOperationsData")]
         public async Task<ResultData<List<AssistantOperationsDataVo>>> GetAssistantOperationsDataAsync([FromQuery] QueryAmiyaAssistantOperationsDataVo query)
         {
-            return ResultData<List<AssistantOperationsDataVo>>.Success().AddData("data", new List<AssistantOperationsDataVo>());
+            QueryAmiyaAssistantOperationsDataDto queryDto = new QueryAmiyaAssistantOperationsDataDto();
+            queryDto.Unit = query.Unit;
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.LiveAnchorIds = query.LiveAnchorIds;
+            queryDto.IsOldCustomer = query.IsOldCustomer;
+            queryDto.IsEffective = query.IsEffective;
+            var data = await amiyaOperationsBoardService.GetAssistantOperationsDataAsync(queryDto);
+            var res = data.Select(e => new AssistantOperationsDataVo {
+                AssistantName = e.AssistantName,
+                SendOrder = e.SendOrder,
+                SendOrderTarget = e.SendOrderTarget,
+                SendOrderTargetComplete = e.SendOrderTargetComplete,
+                ToHospital = e.ToHospital,
+                ToHospitalTarget = e.ToHospitalTarget,
+                ToHospitalTargetComplete = e.ToHospitalTargetComplete,
+                Deal = e.Deal,
+                DealTarget = e.DealTarget,
+                DealTargetComplete = e.DealTargetComplete,
+            }).ToList();
+            return ResultData<List<AssistantOperationsDataVo>>.Success().AddData("data",res);
         }
         /// <summary>
         /// 获取助理看板指标转化情况数据
@@ -362,7 +425,28 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("assistantIndicatorConversionData")]
         public async Task<ResultData<List<AssistantIndicatorConversionDataVo>>> GetAssistantIndicatorConversionDataAsync([FromQuery] QueryAmiyaAssistantOperationsDataVo query)
         {
-            return ResultData<List<AssistantIndicatorConversionDataVo>>.Success().AddData("data", new List<AssistantIndicatorConversionDataVo>());
+            QueryAmiyaAssistantOperationsDataDto queryDto = new QueryAmiyaAssistantOperationsDataDto();
+            queryDto.Unit = query.Unit;
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.LiveAnchorIds = query.LiveAnchorIds;
+            queryDto.IsOldCustomer = query.IsOldCustomer;
+            queryDto.IsEffective = query.IsEffective;
+            var data = await amiyaOperationsBoardService.GetAssistantIndicatorConversionDataAsync(queryDto);
+            var res = data.Select(e => new AssistantIndicatorConversionDataVo {
+                AssistantName = e.AssistantName,
+                SevenDaySendOrderRate = e.SevenDaySendOrderRate,
+                FifteenDaySendOrderRate = e.FifteenDaySendOrderRate,
+                OldCustomerToHospitalRate = e.OldCustomerToHospitalRate,
+                RePurchaseRate = e.RePurchaseRate,
+                AddWechatRate = e.AddWechatRate,
+                SendOrderRate = e.SendOrderRate,
+                ToHospitalRate = e.ToHospitalRate,
+                NewCustomerDealRate = e.NewCustomerDealRate,
+                NewCustomerUnitPrice = e.NewCustomerUnitPrice,
+                OldCustomerUnitPrice = e.OldCustomerUnitPrice,
+            }).ToList();
+            return ResultData<List<AssistantIndicatorConversionDataVo>>.Success().AddData("data", res);
         }
         #endregion
     }

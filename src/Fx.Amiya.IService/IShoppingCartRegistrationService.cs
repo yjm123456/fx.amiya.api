@@ -154,6 +154,15 @@ namespace Fx.Amiya.IService
         /// <param name="contentPlatFormId"></param>
         /// <returns></returns>
         Task<List<ShoppingCartRegistrationDto>> GetPerformanceByBaseLiveAnchorIdAsync(DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, string baseLiveAnchorId);
+        /// <summary>
+        /// 根据助理id集合获取获取潜在/有效 加v,分诊
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isEffectiveCustomerData"></param>
+        /// <param name="contentPlatFormId"></param>
+        /// <returns></returns>
+        Task<List<ShoppingCartRegistrationDto>> GetPerformanceByAssistantIdListAsync(DateTime startDate, DateTime endDate, List<int> assistantIdList);
 
         /// <summary>
         /// 根据条件获取小黄车照片/视频面诊业绩折线图
@@ -194,6 +203,16 @@ namespace Fx.Amiya.IService
         /// <param name="isEffective"></param>
         /// <returns></returns>
         Task<ShoppingCartRegistrationIndicatorBaseDataDto> GetIndicatorConversionDataAsync(DateTime startDate, DateTime endDate, string baseLiveAnchorId, bool? isEffective);
+        /// <summary>
+        /// 根据助理id获取指标转化情况
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="baseLiveAnchorId"></param>
+        /// <param name="isEffective"></param>
+        /// <returns></returns>
+
+        Task<List<ShoppingCartRegistrationIndicatorBaseDataDto>> GetIndicatorConversionDataByAssistantIdsAsync(DateTime startDate, DateTime endDate, List<int> assistantIds, bool? isEffective);
         #endregion
         #region 助理首页
 

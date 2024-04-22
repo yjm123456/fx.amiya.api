@@ -39,11 +39,11 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService
         /// <summary>
         /// 成交量
         /// </summary>
-        public decimal Deal { get; set; }
+        public int Deal { get; set; }
         /// <summary>
         /// 成交目标
         /// </summary>
-        public decimal DealTarget { get; set; }
+        public int DealTarget { get; set; }
         /// <summary>
         /// 成交达成率
         /// </summary>

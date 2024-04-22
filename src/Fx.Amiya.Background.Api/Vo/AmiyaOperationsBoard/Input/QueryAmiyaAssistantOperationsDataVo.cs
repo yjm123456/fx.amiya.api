@@ -23,6 +23,13 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Input
         /// 主播账号集合
         /// </summary>
         public List<string> LiveAnchorIds { get; set; }
-
+        /// <summary>
+        /// 是否是新/老客(true:老客,false:新客)
+        /// </summary>
+        public bool? IsOldCustomer { get; set; }
+        /// <summary>
+        /// 有效/潜在(true:有效,false:潜在)
+        /// </summary>
+        public bool? IsEffective { get; set; }
     }
 }

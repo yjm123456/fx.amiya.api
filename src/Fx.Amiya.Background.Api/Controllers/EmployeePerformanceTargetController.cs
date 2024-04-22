@@ -72,7 +72,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       EffectiveConsulationCardTarget=d.EffectiveConsulationCardTarget,
                                                       PotentialConsulationCardTarget=d.PotentialConsulationCardTarget,
                                                       SendOrderTarget = d.SendOrderTarget,
-                                                      VisitTarget = d.VisitTarget,
+                                                      NewCustomerVisitTarget = d.NewCustomerVisitTarget,
+                                                      OldCustomerVisitTarget=d.OldCustomerVisitTarget,
                                                       NewCustomerDealTarget = d.NewCustomerDealTarget,
                                                       OldCustomerDealTarget = d.OldCustomerDealTarget,
                                                       NewCustomerPerformanceTarget = d.NewCustomerPerformanceTarget,
@@ -115,7 +116,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.EffectiveAddWechatTarget = addVo.EffectiveAddWechatTarget;
                 addDto.PotentialAddWechatTarget = addVo.PotentialAddWechatTarget;
                 addDto.SendOrderTarget = addVo.SendOrderTarget;
-                addDto.VisitTarget = addVo.VisitTarget;
+                addDto.NewCustomerVisitTarget = addVo.NewCustomerVisitTarget;
+                addDto.OldCustomerVisitTarget=addVo.OldCustomerVisitTarget;
                 addDto.NewCustomerDealTarget = addVo.NewCustomerDealTarget;
                 addDto.OldCustomerDealTarget = addVo.OldCustomerDealTarget;
                 addDto.NewCustomerPerformanceTarget = addVo.NewCustomerPerformanceTarget;
@@ -157,7 +159,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 employeePerformanceTargetVo.EffectiveConsulationCardTarget = employeePerformanceTarget.EffectiveConsulationCardTarget;
                 employeePerformanceTargetVo.PotentialConsulationCardTarget=employeePerformanceTarget.PotentialConsulationCardTarget;
                 employeePerformanceTargetVo.SendOrderTarget = employeePerformanceTarget.SendOrderTarget;
-                employeePerformanceTargetVo.VisitTarget = employeePerformanceTarget.VisitTarget;
+                employeePerformanceTargetVo.OldCustomerVisitTarget = employeePerformanceTarget.OldCustomerVisitTarget;
+                employeePerformanceTargetVo.NewCustomerVisitTarget = employeePerformanceTarget.NewCustomerVisitTarget;
                 employeePerformanceTargetVo.NewCustomerDealTarget = employeePerformanceTarget.NewCustomerDealTarget;
                 employeePerformanceTargetVo.OldCustomerDealTarget = employeePerformanceTarget.OldCustomerDealTarget;
                 employeePerformanceTargetVo.NewCustomerPerformanceTarget = employeePerformanceTarget.NewCustomerPerformanceTarget;
@@ -194,7 +197,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.EffectiveAddWechatTarget = updateVo.EffectiveAddWechatTarget;
                 updateDto.PotentialAddWechatTarget = updateVo.PotentialAddWechatTarget;
                 updateDto.SendOrderTarget = updateVo.SendOrderTarget;
-                updateDto.VisitTarget = updateVo.VisitTarget;
+                updateDto.NewCustomerVisitTarget = updateVo.NewCustomerVisitTarget;
+                updateDto.OldCustomerVisitTarget=updateVo.OldCustomerVisitTarget;
                 updateDto.NewCustomerDealTarget = updateVo.NewCustomerDealTarget;
                 updateDto.OldCustomerDealTarget = updateVo.OldCustomerDealTarget;
                 updateDto.NewCustomerPerformanceTarget = updateVo.NewCustomerPerformanceTarget;

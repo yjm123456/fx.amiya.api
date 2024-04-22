@@ -46,9 +46,14 @@ namespace Fx.Amiya.Dto.EmployeePerformanceTarget.Result
         /// </summary>
         public int SendOrderTarget { get; set; }
         /// <summary>
-        /// 到院目标
+        /// 新客到院目标
         /// </summary>
-        public int VisitTarget { get; set; }
+        public int NewCustomerVisitTarget { get; set; }
+        /// <summary>
+        /// 老客到院目标
+        /// </summary>
+        public int OldCustomerVisitTarget { get; set; }
+  
         /// <summary>
         /// 新客成交目标
         /// </summary>

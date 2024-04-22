@@ -77,6 +77,7 @@ namespace Fx.Amiya.Dto.HospitalBoard
     /// </summary>
     public class OrderSendAndDealNumDto
     {
+        public int BelongEmpId { get; set; }
         public int SendOrderNum { get; set; }
 
         public int VisitNum { get; set; }

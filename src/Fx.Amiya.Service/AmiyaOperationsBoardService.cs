@@ -365,17 +365,17 @@ namespace Fx.Amiya.Service
             dataList.AddRange(groupTotalData);
             CompanyCustomerAcquisitionDataDto totalData = new CompanyCustomerAcquisitionDataDto();
             totalData.GroupName = "总计";
-            totalData.OrderCard = dataList.Sum(e => e.OrderCard);
-            totalData.OrderCardTarget = dataList.Sum(e => e.OrderCardTarget);
-            totalData.OrderCardTargetComplete = DecimalExtension.CalculateTargetComplete(dataList.Sum(e => e.OrderCard), dataList.Sum(e => e.OrderCardTarget)).Value;
-            totalData.RefundCard = dataList.Sum(e => e.RefundCard);
-            totalData.OrderCardError = dataList.Sum(e => e.OrderCardError);
-            totalData.AllocationConsulation = dataList.Sum(e => e.AllocationConsulation);
-            totalData.AllocationConsulationTarget = dataList.Sum(e => e.AllocationConsulationTarget);
-            totalData.AllocationConsulationTargetComplete = DecimalExtension.CalculateTargetComplete(dataList.Sum(e => e.AllocationConsulation), dataList.Sum(e => e.AllocationConsulationTarget)).Value;
-            totalData.AddWechat = dataList.Sum(e => e.AddWechat);
-            totalData.AddWechatTarget = dataList.Sum(e => e.AddWechatTarget);
-            totalData.AddWechatTargetComplete = DecimalExtension.CalculateTargetComplete(dataList.Sum(e => e.AddWechat), dataList.Sum(e => e.AddWechatTarget)).Value;
+            totalData.OrderCard = groupTotalData.Sum(e => e.OrderCard);
+            totalData.OrderCardTarget = groupTotalData.Sum(e => e.OrderCardTarget);
+            totalData.OrderCardTargetComplete = DecimalExtension.CalculateTargetComplete(groupTotalData.Sum(e => e.OrderCard), groupTotalData.Sum(e => e.OrderCardTarget)).Value;
+            totalData.RefundCard = groupTotalData.Sum(e => e.RefundCard);
+            totalData.OrderCardError = groupTotalData.Sum(e => e.OrderCardError);
+            totalData.AllocationConsulation = groupTotalData.Sum(e => e.AllocationConsulation);
+            totalData.AllocationConsulationTarget = groupTotalData.Sum(e => e.AllocationConsulationTarget);
+            totalData.AllocationConsulationTargetComplete = DecimalExtension.CalculateTargetComplete(groupTotalData.Sum(e => e.AllocationConsulation), groupTotalData.Sum(e => e.AllocationConsulationTarget)).Value;
+            totalData.AddWechat = groupTotalData.Sum(e => e.AddWechat);
+            totalData.AddWechatTarget = groupTotalData.Sum(e => e.AddWechatTarget);
+            totalData.AddWechatTargetComplete = DecimalExtension.CalculateTargetComplete(groupTotalData.Sum(e => e.AddWechat), groupTotalData.Sum(e => e.AddWechatTarget)).Value;
             dataList.Add(totalData);
             return dataList;
         }
@@ -441,29 +441,29 @@ namespace Fx.Amiya.Service
                 CompanyIndicatorConversionDataDto data = new CompanyIndicatorConversionDataDto();
                 var effectiveData = await shoppingCartRegistrationService.GetIndicatorConversionDataAsync(selectDate.StartDate, selectDate.EndDate, liveanchorId, true);
                 effectiveBaseData.Add(effectiveData);
-                data.GroupName = $"{liveanchorName}组-潜在业绩";
-                data.SevenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(effectiveData.TotalCount, effectiveData.SevenDaySendOrderCount).Value;
-                data.FifteenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(effectiveData.TotalCount, effectiveData.FifteenToHospitalCount).Value;
-                data.OldCustomerToHospitalRate = DecimalExtension.CalculateTargetComplete(effectiveData.OldCustomerCount, effectiveData.OldCustomerToHospitalCount).Value;
-                data.RePurchaseRate = DecimalExtension.CalculateTargetComplete(effectiveData.OldCustomerCount, effectiveData.OldCustomerRepurchase).Value;
-                data.AddWechatRate = DecimalExtension.CalculateTargetComplete(effectiveData.TotalCount, effectiveData.AddWechatCount).Value;
-                data.SendOrderRate = DecimalExtension.CalculateTargetComplete(effectiveData.TotalCount, effectiveData.SendOrderCount).Value;
-                data.ToHospitalRate = DecimalExtension.CalculateTargetComplete(effectiveData.TotalCount, effectiveData.ToHospitalCount).Value;
-                data.NewCustomerDealRate = DecimalExtension.CalculateTargetComplete(effectiveData.NewCustomerCount, effectiveData.NewCustomerDealCount).Value;
+                data.GroupName = $"{liveanchorName}组-有效业绩";
+                data.SevenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(effectiveData.SevenDaySendOrderCount,effectiveData.TotalCount).Value;
+                data.FifteenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(effectiveData.FifteenToHospitalCount,effectiveData.TotalCount).Value;
+                data.OldCustomerToHospitalRate = DecimalExtension.CalculateTargetComplete(effectiveData.OldCustomerToHospitalCount,effectiveData.OldCustomerCount).Value;
+                data.RePurchaseRate = DecimalExtension.CalculateTargetComplete(effectiveData.OldCustomerRepurchase,effectiveData.OldCustomerCount).Value;
+                data.AddWechatRate = DecimalExtension.CalculateTargetComplete(effectiveData.AddWechatCount, effectiveData.TotalCount).Value;
+                data.SendOrderRate = DecimalExtension.CalculateTargetComplete(effectiveData.SendOrderCount,effectiveData.TotalCount).Value;
+                data.ToHospitalRate = DecimalExtension.CalculateTargetComplete(effectiveData.ToHospitalCount,effectiveData.TotalCount).Value;
+                data.NewCustomerDealRate = DecimalExtension.CalculateTargetComplete(effectiveData.NewCustomerDealCount,effectiveData.NewCustomerCount).Value;
                 data.NewCustomerUnitPrice = DecimalExtension.Division(effectiveData.NewCustomerTotalPerformance, effectiveData.NewCustomerCount).Value;
                 data.OldCustomerUnitPrice = DecimalExtension.Division(effectiveData.OldCustomerTotalPerformance, effectiveData.OldCustomerCount).Value;
                 dataList.Add(data);
             }
             CompanyIndicatorConversionDataDto totalEffectiveData = new CompanyIndicatorConversionDataDto();
             totalEffectiveData.GroupName = "有效业绩";
-            totalEffectiveData.SevenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.Sum(e => e.TotalCount), effectiveBaseData.Sum(e => e.SevenDaySendOrderCount)).Value;
-            totalEffectiveData.FifteenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.Sum(e => e.TotalCount), effectiveBaseData.Sum(e => e.FifteenToHospitalCount)).Value;
-            totalEffectiveData.OldCustomerToHospitalRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.Sum(e => e.OldCustomerCount), effectiveBaseData.Sum(e => e.OldCustomerToHospitalCount)).Value;
-            totalEffectiveData.RePurchaseRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.Sum(e => e.OldCustomerCount), effectiveBaseData.Sum(e => e.OldCustomerRepurchase)).Value;
-            totalEffectiveData.AddWechatRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.Sum(e => e.TotalCount), effectiveBaseData.Sum(e => e.AddWechatCount)).Value;
-            totalEffectiveData.SendOrderRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.Sum(e => e.TotalCount), effectiveBaseData.Sum(e => e.SendOrderCount)).Value;
-            totalEffectiveData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.Sum(e => e.TotalCount), effectiveBaseData.Sum(e => e.ToHospitalCount)).Value;
-            totalEffectiveData.NewCustomerDealRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.Sum(e => e.NewCustomerCount), effectiveBaseData.Sum(e => e.NewCustomerDealCount)).Value;
+            totalEffectiveData.SevenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.Sum(e => e.SevenDaySendOrderCount),effectiveBaseData.Sum(e => e.TotalCount)).Value;
+            totalEffectiveData.FifteenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.Sum(e => e.FifteenToHospitalCount),effectiveBaseData.Sum(e => e.TotalCount)).Value;
+            totalEffectiveData.OldCustomerToHospitalRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.Sum(e => e.OldCustomerToHospitalCount),effectiveBaseData.Sum(e => e.OldCustomerCount)).Value;
+            totalEffectiveData.RePurchaseRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.Sum(e => e.OldCustomerRepurchase),effectiveBaseData.Sum(e => e.OldCustomerCount)).Value;
+            totalEffectiveData.AddWechatRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.Sum(e => e.AddWechatCount),effectiveBaseData.Sum(e => e.TotalCount)).Value;
+            totalEffectiveData.SendOrderRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.Sum(e => e.SendOrderCount), effectiveBaseData.Sum(e => e.TotalCount)).Value;
+            totalEffectiveData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.Sum(e => e.ToHospitalCount),effectiveBaseData.Sum(e => e.TotalCount)).Value;
+            totalEffectiveData.NewCustomerDealRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.Sum(e => e.NewCustomerDealCount),effectiveBaseData.Sum(e => e.NewCustomerCount)).Value;
             totalEffectiveData.NewCustomerUnitPrice = DecimalExtension.Division(effectiveBaseData.Sum(e => e.NewCustomerTotalPerformance), effectiveBaseData.Sum(e => e.NewCustomerCount)).Value;
             totalEffectiveData.OldCustomerUnitPrice = DecimalExtension.Division(effectiveBaseData.Sum(e => e.OldCustomerTotalPerformance), effectiveBaseData.Sum(e => e.OldCustomerCount)).Value;
             dataList.Add(totalEffectiveData);
@@ -474,42 +474,42 @@ namespace Fx.Amiya.Service
                 var potentialData = await shoppingCartRegistrationService.GetIndicatorConversionDataAsync(selectDate.StartDate, selectDate.EndDate, liveanchorId, false);
                 potentialBaseData.Add(potentialData);
                 data.GroupName = $"{liveanchorName}组-潜在业绩";
-                data.SevenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(potentialData.TotalCount, potentialData.SevenDaySendOrderCount).Value;
-                data.FifteenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(potentialData.TotalCount, potentialData.FifteenToHospitalCount).Value;
-                data.OldCustomerToHospitalRate = DecimalExtension.CalculateTargetComplete(potentialData.OldCustomerCount, potentialData.OldCustomerToHospitalCount).Value;
-                data.RePurchaseRate = DecimalExtension.CalculateTargetComplete(potentialData.OldCustomerCount, potentialData.OldCustomerRepurchase).Value;
-                data.AddWechatRate = DecimalExtension.CalculateTargetComplete(potentialData.TotalCount, potentialData.AddWechatCount).Value;
-                data.SendOrderRate = DecimalExtension.CalculateTargetComplete(potentialData.TotalCount, potentialData.SendOrderCount).Value;
-                data.ToHospitalRate = DecimalExtension.CalculateTargetComplete(potentialData.TotalCount, potentialData.ToHospitalCount).Value;
-                data.NewCustomerDealRate = DecimalExtension.CalculateTargetComplete(potentialData.NewCustomerCount, potentialData.NewCustomerDealCount).Value;
+                data.SevenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(potentialData.SevenDaySendOrderCount, potentialData.TotalCount).Value;
+                data.FifteenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(potentialData.FifteenToHospitalCount, potentialData.TotalCount).Value;
+                data.OldCustomerToHospitalRate = DecimalExtension.CalculateTargetComplete(potentialData.OldCustomerToHospitalCount, potentialData.OldCustomerCount).Value;
+                data.RePurchaseRate = DecimalExtension.CalculateTargetComplete(potentialData.OldCustomerRepurchase, potentialData.OldCustomerCount).Value;
+                data.AddWechatRate = DecimalExtension.CalculateTargetComplete(potentialData.AddWechatCount, potentialData.TotalCount).Value;
+                data.SendOrderRate = DecimalExtension.CalculateTargetComplete(potentialData.SendOrderCount, potentialData.TotalCount).Value;
+                data.ToHospitalRate = DecimalExtension.CalculateTargetComplete(potentialData.ToHospitalCount, potentialData.TotalCount).Value;
+                data.NewCustomerDealRate = DecimalExtension.CalculateTargetComplete(potentialData.NewCustomerDealCount, potentialData.NewCustomerCount).Value;
                 data.NewCustomerUnitPrice = DecimalExtension.Division(potentialData.NewCustomerTotalPerformance, potentialData.NewCustomerCount).Value;
                 data.OldCustomerUnitPrice = DecimalExtension.Division(potentialData.OldCustomerTotalPerformance, potentialData.OldCustomerCount).Value;
                 dataList.Add(data);
             }
             CompanyIndicatorConversionDataDto totalPotentialData = new CompanyIndicatorConversionDataDto();
             totalPotentialData.GroupName = "潜在业绩";
-            totalPotentialData.SevenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(potentialBaseData.Sum(e => e.TotalCount), potentialBaseData.Sum(e => e.SevenDaySendOrderCount)).Value;
-            totalPotentialData.FifteenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(potentialBaseData.Sum(e => e.TotalCount), potentialBaseData.Sum(e => e.FifteenToHospitalCount)).Value;
-            totalPotentialData.OldCustomerToHospitalRate = DecimalExtension.CalculateTargetComplete(potentialBaseData.Sum(e => e.OldCustomerCount), potentialBaseData.Sum(e => e.OldCustomerToHospitalCount)).Value;
-            totalPotentialData.RePurchaseRate = DecimalExtension.CalculateTargetComplete(potentialBaseData.Sum(e => e.OldCustomerCount), potentialBaseData.Sum(e => e.OldCustomerRepurchase)).Value;
-            totalPotentialData.AddWechatRate = DecimalExtension.CalculateTargetComplete(potentialBaseData.Sum(e => e.TotalCount), potentialBaseData.Sum(e => e.AddWechatCount)).Value;
-            totalPotentialData.SendOrderRate = DecimalExtension.CalculateTargetComplete(potentialBaseData.Sum(e => e.TotalCount), potentialBaseData.Sum(e => e.SendOrderCount)).Value;
-            totalPotentialData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(potentialBaseData.Sum(e => e.TotalCount), potentialBaseData.Sum(e => e.ToHospitalCount)).Value;
-            totalPotentialData.NewCustomerDealRate = DecimalExtension.CalculateTargetComplete(potentialBaseData.Sum(e => e.NewCustomerCount), potentialBaseData.Sum(e => e.NewCustomerDealCount)).Value;
+            totalPotentialData.SevenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(potentialBaseData.Sum(e => e.SevenDaySendOrderCount), potentialBaseData.Sum(e => e.TotalCount)).Value;
+            totalPotentialData.FifteenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(potentialBaseData.Sum(e => e.FifteenToHospitalCount), potentialBaseData.Sum(e => e.TotalCount)).Value;
+            totalPotentialData.OldCustomerToHospitalRate = DecimalExtension.CalculateTargetComplete(potentialBaseData.Sum(e => e.OldCustomerToHospitalCount), potentialBaseData.Sum(e => e.OldCustomerCount)).Value;
+            totalPotentialData.RePurchaseRate = DecimalExtension.CalculateTargetComplete(potentialBaseData.Sum(e => e.OldCustomerRepurchase), potentialBaseData.Sum(e => e.OldCustomerCount)).Value;
+            totalPotentialData.AddWechatRate = DecimalExtension.CalculateTargetComplete(potentialBaseData.Sum(e => e.AddWechatCount), potentialBaseData.Sum(e => e.TotalCount)).Value;
+            totalPotentialData.SendOrderRate = DecimalExtension.CalculateTargetComplete(potentialBaseData.Sum(e => e.SendOrderCount), potentialBaseData.Sum(e => e.TotalCount)).Value;
+            totalPotentialData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(potentialBaseData.Sum(e => e.ToHospitalCount), potentialBaseData.Sum(e => e.TotalCount)).Value;
+            totalPotentialData.NewCustomerDealRate = DecimalExtension.CalculateTargetComplete(potentialBaseData.Sum(e => e.NewCustomerDealCount), potentialBaseData.Sum(e => e.NewCustomerCount)).Value;
             totalPotentialData.NewCustomerUnitPrice = DecimalExtension.Division(potentialBaseData.Sum(e => e.NewCustomerTotalPerformance), potentialBaseData.Sum(e => e.NewCustomerCount)).Value;
             totalPotentialData.OldCustomerUnitPrice = DecimalExtension.Division(potentialBaseData.Sum(e => e.OldCustomerTotalPerformance), potentialBaseData.Sum(e => e.OldCustomerCount)).Value;
             dataList.Add(totalPotentialData);
             var totalList = effectiveBaseData.Concat(potentialBaseData);
             CompanyIndicatorConversionDataDto totalData = new CompanyIndicatorConversionDataDto();
             totalData.GroupName = "总计";
-            totalData.SevenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(totalList.Sum(e => e.TotalCount), totalList.Sum(e => e.SevenDaySendOrderCount)).Value;
-            totalData.FifteenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(totalList.Sum(e => e.TotalCount), totalList.Sum(e => e.FifteenToHospitalCount)).Value;
-            totalData.OldCustomerToHospitalRate = DecimalExtension.CalculateTargetComplete(totalList.Sum(e => e.OldCustomerCount), totalList.Sum(e => e.OldCustomerToHospitalCount)).Value;
-            totalData.RePurchaseRate = DecimalExtension.CalculateTargetComplete(totalList.Sum(e => e.OldCustomerCount), totalList.Sum(e => e.OldCustomerRepurchase)).Value;
-            totalData.AddWechatRate = DecimalExtension.CalculateTargetComplete(totalList.Sum(e => e.TotalCount), totalList.Sum(e => e.AddWechatCount)).Value;
-            totalData.SendOrderRate = DecimalExtension.CalculateTargetComplete(totalList.Sum(e => e.TotalCount), totalList.Sum(e => e.SendOrderCount)).Value;
-            totalData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(totalList.Sum(e => e.TotalCount), totalList.Sum(e => e.ToHospitalCount)).Value;
-            totalData.NewCustomerDealRate = DecimalExtension.CalculateTargetComplete(totalList.Sum(e => e.NewCustomerCount), totalList.Sum(e => e.NewCustomerDealCount)).Value;
+            totalData.SevenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(totalList.Sum(e => e.SevenDaySendOrderCount), totalList.Sum(e => e.TotalCount)).Value;
+            totalData.FifteenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(totalList.Sum(e => e.FifteenToHospitalCount), totalList.Sum(e => e.TotalCount)).Value;
+            totalData.OldCustomerToHospitalRate = DecimalExtension.CalculateTargetComplete(totalList.Sum(e => e.OldCustomerToHospitalCount), totalList.Sum(e => e.OldCustomerCount)).Value;
+            totalData.RePurchaseRate = DecimalExtension.CalculateTargetComplete(totalList.Sum(e => e.OldCustomerRepurchase), totalList.Sum(e => e.OldCustomerCount)).Value;
+            totalData.AddWechatRate = DecimalExtension.CalculateTargetComplete(totalList.Sum(e => e.AddWechatCount), totalList.Sum(e => e.TotalCount)).Value;
+            totalData.SendOrderRate = DecimalExtension.CalculateTargetComplete(totalList.Sum(e => e.SendOrderCount), totalList.Sum(e => e.TotalCount)).Value;
+            totalData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(totalList.Sum(e => e.ToHospitalCount), totalList.Sum(e => e.TotalCount)).Value;
+            totalData.NewCustomerDealRate = DecimalExtension.CalculateTargetComplete(totalList.Sum(e => e.NewCustomerDealCount), totalList.Sum(e => e.NewCustomerCount)).Value;
             totalData.NewCustomerUnitPrice = DecimalExtension.Division(totalList.Sum(e => e.NewCustomerTotalPerformance), totalList.Sum(e => e.NewCustomerCount)).Value;
             totalData.OldCustomerUnitPrice = DecimalExtension.Division(totalList.Sum(e => e.OldCustomerTotalPerformance), totalList.Sum(e => e.OldCustomerCount)).Value;
             dataList.Add(totalData);
@@ -524,8 +524,53 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<AssistantPerformanceDataDto>> GetAssistantPerformanceDataAsync(QueryAmiyaAssistantOperationsDataDto query)
         {
-            List<AssistantPerformanceDataDto> result = new List<AssistantPerformanceDataDto>();
-            return result;
+            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate.Value, query.EndDate.Value);
+            var assistantNameList = await amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(query.LiveAnchorIds);
+            var assistantTarget = await employeePerformanceTargetService.GetEmployeeTargetByAssistantIdListAsync(query.StartDate.Value.Year, query.StartDate.Value.Month, assistantNameList.Select(e => e.Id).ToList());
+            var order = await contentPlatFormOrderDealInfoService.GetPerformanceDetailByDateAndAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, assistantNameList.Select(e => e.Id).ToList());
+            var resList = order.GroupBy(e => e.BelongEmployeeId).Select(e =>
+             {
+                 var target = assistantTarget.Where(a => a.EmployeeId == e.Key).FirstOrDefault();
+                 var name = assistantNameList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其他";
+                 AssistantPerformanceDataDto data = new AssistantPerformanceDataDto();
+                 data.AssistantName = name;
+                 data.NewCustomerPerformanceTarget = target?.NewCustomerPerformanceTarget ?? 0;
+                 data.CurrentMonthNewCustomerPerformance = e.Where(e => e.IsOldCustomer == false).Sum(e => e.Price);
+                 data.NewCustomerPerformanceTargetComplete = DecimalExtension.CalculateTargetComplete(data.CurrentMonthNewCustomerPerformance, data.NewCustomerPerformanceTarget).Value;
+                 data.OldCustomerTarget = target?.OldCustomerPerformanceTarget ?? 0;
+                 data.CurrentMonthOldCustomerPerformance = e.Where(e => e.IsOldCustomer == true).Sum(e => e.Price);
+                 data.OldCustomerTargetComplete = DecimalExtension.CalculateTargetComplete(data.CurrentMonthOldCustomerPerformance, data.OldCustomerTarget).Value;
+                 data.TotalPerformanceTarget = data.NewCustomerPerformanceTarget + data.OldCustomerTarget;
+                 data.TotalPerformance = data.CurrentMonthNewCustomerPerformance + data.CurrentMonthOldCustomerPerformance;
+                 data.TotalPerformanceTargetComplete = DecimalExtension.CalculateTargetComplete(data.TotalPerformance, data.TotalPerformanceTarget).Value;
+                 return data;
+             }).ToList();
+            AssistantPerformanceDataDto data = new AssistantPerformanceDataDto();
+            data.AssistantName = "其他";
+            data.NewCustomerPerformanceTarget = 0;
+            data.CurrentMonthNewCustomerPerformance = resList.Where(e => e.AssistantName == "其他").Sum(e => e.CurrentMonthNewCustomerPerformance);
+            data.NewCustomerPerformanceTargetComplete = 0;
+            data.OldCustomerTarget = 0;
+            data.CurrentMonthOldCustomerPerformance = resList.Where(e => e.AssistantName == "其他").Sum(e => e.CurrentMonthOldCustomerPerformance);
+            data.OldCustomerTargetComplete = 0;
+            data.TotalPerformanceTarget = 0;
+            data.TotalPerformance = data.CurrentMonthNewCustomerPerformance + data.CurrentMonthOldCustomerPerformance;
+            data.TotalPerformanceTargetComplete = 0;
+            resList.RemoveAll(e => e.AssistantName == "其他");
+            resList.Add(data);
+            AssistantPerformanceDataDto total = new AssistantPerformanceDataDto();
+            total.AssistantName = "总计";
+            total.NewCustomerPerformanceTarget = resList.Sum(e => e.NewCustomerPerformanceTarget);
+            total.CurrentMonthNewCustomerPerformance = resList.Sum(e => e.CurrentMonthNewCustomerPerformance);
+            total.NewCustomerPerformanceTargetComplete = DecimalExtension.CalculateTargetComplete(total.CurrentMonthNewCustomerPerformance, total.NewCustomerPerformanceTarget).Value;
+            total.OldCustomerTarget = resList.Sum(e => e.NewCustomerPerformanceTarget);
+            total.CurrentMonthOldCustomerPerformance = resList.Sum(e => e.CurrentMonthOldCustomerPerformance);
+            total.OldCustomerTargetComplete = DecimalExtension.CalculateTargetComplete(total.CurrentMonthOldCustomerPerformance, total.OldCustomerTarget).Value;
+            total.TotalPerformanceTarget = total.CurrentMonthOldCustomerPerformance + total.NewCustomerPerformanceTarget;
+            total.TotalPerformance = data.CurrentMonthNewCustomerPerformance + data.CurrentMonthOldCustomerPerformance;
+            total.TotalPerformanceTargetComplete = DecimalExtension.CalculateTargetComplete(total.TotalPerformance, total.TotalPerformanceTarget).Value;
+            resList.Add(total);
+            return resList;
         }
         /// <summary>
         /// 获取助理看板获客情况数据
@@ -533,8 +578,62 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<AssistantCustomerAcquisitionDataDto>> GetAssistantCustomerAcquisitionDataAsync(QueryAmiyaAssistantOperationsDataDto query)
         {
-            List<AssistantCustomerAcquisitionDataDto> result = new List<AssistantCustomerAcquisitionDataDto>();
-            return result;
+            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate.Value, query.EndDate.Value);
+            var assistantNameList = await amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(query.LiveAnchorIds);
+            var assistantTarget = await employeePerformanceTargetService.GetEmployeeTargetByAssistantIdListAsync(query.StartDate.Value.Year, query.StartDate.Value.Month, assistantNameList.Select(e => e.Id).ToList());
+            var data = await shoppingCartRegistrationService.GetPerformanceByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, assistantNameList.Select(e => e.Id).ToList());
+            var resList = data.GroupBy(e => e.AssignEmpId).Select(e =>
+            {
+                var target = assistantTarget.Where(a => a.EmployeeId == e.Key).FirstOrDefault();
+                var name = assistantNameList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其他";
+                AssistantCustomerAcquisitionDataDto data = new AssistantCustomerAcquisitionDataDto();
+                data.AssistantName = name;
+                data.PotentialAllocationConsulation = e.Where(e => e.Price <= 0).Count();
+                data.PotentialAllocationConsulationTarget = target?.PotentialConsulationCardTarget ?? 0;
+                data.PotentialAllocationConsulationTargetComplete = DecimalExtension.CalculateTargetComplete(data.PotentialAllocationConsulation, data.PotentialAllocationConsulationTarget).Value;
+                data.PotentialAddWechat = e.Where(e => e.Price <= 0).Count();
+                data.PotentialAddWechatTarget = target?.PotentialAddWechatTarget ?? 0;
+                data.PotentialAddWechatTargetComplete = DecimalExtension.CalculateTargetComplete(data.PotentialAddWechat, data.PotentialAddWechatTarget).Value;
+                data.EffectiveAllocationConsulation = e.Where(e => e.Price > 0).Count();
+                data.EffectiveAllocationConsulationTarget = target?.EffectiveConsulationCardTarget ?? 0;
+                data.EffectiveAllocationConsulationTargetComplete = DecimalExtension.CalculateTargetComplete(data.EffectiveAllocationConsulation, data.EffectiveAllocationConsulationTarget).Value;
+                data.EffectiveAddWechat = e.Where(e => e.Price > 0).Count();
+                data.EffectiveAddWechatTarget = target?.EffectiveAddWechatTarget ?? 0;
+                data.EffectiveAddWechatTargetComplete = DecimalExtension.CalculateTargetComplete(data.EffectiveAddWechat, data.EffectiveAddWechatTarget).Value;
+                return data;
+            }).ToList();
+            AssistantCustomerAcquisitionDataDto other = new AssistantCustomerAcquisitionDataDto();
+            other.AssistantName = "其他";
+            other.PotentialAllocationConsulation = resList.Where(e => e.AssistantName == "其他").Sum(e => e.PotentialAllocationConsulation);
+            other.PotentialAllocationConsulationTarget = resList.Where(e => e.AssistantName == "其他").Sum(e => e.PotentialAllocationConsulation);
+            other.PotentialAllocationConsulationTargetComplete = DecimalExtension.CalculateTargetComplete(other.PotentialAllocationConsulation, other.PotentialAllocationConsulationTarget).Value;
+            other.PotentialAddWechat = resList.Where(e => e.AssistantName == "其他").Sum(e => e.PotentialAddWechat);
+            other.PotentialAddWechatTarget = resList.Where(e => e.AssistantName == "其他").Sum(e => e.PotentialAddWechatTarget);
+            other.PotentialAddWechatTargetComplete = DecimalExtension.CalculateTargetComplete(other.PotentialAddWechat, other.PotentialAddWechatTarget).Value;
+            other.EffectiveAllocationConsulation = resList.Where(e => e.AssistantName == "其他").Sum(e => e.EffectiveAllocationConsulation);
+            other.EffectiveAllocationConsulationTarget = resList.Where(e => e.AssistantName == "其他").Sum(e => e.EffectiveAllocationConsulationTarget);
+            other.EffectiveAllocationConsulationTargetComplete = DecimalExtension.CalculateTargetComplete(other.EffectiveAllocationConsulation, other.EffectiveAllocationConsulationTarget).Value;
+            other.EffectiveAddWechat = resList.Where(e => e.AssistantName == "其他").Sum(e => e.EffectiveAddWechat);
+            other.EffectiveAddWechatTarget = resList.Where(e => e.AssistantName == "其他").Sum(e => e.EffectiveAddWechatTarget);
+            other.EffectiveAddWechatTargetComplete = DecimalExtension.CalculateTargetComplete(other.EffectiveAddWechat, other.EffectiveAddWechatTarget).Value;
+            resList.RemoveAll(e => e.AssistantName == "其他");
+            resList.Add(other);
+            AssistantCustomerAcquisitionDataDto total = new AssistantCustomerAcquisitionDataDto();
+            total.AssistantName = "总计";
+            total.PotentialAllocationConsulation = resList.Sum(e => e.PotentialAllocationConsulation);
+            total.PotentialAllocationConsulationTarget = resList.Sum(e => e.PotentialAllocationConsulation);
+            total.PotentialAllocationConsulationTargetComplete = DecimalExtension.CalculateTargetComplete(total.PotentialAllocationConsulation, total.PotentialAllocationConsulationTarget).Value;
+            total.PotentialAddWechat = resList.Sum(e => e.PotentialAddWechat);
+            total.PotentialAddWechatTarget = resList.Sum(e => e.PotentialAddWechatTarget);
+            total.PotentialAddWechatTargetComplete = DecimalExtension.CalculateTargetComplete(total.PotentialAddWechat, total.PotentialAddWechatTarget).Value;
+            total.EffectiveAllocationConsulation = resList.Sum(e => e.EffectiveAllocationConsulation);
+            total.EffectiveAllocationConsulationTarget = resList.Sum(e => e.EffectiveAllocationConsulationTarget);
+            total.EffectiveAllocationConsulationTargetComplete = DecimalExtension.CalculateTargetComplete(total.EffectiveAllocationConsulation, total.EffectiveAllocationConsulationTarget).Value;
+            total.EffectiveAddWechat = resList.Sum(e => e.EffectiveAddWechat);
+            total.EffectiveAddWechatTarget = resList.Sum(e => e.EffectiveAddWechatTarget);
+            total.EffectiveAddWechatTargetComplete = DecimalExtension.CalculateTargetComplete(total.EffectiveAddWechat, total.EffectiveAddWechatTarget).Value;
+            resList.Add(total);
+            return resList;
         }
         /// <summary>
         /// 获取助理看板运营情况数据
@@ -542,8 +641,53 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<AssistantOperationsDataDto>> GetAssistantOperationsDataAsync(QueryAmiyaAssistantOperationsDataDto query)
         {
-            List<AssistantOperationsDataDto> result = new List<AssistantOperationsDataDto>();
-            return result;
+            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate.Value, query.EndDate.Value);
+            var assistantNameList = await amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(query.LiveAnchorIds);
+            var assistantTarget = await employeePerformanceTargetService.GetEmployeeTargetByAssistantIdListAsync(query.StartDate.Value.Year, query.StartDate.Value.Month, assistantNameList.Select(e => e.Id).ToList());
+            var baseOrderPerformance = await contentPlateFormOrderService.GetOrderSendAndDealDataByMonthAndBaseLiveAnchorIdAsync(selectDate.StartDate, selectDate.EndDate, query.IsOldCustomer.Value, assistantNameList.Select(e => e.Id).ToList());
+            var resList = baseOrderPerformance.Select(e =>
+            {
+                var target = assistantTarget.Where(a => a.EmployeeId == e.BelongEmpId).FirstOrDefault();
+                var name = assistantNameList.Where(a => a.Id == e.BelongEmpId).FirstOrDefault()?.Name ?? "其他";
+                AssistantOperationsDataDto data = new AssistantOperationsDataDto();
+                data.AssistantName = name;
+                data.SendOrder = e.SendOrderNum;
+                data.SendOrderTarget = target?.SendOrderTarget ?? 0;
+                data.SendOrderTargetComplete = DecimalExtension.CalculateTargetComplete(data.SendOrder, data.SendOrderTarget).Value;
+                data.ToHospital = e.VisitNum;
+                data.ToHospitalTarget = query.IsOldCustomer.Value ? target?.OldCustomerVisitTarget ?? 0 : target?.NewCustomerVisitTarget ?? 0;
+                data.ToHospitalTargetComplete = DecimalExtension.CalculateTargetComplete(data.ToHospital, data.ToHospitalTarget).Value;
+                data.Deal = e.DealNum;
+                data.DealTarget = query.IsOldCustomer.Value ? target?.OldCustomerDealNumTarget ?? 0 : target?.NewCustomerDealNumTarget ?? 0;
+                data.DealTargetComplete = DecimalExtension.CalculateTargetComplete(data.Deal, data.DealTarget).Value;
+                return data;
+            }).ToList();
+            AssistantOperationsDataDto other = new AssistantOperationsDataDto();
+            other.AssistantName = "其他";
+            other.SendOrder = resList.Where(e => e.AssistantName == "其他").Sum(e => e.SendOrder);
+            other.SendOrderTarget = resList.Where(e => e.AssistantName == "其他").Sum(e => e.SendOrderTarget);
+            other.SendOrderTargetComplete = DecimalExtension.CalculateTargetComplete(other.SendOrder, other.SendOrderTarget).Value;
+            other.ToHospital = resList.Where(e => e.AssistantName == "其他").Sum(e => e.ToHospital);
+            other.ToHospitalTarget = resList.Where(e => e.AssistantName == "其他").Sum(e => e.ToHospitalTarget);
+            other.ToHospitalTargetComplete = DecimalExtension.CalculateTargetComplete(other.ToHospital, other.ToHospitalTarget).Value;
+            other.Deal = resList.Where(e => e.AssistantName == "其他").Sum(e => e.Deal);
+            other.DealTarget = resList.Where(e => e.AssistantName == "其他").Sum(e => e.DealTarget);
+            other.DealTargetComplete = DecimalExtension.CalculateTargetComplete(other.Deal, other.DealTarget).Value;
+            resList.RemoveAll(e => e.AssistantName == "其他");
+            resList.Add(other);
+            AssistantOperationsDataDto total = new AssistantOperationsDataDto();
+            total.AssistantName = "其他";
+            total.SendOrder = resList.Sum(e => e.SendOrder);
+            total.SendOrderTarget = resList.Sum(e => e.SendOrderTarget);
+            total.SendOrderTargetComplete = DecimalExtension.CalculateTargetComplete(other.SendOrder, other.SendOrderTarget).Value;
+            total.ToHospital = resList.Sum(e => e.ToHospital);
+            total.ToHospitalTarget = resList.Sum(e => e.ToHospitalTarget);
+            total.ToHospitalTargetComplete = DecimalExtension.CalculateTargetComplete(other.ToHospital, other.ToHospitalTarget).Value;
+            total.Deal = resList.Sum(e => e.Deal);
+            total.DealTarget = resList.Sum(e => e.DealTarget);
+            total.DealTargetComplete = DecimalExtension.CalculateTargetComplete(other.Deal, other.DealTarget).Value;
+            resList.Add(total);
+            return resList;
         }
         /// <summary>
         /// 获取助理看板指标转化情况数据
@@ -551,8 +695,55 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<AssistantIndicatorConversionDataDto>> GetAssistantIndicatorConversionDataAsync(QueryAmiyaAssistantOperationsDataDto query)
         {
-            List<AssistantIndicatorConversionDataDto> result = new List<AssistantIndicatorConversionDataDto>();
-            return result;
+            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate.Value, query.EndDate.Value);
+            var assistantNameList = await amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(query.LiveAnchorIds);
+            var baseData = await shoppingCartRegistrationService.GetIndicatorConversionDataByAssistantIdsAsync(selectDate.StartDate, selectDate.EndDate, assistantNameList.Select(e => e.Id).ToList(), query.IsOldCustomer);
+            var resList = baseData.GroupBy(e => e.EmpId).Select(e =>
+             {
+
+                 var name = assistantNameList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其他";
+                 AssistantIndicatorConversionDataDto data = new AssistantIndicatorConversionDataDto();
+                 data.AssistantName = name;
+                 data.SevenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.TotalCount), e.Sum(e => e.SevenDaySendOrderCount)).Value;
+                 data.FifteenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.TotalCount), e.Sum(e => e.FifteenToHospitalCount)).Value;
+                 data.OldCustomerToHospitalRate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.OldCustomerCount), e.Sum(e => e.OldCustomerToHospitalCount)).Value;
+                 data.RePurchaseRate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.TotalCount), e.Sum(e => e.OldCustomerRepurchase)).Value;
+                 data.AddWechatRate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.TotalCount), e.Sum(e => e.AddWechatCount)).Value;
+                 data.SendOrderRate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.TotalCount), e.Sum(e => e.SendOrderCount)).Value;
+                 data.ToHospitalRate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.TotalCount), e.Sum(e => e.ToHospitalCount)).Value;
+                 data.NewCustomerDealRate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.NewCustomerCount), e.Sum(e => e.NewCustomerDealCount)).Value;
+                 data.NewCustomerUnitPrice = DecimalExtension.Division(e.Sum(e => e.NewCustomerTotalPerformance), e.Sum(e => e.NewCustomerCount)).Value;
+                 data.OldCustomerUnitPrice = DecimalExtension.Division(e.Sum(e => e.OldCustomerTotalPerformance), e.Sum(e => e.OldCustomerCount)).Value;
+                 return data;
+             }).ToList();
+            var otherList= baseData.Where(e => !assistantNameList.Select(e => e.Id).Contains(e.EmpId));
+            AssistantIndicatorConversionDataDto other = new AssistantIndicatorConversionDataDto();
+            other.AssistantName = "其他";
+            other.SevenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(otherList.Sum(e => e.TotalCount), otherList.Sum(e => e.SevenDaySendOrderCount)).Value;
+            other.FifteenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(otherList.Sum(e => e.TotalCount), otherList.Sum(e => e.FifteenToHospitalCount)).Value;
+            other.OldCustomerToHospitalRate = DecimalExtension.CalculateTargetComplete(otherList.Sum(e => e.OldCustomerCount), otherList.Sum(e => e.OldCustomerToHospitalCount)).Value;
+            other.RePurchaseRate = DecimalExtension.CalculateTargetComplete(otherList.Sum(e => e.TotalCount), otherList.Sum(e => e.OldCustomerRepurchase)).Value;
+            other.AddWechatRate = DecimalExtension.CalculateTargetComplete(otherList.Sum(e => e.TotalCount), otherList.Sum(e => e.AddWechatCount)).Value;
+            other.SendOrderRate = DecimalExtension.CalculateTargetComplete(otherList.Sum(e => e.TotalCount), otherList.Sum(e => e.SendOrderCount)).Value;
+            other.ToHospitalRate = DecimalExtension.CalculateTargetComplete(otherList.Sum(e => e.TotalCount), otherList.Sum(e => e.ToHospitalCount)).Value;
+            other.NewCustomerDealRate = DecimalExtension.CalculateTargetComplete(otherList.Sum(e => e.NewCustomerCount), otherList.Sum(e => e.NewCustomerDealCount)).Value;
+            other.NewCustomerUnitPrice = DecimalExtension.Division(otherList.Sum(e => e.NewCustomerTotalPerformance), otherList.Sum(e => e.NewCustomerCount)).Value;
+            other.OldCustomerUnitPrice = DecimalExtension.Division(otherList.Sum(e => e.OldCustomerTotalPerformance), otherList.Sum(e => e.OldCustomerCount)).Value;
+            resList.Add(other);
+            AssistantIndicatorConversionDataDto total = new AssistantIndicatorConversionDataDto();
+            total.AssistantName = "总计";
+            total.SevenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(baseData.Sum(e => e.TotalCount), baseData.Sum(e => e.SevenDaySendOrderCount)).Value;
+            total.FifteenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(baseData.Sum(e => e.TotalCount), baseData.Sum(e => e.FifteenToHospitalCount)).Value;
+            total.OldCustomerToHospitalRate = DecimalExtension.CalculateTargetComplete(baseData.Sum(e => e.OldCustomerCount), baseData.Sum(e => e.OldCustomerToHospitalCount)).Value;
+            total.RePurchaseRate = DecimalExtension.CalculateTargetComplete(baseData.Sum(e => e.TotalCount), baseData.Sum(e => e.OldCustomerRepurchase)).Value;
+            total.AddWechatRate = DecimalExtension.CalculateTargetComplete(baseData.Sum(e => e.TotalCount), baseData.Sum(e => e.AddWechatCount)).Value;
+            total.SendOrderRate = DecimalExtension.CalculateTargetComplete(baseData.Sum(e => e.TotalCount), baseData.Sum(e => e.SendOrderCount)).Value;
+            total.ToHospitalRate = DecimalExtension.CalculateTargetComplete(baseData.Sum(e => e.TotalCount), baseData.Sum(e => e.ToHospitalCount)).Value;
+            total.NewCustomerDealRate = DecimalExtension.CalculateTargetComplete(baseData.Sum(e => e.NewCustomerCount), baseData.Sum(e => e.NewCustomerDealCount)).Value;
+            total.NewCustomerUnitPrice = DecimalExtension.Division(baseData.Sum(e => e.NewCustomerTotalPerformance), baseData.Sum(e => e.NewCustomerCount)).Value;
+            total.OldCustomerUnitPrice = DecimalExtension.Division(baseData.Sum(e => e.OldCustomerTotalPerformance), baseData.Sum(e => e.OldCustomerCount)).Value;
+            resList.Add(total);
+            return resList;
         }
         #endregion
 

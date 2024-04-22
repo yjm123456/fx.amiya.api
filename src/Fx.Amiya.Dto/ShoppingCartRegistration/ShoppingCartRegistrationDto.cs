@@ -120,6 +120,7 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         /// 小黄车登记顾客类型文本
         /// </summary>
         public string ShoppingCartRegistrationCustomerTypeText { get; set; }
+        public decimal AddPrice { get; set; }
 
     }
 }

@@ -55,10 +55,11 @@ namespace Fx.Amiya.Service
                                                  BelongYear = d.BelongYear,
                                                  EffectiveConsulationCardTarget = d.EffectiveConsulationCardTarget,
                                                  PotentialConsulationCardTarget = d.PotentialConsulationCardTarget,
-                                                 EffectiveAddWechatTarget= d.EffectiveAddWechatTarget,
-                                                 PotentialAddWechatTarget=d.PotentialAddWechatTarget,
+                                                 EffectiveAddWechatTarget = d.EffectiveAddWechatTarget,
+                                                 PotentialAddWechatTarget = d.PotentialAddWechatTarget,
                                                  SendOrderTarget = d.SendOrderTarget,
-                                                 VisitTarget = d.VisitTarget,
+                                                 OldCustomerVisitTarget = d.OldCustomerVisitTarget,
+                                                 NewCustomerVisitTarget = d.NewCustomerVisitTarget,
                                                  NewCustomerDealTarget = d.NewCustomerDealTarget,
                                                  OldCustomerDealTarget = d.OldCustomerDealTarget,
                                                  NewCustomerPerformanceTarget = d.NewCustomerPerformanceTarget,
@@ -95,10 +96,11 @@ namespace Fx.Amiya.Service
                 cmployeePerformanceTarget.BelongMonth = addDto.BelongMonth;
                 cmployeePerformanceTarget.EffectiveConsulationCardTarget = addDto.EffectiveConsulationCardTarget;
                 cmployeePerformanceTarget.PotentialConsulationCardTarget = addDto.PotentialConsulationCardTarget;
-                cmployeePerformanceTarget.EffectiveAddWechatTarget=addDto.EffectiveAddWechatTarget;
-                cmployeePerformanceTarget.PotentialAddWechatTarget=addDto.PotentialAddWechatTarget;
+                cmployeePerformanceTarget.EffectiveAddWechatTarget = addDto.EffectiveAddWechatTarget;
+                cmployeePerformanceTarget.PotentialAddWechatTarget = addDto.PotentialAddWechatTarget;
                 cmployeePerformanceTarget.SendOrderTarget = addDto.SendOrderTarget;
-                cmployeePerformanceTarget.VisitTarget = addDto.VisitTarget;
+                cmployeePerformanceTarget.OldCustomerVisitTarget = addDto.OldCustomerVisitTarget;
+                cmployeePerformanceTarget.NewCustomerVisitTarget = addDto.NewCustomerVisitTarget;
                 cmployeePerformanceTarget.NewCustomerDealTarget = addDto.NewCustomerDealTarget;
                 cmployeePerformanceTarget.OldCustomerDealTarget = addDto.OldCustomerDealTarget;
                 cmployeePerformanceTarget.NewCustomerPerformanceTarget = addDto.NewCustomerPerformanceTarget;
@@ -136,7 +138,8 @@ namespace Fx.Amiya.Service
             returnResult.EffectiveConsulationCardTarget = result.EffectiveConsulationCardTarget;
             returnResult.PotentialConsulationCardTarget = result.PotentialConsulationCardTarget;
             returnResult.SendOrderTarget = result.SendOrderTarget;
-            returnResult.VisitTarget = result.VisitTarget;
+            returnResult.OldCustomerVisitTarget = result.OldCustomerVisitTarget;
+            returnResult.NewCustomerVisitTarget=result.NewCustomerVisitTarget;
             returnResult.NewCustomerDealTarget = result.NewCustomerDealTarget;
             returnResult.OldCustomerDealTarget = result.OldCustomerDealTarget;
             returnResult.NewCustomerPerformanceTarget = result.NewCustomerPerformanceTarget;
@@ -171,7 +174,8 @@ namespace Fx.Amiya.Service
             result.EffectiveAddWechatTarget = updateDto.EffectiveAddWechatTarget;
             result.PotentialAddWechatTarget = updateDto.PotentialAddWechatTarget;
             result.SendOrderTarget = updateDto.SendOrderTarget;
-            result.VisitTarget = updateDto.VisitTarget;
+            result.NewCustomerVisitTarget = updateDto.NewCustomerVisitTarget;
+            result.OldCustomerVisitTarget = updateDto.OldCustomerVisitTarget;
             result.NewCustomerDealTarget = updateDto.NewCustomerDealTarget;
             result.OldCustomerDealTarget = updateDto.OldCustomerDealTarget;
             result.NewCustomerPerformanceTarget = updateDto.NewCustomerPerformanceTarget;
@@ -227,15 +231,44 @@ namespace Fx.Amiya.Service
         /// <param name="month"></param>
         /// <param name="baseLiveAnchorId"></param>
         /// <returns></returns>
-        public async Task<EmployeeTargetInfoDto> GetEmployeeTargetByBaseLiveAnchorIdAsync(int year,int month,string baseLiveAnchorId) {
-            var ids =(await amiyaEmployeeService.GetByLiveAnchorBaseIdAsync(baseLiveAnchorId)).Select(e=>e.Id);
-            var target= dalEmployeePerformanceTarget.GetAll().Where(e => e.Valid == true && e.BelongMonth == month && e.BelongYear == year && ids.Contains(e.EmployeeId));
+        public async Task<EmployeeTargetInfoDto> GetEmployeeTargetByBaseLiveAnchorIdAsync(int year, int month, string baseLiveAnchorId)
+        {
+            var ids = (await amiyaEmployeeService.GetByLiveAnchorBaseIdAsync(baseLiveAnchorId)).Select(e => e.Id);
+            var target = dalEmployeePerformanceTarget.GetAll().Where(e => e.Valid == true && e.BelongMonth == month && e.BelongYear == year && ids.Contains(e.EmployeeId));
             EmployeeTargetInfoDto targetInfo = new EmployeeTargetInfoDto();
             targetInfo.EffectiveAddWechatTarget = target.Sum(e => e.EffectiveAddWechatTarget);
             targetInfo.PotentialAddWechatTarget = target.Sum(e => e.PotentialAddWechatTarget);
             targetInfo.EffectiveConsulationCardTarget = target.Sum(e => e.EffectiveConsulationCardTarget);
             targetInfo.PotentialConsulationCardTarget = target.Sum(e => e.PotentialConsulationCardTarget);
             return targetInfo;
+        }
+        /// <summary>
+        /// 根据助理id集合获取助理目标
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="baseLiveAnchorId"></param>
+        /// <returns></returns>
+        public async Task<List<EmployeeTargetInfoDto>> GetEmployeeTargetByAssistantIdListAsync(int year, int month, List<int> assistantIds)
+        {
+
+            return await dalEmployeePerformanceTarget.GetAll()
+                .Where(e => e.Valid == true && e.BelongMonth == month && e.BelongYear == year && assistantIds.Contains(e.EmployeeId))
+                .Select(e => new EmployeeTargetInfoDto
+                {
+                    EmployeeId = e.EmployeeId,
+                    EffectiveAddWechatTarget = e.EffectiveAddWechatTarget,
+                    PotentialAddWechatTarget = e.PotentialAddWechatTarget,
+                    EffectiveConsulationCardTarget = e.EffectiveConsulationCardTarget,
+                    PotentialConsulationCardTarget = e.PotentialConsulationCardTarget,
+                    OldCustomerPerformanceTarget=e.OldCustomerPerformanceTarget,
+                    NewCustomerPerformanceTarget=e.NewCustomerPerformanceTarget,
+                    NewCustomerVisitTarget=e.NewCustomerVisitTarget,
+                    OldCustomerVisitTarget=e.OldCustomerVisitTarget,
+                    SendOrderTarget=e.SendOrderTarget,
+                    NewCustomerDealNumTarget=e.NewCustomerDealTarget,
+                    OldCustomerDealNumTarget=e.OldCustomerDealTarget
+                }).ToListAsync(); 
         }
     }
 }

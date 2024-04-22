@@ -3682,7 +3682,7 @@ namespace Fx.Amiya.Service
             OrderSendAndDealNumDto orderData = new OrderSendAndDealNumDto();
             orderData.SendOrderNum = await _dalContentPlatformOrder.GetAll()
              .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
-             .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsOldCustomer == false)
+             .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsOldCustomer == isOldCustomer)
              .Where(o => o.LiveAnchor.LiveAnchorBaseId == baseLiveAbchorId)
                 .Select(e => e.Phone)
                 .Distinct()
@@ -3710,6 +3710,38 @@ namespace Fx.Amiya.Service
                 .Sum(x => x.DealAmount);
 
             return orderData;
+        }
+        /// <summary>
+        /// 根据助理id集合获取助理客户运营情况
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="isOldCustomer"></param>
+        /// <param name="baseLiveAbchorId"></param>
+        /// <returns></returns>
+        public async Task<List<OrderSendAndDealNumDto>> GetOrderSendAndDealDataByMonthAndBaseLiveAnchorIdAsync(DateTime startDate, DateTime endDate, bool isOldCustomer, List<int> assistantIds)
+        {
+            var baseData = _dalContentPlatformOrder.GetAll().Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.CreateDate >= startDate && e.CreateDate < endDate).Select(e => new
+            {
+                SendDate = e.SendDate,
+                OrderStatus = e.OrderStatus,
+                Phone = e.Phone,
+                ToHospitalDate = e.ToHospitalDate,
+                DealDate = e.DealDate,
+                BelongEmpId = e.BelongEmpId,
+                IsOldCustomer = e.IsOldCustomer,
+                IsToHospital = e.IsToHospital,
+                DealAmount = e.DealAmount
+            }).ToList();
+            return baseData.GroupBy(e => e.BelongEmpId).Select(e => new OrderSendAndDealNumDto
+            {
+                BelongEmpId = e.Key ?? 0,
+                SendOrderNum = e.Where(o => o.SendDate >= startDate && o.SendDate < endDate && o.IsOldCustomer == isOldCustomer).Select(e => e.Phone).Distinct().Count(),
+                VisitNum = e.Where(e => e.IsToHospital == true && e.IsOldCustomer == isOldCustomer && e.ToHospitalDate >= startDate && e.ToHospitalDate < endDate).Select(e => e.Phone).Distinct().Count(),
+                DealNum = baseData.Where(x => x.DealDate >= startDate && x.DealDate < endDate && x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete).Select(e => e.Phone).Distinct().Count(),
+                DealPrice = baseData.Where(x => x.DealDate >= startDate && x.DealDate < endDate && x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete).Sum(x => x.DealAmount)
+            }).ToList();
+
         }
 
         /// <summary>

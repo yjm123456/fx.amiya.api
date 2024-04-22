@@ -513,8 +513,8 @@ namespace Fx.Amiya.Service
             var performance = dalLiveAnchorMonthlyTargetLiving.GetAll().Include(x => x.LiveAnchor).Where(t => t.Year == year && t.Month == month).Where(e=>baseLiveAnchorIds.Contains(e.LiveAnchor.LiveAnchorBaseId));
             var dataList = performance.GroupBy(e => e.LiveAnchor.LiveAnchorBaseId).Select(e => new LiveAnchorBaseBusinessMonthTargetPerformanceDto
             {
-                ConsulationCardTarget = performance.Sum(t => t.ConsultationTarget + t.ConsultationTarget2),
-                LivingRefundCardTarget = performance.Sum(t => t.LivingRefundCardTarget),
+                ConsulationCardTarget = e.Sum(t => t.ConsultationTarget + t.ConsultationTarget2),
+                LivingRefundCardTarget = e.Sum(t => t.LivingRefundCardTarget),
                 BaseLiveAnchorId = e.Key
             }).ToList();            
             return dataList;

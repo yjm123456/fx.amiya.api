@@ -2234,7 +2234,19 @@ namespace Fx.Amiya.Service
                 }
                 ).ToList();
         }
-
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceDetailByDateAndAssistantIdListAsync(DateTime startDate, DateTime endDate, List<int> assistantId)
+        {
+            return dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
+                .Where(o => o.CreateDate >= startDate && o.CreateDate < endDate && o.IsDeal == true && o.ContentPlatFormOrderId != null)
+                .Where(o => assistantId.Count == 0 || assistantId.Contains(o.ContentPlatFormOrder.BelongEmpId.Value))
+                .Select(ContentPlatFOrmOrderDealInfo => new ContentPlatFormOrderDealInfoDto
+                {
+                    BelongEmployeeId= ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.BelongEmpId.Value,
+                    Price = ContentPlatFOrmOrderDealInfo.Price,
+                    IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer,                   
+                }
+                ).ToList();
+        }
         #endregion
         #region 助理首页
         /// <summary>

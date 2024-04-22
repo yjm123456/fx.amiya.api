@@ -293,5 +293,9 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 基础主播名称
         /// </summary>
         public string BaseLiveAnchorName { get; set; }
+        /// <summary>
+        /// 归属客服id
+        /// </summary>
+        public int BelongEmployeeId { get; set; }
     }
 }
