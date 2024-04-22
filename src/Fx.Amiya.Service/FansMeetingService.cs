@@ -7,6 +7,7 @@ using Fx.Amiya.IService;
 using Fx.Common;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -148,5 +149,24 @@ namespace Fx.Amiya.Service
             }
         }
 
+
+        /// <summary>
+        /// 获取有效的粉丝见面会信息（下拉框使用）
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<List<BaseKeyValueDto>> GetValidListAsync()
+        {
+            var fansMeetings = from d in dalFansMeeting.GetAll().Include(x => x.HospitalInfo)
+                               where (d.Valid == true)
+                               select new BaseKeyValueDto
+                               {
+                                   Key = d.Id,
+                                   Value = d.Name
+                               };
+            List<BaseKeyValueDto> fansMeetingPageInfo = new List<BaseKeyValueDto>();
+            fansMeetingPageInfo= await fansMeetings.ToListAsync();
+            return fansMeetingPageInfo;
+        }
     }
 }

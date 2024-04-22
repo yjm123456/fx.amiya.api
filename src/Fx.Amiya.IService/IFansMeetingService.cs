@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.ContentPlateFormOrder;
+﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.FansMeeting.Input;
 using Fx.Amiya.Dto.FansMeeting.Result;
@@ -22,5 +23,6 @@ namespace Fx.Amiya.IService
         Task<FansMeetingDto> GetByIdAsync(string id);
         Task UpdateAsync(UpdateFansMeetingDto updateDto);
         Task DeleteAsync(string id);
+        Task<List<BaseKeyValueDto>> GetValidListAsync();
     }
 }

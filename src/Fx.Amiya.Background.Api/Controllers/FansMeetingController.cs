@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.FansMeeting.Input;
 using Fx.Amiya.Background.Api.Vo.FansMeeting.Result;
 using Fx.Amiya.Dto.FansMeeting.Input;
@@ -186,5 +188,31 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
 
+
+        /// <summary>
+        /// 获取有效的粉丝见面会信息（下拉框使用）
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("ValidKeyAndValue")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<List<BaseIdAndNameVo>>> GetValidByKeyAndValueAsync()
+        {
+            try
+            {
+                var q = await fansMeetingService.GetValidListAsync();
+                var fansMeeting = from d in q
+                                  select new BaseIdAndNameVo
+                                  {
+                                      Id = d.Key,
+                                      Name = d.Value,
+                                  };
+
+                return ResultData<List<BaseIdAndNameVo>>.Success().AddData("fansMeeting", fansMeeting.ToList());
+            }
+            catch (Exception ex)
+            {
+                return ResultData<List<BaseIdAndNameVo>>.Fail(ex.Message);
+            }
+        }
     }
 }
