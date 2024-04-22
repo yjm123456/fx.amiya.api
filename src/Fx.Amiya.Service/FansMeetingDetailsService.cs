@@ -77,6 +77,14 @@ namespace Fx.Amiya.Service
         {
             try
             {
+                //查询是否存在该条手机号
+                var isExist = await dalFansMeetingDetails.GetAll()
+                               .Where(d => d.Valid == true && d.FansMeetingId == addDto.FansMeetingId && d.Phone == addDto.Phone).ToListAsync();
+                if (isExist.Count() > 0)
+                {
+                    throw new Exception("粉丝见面会中已存在该手机号，请重新确认后再添加！手机号：" + addDto.Phone);
+                }
+
                 FansMeetingDetails fansMeetingDetails = new FansMeetingDetails();
                 fansMeetingDetails.Id = Guid.NewGuid().ToString();
                 fansMeetingDetails.CreateDate = DateTime.Now;
@@ -156,7 +164,12 @@ namespace Fx.Amiya.Service
             var result = await dalFansMeetingDetails.GetAll().Where(x => x.Id == updateDto.Id && x.Valid == true).FirstOrDefaultAsync();
             if (result == null)
                 throw new Exception("未找到粉丝见面会详情信息");
-
+            var isExist = await dalFansMeetingDetails.GetAll()
+                              .Where(d => d.Valid == true && d.FansMeetingId == updateDto.FansMeetingId && d.Phone == updateDto.Phone && d.Id != updateDto.Id).ToListAsync();
+            if (isExist.Count() > 0)
+            {
+                throw new Exception("粉丝见面会中已存在该手机号，请重新确认后再添加！手机号：" + updateDto.Phone);
+            }
             result.FansMeetingId = updateDto.FansMeetingId;
             result.OrderId = updateDto.OrderId;
             result.AppointmentDate = updateDto.AppointmentDate;
