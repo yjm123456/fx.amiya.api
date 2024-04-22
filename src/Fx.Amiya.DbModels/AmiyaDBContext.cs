@@ -212,6 +212,8 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<FeishuTables> FeishuTables { get; set; }
         public virtual DbSet<ShortVideoComments> ShortVideoComments { get; set; }
         public virtual DbSet<ShortVideoFansData> ShortVideoFansDatas { get; set; }
+        public virtual DbSet<FansMeeting> FansMeeting { get; set; }
+        public virtual DbSet<FansMeetingDetails> FansMeetingDetails { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new WxMiniUserInfoConfiguration());
@@ -418,7 +420,9 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new FeishuTablesConfiguration());
             modelBuilder.ApplyConfiguration(new ShortVideoCommentsConfiguration());
             modelBuilder.ApplyConfiguration(new ShortVideoFansDataConfiguration());
-            
+            modelBuilder.ApplyConfiguration(new FansMeetingConfiguration());
+            modelBuilder.ApplyConfiguration(new FansMeetingDetailsConfiguration());
+
             base.OnModelCreating(modelBuilder);
         }
     }
