@@ -22,7 +22,7 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Input
         /// <summary>
         /// 主播账号集合
         /// </summary>
-        public List<string> LiveAnchorIds { get; set; }
+        public string LiveAnchorIds { get; set; }
         /// <summary>
         /// 是否是新/老客(true:老客,false:新客)
         /// </summary>

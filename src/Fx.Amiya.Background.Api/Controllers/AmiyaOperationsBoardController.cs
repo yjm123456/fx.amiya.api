@@ -381,9 +381,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.Unit = query.Unit;
             queryDto.StartDate = query.StartDate;
             queryDto.EndDate = query.EndDate;
-            queryDto.LiveAnchorIds = query.LiveAnchorIds;
+            queryDto.LiveAnchorIds = query.LiveAnchorIds.Split(",").ToList();
             queryDto.IsOldCustomer = query.IsOldCustomer;
             queryDto.IsEffective = query.IsEffective;
+
             var data = await amiyaOperationsBoardService.GetAssistantPerformanceDataAsync(queryDto);
             var res = data.Select(e => new AssistantPerformanceDataVo
             {
@@ -411,7 +412,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.Unit = query.Unit;
             queryDto.StartDate = query.StartDate;
             queryDto.EndDate = query.EndDate;
-            queryDto.LiveAnchorIds = query.LiveAnchorIds;
+            queryDto.LiveAnchorIds = query.LiveAnchorIds.Split(",").ToList();
             queryDto.IsOldCustomer = query.IsOldCustomer;
             queryDto.IsEffective = query.IsEffective;
             var data = await amiyaOperationsBoardService.GetAssistantCustomerAcquisitionDataAsync(queryDto);
@@ -444,7 +445,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.Unit = query.Unit;
             queryDto.StartDate = query.StartDate;
             queryDto.EndDate = query.EndDate;
-            queryDto.LiveAnchorIds = query.LiveAnchorIds;
+            queryDto.LiveAnchorIds = query.LiveAnchorIds.Split(",").ToList();
             queryDto.IsOldCustomer = query.IsOldCustomer;
             queryDto.IsEffective = query.IsEffective;
             var data = await amiyaOperationsBoardService.GetAssistantOperationsDataAsync(queryDto);
@@ -474,7 +475,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.Unit = query.Unit;
             queryDto.StartDate = query.StartDate;
             queryDto.EndDate = query.EndDate;
-            queryDto.LiveAnchorIds = query.LiveAnchorIds;
+            queryDto.LiveAnchorIds = query.LiveAnchorIds.Split(",").ToList();
             queryDto.IsOldCustomer = query.IsOldCustomer;
             queryDto.IsEffective = query.IsEffective;
             var data = await amiyaOperationsBoardService.GetAssistantIndicatorConversionDataAsync(queryDto);

@@ -816,7 +816,7 @@ namespace Fx.Amiya.Service
                 List<AmiyaEmployeeDto> amiyaEmployeeDtos = new List<AmiyaEmployeeDto>();
                 var employeeInfo = dalAmiyaEmployee.GetAll()
                     .Include(e => e.AmiyaPositionInfo).ThenInclude(e => e.AmiyaDepartment)
-                    .Where(e => (liveAnchorBaseId==null || liveAnchorBaseId.Contains(e.LiveAnchorBaseId)) && e.IsCustomerService == true);
+                    .Where(e => ((liveAnchorBaseId == null||liveAnchorBaseId.Count()==0) || liveAnchorBaseId.Contains(e.LiveAnchorBaseId)) && e.IsCustomerService == true);
                 var employee = await employeeInfo.Select(e => new AmiyaEmployeeDto
                 {
                     Id = e.Id,
