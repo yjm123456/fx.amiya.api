@@ -28,6 +28,14 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService
         /// 是否是新/老客(true:老客,false:新客,传null不筛选)
         /// </summary>
         public bool? IsOldCustomer { get; set; }
-       
+        /// <summary>
+        /// 有效/潜在(true:有效,false:潜在传null不筛选)
+        /// </summary>
+        public bool? IsEffective { get; set; }
+        /// <summary>
+        /// 是否是当月数据(true:当月,false:历史,null:不筛选)
+        /// </summary>
+        public bool? IsCurrentMonth { get; set; }
+
     }
 }

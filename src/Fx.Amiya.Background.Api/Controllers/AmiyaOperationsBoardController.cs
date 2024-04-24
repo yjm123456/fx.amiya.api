@@ -2,6 +2,7 @@
 using Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result;
 using Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result;
 using Fx.Amiya.Dto.AmiyaOperationsBoardService;
+using Fx.Amiya.Dto.AmiyaOperationsBoardService.Result;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Open.Infrastructure.Web;
@@ -189,7 +190,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 EmployeeName = x.EmployeeName,
                 DistributeConsulationNum = x.DistributeConsulationNum,
                 AddWechatNum = x.AddWechatNum,
-            }).OrderByDescending(x=>x.DistributeConsulationNum).ToList();
+            }).OrderByDescending(x => x.DistributeConsulationNum).ToList();
             result.GetEmployeeCustomerAnalizes = data.GetEmployeeCustomerAnalizes.Select(x => new GetEmployeeCustomerAnalizeVo
             {
                 EmployeeName = x.EmployeeName,
@@ -308,6 +309,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             querDto.EndDate = query.EndDate;
             querDto.Unit = query.Unit;
             querDto.LiveAnchorIds = query.LiveAnchorIds;
+            querDto.IsEffective = query.IsEffective;
             var data = await amiyaOperationsBoardService.GetCompanyIndicatorConversionDataAsync(querDto);
             var res = data.Select(e => new CompanyIndicatorConversionDataVo
             {
@@ -324,6 +326,46 @@ namespace Fx.Amiya.Background.Api.Controllers
                 OldCustomerUnitPrice = e.OldCustomerUnitPrice,
             }).OrderBy(e => e.GroupName).ToList();
             return ResultData<List<CompanyIndicatorConversionDataVo>>.Success().AddData("data", res);
+        }
+
+        /// <summary>
+        /// 获取公司当月/历史新客分诊转换情况
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("companyNewCustomerConversionData")]
+        public async Task<ResultData<List<CompanyNewCustomerConversionDataVo>>> GetCompanyNewCustomerConversionDataAsync([FromQuery] QueryAmiyaCompanyOperationsDataVo query)
+        {
+            List<CompanyNewCustomerConversionDataDto> res = new List<CompanyNewCustomerConversionDataDto>();
+            QueryAmiyaCompanyOperationsDataDto querDto = new QueryAmiyaCompanyOperationsDataDto();
+            querDto.StartDate = query.StartDate;
+            querDto.EndDate = query.EndDate;
+            querDto.Unit = query.Unit;
+            querDto.LiveAnchorIds = query.LiveAnchorIds;
+            querDto.IsEffective = query.IsEffective;
+            querDto.IsCurrentMonth = query.IsCurrentMonth;
+            if (querDto.IsCurrentMonth.Value)
+            {
+                res = await amiyaOperationsBoardService.GetCompanyNewCustomerConversionDataAsync(querDto);
+            }
+            else
+            {
+                res = await amiyaOperationsBoardService.GetHistoryNewCustomerConversionDataAsync(querDto);
+            }
+            var data = res.Select(e => new CompanyNewCustomerConversionDataVo
+            {
+                GroupName = e.GroupName,
+                SendOrderCount = e.SendOrderCount,
+                DistributeConsulationNum = e.DistributeConsulationNum,
+                AddWechatCount = e.AddWechatCount,
+                AddWechatRate = e.AddWechatRate,
+                SendOrderRate = e.SendOrderRate,
+                ToHospitalCount = e.ToHospitalCount,
+                ToHospitalRate = e.ToHospitalRate,
+                DealCount = e.DealCount,
+                DealRate = e.DealRate,
+                Performance = e.Performance,
+            }).OrderBy(e=>e.GroupName).ToList();
+            return ResultData<List<CompanyNewCustomerConversionDataVo>>.Success().AddData("data", data);
         }
         #endregion
 
@@ -343,8 +385,9 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.IsOldCustomer = query.IsOldCustomer;
             queryDto.IsEffective = query.IsEffective;
             var data = await amiyaOperationsBoardService.GetAssistantPerformanceDataAsync(queryDto);
-            var res = data.Select(e => new AssistantPerformanceDataVo {
-                AssistantName=e.AssistantName,
+            var res = data.Select(e => new AssistantPerformanceDataVo
+            {
+                AssistantName = e.AssistantName,
                 CurrentMonthNewCustomerPerformance = e.CurrentMonthNewCustomerPerformance,
                 NewCustomerPerformanceTarget = e.NewCustomerPerformanceTarget,
                 NewCustomerPerformanceTargetComplete = e.NewCustomerPerformanceTargetComplete,
@@ -372,7 +415,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.IsOldCustomer = query.IsOldCustomer;
             queryDto.IsEffective = query.IsEffective;
             var data = await amiyaOperationsBoardService.GetAssistantCustomerAcquisitionDataAsync(queryDto);
-            var res = data.Select(e => new AssistantCustomerAcquisitionDataVo {
+            var res = data.Select(e => new AssistantCustomerAcquisitionDataVo
+            {
                 AssistantName = e.AssistantName,
                 PotentialAllocationConsulation = e.PotentialAllocationConsulation,
                 PotentialAllocationConsulationTarget = e.PotentialAllocationConsulationTarget,
@@ -404,7 +448,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.IsOldCustomer = query.IsOldCustomer;
             queryDto.IsEffective = query.IsEffective;
             var data = await amiyaOperationsBoardService.GetAssistantOperationsDataAsync(queryDto);
-            var res = data.Select(e => new AssistantOperationsDataVo {
+            var res = data.Select(e => new AssistantOperationsDataVo
+            {
                 AssistantName = e.AssistantName,
                 SendOrder = e.SendOrder,
                 SendOrderTarget = e.SendOrderTarget,
@@ -416,7 +461,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 DealTarget = e.DealTarget,
                 DealTargetComplete = e.DealTargetComplete,
             }).ToList();
-            return ResultData<List<AssistantOperationsDataVo>>.Success().AddData("data",res);
+            return ResultData<List<AssistantOperationsDataVo>>.Success().AddData("data", res);
         }
         /// <summary>
         /// 获取助理看板指标转化情况数据
@@ -433,7 +478,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.IsOldCustomer = query.IsOldCustomer;
             queryDto.IsEffective = query.IsEffective;
             var data = await amiyaOperationsBoardService.GetAssistantIndicatorConversionDataAsync(queryDto);
-            var res = data.Select(e => new AssistantIndicatorConversionDataVo {
+            var res = data.Select(e => new AssistantIndicatorConversionDataVo
+            {
                 AssistantName = e.AssistantName,
                 SevenDaySendOrderRate = e.SevenDaySendOrderRate,
                 FifteenDaySendOrderRate = e.FifteenDaySendOrderRate,

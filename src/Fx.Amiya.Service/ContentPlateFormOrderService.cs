@@ -3713,6 +3713,9 @@ namespace Fx.Amiya.Service
 
             return orderData;
         }
+
+        
+
         /// <summary>
         /// 根据助理id集合获取助理客户运营情况
         /// </summary>
@@ -3745,6 +3748,7 @@ namespace Fx.Amiya.Service
             }).ToList();
 
         }
+
 
         /// <summary>
         /// 获取助理首页业绩完成情况数据

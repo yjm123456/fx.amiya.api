@@ -89,7 +89,7 @@ namespace Fx.Amiya.Background.Api
             {
                 app.UseFxSwagger();
             }
-            //app.UseTimedJob();
+            app.UseTimedJob();
             app.UseFxExceptionHandler();
 
             app.UseEndpoints(endpoints =>

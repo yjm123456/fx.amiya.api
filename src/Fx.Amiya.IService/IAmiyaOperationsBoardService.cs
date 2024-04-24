@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Fx.Amiya.Dto.AmiyaOperationsBoardService;
+using Fx.Amiya.Dto.AmiyaOperationsBoardService.Result;
 
 namespace Fx.Amiya.IService
 {
@@ -73,7 +74,18 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
          Task<List<CompanyIndicatorConversionDataDto>> GetCompanyIndicatorConversionDataAsync(QueryAmiyaCompanyOperationsDataDto query);
-        
+        /// <summary>
+        /// 获取公司当月新客分诊转化情况
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<List<CompanyNewCustomerConversionDataDto>> GetCompanyNewCustomerConversionDataAsync(QueryAmiyaCompanyOperationsDataDto query);
+        /// <summary>
+        /// 获取公司历史分诊新客转化情况数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<List<CompanyNewCustomerConversionDataDto>> GetHistoryNewCustomerConversionDataAsync(QueryAmiyaCompanyOperationsDataDto query);
         #endregion
 
         #region 助理看板
@@ -81,7 +93,7 @@ namespace Fx.Amiya.IService
         /// 获取助理看板业绩情况数据
         /// </summary>
         /// <returns></returns>
-         Task<List<AssistantPerformanceDataDto>> GetAssistantPerformanceDataAsync(QueryAmiyaAssistantOperationsDataDto query);
+        Task<List<AssistantPerformanceDataDto>> GetAssistantPerformanceDataAsync(QueryAmiyaAssistantOperationsDataDto query);
        
         /// <summary>
         /// 获取助理看板获客情况数据

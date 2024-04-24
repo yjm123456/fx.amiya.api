@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.AmiyaOperationsBoardService;
+using Fx.Amiya.Dto.AmiyaOperationsBoardService.Result;
 using Fx.Amiya.Dto.AssistantHomePage.Input;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.Dto.ShoppingCartRegistration;
@@ -195,14 +196,24 @@ namespace Fx.Amiya.IService
         #endregion
         #region 啊美雅运营看板
         /// <summary>
-        /// /获取指标转化基础数据
+        /// 获取指标转化基础数据
         /// </summary>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
         /// <param name="baseLiveAnchorId"></param>
         /// <param name="isEffective"></param>
         /// <returns></returns>
-        Task<ShoppingCartRegistrationIndicatorBaseDataDto> GetIndicatorConversionDataAsync(DateTime startDate, DateTime endDate, string baseLiveAnchorId, bool? isEffective);
+        Task<ShoppingCartRegistrationIndicatorBaseDataDto> GetIndicatorConversionDataAsync(DateTime startDate, DateTime endDate, string baseLiveAnchorId, bool? isEffective, bool? isCurrentMonth = null);
+        /// <summary>
+        /// 获取分诊新客转化情况基础数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="baseLiveAnchorId"></param>
+        /// <param name="isEffective"></param>
+        /// <param name="isOldCustomer"></param>
+        /// <returns></returns>
+        Task<ShoppingCartRegistrationIndicatorBaseDataDto> GetCurrentMonthNewCustomerConversionDataAsync(DateTime startDate, DateTime endDate, string baseLiveAnchorId, bool? isEffective, bool isOldCustomer);
         /// <summary>
         /// 根据助理id获取指标转化情况
         /// </summary>
@@ -213,6 +224,14 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
 
         Task<List<ShoppingCartRegistrationIndicatorBaseDataDto>> GetIndicatorConversionDataByAssistantIdsAsync(DateTime startDate, DateTime endDate, List<int> assistantIds, bool? isEffective);
+        /// <summary>
+        /// 获取历史新客转化情况
+        /// </summary>
+        /// <param name="startData"></param>
+        /// <param name="endDate"></param>
+        /// <param name="isOldCustomer"></param>
+        /// <returns></returns>
+        Task<CompanyNewCustomerConversionBaseDataDto> GetHistoryNewCustomerConversionDataAsync(DateTime startData, DateTime endDate, string baseLiveAnchorId, bool? isOldCustomer, bool? isEffective);
         #endregion
         #region 助理首页
 
