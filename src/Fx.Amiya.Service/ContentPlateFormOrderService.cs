@@ -1986,7 +1986,7 @@ namespace Fx.Amiya.Service
                 //若审核金额等于交易金额，则审核通过，若不等于则审核中
                 if (input.CheckState == (int)CheckType.CheckedSuccess)
                 {
-                    if (input.CheckPrice == dealInfoUpdate.Price)
+                    if (input.CheckPrice == dealInfoUpdate.Price && dealInfoUpdate.CheckPrice + input.CheckPrice == dealInfoUpdate.Price)
                     {
 
                         dealInfoCheck.CheckState = (int)CheckType.CheckedSuccess;
@@ -3714,7 +3714,7 @@ namespace Fx.Amiya.Service
             return orderData;
         }
 
-        
+
 
         /// <summary>
         /// 根据助理id集合获取助理客户运营情况

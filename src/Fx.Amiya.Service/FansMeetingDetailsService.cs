@@ -82,7 +82,7 @@ namespace Fx.Amiya.Service
                                .Where(d => d.Valid == true && d.FansMeetingId == addDto.FansMeetingId && d.Phone == addDto.Phone).ToListAsync();
                 if (isExist.Count() > 0)
                 {
-                    throw new Exception("粉丝见面会中已存在该手机号，请重新确认后再添加！手机号：" + addDto.Phone);
+                    throw new Exception("粉丝见面会中已存在该手机号，请重新确认后再添加，手机号：" + addDto.Phone + "！");
                 }
 
                 FansMeetingDetails fansMeetingDetails = new FansMeetingDetails();
@@ -98,7 +98,8 @@ namespace Fx.Amiya.Service
                 fansMeetingDetails.Phone = addDto.Phone;
                 fansMeetingDetails.CustomerQuantity = addDto.CustomerQuantity;
                 fansMeetingDetails.IsOldCustomer = addDto.IsOldCustomer;
-                fansMeetingDetails.AmiyaConsulationId = addDto.AmiyaConsulationId;
+                //如果啊美雅助理字段为空则归属给客户池客服
+                fansMeetingDetails.AmiyaConsulationId = addDto.AmiyaConsulationId == 0 ? 188 : addDto.AmiyaConsulationId;
                 fansMeetingDetails.HospitalConsulationName = addDto.HospitalConsulationName;
                 fansMeetingDetails.City = addDto.City;
                 fansMeetingDetails.TravelInformation = addDto.TravelInformation;

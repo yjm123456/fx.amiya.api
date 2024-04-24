@@ -117,7 +117,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 AddFansMeetingDetailsDto addDto = new AddFansMeetingDetailsDto();
                 addDto.FansMeetingId = addVo.FansMeetingId;
-                if (addVo.OrderIdList.Count>0)
+                if (addVo.OrderIdList.Count > 0)
                 {
                     foreach (var z in addVo.OrderIdList)
                     {
@@ -151,6 +151,15 @@ namespace Fx.Amiya.Background.Api.Controllers
 
                             addDto.CustomerPictureUrl = orderInfo.CustomerPictures.First();
                         }
+
+                        addDto.AppointmentDate = addVo.AppointmentDate;
+                        addDto.AppointmentDetailsDate = addVo.AppointmentDetailsDate;
+                        addDto.HospitalConsulationName = addVo.HospitalConsulationName;
+                        addDto.TravelInformation = addVo.TravelInformation;
+                        addDto.IsNeedDriver = addVo.IsNeedDriver;
+                        addDto.HotelPlan = addVo.HotelPlan;
+                        addDto.PlanConsumption = addVo.PlanConsumption;
+                        await fansMeetingDetailsService.AddAsync(addDto);
                     }
                 }
                 else
@@ -163,19 +172,20 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.City = addVo.City;
                     addDto.Remark = addVo.Remark;
                     addDto.CustomerPictureUrl = addVo.CustomerPictureUrl;
+
+
+                    addDto.AppointmentDate = addVo.AppointmentDate;
+                    addDto.AppointmentDetailsDate = addVo.AppointmentDetailsDate;
+                    addDto.HospitalConsulationName = addVo.HospitalConsulationName;
+                    addDto.TravelInformation = addVo.TravelInformation;
+                    addDto.IsNeedDriver = addVo.IsNeedDriver;
+                    addDto.HotelPlan = addVo.HotelPlan;
+                    addDto.PlanConsumption = addVo.PlanConsumption;
+                    await fansMeetingDetailsService.AddAsync(addDto);
                 }
 
 
 
-                addDto.AppointmentDate = addVo.AppointmentDate;
-                addDto.AppointmentDetailsDate = addVo.AppointmentDetailsDate;
-
-                addDto.HospitalConsulationName = addVo.HospitalConsulationName;
-                addDto.TravelInformation = addVo.TravelInformation;
-                addDto.IsNeedDriver = addVo.IsNeedDriver;
-                addDto.HotelPlan = addVo.HotelPlan;
-                addDto.PlanConsumption = addVo.PlanConsumption;
-                await fansMeetingDetailsService.AddAsync(addDto);
 
                 return ResultData.Success();
             }
