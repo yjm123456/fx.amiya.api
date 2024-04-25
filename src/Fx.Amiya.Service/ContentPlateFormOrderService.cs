@@ -3684,7 +3684,8 @@ namespace Fx.Amiya.Service
             OrderSendAndDealNumDto orderData = new OrderSendAndDealNumDto();
             orderData.SendOrderNum = await _dalContentPlatformOrder.GetAll()
              .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
-             .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsOldCustomer == isOldCustomer)
+             //.Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsOldCustomer == isOldCustomer)
+             .Where(e =>  e.IsOldCustomer == isOldCustomer)
              .Where(o => o.LiveAnchor.LiveAnchorBaseId == baseLiveAbchorId)
                 .Select(e => e.Phone)
                 .Distinct()
@@ -3692,24 +3693,25 @@ namespace Fx.Amiya.Service
 
 
 
-            var visitCount = await _dalContentPlatformOrder.GetAll()
+            var visitCount = await dalContentPlatFormOrderDealInfo.GetAll()
              .Where(o => o.ToHospitalDate >= startDate && o.ToHospitalDate < endDate)
-             .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsToHospital == true && e.IsOldCustomer == isOldCustomer)
-             .Where(o => o.LiveAnchor.LiveAnchorBaseId == baseLiveAbchorId)
+             //.Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsToHospital == true && e.IsOldCustomer == isOldCustomer)
+             .Where(e =>  e.IsToHospital == true && e.IsOldCustomer == isOldCustomer)
+             .Where(o => o.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId == baseLiveAbchorId)
                 .ToListAsync();
 
             orderData.VisitNum = visitCount
-                .Select(e => e.Phone)
+                
+                .Distinct()
+                .Count();
+            //&& x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete
+            orderData.DealNum = dalContentPlatFormOrderDealInfo.GetAll().Where(x => x.DealDate >= startDate && x.DealDate < endDate&&x.IsOldCustomer==isOldCustomer&&x.IsDeal==true ).Select(e => e.ContentPlatFormOrder.Phone)
                 .Distinct()
                 .Count();
 
-            orderData.DealNum = visitCount.Where(x => x.DealDate >= startDate && x.DealDate < endDate && x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete).Select(e => e.Phone)
-                .Distinct()
-                .Count();
 
-
-            orderData.DealPrice = visitCount.Where(x => x.DealDate >= startDate && x.DealDate < endDate && x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
-                .Sum(x => x.DealAmount);
+            orderData.DealPrice = visitCount.Where(x => x.DealDate >= startDate && x.DealDate < endDate )
+                .Sum(x => x.Price);
 
             return orderData;
         }

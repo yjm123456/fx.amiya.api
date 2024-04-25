@@ -258,8 +258,8 @@ namespace Fx.Amiya.Service
             var nameList = await liveAnchorBaseInfoService.GetValidAsync(true);
             query.LiveAnchorIds = nameList.Select(e => e.Id).ToList();
             var liveanchorIds = (await liveAnchorService.GetLiveAnchorListByBaseInfoIdListAsync(query.LiveAnchorIds)).Select(e => e.Id).ToList();
-            var targetList = await liveAnchorMonthlyTargetAfterLivingService.GetPerformanceTargetByBaseLiveAnchorIdAsync(selectDate.StartDate.Year, selectDate.EndDate.Month, query.LiveAnchorIds);
-            var order = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(query.StartDate.Value, query.EndDate.Value, liveanchorIds);
+            var targetList = await liveAnchorMonthlyTargetAfterLivingService.GetPerformanceTargetByBaseLiveAnchorIdAsync(selectDate.StartDate.Year, selectDate.StartDate.Month, query.LiveAnchorIds);
+            var order = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(selectDate.StartDate, selectDate.EndDate, liveanchorIds);
             var dataList = order.GroupBy(e => e.BaseLiveAnchorId).Select(e =>
             {
                 var liveanchorName = nameList.Where(a => a.Id == e.Key).Select(e => e.LiveAnchorName).FirstOrDefault();
