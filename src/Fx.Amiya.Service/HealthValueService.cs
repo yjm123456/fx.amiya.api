@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.DbModels.Model;
+using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.HealthValue;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -34,7 +35,7 @@ namespace Fx.Amiya.Service
             healthValue.Value = addHealthValueDto.Value;
             healthValue.CreateDate = DateTime.Now;
             healthValue.Valid = true;
-            await dalHealthValue.AddAsync(healthValue,true);
+            await dalHealthValue.AddAsync(healthValue, true);
         }
 
         public async Task DeleteAsync(string id)
@@ -42,7 +43,7 @@ namespace Fx.Amiya.Service
             var healthValue = dalHealthValue.GetAll().Where(e => e.Id == id).SingleOrDefault();
             if (healthValue == null) throw new Exception("健康值编号错误！");
             healthValue.Valid = false;
-            await dalHealthValue.UpdateAsync(healthValue,true);
+            await dalHealthValue.UpdateAsync(healthValue, true);
         }
         /// <summary>
         /// 根据编码获取健康值
@@ -56,7 +57,8 @@ namespace Fx.Amiya.Service
             {
                 return 0m;
             }
-            else {
+            else
+            {
                 return healthValue.Value;
             }
         }
@@ -78,13 +80,14 @@ namespace Fx.Amiya.Service
         {
             var list = dalHealthValue.GetAll()
                 .Where(e => string.IsNullOrEmpty(keyWord) || e.Name.Contains(keyWord) || e.Code.Contains(keyWord))
-                .Where(e=>!valid.HasValue||e.Valid==valid)
-                .Select(e=>new HealthValueDto { 
-                    Name=e.Name,
-                    Code=e.Code,
-                    Value=e.Value,
-                    Valid=e.Valid,
-                    Id=e.Id
+                .Where(e => !valid.HasValue || e.Valid == valid)
+                .Select(e => new HealthValueDto
+                {
+                    Name = e.Name,
+                    Code = e.Code,
+                    Value = e.Value,
+                    Valid = e.Valid,
+                    Id = e.Id
                 });
             FxPageInfo<HealthValueDto> fxPageInfo = new FxPageInfo<HealthValueDto>();
             fxPageInfo.TotalCount = list.Count();
@@ -98,13 +101,27 @@ namespace Fx.Amiya.Service
             var result = dalHealthValue.GetAll().Where(e => e.Id != updateHealthValueDto.Id && e.Code == updateHealthValueDto.Code).FirstOrDefault();
             if (result != null) throw new Exception("编码重复！");
             var healthValue = dalHealthValue.GetAll().Where(e => e.Id == updateHealthValueDto.Id).SingleOrDefault();
-            if(healthValue==null) throw new Exception("编号错误！");
+            if (healthValue == null) throw new Exception("编号错误！");
             healthValue.Name = updateHealthValueDto.Name;
             healthValue.Code = updateHealthValueDto.Code;
             healthValue.Value = updateHealthValueDto.Value;
             healthValue.Valid = updateHealthValueDto.Valid;
             healthValue.UpdateDate = DateTime.Now;
-            await dalHealthValue.UpdateAsync(healthValue,true);
+            await dalHealthValue.UpdateAsync(healthValue, true);
+        }
+
+        public async Task<List<BaseKeyValueAndPercentDto>> GetValidListAsync()
+        {
+            var list = dalHealthValue.GetAll()
+                .Where(e => e.Valid == true)
+                .Select(e => new BaseKeyValueAndPercentDto
+                {
+                    Key = e.Code,
+                    Value = e.Name,
+                    Rate = e.Value,
+                });
+            return list.ToList();
+
         }
     }
 }

@@ -3655,6 +3655,7 @@ namespace Fx.Amiya.Service
              .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsToHospital == true)
              .Where(o => string.IsNullOrEmpty(contentPlatFormId) || o.ContentPlateformId == contentPlatFormId)
              .Where(o => isEffectiveCustomerData == true ? o.AddOrderPrice > 0 : o.AddOrderPrice == 0)
+            .Where(e => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(e.LiveAnchorId.HasValue ? e.LiveAnchorId.Value : 0))
                 .ToListAsync();
 
             orderData.VisitNum = visitCount

@@ -31,6 +31,7 @@ namespace Fx.Amiya.Service
         {
             var fansMeetingDetailss = from d in dalFansMeetingDetails.GetAll().Include(x => x.FansMeetingInfo).Include(x => x.AmiyaEmployeeInfo)
                                       where (d.Valid == true && d.FansMeetingId == query.FansMeetingId)
+                                      && (string.IsNullOrEmpty(query.KeyWord) || d.Phone.Contains(query.KeyWord))
                                       && (!query.StartDate.HasValue || d.CreateDate >= query.StartDate.Value)
                                       && (!query.EndDate.HasValue || d.CreateDate < query.EndDate.Value.AddDays(1).AddMilliseconds(-1))
                                       select new FansMeetingDetailsDto

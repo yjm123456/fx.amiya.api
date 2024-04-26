@@ -57,6 +57,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryDto.EndDate = query.EndDate;
                 queryDto.FansMeetingId = query.FansMeetingId;
                 queryDto.PageNum = query.PageNum;
+                queryDto.KeyWord = query.KeyWord;
                 queryDto.PageSize = query.PageSize;
                 var q = await fansMeetingDetailsService.GetListAsync(queryDto);
                 var fansMeetingDetails = from d in q.List

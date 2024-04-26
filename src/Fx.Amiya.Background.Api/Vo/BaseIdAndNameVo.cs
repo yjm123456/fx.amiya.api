@@ -46,7 +46,7 @@ namespace Fx.Amiya.Background.Api.Vo
         public string Name { get; set; }
 
         /// <summary>
-        /// 占比
+        /// 数值
         /// </summary>
         public decimal Rate { get; set; }
     }

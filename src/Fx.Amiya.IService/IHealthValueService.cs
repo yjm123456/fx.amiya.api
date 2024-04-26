@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.HealthValue;
+﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.HealthValue;
 using Fx.Common;
 using System;
 using System.Collections.Generic;
@@ -21,5 +22,7 @@ namespace Fx.Amiya.IService
         /// <param name="code"></param>
         /// <returns></returns>
         Task<decimal> GetValueByCode(string code);
+
+        Task<List<BaseKeyValueAndPercentDto>> GetValidListAsync();
     }
 }

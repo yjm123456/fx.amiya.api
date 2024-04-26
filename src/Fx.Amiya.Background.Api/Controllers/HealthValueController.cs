@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Background.Api.Vo.HealthValue;
+﻿using Fx.Amiya.Background.Api.Vo;
+using Fx.Amiya.Background.Api.Vo.HealthValue;
 using Fx.Amiya.Dto.HealthValue;
 using Fx.Amiya.IService;
 using Fx.Common;
@@ -31,7 +32,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="addHealthValueVo"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ResultData> AddAsync(AddHealthValueVo addHealthValueVo) {
+        public async Task<ResultData> AddAsync(AddHealthValueVo addHealthValueVo)
+        {
             AddHealthValueDto addHealthValueDto = new AddHealthValueDto();
             addHealthValueDto.Name = addHealthValueVo.Name;
             addHealthValueDto.Code = addHealthValueVo.Code;
@@ -63,7 +65,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete]
-        public async Task<ResultData> DeleteAsync(string id) {
+        public async Task<ResultData> DeleteAsync(string id)
+        {
             await healthValueService.DeleteAsync(id);
             return ResultData.Success();
         }
@@ -73,8 +76,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("getById/{id}")]
-        public async Task<ResultData<HealthValueVo>> GetByIdAsync(string id) {
-            var result= await healthValueService.GetByIdAsync(id);
+        public async Task<ResultData<HealthValueVo>> GetByIdAsync(string id)
+        {
+            var result = await healthValueService.GetByIdAsync(id);
             HealthValueVo healthValueVo = new HealthValueVo();
             healthValueVo.Id = result.Id;
             healthValueVo.Name = result.Name;
@@ -92,8 +96,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("list")]
-        public async Task<ResultData<FxPageInfo<HealthValueVo>>> GetWithPageAsync(string keyWord,bool? valid,int pageNum,int pageSize) {
-            var list= await healthValueService.GetListWithPageAsync(valid,keyWord,pageSize,pageNum);
+        public async Task<ResultData<FxPageInfo<HealthValueVo>>> GetWithPageAsync(string keyWord, bool? valid, int pageNum, int pageSize)
+        {
+            var list = await healthValueService.GetListWithPageAsync(valid, keyWord, pageSize, pageNum);
             FxPageInfo<HealthValueVo> fxPageInfo = new FxPageInfo<HealthValueVo>();
             fxPageInfo.TotalCount = list.TotalCount;
             fxPageInfo.List = list.List.Select(e => new HealthValueVo
@@ -106,7 +111,23 @@ namespace Fx.Amiya.Background.Api.Controllers
             });
             return ResultData<FxPageInfo<HealthValueVo>>.Success().AddData("list", fxPageInfo);
         }
-
+        /// <summary>
+        /// 获取所有有效的健康值数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("valid")]
+        public async Task<ResultData<List<BaseIdNameAndRateVo>>> GetValidAsync()
+        {
+            var list = await healthValueService.GetValidListAsync();
+            List<BaseIdNameAndRateVo> result = new List<BaseIdNameAndRateVo>();
+            result = list.Select(e => new BaseIdNameAndRateVo
+            {
+                Id = e.Key,
+                Name = e.Value,
+                Rate = e.Rate
+            }).ToList();
+            return ResultData<List<BaseIdNameAndRateVo>>.Success().AddData("list", result);
+        }
 
     }
 }
