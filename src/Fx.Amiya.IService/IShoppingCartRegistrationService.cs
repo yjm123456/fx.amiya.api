@@ -70,6 +70,12 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         List<BaseKeyValueDto<int>> GetShoppingCartGetCustomerTypeText();
+        /// <summary>
+        /// 根据创建人与时间线获取医美/带货客资加v量
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<GetShoppingCartRegistionAddWechatNumDto> GetShoppingCartRegistionAddWechatNumAsync(QueryAddWeChatDto query);
         #region 【日数据业绩生成】
 
         /// <summary>

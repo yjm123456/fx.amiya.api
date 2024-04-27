@@ -708,5 +708,31 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         }
+
+        /// <summary>
+        /// 根据创建人与登记时间线获取医美/带货客资加v量
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("getAddWechatNumByCreateEmpInfoAndDate")]
+        public async Task<ResultData<GetShoppingCartRegistionAddWechatNumVo>> GetAddWechatNumByCreateEmpInfoAndDateAsync([FromQuery] QueryAddWechatNumVo query)
+        {
+            try
+            {
+                QueryAddWeChatDto queryDto = new QueryAddWeChatDto();
+                queryDto.EmployeeId = query.EmployeeId;
+                queryDto.StartDate = query.SartDate;
+                queryDto.EndDate = query.EndDate;
+                var shoppingCartRegistration = await shoppingCartRegistrationService.GetShoppingCartRegistionAddWechatNumAsync(queryDto);
+                GetShoppingCartRegistionAddWechatNumVo result = new GetShoppingCartRegistionAddWechatNumVo();
+                result.BeautyCustomerAddWechatNum = shoppingCartRegistration.BeautyCustomerAddWechatNum;
+                result.TakeGoodsCustomerAddWechatNum = shoppingCartRegistration.TakeGoodsCustomerAddWechatNum;
+                return ResultData<GetShoppingCartRegistionAddWechatNumVo>.Success().AddData("AddWechatNumByCreateEmpInfoAndDate", result);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<GetShoppingCartRegistionAddWechatNumVo>.Fail(ex.Message);
+            }
+        }
     }
 }

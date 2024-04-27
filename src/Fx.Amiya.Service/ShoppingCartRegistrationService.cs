@@ -803,6 +803,29 @@ namespace Fx.Amiya.Service
             return emergencyLevelList;
         }
 
+        /// <summary>
+        /// 根据创建人与时间线获取医美/带货客资加v量
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <param name="createBy"></param>
+        /// <returns></returns>
+        public async Task<GetShoppingCartRegistionAddWechatNumDto> GetShoppingCartRegistionAddWechatNumAsync(QueryAddWeChatDto query)
+        {
+            try
+            {
+                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().Where(k => k.CreateBy == query.EmployeeId && k.RecordDate > query.StartDate && k.RecordDate <= query.EndDate.AddDays(1).AddMilliseconds(-1)).ToListAsync();
+                GetShoppingCartRegistionAddWechatNumDto result = new GetShoppingCartRegistionAddWechatNumDto();
+                result.BeautyCustomerAddWechatNum = shoppingCartRegistration.Where(x => x.ShoppingCartRegistrationCustomerType == (int)ShoppingCartRegistionCustomerSource.AestheticMedicine).Count();
+                result.TakeGoodsCustomerAddWechatNum = shoppingCartRegistration.Where(x => x.ShoppingCartRegistrationCustomerType == (int)ShoppingCartRegistionCustomerSource.TakeGoods).Count();
+                return result;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message.ToString());
+            }
+        }
+
         #region 【日数据业绩生成】
 
         /// <summary>

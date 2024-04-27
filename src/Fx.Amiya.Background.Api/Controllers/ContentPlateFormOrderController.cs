@@ -51,6 +51,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         private ICustomerHospitalDealInfoService customerHospitalDealInfoService;
         private IAmiyaPositionInfoService amiyaPositionInfoService;
         private IContentPlatFormCustomerPictureService _contentPlatFormCustomerPictureService;
+        private readonly ILiveAnchorBaseInfoService liveAnchorBaseInfoService;
         private IHospitalInfoService _hospitalInfoService;
         private IHttpContextAccessor _httpContextAccessor;
         private IOperationLogService operationLogService;
@@ -83,6 +84,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             IHospitalInfoService hospitalInfoService,
             IAmiyaHospitalDepartmentService departmentService,
             IContentPlatformOrderSendService contentPlatformOrderSend,
+            ILiveAnchorBaseInfoService liveAnchorBaseInfoService,
            ICustomerService customerService,
             IContentPlatFormCustomerPictureService contentPlatFormCustomerPictureService,
             IHttpContextAccessor httpContextAccessor,
@@ -97,6 +99,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             this.amiyaEmployeeService = amiyaEmployeeService;
             _departmentService = departmentService;
             _contentPlatformOrderSend = contentPlatformOrderSend;
+            this.liveAnchorBaseInfoService = liveAnchorBaseInfoService;
             _wxAppConfigService = wxAppConfigService;
             _hospitalInfoService = hospitalInfoService;
             _httpContextAccessor = httpContextAccessor;
@@ -1311,9 +1314,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("bindCustomerServieOrders")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<BindCustomerServiceContentPlatformOrderVo>>> GetBindCustomerServieContentPlatformOrdersAsync(int? customerServiceId,int? orderStatus, int? liveAnchorId, DateTime? startDate, DateTime? endDate, string keyword, string liveAnchorWechatNoId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<BindCustomerServiceContentPlatformOrderVo>>> GetBindCustomerServieContentPlatformOrdersAsync(int? customerServiceId, int? orderStatus, int? liveAnchorId, DateTime? startDate, DateTime? endDate, string keyword, string liveAnchorWechatNoId, int pageNum, int pageSize)
         {
-            var orders = await _orderService.GetBindCustomerServieContentPlatformOrdersAsync(customerServiceId,orderStatus, liveAnchorId, startDate, endDate, keyword, liveAnchorWechatNoId, pageNum, pageSize);
+            var orders = await _orderService.GetBindCustomerServieContentPlatformOrdersAsync(customerServiceId, orderStatus, liveAnchorId, startDate, endDate, keyword, liveAnchorWechatNoId, pageNum, pageSize);
             var contentPlatformOrders = from d in orders.List
                                         select new BindCustomerServiceContentPlatformOrderVo
                                         {
@@ -1610,12 +1613,31 @@ namespace Fx.Amiya.Background.Api.Controllers
                 Id = e.Id,
                 AppointmentHospital = e.AppointmentHospital,
                 OrderStatus = e.OrderStatus,
-                SendHospital=e.SendHospital,
+                SendHospital = e.SendHospital,
                 //ConsultContent = e.ConsultContent,
                 IsToHospital = e.IsToHosiotal
             }).ToList();
             return ResultData<FxPageInfo<ContentPlateformOrderSimpleInfoVo>>.Success().AddData("data", fxPageInfo);
         }
+
+        /// <summary>
+        /// 根据派单人和派单时间获取供应链达人派单和上门数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("getCooperationLiveAnchorSendAndVisitNum")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<GetCooperationLiveAnchorSendAndVisitNumVo>> GetCooperationLiveAnchorSendAndVisitNumAsync([FromQuery] QueryCooperationLiveAnchorSendAndVisitNumVo query)
+        {
+            var baseLiveAnchorIds = await liveAnchorBaseInfoService.GetCooperateLiveAnchorAsync(null);
+            var liveAnchorIds = await liveAnchorService.GetLiveAnchorListByBaseInfoIdListAsync(baseLiveAnchorIds.Select(e => e.Id).ToList());
+            var orders = await _orderService.GetOrderSendAndDealDataByMonthAsync(query.SendStartDate, query.SendEndDate.AddDays(1).AddMilliseconds(-1), null, "", liveAnchorIds.Select(e => e.Id).ToList());
+            GetCooperationLiveAnchorSendAndVisitNumVo result = new GetCooperationLiveAnchorSendAndVisitNumVo();
+            result.SendOrderNum = orders.SendOrderNum;
+            result.VisitNum = orders.VisitNum;
+            return ResultData<GetCooperationLiveAnchorSendAndVisitNumVo>.Success().AddData("CooperationLiveAnchorSendAndVisitNum", result);
+        }
+
         #region {医院对接同步}
         ///// <summary>
         ///// 医院对接同步完成订单(影响订单业务)

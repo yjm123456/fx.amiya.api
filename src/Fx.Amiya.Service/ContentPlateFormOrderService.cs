@@ -3634,6 +3634,9 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="startDate">开始时间</param>
         /// <param name="endDate">结束时间</param>
+        /// <param name="isEffectiveCustomerData">有效/潜在业绩</param>
+        /// <param name="contentPlatFormId">内容平台id</param>
+        /// <param name="liveAnchorIds">主播id集合</param>
         /// <returns></returns>
         public async Task<OrderSendAndDealNumDto> GetOrderSendAndDealDataByMonthAsync(DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, string contentPlatFormId, List<int> liveAnchorIds)
         {
