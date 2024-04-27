@@ -1436,9 +1436,10 @@ namespace Fx.Amiya.Service
                                            from s in baseData
                                            where s.Phone == c.Phone && c.ToHospitalDate <= s.RecordDate.AddDays(15)
                                            select s).Select(e => e.Phone).Distinct().Count();
-            var dealDataList = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate > startDate && e.CreateDate < endDate).Where(e=> (isEffective.Value ? e.ContentPlatFormOrder.AddOrderPrice > 0 : e.ContentPlatFormOrder.AddOrderPrice <= 0)).Select(e => new {
+            var dealDataList = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate > startDate && e.CreateDate < endDate && liveanchorIds.Contains(e.ContentPlatFormOrder.LiveAnchorId.Value)).Where(e => (!isEffective.HasValue || isEffective.Value ? e.ContentPlatFormOrder.AddOrderPrice > 0 : e.ContentPlatFormOrder.AddOrderPrice <= 0)).Select(e => new
+            {
                 Phone = e.ContentPlatFormOrder.Phone,
-                IsOldCustomer = e.IsOldCustomer,            
+                IsOldCustomer = e.IsOldCustomer,
                 IsToHospital = e.IsToHospital,
                 DealPrice = e.Price,
                 IsDeal = e.IsDeal,

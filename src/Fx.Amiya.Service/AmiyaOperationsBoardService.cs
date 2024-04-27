@@ -450,10 +450,11 @@ namespace Fx.Amiya.Service
                 groupDataList.Add(totalData);
             }
             CompanyNewCustomerConversionDataDto data = new CompanyNewCustomerConversionDataDto();
+
             data.GroupName = "总计";
             data.SendOrderCount = groupDataList.Sum(e => e.SendOrderCount);
-            data.SendOrderRate = DecimalExtension.CalculateTargetComplete(data.SendOrderCount, data.DistributeConsulationNum).Value;
             data.DistributeConsulationNum = groupDataList.Sum(e => e.DistributeConsulationNum);
+            data.SendOrderRate = DecimalExtension.CalculateTargetComplete(data.SendOrderCount, data.DistributeConsulationNum).Value;
             data.AddWechatCount = groupDataList.Sum(e => e.AddWechatCount);
             data.AddWechatRate = DecimalExtension.CalculateTargetComplete(data.AddWechatCount, data.DistributeConsulationNum).Value;
             data.ToHospitalCount = groupDataList.Sum(e => e.ToHospitalCount);
