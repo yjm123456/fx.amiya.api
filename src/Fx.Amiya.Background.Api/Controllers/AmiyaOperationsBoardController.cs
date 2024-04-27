@@ -25,10 +25,12 @@ namespace Fx.Amiya.Background.Api.Controllers
     {
         private readonly IAmiyaOperationsBoardService amiyaOperationsBoardService;
         private readonly ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService;
-        public AmiyaOperationsBoardController(IAmiyaOperationsBoardService amiyaOperationsBoardService, ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService)
+        private readonly ILiveAnchorBaseInfoService liveAnchorBaseInfoService;
+        public AmiyaOperationsBoardController(IAmiyaOperationsBoardService amiyaOperationsBoardService, ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService, ILiveAnchorBaseInfoService liveAnchorBaseInfoService)
         {
             this.amiyaOperationsBoardService = amiyaOperationsBoardService;
             this.liveAnchorMonthlyTargetLivingService = liveAnchorMonthlyTargetLivingService;
+            this.liveAnchorBaseInfoService = liveAnchorBaseInfoService;
         }
         #region  运营主看板
         /// <summary>
@@ -364,7 +366,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 DealCount = e.DealCount,
                 DealRate = e.DealRate,
                 Performance = e.Performance,
-            }).OrderBy(e=>e.GroupName).ToList();
+            }).OrderBy(e => e.GroupName).ToList();
             return ResultData<List<CompanyNewCustomerConversionDataVo>>.Success().AddData("data", data);
         }
         #endregion
@@ -381,7 +383,15 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.Unit = query.Unit;
             queryDto.StartDate = query.StartDate;
             queryDto.EndDate = query.EndDate;
-            queryDto.LiveAnchorIds = query.LiveAnchorIds.Split(",").ToList();
+            if (string.IsNullOrEmpty(query.LiveAnchorIds))
+            {
+                queryDto.LiveAnchorIds = (await liveAnchorBaseInfoService.GetValidAsync(true)).Select(e => e.Id).ToList();
+            }
+            else
+            {
+                queryDto.LiveAnchorIds = query.LiveAnchorIds.Split(",").ToList();
+            }
+
             queryDto.IsOldCustomer = query.IsOldCustomer;
             queryDto.IsEffective = query.IsEffective;
 
@@ -412,7 +422,14 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.Unit = query.Unit;
             queryDto.StartDate = query.StartDate;
             queryDto.EndDate = query.EndDate;
-            queryDto.LiveAnchorIds = query.LiveAnchorIds.Split(",").ToList();
+            if (string.IsNullOrEmpty(query.LiveAnchorIds))
+            {
+                queryDto.LiveAnchorIds = (await liveAnchorBaseInfoService.GetValidAsync(true)).Select(e => e.Id).ToList();
+            }
+            else
+            {
+                queryDto.LiveAnchorIds = query.LiveAnchorIds.Split(",").ToList();
+            }
             queryDto.IsOldCustomer = query.IsOldCustomer;
             queryDto.IsEffective = query.IsEffective;
             var data = await amiyaOperationsBoardService.GetAssistantCustomerAcquisitionDataAsync(queryDto);
@@ -445,7 +462,14 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.Unit = query.Unit;
             queryDto.StartDate = query.StartDate;
             queryDto.EndDate = query.EndDate;
-            queryDto.LiveAnchorIds = query.LiveAnchorIds.Split(",").ToList();
+            if (string.IsNullOrEmpty(query.LiveAnchorIds))
+            {
+                queryDto.LiveAnchorIds = (await liveAnchorBaseInfoService.GetValidAsync(true)).Select(e => e.Id).ToList();
+            }
+            else
+            {
+                queryDto.LiveAnchorIds = query.LiveAnchorIds.Split(",").ToList();
+            }
             queryDto.IsOldCustomer = query.IsOldCustomer;
             queryDto.IsEffective = query.IsEffective;
             var data = await amiyaOperationsBoardService.GetAssistantOperationsDataAsync(queryDto);
@@ -475,7 +499,14 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.Unit = query.Unit;
             queryDto.StartDate = query.StartDate;
             queryDto.EndDate = query.EndDate;
-            queryDto.LiveAnchorIds = query.LiveAnchorIds.Split(",").ToList();
+            if (string.IsNullOrEmpty(query.LiveAnchorIds))
+            {
+                queryDto.LiveAnchorIds = (await liveAnchorBaseInfoService.GetValidAsync(true)).Select(e => e.Id).ToList();
+            }
+            else
+            {
+                queryDto.LiveAnchorIds = query.LiveAnchorIds.Split(",").ToList();
+            }
             queryDto.IsOldCustomer = query.IsOldCustomer;
             queryDto.IsEffective = query.IsEffective;
             var data = await amiyaOperationsBoardService.GetAssistantIndicatorConversionDataAsync(queryDto);

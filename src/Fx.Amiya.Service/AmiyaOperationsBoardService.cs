@@ -578,9 +578,9 @@ namespace Fx.Amiya.Service
                 effectiveData.GroupName = $"{liveanchorName}组-有效";               
                 effectiveData.SendOrderCount = effectiveBaseData.SendOrderCount;
                 effectiveData.ToHospitalCount = effectiveBaseData.ToHospitalCount;
-                effectiveData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(effectiveData.ToHospitalCount, effectiveData.DistributeConsulationNum).Value;
+                effectiveData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(effectiveData.ToHospitalCount, effectiveBaseData.TotalCount).Value;
                 effectiveData.DealCount = effectiveBaseData.DealCount;
-                effectiveData.DealRate = DecimalExtension.CalculateTargetComplete(effectiveData.DealCount, effectiveData.DistributeConsulationNum).Value;
+                effectiveData.DealRate = DecimalExtension.CalculateTargetComplete(effectiveData.DealCount, effectiveBaseData.TotalCount).Value;
                 effectiveData.Performance = effectiveBaseData.DealPrice;
                 dataList.Add(effectiveData);
 
@@ -588,20 +588,20 @@ namespace Fx.Amiya.Service
                 potentialData.GroupName = $"{liveanchorName}组-潜在";               
                 potentialData.SendOrderCount = potentialBaseData.SendOrderCount;
                 potentialData.ToHospitalCount = potentialBaseData.ToHospitalCount;
-                potentialData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(potentialData.ToHospitalCount, potentialData.DistributeConsulationNum).Value;
+                potentialData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(potentialData.ToHospitalCount, potentialBaseData.TotalCount).Value;
                 potentialData.DealCount = potentialBaseData.DealCount;
-                potentialData.DealRate = DecimalExtension.CalculateTargetComplete(potentialData.DealCount, potentialData.DistributeConsulationNum).Value;
+                potentialData.DealRate = DecimalExtension.CalculateTargetComplete(potentialData.DealCount, potentialBaseData.TotalCount).Value;
                 potentialData.Performance = potentialBaseData.DealPrice;
                 dataList.Add(potentialData);
 
-                var totalCount = effectiveData.DistributeConsulationNum + potentialData.DistributeConsulationNum;
+                var totalCount = effectiveBaseData.TotalCount + potentialBaseData.TotalCount;
                 var totalSendCount = effectiveData.SendOrderCount + potentialData.SendOrderCount;              
                 var totalTohospitalCount = effectiveData.ToHospitalCount + potentialData.ToHospitalCount;
                 var totalDealCount = effectiveData.DealCount + potentialData.DealCount;
                 
                 CompanyNewCustomerConversionDataDto totalData = new CompanyNewCustomerConversionDataDto();
                 totalData.GroupName = $"{liveanchorName}组";
-                totalData.SendOrderCount = totalSendCount;              
+                totalData.SendOrderCount = totalSendCount;      
                 totalData.ToHospitalCount = totalTohospitalCount;
                 totalData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(totalTohospitalCount, totalCount).Value;
                 totalData.DealCount = totalDealCount;
@@ -673,8 +673,8 @@ namespace Fx.Amiya.Service
             total.OldCustomerTarget = resList.Sum(e => e.NewCustomerPerformanceTarget);
             total.CurrentMonthOldCustomerPerformance = resList.Sum(e => e.CurrentMonthOldCustomerPerformance);
             total.OldCustomerTargetComplete = DecimalExtension.CalculateTargetComplete(total.CurrentMonthOldCustomerPerformance, total.OldCustomerTarget).Value;
-            total.TotalPerformanceTarget = total.CurrentMonthOldCustomerPerformance + total.NewCustomerPerformanceTarget;
-            total.TotalPerformance = data.CurrentMonthNewCustomerPerformance + data.CurrentMonthOldCustomerPerformance;
+            total.TotalPerformanceTarget = total.OldCustomerTarget + total.NewCustomerPerformanceTarget;
+            total.TotalPerformance = total.CurrentMonthNewCustomerPerformance + total.CurrentMonthOldCustomerPerformance;
             total.TotalPerformanceTargetComplete = DecimalExtension.CalculateTargetComplete(total.TotalPerformance, total.TotalPerformanceTarget).Value;
             resList.Add(total);
             return resList;
@@ -728,7 +728,7 @@ namespace Fx.Amiya.Service
             AssistantCustomerAcquisitionDataDto total = new AssistantCustomerAcquisitionDataDto();
             total.AssistantName = "总计";
             total.PotentialAllocationConsulation = resList.Sum(e => e.PotentialAllocationConsulation);
-            total.PotentialAllocationConsulationTarget = resList.Sum(e => e.PotentialAllocationConsulation);
+            total.PotentialAllocationConsulationTarget = resList.Sum(e => e.EffectiveAllocationConsulationTarget);
             total.PotentialAllocationConsulationTargetComplete = DecimalExtension.CalculateTargetComplete(total.PotentialAllocationConsulation, total.PotentialAllocationConsulationTarget).Value;
             total.PotentialAddWechat = resList.Sum(e => e.PotentialAddWechat);
             total.PotentialAddWechatTarget = resList.Sum(e => e.PotentialAddWechatTarget);
@@ -783,16 +783,16 @@ namespace Fx.Amiya.Service
             resList.RemoveAll(e => e.AssistantName == "其他");
             resList.Add(other);
             AssistantOperationsDataDto total = new AssistantOperationsDataDto();
-            total.AssistantName = "其他";
+            total.AssistantName = "总计";
             total.SendOrder = resList.Sum(e => e.SendOrder);
             total.SendOrderTarget = resList.Sum(e => e.SendOrderTarget);
-            total.SendOrderTargetComplete = DecimalExtension.CalculateTargetComplete(other.SendOrder, other.SendOrderTarget).Value;
+            total.SendOrderTargetComplete = DecimalExtension.CalculateTargetComplete(total.SendOrder, total.SendOrderTarget).Value;
             total.ToHospital = resList.Sum(e => e.ToHospital);
             total.ToHospitalTarget = resList.Sum(e => e.ToHospitalTarget);
-            total.ToHospitalTargetComplete = DecimalExtension.CalculateTargetComplete(other.ToHospital, other.ToHospitalTarget).Value;
+            total.ToHospitalTargetComplete = DecimalExtension.CalculateTargetComplete(total.ToHospital, total.ToHospitalTarget).Value;
             total.Deal = resList.Sum(e => e.Deal);
             total.DealTarget = resList.Sum(e => e.DealTarget);
-            total.DealTargetComplete = DecimalExtension.CalculateTargetComplete(other.Deal, other.DealTarget).Value;
+            total.DealTargetComplete = DecimalExtension.CalculateTargetComplete(total.Deal, total.DealTarget).Value;
             resList.Add(total);
             return resList;
         }

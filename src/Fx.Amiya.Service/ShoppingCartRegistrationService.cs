@@ -1423,7 +1423,6 @@ namespace Fx.Amiya.Service
                 Phone = e.Phone,
                 ToHospitalDate = e.ToHospitalDate,
                 IsOldCustomer = e.IsOldCustomer,
-                Price = e.AddOrderPrice,
                 IsToHospital = e.IsToHospital,
                 DealPrice = e.ContentPlatformOrderDealInfoList.Where(e => e.IsDeal == true).Sum(e => e.Price),
                 IsDeal = e.ContentPlatformOrderDealInfoList.Where(e => e.IsDeal == true).Count() > 0,
@@ -1437,15 +1436,22 @@ namespace Fx.Amiya.Service
                                            from s in baseData
                                            where s.Phone == c.Phone && c.ToHospitalDate <= s.RecordDate.AddDays(15)
                                            select s).Select(e => e.Phone).Distinct().Count();
-            data.OldCustomerCount = contentOrderList.Where(e => e.IsOldCustomer == true).Select(e => e.Phone).Distinct().Count();
-            data.OldCustomerToHospitalCount = contentOrderList.Where(e => e.IsOldCustomer == true && e.IsToHospital == true).Select(e => e.Phone).Distinct().Count();
-            data.OldCustomerRepurchase = contentOrderList.Where(e => e.IsOldCustomer == true && e.IsRePurchase == true).Select(e => e.Phone).Distinct().Count();
+            var dealDataList = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate > startDate && e.CreateDate < endDate).Where(e=> (isEffective.Value ? e.ContentPlatFormOrder.AddOrderPrice > 0 : e.ContentPlatFormOrder.AddOrderPrice <= 0)).Select(e => new {
+                Phone = e.ContentPlatFormOrder.Phone,
+                IsOldCustomer = e.IsOldCustomer,            
+                IsToHospital = e.IsToHospital,
+                DealPrice = e.Price,
+                IsDeal = e.IsDeal,
+            }).ToList();
+            data.OldCustomerCount = dealDataList.Where(e => e.IsOldCustomer == true).Select(e => e.Phone).Distinct().Count();
+            data.OldCustomerToHospitalCount = dealDataList.Where(e => e.IsOldCustomer == true && e.IsToHospital == true).Select(e => e.Phone).Distinct().Count();
+            data.OldCustomerRepurchase = dealDataList.Where(e => e.IsOldCustomer == true).GroupBy(e => e.Phone).Where(g => g.Count() > 1).Count();
             data.AddWechatCount = baseData.Where(e => e.IsAddWeChat).Select(e => e.Phone).Distinct().Count();
             data.ToHospitalCount = contentOrderList.Where(e => e.IsToHospital == true).Select(e => e.Phone).Distinct().Count();
-            data.NewCustomerCount = contentOrderList.Where(e => e.IsOldCustomer == false).Select(e => e.Phone).Distinct().Count();
-            data.NewCustomerDealCount = contentOrderList.Where(e => e.IsOldCustomer == false && e.IsDeal == true).Select(e => e.Phone).Distinct().Count();
-            data.NewCustomerTotalPerformance = contentOrderList.Where(e => e.IsOldCustomer == false).Sum(e => e.DealPrice);
-            data.OldCustomerTotalPerformance = contentOrderList.Where(e => e.IsOldCustomer == true).Sum(e => e.DealPrice);
+            data.NewCustomerCount = dealDataList.Where(e => e.IsOldCustomer == false).Select(e => e.Phone).Distinct().Count();
+            data.NewCustomerDealCount = dealDataList.Where(e => e.IsOldCustomer == false && e.IsDeal == true).Select(e => e.Phone).Distinct().Count();
+            data.NewCustomerTotalPerformance = dealDataList.Where(e => e.IsOldCustomer == false).Sum(e => e.DealPrice);
+            data.OldCustomerTotalPerformance = dealDataList.Where(e => e.IsOldCustomer == true).Sum(e => e.DealPrice);
             return data;
         }
         /// <summary>
@@ -1617,7 +1623,7 @@ namespace Fx.Amiya.Service
             //res.DealPrice = repeatList.Sum(e => e.DealPrice);
             //return res;
             var order = from orderData in dalContentPlatformOrder.GetAll()
-                        where orderData.SendDate >= startData && orderData.SendDate < endDate && orderData.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId
+                        where orderData.CreateDate >= startData && orderData.CreateDate < endDate && orderData.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId
                         select orderData;
             if (isOldCustomer.HasValue)
             {
@@ -1651,14 +1657,16 @@ namespace Fx.Amiya.Service
                                              IsSendOrder = e.OrderStatus > (int)ContentPlateFormOrderStatus.HaveOrder,
                                              IsToHospital = e.IsToHospital,
                                              IsDeal = e.ContentPlatformOrderDealInfoList.Where(e => e.IsDeal == true).Count() > 0,
-                                             DealPrice = e.ContentPlatformOrderDealInfoList.Where(e => e.IsDeal == true).Sum(e => e.Price)
+                                             DealPrice = e.ContentPlatformOrderDealInfoList.Where(e => e.IsDeal == true).Sum(e => e.Price),
+                                             CreateData = s.RecordDate
                                          }).ToListAsync();
+            var repeatList = aggregationData.GroupBy(e => e.Phone).Select(e => e.OrderByDescending(e => e.CreateData).FirstOrDefault()).ToList();
             CompanyNewCustomerConversionBaseDataDto res = new CompanyNewCustomerConversionBaseDataDto();
-            res.SendOrderCount = aggregationData.Where(e => e.IsSendOrder == true).Select(e => e.Phone).Distinct().Count();
-            res.ToHospitalCount = aggregationData.Where(e => e.IsToHospital == true).Select(e => e.Phone).Distinct().Count();
-            res.DealCount = aggregationData.Where(e => e.IsDeal == true).Select(e => e.Phone).Distinct().Count();
-            res.TotalCount = aggregationData.Select(e => e.Phone).Distinct().Count();
-            res.DealPrice = aggregationData.Sum(e => e.DealPrice);
+            res.SendOrderCount = repeatList.Where(e => e.IsSendOrder == true).Select(e => e.Phone).Distinct().Count();
+            res.ToHospitalCount = repeatList.Where(e => e.IsToHospital == true).Select(e => e.Phone).Distinct().Count();
+            res.DealCount = repeatList.Where(e => e.IsDeal == true).Select(e => e.Phone).Distinct().Count();
+            res.TotalCount = repeatList.Select(e => e.Phone).Distinct().Count();
+            res.DealPrice = repeatList.Sum(e => e.DealPrice);
             return res;
 
         }
