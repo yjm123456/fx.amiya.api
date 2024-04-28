@@ -3686,14 +3686,14 @@ namespace Fx.Amiya.Service
         public async Task<OrderSendAndDealNumDto> GetOrderSendAndDealDataByMonthAndBaseLiveAnchorIdAsync(DateTime startDate, DateTime endDate, bool isOldCustomer, string baseLiveAbchorId)
         {
             OrderSendAndDealNumDto orderData = new OrderSendAndDealNumDto();
-            orderData.SendOrderNum = await _dalContentPlatformOrder.GetAll()
+            orderData.SendOrderNum = await dalContentPlatformOrderSend.GetAll()
              .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
-             .Where(e => e.IsOldCustomer == isOldCustomer)
-             .Where(o => o.LiveAnchor.LiveAnchorBaseId == baseLiveAbchorId)
-                .Select(e => e.Phone)
+             .Where(e => e.ContentPlatformOrder.IsOldCustomer == isOldCustomer)
+             .Where(o => o.ContentPlatformOrder.LiveAnchor.LiveAnchorBaseId == baseLiveAbchorId)
+                .Select(e => e.ContentPlatformOrder.Phone)
                 .Distinct()
                 .CountAsync();
-            var visitCount =  dalContentPlatFormOrderDealInfo.GetAll()
+            var visitCount = dalContentPlatFormOrderDealInfo.GetAll()
              .Where(o => o.ToHospitalDate >= startDate && o.ToHospitalDate < endDate)
              .Where(e => e.IsToHospital == true && e.IsOldCustomer == isOldCustomer)
              .Where(o => o.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId == baseLiveAbchorId);
@@ -3721,11 +3721,13 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<OrderSendAndDealNumDto>> GetOrderSendAndDealDataByMonthAndBaseLiveAnchorIdAsync(DateTime startDate, DateTime endDate, bool isOldCustomer, List<int> assistantIds)
         {
-            var baseData = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.ContentPlatFormOrder.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && ((e.CreateDate >= startDate && e.CreateDate < endDate) || e.ContentPlatFormOrder.SendDate > startDate && e.ContentPlatFormOrder.SendDate < endDate)).Select(e => new
+            var sendData = dalContentPlatformOrderSend.GetAll().Where(e => e.SendDate >= startDate && e.SendDate < endDate)
+                .Select(e => new { BelongEmpId = e.ContentPlatformOrder.BelongEmpId, IsOldCustomer = e.ContentPlatformOrder.IsOldCustomer, ContentPlatformOrderId = e.ContentPlatformOrder }).ToList();
+            var baseData = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.ContentPlatFormOrder.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && ((e.CreateDate >= startDate && e.CreateDate < endDate))).Select(e => new
             {
                 Phone = e.ContentPlatFormOrder.Phone,
                 ToHospitalDate = e.ToHospitalDate,
-                DealDate = e.DealDate,
+                IsDeal = e.IsDeal,
                 BelongEmpId = e.ContentPlatFormOrder.BelongEmpId,
                 IsOldCustomer = e.IsOldCustomer,
                 IsToHospital = e.IsToHospital,
@@ -3734,10 +3736,10 @@ namespace Fx.Amiya.Service
             return baseData.GroupBy(e => e.BelongEmpId).Select(e => new OrderSendAndDealNumDto
             {
                 BelongEmpId = e.Key ?? 0,
-                SendOrderNum = e.Where(o => o.IsOldCustomer == isOldCustomer).Select(e => e.Phone).Distinct().Count(),
+                SendOrderNum = sendData.Where(o => o.IsOldCustomer == isOldCustomer && o.BelongEmpId == e.Key).Select(e => e.ContentPlatformOrderId).Distinct().Count(),
                 VisitNum = e.Where(e => e.IsToHospital == true && e.IsOldCustomer == isOldCustomer && e.ToHospitalDate >= startDate && e.ToHospitalDate < endDate).Select(e => e.Phone).Distinct().Count(),
-                DealNum = baseData.Where(x => x.DealDate >= startDate && x.DealDate < endDate && x.IsOldCustomer == isOldCustomer).Select(e => e.Phone).Distinct().Count(),
-                DealPrice = baseData.Where(x => x.DealDate >= startDate && x.DealDate < endDate && x.IsOldCustomer == isOldCustomer).Sum(x => x.DealAmount)
+                DealNum = e.Where(x => x.IsDeal == true && x.IsOldCustomer == isOldCustomer).Select(e => e.Phone).Distinct().Count(),
+                DealPrice = e.Where(x => x.IsDeal == true && x.IsOldCustomer == isOldCustomer).Sum(x => x.DealAmount)
             }).ToList();
         }
 
