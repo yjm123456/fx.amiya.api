@@ -29,6 +29,10 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         /// </summary>
         public int OldCustomerCount { get; set; }
         /// <summary>
+        /// 老客成交人数
+        /// </summary>
+        public int OldCustomerDealCount { get; set; }
+        /// <summary>
         /// 老客上门人数
         /// </summary>
         public int OldCustomerToHospitalCount { get; set; }

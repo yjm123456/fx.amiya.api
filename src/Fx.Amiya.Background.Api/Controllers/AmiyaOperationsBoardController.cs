@@ -469,6 +469,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             else
             {
                 queryDto.LiveAnchorIds = query.LiveAnchorIds.Split(",").ToList();
+                queryDto.LiveAnchorIds = query.LiveAnchorIds.Split(",").ToList();
             }
             queryDto.IsOldCustomer = query.IsOldCustomer;
             queryDto.IsEffective = query.IsEffective;

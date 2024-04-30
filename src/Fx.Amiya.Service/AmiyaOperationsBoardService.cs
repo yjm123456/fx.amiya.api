@@ -405,11 +405,11 @@ namespace Fx.Amiya.Service
                 effectiveData.DistributeConsulationNum = effectiveBaseData.TotalCount;
                 effectiveData.AddWechatCount = effectiveBaseData.AddWechatCount;
                 effectiveData.AddWechatRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.AddWechatCount, effectiveData.DistributeConsulationNum).Value;
-                effectiveData.SendOrderRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.SendOrderCount, effectiveData.DistributeConsulationNum).Value;
+                effectiveData.SendOrderRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.SendOrderCount, effectiveData.AddWechatCount).Value;
                 effectiveData.ToHospitalCount = effectiveBaseData.ToHospitalCount;
-                effectiveData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.ToHospitalCount, effectiveData.DistributeConsulationNum).Value;
+                effectiveData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.ToHospitalCount, effectiveData.SendOrderCount).Value;
                 effectiveData.DealCount = effectiveBaseData.NewCustomerDealCount;
-                effectiveData.DealRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.NewCustomerDealCount, effectiveBaseData.NewCustomerCount).Value;
+                effectiveData.DealRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.NewCustomerDealCount, effectiveBaseData.ToHospitalCount).Value;
                 effectiveData.Performance = effectiveBaseData.NewCustomerTotalPerformance;
                 dataList.Add(effectiveData);
 
@@ -419,11 +419,11 @@ namespace Fx.Amiya.Service
                 potentialData.DistributeConsulationNum = potentialBaseData.TotalCount;
                 potentialData.AddWechatCount = potentialBaseData.AddWechatCount;
                 potentialData.AddWechatRate = DecimalExtension.CalculateTargetComplete(potentialBaseData.AddWechatCount, potentialData.DistributeConsulationNum).Value;
-                potentialData.SendOrderRate = DecimalExtension.CalculateTargetComplete(potentialBaseData.SendOrderCount, potentialData.DistributeConsulationNum).Value;
+                potentialData.SendOrderRate = DecimalExtension.CalculateTargetComplete(potentialBaseData.SendOrderCount, potentialData.AddWechatCount).Value;
                 potentialData.ToHospitalCount = potentialBaseData.ToHospitalCount;
-                potentialData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(potentialBaseData.ToHospitalCount, potentialData.DistributeConsulationNum).Value;
+                potentialData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(potentialBaseData.ToHospitalCount, potentialData.SendOrderCount).Value;
                 potentialData.DealCount = potentialBaseData.NewCustomerDealCount;
-                potentialData.DealRate = DecimalExtension.CalculateTargetComplete(potentialBaseData.NewCustomerDealCount, potentialBaseData.NewCustomerCount).Value;
+                potentialData.DealRate = DecimalExtension.CalculateTargetComplete(potentialBaseData.NewCustomerDealCount, potentialBaseData.ToHospitalCount).Value;
                 potentialData.Performance = potentialBaseData.NewCustomerTotalPerformance;
                 dataList.Add(potentialData);
 
@@ -436,14 +436,14 @@ namespace Fx.Amiya.Service
                 CompanyNewCustomerConversionDataDto totalData = new CompanyNewCustomerConversionDataDto();
                 totalData.GroupName = $"{liveanchorName}组";
                 totalData.SendOrderCount = totalSendCount;
-                totalData.SendOrderRate = DecimalExtension.CalculateTargetComplete(totalSendCount, totalCount).Value;
+                totalData.SendOrderRate = DecimalExtension.CalculateTargetComplete(totalSendCount, totalAddwechatCount).Value;
                 totalData.DistributeConsulationNum = totalCount;
                 totalData.AddWechatCount = totalAddwechatCount;
                 totalData.AddWechatRate = DecimalExtension.CalculateTargetComplete(totalAddwechatCount, totalCount).Value;
                 totalData.ToHospitalCount = totalTohospitalCount;
-                totalData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(totalTohospitalCount, totalCount).Value;
+                totalData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(totalTohospitalCount, totalData.SendOrderCount).Value;
                 totalData.DealCount = totalDealCount;
-                totalData.DealRate = DecimalExtension.CalculateTargetComplete(totalDealCount, totalNewCustomerCount).Value;
+                totalData.DealRate = DecimalExtension.CalculateTargetComplete(totalDealCount, totalData.ToHospitalCount).Value;
                 totalData.Performance = potentialData.Performance + effectiveData.Performance;
                 newCustomerCount += totalNewCustomerCount;
                 dataList.Add(totalData);
@@ -454,14 +454,14 @@ namespace Fx.Amiya.Service
             data.GroupName = "总计";
             data.SendOrderCount = groupDataList.Sum(e => e.SendOrderCount);
             data.DistributeConsulationNum = groupDataList.Sum(e => e.DistributeConsulationNum);
-            data.SendOrderRate = DecimalExtension.CalculateTargetComplete(data.SendOrderCount, data.DistributeConsulationNum).Value;
             data.AddWechatCount = groupDataList.Sum(e => e.AddWechatCount);
             data.AddWechatRate = DecimalExtension.CalculateTargetComplete(data.AddWechatCount, data.DistributeConsulationNum).Value;
+            data.SendOrderRate = DecimalExtension.CalculateTargetComplete(data.SendOrderCount, data.AddWechatCount).Value;           
             data.ToHospitalCount = groupDataList.Sum(e => e.ToHospitalCount);
-            data.ToHospitalRate = DecimalExtension.CalculateTargetComplete(data.ToHospitalCount, data.DistributeConsulationNum).Value;
+            data.ToHospitalRate = DecimalExtension.CalculateTargetComplete(data.ToHospitalCount, data.SendOrderCount).Value;
             data.DealCount = groupDataList.Sum(e => e.DealCount);
-            data.DealRate = DecimalExtension.CalculateTargetComplete(data.DealCount, newCustomerCount).Value;
-            data.Performance = groupDataList.Sum(e => e.DealCount);
+            data.DealRate = DecimalExtension.CalculateTargetComplete(data.DealCount, data.ToHospitalCount).Value;
+            data.Performance = groupDataList.Sum(e => e.Performance);
             dataList.Add(data);
             return dataList;
         }
@@ -533,11 +533,11 @@ namespace Fx.Amiya.Service
                 data.OldCustomerToHospitalRate = DecimalExtension.CalculateTargetComplete(effectiveData.OldCustomerToHospitalCount, effectiveData.OldCustomerCount).Value;
                 data.RePurchaseRate = DecimalExtension.CalculateTargetComplete(effectiveData.OldCustomerRepurchase, effectiveData.OldCustomerCount).Value;
                 data.AddWechatRate = DecimalExtension.CalculateTargetComplete(effectiveData.AddWechatCount, effectiveData.TotalCount).Value;
-                data.SendOrderRate = DecimalExtension.CalculateTargetComplete(effectiveData.SendOrderCount, effectiveData.TotalCount).Value;
-                data.ToHospitalRate = DecimalExtension.CalculateTargetComplete(effectiveData.ToHospitalCount, effectiveData.TotalCount).Value;
+                data.SendOrderRate = DecimalExtension.CalculateTargetComplete(effectiveData.SendOrderCount, effectiveData.AddWechatCount).Value;
+                data.ToHospitalRate = DecimalExtension.CalculateTargetComplete(effectiveData.ToHospitalCount, effectiveData.SendOrderCount).Value;
                 data.NewCustomerDealRate = DecimalExtension.CalculateTargetComplete(effectiveData.NewCustomerDealCount, effectiveData.NewCustomerCount).Value;
-                data.NewCustomerUnitPrice = DecimalExtension.Division(effectiveData.NewCustomerTotalPerformance, effectiveData.NewCustomerCount).Value;
-                data.OldCustomerUnitPrice = DecimalExtension.Division(effectiveData.OldCustomerTotalPerformance, effectiveData.OldCustomerCount).Value;
+                data.NewCustomerUnitPrice = DecimalExtension.Division(effectiveData.NewCustomerTotalPerformance, effectiveData.NewCustomerDealCount).Value;
+                data.OldCustomerUnitPrice = DecimalExtension.Division(effectiveData.OldCustomerTotalPerformance, effectiveData.OldCustomerDealCount).Value;
                 dataList.Add(data);
             }
             CompanyIndicatorConversionDataDto totalEffectiveData = new CompanyIndicatorConversionDataDto();
@@ -550,8 +550,8 @@ namespace Fx.Amiya.Service
             totalEffectiveData.SendOrderRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.Sum(e => e.SendOrderCount), effectiveBaseData.Sum(e => e.TotalCount)).Value;
             totalEffectiveData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.Sum(e => e.ToHospitalCount), effectiveBaseData.Sum(e => e.TotalCount)).Value;
             totalEffectiveData.NewCustomerDealRate = DecimalExtension.CalculateTargetComplete(effectiveBaseData.Sum(e => e.NewCustomerDealCount), effectiveBaseData.Sum(e => e.NewCustomerCount)).Value;
-            totalEffectiveData.NewCustomerUnitPrice = DecimalExtension.Division(effectiveBaseData.Sum(e => e.NewCustomerTotalPerformance), effectiveBaseData.Sum(e => e.NewCustomerCount)).Value;
-            totalEffectiveData.OldCustomerUnitPrice = DecimalExtension.Division(effectiveBaseData.Sum(e => e.OldCustomerTotalPerformance), effectiveBaseData.Sum(e => e.OldCustomerCount)).Value;
+            totalEffectiveData.NewCustomerUnitPrice = DecimalExtension.Division(effectiveBaseData.Sum(e => e.NewCustomerTotalPerformance), effectiveBaseData.Sum(e => e.NewCustomerDealCount)).Value;
+            totalEffectiveData.OldCustomerUnitPrice = DecimalExtension.Division(effectiveBaseData.Sum(e => e.OldCustomerTotalPerformance), effectiveBaseData.Sum(e => e.OldCustomerDealCount)).Value;
             dataList.Add(totalEffectiveData);
 
             return dataList;
@@ -568,7 +568,7 @@ namespace Fx.Amiya.Service
             query.LiveAnchorIds = nameList.Select(e => e.Id).ToList();
             List<CompanyNewCustomerConversionDataDto> dataList = new List<CompanyNewCustomerConversionDataDto>();
             List<CompanyNewCustomerConversionDataDto> groupDataList = new List<CompanyNewCustomerConversionDataDto>();
-            int customerTotalCount = 0;
+            int toHospitalTotalCount = 0;
             foreach (var liveanchorId in query.LiveAnchorIds)
             {
                 var liveanchorName = nameList.Where(e => e.Id == liveanchorId).Select(e => e.LiveAnchorName).FirstOrDefault();
@@ -579,9 +579,8 @@ namespace Fx.Amiya.Service
                 effectiveData.GroupName = $"{liveanchorName}组-有效";
                 effectiveData.SendOrderCount = effectiveBaseData.SendOrderCount;
                 effectiveData.ToHospitalCount = effectiveBaseData.ToHospitalCount;
-                effectiveData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(effectiveData.ToHospitalCount, effectiveBaseData.TotalCount).Value;
                 effectiveData.DealCount = effectiveBaseData.DealCount;
-                effectiveData.DealRate = DecimalExtension.CalculateTargetComplete(effectiveData.DealCount, effectiveBaseData.TotalCount).Value;
+                effectiveData.DealRate = DecimalExtension.CalculateTargetComplete(effectiveData.DealCount, effectiveBaseData.ToHospitalCount).Value;
                 effectiveData.Performance = effectiveBaseData.DealPrice;
                 dataList.Add(effectiveData);
 
@@ -589,9 +588,8 @@ namespace Fx.Amiya.Service
                 potentialData.GroupName = $"{liveanchorName}组-潜在";
                 potentialData.SendOrderCount = potentialBaseData.SendOrderCount;
                 potentialData.ToHospitalCount = potentialBaseData.ToHospitalCount;
-                potentialData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(potentialData.ToHospitalCount, potentialBaseData.TotalCount).Value;
                 potentialData.DealCount = potentialBaseData.DealCount;
-                potentialData.DealRate = DecimalExtension.CalculateTargetComplete(potentialData.DealCount, potentialBaseData.TotalCount).Value;
+                potentialData.DealRate = DecimalExtension.CalculateTargetComplete(potentialData.DealCount, potentialBaseData.ToHospitalCount).Value;
                 potentialData.Performance = potentialBaseData.DealPrice;
                 dataList.Add(potentialData);
 
@@ -604,21 +602,19 @@ namespace Fx.Amiya.Service
                 totalData.GroupName = $"{liveanchorName}组";
                 totalData.SendOrderCount = totalSendCount;
                 totalData.ToHospitalCount = totalTohospitalCount;
-                totalData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(totalTohospitalCount, totalCount).Value;
                 totalData.DealCount = totalDealCount;
-                totalData.DealRate = DecimalExtension.CalculateTargetComplete(totalDealCount, totalCount).Value;
+                totalData.DealRate = DecimalExtension.CalculateTargetComplete(totalDealCount, totalTohospitalCount).Value;
                 totalData.Performance = potentialData.Performance + effectiveData.Performance;
                 dataList.Add(totalData);
                 groupDataList.Add(totalData);
-                customerTotalCount += totalCount;
+                toHospitalTotalCount += totalTohospitalCount;
             }
             CompanyNewCustomerConversionDataDto data = new CompanyNewCustomerConversionDataDto();
             data.GroupName = "总计";
             data.SendOrderCount = groupDataList.Sum(e => e.SendOrderCount);
             data.ToHospitalCount = groupDataList.Sum(e => e.ToHospitalCount);
-            data.ToHospitalRate = DecimalExtension.CalculateTargetComplete(data.ToHospitalCount, customerTotalCount).Value;
             data.DealCount = groupDataList.Sum(e => e.DealCount);
-            data.DealRate = DecimalExtension.CalculateTargetComplete(data.DealCount, customerTotalCount).Value;
+            data.DealRate = DecimalExtension.CalculateTargetComplete(data.DealCount, toHospitalTotalCount).Value;
             data.Performance = groupDataList.Sum(e => e.Performance);
             dataList.Add(data);
             return dataList;
@@ -696,16 +692,16 @@ namespace Fx.Amiya.Service
                 var name = assistantNameList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其他";
                 AssistantCustomerAcquisitionDataDto data = new AssistantCustomerAcquisitionDataDto();
                 data.AssistantName = name;
-                data.PotentialAllocationConsulation = e.Where(e => e.Price <= 0).Count();
+                data.PotentialAllocationConsulation = e.Where(e => e.AddPrice <= 0).Count();
                 data.PotentialAllocationConsulationTarget = CalTarget(query.StartDate.Value, query.EndDate.Value, target?.PotentialConsulationCardTarget ?? 0);
                 data.PotentialAllocationConsulationTargetComplete = DecimalExtension.CalculateTargetComplete(data.PotentialAllocationConsulation, data.PotentialAllocationConsulationTarget).Value;
-                data.PotentialAddWechat = e.Where(e => e.Price <= 0).Count();
+                data.PotentialAddWechat = e.Where(e => e.AddPrice <= 0&&e.IsAddWeChat==true).Count();
                 data.PotentialAddWechatTarget = CalTarget(query.StartDate.Value, query.EndDate.Value, target?.PotentialAddWechatTarget ?? 0);
                 data.PotentialAddWechatTargetComplete = DecimalExtension.CalculateTargetComplete(data.PotentialAddWechat, data.PotentialAddWechatTarget).Value;
-                data.EffectiveAllocationConsulation = e.Where(e => e.Price > 0).Count();
+                data.EffectiveAllocationConsulation = e.Where(e => e.AddPrice > 0).Count();
                 data.EffectiveAllocationConsulationTarget = CalTarget(query.StartDate.Value, query.EndDate.Value, target?.EffectiveConsulationCardTarget ?? 0);
                 data.EffectiveAllocationConsulationTargetComplete = DecimalExtension.CalculateTargetComplete(data.EffectiveAllocationConsulation, data.EffectiveAllocationConsulationTarget).Value;
-                data.EffectiveAddWechat = e.Where(e => e.Price > 0).Count();
+                data.EffectiveAddWechat = e.Where(e => e.AddPrice > 0 && e.IsAddWeChat == true).Count();
                 data.EffectiveAddWechatTarget = CalTarget(query.StartDate.Value, query.EndDate.Value, target?.EffectiveAddWechatTarget ?? 0);
                 data.EffectiveAddWechatTargetComplete = DecimalExtension.CalculateTargetComplete(data.EffectiveAddWechat, data.EffectiveAddWechatTarget).Value;
                 return data;
@@ -808,7 +804,6 @@ namespace Fx.Amiya.Service
             var baseData = await shoppingCartRegistrationService.GetIndicatorConversionDataByAssistantIdsAsync(selectDate.StartDate, selectDate.EndDate, assistantNameList.Select(e => e.Id).ToList(), query.IsOldCustomer);
             var resList = baseData.GroupBy(e => e.EmpId).Select(e =>
              {
-
                  var name = assistantNameList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其他";
                  AssistantIndicatorConversionDataDto data = new AssistantIndicatorConversionDataDto();
                  data.AssistantName = name;
