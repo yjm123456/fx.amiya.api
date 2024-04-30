@@ -3646,18 +3646,16 @@ namespace Fx.Amiya.Service
              .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
              .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsOldCustomer == false)
              .Where(o => string.IsNullOrEmpty(contentPlatFormId) || o.ContentPlateformId == contentPlatFormId)
-             .Where(o => isEffectiveCustomerData == true ? o.AddOrderPrice > 0 : o.AddOrderPrice == 0)
+             .Where(o => (!isEffectiveCustomerData.HasValue || (isEffectiveCustomerData.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0)))
                 .Select(e => e.Phone)
                 .Distinct()
                 .CountAsync();
-
-
 
             var visitCount = await _dalContentPlatformOrder.GetAll()
              .Where(o => o.ToHospitalDate >= startDate && o.ToHospitalDate < endDate)
              .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsToHospital == true)
              .Where(o => string.IsNullOrEmpty(contentPlatFormId) || o.ContentPlateformId == contentPlatFormId)
-             .Where(o => isEffectiveCustomerData == true ? o.AddOrderPrice > 0 : o.AddOrderPrice == 0)
+             .Where(o => (!isEffectiveCustomerData.HasValue || (isEffectiveCustomerData.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0)))
             .Where(e => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(e.LiveAnchorId.HasValue ? e.LiveAnchorId.Value : 0))
                 .ToListAsync();
 
@@ -3840,12 +3838,16 @@ namespace Fx.Amiya.Service
         public async Task<GetEmployeeCustomerAnalizeDto> GetCustomerVisitAndIsDealByEmployeeIdAsync(DateTime startDate, DateTime endDate, int employeeId)
         {
             GetEmployeeCustomerAnalizeDto result = new GetEmployeeCustomerAnalizeDto();
-            var dealDate = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderDealInfoList).Where(x => x.IsToHospital == true && x.ToHospitalDate > startDate && x.ToHospitalDate < endDate.AddDays(1).AddMilliseconds(-1) && x.BelongEmpId == employeeId).ToListAsync();
-            result.VisitNum = dealDate.Count();
-            result.DealNum = dealDate.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && x.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder)
-                    .SelectMany(x => x.ContentPlatformOrderDealInfoList)
-                    .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true)
-                    .ToList().Count();
+            var dealDate = await _dalContentPlatformOrder.GetAll().Where(x => x.IsToHospital == true && x.ToHospitalDate > startDate && x.ToHospitalDate < endDate && x.BelongEmpId == employeeId && x.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && x.IsSupportOrder == false).ToListAsync();
+
+            var supportDealDate = await _dalContentPlatformOrder.GetAll().Where(x => x.IsToHospital == true && x.ToHospitalDate > startDate && x.ToHospitalDate < endDate && x.SupportEmpId == employeeId && x.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && x.IsSupportOrder == true).ToListAsync();
+            foreach (var x in supportDealDate)
+            {
+                dealDate.Add(x);
+            }
+            result.VisitNum = dealDate.Select(x => x.Phone).Distinct().Count();
+            result.DealNum = dealDate.Where(x => x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
+                    .Where(e => e.DealDate >= startDate && e.DealDate < endDate).Select(x => x.Phone).Distinct().Count();
             return result;
         }
 

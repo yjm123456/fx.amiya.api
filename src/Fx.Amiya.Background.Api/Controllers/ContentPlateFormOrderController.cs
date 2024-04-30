@@ -1621,7 +1621,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
 
         /// <summary>
-        /// 根据派单人和派单时间获取供应链达人派单和上门数据
+        /// 根据派单时间获取供应链达人派单和上门数据
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
