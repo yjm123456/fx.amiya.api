@@ -37,6 +37,10 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         /// </summary>
         public int OldCustomerToHospitalCount { get; set; }
         /// <summary>
+        /// 新客上门人数
+        /// </summary>
+        public int NewCustomerToHospitalCount { get; set; }
+        /// <summary>
         /// 老客复购人数
         /// </summary>
         public int OldCustomerRepurchase { get; set; }
@@ -64,6 +68,7 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         /// 老客总业绩
         /// </summary>
         public decimal OldCustomerTotalPerformance { get; set; }
+        public int CustomerCount { get; set; }
         public int EmpId { get; set; }
     }
 }
