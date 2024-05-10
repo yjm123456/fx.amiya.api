@@ -47,11 +47,30 @@ namespace Fx.Amiya.Service
             {
                 throw new Exception("主播基础id为空！");
             }
-            List<int> liveAnchorIds = new List<int>();
 
             var liveAnchors = from d in dalLiveAnchor.GetAll()
                               where d.Valid == true
                               && d.LiveAnchorBaseId == liveAnchorBaseId
+                              select new LiveAnchorDto
+                              {
+                                  Id = d.Id,
+                                  Name = d.Name,
+                                  HostAccountName = string.IsNullOrWhiteSpace(d.HostAccountName) ? "" : d.HostAccountName,
+                                  ContentPlateFormId = string.IsNullOrWhiteSpace(d.ContentPlateFormId) ? "" : d.ContentPlateFormId,
+                                  LiveAnchorBaseId = d.LiveAnchorBaseId,
+                                  Valid = d.Valid
+                              };
+            var resultList = await liveAnchors.ToListAsync();
+            return resultList;
+        }
+
+        public async Task<List<LiveAnchorDto>> GetValidListByContentPlatFormIdAndNameAsync(string contentPlatFormId, string name)
+        {
+
+            var liveAnchors = from d in dalLiveAnchor.GetAll()
+                              where d.Valid == true
+                              && d.ContentPlateFormId == contentPlatFormId
+                              && d.Name.Contains(name)
                               select new LiveAnchorDto
                               {
                                   Id = d.Id,
@@ -77,18 +96,18 @@ namespace Fx.Amiya.Service
                 throw new Exception("主播基础id为空！");
             }
             return (from d in dalLiveAnchor.GetAll()
-                               where d.Valid == true
-                               && liveAnchorBaseIds.Contains(d.LiveAnchorBaseId)
-                               select new LiveAnchorDto
-                               {
-                                   Id = d.Id,
-                                   Name = d.Name,
-                                   HostAccountName = string.IsNullOrWhiteSpace(d.HostAccountName) ? "" : d.HostAccountName,
-                                   ContentPlateFormId = string.IsNullOrWhiteSpace(d.ContentPlateFormId) ? "" : d.ContentPlateFormId,
-                                   LiveAnchorBaseId = d.LiveAnchorBaseId,
-                                   Valid = d.Valid
-                               }).ToList();
-            
+                    where d.Valid == true
+                    && liveAnchorBaseIds.Contains(d.LiveAnchorBaseId)
+                    select new LiveAnchorDto
+                    {
+                        Id = d.Id,
+                        Name = d.Name,
+                        HostAccountName = string.IsNullOrWhiteSpace(d.HostAccountName) ? "" : d.HostAccountName,
+                        ContentPlateFormId = string.IsNullOrWhiteSpace(d.ContentPlateFormId) ? "" : d.ContentPlateFormId,
+                        LiveAnchorBaseId = d.LiveAnchorBaseId,
+                        Valid = d.Valid
+                    }).ToList();
+
         }
 
         /// <summary>
@@ -201,7 +220,7 @@ namespace Fx.Amiya.Service
                                   Name = d.Name,
                                   HostAccountName = string.IsNullOrWhiteSpace(d.HostAccountName) ? "" : d.HostAccountName,
                                   ContentPlateFormId = string.IsNullOrWhiteSpace(d.ContentPlateFormId) ? "" : d.ContentPlateFormId,
-                                  LiveAnchorBaseId=d.LiveAnchorBaseId,
+                                  LiveAnchorBaseId = d.LiveAnchorBaseId,
                                   Valid = d.Valid
                               };
             FxPageInfo<LiveAnchorDto> liveAnchorPageInfo = new FxPageInfo<LiveAnchorDto>();
@@ -350,8 +369,9 @@ namespace Fx.Amiya.Service
 
         public async Task<List<LiveAnchorDto>> GetLiveAnchorListByBaseInfoId(string baseInfoId)
         {
-            return await dalLiveAnchor.GetAll().Where(l => l.LiveAnchorBaseId == baseInfoId&&l.Valid==true).Select(l=>new LiveAnchorDto {
-                Id=l.Id
+            return await dalLiveAnchor.GetAll().Where(l => l.LiveAnchorBaseId == baseInfoId && l.Valid == true).Select(l => new LiveAnchorDto
+            {
+                Id = l.Id
             }).ToListAsync();
         }
         /// <summary>
@@ -360,12 +380,13 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<LiveAnchorDto>> GetWechatVideoOrderLiveAnchorIdAsync()
         {
-            var list = dalOrderAppInfo.GetAll().Where(e=>e.AppType==(byte)AppType.WeChatVideo).Select(e=>e.BelongLiveAnchor).ToList();
-            return dalLiveAnchor.GetAll().Where(e => list.Contains(e.Id)).Select(e=>new LiveAnchorDto { 
-                Id=e.Id,
-                Name=e.Name
+            var list = dalOrderAppInfo.GetAll().Where(e => e.AppType == (byte)AppType.WeChatVideo).Select(e => e.BelongLiveAnchor).ToList();
+            return dalLiveAnchor.GetAll().Where(e => list.Contains(e.Id)).Select(e => new LiveAnchorDto
+            {
+                Id = e.Id,
+                Name = e.Name
             }).ToList();
-            
+
         }
         /// <summary>
         /// 根据平台id和基础主播id获取主播ip的id
@@ -373,8 +394,9 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<int>> GetLiveAnchorIdsByContentPlatformIdAndBaseId(string contentPlatformId, string baseId)
         {
-            var data= dalLiveAnchor.GetAll().Where(e => e.ContentPlateFormId == contentPlatformId);
-            if (!string.IsNullOrEmpty(baseId)) {
+            var data = dalLiveAnchor.GetAll().Where(e => e.ContentPlateFormId == contentPlatformId);
+            if (!string.IsNullOrEmpty(baseId))
+            {
                 data = data.Where(e => e.LiveAnchorBaseId == baseId);
             }
             return await data.Select(e => e.Id).ToListAsync();

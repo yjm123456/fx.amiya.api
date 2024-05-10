@@ -3650,14 +3650,14 @@ namespace Fx.Amiya.Service
                 .Select(e => e.Phone)
                 .Distinct()
                 .CountAsync();
-
-            var visitCount = await _dalContentPlatformOrder.GetAll()
-             .Where(o => o.ToHospitalDate >= startDate && o.ToHospitalDate < endDate)
+            var visitCount = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderDealInfoList)
+             .Where(o => o.ContentPlatformOrderDealInfoList.Where(x => x.CreateDate >= startDate&& x.CreateDate < endDate).Count() > 0)
              .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsToHospital == true)
              .Where(o => string.IsNullOrEmpty(contentPlatFormId) || o.ContentPlateformId == contentPlatFormId)
              .Where(o => (!isEffectiveCustomerData.HasValue || (isEffectiveCustomerData.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0)))
             .Where(e => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(e.LiveAnchorId.HasValue ? e.LiveAnchorId.Value : 0))
                 .ToListAsync();
+
 
             orderData.VisitNum = visitCount
                 .Select(e => e.Phone)
@@ -3721,8 +3721,8 @@ namespace Fx.Amiya.Service
         {
             var sendData = dalContentPlatformOrderSend.GetAll().Where(e => e.SendDate >= startDate && e.SendDate < endDate)
                 .Where(e => e.ContentPlatformOrder.IsOldCustomer == isOldCustomer)
-                .Select(e => new { BelongEmpId = e.ContentPlatformOrder.BelongEmpId, IsOldCustomer = e.ContentPlatformOrder.IsOldCustomer,Phone= e.ContentPlatformOrder.Phone }).ToList();
-            var baseData = dalContentPlatFormOrderDealInfo.GetAll().Where(e =>  ((e.CreateDate >= startDate && e.CreateDate < endDate))).Select(e => new
+                .Select(e => new { BelongEmpId = e.ContentPlatformOrder.BelongEmpId, IsOldCustomer = e.ContentPlatformOrder.IsOldCustomer, Phone = e.ContentPlatformOrder.Phone }).ToList();
+            var baseData = dalContentPlatFormOrderDealInfo.GetAll().Where(e => ((e.CreateDate >= startDate && e.CreateDate < endDate))).Select(e => new
             {
                 Phone = e.ContentPlatFormOrder.Phone,
                 ToHospitalDate = e.ToHospitalDate,

@@ -425,7 +425,7 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 官网
         /// </summary>
-        OfficialWebsite=9
+        OfficialWebsite = 9
     }
 
     #region 内容平台相关枚举
@@ -1020,6 +1020,15 @@ namespace Fx.Amiya.IService
         /// </summary>
         ProductionTransform = 6,
 
+        /// <summary>
+        /// 抖音小风车
+        /// </summary>
+        TikTokShoppingCart = 7,
+        /// <summary>
+        /// 视频号福袋
+        /// </summary>
+        WechatVideoLuckyBag = 8,
+
     }
 
 
@@ -1517,7 +1526,8 @@ namespace Fx.Amiya.IService
     /// <summary>
     /// 未加V原因
     /// </summary>
-    public enum UnAddWechatReason {
+    public enum UnAddWechatReason
+    {
         /// <summary>
         /// 其他
         /// </summary>
@@ -1525,30 +1535,30 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 号码未获取
         /// </summary>
-        NoPhoneNUmber =1,
+        NoPhoneNUmber = 1,
         /// <summary>
         /// 未接/拒接电话
         /// </summary>
-        RefuseCall=2,
+        RefuseCall = 2,
         /// <summary>
         /// 只要产品
         /// </summary>
-        OnlyForGoods=3,
+        OnlyForGoods = 3,
         /// <summary>
         /// 不想咨询
         /// </summary>
-        NoConsulation=4,
+        NoConsulation = 4,
         /// <summary>
         /// 加V未通过
         /// </summary>
-        AddWechatFail=5,
+        AddWechatFail = 5,
         /// <summary>
         /// 错拍链接
         /// </summary>
-        ErrorPurche=6,
+        ErrorPurche = 6,
         /// <summary>
         /// 非本人拍
         /// </summary>
-        UnMySelf=7
+        UnMySelf = 7
     }
 }

@@ -33,18 +33,22 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IHttpContextAccessor httpContextAccessor;
         private IContentPlateFormOrderService contentPlateFormOrderService;
         private IOperationLogService operationLogService;
+        private readonly ILiveAnchorService liveAnchorService;
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="shoppingCartRegistrationService"></param>
         public ShoppingCartRegistrationController(IShoppingCartRegistrationService shoppingCartRegistrationService,
             IContentPlateFormOrderService contentPlateFormOrderService,
-            IHttpContextAccessor httpContextAccessor, IOperationLogService operationLogService)
+            IHttpContextAccessor httpContextAccessor,
+            IOperationLogService operationLogService,
+            ILiveAnchorService liveAnchorService)
         {
             this.shoppingCartRegistrationService = shoppingCartRegistrationService;
             this.httpContextAccessor = httpContextAccessor;
             this.contentPlateFormOrderService = contentPlateFormOrderService;
             this.operationLogService = operationLogService;
+            this.liveAnchorService = liveAnchorService;
         }
 
 
@@ -699,6 +703,170 @@ namespace Fx.Amiya.Background.Api.Controllers
                         addDto.IsBadReview = false;
                         addDto.EmergencyLevel = 2;
                         addDto.Source = 7;
+                        addDtoList.Add(addDto);
+                    }
+                    await shoppingCartRegistrationService.AddListAsync(addDtoList);
+                }
+            }
+            return ResultData.Success();
+
+
+        }
+
+        /// <summary>
+        /// 导入小黄车登记列表（抖音小风车与视频号福袋）
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut("importTikTokAndVideoToShoppingCartRegistionData")]
+        public async Task<ResultData> InPortTikTokAndVideoToShoppingCartRegistionDataAsync(IFormFile file)
+        {
+            if (file == null || file.Length <= 0)
+                throw new Exception("请检查文件是否存在");
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeId = Convert.ToInt32(employee.Id);
+            using (var stream = new MemoryStream())
+            {
+                await file.CopyToAsync(stream);//取到文件流
+
+                using (ExcelPackage package = new ExcelPackage(stream))
+                {
+
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets["sheet1"];
+                    if (worksheet == null)
+                    {
+                        throw new Exception("请另外新建一个excel文件'.xlsx'后将填写好的数据复制到新文件中上传，勿采用当前导出文件进行上传！");
+                    }
+                    //获取表格的列数和行数
+                    int rowCount = worksheet.Dimension.Rows;
+
+                    List<AddShoppingCartRegistrationDto> addDtoList = new List<AddShoppingCartRegistrationDto>();
+                    for (int x = 2; x <= rowCount; x++)
+                    {
+                        AddShoppingCartRegistrationDto addDto = new AddShoppingCartRegistrationDto();
+
+                        if (worksheet.Cells[x, 1].Value != null)
+                        {
+                            addDto.CustomerNickName = worksheet.Cells[x, 1].Value.ToString();
+                        }
+                        else
+                        {
+                            addDto.CustomerNickName = "-";
+                        }
+                        if (worksheet.Cells[x, 2].Value != null)
+                        {
+                            addDto.Phone = worksheet.Cells[x, 2].Value.ToString();
+                        }
+                        else
+                        {
+                            throw new Exception("客户电话有参数列为空，请检查表格数据！");
+                        }
+                        if (worksheet.Cells[x, 3].Value != null)
+                        {
+                            double tempValue;
+                            if (double.TryParse(worksheet.Cells[x, 3].Value.ToString(), out tempValue))
+                            {
+                                var dealDate = DateTime.FromOADate(double.Parse(worksheet.Cells[x, 3].Value.ToString()));
+                                addDto.RecordDate = dealDate;
+                            }
+                            else
+                            {
+                                addDto.RecordDate = Convert.ToDateTime(worksheet.Cells[x, 3].Value.ToString());
+                            }
+                        }
+                        else
+                        {
+                            addDto.RecordDate = DateTime.Now;
+                        }
+                        if (worksheet.Cells[x, 4].Value != null)
+                        {
+                            if (worksheet.Cells[x, 4].Value.ToString().Contains("抖音"))
+                            {
+                                addDto.ContentPlatFormId = "4e4e9564-f6c3-47b6-a7da-e4518bab66a1";
+                            }
+
+                            else if (worksheet.Cells[x, 4].Value.ToString().Contains("视频号"))
+                            {
+                                addDto.ContentPlatFormId = "9196b247-1ab9-4d0c-a11e-a1ef09019878";
+                            }
+                            else
+                            {
+                                throw new Exception("平台列表存在非法参数，请检查表格数据！");
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("平台有参数列为空，请检查表格数据！");
+                        }
+
+                        if (worksheet.Cells[x, 5].Value != null)
+                        {
+                            var liveAnchor = await liveAnchorService.GetValidListByContentPlatFormIdAndNameAsync(addDto.ContentPlatFormId, worksheet.Cells[x, 5].Value.ToString());
+                            if (liveAnchor.Count() == 0)
+                            {
+                                throw new Exception("主播IP'"+ worksheet.Cells[x, 5].Value.ToString() + "'数据未查询到，请检查表格数据！");
+                            }
+                            addDto.LiveAnchorId = liveAnchor.First().Id;
+                        }
+                        else
+                        {
+                            throw new Exception("主播IP有参数列为空，请检查表格数据！");
+                        }
+                        if (worksheet.Cells[x, 6].Value != null)
+                        {
+                            addDto.Remark = worksheet.Cells[x, 6].Value.ToString();
+                        }
+                        if (worksheet.Cells[x, 7].Value != null)
+                        {
+                            int lastSource = 0;
+                            string source = worksheet.Cells[x, 7].Value.ToString();
+                            switch (source)
+                            {
+                                case "短视频":
+                                    lastSource = 0;
+                                    break;
+                                case "直播前":
+                                    lastSource = 1;
+                                    break;
+                                case "粉丝群":
+                                    lastSource = 2;
+                                    break;
+                                case "私信":
+                                    lastSource = 3;
+                                    break;
+                                case "智能AI":
+                                    lastSource = 4;
+                                    break;
+                                case "其他":
+                                    lastSource = 5;
+                                    break;
+                                case "产品转化":
+                                    lastSource = 6;
+                                    break;
+                                case "小风车":
+                                    lastSource = 7;
+                                    break;
+                                case "福袋":
+                                    lastSource = 8;
+                                    break;
+                            }
+                            addDto.Source = lastSource;
+
+                        }
+                        else
+                        {
+                            throw new Exception("客户来源有参数列为空，请检查表格数据！");
+                        }
+                        addDto.SubPhone = "";
+                        addDto.IsConsultation = false;
+                        addDto.ConsultationType = 4;
+                        addDto.IsWriteOff = false;
+                        addDto.IsAddWeChat = false;
+                        addDto.IsReturnBackPrice = false;
+                        addDto.IsReContent = false;
+                        addDto.CreateBy = employeeId;
+                        addDto.IsBadReview = false;
+                        addDto.EmergencyLevel = 2;
+
                         addDtoList.Add(addDto);
                     }
                     await shoppingCartRegistrationService.AddListAsync(addDtoList);

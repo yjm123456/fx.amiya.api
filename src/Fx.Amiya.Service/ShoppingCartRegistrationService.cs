@@ -272,11 +272,13 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
+                string repeatePhone = "";
                 foreach (var addDto in addDtoList)
                 {
                     var searchDataByPhone = await dalShoppingCartRegistration.GetAll().FirstOrDefaultAsync(e => e.Phone == addDto.Phone);
                     if (searchDataByPhone != null)
                     {
+                        repeatePhone += addDto.Phone + ",";
                         continue;
                     }
 
@@ -323,11 +325,17 @@ namespace Fx.Amiya.Service
                     Thread.Sleep(1000);
                 }
 
+
+                if (!string.IsNullOrEmpty(repeatePhone))
+                {
+                    throw new Exception("导入成功，存在部分重复手机号如下：" + repeatePhone + "请确认这些手机号是否为复购顾客！");
+                }
                 unitOfWork.Commit();
             }
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
+                string z = "";
                 throw new Exception(ex.Message.ToString());
             }
         }
@@ -817,7 +825,8 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().Where(k => k.CreateBy == query.EmployeeId && k.IsAddWeChat == true && k.RecordDate >= query.StartDate && k.RecordDate <= query.EndDate.AddDays(1).AddMilliseconds(-1)).ToListAsync();
+                var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == query.EmployeeId);
+                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().Where(k => k.BaseLiveAnchorId == employee.LiveAnchorBaseId && k.IsAddWeChat == true && k.RecordDate >= query.StartDate && k.RecordDate <= query.EndDate.AddDays(1).AddMilliseconds(-1)).ToListAsync();
                 GetShoppingCartRegistionAddWechatNumDto result = new GetShoppingCartRegistionAddWechatNumDto();
                 result.BeautyCustomerAddWechatNum = shoppingCartRegistration.Where(x => x.ShoppingCartRegistrationCustomerType == (int)ShoppingCartRegistionCustomerSource.AestheticMedicine).Count();
                 result.TakeGoodsCustomerAddWechatNum = shoppingCartRegistration.Where(x => x.ShoppingCartRegistrationCustomerType == (int)ShoppingCartRegistionCustomerSource.TakeGoods).Count();

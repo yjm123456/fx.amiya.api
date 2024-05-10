@@ -43,7 +43,13 @@ namespace Fx.Amiya.IService
         /// <param name="pageSize"></param>
         /// <returns></returns>
         Task<FxPageInfo<LiveAnchorDto>> GetListAsync(string name, int employeeId,string contentPlatformId, bool valid, int pageNum, int pageSize);
-
+        /// <summary>
+        /// 根据平台和主播名字获取主播信息
+        /// </summary>
+        /// <param name="contentPlatFormId"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        Task<List<LiveAnchorDto>> GetValidListByContentPlatFormIdAndNameAsync(string contentPlatFormId, string name);
         Task DeleteAsync(int id);
         Task AddAsync(AddLiveAnchorDto addDto);
         Task<LiveAnchorDto> GetByIdAsync(int id);

@@ -801,6 +801,13 @@ namespace Fx.Amiya.Service
                 case 6:
                     sourceText = "产品转化";
                     break;
+                case 7:
+                    sourceText = "小风车";
+                    break;
+                case 8:
+                    sourceText = "福袋";
+                    break;
+
                 //case 7:
                 //    sourceText = "带货";
                 //    break;
