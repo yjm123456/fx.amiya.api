@@ -828,7 +828,7 @@ namespace Fx.Amiya.Service
             other.AddWechatRate = DecimalExtension.CalculateTargetComplete(otherList.Sum(e => e.AddWechatCount), otherList.Sum(e => e.TotalCount)).Value;
             other.SendOrderRate = DecimalExtension.CalculateTargetComplete(otherList.Sum(e => e.SendOrderCount), otherList.Sum(e => e.AddWechatCount)).Value;
             other.ToHospitalRate = DecimalExtension.CalculateTargetComplete(otherList.Sum(e => e.ToHospitalCount), otherList.Sum(e => e.SendOrderCount)).Value;
-            other.NewCustomerDealRate = DecimalExtension.CalculateTargetComplete(otherList.Sum(e => e.NewCustomerDealCount), otherList.Sum(e => e.NewCustomerCount)).Value;
+            other.NewCustomerDealRate = DecimalExtension.CalculateTargetComplete(otherList.Sum(e => e.NewCustomerDealCount), otherList.Sum(e => e.NewCustomerToHospitalCount)).Value;
             other.NewCustomerUnitPrice = DecimalExtension.Division(otherList.Sum(e => e.NewCustomerTotalPerformance), otherList.Sum(e => e.NewCustomerDealCount)).Value;
             other.OldCustomerUnitPrice = DecimalExtension.Division(otherList.Sum(e => e.OldCustomerTotalPerformance), otherList.Sum(e => e.OldCustomerDealCount)).Value;
             resList.Add(other);
@@ -841,7 +841,7 @@ namespace Fx.Amiya.Service
             total.AddWechatRate = DecimalExtension.CalculateTargetComplete(baseData.Sum(e => e.AddWechatCount), baseData.Sum(e => e.TotalCount)).Value;
             total.SendOrderRate = DecimalExtension.CalculateTargetComplete(baseData.Sum(e => e.SendOrderCount), baseData.Sum(e => e.AddWechatCount)).Value;
             total.ToHospitalRate = DecimalExtension.CalculateTargetComplete(baseData.Sum(e => e.ToHospitalCount), baseData.Sum(e => e.SendOrderCount)).Value;
-            total.NewCustomerDealRate = DecimalExtension.CalculateTargetComplete(baseData.Sum(e => e.NewCustomerDealCount), baseData.Sum(e => e.NewCustomerCount)).Value;
+            total.NewCustomerDealRate = DecimalExtension.CalculateTargetComplete(baseData.Sum(e => e.NewCustomerDealCount), baseData.Sum(e => e.NewCustomerToHospitalCount)).Value;
             total.NewCustomerUnitPrice = DecimalExtension.Division(baseData.Sum(e => e.NewCustomerTotalPerformance), baseData.Sum(e => e.NewCustomerDealCount)).Value;
             total.OldCustomerUnitPrice = DecimalExtension.Division(baseData.Sum(e => e.OldCustomerTotalPerformance), baseData.Sum(e => e.OldCustomerDealCount)).Value;
             resList.Add(total);

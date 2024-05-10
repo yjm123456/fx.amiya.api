@@ -1717,7 +1717,7 @@ namespace Fx.Amiya.Service
                     OldCustomerDealCount = e.Where(e => e.IsOldCustomer == true && e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true).Select(e => e.Phone).Distinct().Count(),
                     OldCustomerTotalPerformance = e.Where(e => e.IsOldCustomer == true && e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true).Sum(e => e.DealPrice),
                     NewCustomerDealCount = e.Where(e => e.IsOldCustomer == false && e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true).Select(e => e.Phone).Distinct().Count(),
-                    NewCustomerToHospitalCount = e.Where(e => e.IsToHospital == true && e.ToHospitalDate > startDate && e.IsOldCustomer == false).Select(e => e.Phone).Distinct().Count(),
+                    NewCustomerToHospitalCount = e.Where(e => e.IsToHospital == true && e.CreateDate >= startDate && e.CreateDate < endDate && e.IsOldCustomer == false).Select(e => e.Phone).Distinct().Count(),
                     NewCustomerTotalPerformance = e.Where(e => e.IsOldCustomer == false && e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true).Sum(e => e.DealPrice),
                     ToHospitalCount = e.Where(e => e.IsToHospital == true && e.ToHospitalDate > startDate).Select(e => e.Phone).Distinct().Count(),
                 });
@@ -1746,6 +1746,7 @@ namespace Fx.Amiya.Service
                 NewCustomerDealCount = e.Sum(e => e.NewCustomerDealCount),
                 NewCustomerTotalPerformance = e.Sum(e => e.NewCustomerTotalPerformance),
                 ToHospitalCount = e.Sum(e => e.ToHospitalCount),
+                NewCustomerToHospitalCount=e.Sum(e=> e.NewCustomerToHospitalCount)
             });
 
             return aggregateData.ToList();
