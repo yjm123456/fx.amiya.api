@@ -1679,28 +1679,62 @@ namespace Fx.Amiya.Service
             .Where(o => o.CreateDate < startDate)
             .Where(e => e.IsOldCustomer == true)
             //.Where(o => assistantIds.Contains(o.BelongEmpId.Value))
-            .Where(o => (o.IsSupportOrder == false && assistantIds.Contains(o.BelongEmpId.Value)) || o.IsSupportOrder == true && assistantIds.Contains(o.SupportEmpId))
+            .Where(o => (o.IsSupportOrder == false && assistantIds.Contains(o.BelongEmpId.Value)))
             .Where(o => !isEffective.HasValue || (isEffective.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0))
-            .Select(o => new { BelongEmpId = o.IsSupportOrder ? o.SupportEmpId : o.BelongEmpId, Phone = o.Phone })
+            .Select(o => new { BelongEmpId = o.BelongEmpId.Value, Phone = o.Phone })
             .GroupBy(e => e.BelongEmpId)
-            .Select(e => new ShoppingCartRegistrationIndicatorBaseDataDto { EmpId = e.Key ?? 0, OldCustomerCountEndLastMonth = e.Count() }).ToList();
+            .Select(e => new ShoppingCartRegistrationIndicatorBaseDataDto { EmpId = e.Key, OldCustomerCountEndLastMonth = e.Count() }).ToList();
+            var supportOldCustomerCountEndLastMonthData = dalContentPlatformOrder.GetAll()
+           .Where(o => o.CreateDate < startDate)
+           .Where(e => e.IsOldCustomer == true)
+           //.Where(o => assistantIds.Contains(o.BelongEmpId.Value))
+           .Where(o => (o.IsSupportOrder == true && assistantIds.Contains(o.SupportEmpId)))
+           .Where(o => !isEffective.HasValue || (isEffective.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0))
+           .Select(o => new { BelongEmpId = o.SupportEmpId, Phone = o.Phone })
+           .GroupBy(e => e.BelongEmpId)
+           .Select(e => new ShoppingCartRegistrationIndicatorBaseDataDto { EmpId = e.Key , OldCustomerCountEndLastMonth = e.Count() }).ToList();
+            oldCustomerCountEndLastMonthData.AddRange(supportOldCustomerCountEndLastMonthData);
+
+
             var oldCustomerCountData = dalContentPlatformOrder.GetAll()
             .Where(e => e.IsOldCustomer == true)
             //.Where(o => assistantIds.Contains(o.BelongEmpId.Value))
-            .Where(o => (o.IsSupportOrder == false && assistantIds.Contains(o.BelongEmpId.Value)) || o.IsSupportOrder == true && assistantIds.Contains(o.SupportEmpId))
+            .Where(o => (o.IsSupportOrder == false && assistantIds.Contains(o.BelongEmpId.Value)))
             .Where(o => !isEffective.HasValue || (isEffective.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0))
-            .Select(o => new { BelongEmpId = o.IsSupportOrder ? o.SupportEmpId : o.BelongEmpId, Phone = o.Phone })
+            .Select(o => new { BelongEmpId = o.BelongEmpId.Value, Phone = o.Phone })
             .GroupBy(e => e.BelongEmpId)
-            .Select(e => new ShoppingCartRegistrationIndicatorBaseDataDto { EmpId = e.Key ?? 0, OldCustomerCount = e.Count() }).ToList();
+            .Select(e => new ShoppingCartRegistrationIndicatorBaseDataDto { EmpId = e.Key, OldCustomerCount = e.Count() }).ToList();
+
+            var supportOldCustomerCountData = dalContentPlatformOrder.GetAll()
+           .Where(e => e.IsOldCustomer == true)
+           //.Where(o => assistantIds.Contains(o.BelongEmpId.Value))
+           .Where(o => (o.IsSupportOrder == true && assistantIds.Contains(o.SupportEmpId)))
+           .Where(o => !isEffective.HasValue || (isEffective.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0))
+           .Select(o => new { BelongEmpId = o.SupportEmpId, Phone = o.Phone })
+           .GroupBy(e => e.BelongEmpId)
+           .Select(e => new ShoppingCartRegistrationIndicatorBaseDataDto { EmpId = e.Key, OldCustomerCount = e.Count() }).ToList();
+            oldCustomerCountData.AddRange(supportOldCustomerCountData);
+
             var newCustomerCountData = dalContentPlatformOrder.GetAll()
             .Where(e => e.IsOldCustomer == false)
             .Where(e => e.DealDate != null)
             //.Where(o => assistantIds.Contains(o.BelongEmpId.Value))
-            .Where(o => (o.IsSupportOrder == false && assistantIds.Contains(o.BelongEmpId.Value)) || o.IsSupportOrder == true && assistantIds.Contains(o.SupportEmpId))
+            .Where(o => (o.IsSupportOrder == false && assistantIds.Contains(o.BelongEmpId.Value)))
             .Where(o => !isEffective.HasValue || (isEffective.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0))
-            .Select(o => new { BelongEmpId = o.IsSupportOrder ? o.SupportEmpId : o.BelongEmpId, Phone = o.Phone })
+            .Select(o => new { BelongEmpId = o.BelongEmpId.Value, Phone = o.Phone })
             .GroupBy(e => e.BelongEmpId)
-            .Select(e => new ShoppingCartRegistrationIndicatorBaseDataDto { EmpId = e.Key ?? 0, NewCustomerCount = e.Count() }).ToList();
+            .Select(e => new ShoppingCartRegistrationIndicatorBaseDataDto { EmpId = e.Key, NewCustomerCount = e.Count() }).ToList();
+            var supportnewCustomerCountData = dalContentPlatformOrder.GetAll()
+            .Where(e => e.IsOldCustomer == false)
+            .Where(e => e.DealDate != null)
+            //.Where(o => assistantIds.Contains(o.BelongEmpId.Value))
+            .Where(o => (o.IsSupportOrder == true && assistantIds.Contains(o.SupportEmpId)))
+            .Where(o => !isEffective.HasValue || (isEffective.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0))
+            .Select(o => new { BelongEmpId = o.SupportEmpId, Phone = o.Phone })
+            .GroupBy(e => e.BelongEmpId)
+            .Select(e => new ShoppingCartRegistrationIndicatorBaseDataDto { EmpId = e.Key, NewCustomerCount = e.Count() }).ToList();
+            newCustomerCountData.AddRange(supportnewCustomerCountData);
+
             var list1 = baseData.GroupBy(e => e.AssignEmpId)
                 .Select(e => new ShoppingCartRegistrationIndicatorBaseDataDto
                 {
