@@ -803,7 +803,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                             var liveAnchor = await liveAnchorService.GetValidListByContentPlatFormIdAndNameAsync(addDto.ContentPlatFormId, worksheet.Cells[x, 5].Value.ToString());
                             if (liveAnchor.Count() == 0)
                             {
-                                throw new Exception("主播IP'"+ worksheet.Cells[x, 5].Value.ToString() + "'数据未查询到，请检查表格数据！");
+                                throw new Exception("主播IP'" + worksheet.Cells[x, 5].Value.ToString() + "'数据未查询到，请检查表格数据！");
                             }
                             addDto.LiveAnchorId = liveAnchor.First().Id;
                         }
@@ -855,6 +855,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                         else
                         {
                             throw new Exception("客户来源有参数列为空，请检查表格数据！");
+                        }
+                        if (worksheet.Cells[x, 8].Value != null)
+                        {
+                            addDto.Remark += "--" + worksheet.Cells[x, 8].Value.ToString();
                         }
                         addDto.SubPhone = "";
                         addDto.IsConsultation = false;

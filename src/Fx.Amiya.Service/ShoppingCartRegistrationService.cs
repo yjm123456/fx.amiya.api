@@ -269,10 +269,10 @@ namespace Fx.Amiya.Service
 
         public async Task AddListAsync(List<AddShoppingCartRegistrationDto> addDtoList)
         {
+            string repeatePhone = "";
             unitOfWork.BeginTransaction();
             try
             {
-                string repeatePhone = "";
                 foreach (var addDto in addDtoList)
                 {
                     var searchDataByPhone = await dalShoppingCartRegistration.GetAll().FirstOrDefaultAsync(e => e.Phone == addDto.Phone);
@@ -324,19 +324,19 @@ namespace Fx.Amiya.Service
                     await dalShoppingCartRegistration.AddAsync(shoppingCartRegistration, true);
                     Thread.Sleep(1000);
                 }
-
-
-                if (!string.IsNullOrEmpty(repeatePhone))
-                {
-                    throw new Exception("导入成功，存在部分重复手机号如下：" + repeatePhone + "请确认这些手机号是否为复购顾客！");
-                }
                 unitOfWork.Commit();
             }
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
-                string z = "";
                 throw new Exception(ex.Message.ToString());
+            }
+            finally
+            {
+                if (!string.IsNullOrEmpty(repeatePhone))
+                {
+                    throw new Exception("导入成功，存在部分重复手机号如下：" + repeatePhone + "请确认这些手机号是否为复购顾客！");
+                }
             }
         }
 
