@@ -1735,8 +1735,8 @@ namespace Fx.Amiya.Service
                     ConsultationType = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.ConsultationType,
                     IsAcompanying = ContentPlatFOrmOrderDealInfo.IsAcompanying,
                     AddOrderPrice = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.AddOrderPrice,
-                    BaseLiveAnchorId= ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId,
-                    BaseLiveAnchorName= ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.LiveAnchor.Name,
+                    BaseLiveAnchorId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId,
+                    BaseLiveAnchorName = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.LiveAnchor.Name,
                 }
                 ).ToListAsync();
         }
@@ -2236,16 +2236,18 @@ namespace Fx.Amiya.Service
         }
         public async Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceDetailByDateAndAssistantIdListAsync(DateTime startDate, DateTime endDate, List<int> assistantId)
         {
-            return dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
+            //归属客服业绩
+            var belongData = dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
                 .Where(o => o.CreateDate >= startDate && o.CreateDate < endDate && o.IsDeal == true && o.ContentPlatFormOrderId != null)
                 .Where(o => assistantId.Count == 0 || assistantId.Contains(o.ContentPlatFormOrder.BelongEmpId.Value))
                 .Select(ContentPlatFOrmOrderDealInfo => new ContentPlatFormOrderDealInfoDto
                 {
-                    BelongEmployeeId= ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.BelongEmpId.Value,
+                    BelongEmployeeId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.IsSupportOrder? ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.SupportEmpId : ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.BelongEmpId.Value,
                     Price = ContentPlatFOrmOrderDealInfo.Price,
-                    IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer,                   
+                    IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer,
                 }
                 ).ToList();
+            return belongData;
         }
         #endregion
         #region 助理首页

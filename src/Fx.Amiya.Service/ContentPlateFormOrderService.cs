@@ -3651,7 +3651,7 @@ namespace Fx.Amiya.Service
                 .Distinct()
                 .CountAsync();
             var visitCount = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderDealInfoList)
-             .Where(o => o.ContentPlatformOrderDealInfoList.Where(x => x.CreateDate >= startDate&& x.CreateDate < endDate).Count() > 0)
+             .Where(o => o.ContentPlatformOrderDealInfoList.Where(x => x.CreateDate >= startDate && x.CreateDate < endDate).Count() > 0)
              .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsToHospital == true)
              .Where(o => string.IsNullOrEmpty(contentPlatFormId) || o.ContentPlateformId == contentPlatFormId)
              .Where(o => (!isEffectiveCustomerData.HasValue || (isEffectiveCustomerData.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0)))
@@ -3721,17 +3721,19 @@ namespace Fx.Amiya.Service
         {
             var sendData = dalContentPlatformOrderSend.GetAll().Where(e => e.SendDate >= startDate && e.SendDate < endDate)
                 .Where(e => e.ContentPlatformOrder.IsOldCustomer == isOldCustomer)
-                .Select(e => new { BelongEmpId = e.ContentPlatformOrder.BelongEmpId, IsOldCustomer = e.ContentPlatformOrder.IsOldCustomer, Phone = e.ContentPlatformOrder.Phone }).ToList();
-            var baseData = dalContentPlatFormOrderDealInfo.GetAll().Where(e => ((e.CreateDate >= startDate && e.CreateDate < endDate))).Select(e => new
-            {
-                Phone = e.ContentPlatFormOrder.Phone,
-                ToHospitalDate = e.ToHospitalDate,
-                IsDeal = e.IsDeal,
-                BelongEmpId = e.ContentPlatFormOrder.BelongEmpId,
-                IsOldCustomer = e.IsOldCustomer,
-                IsToHospital = e.IsToHospital,
-                DealAmount = e.Price
-            }).ToList();
+                .Select(e => new { BelongEmpId = e.ContentPlatformOrder.IsSupportOrder ? e.ContentPlatformOrder.SupportEmpId : e.ContentPlatformOrder.BelongEmpId, IsOldCustomer = e.ContentPlatformOrder.IsOldCustomer, Phone = e.ContentPlatformOrder.Phone }).ToList();
+            var baseData = dalContentPlatFormOrderDealInfo.GetAll()
+                .Where(e => ((e.CreateDate >= startDate && e.CreateDate < endDate))).Select(e => new
+                {
+                    Phone = e.ContentPlatFormOrder.Phone,
+                    ToHospitalDate = e.ToHospitalDate,
+                    IsDeal = e.IsDeal,
+                    BelongEmpId = e.ContentPlatFormOrder.IsSupportOrder ? e.ContentPlatFormOrder.SupportEmpId : e.ContentPlatFormOrder.BelongEmpId,
+                    IsOldCustomer = e.IsOldCustomer,
+                    IsToHospital = e.IsToHospital,
+                    DealAmount = e.Price
+                }).ToList();
+
             return baseData.GroupBy(e => e.BelongEmpId).Select(e => new OrderSendAndDealNumDto
             {
                 BelongEmpId = e.Key ?? 0,

@@ -408,7 +408,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 TotalPerformance = e.TotalPerformance,
                 TotalPerformanceTarget = e.TotalPerformanceTarget,
                 TotalPerformanceTargetComplete = e.TotalPerformanceTargetComplete,
-            }).ToList();
+            }).OrderBy(e=>e.TotalPerformance).ToList();
             return ResultData<List<AssistantPerformanceDataVo>>.Success().AddData("data", res);
         }
         /// <summary>

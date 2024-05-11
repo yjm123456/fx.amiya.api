@@ -1637,7 +1637,7 @@ namespace Fx.Amiya.Service
             var sevenDaySendOrderData = (from c in dalContentPlatformOrder.GetAll()
                                              .Where(e => e.SendDate > startDate && e.SendDate < endDate && e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder)
                                              .Where(o => !isEffective.HasValue || (isEffective.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0))
-                                             .Select(e => new { Phone = e.Phone, SendDate = e.SendDate, AssignEmpId = e.BelongEmpId }).ToList()
+                                             .Select(e => new { Phone = e.Phone, SendDate = e.SendDate, AssignEmpId = e.IsSupportOrder ? e.SupportEmpId : e.BelongEmpId }).ToList()
                                          from s in baseData
                                          where s.Phone == c.Phone && c.SendDate.Value.Date <= s.RecordDate.AddDays(7)
                                          select new { Phone = s.Phone, AssignEmpId = c.AssignEmpId }).ToList();
@@ -1649,7 +1649,7 @@ namespace Fx.Amiya.Service
                                                  Phone = e.Phone,
                                                  ToHospitalDate = e.ToHospitalDate,
                                                  SendDate = e.SendDate,
-                                                 AssignEmpId = e.BelongEmpId
+                                                 AssignEmpId = e.IsSupportOrder ? e.SupportEmpId : e.BelongEmpId
                                              }).ToList()
                                          from s in baseData
                                          where s.Phone == c.Phone && c.ToHospitalDate <= s.RecordDate.AddDays(15) && c.SendDate > s.RecordDate
@@ -1657,11 +1657,12 @@ namespace Fx.Amiya.Service
             var sendOrderData = dalContentPlatformOrderSend.GetAll()
              .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
              .Where(o => !isEffective.HasValue || (isEffective.Value ? o.ContentPlatformOrder.AddOrderPrice > 0 : o.ContentPlatformOrder.AddOrderPrice <= 0))
-             .Where(o => assistantIds.Contains(o.ContentPlatformOrder.BelongEmpId.Value))
-             .Select(e => new { Phone = e.ContentPlatformOrder.Phone, AssignEmpId = e.ContentPlatformOrder.BelongEmpId }).ToList();
+             .Where(o => (o.ContentPlatformOrder.IsSupportOrder == false && assistantIds.Contains(o.ContentPlatformOrder.BelongEmpId.Value)) || o.ContentPlatformOrder.IsSupportOrder == true && assistantIds.Contains(o.ContentPlatformOrder.SupportEmpId))
+             .Select(e => new { Phone = e.ContentPlatformOrder.Phone, AssignEmpId = e.ContentPlatformOrder.IsSupportOrder ? e.ContentPlatformOrder.SupportEmpId : e.ContentPlatformOrder.BelongEmpId }).ToList();
             var visitData = dalContentPlatFormOrderDealInfo.GetAll()
              .Where(o => (o.CreateDate >= startDate && o.CreateDate < endDate) || (o.ToHospitalDate > startDate && o.ToHospitalDate < endDate))
-             .Where(o => assistantIds.Contains(o.ContentPlatFormOrder.BelongEmpId.Value))
+              //.Where(o => assistantIds.Contains(o.ContentPlatFormOrder.BelongEmpId.Value))
+              .Where(o => (o.ContentPlatFormOrder.IsSupportOrder == false && assistantIds.Contains(o.ContentPlatFormOrder.BelongEmpId.Value)) || o.ContentPlatFormOrder.IsSupportOrder == true && assistantIds.Contains(o.ContentPlatFormOrder.SupportEmpId))
              .Where(o => !isEffective.HasValue || (isEffective.Value ? o.ContentPlatFormOrder.AddOrderPrice > 0 : o.ContentPlatFormOrder.AddOrderPrice <= 0))
              .Select(e => new
              {
@@ -1671,27 +1672,33 @@ namespace Fx.Amiya.Service
                  ToHospitalDate = e.ToHospitalDate,
                  DealPrice = e.Price,
                  IsOldCustomer = e.IsOldCustomer,
-                 AssignEmpId = e.ContentPlatFormOrder.BelongEmpId,
+                 AssignEmpId = e.ContentPlatFormOrder.IsSupportOrder ? e.ContentPlatFormOrder.SupportEmpId : e.ContentPlatFormOrder.BelongEmpId,
                  CreateDate = e.CreateDate
              }).ToList();
             var oldCustomerCountEndLastMonthData = dalContentPlatformOrder.GetAll()
             .Where(o => o.CreateDate < startDate)
             .Where(e => e.IsOldCustomer == true)
-            .Where(o => assistantIds.Contains(o.BelongEmpId.Value))
+            //.Where(o => assistantIds.Contains(o.BelongEmpId.Value))
+            .Where(o => (o.IsSupportOrder == false && assistantIds.Contains(o.BelongEmpId.Value)) || o.IsSupportOrder == true && assistantIds.Contains(o.SupportEmpId))
             .Where(o => !isEffective.HasValue || (isEffective.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0))
+            .Select(o => new { BelongEmpId = o.IsSupportOrder ? o.SupportEmpId : o.BelongEmpId, Phone = o.Phone })
             .GroupBy(e => e.BelongEmpId)
             .Select(e => new ShoppingCartRegistrationIndicatorBaseDataDto { EmpId = e.Key ?? 0, OldCustomerCountEndLastMonth = e.Count() }).ToList();
             var oldCustomerCountData = dalContentPlatformOrder.GetAll()
             .Where(e => e.IsOldCustomer == true)
-            .Where(o => assistantIds.Contains(o.BelongEmpId.Value))
+            //.Where(o => assistantIds.Contains(o.BelongEmpId.Value))
+            .Where(o => (o.IsSupportOrder == false && assistantIds.Contains(o.BelongEmpId.Value)) || o.IsSupportOrder == true && assistantIds.Contains(o.SupportEmpId))
             .Where(o => !isEffective.HasValue || (isEffective.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0))
+            .Select(o => new { BelongEmpId = o.IsSupportOrder ? o.SupportEmpId : o.BelongEmpId, Phone = o.Phone })
             .GroupBy(e => e.BelongEmpId)
             .Select(e => new ShoppingCartRegistrationIndicatorBaseDataDto { EmpId = e.Key ?? 0, OldCustomerCount = e.Count() }).ToList();
             var newCustomerCountData = dalContentPlatformOrder.GetAll()
             .Where(e => e.IsOldCustomer == false)
             .Where(e => e.DealDate != null)
-            .Where(o => assistantIds.Contains(o.BelongEmpId.Value))
+            //.Where(o => assistantIds.Contains(o.BelongEmpId.Value))
+            .Where(o => (o.IsSupportOrder == false && assistantIds.Contains(o.BelongEmpId.Value)) || o.IsSupportOrder == true && assistantIds.Contains(o.SupportEmpId))
             .Where(o => !isEffective.HasValue || (isEffective.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0))
+            .Select(o => new { BelongEmpId = o.IsSupportOrder ? o.SupportEmpId : o.BelongEmpId, Phone = o.Phone })
             .GroupBy(e => e.BelongEmpId)
             .Select(e => new ShoppingCartRegistrationIndicatorBaseDataDto { EmpId = e.Key ?? 0, NewCustomerCount = e.Count() }).ToList();
             var list1 = baseData.GroupBy(e => e.AssignEmpId)
@@ -1755,7 +1762,7 @@ namespace Fx.Amiya.Service
                 NewCustomerDealCount = e.Sum(e => e.NewCustomerDealCount),
                 NewCustomerTotalPerformance = e.Sum(e => e.NewCustomerTotalPerformance),
                 ToHospitalCount = e.Sum(e => e.ToHospitalCount),
-                NewCustomerToHospitalCount=e.Sum(e=> e.NewCustomerToHospitalCount)
+                NewCustomerToHospitalCount = e.Sum(e => e.NewCustomerToHospitalCount)
             });
 
             return aggregateData.ToList();
