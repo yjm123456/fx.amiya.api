@@ -597,7 +597,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await orderService.GetOrderListWithPageAsync(startDate, endDate, writeOffStartDate, writeOffEndDate, belongEmpId, keyword, statusCode, appType, orderNature, employeeId, pageNum, pageSize);
+                var q = await orderService.GetOrderListWithPageAsync(startDate, endDate, writeOffStartDate, writeOffEndDate, belongEmpId, keyword,statusCode, appType, orderNature, employeeId, pageNum, pageSize);
                 var order = from d in q.List
                             select new OrderInfoVo
                             {

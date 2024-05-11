@@ -202,13 +202,13 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<OrderInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? writeOffStartDate, DateTime? writeOffEndDate, int? belongEmpId, string keyword, string statusCode, byte? appType, byte? orderNature, int employeeId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<OrderInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? writeOffStartDate, DateTime? writeOffEndDate, int? belongEmpId, string keyword,  string statusCode, byte? appType, byte? orderNature, int employeeId, int pageNum, int pageSize)
         {
             try
             {
                 var orders = from d in dalOrderInfo.GetAll()
                              where (string.IsNullOrWhiteSpace(keyword) || d.Id.Contains(keyword) || d.GoodsName.Contains(keyword)
-                             || d.Phone.Contains(keyword) || d.AppointmentHospital.Contains(keyword))
+                             || d.Phone.Contains(keyword) || d.AppointmentHospital.Contains(keyword) || d.FinalConsumptionHospital.Contains(keyword))
                              && (string.IsNullOrWhiteSpace(statusCode) || d.StatusCode == statusCode.Trim())
                              && (appType == null || d.AppType == appType)
                              && (!belongEmpId.HasValue || d.BelongEmpId == belongEmpId)
