@@ -54,9 +54,13 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryDto.PageNum = query.PageNum;
                 queryDto.PageSize = query.PageSize;
                 queryDto.HospitalId = query.HospitalId;
+                queryDto.Valid = query.Valid;
                 queryDto.KeyWord = query.KeyWord;
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-                queryDto.empLoyeeId = Convert.ToInt32(employee.Id);
+                if (employee != null)
+                {
+                    queryDto.empLoyeeId = Convert.ToInt32(employee.Id);
+                }
                 var q = await fansMeetingService.GetListAsync(queryDto);
                 var fansMeeting = from d in q.List
                                   select new FansMeetingVo
@@ -202,7 +206,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("ValidKeyAndValue")]
-        [FxInternalAuthorize]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData<List<BaseIdAndNameVo>>> GetValidByKeyAndValueAsync()
         {
             try

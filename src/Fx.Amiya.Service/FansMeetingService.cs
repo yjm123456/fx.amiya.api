@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.AmiyaEmployee;
 using Fx.Amiya.Dto.FansMeeting.Input;
 using Fx.Amiya.Dto.FansMeeting.Result;
 using Fx.Amiya.IDal;
@@ -32,7 +33,15 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<FxPageInfo<FansMeetingDto>> GetListAsync(QueryFansMeetingDto query)
         {
-            var employeeInfo = await amiyaEmployeeService.GetByIdAsync(query.empLoyeeId);
+            AmiyaEmployeeDto employeeInfo = new AmiyaEmployeeDto();
+            if (query.empLoyeeId != 0)
+            {
+                employeeInfo = await amiyaEmployeeService.GetByIdAsync(query.empLoyeeId);
+            }
+            else
+            {
+                employeeInfo.IsDirector = true;
+            }
             var fansMeetings = from d in dalFansMeeting.GetAll().Include(x => x.HospitalInfo)
                                where (d.Valid == true)
                                && (!query.HospitalId.HasValue || d.HospitalId == query.HospitalId.Value)
@@ -40,6 +49,7 @@ namespace Fx.Amiya.Service
                                && (!query.EndDate.HasValue || d.CreateDate < query.EndDate.Value.AddDays(1).AddMilliseconds(-1))
                                && (string.IsNullOrEmpty(query.KeyWord) || d.Name.Contains(query.KeyWord))
                                && (employeeInfo.IsDirector == true || d.BaseLiveAnchorId == employeeInfo.LiveAnchorBaseId)
+                               && (d.Valid == query.Valid)
                                select new FansMeetingDto
                                {
                                    Id = d.Id,

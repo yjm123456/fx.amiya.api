@@ -11,5 +11,9 @@ namespace Fx.Amiya.Background.Api.Vo.FansMeeting.Input
         /// 医院id
         /// </summary>
         public int? HospitalId { get; set; }
+        /// <summary>
+        /// 是否过期
+        /// </summary>
+        public bool Valid { get; set; }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Dto.FansMeeting.Input
 {
-    public class QueryFansMeetingDto:BaseQueryDto
+    public class QueryFansMeetingDto : BaseQueryDto
     {
 
         /// <summary>
@@ -14,5 +14,9 @@ namespace Fx.Amiya.Dto.FansMeeting.Input
         /// </summary>
         public int? HospitalId { get; set; }
         public int empLoyeeId { get; set; }
+        /// <summary>
+        /// 是否过期
+        /// </summary>
+        public bool Valid { get; set; }
     }
 }

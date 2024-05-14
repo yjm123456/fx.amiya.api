@@ -126,7 +126,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="addVo"></param>
         /// <returns></returns>
         [HttpPost("add")]
-        [FxInternalAuthorize]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData> AddAsync(AddFansMeetingDetailsVo addVo)
         {
             try
@@ -279,6 +279,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
+                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int empId = Convert.ToInt32(employee.Id);
                 UpdateFansMeetingDetailsDto updateDto = new UpdateFansMeetingDetailsDto();
                 updateDto.Id = updateVo.Id;
                 updateDto.FansMeetingId = updateVo.FansMeetingId;
@@ -293,7 +295,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.Phone = updateVo.Phone;
                 updateDto.CustomerQuantity = updateVo.CustomerQuantity;
                 updateDto.IsOldCustomer = updateVo.IsOldCustomer;
-                updateDto.AmiyaConsulationId = updateVo.AmiyaConsulationId;
+                updateDto.AmiyaConsulationId = empId;
                 updateDto.HospitalConsulationName = updateVo.HospitalConsulationName;
                 updateDto.City = updateVo.City;
                 updateDto.TravelInformation = updateVo.TravelInformation;
