@@ -61,6 +61,9 @@ namespace Fx.Amiya.Service
                                           PlanConsumption = d.PlanConsumption,
                                           Remark = d.Remark,
                                           CustomerPictureUrl = d.CustomerPictureUrl,
+                                          IsDeal=d.IsDeal,
+                                          IsToHospital=d.IsToHospital,
+                                          CumulativeDealPrice=d.CumulativeDealPrice
                                       };
             FxPageInfo<FansMeetingDetailsDto> fansMeetingDetailsPageInfo = new FxPageInfo<FansMeetingDetailsDto>();
             fansMeetingDetailsPageInfo.TotalCount = await fansMeetingDetailss.CountAsync();
@@ -223,6 +226,33 @@ namespace Fx.Amiya.Service
                 throw new Exception(er.Message.ToString());
             }
         }
-
+        /// <summary>
+        /// 判断用户是否参加粉丝见面会
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<bool> IsAttendMeeting(AttendMeetingQueryDto query)
+        {
+            var result = dalFansMeetingDetails.GetAll()
+                .Where(e => e.FansMeetingId == query.Id)
+                .Where(e => e.Phone == query.Phone)
+                .Where(e => e.FansMeetingInfo.HospitalId == query.HospitalId)
+                .Count();
+            return result > 0;
+        }
+        /// <summary>
+        /// 生成成交信息
+        /// </summary>
+        /// <param name="generate"></param>
+        /// <returns></returns>
+        public async Task GenerateDealInfoAsync(GenerateDealInfoDto generate)
+        {
+            var record =await dalFansMeetingDetails.GetAll().Where(e => e.Id == generate.Id).FirstOrDefaultAsync();
+            record.IsDeal = generate.IsDeal;
+            record.IsToHospital = generate.IsToHospital;
+            record.CumulativeDealPrice = record.CumulativeDealPrice + generate.DealPrice;
+            record.UpdateDate = DateTime.Now;
+            await dalFansMeetingDetails.UpdateAsync(record,true);
+        }
     }
 }

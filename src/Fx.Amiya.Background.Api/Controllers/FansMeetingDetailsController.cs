@@ -91,6 +91,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                              PlanConsumption = d.PlanConsumption,
                                              Remark = d.Remark,
                                              CustomerPictureUrl = d.CustomerPictureUrl,
+                                             IsDeal=d.IsDeal,
+                                             IsToHospital=d.IsToHospital,
+                                             CumulativeDealPrice=d.CumulativeDealPrice
                                          };
 
                 FxPageInfo<FansMeetingDetailsVo> pageInfo = new FxPageInfo<FansMeetingDetailsVo>();
@@ -316,6 +319,20 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 return ResultData.Fail(ex.Message);
             }
+        }
+        /// <summary>
+        /// 是否参加粉丝见面会
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("isAttend")]
+        public async Task<ResultData<bool>> isAttendMeeting(AttendMeetingQueryVo query)
+        {
+            AttendMeetingQueryDto queryDto = new AttendMeetingQueryDto();
+            queryDto.Id = query.Id;
+            queryDto.Phone = query.Phone;
+            queryDto.HospitalId = query.HospitalId;
+            var res =await fansMeetingDetailsService.IsAttendMeeting(queryDto);
+            return ResultData<bool>.Success().AddData("isAttend",res);
         }
 
     }

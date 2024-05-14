@@ -97,6 +97,10 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// </summary>
         public int? ConsumptionType { get; set; }
         /// <summary>
+        /// 粉丝见面会id
+        /// </summary>
+        public string FansMeetingId { get; set; }
+        /// <summary>
         /// 邀约凭证
         /// </summary>
         public List<string> InvitationDocuments { get; set; }

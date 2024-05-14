@@ -1399,6 +1399,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.EmpId = Convert.ToInt32(employee.Id);
                 updateDto.ConsumptionType = updateVo.ConsumptionType;
                 updateDto.InvitationDocuments = updateVo.InvitationDocuments;
+                updateDto.FansMeetingId=updateVo.FansMeetingId;
                 List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
                 if (updateDto.IsFinish == true)
                 {

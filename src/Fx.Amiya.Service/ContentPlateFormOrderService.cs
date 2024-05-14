@@ -5,6 +5,7 @@ using Fx.Amiya.Dto.AssistantHomePage.Result;
 using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.CustomerInfo;
+using Fx.Amiya.Dto.FansMeetingDetails.Input;
 using Fx.Amiya.Dto.FinancialBoard;
 using Fx.Amiya.Dto.HospitalBindCustomerService;
 using Fx.Amiya.Dto.HospitalBoard;
@@ -72,7 +73,7 @@ namespace Fx.Amiya.Service
         private ICustomerAppointmentScheduleService customerAppointmentScheduleService;
         private IDalContentPlatformOrderSend dalContentPlatformOrderSend;
         private ITrackService trackService;
-
+        private IFansMeetingDetailsService fansMeetingDetailsService;
         public ContentPlateFormOrderService(
            IDalContentPlatformOrder dalContentPlatformOrder,
            IDalAmiyaEmployee dalAmiyaEmployee,
@@ -99,7 +100,7 @@ namespace Fx.Amiya.Service
             IContentPlatFormOrderDealInfoService contentPlatFormOrderDalService,
              IDalBindCustomerService dalBindCustomerService,
              IDalConfig dalConfig,
-             IWxAppConfigService wxAppConfigService, IDalLiveAnchor dalLiveAnchor, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalAmiyaHospitalDepartment dalAmiyaHospitalDepartment, IDalHospitalInfo dalHospitalInfo, ICustomerAppointmentScheduleService customerAppointmentScheduleService, IDalContentPlatformOrderSend dalContentPlatformOrderSend, ITrackService trackService)
+             IWxAppConfigService wxAppConfigService, IDalLiveAnchor dalLiveAnchor, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalAmiyaHospitalDepartment dalAmiyaHospitalDepartment, IDalHospitalInfo dalHospitalInfo, ICustomerAppointmentScheduleService customerAppointmentScheduleService, IDalContentPlatformOrderSend dalContentPlatformOrderSend, ITrackService trackService, IFansMeetingDetailsService fansMeetingDetailsService)
         {
             _dalContentPlatformOrder = dalContentPlatformOrder;
             this.unitOfWork = unitOfWork;
@@ -135,6 +136,7 @@ namespace Fx.Amiya.Service
             this.customerAppointmentScheduleService = customerAppointmentScheduleService;
             this.dalContentPlatformOrderSend = dalContentPlatformOrderSend;
             this.trackService = trackService;
+            this.fansMeetingDetailsService = fansMeetingDetailsService;
         }
 
         /// <summary>
@@ -2421,6 +2423,15 @@ namespace Fx.Amiya.Service
                 orderDealDto.InvitationDocuments = input.InvitationDocuments;
                 orderDealDto.AddContentPlatFormOrderDealDetailsDtoList = input.AddContentPlatFormOrderDealDetailsDtoList;
                 await _contentPlatFormOrderDalService.AddAsync(orderDealDto);
+
+                //更新粉丝见面会数据
+                if (!string.IsNullOrEmpty(input.FansMeetingId)) {
+                    GenerateDealInfoDto generate = new GenerateDealInfoDto();
+                    generate.Id = input.FansMeetingId;
+                    generate.IsToHospital = input.IsToHospital;
+                    generate.IsDeal = input.IsFinish;
+                    await fansMeetingDetailsService.GenerateDealInfoAsync(generate);
+                }
 
                 unitOfWork.Commit();
                 //成交后加入待回访数据
