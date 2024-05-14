@@ -99,6 +99,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.StartDate = addVo.StartDate;
                 addDto.EndDate = addVo.EndDate;
                 addDto.HospitalId = addVo.HospitalId;
+                addDto.BaseLiveAnchorId = addVo.BaseLiveAnchorId;
                 await fansMeetingService.AddAsync(addDto);
 
                 return ResultData.Success();
@@ -131,6 +132,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 fansMeetingVo.EndDate = fansMeeting.EndDate;
                 fansMeetingVo.HospitalId = fansMeeting.HospitalId;
                 fansMeetingVo.HospitalName = fansMeeting.HospitalName;
+                fansMeetingVo.BaseLiveAnchorId = fansMeeting.BaseLiveAnchorId;
                 return ResultData<FansMeetingVo>.Success().AddData("fansMeeting", fansMeetingVo);
             }
             catch (Exception ex)
@@ -158,6 +160,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.StartDate = updateVo.StartDate;
                 updateDto.EndDate = updateVo.EndDate;
                 updateDto.HospitalId = updateVo.HospitalId;
+                updateDto.BaseLiveAnchorId = updateVo.BaseLiveAnchorId;
                 await fansMeetingService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

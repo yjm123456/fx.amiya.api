@@ -73,6 +73,7 @@ namespace Fx.Amiya.Service
                 fansMeeting.StartDate = addDto.StartDate;
                 fansMeeting.EndDate = addDto.EndDate;
                 fansMeeting.HospitalId = addDto.HospitalId;
+                fansMeeting.BaseLiveAnchorId = addDto.BaseLiveAnchorId;
                 await dalFansMeeting.AddAsync(fansMeeting, true);
 
             }
@@ -100,6 +101,7 @@ namespace Fx.Amiya.Service
             returnResult.StartDate = result.StartDate;
             returnResult.EndDate = result.EndDate;
             returnResult.HospitalId = result.HospitalId;
+            returnResult.BaseLiveAnchorId = result.BaseLiveAnchorId;
             returnResult.HospitalName = result.HospitalInfo.Name;
 
             return returnResult;
@@ -122,6 +124,7 @@ namespace Fx.Amiya.Service
             result.StartDate = updateDto.StartDate;
             result.EndDate = updateDto.EndDate;
             result.HospitalId = updateDto.HospitalId;
+            result.BaseLiveAnchorId = updateDto.BaseLiveAnchorId;
             result.UpdateDate = DateTime.Now;
             await dalFansMeeting.UpdateAsync(result, true);
         }

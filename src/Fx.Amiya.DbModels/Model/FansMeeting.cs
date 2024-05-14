@@ -24,6 +24,11 @@ namespace Fx.Amiya.DbModels.Model
         public int HospitalId { get; set; }
 
 
+        /// <summary>
+        /// 基础主播id
+        /// </summary>
+        public string BaseLiveAnchorId { get; set; }
+
         public HospitalInfo HospitalInfo { get; set; }
 
         public List<FansMeetingDetails> FansMeetingDetailsList { get; set; }

@@ -20,7 +20,8 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.StartDate).HasColumnName("start_date").HasColumnType("DATETIME").IsRequired();
             builder.Property(e => e.EndDate).HasColumnName("end_date").HasColumnType("DATETIME").IsRequired();
             builder.Property(e => e.HospitalId).HasColumnName("hospital_id").HasColumnType("int").IsRequired();
-
+            builder.Property(e => e.BaseLiveAnchorId).HasColumnName("base_live_anchor_id").HasColumnType("varchar(50)").IsRequired(false);
+            
             builder.Property(e => e.CreateDate).HasColumnName("create_date").HasColumnType("DATETIME").IsRequired();
             builder.Property(e => e.UpdateDate).HasColumnName("update_date").HasColumnType("DATETIME").IsRequired(false);
             builder.Property(e => e.Valid).HasColumnName("valid").HasColumnType("BIT(1)").IsRequired();

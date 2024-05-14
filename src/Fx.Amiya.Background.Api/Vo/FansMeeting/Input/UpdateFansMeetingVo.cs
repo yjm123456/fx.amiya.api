@@ -28,5 +28,10 @@ namespace Fx.Amiya.Background.Api.Vo.FansMeeting.Input
         /// 医院id
         /// </summary>
         public int HospitalId { get; set; }
+
+        /// <summary>
+        /// 基础主播id
+        /// </summary>
+        public string BaseLiveAnchorId { get; set; }
     }
 }
