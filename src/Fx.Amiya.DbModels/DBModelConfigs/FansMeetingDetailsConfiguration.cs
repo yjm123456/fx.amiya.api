@@ -35,7 +35,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.CustomerPictureUrl).HasColumnName("customer_picture_url").HasColumnType("VARCHAR(300)").IsRequired(false);
             builder.Property(e => e.IsDeal).HasColumnName("is_deal").HasColumnType("bit").IsRequired(true);
             builder.Property(e => e.IsToHospital).HasColumnName("is_to_hospital").HasColumnType("bit").IsRequired(true);
-            builder.Property(e=>e.CumulativeDealPrice).HasColumnName("cumulative_deal_price").HasColumnType("decimal(12,2)").IsRequired(true);
+            builder.Property(e=>e.CumulativeDealPrice).HasColumnName("cumulative_deal_price").HasColumnType("decimal(20,6)").IsRequired(true);
 
             builder.Property(e => e.CreateDate).HasColumnName("create_date").HasColumnType("DATETIME").IsRequired();
             builder.Property(e => e.UpdateDate).HasColumnName("update_date").HasColumnType("DATETIME").IsRequired(false);

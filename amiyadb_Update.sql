@@ -247,3 +247,18 @@ ADD COLUMN `base_live_anchor_id` VARCHAR(50) NULL AFTER `hospital_id`;
 
 ----------------------------------------------余建明 2024/5/14 END----------------------------------------
 
+
+
+
+------------------------------------王健 2024/5/14 BEGIN--------------------------------------
+
+---粉丝见面会详情添加是否成交,到院,累计消费金额
+ALTER TABLE `tbl_fans_meeting_details`
+	ADD COLUMN `is_deal` BIT NOT NULL DEFAULT 0 AFTER `customer_picture_url`,
+	ADD COLUMN `is_to_hospital` BIT NOT NULL DEFAULT 0 AFTER `is_deal`,
+	ADD COLUMN `cumulative_deal_price` DECIMAL(12,2) NOT NULL DEFAULT 0 AFTER `is_to_hospital`;
+
+
+
+
+------------------------------------王健 2024/5/14 END--------------------------------------

@@ -246,6 +246,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 fansMeetingDetailsVo.PlanConsumption = fansMeetingDetails.PlanConsumption;
                 fansMeetingDetailsVo.Remark = fansMeetingDetails.Remark;
                 fansMeetingDetailsVo.CustomerPictureUrl = fansMeetingDetails.CustomerPictureUrl;
+                fansMeetingDetailsVo.IsDeal=fansMeetingDetails.IsDeal;
+                fansMeetingDetailsVo.IsToHospital = fansMeetingDetails.IsToHospital;
+                fansMeetingDetailsVo.CumulativeDealPrice = fansMeetingDetails.CumulativeDealPrice;
                 return ResultData<FansMeetingDetailsVo>.Success().AddData("fansMeetingDetails", fansMeetingDetailsVo);
             }
             catch (Exception ex)
@@ -290,6 +293,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.PlanConsumption = updateVo.PlanConsumption;
                 updateDto.Remark = updateVo.Remark;
                 updateDto.CustomerPictureUrl = updateVo.CustomerPictureUrl;
+                updateDto.IsDeal=updateVo.IsDeal;
+                updateDto.IsToHospital = updateVo.IsToHospital;
+                updateDto.CumulativeDealPrice=updateVo.CumulativeDealPrice;
                 await fansMeetingDetailsService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

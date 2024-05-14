@@ -84,5 +84,17 @@ namespace Fx.Amiya.Background.Api.Vo.FansMeetingDetails.Input
         /// 顾客照片
         /// </summary>
         public string CustomerPictureUrl { get; set; }
+        /// <summary>
+        /// 是否成交
+        /// </summary>
+        public bool IsDeal { get; set; }
+        /// <summary>
+        /// 是否到院
+        /// </summary>
+        public bool IsToHospital { get; set; }
+        /// <summary>
+        /// 累计成交金额
+        /// </summary>
+        public decimal CumulativeDealPrice { get; set; }
     }
 }

@@ -153,6 +153,9 @@ namespace Fx.Amiya.Service
             returnResult.PlanConsumption = result.PlanConsumption;
             returnResult.Remark = result.Remark;
             returnResult.CustomerPictureUrl = result.CustomerPictureUrl;
+            returnResult.IsDeal = result.IsDeal;
+            returnResult.IsToHospital = result.IsToHospital;
+            returnResult.CumulativeDealPrice=result.CumulativeDealPrice;
 
             return returnResult;
         }
@@ -197,6 +200,9 @@ namespace Fx.Amiya.Service
             result.Remark = updateDto.Remark;
             result.CustomerPictureUrl = updateDto.CustomerPictureUrl;
             result.UpdateDate = DateTime.Now;
+            result.IsDeal=updateDto.IsDeal;
+            result.IsToHospital = updateDto.IsToHospital;
+            result.CumulativeDealPrice=updateDto.CumulativeDealPrice;
             await dalFansMeetingDetails.UpdateAsync(result, true);
         }
         /// <summary>
