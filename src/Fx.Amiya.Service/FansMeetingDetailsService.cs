@@ -32,8 +32,16 @@ namespace Fx.Amiya.Service
             var fansMeetingDetailss = from d in dalFansMeetingDetails.GetAll().Include(x => x.FansMeetingInfo).Include(x => x.AmiyaEmployeeInfo)
                                       where (d.Valid == true && d.FansMeetingId == query.FansMeetingId)
                                       && (string.IsNullOrEmpty(query.KeyWord) || d.Phone.Contains(query.KeyWord))
-                                      && (!query.StartDate.HasValue || d.CreateDate >= query.StartDate.Value)
-                                      && (!query.EndDate.HasValue || d.CreateDate < query.EndDate.Value.AddDays(1).AddMilliseconds(-1))
+                                      && (!query.StartDate.HasValue || d.AppointmentDate.Value >= query.StartDate.Value)
+                                      && (!query.EndDate.HasValue || d.AppointmentDate.Value < query.EndDate.Value.AddDays(1).AddMilliseconds(-1))
+
+                                      && (!query.IsToHospital.HasValue || d.IsToHospital == query.IsToHospital.Value)
+                                      && (!query.IsDeal.HasValue || d.IsDeal == query.IsDeal.Value)
+                                      && (!query.AmiyaEmployeeId.HasValue || d.AmiyaConsulationId == query.AmiyaEmployeeId.Value)
+                                      && (!query.CustomerQuantity.HasValue || d.CustomerQuantity == query.CustomerQuantity.Value)
+                                      && (!query.IsOdCustomer.HasValue || d.IsOldCustomer == query.IsOdCustomer.Value)
+                                      && (!query.StartDealPrice.HasValue || d.CumulativeDealPrice >= query.StartDealPrice.Value)
+                                      && (!query.EndDealPrice.HasValue || d.CumulativeDealPrice <= query.EndDealPrice.Value)
                                       select new FansMeetingDetailsDto
                                       {
                                           Id = d.Id,

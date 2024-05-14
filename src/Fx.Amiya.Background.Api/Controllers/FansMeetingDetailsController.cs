@@ -58,10 +58,19 @@ namespace Fx.Amiya.Background.Api.Controllers
                 QueryFansMeetingDetailsDto queryDto = new QueryFansMeetingDetailsDto();
                 queryDto.StartDate = query.StartDate;
                 queryDto.EndDate = query.EndDate;
-                queryDto.FansMeetingId = query.FansMeetingId;
                 queryDto.PageNum = query.PageNum;
                 queryDto.KeyWord = query.KeyWord;
                 queryDto.PageSize = query.PageSize;
+
+
+                queryDto.FansMeetingId = query.FansMeetingId;
+                queryDto.IsDeal = query.IsDeal;
+                queryDto.IsToHospital = query.IsToHospital;
+                queryDto.AmiyaEmployeeId = query.AmiyaEmployeeId;
+                queryDto.CustomerQuantity = query.CustomerQuantity;
+                queryDto.IsOdCustomer = query.IsOdCustomer;
+                queryDto.StartDealPrice = query.StartDealPrice;
+                queryDto.EndDealPrice = query.EndDealPrice;
                 var q = await fansMeetingDetailsService.GetListAsync(queryDto);
                 var fansMeetingDetails = from d in q.List
                                          select new FansMeetingDetailsVo
