@@ -74,6 +74,9 @@ namespace Fx.Amiya.Service
         private IDalContentPlatformOrderSend dalContentPlatformOrderSend;
         private ITrackService trackService;
         private IFansMeetingDetailsService fansMeetingDetailsService;
+        private IFansMeetingService fansMeetingService;
+        private IDalFansMeeting dalFansMeeting;
+        private IDalFansMeetingDetails dalFansMeetingDetails;
         public ContentPlateFormOrderService(
            IDalContentPlatformOrder dalContentPlatformOrder,
            IDalAmiyaEmployee dalAmiyaEmployee,
@@ -100,7 +103,7 @@ namespace Fx.Amiya.Service
             IContentPlatFormOrderDealInfoService contentPlatFormOrderDalService,
              IDalBindCustomerService dalBindCustomerService,
              IDalConfig dalConfig,
-             IWxAppConfigService wxAppConfigService, IDalLiveAnchor dalLiveAnchor, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalAmiyaHospitalDepartment dalAmiyaHospitalDepartment, IDalHospitalInfo dalHospitalInfo, ICustomerAppointmentScheduleService customerAppointmentScheduleService, IDalContentPlatformOrderSend dalContentPlatformOrderSend, ITrackService trackService, IFansMeetingDetailsService fansMeetingDetailsService)
+             IWxAppConfigService wxAppConfigService, IDalLiveAnchor dalLiveAnchor, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalAmiyaHospitalDepartment dalAmiyaHospitalDepartment, IDalHospitalInfo dalHospitalInfo, ICustomerAppointmentScheduleService customerAppointmentScheduleService, IDalContentPlatformOrderSend dalContentPlatformOrderSend, ITrackService trackService, IFansMeetingDetailsService fansMeetingDetailsService, IFansMeetingService fansMeetingService, IDalFansMeetingDetails dalFansMeetingDetails)
         {
             _dalContentPlatformOrder = dalContentPlatformOrder;
             this.unitOfWork = unitOfWork;
@@ -137,6 +140,8 @@ namespace Fx.Amiya.Service
             this.dalContentPlatformOrderSend = dalContentPlatformOrderSend;
             this.trackService = trackService;
             this.fansMeetingDetailsService = fansMeetingDetailsService;
+            this.fansMeetingService = fansMeetingService;
+            this.dalFansMeetingDetails = dalFansMeetingDetails;
         }
 
         /// <summary>
@@ -2428,7 +2433,12 @@ namespace Fx.Amiya.Service
                 if (!string.IsNullOrEmpty(input.FansMeetingId))
                 {
                     GenerateDealInfoDto generate = new GenerateDealInfoDto();
-                    generate.Id = input.FansMeetingId;
+
+
+                    var id = dalFansMeetingDetails.GetAll().Where(e => e.FansMeetingId == input.Id).Where(e => e.Phone == order.Phone).Select(e => e.Id).FirstOrDefault();
+                    if (string.IsNullOrEmpty(id))
+                        throw new Exception("该客户未参加此次粉丝见面会!");
+                    generate.Id = id;
                     generate.IsToHospital = input.IsToHospital;
                     generate.IsDeal = input.IsFinish;
                     generate.DealPrice = input.DealAmount ?? 0m;
