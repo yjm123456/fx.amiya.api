@@ -2435,7 +2435,7 @@ namespace Fx.Amiya.Service
                     GenerateDealInfoDto generate = new GenerateDealInfoDto();
 
 
-                    var id = dalFansMeetingDetails.GetAll().Where(e => e.FansMeetingId == input.Id).Where(e => e.Phone == order.Phone).Select(e => e.Id).FirstOrDefault();
+                    var id = dalFansMeetingDetails.GetAll().Where(e => e.FansMeetingId == input.FansMeetingId).Where(e => e.Phone == order.Phone).Select(e => e.Id).FirstOrDefault();
                     if (string.IsNullOrEmpty(id))
                         throw new Exception("该客户未参加此次粉丝见面会!");
                     generate.Id = id;
