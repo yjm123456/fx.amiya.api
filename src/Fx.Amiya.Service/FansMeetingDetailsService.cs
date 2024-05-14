@@ -172,6 +172,10 @@ namespace Fx.Amiya.Service
             {
                 throw new Exception("粉丝见面会中已存在该手机号，请重新确认后再添加！手机号：" + updateDto.Phone);
             }
+            if (result.AmiyaConsulationId != updateDto.AmiyaConsulationId)
+            {
+                throw new Exception("无法修改其他助理数据信息！");
+            }
             result.FansMeetingId = updateDto.FansMeetingId;
             result.OrderId = updateDto.OrderId;
             result.AppointmentDate = updateDto.AppointmentDate;
@@ -192,19 +196,23 @@ namespace Fx.Amiya.Service
             result.UpdateDate = DateTime.Now;
             await dalFansMeetingDetails.UpdateAsync(result, true);
         }
-
         /// <summary>
         /// 作废粉丝见面会详情
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="employeeId"></param>
         /// <returns></returns>
-        public async Task DeleteAsync(string id)
+        public async Task DeleteAsync(string id,int employeeId)
         {
             try
             {
                 var result = await dalFansMeetingDetails.GetAll().SingleOrDefaultAsync(e => e.Id == id && e.Valid == true);
                 if (result == null)
                     throw new Exception("未找到粉丝见面会详情信息");
+                if (result.AmiyaConsulationId != employeeId)
+                {
+                    throw new Exception("无法删除其他助理数据信息！");
+                }
                 result.Valid = false;
                 result.DeleteDate = DateTime.Now;
                 await dalFansMeetingDetails.UpdateAsync(result, true);

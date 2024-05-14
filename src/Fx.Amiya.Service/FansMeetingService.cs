@@ -16,9 +16,11 @@ namespace Fx.Amiya.Service
     public class FansMeetingService : IFansMeetingService
     {
         private readonly IDalFansMeeting dalFansMeeting;
-        public FansMeetingService(IDalFansMeeting dalFansMeeting)
+        private readonly IAmiyaEmployeeService amiyaEmployeeService;
+        public FansMeetingService(IDalFansMeeting dalFansMeeting, IAmiyaEmployeeService amiyaEmployeeService)
         {
             this.dalFansMeeting = dalFansMeeting;
+            this.amiyaEmployeeService = amiyaEmployeeService;
         }
 
 
@@ -30,12 +32,14 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<FxPageInfo<FansMeetingDto>> GetListAsync(QueryFansMeetingDto query)
         {
+            var employeeInfo = await amiyaEmployeeService.GetByIdAsync(query.empLoyeeId);
             var fansMeetings = from d in dalFansMeeting.GetAll().Include(x => x.HospitalInfo)
                                where (d.Valid == true)
                                && (!query.HospitalId.HasValue || d.HospitalId == query.HospitalId.Value)
                                && (!query.StartDate.HasValue || d.CreateDate >= query.StartDate.Value)
                                && (!query.EndDate.HasValue || d.CreateDate < query.EndDate.Value.AddDays(1).AddMilliseconds(-1))
                                && (string.IsNullOrEmpty(query.KeyWord) || d.Name.Contains(query.KeyWord))
+                               && (employeeInfo.IsDirector == false || d.BaseLiveAnchorId == employeeInfo.LiveAnchorBaseId)
                                select new FansMeetingDto
                                {
                                    Id = d.Id,
@@ -168,7 +172,7 @@ namespace Fx.Amiya.Service
                                    Value = d.Name
                                };
             List<BaseKeyValueDto> fansMeetingPageInfo = new List<BaseKeyValueDto>();
-            fansMeetingPageInfo= await fansMeetings.ToListAsync();
+            fansMeetingPageInfo = await fansMeetings.ToListAsync();
             return fansMeetingPageInfo;
         }
     }

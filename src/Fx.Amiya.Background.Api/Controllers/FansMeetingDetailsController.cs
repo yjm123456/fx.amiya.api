@@ -9,6 +9,7 @@ using Fx.Amiya.Service;
 using Fx.Authorization.Attributes;
 using Fx.Common;
 using Fx.Open.Infrastructure.Web;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fx.Amiya.Background.Api.Controllers
@@ -24,6 +25,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         private readonly IContentPlateFormOrderService contentPlateFormOrderService;
         private readonly ICustomerService customerService;
         private readonly IWxAppConfigService _wxAppConfigService;
+        private IHttpContextAccessor _httpContextAccessor;
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -31,12 +33,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="contentPlateFormOrderService"></param>
         /// <param name="customerService"></param>
         /// <param name="wxAppConfigService"></param>
-        public FansMeetingDetailsController(IFansMeetingDetailsService fansMeetingDetailsService, IContentPlateFormOrderService contentPlateFormOrderService, ICustomerService customerService, IWxAppConfigService wxAppConfigService)
+        public FansMeetingDetailsController(IFansMeetingDetailsService fansMeetingDetailsService, IContentPlateFormOrderService contentPlateFormOrderService, ICustomerService customerService, IHttpContextAccessor httpContextAccessor, IWxAppConfigService wxAppConfigService)
         {
             this.fansMeetingDetailsService = fansMeetingDetailsService;
             this.contentPlateFormOrderService = contentPlateFormOrderService;
             this.customerService = customerService;
             this._wxAppConfigService = wxAppConfigService;
+            this._httpContextAccessor = httpContextAccessor;
         }
 
 
@@ -153,8 +156,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                             addDto.CustomerPictureUrl = orderInfo.CustomerPictures.First();
                         }
 
-                        addDto.AppointmentDate = addVo.AppointmentDate;
                         addDto.AppointmentDetailsDate = addVo.AppointmentDetailsDate;
+                        addDto.AppointmentDate = addVo.AppointmentDate;
+                        if (addDto.AppointmentDate.HasValue == false)
+                        {
+                            addDto.AppointmentDetailsDate = "待定";
+                        }
                         addDto.HospitalConsulationName = addVo.HospitalConsulationName;
                         addDto.TravelInformation = addVo.TravelInformation;
                         addDto.IsNeedDriver = addVo.IsNeedDriver;
@@ -175,8 +182,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.CustomerPictureUrl = addVo.CustomerPictureUrl;
 
 
-                    addDto.AppointmentDate = addVo.AppointmentDate;
                     addDto.AppointmentDetailsDate = addVo.AppointmentDetailsDate;
+                    addDto.AppointmentDate = addVo.AppointmentDate;
+                    if (addDto.AppointmentDate.HasValue == false)
+                    {
+                        addDto.AppointmentDetailsDate = "待定";
+                    }
                     addDto.HospitalConsulationName = addVo.HospitalConsulationName;
                     addDto.TravelInformation = addVo.TravelInformation;
                     addDto.IsNeedDriver = addVo.IsNeedDriver;
@@ -257,8 +268,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.Id = updateVo.Id;
                 updateDto.FansMeetingId = updateVo.FansMeetingId;
                 updateDto.OrderId = updateVo.OrderId;
-                updateDto.AppointmentDate = updateVo.AppointmentDate;
                 updateDto.AppointmentDetailsDate = updateVo.AppointmentDetailsDate;
+                updateDto.AppointmentDate = updateVo.AppointmentDate;
+                if (updateDto.AppointmentDate.HasValue == false)
+                {
+                    updateDto.AppointmentDetailsDate = "待定";
+                }
                 updateDto.CustomerName = updateVo.CustomerName;
                 updateDto.Phone = updateVo.Phone;
                 updateDto.CustomerQuantity = updateVo.CustomerQuantity;
@@ -292,7 +307,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                await fansMeetingDetailsService.DeleteAsync(id);
+                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int empId = Convert.ToInt32(employee.Id);
+                await fansMeetingDetailsService.DeleteAsync(id, empId);
                 return ResultData.Success();
             }
             catch (Exception ex)

@@ -10,6 +10,7 @@ using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
 using Fx.Open.Infrastructure.Web;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fx.Amiya.Background.Api.Controllers
@@ -22,14 +23,16 @@ namespace Fx.Amiya.Background.Api.Controllers
     public class FansMeetingController : ControllerBase
     {
         private IFansMeetingService fansMeetingService;
+        private IHttpContextAccessor _httpContextAccessor;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="fansMeetingService"></param>
-        public FansMeetingController(IFansMeetingService fansMeetingService)
+        public FansMeetingController(IHttpContextAccessor httpContextAccessor, IFansMeetingService fansMeetingService)
         {
             this.fansMeetingService = fansMeetingService;
+            this._httpContextAccessor = httpContextAccessor;
         }
 
 
@@ -52,6 +55,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryDto.PageSize = query.PageSize;
                 queryDto.HospitalId = query.HospitalId;
                 queryDto.KeyWord = query.KeyWord;
+                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                queryDto.empLoyeeId = Convert.ToInt32(employee.Id);
                 var q = await fansMeetingService.GetListAsync(queryDto);
                 var fansMeeting = from d in q.List
                                   select new FansMeetingVo

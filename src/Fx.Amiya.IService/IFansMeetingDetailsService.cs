@@ -21,6 +21,6 @@ namespace Fx.Amiya.IService
         Task AddAsync(AddFansMeetingDetailsDto addDto);
         Task<FansMeetingDetailsDto> GetByIdAsync(string id);
         Task UpdateAsync(UpdateFansMeetingDetailsDto updateDto);
-        Task DeleteAsync(string id);
+        Task DeleteAsync(string id, int empId);
     }
 }

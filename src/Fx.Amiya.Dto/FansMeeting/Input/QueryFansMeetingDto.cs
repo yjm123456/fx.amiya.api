@@ -13,5 +13,6 @@ namespace Fx.Amiya.Dto.FansMeeting.Input
         /// 医院id
         /// </summary>
         public int? HospitalId { get; set; }
+        public int empLoyeeId { get; set; }
     }
 }
