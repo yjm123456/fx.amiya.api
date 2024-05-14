@@ -2425,11 +2425,13 @@ namespace Fx.Amiya.Service
                 await _contentPlatFormOrderDalService.AddAsync(orderDealDto);
 
                 //更新粉丝见面会数据
-                if (!string.IsNullOrEmpty(input.FansMeetingId)) {
+                if (!string.IsNullOrEmpty(input.FansMeetingId))
+                {
                     GenerateDealInfoDto generate = new GenerateDealInfoDto();
                     generate.Id = input.FansMeetingId;
                     generate.IsToHospital = input.IsToHospital;
                     generate.IsDeal = input.IsFinish;
+                    generate.DealPrice = input.DealAmount ?? 0m;
                     await fansMeetingDetailsService.GenerateDealInfoAsync(generate);
                 }
 
