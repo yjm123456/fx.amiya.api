@@ -39,7 +39,7 @@ namespace Fx.Amiya.Service
                                && (!query.StartDate.HasValue || d.CreateDate >= query.StartDate.Value)
                                && (!query.EndDate.HasValue || d.CreateDate < query.EndDate.Value.AddDays(1).AddMilliseconds(-1))
                                && (string.IsNullOrEmpty(query.KeyWord) || d.Name.Contains(query.KeyWord))
-                               && (employeeInfo.IsDirector == false || d.BaseLiveAnchorId == employeeInfo.LiveAnchorBaseId)
+                               && (employeeInfo.IsDirector == true || d.BaseLiveAnchorId == employeeInfo.LiveAnchorBaseId)
                                select new FansMeetingDto
                                {
                                    Id = d.Id,

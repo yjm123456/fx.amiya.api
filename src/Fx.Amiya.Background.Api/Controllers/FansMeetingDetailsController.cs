@@ -340,7 +340,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("isAttend")]
-        public async Task<ResultData<bool>> isAttendMeeting(AttendMeetingQueryVo query)
+        public async Task<ResultData<bool>> isAttendMeeting([FromQuery]AttendMeetingQueryVo query)
         {
             AttendMeetingQueryDto queryDto = new AttendMeetingQueryDto();
             queryDto.Id = query.Id;

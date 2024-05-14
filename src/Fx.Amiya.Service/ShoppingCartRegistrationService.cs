@@ -1165,14 +1165,13 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<ShoppingCartRegistrationDto>> GetPerformanceByBaseLiveAnchorIdAsync(DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, string baseLiveAnchorId)
         {
-            var employeeIdList = (await _amiyaEmployeeService.GetByLiveAnchorBaseIdAsync(baseLiveAnchorId)).Select(e => e.Id).ToList();
+            var liveanchorIds = (await _liveAnchorService.GetLiveAnchorListByBaseInfoId(baseLiveAnchorId)).Select(e => e.Id);
             var result = from d in dalShoppingCartRegistration.GetAll()
-            .Where(o => o.RecordDate >= startDate && o.RecordDate < endDate)
-            .Where(o => employeeIdList.Contains(o.AssignEmpId.Value))
+                         .Where(e => e.AssignEmpId != null && e.RecordDate >= startDate && e.RecordDate < endDate && liveanchorIds.Contains(e.LiveAnchorId))
                          select d;
             if (isEffectiveCustomerData.HasValue)
             {
-                result = result.Where(o => isEffectiveCustomerData == true ? o.Price > 0 : o.Price == 0);
+                result = result.Where(e => !isEffectiveCustomerData.HasValue || (isEffectiveCustomerData.Value ? (e.Price == 29.9m || e.Price == 199m) : (e.Price != 29.9m && e.Price != 199m)));
             }
             var x = from d in result
                     select new ShoppingCartRegistrationDto
@@ -1576,7 +1575,6 @@ namespace Fx.Amiya.Service
             var assistantNameList = (await _amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(new List<string> { baseLiveAnchorId })).Select(e => e.Id).ToList();
             var baseData = dalShoppingCartRegistration.GetAll()
                 .Where(e => e.AssignEmpId != null && e.RecordDate >= startDate && e.RecordDate < endDate && liveanchorIds.Contains(e.LiveAnchorId))
-                //.Where(e => !isEffective.HasValue || (isEffective.Value ? (e.Price > 0) : (e.Price <= 0)))
                 .Where(e => !isEffective.HasValue || (isEffective.Value ? (e.Price == 29.9m || e.Price == 199m) : (e.Price != 29.9m && e.Price != 199m)))
                 .Select(e => new
                 {
@@ -1590,7 +1588,6 @@ namespace Fx.Amiya.Service
               .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
               .Where(e => e.ContentPlatformOrder.IsOldCustomer == isOldCustomer)
               .Where(o => o.ContentPlatformOrder.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId)
-              //.Where(e => !isEffective.HasValue || (isEffective.Value ? e.ContentPlatformOrder.AddOrderPrice > 0 : e.ContentPlatformOrder.AddOrderPrice <= 0))
                .Select(e => e.ContentPlatformOrder.Phone)
                          join d in dalShoppingCartRegistration.GetAll()
                          on c equals d.Phone
