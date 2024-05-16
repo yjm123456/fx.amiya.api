@@ -226,7 +226,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="id">粉丝见面会详情编号</param>
         /// <returns></returns>
         [HttpGet("byId/{id}")]
-        [FxInternalAuthorize]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData<FansMeetingDetailsVo>> GetByIdAsync(string id)
         {
             try
@@ -274,13 +274,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="updateVo"></param>
         /// <returns></returns>
         [HttpPut]
-        [FxInternalAuthorize]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData> UpdateAsync(UpdateFansMeetingDetailsVo updateVo)
         {
             try
             {
-                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-                int empId = Convert.ToInt32(employee.Id);
                 UpdateFansMeetingDetailsDto updateDto = new UpdateFansMeetingDetailsDto();
                 updateDto.Id = updateVo.Id;
                 updateDto.FansMeetingId = updateVo.FansMeetingId;
@@ -295,7 +293,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.Phone = updateVo.Phone;
                 updateDto.CustomerQuantity = updateVo.CustomerQuantity;
                 updateDto.IsOldCustomer = updateVo.IsOldCustomer;
-                updateDto.AmiyaConsulationId = empId;
+                updateDto.AmiyaConsulationId = updateVo.AmiyaConsulationId;
                 updateDto.HospitalConsulationName = updateVo.HospitalConsulationName;
                 updateDto.City = updateVo.City;
                 updateDto.TravelInformation = updateVo.TravelInformation;

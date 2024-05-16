@@ -43,8 +43,7 @@ namespace Fx.Amiya.Service
                 employeeInfo.IsDirector = true;
             }
             var fansMeetings = from d in dalFansMeeting.GetAll().Include(x => x.HospitalInfo)
-                               where (d.Valid == true)
-                               && (!query.HospitalId.HasValue || d.HospitalId == query.HospitalId.Value)
+                               where (!query.HospitalId.HasValue || d.HospitalId == query.HospitalId.Value)
                                && (!query.StartDate.HasValue || d.CreateDate >= query.StartDate.Value)
                                && (!query.EndDate.HasValue || d.CreateDate < query.EndDate.Value.AddDays(1).AddMilliseconds(-1))
                                && (string.IsNullOrEmpty(query.KeyWord) || d.Name.Contains(query.KeyWord))
