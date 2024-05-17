@@ -246,7 +246,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                 fansMeetingDetailsVo.Phone = fansMeetingDetails.Phone;
                 fansMeetingDetailsVo.CustomerQuantity = fansMeetingDetails.CustomerQuantity;
                 fansMeetingDetailsVo.IsOldCustomer = fansMeetingDetails.IsOldCustomer;
-                fansMeetingDetailsVo.AmiyaConsulationId = fansMeetingDetails.AmiyaConsulationId;
                 fansMeetingDetailsVo.HospitalConsulationName = fansMeetingDetails.HospitalConsulationName;
                 fansMeetingDetailsVo.City = fansMeetingDetails.City;
                 fansMeetingDetailsVo.TravelInformation = fansMeetingDetails.TravelInformation;
