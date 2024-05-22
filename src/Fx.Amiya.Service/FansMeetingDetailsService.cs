@@ -57,7 +57,7 @@ namespace Fx.Amiya.Service
                                           AppointmentDate = d.AppointmentDate,
                                           AppointmentDetailsDate = d.AppointmentDetailsDate,
                                           CustomerName = d.CustomerName,
-                                          Phone = d.Phone,
+                                          Phone = query.LoginEmpRole == 4 ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
                                           CustomerQuantity = d.CustomerQuantity,
                                           CustomerQuantityText = ServiceClass.CustomerQuantityText(d.CustomerQuantity),
                                           IsOldCustomer = d.IsOldCustomer,
@@ -69,9 +69,9 @@ namespace Fx.Amiya.Service
                                           PlanConsumption = d.PlanConsumption,
                                           Remark = d.Remark,
                                           CustomerPictureUrl = d.CustomerPictureUrl,
-                                          IsDeal=d.IsDeal,
-                                          IsToHospital=d.IsToHospital,
-                                          CumulativeDealPrice=d.CumulativeDealPrice
+                                          IsDeal = d.IsDeal,
+                                          IsToHospital = d.IsToHospital,
+                                          CumulativeDealPrice = d.CumulativeDealPrice
                                       };
             FxPageInfo<FansMeetingDetailsDto> fansMeetingDetailsPageInfo = new FxPageInfo<FansMeetingDetailsDto>();
             fansMeetingDetailsPageInfo.TotalCount = await fansMeetingDetailss.CountAsync();
@@ -163,7 +163,7 @@ namespace Fx.Amiya.Service
             returnResult.CustomerPictureUrl = result.CustomerPictureUrl;
             returnResult.IsDeal = result.IsDeal;
             returnResult.IsToHospital = result.IsToHospital;
-            returnResult.CumulativeDealPrice=result.CumulativeDealPrice;
+            returnResult.CumulativeDealPrice = result.CumulativeDealPrice;
 
             return returnResult;
         }
@@ -208,9 +208,9 @@ namespace Fx.Amiya.Service
             result.Remark = updateDto.Remark;
             result.CustomerPictureUrl = updateDto.CustomerPictureUrl;
             result.UpdateDate = DateTime.Now;
-            result.IsDeal=updateDto.IsDeal;
+            result.IsDeal = updateDto.IsDeal;
             result.IsToHospital = updateDto.IsToHospital;
-            result.CumulativeDealPrice=updateDto.CumulativeDealPrice;
+            result.CumulativeDealPrice = updateDto.CumulativeDealPrice;
             await dalFansMeetingDetails.UpdateAsync(result, true);
         }
         /// <summary>
@@ -219,7 +219,7 @@ namespace Fx.Amiya.Service
         /// <param name="id"></param>
         /// <param name="employeeId"></param>
         /// <returns></returns>
-        public async Task DeleteAsync(string id,int employeeId)
+        public async Task DeleteAsync(string id, int employeeId)
         {
             try
             {
@@ -261,12 +261,12 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task GenerateDealInfoAsync(GenerateDealInfoDto generate)
         {
-            var record =await dalFansMeetingDetails.GetAll().Where(e => e.Id == generate.Id).FirstOrDefaultAsync();
+            var record = await dalFansMeetingDetails.GetAll().Where(e => e.Id == generate.Id).FirstOrDefaultAsync();
             record.IsDeal = generate.IsDeal;
             record.IsToHospital = generate.IsToHospital;
             record.CumulativeDealPrice = record.CumulativeDealPrice + generate.DealPrice;
             record.UpdateDate = DateTime.Now;
-            await dalFansMeetingDetails.UpdateAsync(record,true);
+            await dalFansMeetingDetails.UpdateAsync(record, true);
         }
     }
 }

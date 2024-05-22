@@ -46,5 +46,7 @@ namespace Fx.Amiya.Dto.FansMeetingDetails.Input
         /// 消费区间（止）-非必填
         /// </summary>
         public decimal? EndDealPrice { get; set; }
+
+        public int? LoginEmpRole { get; set; }
     }
 }

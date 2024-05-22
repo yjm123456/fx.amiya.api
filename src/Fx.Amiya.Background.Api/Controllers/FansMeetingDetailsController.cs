@@ -45,13 +45,13 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 根据条件获取粉丝见面会详情信息
+        /// 医院端根据条件获取粉丝见面会详情信息
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        [HttpGet("listWithPage")]
-        [FxInternalOrTenantAuthroize]
-        public async Task<ResultData<FxPageInfo<FansMeetingDetailsVo>>> GetListWithPageAsync([FromQuery] QueryFansMeetingDetailsVo query)
+        [HttpGet("listWithPageByHospital")]
+        [FxTenantAuthorize]
+        public async Task<ResultData<FxPageInfo<FansMeetingDetailsVo>>> GetListWithPageByHospitalAsync([FromQuery] QueryFansMeetingDetailsVo query)
         {
             try
             {
@@ -64,13 +64,6 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
                 queryDto.FansMeetingId = query.FansMeetingId;
-                queryDto.IsDeal = query.IsDeal;
-                queryDto.IsToHospital = query.IsToHospital;
-                queryDto.AmiyaEmployeeId = query.AmiyaEmployeeId;
-                queryDto.CustomerQuantity = query.CustomerQuantity;
-                queryDto.IsOdCustomer = query.IsOdCustomer;
-                queryDto.StartDealPrice = query.StartDealPrice;
-                queryDto.EndDealPrice = query.EndDealPrice;
                 var q = await fansMeetingDetailsService.GetListAsync(queryDto);
                 var fansMeetingDetails = from d in q.List
                                          select new FansMeetingDetailsVo
@@ -117,6 +110,82 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
 
+
+        /// <summary>
+        /// 管理端根据条件获取粉丝见面会详情信息
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("listWithPage")]
+        [FxInternalOrTenantAuthroize]
+        public async Task<ResultData<FxPageInfo<FansMeetingDetailsVo>>> GetListWithPageAsync([FromQuery] QueryFansMeetingDetailsVo query)
+        {
+            try
+            {
+                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int empIdRole = Convert.ToInt32(employee.PositionId);
+                QueryFansMeetingDetailsDto queryDto = new QueryFansMeetingDetailsDto();
+                queryDto.StartDate = query.StartDate;
+                queryDto.EndDate = query.EndDate;
+                queryDto.PageNum = query.PageNum;
+                queryDto.KeyWord = query.KeyWord;
+                queryDto.PageSize = query.PageSize;
+
+
+                queryDto.FansMeetingId = query.FansMeetingId;
+                queryDto.IsDeal = query.IsDeal;
+                queryDto.IsToHospital = query.IsToHospital;
+                queryDto.AmiyaEmployeeId = query.AmiyaEmployeeId;
+                queryDto.CustomerQuantity = query.CustomerQuantity;
+                queryDto.IsOdCustomer = query.IsOdCustomer;
+                queryDto.StartDealPrice = query.StartDealPrice;
+                queryDto.EndDealPrice = query.EndDealPrice;
+                queryDto.LoginEmpRole = empIdRole;
+                var q = await fansMeetingDetailsService.GetListAsync(queryDto);
+                var fansMeetingDetails = from d in q.List
+                                         select new FansMeetingDetailsVo
+                                         {
+                                             Id = d.Id,
+                                             CreateDate = d.CreateDate,
+                                             AmiyaConsulationId = d.AmiyaConsulationId,
+                                             AmiyaConsulationName = d.AmiyaConsulationName,
+                                             UpdateDate = d.UpdateDate,
+                                             Valid = d.Valid,
+                                             DeleteDate = d.DeleteDate,
+                                             FansMeetingId = d.FansMeetingId,
+                                             FansMeetingName = d.FansMeetingName,
+                                             OrderId = d.OrderId,
+                                             AppointmentDate = d.AppointmentDate,
+                                             AppointmentDetailsDate = d.AppointmentDetailsDate,
+                                             CustomerName = d.CustomerName,
+                                             Phone = d.Phone,
+                                             CustomerQuantity = d.CustomerQuantity,
+                                             CustomerQuantityText = d.CustomerQuantityText,
+                                             IsOldCustomer = d.IsOldCustomer,
+                                             HospitalConsulationName = d.HospitalConsulationName,
+                                             City = d.City,
+                                             TravelInformation = d.TravelInformation,
+                                             IsNeedDriver = d.IsNeedDriver,
+                                             HotelPlan = d.HotelPlan,
+                                             PlanConsumption = d.PlanConsumption,
+                                             Remark = d.Remark,
+                                             CustomerPictureUrl = d.CustomerPictureUrl,
+                                             IsDeal = d.IsDeal,
+                                             IsToHospital = d.IsToHospital,
+                                             CumulativeDealPrice = d.CumulativeDealPrice
+                                         };
+
+                FxPageInfo<FansMeetingDetailsVo> pageInfo = new FxPageInfo<FansMeetingDetailsVo>();
+                pageInfo.TotalCount = q.TotalCount;
+                pageInfo.List = fansMeetingDetails;
+
+                return ResultData<FxPageInfo<FansMeetingDetailsVo>>.Success().AddData("fansMeetingDetails", pageInfo);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<FxPageInfo<FansMeetingDetailsVo>>.Fail(ex.Message);
+            }
+        }
 
 
 
