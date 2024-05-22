@@ -69,5 +69,9 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         /// </summary>
         public int ShoppingCartRegistrationCustomerType { get; set; }
         public int OperationBy { get; set; }
+        /// <summary>
+        /// 归属渠道
+        /// </summary>
+        public int BelongChannel { get; set; }
     }
 }

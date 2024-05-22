@@ -69,7 +69,11 @@ namespace Fx.Amiya.DbModels.Model
         /// 获客方式
         /// </summary>
         public int GetCustomerType { get; set; }
-        
+        /// <summary>
+        /// 归属渠道(1,直播前,2直播中,3直播后)
+        /// </summary>
+        public  int BelongChannel { get; set; }
+
         public Contentplatform Contentplatform { get; set; }
         public LiveAnchor LiveAnchor { get; set; }
         public AmiyaEmployee AmiyaEmployee { get; set; }

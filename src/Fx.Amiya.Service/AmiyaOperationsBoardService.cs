@@ -315,9 +315,9 @@ namespace Fx.Amiya.Service
                 dataItem.RefundCard = data.Where(x => x.IsReturnBackPrice == true).Count();
                 dataItem.OrderCardError = 0;
                 dataItem.AllocationConsulationTarget = CalTarget(query.StartDate.Value, query.EndDate.Value, assistantTarget?.EffectiveConsulationCardTarget ?? 0);
-                dataItem.AllocationConsulation = data.Count();
+                dataItem.AllocationConsulation = data.Select(e=>e.Phone).Distinct().Count();
                 dataItem.AllocationConsulationTargetComplete = DecimalExtension.CalculateTargetComplete(dataItem.AllocationConsulation, dataItem.AllocationConsulationTarget).Value;
-                dataItem.AddWechat = data.Where(e => e.IsAddWeChat && e.IsReturnBackPrice == false).Count();
+                dataItem.AddWechat = data.Where(e => e.IsAddWeChat).Select(e=>e.Phone).Distinct().Count();
                 dataItem.AddWechatTarget = CalTarget(query.StartDate.Value, query.EndDate.Value, assistantTarget?.EffectiveAddWechatTarget ?? 0);
                 dataItem.AddWechatTargetComplete = DecimalExtension.CalculateTargetComplete(dataItem.AddWechat, dataItem.AddWechatTarget).Value;
                 dataItem.BaseLiveAnchorId = liveanchor.Id;
@@ -476,7 +476,6 @@ namespace Fx.Amiya.Service
             query.LiveAnchorIds = nameList.Select(e => e.Id).ToList();
             var targetList = await liveAnchorMonthlyTargetAfterLivingService.GetPerformanceTargetByBaseLiveAnchorIdAsync(selectDate.StartDate.Year, selectDate.EndDate.Month, query.LiveAnchorIds);
             List<CompanyOperationsDataDto> dataList = new List<CompanyOperationsDataDto>();
-
             foreach (var liveanchorId in query.LiveAnchorIds)
             {
                 var liveanchorName = nameList.Where(e => e.Id == liveanchorId).Select(e => e.LiveAnchorName).FirstOrDefault();
@@ -691,16 +690,16 @@ namespace Fx.Amiya.Service
                 var name = assistantNameList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其他";
                 AssistantCustomerAcquisitionDataDto data = new AssistantCustomerAcquisitionDataDto();
                 data.AssistantName = name;
-                data.PotentialAllocationConsulation = e.Where(e => e.AddPrice <= 0).Count();
+                data.PotentialAllocationConsulation = e.Where(e => (e.AddPrice!=29.9m&&e.AddPrice!=199m)).Count();
                 data.PotentialAllocationConsulationTarget = CalTarget(query.StartDate.Value, query.EndDate.Value, target?.PotentialConsulationCardTarget ?? 0);
                 data.PotentialAllocationConsulationTargetComplete = DecimalExtension.CalculateTargetComplete(data.PotentialAllocationConsulation, data.PotentialAllocationConsulationTarget).Value;
-                data.PotentialAddWechat = e.Where(e => e.AddPrice <= 0&&e.IsAddWeChat==true).Count();
+                data.PotentialAddWechat = e.Where(e => (e.AddPrice != 29.9m && e.AddPrice != 199m) && e.IsAddWeChat==true).Count();
                 data.PotentialAddWechatTarget = CalTarget(query.StartDate.Value, query.EndDate.Value, target?.PotentialAddWechatTarget ?? 0);
                 data.PotentialAddWechatTargetComplete = DecimalExtension.CalculateTargetComplete(data.PotentialAddWechat, data.PotentialAddWechatTarget).Value;
-                data.EffectiveAllocationConsulation = e.Where(e => e.AddPrice > 0).Count();
+                data.EffectiveAllocationConsulation = e.Where(e => (e.AddPrice == 29.9m || e.AddPrice == 199m)).Count();
                 data.EffectiveAllocationConsulationTarget = CalTarget(query.StartDate.Value, query.EndDate.Value, target?.EffectiveConsulationCardTarget ?? 0);
                 data.EffectiveAllocationConsulationTargetComplete = DecimalExtension.CalculateTargetComplete(data.EffectiveAllocationConsulation, data.EffectiveAllocationConsulationTarget).Value;
-                data.EffectiveAddWechat = e.Where(e => e.AddPrice > 0 && e.IsAddWeChat == true).Count();
+                data.EffectiveAddWechat = e.Where(e => (e.AddPrice == 29.9m || e.AddPrice == 199m) && e.IsAddWeChat == true).Count();
                 data.EffectiveAddWechatTarget = CalTarget(query.StartDate.Value, query.EndDate.Value, target?.EffectiveAddWechatTarget ?? 0);
                 data.EffectiveAddWechatTargetComplete = DecimalExtension.CalculateTargetComplete(data.EffectiveAddWechat, data.EffectiveAddWechatTarget).Value;
                 return data;
@@ -800,7 +799,7 @@ namespace Fx.Amiya.Service
         {
             var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate.Value, query.EndDate.Value);
             var assistantNameList = await amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(query.LiveAnchorIds);
-            var baseData = await shoppingCartRegistrationService.GetIndicatorConversionDataByAssistantIdsAsync(selectDate.StartDate, selectDate.EndDate, assistantNameList.Select(e => e.Id).ToList(), query.IsOldCustomer);
+            var baseData = await shoppingCartRegistrationService.GetIndicatorConversionDataByAssistantIdsAsync(selectDate.StartDate, selectDate.EndDate, assistantNameList.Select(e => e.Id).ToList(), query.IsEffective);
             var resList = baseData.GroupBy(e => e.EmpId).Select(e =>
              {
                  var name = assistantNameList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其他";

@@ -47,6 +47,8 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.ProductType).HasColumnName("product_type").HasColumnType("int").IsRequired();
             builder.Property(t => t.GetCustomerType).HasColumnName("get_customer_type").HasColumnType("int").IsRequired();
             builder.Property(t => t.ShoppingCartRegistrationCustomerType).HasColumnName("customer_type").HasColumnType("int").IsRequired();
+            builder.Property(t => t.BelongChannel).HasColumnName("belong_channel").HasColumnType("int").IsRequired();
+
 
             builder.HasOne(e => e.Contentplatform).WithMany(e => e.ShoppingCartRegistrationList).HasForeignKey(e => e.ContentPlatFormId);
             builder.HasOne(e => e.LiveAnchor).WithMany(e => e.ShoppingCartRegistrationList).HasForeignKey(e => e.LiveAnchorId);

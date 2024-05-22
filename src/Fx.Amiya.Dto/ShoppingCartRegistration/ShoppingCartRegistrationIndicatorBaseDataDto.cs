@@ -32,6 +32,7 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         /// 截至本月初老客成交人数 
         /// </summary>
         public int OldCustomerCountEndLastMonth { get; set; }
+       
         /// <summary>
         /// 本月老客成交人数
         /// </summary>

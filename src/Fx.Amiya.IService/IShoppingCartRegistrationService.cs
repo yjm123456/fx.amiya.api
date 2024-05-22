@@ -15,7 +15,7 @@ namespace Fx.Amiya.IService
 {
     public interface IShoppingCartRegistrationService
     {
-        Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, int? createBy, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? AdmissionId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? ShoppingCartRegistrationCustomerType, int? emergencyLevel, bool? isBadReview,string baseLiveAnchorId,int? source);
+        Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, int? createBy, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? AdmissionId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? ShoppingCartRegistrationCustomerType, int? emergencyLevel, bool? isBadReview,string baseLiveAnchorId,int? source,int? belongDepartment);
         Task AddAsync(AddShoppingCartRegistrationDto addDto);
 
         Task AddListAsync(List<AddShoppingCartRegistrationDto> addDtoList);
@@ -70,6 +70,11 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         List<BaseKeyValueDto<int>> GetShoppingCartGetCustomerTypeText();
+        /// <summary>
+        /// 获取归属部门
+        /// </summary>
+        /// <returns></returns>
+        List<BaseIdAndNameDto<int>> GetBelongDepartmentList();
         /// <summary>
         /// 根据创建人与时间线获取医美/带货客资加v量
         /// </summary>

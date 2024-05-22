@@ -82,13 +82,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="source">客户来源</param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<ShoppingCartRegistrationVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, int? createBy, bool? isSendOrder, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? assignEmpId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? ShoppingCartRegistrationCustomerType, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId, int? source)
+        public async Task<ResultData<FxPageInfo<ShoppingCartRegistrationVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, int? createBy, bool? isSendOrder, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? assignEmpId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? ShoppingCartRegistrationCustomerType, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId, int? source,int? belongChannel)
         {
             try
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await shoppingCartRegistrationService.GetListWithPageAsync(startDate, endDate, LiveAnchorId, isCreateOrder, createBy, isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, pageNum, pageSize, minPrice, maxPrice, assignEmpId, startRefundTime, endRefundTime, startBadReviewTime, endBadReviewTime, ShoppingCartRegistrationCustomerType, emergencyLevel, isBadReview, baseLiveAnchorId, source);
+                var q = await shoppingCartRegistrationService.GetListWithPageAsync(startDate, endDate, LiveAnchorId, isCreateOrder, createBy, isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, pageNum, pageSize, minPrice, maxPrice, assignEmpId, startRefundTime, endRefundTime, startBadReviewTime, endBadReviewTime, ShoppingCartRegistrationCustomerType, emergencyLevel, isBadReview, baseLiveAnchorId, source, belongChannel);
 
                 var shoppingCartRegistration = from d in q.List
                                                select new ShoppingCartRegistrationVo
@@ -138,7 +138,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                    BaseLiveAnchorId = d.BaseLiveAnchorId,
                                                    BaseLiveAnchorName = d.BaseLiveAnchorName,
                                                    GetCustomerType = d.GetCustomerType,
-                                                   GetCustomerTypeText = d.GetCustomerTypeText
+                                                   GetCustomerTypeText = d.GetCustomerTypeText,
+                                                   BelongChannel = d.BelongChannel,
+                                                   BelongChannelName = d.BelongChannelName
                                                };
 
                 FxPageInfo<ShoppingCartRegistrationVo> shoppingCartRegistrationPageInfo = new FxPageInfo<ShoppingCartRegistrationVo>();
@@ -205,6 +207,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.Source = addVo.Source;
                 addDto.ProductType = addVo.ProductType;
                 addDto.IsConsultation = addVo.IsConsultation;
+                addDto.BelongChannel = addVo.BelongChannel;
                 var contentPlatFormOrder = await contentPlateFormOrderService.GetOrderListByPhoneAsync(addVo.Phone);
                 var isSendOrder = contentPlatFormOrder.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder).Count();
                 if (contentPlatFormOrder.Count > 0)
@@ -277,7 +280,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shoppingCartRegistrationVo.Source = shoppingCartRegistration.Source;
                 shoppingCartRegistrationVo.ProductType = shoppingCartRegistration.ProductType;
                 shoppingCartRegistrationVo.BaseLiveAnchorId = shoppingCartRegistration.BaseLiveAnchorId;
-
+                shoppingCartRegistrationVo.BelongChannel = shoppingCartRegistration.BelongChannel;
+                shoppingCartRegistrationVo.BelongChannelName = shoppingCartRegistration.BelongChannelName;
                 return ResultData<ShoppingCartRegistrationVo>.Success().AddData("shoppingCartRegistrationInfo", shoppingCartRegistrationVo);
             }
             catch (Exception ex)
@@ -344,6 +348,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shoppingCartRegistrationVo.ShoppingCartRegistrationCustomerType = shoppingCartRegistration.ShoppingCartRegistrationCustomerType;
                 shoppingCartRegistrationVo.ShoppingCartRegistrationCustomerTypeText = shoppingCartRegistration.ShoppingCartRegistrationCustomerTypeText;
                 shoppingCartRegistrationVo.ProductType = shoppingCartRegistration.ProductType;
+                shoppingCartRegistrationVo.BelongChannel = shoppingCartRegistration.BelongChannel;
+                shoppingCartRegistrationVo.BelongChannelName = shoppingCartRegistration.BelongChannelName;
+
                 return ResultData<ShoppingCartRegistrationVo>.Success().AddData("shoppingCartRegistrationInfo", shoppingCartRegistrationVo);
             }
             catch (Exception ex)
@@ -405,6 +412,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.ShoppingCartRegistrationCustomerType = updateVo.ShoppingCartRegistrationCustomerType;
                 updateDto.OperationBy = employeeId;
                 updateDto.CreateBy = updateVo.CreateBy;
+                updateDto.BelongChannel = updateVo.BelongChannel;
                 var contentPlatFormOrder = await contentPlateFormOrderService.GetOrderListByPhoneAsync(updateVo.Phone);
                 var isSendOrder = contentPlatFormOrder.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder).Count();
                 if (contentPlatFormOrder.Count > 0)
@@ -576,6 +584,22 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
 
         /// <summary>
+        /// 获取归属渠道列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("shoppingCartGetBelongChannelList")]
+        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetBelongChannelListAsync()
+        {
+            var nameList = shoppingCartRegistrationService.GetBelongDepartmentList();
+            var result = nameList.Select(e => new BaseIdAndNameVo<int>
+            {
+                Id = e.Id,
+                Name = e.Name
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("belongChannelList", result);
+        }
+
+        /// <summary>
         /// 删除小黄车登记信息
         /// </summary>
         /// <param name="id"></param>
@@ -689,8 +713,30 @@ namespace Fx.Amiya.Background.Api.Controllers
                         }
                         if (worksheet.Cells[x, 6].Value != null)
                         {
-                            addDto.Remark = worksheet.Cells[x, 6].Value.ToString();
+                            var department = worksheet.Cells[x, 6].Value.ToString();
+                            switch (department) {
+                                case "直播前":
+                                    addDto.BelongChannel = 1;
+                                    break;
+                                case "直播中":
+                                    addDto.BelongChannel = 2;
+                                    break;
+                                case "直播后":
+                                    addDto.BelongChannel = 3;
+                                    break;
+                                default:
+                                    throw new Exception("归属渠道只能是直播前,直播中,直播后");
+                            }
                         }
+                        else
+                        {
+                            throw new Exception("归属部门有参数列为空，请检查表格数据！");
+                        }
+                        if (worksheet.Cells[x, 7].Value != null)
+                        {
+                            addDto.Remark = worksheet.Cells[x, 7].Value.ToString();
+                        }
+
                         addDto.ContentPlatFormId = "9196b247-1ab9-4d0c-a11e-a1ef09019878";
                         addDto.SubPhone = "";
                         addDto.IsConsultation = false;
@@ -858,7 +904,29 @@ namespace Fx.Amiya.Background.Api.Controllers
                         }
                         if (worksheet.Cells[x, 8].Value != null)
                         {
-                            addDto.Remark += "--" + worksheet.Cells[x, 8].Value.ToString();
+                            var department = worksheet.Cells[x, 8].Value.ToString();
+                            switch (department)
+                            {
+                                case "直播前":
+                                    addDto.BelongChannel = 1;
+                                    break;
+                                case "直播中":
+                                    addDto.BelongChannel = 2;
+                                    break;
+                                case "直播后":
+                                    addDto.BelongChannel = 3;
+                                    break;
+                                default:
+                                    throw new Exception("归属部门只能是直播前,直播中,直播后");
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("归属部门有参数列为空，请检查表格数据！");
+                        }
+                        if (worksheet.Cells[x, 9].Value != null)
+                        {
+                            addDto.Remark += "--" + worksheet.Cells[x, 9].Value.ToString();
                         }
                         addDto.SubPhone = "";
                         addDto.IsConsultation = false;

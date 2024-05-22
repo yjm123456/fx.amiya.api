@@ -91,5 +91,13 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         /// 小黄车登记顾客类型
         /// </summary>
         public int ShoppingCartRegistrationCustomerType { get; set; }
+        /// <summary>
+        /// 归属渠道
+        /// </summary>
+        public int BelongChannel { get; set; }
+        /// <summary>
+        /// 归属渠道名称
+        /// </summary>
+        public string BelongChannelName { get; set; }
     }
 }

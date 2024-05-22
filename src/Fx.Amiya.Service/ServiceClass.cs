@@ -2474,9 +2474,34 @@ namespace Fx.Amiya.Service
                     break;
                 case 7:
                     text = "非本人拍";
-                    break;              
+                    break;
                 default:
                     text = "未知原因";
+                    break;
+            }
+            return text;
+        }
+        /// <summary>
+        /// 小黄车客户归属渠道
+        /// </summary>
+        /// <param name="belongChannel"></param>
+        /// <returns></returns>
+        public static string BelongChannelText(int belongChannel)
+        {
+            string text = "";
+            switch (belongChannel)
+            {
+                case 1:
+                    text = "直播前";
+                    break;
+                case 2:
+                    text = "直播中";
+                    break;
+                case 3:
+                    text = "直播后";
+                    break;
+                default:
+                    text = "未归属";
                     break;
             }
             return text;

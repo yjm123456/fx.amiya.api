@@ -1561,4 +1561,21 @@ namespace Fx.Amiya.IService
         /// </summary>
         UnMySelf = 7
     }
+    /// <summary>
+    /// 小黄车客户归属渠道
+    /// </summary>
+    public enum BelongChannel { 
+        /// <summary>
+        /// 直播前
+        /// </summary>
+        LiveBefore=1,
+        /// <summary>
+        /// 直播中
+        /// </summary>
+        Living=2,
+        /// <summary>
+        /// 直播后
+        /// </summary>
+        LiveAfter=3
+    }
 }
