@@ -1666,7 +1666,7 @@ namespace Fx.Amiya.Service
                 }).ToList();
             var sevenDaySendOrderData = (from c in dalContentPlatformOrder.GetAll()
                                              .Where(e => e.SendDate > startDate && e.SendDate < endDate && e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder)
-                                             .Where(e=> isEffective.Value ? (e.AddOrderPrice == 199m || e.AddOrderPrice == 29.9m) : (e.AddOrderPrice != 199m && e.AddOrderPrice != 29.9m))
+                                             .Where(e=> !isEffective.HasValue|| (isEffective.Value ? (e.AddOrderPrice == 199m || e.AddOrderPrice == 29.9m) : (e.AddOrderPrice != 199m && e.AddOrderPrice != 29.9m)))
                                              .Select(e => new { Phone = e.Phone, SendDate = e.SendDate, AssignEmpId = e.IsSupportOrder ? e.SupportEmpId : e.BelongEmpId }).ToList()
                                          from s in baseData
                                          where s.Phone == c.Phone && c.SendDate.Value.Date <= s.RecordDate.AddDays(7)
@@ -1685,13 +1685,13 @@ namespace Fx.Amiya.Service
                                          select new { Phone = s.Phone, AssignEmpId = c.AssignEmpId });
             var sendOrderData = dalContentPlatformOrderSend.GetAll()
              .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
-             .Where(e => isEffective.Value ? (e.ContentPlatformOrder.AddOrderPrice == 199m || e.ContentPlatformOrder.AddOrderPrice == 29.9m) : (e.ContentPlatformOrder.AddOrderPrice != 199m && e.ContentPlatformOrder.AddOrderPrice != 29.9m))
+             .Where(e => !isEffective.HasValue || (isEffective.Value ? (e.ContentPlatformOrder.AddOrderPrice == 199m || e.ContentPlatformOrder.AddOrderPrice == 29.9m) : (e.ContentPlatformOrder.AddOrderPrice != 199m && e.ContentPlatformOrder.AddOrderPrice != 29.9m)))
              .Where(o => (o.ContentPlatformOrder.IsSupportOrder == false && assistantIds.Contains(o.ContentPlatformOrder.BelongEmpId.Value)) || o.ContentPlatformOrder.IsSupportOrder == true && assistantIds.Contains(o.ContentPlatformOrder.SupportEmpId))
              .Select(e => new { Phone = e.ContentPlatformOrder.Phone, AssignEmpId = e.ContentPlatformOrder.IsSupportOrder ? e.ContentPlatformOrder.SupportEmpId : e.ContentPlatformOrder.BelongEmpId }).ToList();
             var visitData = dalContentPlatFormOrderDealInfo.GetAll()
              .Where(o => (o.CreateDate >= startDate && o.CreateDate < endDate))
              .Where(o => (o.ContentPlatFormOrder.IsSupportOrder == false && assistantIds.Contains(o.ContentPlatFormOrder.BelongEmpId.Value)) || o.ContentPlatFormOrder.IsSupportOrder == true && assistantIds.Contains(o.ContentPlatFormOrder.SupportEmpId))
-             .Where(e => isEffective.Value ? (e.ContentPlatFormOrder.AddOrderPrice == 199m || e.ContentPlatFormOrder.AddOrderPrice == 29.9m) : (e.ContentPlatFormOrder.AddOrderPrice != 199m && e.ContentPlatFormOrder.AddOrderPrice != 29.9m))
+             .Where(e => !isEffective.HasValue|| (isEffective.Value ? (e.ContentPlatFormOrder.AddOrderPrice == 199m || e.ContentPlatFormOrder.AddOrderPrice == 29.9m) : (e.ContentPlatFormOrder.AddOrderPrice != 199m && e.ContentPlatFormOrder.AddOrderPrice != 29.9m)))
              .Select(e => new
              {
                  Phone = e.ContentPlatFormOrder.Phone,
@@ -1707,7 +1707,7 @@ namespace Fx.Amiya.Service
             .Where(o => o.CreateDate < startDate)
             .Where(e => e.IsOldCustomer == true)
             .Where(o => (o.ContentPlatFormOrder.IsSupportOrder == false && assistantIds.Contains(o.ContentPlatFormOrder.BelongEmpId.Value)))
-            .Where(e => isEffective.Value ? (e.ContentPlatFormOrder.AddOrderPrice == 199m || e.ContentPlatFormOrder.AddOrderPrice == 29.9m) : (e.ContentPlatFormOrder.AddOrderPrice != 199m && e.ContentPlatFormOrder.AddOrderPrice != 29.9m))
+            .Where(e => !isEffective.HasValue || (isEffective.Value ? (e.ContentPlatFormOrder.AddOrderPrice == 199m || e.ContentPlatFormOrder.AddOrderPrice == 29.9m) : (e.ContentPlatFormOrder.AddOrderPrice != 199m && e.ContentPlatFormOrder.AddOrderPrice != 29.9m)))
             .Select(o => new { BelongEmpId = o.ContentPlatFormOrder.BelongEmpId.Value, Phone = o.ContentPlatFormOrder.Phone })
             .Distinct()
             .GroupBy(e => e.BelongEmpId)
@@ -1716,7 +1716,7 @@ namespace Fx.Amiya.Service
             .Where(o => o.CreateDate < startDate)
             .Where(e => e.IsOldCustomer == true)
             .Where(o => (o.ContentPlatFormOrder.IsSupportOrder == true && assistantIds.Contains(o.ContentPlatFormOrder.SupportEmpId)))
-            .Where(e => isEffective.Value ? (e.ContentPlatFormOrder.AddOrderPrice == 199m || e.ContentPlatFormOrder.AddOrderPrice == 29.9m) : (e.ContentPlatFormOrder.AddOrderPrice != 199m && e.ContentPlatFormOrder.AddOrderPrice != 29.9m))
+            .Where(e => !isEffective.HasValue || (isEffective.Value ? (e.ContentPlatFormOrder.AddOrderPrice == 199m || e.ContentPlatFormOrder.AddOrderPrice == 29.9m) : (e.ContentPlatFormOrder.AddOrderPrice != 199m && e.ContentPlatFormOrder.AddOrderPrice != 29.9m)))
             .Select(o => new { BelongEmpId = o.ContentPlatFormOrder.BelongEmpId.Value, Phone = o.ContentPlatFormOrder.Phone })
             .Distinct()
             .GroupBy(e => e.BelongEmpId)
@@ -1725,7 +1725,7 @@ namespace Fx.Amiya.Service
             var oldCustomerCountData = dalContentPlatFormOrderDealInfo.GetAll()
             .Where(e => e.IsOldCustomer == true && e.IsDeal == true)
             .Where(o => (o.ContentPlatFormOrder.IsSupportOrder == false && assistantIds.Contains(o.ContentPlatFormOrder.BelongEmpId.Value)))
-             .Where(e => isEffective.Value ? (e.ContentPlatFormOrder.AddOrderPrice == 199m || e.ContentPlatFormOrder.AddOrderPrice == 29.9m) : (e.ContentPlatFormOrder.AddOrderPrice != 199m && e.ContentPlatFormOrder.AddOrderPrice != 29.9m))
+             .Where(e => !isEffective.HasValue || (isEffective.Value ? (e.ContentPlatFormOrder.AddOrderPrice == 199m || e.ContentPlatFormOrder.AddOrderPrice == 29.9m) : (e.ContentPlatFormOrder.AddOrderPrice != 199m && e.ContentPlatFormOrder.AddOrderPrice != 29.9m)))
             .Select(o => new { BelongEmpId = o.ContentPlatFormOrder.BelongEmpId.Value, Phone = o.ContentPlatFormOrder.Phone })
             .Distinct()
             .GroupBy(e => e.BelongEmpId)
@@ -1733,7 +1733,7 @@ namespace Fx.Amiya.Service
             var supportOldCustomerCountData = dalContentPlatFormOrderDealInfo.GetAll()
            .Where(e => e.IsOldCustomer == true)
            .Where(o => (o.ContentPlatFormOrder.IsSupportOrder == true && assistantIds.Contains(o.ContentPlatFormOrder.SupportEmpId)))
-            .Where(e => isEffective.Value ? (e.ContentPlatFormOrder.AddOrderPrice == 199m || e.ContentPlatFormOrder.AddOrderPrice == 29.9m) : (e.ContentPlatFormOrder.AddOrderPrice != 199m && e.ContentPlatFormOrder.AddOrderPrice != 29.9m))
+            .Where(e => !isEffective.HasValue || (isEffective.Value ? (e.ContentPlatFormOrder.AddOrderPrice == 199m || e.ContentPlatFormOrder.AddOrderPrice == 29.9m) : (e.ContentPlatFormOrder.AddOrderPrice != 199m && e.ContentPlatFormOrder.AddOrderPrice != 29.9m)))
            .Select(o => new { BelongEmpId = o.ContentPlatFormOrder.SupportEmpId, Phone = o.ContentPlatFormOrder.Phone })
            .Distinct()
            .GroupBy(e => e.BelongEmpId)
@@ -1742,7 +1742,7 @@ namespace Fx.Amiya.Service
             var newCustomerCountData = dalContentPlatFormOrderDealInfo.GetAll()
             .Where(e => e.IsOldCustomer == false && e.IsDeal == true)
             .Where(o => (o.ContentPlatFormOrder.IsSupportOrder == false && assistantIds.Contains(o.ContentPlatFormOrder.BelongEmpId.Value)))
-             .Where(e => isEffective.Value ? (e.ContentPlatFormOrder.AddOrderPrice == 199m || e.ContentPlatFormOrder.AddOrderPrice == 29.9m) : (e.ContentPlatFormOrder.AddOrderPrice != 199m && e.ContentPlatFormOrder.AddOrderPrice != 29.9m))
+             .Where(e => !isEffective.HasValue || (isEffective.Value ? (e.ContentPlatFormOrder.AddOrderPrice == 199m || e.ContentPlatFormOrder.AddOrderPrice == 29.9m) : (e.ContentPlatFormOrder.AddOrderPrice != 199m && e.ContentPlatFormOrder.AddOrderPrice != 29.9m)))
             .Select(o => new { BelongEmpId = o.ContentPlatFormOrder.BelongEmpId.Value, Phone = o.ContentPlatFormOrder.Phone })
             .Distinct()
             .GroupBy(e => e.BelongEmpId)
@@ -1750,7 +1750,7 @@ namespace Fx.Amiya.Service
             var supportnewCustomerCountData = dalContentPlatFormOrderDealInfo.GetAll()
             .Where(e => e.IsOldCustomer == false && e.IsDeal == true)
             .Where(o => (o.ContentPlatFormOrder.IsSupportOrder == true && assistantIds.Contains(o.ContentPlatFormOrder.SupportEmpId)))
-             .Where(e => isEffective.Value ? (e.ContentPlatFormOrder.AddOrderPrice == 199m || e.ContentPlatFormOrder.AddOrderPrice == 29.9m) : (e.ContentPlatFormOrder.AddOrderPrice != 199m && e.ContentPlatFormOrder.AddOrderPrice != 29.9m))
+             .Where(e => !isEffective.HasValue || (isEffective.Value ? (e.ContentPlatFormOrder.AddOrderPrice == 199m || e.ContentPlatFormOrder.AddOrderPrice == 29.9m) : (e.ContentPlatFormOrder.AddOrderPrice != 199m && e.ContentPlatFormOrder.AddOrderPrice != 29.9m)))
             .Select(o => new { BelongEmpId = o.ContentPlatFormOrder.SupportEmpId, Phone = o.ContentPlatFormOrder.Phone })
             .Distinct()
             .GroupBy(e => e.BelongEmpId)
