@@ -82,7 +82,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="source">客户来源</param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<ShoppingCartRegistrationVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, int? createBy, bool? isSendOrder, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? assignEmpId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? ShoppingCartRegistrationCustomerType, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId, int? source,int? belongChannel)
+        public async Task<ResultData<FxPageInfo<ShoppingCartRegistrationVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, int? createBy, bool? isSendOrder, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? assignEmpId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? ShoppingCartRegistrationCustomerType, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId, int? source, int? belongChannel)
         {
             try
             {
@@ -714,7 +714,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                         if (worksheet.Cells[x, 6].Value != null)
                         {
                             var department = worksheet.Cells[x, 6].Value.ToString();
-                            switch (department) {
+                            switch (department)
+                            {
                                 case "直播前":
                                     addDto.BelongChannel = 1;
                                     break;
@@ -938,7 +939,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                         addDto.CreateBy = employeeId;
                         addDto.IsBadReview = false;
                         addDto.EmergencyLevel = 2;
-
                         addDtoList.Add(addDto);
                     }
                     await shoppingCartRegistrationService.AddListAsync(addDtoList);

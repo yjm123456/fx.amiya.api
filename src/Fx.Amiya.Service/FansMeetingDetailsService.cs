@@ -57,7 +57,7 @@ namespace Fx.Amiya.Service
                                           AppointmentDate = d.AppointmentDate,
                                           AppointmentDetailsDate = d.AppointmentDetailsDate,
                                           CustomerName = d.CustomerName,
-                                          Phone = query.LoginEmpRole == 4 ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
+                                          Phone = query.IsHidePhone == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
                                           CustomerQuantity = d.CustomerQuantity,
                                           CustomerQuantityText = ServiceClass.CustomerQuantityText(d.CustomerQuantity),
                                           IsOldCustomer = d.IsOldCustomer,
@@ -75,7 +75,7 @@ namespace Fx.Amiya.Service
                                       };
             FxPageInfo<FansMeetingDetailsDto> fansMeetingDetailsPageInfo = new FxPageInfo<FansMeetingDetailsDto>();
             fansMeetingDetailsPageInfo.TotalCount = await fansMeetingDetailss.CountAsync();
-            fansMeetingDetailsPageInfo.List = await fansMeetingDetailss.OrderByDescending(x => x.CreateDate).Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToListAsync();
+            fansMeetingDetailsPageInfo.List = await fansMeetingDetailss.OrderBy(x => x.AppointmentDate.Value).ThenBy(x => x.AppointmentDetailsDate).Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToListAsync();
             return fansMeetingDetailsPageInfo;
         }
 

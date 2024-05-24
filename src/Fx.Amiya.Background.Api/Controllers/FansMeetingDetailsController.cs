@@ -26,6 +26,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         private readonly ICustomerService customerService;
         private readonly IWxAppConfigService _wxAppConfigService;
         private IHttpContextAccessor _httpContextAccessor;
+        private IPermissionService permissionService;
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -33,13 +34,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="contentPlateFormOrderService"></param>
         /// <param name="customerService"></param>
         /// <param name="wxAppConfigService"></param>
-        public FansMeetingDetailsController(IFansMeetingDetailsService fansMeetingDetailsService, IContentPlateFormOrderService contentPlateFormOrderService, ICustomerService customerService, IHttpContextAccessor httpContextAccessor, IWxAppConfigService wxAppConfigService)
+        public FansMeetingDetailsController(IFansMeetingDetailsService fansMeetingDetailsService, IContentPlateFormOrderService contentPlateFormOrderService, ICustomerService customerService, IHttpContextAccessor httpContextAccessor, IPermissionService permissionService, IWxAppConfigService wxAppConfigService)
         {
             this.fansMeetingDetailsService = fansMeetingDetailsService;
             this.contentPlateFormOrderService = contentPlateFormOrderService;
             this.customerService = customerService;
             this._wxAppConfigService = wxAppConfigService;
             this._httpContextAccessor = httpContextAccessor;
+            this.permissionService = permissionService;
         }
 
 
@@ -62,7 +64,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryDto.KeyWord = query.KeyWord;
                 queryDto.PageSize = query.PageSize;
 
-
+                queryDto.IsHidePhone = false;
                 queryDto.FansMeetingId = query.FansMeetingId;
                 var q = await fansMeetingDetailsService.GetListAsync(queryDto);
                 var fansMeetingDetails = from d in q.List
@@ -93,9 +95,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                              PlanConsumption = d.PlanConsumption,
                                              Remark = d.Remark,
                                              CustomerPictureUrl = d.CustomerPictureUrl,
-                                             IsDeal=d.IsDeal,
-                                             IsToHospital=d.IsToHospital,
-                                             CumulativeDealPrice=d.CumulativeDealPrice
+                                             IsDeal = d.IsDeal,
+                                             IsToHospital = d.IsToHospital,
+                                             CumulativeDealPrice = d.CumulativeDealPrice
                                          };
 
                 FxPageInfo<FansMeetingDetailsVo> pageInfo = new FxPageInfo<FansMeetingDetailsVo>();
@@ -124,6 +126,13 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int empIdRole = Convert.ToInt32(employee.PositionId);
+                var result = await permissionService.getPermissionsById(empIdRole);
+                bool isHidePhone = true;
+                var findPermissionId = result.Find(x => x == 19);
+                if (findPermissionId > 0)
+                {
+                    isHidePhone = false;
+                }
                 QueryFansMeetingDetailsDto queryDto = new QueryFansMeetingDetailsDto();
                 queryDto.StartDate = query.StartDate;
                 queryDto.EndDate = query.EndDate;
@@ -140,7 +149,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryDto.IsOdCustomer = query.IsOdCustomer;
                 queryDto.StartDealPrice = query.StartDealPrice;
                 queryDto.EndDealPrice = query.EndDealPrice;
-                queryDto.LoginEmpRole = empIdRole;
+                queryDto.IsHidePhone = isHidePhone;
                 var q = await fansMeetingDetailsService.GetListAsync(queryDto);
                 var fansMeetingDetails = from d in q.List
                                          select new FansMeetingDetailsVo
@@ -323,7 +332,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 fansMeetingDetailsVo.PlanConsumption = fansMeetingDetails.PlanConsumption;
                 fansMeetingDetailsVo.Remark = fansMeetingDetails.Remark;
                 fansMeetingDetailsVo.CustomerPictureUrl = fansMeetingDetails.CustomerPictureUrl;
-                fansMeetingDetailsVo.IsDeal=fansMeetingDetails.IsDeal;
+                fansMeetingDetailsVo.IsDeal = fansMeetingDetails.IsDeal;
                 fansMeetingDetailsVo.IsToHospital = fansMeetingDetails.IsToHospital;
                 fansMeetingDetailsVo.CumulativeDealPrice = fansMeetingDetails.CumulativeDealPrice;
                 return ResultData<FansMeetingDetailsVo>.Success().AddData("fansMeetingDetails", fansMeetingDetailsVo);
@@ -370,9 +379,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.PlanConsumption = updateVo.PlanConsumption;
                 updateDto.Remark = updateVo.Remark;
                 updateDto.CustomerPictureUrl = updateVo.CustomerPictureUrl;
-                updateDto.IsDeal=updateVo.IsDeal;
+                updateDto.IsDeal = updateVo.IsDeal;
                 updateDto.IsToHospital = updateVo.IsToHospital;
-                updateDto.CumulativeDealPrice=updateVo.CumulativeDealPrice;
+                updateDto.CumulativeDealPrice = updateVo.CumulativeDealPrice;
                 await fansMeetingDetailsService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -408,14 +417,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("isAttend")]
-        public async Task<ResultData<bool>> isAttendMeeting([FromQuery]AttendMeetingQueryVo query)
+        public async Task<ResultData<bool>> isAttendMeeting([FromQuery] AttendMeetingQueryVo query)
         {
             AttendMeetingQueryDto queryDto = new AttendMeetingQueryDto();
             queryDto.Id = query.Id;
             queryDto.Phone = query.Phone;
             queryDto.HospitalId = query.HospitalId;
-            var res =await fansMeetingDetailsService.IsAttendMeeting(queryDto);
-            return ResultData<bool>.Success().AddData("isAttend",res);
+            var res = await fansMeetingDetailsService.IsAttendMeeting(queryDto);
+            return ResultData<bool>.Success().AddData("isAttend", res);
         }
 
     }

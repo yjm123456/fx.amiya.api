@@ -47,6 +47,6 @@ namespace Fx.Amiya.Dto.FansMeetingDetails.Input
         /// </summary>
         public decimal? EndDealPrice { get; set; }
 
-        public int? LoginEmpRole { get; set; }
+        public bool IsHidePhone { get; set; }
     }
 }
