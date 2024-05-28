@@ -33,6 +33,7 @@ namespace Fx.Amiya.Service
         private IDalHospitalContract dalHospitalContract;
         private IDalAmiyaEmployee dalAmiyaEmployee;
         private IDalHospitalProject dalHospitalProject;
+        private IDalContentPlatformOrderSend dalContentPlatformOrderSend;
         public HospitalInfoService(IDalHospitalInfo dalHospitalInfo,
             IDalHospitalTagDetail dalHospitalTagDetail,
             IUnitOfWork unitOfWork,
@@ -40,7 +41,7 @@ namespace Fx.Amiya.Service
             IDalHospitalPartakeItem dalHospitalQuotedPriceItemInfo,
             IAmiyaEmployeeService amiyaEmployeeService,
             IDalHospitalProject dalHospitalProject,
-            IDalItemInfo dalItemInfo, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalHospitalContract dalHospitalContract, IDalAmiyaEmployee dalAmiyaEmployee)
+            IDalItemInfo dalItemInfo, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalHospitalContract dalHospitalContract, IDalAmiyaEmployee dalAmiyaEmployee, IDalContentPlatformOrderSend dalContentPlatformOrderSend)
         {
             this.dalHospitalInfo = dalHospitalInfo;
             this.dalHospitalTagDetail = dalHospitalTagDetail;
@@ -53,6 +54,7 @@ namespace Fx.Amiya.Service
             this.dalCompanyBaseInfo = dalCompanyBaseInfo;
             this.dalHospitalContract = dalHospitalContract;
             this.dalAmiyaEmployee = dalAmiyaEmployee;
+            this.dalContentPlatformOrderSend = dalContentPlatformOrderSend;
         }
 
 
@@ -1302,7 +1304,18 @@ namespace Fx.Amiya.Service
             }
             return requestTypeList;
         }
-
+        /// <summary>
+        /// 根据时间获取医院派单数
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<ActiveHospitalInfoDto>> GetActiveHospitalListByTimeAsync(QueryActiveHospitalDto query)
+        {
+            return await dalContentPlatformOrderSend.GetAll().Where(e => e.SendDate > query.StartDate && e.SendDate < query.EndDate.AddDays(1).Date).GroupBy(e=>e.HospitalId).Select(e=>new ActiveHospitalInfoDto {
+                HospitalId=e.Key,
+                HospitalName=dalHospitalInfo.GetAll().Where(h=>h.Id==e.Key).Single().Name,
+                SendOrderCount=e.Count()
+            }).ToListAsync();
+        }
 
         #region 【新的医院合同接口】
 
@@ -1427,6 +1440,8 @@ namespace Fx.Amiya.Service
             hospitalProjectInfoDto.ProjectUrl = project.ProjectUrl;
             return hospitalProjectInfoDto;
         }
+
+       
 
         #endregion
 

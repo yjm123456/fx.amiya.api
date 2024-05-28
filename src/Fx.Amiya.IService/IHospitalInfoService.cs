@@ -191,6 +191,11 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<List<BaseKeyValueDto<int>>> GetYearServiceStatusAsync();
+        /// <summary>
+        /// 根据时间获取医院派单数
+        /// </summary>
+        /// <returns></returns>
+        Task<List<ActiveHospitalInfoDto>> GetActiveHospitalListByTimeAsync(QueryActiveHospitalDto query);
 
         #region 【新的医院合同接口】
 

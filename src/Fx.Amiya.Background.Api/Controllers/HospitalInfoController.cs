@@ -999,5 +999,22 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
 
         #endregion
+        /// <summary>
+        /// 获取活跃医院数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("activeHospitalList")]
+        public async Task<ResultData<List<ActiveHospitalInfoVo>>> GetActiveHospitalListByTimeAsync([FromQuery]QueryActiveHospitalVo query) {
+            QueryActiveHospitalDto queryDto = new QueryActiveHospitalDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            var res=(await hospitalInfoService.GetActiveHospitalListByTimeAsync(queryDto)).Select(e=>new ActiveHospitalInfoVo { 
+                HospitalId=e.HospitalId,
+                HospitalName=e.HospitalName,
+                SendOrderCount=e.SendOrderCount
+            }).OrderByDescending(e=>e.SendOrderCount).ToList();
+            return ResultData<List<ActiveHospitalInfoVo>>.Success().AddData("data",res);
+        }
     }
 }
