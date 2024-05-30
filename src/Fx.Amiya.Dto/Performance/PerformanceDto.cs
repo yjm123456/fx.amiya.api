@@ -11,5 +11,8 @@ namespace Fx.Amiya.Dto.Performance
         public int? LiveAnchorId { get; set; }
         public decimal Price { get; set; }
         public int ToHospitalType  { get; set; }
+        public DateTime CreateDate { get; set; }
+
+        public bool IsOldCustomer { get; set; }
     }
 }

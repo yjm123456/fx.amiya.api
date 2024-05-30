@@ -17,7 +17,12 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
          Task<OperationTotalAchievementDataDto> GetTotalAchievementAndDateScheduleAsync(QueryOperationDataDto query);
-        
+        /// <summary>
+        /// 根据条件获取新老客业绩占比
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<GetNewOrOldCustomerCompareDataDto> GetNewOrOldCustomerCompareDataVoAsync(QueryOperationDataDto query);
 
         /// <summary>
         /// 获取获客情况数据

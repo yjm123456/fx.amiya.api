@@ -507,7 +507,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="updateVo"></param>
         /// <returns></returns>
-        [HttpPut("checkOrder")]
+        [HttpPut("checkOrderState")]
         [FxInternalAuthorize]
         public async Task<ResultData> CheckOrderAsync(ContentPlateFormOrderCheckVo updateVo)
         {

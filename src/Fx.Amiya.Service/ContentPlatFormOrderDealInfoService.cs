@@ -2207,7 +2207,9 @@ namespace Fx.Amiya.Service
                 {
                     Price = ContentPlatFOrmOrderDealInfo.Price,
                     LiveAnchorId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.LiveAnchorId,
-                    ToHospitalType = ContentPlatFOrmOrderDealInfo.ToHospitalType
+                    ToHospitalType = ContentPlatFOrmOrderDealInfo.ToHospitalType,
+                    CreateDate = ContentPlatFOrmOrderDealInfo.CreateDate,
+                    IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer
                 }
                 ).ToListAsync();
         }

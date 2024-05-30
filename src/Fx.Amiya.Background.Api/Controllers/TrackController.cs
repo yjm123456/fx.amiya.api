@@ -398,7 +398,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("recordListByEncryptPhone")]
-        [FxInternalAuthorize]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData<FxPageInfo<TrackRecordVo>>> GetRecordListByEncryptPhoneWithPageAsync(string encryptPhone, string shoppingCartRegistionId, int pageNum, int pageSize)
         {
             var q = await trackService.GetRecordListByEncryptPhoneWithPageAsync(encryptPhone, shoppingCartRegistionId, pageNum, pageSize);
@@ -448,7 +448,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="addVo"></param>
         /// <returns></returns>  
         [HttpPost("trackRecord")]
-        [FxInternalAuthorize]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData> AddTrackRecordAsync(AddTrackRecordVo addVo)
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
@@ -494,7 +494,57 @@ namespace Fx.Amiya.Background.Api.Controllers
 
         }
 
+        /// <summary>
+        /// 添加回访记录(医院端)
+        /// </summary>
+        /// <param name="addVo"></param>
+        /// <returns></returns>  
+        [HttpPost("trackRecordByHospital")]
+        [FxInternalOrTenantAuthroize]
+        public async Task<ResultData> AddTrackRecordByHospitalAsync(AddTrackRecordVo addVo)
+        {
+           
 
+            AddTrackRecordDto addDto = new AddTrackRecordDto();
+            addDto.WaitTrackId = addVo.WaitTrackId;
+            addDto.EncryptPhone = addVo.EncryptPhone;
+            addDto.TrackContent = addVo.TrackContent;
+            addDto.TrackToolId = addVo.TrackToolId;
+            addDto.TrackPlan = addVo.TrackPlan;
+            addDto.TrackTypeId = addVo.TrackTypeId;
+            addDto.TrackThemeId = addVo.TrackThemeId;
+            addDto.Valid = addVo.Valid;
+            addDto.CallRecordId = addVo.CallRecordId;
+            addDto.TrackPicture1 = addVo.TrackPicture1;
+            addDto.TrackPicture2 = addVo.TrackPicture2;
+            addDto.TrackPicture3 = addVo.TrackPicture3;
+            addDto.ShoppingCartRegistionId = addVo.ShoppingCartRegistionId;
+            addDto.IsOldCustomerTrack = addVo.IsOldCustomerTrack;
+            addDto.IsAddWechat = addVo.IsAddWechat;
+            addDto.UnAddWechatReasonId = addVo.UnAddWechatReasonId;
+            List<AddWaitTrackCustomerDto> waitTrackRecordList = new List<AddWaitTrackCustomerDto>();
+            if (addVo.AddWaitTrackCustomer != null)
+            {
+                foreach (var x in addVo.AddWaitTrackCustomer)
+                {
+                    AddWaitTrackCustomerDto addList = new AddWaitTrackCustomerDto();
+                    addList = new AddWaitTrackCustomerDto()
+                    {
+                        PlanTrackDate = x.PlanTrackDate,
+                        TrackTypeId = x.TrackTypeId,
+                        TrackThemeId = x.TrackThemeId,
+                        OtherTrackEmployeeId = x.OtherTrackEmployeeId,
+                        TrackPlan = x.TrackPlan
+                    };
+                    waitTrackRecordList.Add(addList);
+                }
+            }
+            addDto.AddWaitTrackCustomer = waitTrackRecordList;
+            //线上改为266
+            int result = await trackService.AddTrackRecordAsync(addDto, 193);
+            return ResultData.Success();
+
+        }
 
 
 

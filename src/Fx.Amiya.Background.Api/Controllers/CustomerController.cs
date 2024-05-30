@@ -245,7 +245,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("newBindCustomerServerList")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<NewCustomerInfoVo>>> GetNewBindCustomerServiceListAsync([FromQuery]QueryBIndCustomerServicePageVo query)
+        public async Task<ResultData<FxPageInfo<NewCustomerInfoVo>>> GetNewBindCustomerServiceListAsync([FromQuery] QueryBIndCustomerServicePageVo query)
         {
             if (query.EmployeeId == null)
             {
@@ -259,7 +259,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             customerSearchParamDto.EndDate = query.EndDate;
             customerSearchParamDto.EmployeeId = (int)query.EmployeeId;
             customerSearchParamDto.MinAmount = query.MinAmount;
-            customerSearchParamDto.MaxAmount = query.MaxAmount; 
+            customerSearchParamDto.MaxAmount = query.MaxAmount;
             customerSearchParamDto.PageNum = query.PageNum.Value;
             customerSearchParamDto.PageSize = query.PageSize.Value;
             var q = await customerService.GetNewBindCustomerServiceListAsync(customerSearchParamDto);
@@ -268,10 +268,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                            {
                                Phone = d.Phone,
                                EncryptPhone = d.EncryptPhone,
-                               CreateDate=d.CreateDate,
+                               CreateDate = d.CreateDate,
                                CustomerServiceId = d.CustomerServiceId,
                                CustomerServiceName = d.CustomerServiceName,
-                              
+
                            };
             FxPageInfo<NewCustomerInfoVo> customerPageInfo = new FxPageInfo<NewCustomerInfoVo>();
             customerPageInfo.TotalCount = q.TotalCount;
@@ -587,7 +587,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="encryptPhone"></param>
         /// <returns></returns>
         [HttpGet("decryptoPhone/{encryptPhone}")]
-        [FxInternalAuthorize]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData<string>> DecryptoPhone(string encryptPhone)
         {
             string phone = await customerService.DecryptoPhone(encryptPhone);
