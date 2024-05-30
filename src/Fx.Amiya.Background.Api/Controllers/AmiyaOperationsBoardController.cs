@@ -166,6 +166,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         #region 转化
+        
 
         #endregion
 
@@ -319,321 +320,321 @@ namespace Fx.Amiya.Background.Api.Controllers
         //#endregion
 
         //#region 公司看板
-        ///// <summary>
-        ///// 获取公司看板业绩情况数据
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpGet("companyPerformanceData")]
-        //public async Task<ResultData<List<CompanyPerformanceDataVo>>> GetCompanyPerformanceDataAsync([FromQuery] QueryAmiyaCompanyOperationsDataVo query)
-        //{
-        //    QueryAmiyaCompanyOperationsDataDto querDto = new QueryAmiyaCompanyOperationsDataDto();
-        //    querDto.StartDate = query.StartDate;
-        //    querDto.EndDate = query.EndDate;
-        //    querDto.Unit = query.Unit;
-        //    querDto.LiveAnchorIds = query.LiveAnchorIds;
-        //    var data = await amiyaOperationsBoardService.GetCompanyPerformanceDataAsync(querDto);
-        //    var res = data.Select(e => new CompanyPerformanceDataVo
-        //    {
-        //        GroupName = e.GroupName,
-        //        CurrentMonthNewCustomerPerformance = e.CurrentMonthNewCustomerPerformance,
-        //        NewCustomerPerformanceTarget = e.NewCustomerPerformanceTarget,
-        //        NewCustomerPerformanceTargetComplete = e.NewCustomerPerformanceTargetComplete,
-        //        CurrentMonthOldCustomerPerformance = e.CurrentMonthOldCustomerPerformance,
-        //        OldCustomerTarget = e.OldCustomerTarget,
-        //        OldCustomerTargetComplete = e.OldCustomerTargetComplete,
-        //        TotalPerformance = e.TotalPerformance,
-        //        TotalPerformanceTarget = e.TotalPerformanceTarget,
-        //        TotalPerformanceTargetComplete = e.TotalPerformanceTargetComplete
-        //    }).OrderBy(e => e.GroupName).ToList();
-        //    return ResultData<List<CompanyPerformanceDataVo>>.Success().AddData("data", res);
-        //}
-        ///// <summary>
-        ///// 获取公司看板获客情况数据
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpGet("companyCustomerAcquisition")]
-        //public async Task<ResultData<List<CompanyCustomerAcquisitionDataVo>>> GetCompanyCustomerAcquisitionDataAsync([FromQuery] QueryAmiyaCompanyOperationsDataVo query)
-        //{
-        //    QueryAmiyaCompanyOperationsDataDto querDto = new QueryAmiyaCompanyOperationsDataDto();
-        //    querDto.StartDate = query.StartDate;
-        //    querDto.EndDate = query.EndDate;
-        //    querDto.Unit = query.Unit;
-        //    querDto.LiveAnchorIds = query.LiveAnchorIds;
-        //    var data = await amiyaOperationsBoardService.GetCompanyCustomerAcquisitionDataAsync(querDto);
-        //    var res = data.Select(e => new CompanyCustomerAcquisitionDataVo
-        //    {
-        //        GroupName = e.GroupName,
-        //        OrderCard = e.OrderCard,
-        //        OrderCardTarget = e.OrderCardTarget,
-        //        OrderCardTargetComplete = e.OrderCardTargetComplete,
-        //        RefundCard = e.RefundCard,
-        //        OrderCardError = e.OrderCardError,
-        //        AllocationConsulation = e.AllocationConsulation,
-        //        AllocationConsulationTarget = e.AllocationConsulationTarget,
-        //        AllocationConsulationTargetComplete = e.AllocationConsulationTargetComplete,
-        //        AddWechat = e.AddWechat,
-        //        AddWechatTarget = e.AddWechatTarget,
-        //        AddWechatTargetComplete = e.AddWechatTargetComplete,
-        //    }).OrderBy(e => e.GroupName).ToList();
-        //    return ResultData<List<CompanyCustomerAcquisitionDataVo>>.Success().AddData("data", res);
-        //}
-        ///// <summary>
-        ///// 获取公司看板运营情况数据
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpGet("companyOperationsData")]
-        //public async Task<ResultData<List<CompanyOperationsDataVo>>> GetCompanyOperationsDataAsync([FromQuery] QueryAmiyaCompanyOperationsDataVo query)
-        //{
-        //    QueryAmiyaCompanyOperationsDataDto querDto = new QueryAmiyaCompanyOperationsDataDto();
-        //    querDto.StartDate = query.StartDate;
-        //    querDto.EndDate = query.EndDate;
-        //    querDto.Unit = query.Unit;
-        //    querDto.LiveAnchorIds = query.LiveAnchorIds;
-        //    querDto.IsOldCustomer = query.IsOldCustomer;
-        //    var data = await amiyaOperationsBoardService.GetCompanyOperationsDataAsync(querDto);
-        //    var res = data.Select(e => new CompanyOperationsDataVo
-        //    {
-        //        GroupName = e.GroupName,
-        //        SendOrder = e.SendOrder,
-        //        SendOrderTarget = e.SendOrderTarget,
-        //        SendOrderTargetComplete = e.SendOrderTargetComplete,
-        //        ToHospital = e.ToHospital,
-        //        ToHospitalTarget = e.ToHospitalTarget,
-        //        ToHospitalTargetComplete = e.ToHospitalTargetComplete,
-        //        Deal = e.Deal,
-        //        DealTarget = e.DealTarget,
-        //        DealTargetComplete = e.DealTargetComplete,
-        //    }).OrderBy(e => e.GroupName).ToList();
-        //    return ResultData<List<CompanyOperationsDataVo>>.Success().AddData("data", res);
-        //}
-        ///// <summary>
-        ///// 获取公司看板指标转化情况数据
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpGet("companyIndicatorConversionData")]
-        //public async Task<ResultData<List<CompanyIndicatorConversionDataVo>>> GetCompanyIndicatorConversionDataAsync([FromQuery] QueryAmiyaCompanyOperationsDataVo query)
-        //{
-        //    QueryAmiyaCompanyOperationsDataDto querDto = new QueryAmiyaCompanyOperationsDataDto();
-        //    querDto.StartDate = query.StartDate;
-        //    querDto.EndDate = query.EndDate;
-        //    querDto.Unit = query.Unit;
-        //    querDto.LiveAnchorIds = query.LiveAnchorIds;
-        //    querDto.IsEffective = query.IsEffective;
-        //    var data = await amiyaOperationsBoardService.GetCompanyIndicatorConversionDataAsync(querDto);
-        //    var res = data.Select(e => new CompanyIndicatorConversionDataVo
-        //    {
-        //        GroupName = e.GroupName,
-        //        SevenDaySendOrderRate = e.SevenDaySendOrderRate,
-        //        FifteenDaySendOrderRate = e.FifteenDaySendOrderRate,
-        //        OldCustomerToHospitalRate = e.OldCustomerToHospitalRate,
-        //        RePurchaseRate = e.RePurchaseRate,
-        //        AddWechatRate = e.AddWechatRate,
-        //        SendOrderRate = e.SendOrderRate,
-        //        ToHospitalRate = e.ToHospitalRate,
-        //        NewCustomerDealRate = e.NewCustomerDealRate,
-        //        NewCustomerUnitPrice = e.NewCustomerUnitPrice,
-        //        OldCustomerUnitPrice = e.OldCustomerUnitPrice,
-        //    }).OrderBy(e => e.GroupName).ToList();
-        //    return ResultData<List<CompanyIndicatorConversionDataVo>>.Success().AddData("data", res);
-        //}
+        /// <summary>
+        /// 获取公司看板业绩情况数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("companyPerformanceData")]
+        public async Task<ResultData<List<CompanyPerformanceDataVo>>> GetCompanyPerformanceDataAsync([FromQuery] QueryAmiyaCompanyOperationsDataVo query)
+        {
+            QueryAmiyaCompanyOperationsDataDto querDto = new QueryAmiyaCompanyOperationsDataDto();
+            querDto.StartDate = query.StartDate;
+            querDto.EndDate = query.EndDate;
+            querDto.Unit = query.Unit;
+            querDto.LiveAnchorIds = query.LiveAnchorIds;
+            var data = await amiyaOperationsBoardService.GetCompanyPerformanceDataAsync(querDto);
+            var res = data.Select(e => new CompanyPerformanceDataVo
+            {
+                GroupName = e.GroupName,
+                CurrentMonthNewCustomerPerformance = e.CurrentMonthNewCustomerPerformance,
+                NewCustomerPerformanceTarget = e.NewCustomerPerformanceTarget,
+                NewCustomerPerformanceTargetComplete = e.NewCustomerPerformanceTargetComplete,
+                CurrentMonthOldCustomerPerformance = e.CurrentMonthOldCustomerPerformance,
+                OldCustomerTarget = e.OldCustomerTarget,
+                OldCustomerTargetComplete = e.OldCustomerTargetComplete,
+                TotalPerformance = e.TotalPerformance,
+                TotalPerformanceTarget = e.TotalPerformanceTarget,
+                TotalPerformanceTargetComplete = e.TotalPerformanceTargetComplete
+            }).OrderBy(e => e.GroupName).ToList();
+            return ResultData<List<CompanyPerformanceDataVo>>.Success().AddData("data", res);
+        }
+        /// <summary>
+        /// 获取公司看板获客情况数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("companyCustomerAcquisition")]
+        public async Task<ResultData<List<CompanyCustomerAcquisitionDataVo>>> GetCompanyCustomerAcquisitionDataAsync([FromQuery] QueryAmiyaCompanyOperationsDataVo query)
+        {
+            QueryAmiyaCompanyOperationsDataDto querDto = new QueryAmiyaCompanyOperationsDataDto();
+            querDto.StartDate = query.StartDate;
+            querDto.EndDate = query.EndDate;
+            querDto.Unit = query.Unit;
+            querDto.LiveAnchorIds = query.LiveAnchorIds;
+            var data = await amiyaOperationsBoardService.GetCompanyCustomerAcquisitionDataAsync(querDto);
+            var res = data.Select(e => new CompanyCustomerAcquisitionDataVo
+            {
+                GroupName = e.GroupName,
+                OrderCard = e.OrderCard,
+                OrderCardTarget = e.OrderCardTarget,
+                OrderCardTargetComplete = e.OrderCardTargetComplete,
+                RefundCard = e.RefundCard,
+                OrderCardError = e.OrderCardError,
+                AllocationConsulation = e.AllocationConsulation,
+                AllocationConsulationTarget = e.AllocationConsulationTarget,
+                AllocationConsulationTargetComplete = e.AllocationConsulationTargetComplete,
+                AddWechat = e.AddWechat,
+                AddWechatTarget = e.AddWechatTarget,
+                AddWechatTargetComplete = e.AddWechatTargetComplete,
+            }).OrderBy(e => e.GroupName).ToList();
+            return ResultData<List<CompanyCustomerAcquisitionDataVo>>.Success().AddData("data", res);
+        }
+        /// <summary>
+        /// 获取公司看板运营情况数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("companyOperationsData")]
+        public async Task<ResultData<List<CompanyOperationsDataVo>>> GetCompanyOperationsDataAsync([FromQuery] QueryAmiyaCompanyOperationsDataVo query)
+        {
+            QueryAmiyaCompanyOperationsDataDto querDto = new QueryAmiyaCompanyOperationsDataDto();
+            querDto.StartDate = query.StartDate;
+            querDto.EndDate = query.EndDate;
+            querDto.Unit = query.Unit;
+            querDto.LiveAnchorIds = query.LiveAnchorIds;
+            querDto.IsOldCustomer = query.IsOldCustomer;
+            var data = await amiyaOperationsBoardService.GetCompanyOperationsDataAsync(querDto);
+            var res = data.Select(e => new CompanyOperationsDataVo
+            {
+                GroupName = e.GroupName,
+                SendOrder = e.SendOrder,
+                SendOrderTarget = e.SendOrderTarget,
+                SendOrderTargetComplete = e.SendOrderTargetComplete,
+                ToHospital = e.ToHospital,
+                ToHospitalTarget = e.ToHospitalTarget,
+                ToHospitalTargetComplete = e.ToHospitalTargetComplete,
+                Deal = e.Deal,
+                DealTarget = e.DealTarget,
+                DealTargetComplete = e.DealTargetComplete,
+            }).OrderBy(e => e.GroupName).ToList();
+            return ResultData<List<CompanyOperationsDataVo>>.Success().AddData("data", res);
+        }
+        /// <summary>
+        /// 获取公司看板指标转化情况数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("companyIndicatorConversionData")]
+        public async Task<ResultData<List<CompanyIndicatorConversionDataVo>>> GetCompanyIndicatorConversionDataAsync([FromQuery] QueryAmiyaCompanyOperationsDataVo query)
+        {
+            QueryAmiyaCompanyOperationsDataDto querDto = new QueryAmiyaCompanyOperationsDataDto();
+            querDto.StartDate = query.StartDate;
+            querDto.EndDate = query.EndDate;
+            querDto.Unit = query.Unit;
+            querDto.LiveAnchorIds = query.LiveAnchorIds;
+            querDto.IsEffective = query.IsEffective;
+            var data = await amiyaOperationsBoardService.GetCompanyIndicatorConversionDataAsync(querDto);
+            var res = data.Select(e => new CompanyIndicatorConversionDataVo
+            {
+                GroupName = e.GroupName,
+                SevenDaySendOrderRate = e.SevenDaySendOrderRate,
+                FifteenDaySendOrderRate = e.FifteenDaySendOrderRate,
+                OldCustomerToHospitalRate = e.OldCustomerToHospitalRate,
+                RePurchaseRate = e.RePurchaseRate,
+                AddWechatRate = e.AddWechatRate,
+                SendOrderRate = e.SendOrderRate,
+                ToHospitalRate = e.ToHospitalRate,
+                NewCustomerDealRate = e.NewCustomerDealRate,
+                NewCustomerUnitPrice = e.NewCustomerUnitPrice,
+                OldCustomerUnitPrice = e.OldCustomerUnitPrice,
+            }).OrderBy(e => e.GroupName).ToList();
+            return ResultData<List<CompanyIndicatorConversionDataVo>>.Success().AddData("data", res);
+        }
 
-        ///// <summary>
-        ///// 获取公司当月/历史新客分诊转换情况
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpGet("companyNewCustomerConversionData")]
-        //public async Task<ResultData<List<CompanyNewCustomerConversionDataVo>>> GetCompanyNewCustomerConversionDataAsync([FromQuery] QueryAmiyaCompanyOperationsDataVo query)
-        //{
-        //    List<CompanyNewCustomerConversionDataDto> res = new List<CompanyNewCustomerConversionDataDto>();
-        //    QueryAmiyaCompanyOperationsDataDto querDto = new QueryAmiyaCompanyOperationsDataDto();
-        //    querDto.StartDate = query.StartDate;
-        //    querDto.EndDate = query.EndDate;
-        //    querDto.Unit = query.Unit;
-        //    querDto.LiveAnchorIds = query.LiveAnchorIds;
-        //    querDto.IsEffective = query.IsEffective;
-        //    querDto.IsCurrentMonth = query.IsCurrentMonth;
-        //    if (querDto.IsCurrentMonth.Value)
-        //    {
-        //        res = await amiyaOperationsBoardService.GetCompanyNewCustomerConversionDataAsync(querDto);
-        //    }
-        //    else
-        //    {
-        //        res = await amiyaOperationsBoardService.GetHistoryNewCustomerConversionDataAsync(querDto);
-        //    }
-        //    var data = res.Select(e => new CompanyNewCustomerConversionDataVo
-        //    {
-        //        GroupName = e.GroupName,
-        //        SendOrderCount = e.SendOrderCount,
-        //        DistributeConsulationNum = e.DistributeConsulationNum,
-        //        AddWechatCount = e.AddWechatCount,
-        //        AddWechatRate = e.AddWechatRate,
-        //        SendOrderRate = e.SendOrderRate,
-        //        ToHospitalCount = e.ToHospitalCount,
-        //        ToHospitalRate = e.ToHospitalRate,
-        //        DealCount = e.DealCount,
-        //        DealRate = e.DealRate,
-        //        Performance = e.Performance,
-        //    }).OrderBy(e => e.GroupName).ToList();
-        //    return ResultData<List<CompanyNewCustomerConversionDataVo>>.Success().AddData("data", data);
-        //}
+        /// <summary>
+        /// 获取公司当月/历史新客分诊转换情况
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("companyNewCustomerConversionData")]
+        public async Task<ResultData<List<CompanyNewCustomerConversionDataVo>>> GetCompanyNewCustomerConversionDataAsync([FromQuery] QueryAmiyaCompanyOperationsDataVo query)
+        {
+            List<CompanyNewCustomerConversionDataDto> res = new List<CompanyNewCustomerConversionDataDto>();
+            QueryAmiyaCompanyOperationsDataDto querDto = new QueryAmiyaCompanyOperationsDataDto();
+            querDto.StartDate = query.StartDate;
+            querDto.EndDate = query.EndDate;
+            querDto.Unit = query.Unit;
+            querDto.LiveAnchorIds = query.LiveAnchorIds;
+            querDto.IsEffective = query.IsEffective;
+            querDto.IsCurrentMonth = query.IsCurrentMonth;
+            if (querDto.IsCurrentMonth.Value)
+            {
+                res = await amiyaOperationsBoardService.GetCompanyNewCustomerConversionDataAsync(querDto);
+            }
+            else
+            {
+                res = await amiyaOperationsBoardService.GetHistoryNewCustomerConversionDataAsync(querDto);
+            }
+            var data = res.Select(e => new CompanyNewCustomerConversionDataVo
+            {
+                GroupName = e.GroupName,
+                SendOrderCount = e.SendOrderCount,
+                DistributeConsulationNum = e.DistributeConsulationNum,
+                AddWechatCount = e.AddWechatCount,
+                AddWechatRate = e.AddWechatRate,
+                SendOrderRate = e.SendOrderRate,
+                ToHospitalCount = e.ToHospitalCount,
+                ToHospitalRate = e.ToHospitalRate,
+                DealCount = e.DealCount,
+                DealRate = e.DealRate,
+                Performance = e.Performance,
+            }).OrderBy(e => e.GroupName).ToList();
+            return ResultData<List<CompanyNewCustomerConversionDataVo>>.Success().AddData("data", data);
+        }
         //#endregion
 
         //#region 助理看板
-        ///// <summary>
-        ///// 获取助理看板业绩情况数据
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpGet("assistantPerformanceData")]
-        //public async Task<ResultData<List<AssistantPerformanceDataVo>>> GetAssistantPerformanceDataAsync([FromQuery] QueryAmiyaAssistantOperationsDataVo query)
-        //{
-        //    QueryAmiyaAssistantOperationsDataDto queryDto = new QueryAmiyaAssistantOperationsDataDto();
-        //    queryDto.Unit = query.Unit;
-        //    queryDto.StartDate = query.StartDate;
-        //    queryDto.EndDate = query.EndDate;
-        //    if (string.IsNullOrEmpty(query.LiveAnchorIds))
-        //    {
-        //        queryDto.LiveAnchorIds = (await liveAnchorBaseInfoService.GetValidAsync(true)).Select(e => e.Id).ToList();
-        //    }
-        //    else
-        //    {
-        //        queryDto.LiveAnchorIds = query.LiveAnchorIds.Split(",").ToList();
-        //    }
+        /// <summary>
+        /// 获取助理看板业绩情况数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("assistantPerformanceData")]
+        public async Task<ResultData<List<AssistantPerformanceDataVo>>> GetAssistantPerformanceDataAsync([FromQuery] QueryAmiyaAssistantOperationsDataVo query)
+        {
+            QueryAmiyaAssistantOperationsDataDto queryDto = new QueryAmiyaAssistantOperationsDataDto();
+            queryDto.Unit = query.Unit;
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            if (string.IsNullOrEmpty(query.LiveAnchorIds))
+            {
+                queryDto.LiveAnchorIds = (await liveAnchorBaseInfoService.GetValidAsync(true)).Select(e => e.Id).ToList();
+            }
+            else
+            {
+                queryDto.LiveAnchorIds = query.LiveAnchorIds.Split(",").ToList();
+            }
 
-        //    queryDto.IsOldCustomer = query.IsOldCustomer;
-        //    queryDto.IsEffective = query.IsEffective;
+            queryDto.IsOldCustomer = query.IsOldCustomer;
+            queryDto.IsEffective = query.IsEffective;
 
-        //    var data = await amiyaOperationsBoardService.GetAssistantPerformanceDataAsync(queryDto);
-        //    var res = data.Select(e => new AssistantPerformanceDataVo
-        //    {
-        //        AssistantName = e.AssistantName,
-        //        CurrentMonthNewCustomerPerformance = e.CurrentMonthNewCustomerPerformance,
-        //        NewCustomerPerformanceTarget = e.NewCustomerPerformanceTarget,
-        //        NewCustomerPerformanceTargetComplete = e.NewCustomerPerformanceTargetComplete,
-        //        CurrentMonthOldCustomerPerformance = e.CurrentMonthOldCustomerPerformance,
-        //        OldCustomerTarget = e.OldCustomerTarget,
-        //        OldCustomerTargetComplete = e.OldCustomerTargetComplete,
-        //        TotalPerformance = e.TotalPerformance,
-        //        TotalPerformanceTarget = e.TotalPerformanceTarget,
-        //        TotalPerformanceTargetComplete = e.TotalPerformanceTargetComplete,
-        //    }).OrderBy(e=>e.TotalPerformance).ToList();
-        //    return ResultData<List<AssistantPerformanceDataVo>>.Success().AddData("data", res);
-        //}
-        ///// <summary>
-        ///// 获取助理看板获客情况数据
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpGet("assistantCustomerAcquisition")]
-        //public async Task<ResultData<List<AssistantCustomerAcquisitionDataVo>>> GetAssistantCustomerAcquisitionDataAsync([FromQuery] QueryAmiyaAssistantOperationsDataVo query)
-        //{
-        //    QueryAmiyaAssistantOperationsDataDto queryDto = new QueryAmiyaAssistantOperationsDataDto();
-        //    queryDto.Unit = query.Unit;
-        //    queryDto.StartDate = query.StartDate;
-        //    queryDto.EndDate = query.EndDate;
-        //    if (string.IsNullOrEmpty(query.LiveAnchorIds))
-        //    {
-        //        queryDto.LiveAnchorIds = (await liveAnchorBaseInfoService.GetValidAsync(true)).Select(e => e.Id).ToList();
-        //    }
-        //    else
-        //    {
-        //        queryDto.LiveAnchorIds = query.LiveAnchorIds.Split(",").ToList();
-        //    }
-        //    queryDto.IsOldCustomer = query.IsOldCustomer;
-        //    queryDto.IsEffective = query.IsEffective;
-        //    var data = await amiyaOperationsBoardService.GetAssistantCustomerAcquisitionDataAsync(queryDto);
-        //    var res = data.Select(e => new AssistantCustomerAcquisitionDataVo
-        //    {
-        //        AssistantName = e.AssistantName,
-        //        PotentialAllocationConsulation = e.PotentialAllocationConsulation,
-        //        PotentialAllocationConsulationTarget = e.PotentialAllocationConsulationTarget,
-        //        PotentialAllocationConsulationTargetComplete = e.PotentialAllocationConsulationTargetComplete,
-        //        PotentialAddWechat = e.PotentialAddWechat,
-        //        PotentialAddWechatTarget = e.PotentialAddWechatTarget,
-        //        PotentialAddWechatTargetComplete = e.PotentialAddWechatTargetComplete,
-        //        EffectiveAllocationConsulation = e.EffectiveAllocationConsulation,
-        //        EffectiveAllocationConsulationTarget = e.EffectiveAllocationConsulationTarget,
-        //        EffectiveAllocationConsulationTargetComplete = e.EffectiveAllocationConsulationTargetComplete,
-        //        EffectiveAddWechat = e.EffectiveAddWechat,
-        //        EffectiveAddWechatTarget = e.EffectiveAddWechatTarget,
-        //        EffectiveAddWechatTargetComplete = e.EffectiveAddWechatTargetComplete,
-        //    }).ToList();
-        //    return ResultData<List<AssistantCustomerAcquisitionDataVo>>.Success().AddData("data", res);
-        //}
-        ///// <summary>
-        ///// 获取助理看板运营情况数据
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpGet("assistantOperationsData")]
-        //public async Task<ResultData<List<AssistantOperationsDataVo>>> GetAssistantOperationsDataAsync([FromQuery] QueryAmiyaAssistantOperationsDataVo query)
-        //{
-        //    QueryAmiyaAssistantOperationsDataDto queryDto = new QueryAmiyaAssistantOperationsDataDto();
-        //    queryDto.Unit = query.Unit;
-        //    queryDto.StartDate = query.StartDate;
-        //    queryDto.EndDate = query.EndDate;
-        //    if (string.IsNullOrEmpty(query.LiveAnchorIds))
-        //    {
-        //        queryDto.LiveAnchorIds = (await liveAnchorBaseInfoService.GetValidAsync(true)).Select(e => e.Id).ToList();
-        //    }
-        //    else
-        //    {
-        //        queryDto.LiveAnchorIds = query.LiveAnchorIds.Split(",").ToList();
-        //        queryDto.LiveAnchorIds = query.LiveAnchorIds.Split(",").ToList();
-        //    }
-        //    queryDto.IsOldCustomer = query.IsOldCustomer;
-        //    queryDto.IsEffective = query.IsEffective;
-        //    var data = await amiyaOperationsBoardService.GetAssistantOperationsDataAsync(queryDto);
-        //    var res = data.Select(e => new AssistantOperationsDataVo
-        //    {
-        //        AssistantName = e.AssistantName,
-        //        SendOrder = e.SendOrder,
-        //        SendOrderTarget = e.SendOrderTarget,
-        //        SendOrderTargetComplete = e.SendOrderTargetComplete,
-        //        ToHospital = e.ToHospital,
-        //        ToHospitalTarget = e.ToHospitalTarget,
-        //        ToHospitalTargetComplete = e.ToHospitalTargetComplete,
-        //        Deal = e.Deal,
-        //        DealTarget = e.DealTarget,
-        //        DealTargetComplete = e.DealTargetComplete,
-        //    }).ToList();
-        //    return ResultData<List<AssistantOperationsDataVo>>.Success().AddData("data", res);
-        //}
-        ///// <summary>
-        ///// 获取助理看板指标转化情况数据
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpGet("assistantIndicatorConversionData")]
-        //public async Task<ResultData<List<AssistantIndicatorConversionDataVo>>> GetAssistantIndicatorConversionDataAsync([FromQuery] QueryAmiyaAssistantOperationsDataVo query)
-        //{
-        //    QueryAmiyaAssistantOperationsDataDto queryDto = new QueryAmiyaAssistantOperationsDataDto();
-        //    queryDto.Unit = query.Unit;
-        //    queryDto.StartDate = query.StartDate;
-        //    queryDto.EndDate = query.EndDate;
-        //    if (string.IsNullOrEmpty(query.LiveAnchorIds))
-        //    {
-        //        queryDto.LiveAnchorIds = (await liveAnchorBaseInfoService.GetValidAsync(true)).Select(e => e.Id).ToList();
-        //    }
-        //    else
-        //    {
-        //        queryDto.LiveAnchorIds = query.LiveAnchorIds.Split(",").ToList();
-        //    }
-        //    queryDto.IsOldCustomer = query.IsOldCustomer;
-        //    queryDto.IsEffective = query.IsEffective;
-        //    var data = await amiyaOperationsBoardService.GetAssistantIndicatorConversionDataAsync(queryDto);
-        //    var res = data.Select(e => new AssistantIndicatorConversionDataVo
-        //    {
-        //        AssistantName = e.AssistantName,
-        //        SevenDaySendOrderRate = e.SevenDaySendOrderRate,
-        //        FifteenDaySendOrderRate = e.FifteenDaySendOrderRate,
-        //        OldCustomerToHospitalRate = e.OldCustomerToHospitalRate,
-        //        RePurchaseRate = e.RePurchaseRate,
-        //        AddWechatRate = e.AddWechatRate,
-        //        SendOrderRate = e.SendOrderRate,
-        //        ToHospitalRate = e.ToHospitalRate,
-        //        NewCustomerDealRate = e.NewCustomerDealRate,
-        //        NewCustomerUnitPrice = e.NewCustomerUnitPrice,
-        //        OldCustomerUnitPrice = e.OldCustomerUnitPrice,
-        //    }).ToList();
-        //    return ResultData<List<AssistantIndicatorConversionDataVo>>.Success().AddData("data", res);
-        //}
+            var data = await amiyaOperationsBoardService.GetAssistantPerformanceDataAsync(queryDto);
+            var res = data.Select(e => new AssistantPerformanceDataVo
+            {
+                AssistantName = e.AssistantName,
+                CurrentMonthNewCustomerPerformance = e.CurrentMonthNewCustomerPerformance,
+                NewCustomerPerformanceTarget = e.NewCustomerPerformanceTarget,
+                NewCustomerPerformanceTargetComplete = e.NewCustomerPerformanceTargetComplete,
+                CurrentMonthOldCustomerPerformance = e.CurrentMonthOldCustomerPerformance,
+                OldCustomerTarget = e.OldCustomerTarget,
+                OldCustomerTargetComplete = e.OldCustomerTargetComplete,
+                TotalPerformance = e.TotalPerformance,
+                TotalPerformanceTarget = e.TotalPerformanceTarget,
+                TotalPerformanceTargetComplete = e.TotalPerformanceTargetComplete,
+            }).OrderBy(e => e.TotalPerformance).ToList();
+            return ResultData<List<AssistantPerformanceDataVo>>.Success().AddData("data", res);
+        }
+        /// <summary>
+        /// 获取助理看板获客情况数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("assistantCustomerAcquisition")]
+        public async Task<ResultData<List<AssistantCustomerAcquisitionDataVo>>> GetAssistantCustomerAcquisitionDataAsync([FromQuery] QueryAmiyaAssistantOperationsDataVo query)
+        {
+            QueryAmiyaAssistantOperationsDataDto queryDto = new QueryAmiyaAssistantOperationsDataDto();
+            queryDto.Unit = query.Unit;
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            if (string.IsNullOrEmpty(query.LiveAnchorIds))
+            {
+                queryDto.LiveAnchorIds = (await liveAnchorBaseInfoService.GetValidAsync(true)).Select(e => e.Id).ToList();
+            }
+            else
+            {
+                queryDto.LiveAnchorIds = query.LiveAnchorIds.Split(",").ToList();
+            }
+            queryDto.IsOldCustomer = query.IsOldCustomer;
+            queryDto.IsEffective = query.IsEffective;
+            var data = await amiyaOperationsBoardService.GetAssistantCustomerAcquisitionDataAsync(queryDto);
+            var res = data.Select(e => new AssistantCustomerAcquisitionDataVo
+            {
+                AssistantName = e.AssistantName,
+                PotentialAllocationConsulation = e.PotentialAllocationConsulation,
+                PotentialAllocationConsulationTarget = e.PotentialAllocationConsulationTarget,
+                PotentialAllocationConsulationTargetComplete = e.PotentialAllocationConsulationTargetComplete,
+                PotentialAddWechat = e.PotentialAddWechat,
+                PotentialAddWechatTarget = e.PotentialAddWechatTarget,
+                PotentialAddWechatTargetComplete = e.PotentialAddWechatTargetComplete,
+                EffectiveAllocationConsulation = e.EffectiveAllocationConsulation,
+                EffectiveAllocationConsulationTarget = e.EffectiveAllocationConsulationTarget,
+                EffectiveAllocationConsulationTargetComplete = e.EffectiveAllocationConsulationTargetComplete,
+                EffectiveAddWechat = e.EffectiveAddWechat,
+                EffectiveAddWechatTarget = e.EffectiveAddWechatTarget,
+                EffectiveAddWechatTargetComplete = e.EffectiveAddWechatTargetComplete,
+            }).ToList();
+            return ResultData<List<AssistantCustomerAcquisitionDataVo>>.Success().AddData("data", res);
+        }
+        /// <summary>
+        /// 获取助理看板运营情况数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("assistantOperationsData")]
+        public async Task<ResultData<List<AssistantOperationsDataVo>>> GetAssistantOperationsDataAsync([FromQuery] QueryAmiyaAssistantOperationsDataVo query)
+        {
+            QueryAmiyaAssistantOperationsDataDto queryDto = new QueryAmiyaAssistantOperationsDataDto();
+            queryDto.Unit = query.Unit;
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            if (string.IsNullOrEmpty(query.LiveAnchorIds))
+            {
+                queryDto.LiveAnchorIds = (await liveAnchorBaseInfoService.GetValidAsync(true)).Select(e => e.Id).ToList();
+            }
+            else
+            {
+                queryDto.LiveAnchorIds = query.LiveAnchorIds.Split(",").ToList();
+                queryDto.LiveAnchorIds = query.LiveAnchorIds.Split(",").ToList();
+            }
+            queryDto.IsOldCustomer = query.IsOldCustomer;
+            queryDto.IsEffective = query.IsEffective;
+            var data = await amiyaOperationsBoardService.GetAssistantOperationsDataAsync(queryDto);
+            var res = data.Select(e => new AssistantOperationsDataVo
+            {
+                AssistantName = e.AssistantName,
+                SendOrder = e.SendOrder,
+                SendOrderTarget = e.SendOrderTarget,
+                SendOrderTargetComplete = e.SendOrderTargetComplete,
+                ToHospital = e.ToHospital,
+                ToHospitalTarget = e.ToHospitalTarget,
+                ToHospitalTargetComplete = e.ToHospitalTargetComplete,
+                Deal = e.Deal,
+                DealTarget = e.DealTarget,
+                DealTargetComplete = e.DealTargetComplete,
+            }).ToList();
+            return ResultData<List<AssistantOperationsDataVo>>.Success().AddData("data", res);
+        }
+        /// <summary>
+        /// 获取助理看板指标转化情况数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("assistantIndicatorConversionData")]
+        public async Task<ResultData<List<AssistantIndicatorConversionDataVo>>> GetAssistantIndicatorConversionDataAsync([FromQuery] QueryAmiyaAssistantOperationsDataVo query)
+        {
+            QueryAmiyaAssistantOperationsDataDto queryDto = new QueryAmiyaAssistantOperationsDataDto();
+            queryDto.Unit = query.Unit;
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            if (string.IsNullOrEmpty(query.LiveAnchorIds))
+            {
+                queryDto.LiveAnchorIds = (await liveAnchorBaseInfoService.GetValidAsync(true)).Select(e => e.Id).ToList();
+            }
+            else
+            {
+                queryDto.LiveAnchorIds = query.LiveAnchorIds.Split(",").ToList();
+            }
+            queryDto.IsOldCustomer = query.IsOldCustomer;
+            queryDto.IsEffective = query.IsEffective;
+            var data = await amiyaOperationsBoardService.GetAssistantIndicatorConversionDataAsync(queryDto);
+            var res = data.Select(e => new AssistantIndicatorConversionDataVo
+            {
+                AssistantName = e.AssistantName,
+                SevenDaySendOrderRate = e.SevenDaySendOrderRate,
+                FifteenDaySendOrderRate = e.FifteenDaySendOrderRate,
+                OldCustomerToHospitalRate = e.OldCustomerToHospitalRate,
+                RePurchaseRate = e.RePurchaseRate,
+                AddWechatRate = e.AddWechatRate,
+                SendOrderRate = e.SendOrderRate,
+                ToHospitalRate = e.ToHospitalRate,
+                NewCustomerDealRate = e.NewCustomerDealRate,
+                NewCustomerUnitPrice = e.NewCustomerUnitPrice,
+                OldCustomerUnitPrice = e.OldCustomerUnitPrice,
+            }).ToList();
+            return ResultData<List<AssistantIndicatorConversionDataVo>>.Success().AddData("data", res);
+        }
         //#endregion
 
         #endregion
