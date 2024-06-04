@@ -709,6 +709,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 updateDto.DealDate = updateVo.DealDate;
                 updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
                 updateDto.EmpId = Convert.ToInt32(employee.Id);
+                updateDto.FansMeetingId = updateVo.FansMeetingId;
                 //企业微信新版本发布后退回
                 updateDto.ConsumptionType = updateVo.ConsumptionType;
                 //updateDto.ConsumptionType = (int)ConsumptionType.Deal;
@@ -782,6 +783,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
                 updateDto.InvitationDocuments = updateVo.InvitationDocuments;
                 updateDto.ConsumptionType = updateVo.ConsumptionType;
+                updateDto.FansMeetingId=updateVo.FansMeetingId;
                 List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
                 if (updateDto.IsFinish == true)
                 {

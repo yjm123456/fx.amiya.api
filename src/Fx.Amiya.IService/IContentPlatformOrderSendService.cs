@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.ContentPlateFormOrder;
+﻿using Fx.Amiya.Dto.AmiyaOperationsBoardService.Input;
+using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.HospitalBoard;
 using Fx.Amiya.Dto.OrderReport;
@@ -186,6 +187,12 @@ namespace Fx.Amiya.IService
         /// <param name="year">年份</param>
         /// <returns></returns>
         Task<List<SendContentPlatformOrderDto>> GetTodayOrderSendDataAsync(DateTime startDate);
+        /// <summary>
+        /// 获取选取时间内已派单数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <returns></returns>
+        Task<List<SendContentPlatformOrderDto>> GetTodayOrderSendDataAsync(QueryHospitalTransformDataDto query);
 
         /// <summary>
         /// 根据时间获取已到院数据

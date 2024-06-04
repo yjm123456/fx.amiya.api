@@ -9,6 +9,10 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
     public class ShoppingCartRegistrationIndicatorBaseDataDto
     {
         /// <summary>
+        /// 线索量
+        /// </summary>
+        public int ClueCount { get; set; }
+        /// <summary>
         /// 总分诊人数
         /// </summary>
         public int TotalCount { get; set; }

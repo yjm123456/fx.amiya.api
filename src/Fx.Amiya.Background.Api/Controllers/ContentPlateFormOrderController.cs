@@ -1494,6 +1494,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
                 updateDto.InvitationDocuments = updateVo.InvitationDocuments;
                 updateDto.ConsumptionType = updateVo.ConsumptionType;
+                updateDto.FansMeetingId = updateVo.FansMeetingId;
                 List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
                 if (updateDto.IsFinish == true)
                 {

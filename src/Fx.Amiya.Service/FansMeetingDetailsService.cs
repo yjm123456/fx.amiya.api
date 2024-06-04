@@ -264,7 +264,7 @@ namespace Fx.Amiya.Service
             var record = await dalFansMeetingDetails.GetAll().Where(e => e.Id == generate.Id).FirstOrDefaultAsync();
             record.IsDeal = generate.IsDeal;
             record.IsToHospital = generate.IsToHospital;
-            record.CumulativeDealPrice = record.CumulativeDealPrice + generate.DealPrice;
+            record.CumulativeDealPrice = generate.DealPrice;
             record.UpdateDate = DateTime.Now;
             await dalFansMeetingDetails.UpdateAsync(record, true);
         }

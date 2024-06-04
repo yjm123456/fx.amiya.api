@@ -96,6 +96,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         public int? ConsumptionType { get; set; }
         /// <summary>
+        /// 粉丝见面会id
+        /// </summary>
+        public string FansMeetingId { get; set; }
+        /// <summary>
         /// 成交明细
         /// </summary>
         public List<AddContentPlatFormOrderDealDetailsVo> AddContentPlatFormOrderDealDetailsVoList { get; set; }

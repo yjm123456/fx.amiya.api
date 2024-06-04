@@ -39,6 +39,8 @@ namespace Fx.Amiya.Service
         private IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo;
         private IDalContentPlatformOrder dalContentPlatformOrder;
         private IDalContentPlatformOrderSend dalContentPlatformOrderSend;
+        private ILiveAnchorBaseInfoService liveAnchorBaseInfoService;
+
 
         public ShoppingCartRegistrationService(IDalShoppingCartRegistration dalShoppingCartRegistration,
             IContentPlatformService contentPlatformService,
@@ -48,7 +50,7 @@ namespace Fx.Amiya.Service
             ILiveAnchorService liveAnchorService,
              ILiveAnchorWeChatInfoService liveAnchorWeChatInfoService,
             IDalConfig dalConfig,
-            IDalAmiyaEmployee dalAmiyaEmployee, IDalLiveAnchorBaseInfo dalLiveAnchorBaseInfo, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo, IDalContentPlatformOrder dalContentPlatformOrder, IDalContentPlatformOrderSend dalContentPlatformOrderSend)
+            IDalAmiyaEmployee dalAmiyaEmployee, IDalLiveAnchorBaseInfo dalLiveAnchorBaseInfo, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo, IDalContentPlatformOrder dalContentPlatformOrder, IDalContentPlatformOrderSend dalContentPlatformOrderSend, ILiveAnchorBaseInfoService liveAnchorBaseInfoService)
         {
             this.dalShoppingCartRegistration = dalShoppingCartRegistration;
             _contentPlatformService = contentPlatformService;
@@ -63,6 +65,7 @@ namespace Fx.Amiya.Service
             this.dalContentPlatFormOrderDealInfo = dalContentPlatFormOrderDealInfo;
             this.dalContentPlatformOrder = dalContentPlatformOrder;
             this.dalContentPlatformOrderSend = dalContentPlatformOrderSend;
+            this.liveAnchorBaseInfoService = liveAnchorBaseInfoService;
         }
 
 
@@ -1483,7 +1486,7 @@ namespace Fx.Amiya.Service
                 }).ToList();
             data.TotalCount = baseData.Select(e => e.Phone).Count();
             var phoneList = baseData.Select(e => e.Phone).Distinct().ToList();
- 
+
             data.SevenDaySendOrderCount = (from c in dalContentPlatformOrder.GetAll()
                                            .Where(e => e.SendDate > startDate && e.SendDate < endDate && e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder)
                                            .Select(e => new { Phone = e.Phone, SendDate = e.SendDate }).ToList()
@@ -1505,20 +1508,20 @@ namespace Fx.Amiya.Service
             data.SendOrderCount = await dalContentPlatformOrderSend.GetAll()
              .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
              .Where(o => o.ContentPlatformOrder.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId)
-             .Where(o=>o.ContentPlatformOrder.IsOldCustomer==false)
+             .Where(o => o.ContentPlatformOrder.IsOldCustomer == false)
              .Where(o => !isEffective.HasValue || (isEffective.Value ? (o.ContentPlatformOrder.AddOrderPrice == 199m || o.ContentPlatformOrder.AddOrderPrice == 29.9m) : (o.ContentPlatformOrder.AddOrderPrice != 199m && o.ContentPlatformOrder.AddOrderPrice != 29.9m)))
-             .Where(e=>e.ContentPlatformOrder.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.ContentPlatformOrder.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder)
+             .Where(e => e.ContentPlatformOrder.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.ContentPlatformOrder.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder)
                 .Select(e => e.ContentPlatformOrder.Phone)
                 .Distinct()
                 .CountAsync();
-            
+
 
             data.OldCustomerCountEndLastMonth = dalContentPlatFormOrderDealInfo.GetAll()
             .Where(o => o.CreateDate < startDate)
             .Where(e => e.IsOldCustomer == true)
             .Where(e => e.IsDeal == true)
             .Where(o => o.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId)
-            .Where(e=> e.ContentPlatFormOrder.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.ContentPlatFormOrder.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder)
+            .Where(e => e.ContentPlatFormOrder.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.ContentPlatFormOrder.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder)
            .Where(o => !isEffective.HasValue || (isEffective.Value ? (o.ContentPlatFormOrder.AddOrderPrice == 199m || o.ContentPlatFormOrder.AddOrderPrice == 29.9m) : (o.ContentPlatFormOrder.AddOrderPrice != 199m && o.ContentPlatFormOrder.AddOrderPrice != 29.9m))).Select(e => e.ContentPlatFormOrder.Phone).Count();
             data.OldCustomerCount = dalContentPlatFormOrderDealInfo.GetAll()
             .Where(e => e.IsOldCustomer == true && e.IsDeal == true)
@@ -1526,7 +1529,7 @@ namespace Fx.Amiya.Service
              .Where(e => e.ContentPlatFormOrder.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.ContentPlatFormOrder.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder)
            .Where(o => !isEffective.HasValue || (isEffective.Value ? (o.ContentPlatFormOrder.AddOrderPrice == 199m || o.ContentPlatFormOrder.AddOrderPrice == 29.9m) : (o.ContentPlatFormOrder.AddOrderPrice != 199m && o.ContentPlatFormOrder.AddOrderPrice != 29.9m))).Select(e => e.ContentPlatFormOrder.Phone).Distinct().Count();
             data.NewCustomerCount = dalContentPlatFormOrderDealInfo.GetAll()
-            .Where(e => e.IsOldCustomer == false&&e.IsDeal==true)
+            .Where(e => e.IsOldCustomer == false && e.IsDeal == true)
             .Where(o => o.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId)
              .Where(e => e.ContentPlatFormOrder.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.ContentPlatFormOrder.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder)
            .Where(o => !isEffective.HasValue || (isEffective.Value ? (o.ContentPlatFormOrder.AddOrderPrice == 199m || o.ContentPlatFormOrder.AddOrderPrice == 29.9m) : (o.ContentPlatFormOrder.AddOrderPrice != 199m && o.ContentPlatFormOrder.AddOrderPrice != 29.9m))).Select(e => e.ContentPlatFormOrder.Phone).Distinct().Count();
@@ -1551,7 +1554,7 @@ namespace Fx.Amiya.Service
             .Where(o => !isEffective.HasValue || (isEffective.Value ? (o.ContentPlatFormOrder.AddOrderPrice == 199m || o.ContentPlatFormOrder.AddOrderPrice == 29.9m) : (o.ContentPlatFormOrder.AddOrderPrice != 199m && o.ContentPlatFormOrder.AddOrderPrice != 29.9m)))
              .Where(o => o.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId);
             data.NewCustomerToHospitalCount = newVisitCount
-                .Where(e=>e.IsToHospital==true)
+                .Where(e => e.IsToHospital == true)
                 .Select(e => e.ContentPlatFormOrder.Phone)
                 .Distinct()
                 .Count();
@@ -1572,11 +1575,11 @@ namespace Fx.Amiya.Service
             data.AddWechatCount = baseData.Where(e => e.IsAddWeChat == true).Select(e => e.Phone).Count();
             data.ToHospitalCount = dalContentPlatFormOrderDealInfo.GetAll()
                 .Where(o => o.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId)
-                .Where(e=>e.ContentPlatFormOrder.IsOldCustomer==false)
+                .Where(e => e.ContentPlatFormOrder.IsOldCustomer == false)
                  .Where(e => e.ContentPlatFormOrder.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.ContentPlatFormOrder.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder)
                 .Where(o => !isEffective.HasValue || (isEffective.Value ? (o.ContentPlatFormOrder.AddOrderPrice == 199m || o.ContentPlatFormOrder.AddOrderPrice == 29.9m) : (o.ContentPlatFormOrder.AddOrderPrice != 199m && o.ContentPlatFormOrder.AddOrderPrice != 29.9m)))
-                .Where(x => x.CreateDate >= startDate && x.CreateDate < endDate &&x.IsToHospital==true)
-                .Select(e=>e.ContentPlatFormOrder.Phone)
+                .Where(x => x.CreateDate >= startDate && x.CreateDate < endDate && x.IsToHospital == true)
+                .Select(e => e.ContentPlatFormOrder.Phone)
                 .Distinct()
                 .Count();
             return data;
@@ -1659,7 +1662,7 @@ namespace Fx.Amiya.Service
                 }).ToList();
             var sevenDaySendOrderData = (from c in dalContentPlatformOrder.GetAll()
                                              .Where(e => e.SendDate > startDate && e.SendDate < endDate && e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder)
-                                             .Where(e=> !isEffective.HasValue|| (isEffective.Value ? (e.AddOrderPrice == 199m || e.AddOrderPrice == 29.9m) : (e.AddOrderPrice != 199m && e.AddOrderPrice != 29.9m)))
+                                             .Where(e => !isEffective.HasValue || (isEffective.Value ? (e.AddOrderPrice == 199m || e.AddOrderPrice == 29.9m) : (e.AddOrderPrice != 199m && e.AddOrderPrice != 29.9m)))
                                              .Select(e => new { Phone = e.Phone, SendDate = e.SendDate, AssignEmpId = e.IsSupportOrder ? e.SupportEmpId : e.BelongEmpId }).ToList()
                                          from s in baseData
                                          where s.Phone == c.Phone && c.SendDate.Value.Date <= s.RecordDate.AddDays(7)
@@ -1678,14 +1681,14 @@ namespace Fx.Amiya.Service
                                          select new { Phone = s.Phone, AssignEmpId = c.AssignEmpId });
             var sendOrderData = dalContentPlatformOrderSend.GetAll()
              .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
-             .Where(o=>o.ContentPlatformOrder.IsOldCustomer==false)
+             .Where(o => o.ContentPlatformOrder.IsOldCustomer == false)
              .Where(e => !isEffective.HasValue || (isEffective.Value ? (e.ContentPlatformOrder.AddOrderPrice == 199m || e.ContentPlatformOrder.AddOrderPrice == 29.9m) : (e.ContentPlatformOrder.AddOrderPrice != 199m && e.ContentPlatformOrder.AddOrderPrice != 29.9m)))
              .Where(o => (o.ContentPlatformOrder.IsSupportOrder == false && assistantIds.Contains(o.ContentPlatformOrder.BelongEmpId.Value)) || o.ContentPlatformOrder.IsSupportOrder == true && assistantIds.Contains(o.ContentPlatformOrder.SupportEmpId))
              .Select(e => new { Phone = e.ContentPlatformOrder.Phone, AssignEmpId = e.ContentPlatformOrder.IsSupportOrder ? e.ContentPlatformOrder.SupportEmpId : e.ContentPlatformOrder.BelongEmpId }).ToList();
             var visitData = dalContentPlatFormOrderDealInfo.GetAll()
              .Where(o => (o.CreateDate >= startDate && o.CreateDate < endDate))
              .Where(o => (o.ContentPlatFormOrder.IsSupportOrder == false && assistantIds.Contains(o.ContentPlatFormOrder.BelongEmpId.Value)) || o.ContentPlatFormOrder.IsSupportOrder == true && assistantIds.Contains(o.ContentPlatFormOrder.SupportEmpId))
-             .Where(e => !isEffective.HasValue|| (isEffective.Value ? (e.ContentPlatFormOrder.AddOrderPrice == 199m || e.ContentPlatFormOrder.AddOrderPrice == 29.9m) : (e.ContentPlatFormOrder.AddOrderPrice != 199m && e.ContentPlatFormOrder.AddOrderPrice != 29.9m)))
+             .Where(e => !isEffective.HasValue || (isEffective.Value ? (e.ContentPlatFormOrder.AddOrderPrice == 199m || e.ContentPlatFormOrder.AddOrderPrice == 29.9m) : (e.ContentPlatFormOrder.AddOrderPrice != 199m && e.ContentPlatFormOrder.AddOrderPrice != 29.9m)))
              .Select(e => new
              {
                  Phone = e.ContentPlatFormOrder.Phone,
@@ -1784,7 +1787,7 @@ namespace Fx.Amiya.Service
                     NewCustomerDealCount = e.Where(e => e.IsOldCustomer == false && e.IsDeal == true).Select(e => e.Phone).Distinct().Count(),
                     NewCustomerToHospitalCount = e.Where(e => e.IsToHospital == true && e.IsOldCustomer == false).Select(e => e.Phone).Distinct().Count(),
                     NewCustomerTotalPerformance = e.Where(e => e.IsOldCustomer == false && e.IsDeal == true).Sum(e => e.DealPrice),
-                    ToHospitalCount = e.Where(e => e.IsToHospital == true&&e.IsOldCustomer==false).Select(e => e.Phone).Distinct().Count(),
+                    ToHospitalCount = e.Where(e => e.IsToHospital == true && e.IsOldCustomer == false).Select(e => e.Phone).Distinct().Count(),
                 });
             List<ShoppingCartRegistrationIndicatorBaseDataDto> list = new List<ShoppingCartRegistrationIndicatorBaseDataDto>();
             list.AddRange(list1);
@@ -1868,11 +1871,150 @@ namespace Fx.Amiya.Service
 
         #endregion
 
+        #region 转化
+        /// <summary>
+        /// 获取流量和客户转化基础数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="baseLiveAnchorId"></param>
+        /// <returns></returns>
+        public async Task<ShoppingCartRegistrationIndicatorBaseDataDto> GetFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate, string baseLiveAnchorId, List<string> contentPlatformIds)
+        {
+            ShoppingCartRegistrationIndicatorBaseDataDto data = new ShoppingCartRegistrationIndicatorBaseDataDto();
+            var liveanchorIds = (await _liveAnchorService.GetLiveAnchorListByBaseInfoId(baseLiveAnchorId)).Select(e => e.Id);
+            var assistantNameList = (await _amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(new List<string> { baseLiveAnchorId })).Select(e => e.Id).ToList();
+            var baseData = dalShoppingCartRegistration.GetAll()
+                .Where(e => contentPlatformIds.Count==0 || contentPlatformIds.Contains(e.ContentPlatFormId))
+                .Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && liveanchorIds.Contains(e.LiveAnchorId))
+                .Select(e => new
+                {
+                    AssignEmpId = e.AssignEmpId,
+                    IsSendOrder = e.IsSendOrder,
+                    Phone = e.Phone,
+                    RecordDate = e.RecordDate,
+                    IsAddWeChat = e.IsAddWeChat,
+                }).ToList();
+            var phoneList = baseData.Select(e => e.Phone).Distinct().ToList();
+            var sendC = dalContentPlatformOrder.GetAll()
+              //.Where(o => o.ContentPlateformId == contentPlatformId)
+              .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
+              .Where(o => o.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId)
+              .Where(o => phoneList.Contains(o.Phone))
+               .Select(o => o.Phone)
+              .Where(o => phoneList.Contains(o))
+              .Distinct().Count();
+            data.ClueCount = baseData.Count();
+            data.TotalCount = baseData.Where(e => e.AssignEmpId != null).Count();
+            data.SendOrderCount = sendC;
+            var contentOrderList = dalContentPlatFormOrderDealInfo.GetAll()
+                //.Where(e=>e.ContentPlatFormOrder.ContentPlateformId==contentPlatformId)
+                .Where(e => phoneList.Contains(e.ContentPlatFormOrder.Phone) && e.CreateDate >= startDate && e.CreateDate < endDate)
+                .Where(o => o.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId)
+                .Select(e => new
+                {
+                    Phone = e.ContentPlatFormOrder.Phone,
+                    IsToHospital = e.IsToHospital,
+                    DealPrice = e.Price,
+                    IsDeal = e.IsDeal,
+                    IsOldCustomer = e.IsOldCustomer
+                }).ToList();
+            data.AddWechatCount = baseData.Where(e => e.IsAddWeChat).Count();
+            data.ToHospitalCount = contentOrderList.Where(e => e.IsToHospital == true).Select(e => e.Phone).Distinct().Count();
+            data.OldCustomerDealCount = contentOrderList.Where(e => e.IsDeal == true && e.IsOldCustomer == true).Select(e => e.Phone).Distinct().Count();
+            data.NewCustomerDealCount = contentOrderList.Where(e => e.IsDeal == true && e.IsOldCustomer == false).Select(e => e.Phone).Distinct().Count();
+            data.NewCustomerTotalPerformance = contentOrderList.Where(e => e.IsOldCustomer == false).Sum(e => e.DealPrice);
+            data.OldCustomerTotalPerformance = contentOrderList.Where(e => e.IsOldCustomer == true).Sum(e => e.DealPrice);
+            return data;
+        }
+
+        /// <summary>
+        /// 获取助理流量和客户转化基础数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="baseLiveAnchorId"></param>
+        /// <returns></returns>
+        public async Task<List<ShoppingCartRegistrationIndicatorBaseDataDto>> GetAssitantFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate, List<string> contentPlatformIds)
+        {
+            var nameList = await liveAnchorBaseInfoService.GetValidAsync(true);
+            var assistantNameList = (await _amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(nameList.Select(e => e.Id).ToList())).Select(e => e.Id);
+            var baseData = dalShoppingCartRegistration.GetAll()
+                .Where(e => contentPlatformIds.Count==0 || contentPlatformIds.Contains(e.ContentPlatFormId))
+                .Where(e => e.AssignEmpId != null && e.RecordDate >= startDate && e.RecordDate < endDate)
+                .Select(e => new
+                {
+                    AssignEmpId = e.AssignEmpId,
+                    IsSendOrder = e.IsSendOrder,
+                    Phone = e.Phone,
+                    RecordDate = e.RecordDate,
+                    IsAddWeChat = e.IsAddWeChat,
+                }).ToList();
+            var phoneList = baseData.Select(e => e.Phone).ToList();
+            var sendData = dalContentPlatformOrder.GetAll()
+              //.Where(o=>o.ContentPlateformId==contentPlatformId)
+              .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
+              .Where(o => phoneList.Contains(o.Phone))
+              .Select(e => new
+              {
+                  AssignEmpId = e.IsSupportOrder ? e.SupportEmpId : e.BelongEmpId,
+                  Phone = e.Phone
+              }).ToList();
+            var contentOrderList = dalContentPlatFormOrderDealInfo.GetAll()
+                //.Where(e=>e.ContentPlatFormOrder.ContentPlateformId==contentPlatformId)
+                .Where(e => phoneList.Contains(e.ContentPlatFormOrder.Phone) && e.CreateDate >= startDate && e.CreateDate < endDate)
+                .Select(e => new
+                {
+                    AssignEmpId = e.ContentPlatFormOrder.IsSupportOrder ? e.ContentPlatFormOrder.SupportEmpId : e.ContentPlatFormOrder.BelongEmpId,
+                    Phone = e.ContentPlatFormOrder.Phone,
+                    IsToHospital = e.IsToHospital,
+                    DealPrice = e.Price,
+                    IsDeal = e.IsDeal,
+                    IsOldCustomer = e.IsOldCustomer
+                }).ToList();
+            var list1 = baseData.GroupBy(e => e.AssignEmpId).Select(e => new ShoppingCartRegistrationIndicatorBaseDataDto
+            {
+                EmpId = e.Key.Value,
+                TotalCount = e.Count(),
+                AddWechatCount = e.Where(e => e.IsAddWeChat == true).Count()
+            });
+            var list2 = sendData.GroupBy(e => e.AssignEmpId).Select(e => new ShoppingCartRegistrationIndicatorBaseDataDto
+            {
+                EmpId = e.Key.Value,
+                SendOrderCount = e.Select(e => e.Phone).Distinct().Count()
+            });
+            var list3 = contentOrderList.GroupBy(e => e.AssignEmpId).Select(e => new ShoppingCartRegistrationIndicatorBaseDataDto
+            {
+                EmpId = e.Key.Value,
+                ToHospitalCount = e.Where(e => e.IsToHospital == true).Select(e => e.Phone).Distinct().Count(),
+                OldCustomerDealCount = e.Where(e => e.IsDeal == true && e.IsOldCustomer == true).Select(e => e.Phone).Distinct().Count(),
+                NewCustomerDealCount = e.Where(e => e.IsDeal == true && e.IsOldCustomer == false).Select(e => e.Phone).Distinct().Count(),
+                NewCustomerTotalPerformance = e.Where(e => e.IsOldCustomer == false).Sum(e => e.DealPrice),
+                OldCustomerTotalPerformance = e.Where(e => e.IsOldCustomer == true).Sum(e => e.DealPrice)
+            });
+            var unionList = list1.Concat(list2).Concat(list3);
+            return unionList.GroupBy(e => e.EmpId).Select(e => new ShoppingCartRegistrationIndicatorBaseDataDto {
+                EmpId = e.Key,
+                TotalCount = e.Sum(e=>e.TotalCount),
+                AddWechatCount = e.Sum(e=>e.AddWechatCount),
+                SendOrderCount = e.Sum(e => e.AddWechatCount),
+                ToHospitalCount = e.Sum(e => e.ToHospitalCount),
+                OldCustomerDealCount = e.Sum(e => e.OldCustomerDealCount),
+                NewCustomerDealCount = e.Sum(e => e.NewCustomerDealCount),
+                NewCustomerTotalPerformance = e.Sum(e => e.NewCustomerTotalPerformance),
+                OldCustomerTotalPerformance = e.Sum(e => e.OldCustomerTotalPerformance)
+            }).ToList();
+            
+        }
+
+        #endregion
+
         private async Task<CallCenterConfigDto> GetCallCenterConfig()
         {
             var config = await dalConfig.GetAll().SingleOrDefaultAsync();
             return JsonConvert.DeserializeObject<WxAppConfigDto>(config.ConfigJson).CallCenterConfig;
         }
+
 
     }
 }

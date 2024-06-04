@@ -249,5 +249,23 @@ namespace Fx.Amiya.IService
         Task<List<ShoppingCartRegistrationDto>> GetAsistantMonthPerformanceDataAsync(QueryAssistantHomePageDataDto query);
 
         #endregion
+        #region 转化
+        /// <summary>
+        /// 获取流量和客户转化基础数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="baseLiveAnchorId"></param>
+        /// <returns></returns>
+        Task<ShoppingCartRegistrationIndicatorBaseDataDto> GetFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate, string baseLiveAnchorId,List<string> contentPlatformIds);
+        /// <summary>
+        /// 获取助理流量和客户转化基础数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="baseLiveAnchorId"></param>
+        /// <returns></returns>
+        Task<List<ShoppingCartRegistrationIndicatorBaseDataDto>> GetAssitantFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate, List<string> contentPlatformIds);
+        #endregion
     }
 }

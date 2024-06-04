@@ -2,6 +2,7 @@
 using Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result;
 using Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result;
 using Fx.Amiya.Dto.AmiyaOperationsBoardService;
+using Fx.Amiya.Dto.AmiyaOperationsBoardService.Input;
 using Fx.Amiya.Dto.AmiyaOperationsBoardService.Result;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
@@ -119,7 +120,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             List<NewOrOldCustomerPerformanceDataVo> result = new List<NewOrOldCustomerPerformanceDataVo>();
 
             NewOrOldCustomerPerformanceDataVo result1 = new NewOrOldCustomerPerformanceDataVo();
-            result1.NewCustomerPerformance=new List<int> ();
+            result1.NewCustomerPerformance = new List<int>();
             result1.OldCustomerPerformance = new List<int>();
             result1.Name = new List<string>();
             result1.Code = "employee";
@@ -166,7 +167,118 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         #region 转化
-        
+
+        /// <summary>
+        /// 公司转化
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("companyTransformData")]
+        public async Task<ResultData<List<FlowTransFormDataVo>>> GetFlowTransformDataAsync([FromQuery] QueryTransformDataVo query)
+        {
+            QueryTransformDataDto queryDto = new QueryTransformDataDto();
+            queryDto.ContentPlatFormIds = query.ContentPlatFormIds;
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            var result = await amiyaOperationsBoardService.GetFlowTransFormDataAsync(queryDto);
+            var res = result.Select(e => new FlowTransFormDataVo
+            {
+                GroupName = e.GroupName,
+                ClueCount = e.ClueCount,
+                ClueEffectiveRate = e.ClueEffectiveRate,
+                SendOrderCount = e.SendOrderCount,
+                DistributeConsulationNum = e.DistributeConsulationNum,
+                AddWechatCount = e.AddWechatCount,
+                AddWechatRate = e.AddWechatRate,
+                SendOrderRate = e.SendOrderRate,
+                ToHospitalCount = e.ToHospitalCount,
+                ToHospitalRate = e.ToHospitalRate,
+                DealCount = e.DealCount,
+                NewCustomerDealCount = e.NewCustomerDealCount,
+                OldCustomerDealCount = e.OldCustomerDealCount,
+                DealRate = e.DealRate,
+                NewCustomerPerformance = e.NewCustomerPerformance,
+                NewAndOldCustomerRate = e.NewAndOldCustomerRate,
+                OldCustomerPerformance = e.OldCustomerPerformance,
+                NewCustomerUnitPrice = e.NewCustomerUnitPrice,
+                OldCustomerUnitPrice = e.OldCustomerUnitPrice,
+                CustomerUnitPrice = e.CustomerUnitPrice,
+                Rate = e.Rate
+            }).ToList();
+            return ResultData<List<FlowTransFormDataVo>>.Success().AddData("data", res);
+        }
+
+        /// <summary>
+        /// 助理转化
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("assistantTransformData")]
+        public async Task<ResultData<List<FlowTransFormDataVo>>> GetAssistantFlowTransformDataAsync([FromQuery] QueryTransformDataVo query)
+        {
+            QueryTransformDataDto queryDto = new QueryTransformDataDto();
+            queryDto.ContentPlatFormIds = query.ContentPlatFormIds;
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            var result = await amiyaOperationsBoardService.GetAssistantFlowTransFormDataAsync(queryDto);
+            var res = result.Select(e => new FlowTransFormDataVo
+            {
+                GroupName = e.GroupName,
+                ClueCount = e.ClueCount,
+                ClueEffectiveRate = e.ClueEffectiveRate,
+                SendOrderCount = e.SendOrderCount,
+                DistributeConsulationNum = e.DistributeConsulationNum,
+                AddWechatCount = e.AddWechatCount,
+                AddWechatRate = e.AddWechatRate,
+                SendOrderRate = e.SendOrderRate,
+                ToHospitalCount = e.ToHospitalCount,
+                ToHospitalRate = e.ToHospitalRate,
+                DealCount = e.DealCount,
+                NewCustomerDealCount = e.NewCustomerDealCount,
+                OldCustomerDealCount = e.OldCustomerDealCount,
+                DealRate = e.DealRate,
+                NewCustomerPerformance = e.NewCustomerPerformance,
+                NewAndOldCustomerRate = e.NewAndOldCustomerRate,
+                OldCustomerPerformance = e.OldCustomerPerformance,
+                NewCustomerUnitPrice = e.NewCustomerUnitPrice,
+                OldCustomerUnitPrice = e.OldCustomerUnitPrice,
+                CustomerUnitPrice = e.CustomerUnitPrice,
+                Rate = e.Rate
+            }).ToList();
+            return ResultData<List<FlowTransFormDataVo>>.Success().AddData("data", res);
+        }
+        /// <summary>
+        /// 机构转化
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("hospitalTransformData")]
+        public async Task<ResultData<List<HospitalTransformDataVo>>> GetHospitalTransformDataAsync([FromQuery] QueryHospitalTransformDataVo query)
+        {
+            QueryHospitalTransformDataDto queryDto = new QueryHospitalTransformDataDto();
+            queryDto.LiveAnchorIds = query.LiveAnchorIds;
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            var result=await amiyaOperationsBoardService.GetHospitalPerformanceByDateAsync(queryDto);
+            var res = result.Select(e => new HospitalTransformDataVo {
+                City=e.City,
+                HospitalName= e.HospitalName,
+                SendNum=e.SendNum,
+                VisitNum=e.VisitNum,
+                VisitRate=e.VisitRate,
+                NewCustomerDealNum=e.NewCustomerDealNum,
+                NewCustomerDealRate=e.NewCustomerDealRate,
+                NewCustomerAchievement=e.NewCustomerAchievement,
+                NewCustomerUnitPrice=e.NewCustomerUnitPrice,
+                OldCustomerDealNum=e.OldCustomerDealNum,
+                OldCustomerAchievement=e.OldCustomerAchievement,
+                OldCustomerUnitPrice=e.OldCustomerUnitPrice,
+                TotalAchievement=e.TotalAchievement,
+                NewOrOldCustomerRate=e.NewOrOldCustomerRate,
+                Rate=e.Rate
+            }).ToList();
+            return ResultData<List<HospitalTransformDataVo>>.Success().AddData("data", res);
+        }
 
         #endregion
 

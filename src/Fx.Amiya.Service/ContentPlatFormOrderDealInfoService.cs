@@ -1,5 +1,6 @@
 ﻿using Fx.Amiya.DbModels.Model;
 using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.AmiyaOperationsBoardService.Input;
 using Fx.Amiya.Dto.AssistantHomePage.Input;
 using Fx.Amiya.Dto.AssistantHomePage.Result;
 using Fx.Amiya.Dto.ContentPlateFormOrder;
@@ -1403,6 +1404,36 @@ namespace Fx.Amiya.Service
             var result = await dalContentPlatFormOrderDealInfo.GetAll()
                 .Where(o => o.IsToHospital == true && o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= currentDate && o.ToHospitalDate < endDate)
                 .Where(o => hospitalId.Count == 0 || hospitalId.Contains(o.LastDealHospitalId.Value))
+                .ToListAsync();
+            var returnInfo = result.Select(
+                  d =>
+                       new ContentPlatFormOrderDealInfoDto
+                       {
+                           IsToHospital = d.IsToHospital,
+                           IsDeal = d.IsDeal,
+                           IsOldCustomer = d.IsOldCustomer,
+                           ToHospitalType = d.ToHospitalType,
+                           Price = d.Price,
+                           ToHospitalDate = d.ToHospitalDate,
+                           DealDate = d.DealDate,
+                       }
+                ).ToList();
+
+            return returnInfo;
+        }
+        /// <summary>
+        /// 根据到院id获取上门成交业绩
+        /// </summary>
+        /// <param name="recordDate"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetSendPerformanceByHospitalIdAndDateTimeAsync(QueryHospitalTransformDataDto query)
+        {
+           
+            var result = await dalContentPlatFormOrderDealInfo.GetAll()
+                .Where(o => o.IsToHospital == true && o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= query.StartDate && o.ToHospitalDate < query.EndDate)
+                .Where(o => query.HospitalId.Count == 0 || query.HospitalId.Contains(o.LastDealHospitalId.Value))
+                .Where(o=> query.LiveAnchorIds.Count==0 || query.LiveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId))
                 .ToListAsync();
             var returnInfo = result.Select(
                   d =>

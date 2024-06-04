@@ -2520,6 +2520,7 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
+                
                 if (input.IsFinish == true)
                 {
                     if (input.ConsumptionType == (int)ConsumptionType.OTHER) throw new Exception("成交订单不能选择其他消费类型！");
@@ -2539,6 +2540,7 @@ namespace Fx.Amiya.Service
                 {
                     throw new Exception("该订单已审核，无法编辑！");
                 }
+                var dealInfo = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.Id == input.DealId).FirstOrDefault();
                 var orderDealInfoList = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
                 //最近一次非定金成交且id和当前要修改的id不同
                 var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true && x.Price > 0 && x.Id != input.DealId && x.ToHospitalType != (int)ContentPlateFormOrderToHospitalType.REFUND && x.ConsumptionType != (int)ConsumptionType.Deposit && x.ConsultationType != (int)ConsumptionType.Refund).FirstOrDefault();
@@ -2547,6 +2549,7 @@ namespace Fx.Amiya.Service
                 if (dealCount != null)
                 {
                     var dealinfo = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
+                    
                     var realDealCount = dealinfo.Where(x => x.IsDeal == true && x.Id != input.DealId && x.ToHospitalType != (int)ContentPlateFormOrderToHospitalType.REFUND && x.ConsumptionType != (int)ConsumptionType.Deposit && x.ConsumptionType != (int)ConsumptionType.Refund).Count();
                     if (realDealCount > 1)
                     {
@@ -2666,6 +2669,20 @@ namespace Fx.Amiya.Service
                 orderDealDto.UpdateBy = input.UpdateBy;
                 orderDealDto.AddContentPlatFormOrderDealDetailsDtoList = input.AddContentPlatFormOrderDealDetailsDtoList;
                 await _contentPlatFormOrderDalService.UpdateAsync(orderDealDto);
+                //更新粉丝见面会数据
+                if (!string.IsNullOrEmpty(input.FansMeetingId))
+                {
+                    GenerateDealInfoDto generate = new GenerateDealInfoDto();
+                    var id = dalFansMeetingDetails.GetAll().Where(e => e.FansMeetingId == input.FansMeetingId).Where(e => e.Phone == order.Phone).Select(e => e.Id).FirstOrDefault();
+                    if (string.IsNullOrEmpty(id))
+                        throw new Exception("该客户未参加此次粉丝见面会!");
+                    generate.Id = id;
+                    generate.IsToHospital = input.IsToHospital;
+                    generate.IsDeal = input.IsFinish;
+                    generate.DealPrice = input.DealAmount ?? 0m;
+                    generate.OriginalDealPrice = dealInfo.Price;
+                    await fansMeetingDetailsService.GenerateDealInfoAsync(generate);
+                }
 
                 unitOfWork.Commit();
             }

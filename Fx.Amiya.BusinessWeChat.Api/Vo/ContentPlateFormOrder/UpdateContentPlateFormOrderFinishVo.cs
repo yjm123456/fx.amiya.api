@@ -98,6 +98,10 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder
         /// 消费类型
         /// </summary>
         public int? ConsumptionType { get; set; }
+        /// <summary>
+        /// 粉丝见面会id
+        /// </summary>
+        public string FansMeetingId { get; set; }
         public List<AddContentPlatFormOrderDealDetailsVo> AddContentPlatFormOrderDealDetailsVoList { get; set; }
     }
 }

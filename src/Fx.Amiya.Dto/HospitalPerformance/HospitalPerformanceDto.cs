@@ -104,6 +104,10 @@ namespace Fx.Amiya.Dto.HospitalPerformance
         /// 今日新老客占比
         /// </summary>
         public string TodayNewOrOldCustomerRate { get; set; }
+        /// <summary>
+        /// 贡献
+        /// </summary>
+        public decimal Rate { get; set; }
     }
     /// <summary>
     /// 全国机构top10累计运营数据

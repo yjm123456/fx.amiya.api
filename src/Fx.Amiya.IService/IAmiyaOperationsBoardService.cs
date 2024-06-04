@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Fx.Amiya.Dto.AmiyaOperationsBoardService;
 using Fx.Amiya.Dto.AmiyaOperationsBoardService.Result;
+using Fx.Amiya.Dto.AmiyaOperationsBoardService.Input;
+using Fx.Amiya.Dto.HospitalPerformance;
 
 namespace Fx.Amiya.IService
 {
@@ -91,6 +93,24 @@ namespace Fx.Amiya.IService
         /// <param name="query"></param>
         /// <returns></returns>
         Task<List<CompanyNewCustomerConversionDataDto>> GetHistoryNewCustomerConversionDataAsync(QueryAmiyaCompanyOperationsDataDto query);
+        /// <summary>
+        /// 获取流量转化和客户转化情况数据
+        /// </summary>
+        /// <returns></returns>
+        Task<List<FlowTransFormDataVo>> GetFlowTransFormDataAsync(QueryTransformDataDto query);
+        /// <summary>
+        /// 获取助理流量转化和客户转化情况数据
+        /// </summary>
+        /// <returns></returns>
+        Task<List<FlowTransFormDataVo>> GetAssistantFlowTransFormDataAsync(QueryTransformDataDto query);
+        /// <summary>
+        /// 根据时间获取全国机构运营数据概况
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isCity"></param>
+        /// <returns></returns>
+        Task<List<HospitalPerformanceDto>> GetHospitalPerformanceByDateAsync(QueryHospitalTransformDataDto query);
         #endregion
 
         #region 助理看板

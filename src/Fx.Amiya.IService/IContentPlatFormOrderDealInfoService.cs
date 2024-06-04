@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.AmiyaOperationsBoardService.Input;
 using Fx.Amiya.Dto.AssistantHomePage.Input;
 using Fx.Amiya.Dto.AssistantHomePage.Result;
 using Fx.Amiya.Dto.ContentPlateFormOrder;
@@ -93,7 +94,13 @@ namespace Fx.Amiya.IService
         /// <param name="hospitalId"></param>
         /// <returns></returns>
         Task<List<ContentPlatFormOrderDealInfoDto>> GetTodaySendPerformanceByHospitalIdAsync(List<int> hospitalId, DateTime recordDate);
-
+        /// <summary>
+        /// 根据到院id获取指定时间内的上门成交业绩
+        /// </summary>
+        /// <param name="recordDate"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        Task<List<ContentPlatFormOrderDealInfoDto>> GetSendPerformanceByHospitalIdAndDateTimeAsync(QueryHospitalTransformDataDto query);
         /// <summary>>
         /// 根据到院id获取当月上门成交业绩
         /// </summary>

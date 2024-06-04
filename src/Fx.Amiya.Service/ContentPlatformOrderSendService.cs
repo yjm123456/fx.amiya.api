@@ -1,4 +1,5 @@
 ﻿using Fx.Amiya.DbModels.Model;
+using Fx.Amiya.Dto.AmiyaOperationsBoardService.Input;
 using Fx.Amiya.Dto.ContentPlateFormOrder;
 using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.HospitalBoard;
@@ -957,6 +958,30 @@ namespace Fx.Amiya.Service
                              SendDate = d.SendDate,
                          };
             var result = orders.ToList();
+            return result;
+        }
+
+  
+        /// <summary>
+        /// 获取选取时间内已派单数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <returns></returns>
+        public async Task<List<SendContentPlatformOrderDto>> GetTodayOrderSendDataAsync(QueryHospitalTransformDataDto query)
+        {
+            
+            var orders = from d in _dalContentPlatformOrderSend.GetAll().Include(x => x.HospitalInfo).ThenInclude(x => x.CooperativeHospitalCity)
+                         where d.SendDate >= query.StartDate && d.SendDate < query.EndDate&&(query.LiveAnchorIds.Count==0||query.LiveAnchorIds.Contains(d.ContentPlatformOrder.LiveAnchor.LiveAnchorBaseId))
+                         select new SendContentPlatformOrderDto
+                         {
+                             OrderId = d.ContentPlatformOrderId,
+                             SendHospitalId = d.HospitalId,
+                             ThumbPictureUrl = d.HospitalInfo.ThumbPicUrl,
+                             SendHospital = d.HospitalInfo.Name,
+                             City = d.HospitalInfo.CooperativeHospitalCity.Name,
+                             SendDate = d.SendDate,
+                         };
+            var result =await orders.ToListAsync();
             return result;
         }
 

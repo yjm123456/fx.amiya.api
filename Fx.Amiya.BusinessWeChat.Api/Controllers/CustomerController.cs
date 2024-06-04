@@ -30,9 +30,11 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
     public class CustomerController : ControllerBase
     {
         private ICustomerBaseInfoService customerBaseInfoService;
-        public CustomerController(ICustomerBaseInfoService customerBaseInfoService)
+        private ICustomerService customerService;
+        public CustomerController(ICustomerBaseInfoService customerBaseInfoService, ICustomerService customerService)
         {
             this.customerBaseInfoService = customerBaseInfoService;
+            this.customerService = customerService;
         }
 
 
@@ -84,6 +86,18 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             return ResultData<CustomerBaseDetailInfoVo>.Success().AddData("customer", customerSimpleInfoVo);
         }
 
+        /// <summary>
+        /// 解密手机号
+        /// </summary>
+        /// <param name="encryptPhone"></param>
+        /// <returns></returns>
+        [HttpGet("decryptoPhone")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<string>> NewDecryptoPhone(string encryptPhone)
+        {
+            string phone = await customerService.DecryptoPhone(encryptPhone);
+            return ResultData<string>.Success().AddData("phone", phone);
+        }
 
     }
 }
