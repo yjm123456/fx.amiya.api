@@ -8,24 +8,32 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
     /// <summary>
     /// 新老客横向堆叠柱状图输出类
     /// </summary>
-    public class NewOrOldCustomerPerformanceDataVo
+    public class NewOrOldCustomerPerformanceDataListVo
     {
         /// <summary>
-        /// 区分助理与机构（employee=助理，hospital=机构）
+        /// 助理业绩分析
         /// </summary>
-        public string Code { get; set; }
+        public List<CustomerPerformanceDataVo> EmployeePerformance { get; set; }
+        /// <summary>
+        /// 助理业绩分析
+        /// </summary>
+        public List<CustomerPerformanceDataVo> HospitalPerformance { get; set; }
+    }
+
+    public class CustomerPerformanceDataVo
+    {
         /// <summary>
         /// 新客业绩
         /// </summary>
-        public List<int> NewCustomerPerformance { get; set; }
+        public decimal NewCustomerPerformance { get; set; }
         /// <summary>
         /// 老客业绩
         /// </summary>
-        public List<int> OldCustomerPerformance { get; set; }
+        public decimal OldCustomerPerformance { get; set; }
 
         /// <summary>
         /// 名称
         /// </summary>
-        public List<string> Name { get; set; }
+        public string Name { get; set; }
     }
 }

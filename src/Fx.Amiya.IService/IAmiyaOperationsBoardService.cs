@@ -24,7 +24,14 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        Task<GetNewOrOldCustomerCompareDataDto> GetNewOrOldCustomerCompareDataVoAsync(QueryOperationDataDto query);
+        Task<GetNewOrOldCustomerCompareDataDto> GetNewOrOldCustomerCompareDataAsync(QueryOperationDataDto query);
+
+        /// <summary>
+        /// 根据条件获取助理与机构新老客业绩对比情况
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<NewOrOldCustomerPerformanceDataListDto> GetNewOrOldCustomerCompareByEmployeeAndHospitalAsync(QueryOperationDataDto query);
 
         /// <summary>
         /// 获取获客情况数据

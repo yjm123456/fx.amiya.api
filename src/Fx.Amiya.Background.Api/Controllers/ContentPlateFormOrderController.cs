@@ -1571,7 +1571,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.DealPerformanceType = (int)ContentPlateFormOrderDealPerformanceType.HospitalDeclaration;
             updateDto.InvitationDocuments = updateVo.InvitationDocuments;
             updateDto.ConsumptionType = updateVo.ConsumptionType;
-            updateDto.EmpId = 0;
+            updateDto.EmpId = 266;
             List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
             if (updateDto.IsFinish == true)
             {

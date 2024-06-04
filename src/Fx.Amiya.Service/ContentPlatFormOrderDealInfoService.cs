@@ -2263,7 +2263,10 @@ namespace Fx.Amiya.Service
                     LiveAnchorId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.LiveAnchor.Id,
                     BelongLiveAnchor = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId,
                     LastDealHospitalId = ContentPlatFOrmOrderDealInfo.LastDealHospitalId,
-                    DealDate = ContentPlatFOrmOrderDealInfo.DealDate
+                    DealDate = ContentPlatFOrmOrderDealInfo.DealDate,
+                    BelongEmployeeId= ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.BelongEmpId.Value,
+                    IsSupportOrder= ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.IsSupportOrder,
+                    SupportEmpId= ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.SupportEmpId,
                 }
                 ).ToList();
         }

@@ -94,7 +94,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
             queryOperationDataVo.startDate = query.startDate;
             queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
-            var data = await amiyaOperationsBoardService.GetNewOrOldCustomerCompareDataVoAsync(queryOperationDataVo);
+            var data = await amiyaOperationsBoardService.GetNewOrOldCustomerCompareDataAsync(queryOperationDataVo);
             result.TotalPerformanceNewCustomer = data.TotalPerformanceNewCustomer;
             result.TotalPerformanceOldCustomer = data.TotalPerformanceOldCustomer;
             result.GroupDaoDaoPerformanceNewCustomer = data.GroupDaoDaoPerformanceNewCustomer;
@@ -110,52 +110,33 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getNewOrOldCustomerCompareByEmployeeAndHospital")]
-        public async Task<ResultData<List<NewOrOldCustomerPerformanceDataVo>>> GetNewOrOldCustomerCompareByEmployeeAndHospitalDataVoAsync([FromQuery] QueryOperationDataVo query)
+        public async Task<ResultData<NewOrOldCustomerPerformanceDataListVo>> GetNewOrOldCustomerCompareByEmployeeAndHospitalDataVoAsync([FromQuery] QueryOperationDataVo query)
         {
             QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
             queryOperationDataVo.startDate = query.startDate;
             queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
-            // var data = await amiyaOperationsBoardService.GetNewOrOldCustomerCompareDataVoAsync(queryOperationDataVo);
+             var data = await amiyaOperationsBoardService.GetNewOrOldCustomerCompareByEmployeeAndHospitalAsync(queryOperationDataVo);
 
-            List<NewOrOldCustomerPerformanceDataVo> result = new List<NewOrOldCustomerPerformanceDataVo>();
-
-            NewOrOldCustomerPerformanceDataVo result1 = new NewOrOldCustomerPerformanceDataVo();
-            result1.NewCustomerPerformance = new List<int>();
-            result1.OldCustomerPerformance = new List<int>();
-            result1.Name = new List<string>();
-            result1.Code = "employee";
-            result1.NewCustomerPerformance.Add(320);
-            result1.NewCustomerPerformance.Add(301);
-            result1.NewCustomerPerformance.Add(306);
-
-            result1.OldCustomerPerformance.Add(120);
-            result1.OldCustomerPerformance.Add(131);
-            result1.OldCustomerPerformance.Add(106);
-
-            result1.Name.Add("益达");
-            result1.Name.Add("伊娜");
-            result1.Name.Add("王小美");
-            result.Add(result1);
-
-
-            NewOrOldCustomerPerformanceDataVo result2 = new NewOrOldCustomerPerformanceDataVo();
-            result2.NewCustomerPerformance = new List<int>();
-            result2.OldCustomerPerformance = new List<int>();
-            result2.Name = new List<string>();
-            result2.Code = "hospital";
-            result2.NewCustomerPerformance.Add(320);
-            result2.NewCustomerPerformance.Add(302);
-            result2.NewCustomerPerformance.Add(306);
-
-            result2.OldCustomerPerformance.Add(220);
-            result2.OldCustomerPerformance.Add(232);
-            result2.OldCustomerPerformance.Add(206);
-
-            result2.Name.Add("杭州维多");
-            result2.Name.Add("杭州连天美");
-            result2.Name.Add("杭州米兰");
-            result.Add(result2);
-            return ResultData<List<NewOrOldCustomerPerformanceDataVo>>.Success().AddData("data", result);
+            NewOrOldCustomerPerformanceDataListVo result = new NewOrOldCustomerPerformanceDataListVo();
+            result.HospitalPerformance = new List<CustomerPerformanceDataVo>();
+            result.EmployeePerformance = new List<CustomerPerformanceDataVo>();
+            foreach (var x in data.EmployeePerformance)
+            {
+                CustomerPerformanceDataVo employeePerformanceVo = new CustomerPerformanceDataVo();
+                employeePerformanceVo.NewCustomerPerformance = x.NewCustomerPerformance;
+                employeePerformanceVo.OldCustomerPerformance = x.OldCustomerPerformance;
+                employeePerformanceVo.Name = x.Name;
+                result.EmployeePerformance.Add(employeePerformanceVo);
+            }
+            foreach (var x in data.HospitalPerformance)
+            {
+                CustomerPerformanceDataVo hospitalPerformanceVo = new CustomerPerformanceDataVo();
+                hospitalPerformanceVo.NewCustomerPerformance = x.NewCustomerPerformance;
+                hospitalPerformanceVo.OldCustomerPerformance = x.OldCustomerPerformance;
+                hospitalPerformanceVo.Name = x.Name;
+                result.HospitalPerformance.Add(hospitalPerformanceVo);
+            }
+            return ResultData<NewOrOldCustomerPerformanceDataListVo>.Success().AddData("data", result);
         }
 
         #endregion

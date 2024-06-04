@@ -297,5 +297,15 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 归属客服id
         /// </summary>
         public int BelongEmployeeId { get; set; }
+
+        /// <summary>
+        /// 是否为辅助订单
+        /// </summary>
+        public bool IsSupportOrder { get; set; }
+
+        /// <summary>
+        /// 辅助客服id
+        /// </summary>
+        public int SupportEmpId { get; set; }
     }
 }

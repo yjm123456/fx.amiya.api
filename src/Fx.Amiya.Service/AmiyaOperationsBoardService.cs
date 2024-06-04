@@ -21,6 +21,7 @@ namespace Fx.Amiya.Service
         private readonly ILiveAnchorBaseInfoService liveAnchorBaseInfoService;
         private readonly IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService;
         private readonly ILiveAnchorService liveAnchorService;
+        private readonly IHospitalInfoService hospitalInfoService;
         private readonly IShoppingCartRegistrationService shoppingCartRegistrationService;
         private readonly IContentPlateFormOrderService contentPlateFormOrderService;
         private readonly IAmiyaEmployeeService amiyaEmployeeService;
@@ -35,6 +36,7 @@ namespace Fx.Amiya.Service
             ILiveAnchorService liveAnchorService,
             IShoppingCartRegistrationService shoppingCartRegistrationService,
             IContentPlateFormOrderService contentPlateFormOrderService,
+            IHospitalInfoService hospitalInfoService,
             IAmiyaEmployeeService amiyaEmployeeService,
             IEmployeePerformanceTargetService employeePerformanceTargetService,
             IContentPlatformOrderSendService contentPlatformOrderSendService,
@@ -44,6 +46,7 @@ namespace Fx.Amiya.Service
             this.liveAnchorBaseInfoService = liveAnchorBaseInfoService;
             this.contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
             this.liveAnchorService = liveAnchorService;
+            this.hospitalInfoService = hospitalInfoService;
             this.shoppingCartRegistrationService = shoppingCartRegistrationService;
             this.contentPlateFormOrderService = contentPlateFormOrderService;
             this.amiyaEmployeeService = amiyaEmployeeService;
@@ -142,7 +145,7 @@ namespace Fx.Amiya.Service
             return result;
         }
 
-        public async Task<GetNewOrOldCustomerCompareDataDto> GetNewOrOldCustomerCompareDataVoAsync(QueryOperationDataDto query)
+        public async Task<GetNewOrOldCustomerCompareDataDto> GetNewOrOldCustomerCompareDataAsync(QueryOperationDataDto query)
         {
             GetNewOrOldCustomerCompareDataDto result = new GetNewOrOldCustomerCompareDataDto();
             List<int> LiveAnchorInfo = new List<int>();
@@ -169,13 +172,70 @@ namespace Fx.Amiya.Service
 
             #region 吉娜组业绩
             var liveAnchorJina = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync("af69dcf5-f749-41ea-8b50-fe685facdd8b");
-            var LiveAnchorInfoJinaResult = liveAnchorDaoDao.Select(x => x.Id).ToList();
-            var curJinaTotalAchievement = order.Sum(x => x.Price);
+            var LiveAnchorInfoJinaResult = liveAnchorJina.Select(x => x.Id).ToList();
+            var curJinaTotalAchievement = order.Where(x => LiveAnchorInfoJinaResult.Contains(x.LiveAnchorId.Value)).Sum(x => x.Price);
             var curJinaNewCustomer = order.Where(o => o.IsOldCustomer == false).Where(x => LiveAnchorInfoJinaResult.Contains(x.LiveAnchorId.Value)).Sum(o => o.Price);
             var curJinaOldCustomer = order.Where(o => o.IsOldCustomer == true).Where(x => LiveAnchorInfoJinaResult.Contains(x.LiveAnchorId.Value)).Sum(o => o.Price);
             result.GroupJiNaPerformanceNewCustomer = DecimalExtension.CalculateTargetComplete(curJinaNewCustomer, curJinaTotalAchievement);
             result.GroupJiNaPerformanceOldCustomer = DecimalExtension.CalculateTargetComplete(curJinaOldCustomer, curJinaTotalAchievement);
             #endregion
+            return result;
+        }
+
+        public async Task<NewOrOldCustomerPerformanceDataListDto> GetNewOrOldCustomerCompareByEmployeeAndHospitalAsync(QueryOperationDataDto query)
+        {
+            List<int> LiveAnchorInfo = new List<int>();
+            NewOrOldCustomerPerformanceDataListDto result = new NewOrOldCustomerPerformanceDataListDto();
+            result.EmployeePerformance = new List<CustomerPerformanceDataDto>();
+            result.HospitalPerformance = new List<CustomerPerformanceDataDto>();
+            var orderDealInfo = await contentPlatFormOrderDealInfoService.GetPerformanceDetailByDateAsync(query.startDate.Value, query.endDate.Value, LiveAnchorInfo);
+            #region 助理业绩（包含行政客服）
+            var employeeInfo = await amiyaEmployeeService.GetemployeeByPositionIdAsync(4);
+            var employeeInfo2 = await amiyaEmployeeService.GetemployeeByPositionIdAsync(30);
+            foreach (var x in employeeInfo2)
+            {
+                employeeInfo.Add(x);
+            }
+            foreach (var empInfo in employeeInfo)
+            {
+                CustomerPerformanceDataDto customerPerformanceDataDto = new CustomerPerformanceDataDto();
+                customerPerformanceDataDto.Name = empInfo.Name;
+                var newPerformance = orderDealInfo.Where(x => x.IsSupportOrder == false && x.IsOldCustomer == false && x.BelongEmployeeId == empInfo.Id).Sum(x => x.Price);
+                newPerformance += orderDealInfo.Where(x => x.IsSupportOrder == true && x.IsOldCustomer == false && x.SupportEmpId == empInfo.Id).Sum(x => x.Price);
+                customerPerformanceDataDto.NewCustomerPerformance = newPerformance;
+
+
+                var oldPerformance = orderDealInfo.Where(x => x.IsSupportOrder == false && x.IsOldCustomer == true && x.BelongEmployeeId == empInfo.Id).Sum(x => x.Price);
+                oldPerformance += orderDealInfo.Where(x => x.IsSupportOrder == true && x.IsOldCustomer == true && x.SupportEmpId == empInfo.Id).Sum(x => x.Price);
+                customerPerformanceDataDto.OldCustomerPerformance = oldPerformance;
+                customerPerformanceDataDto.TotalPerformance = customerPerformanceDataDto.NewCustomerPerformance + customerPerformanceDataDto.OldCustomerPerformance;
+
+                result.EmployeePerformance.Add(customerPerformanceDataDto);
+            }
+            #endregion
+
+
+            #region 机构业绩
+            var hospitalIdList = orderDealInfo.GroupBy(x => x.LastDealHospitalId);
+            foreach (var hospitalInfo in hospitalIdList)
+            {
+                CustomerPerformanceDataDto hospitalPerformanceDto = new CustomerPerformanceDataDto();
+                var lastHospitalId = hospitalInfo.Key;
+
+                var hospital = await hospitalInfoService.GetByIdAsync(lastHospitalId.Value);
+                hospitalPerformanceDto.Name = hospital.Name;
+                var newPerformance = orderDealInfo.Where(x => x.IsOldCustomer == false && x.LastDealHospitalId == lastHospitalId.Value).Sum(x => x.Price);
+                hospitalPerformanceDto.NewCustomerPerformance = newPerformance;
+
+
+                var oldPerformance = orderDealInfo.Where(x => x.IsOldCustomer == true && x.LastDealHospitalId == lastHospitalId.Value).Sum(x => x.Price);
+                hospitalPerformanceDto.OldCustomerPerformance = oldPerformance;
+                hospitalPerformanceDto.TotalPerformance = hospitalPerformanceDto.NewCustomerPerformance + hospitalPerformanceDto.OldCustomerPerformance;
+                result.HospitalPerformance.Add(hospitalPerformanceDto);
+            }
+            #endregion
+            result.EmployeePerformance = result.EmployeePerformance.OrderByDescending(x => x.TotalPerformance).ToList();
+            result.HospitalPerformance = result.HospitalPerformance.OrderByDescending(x => x.TotalPerformance).ToList();
             return result;
         }
 
