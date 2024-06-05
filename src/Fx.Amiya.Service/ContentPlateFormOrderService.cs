@@ -2427,7 +2427,7 @@ namespace Fx.Amiya.Service
                 orderDealDto.CreateBy = input.EmpId;
                 orderDealDto.InvitationDocuments = input.InvitationDocuments;
                 orderDealDto.AddContentPlatFormOrderDealDetailsDtoList = input.AddContentPlatFormOrderDealDetailsDtoList;
-                await _contentPlatFormOrderDalService.AddAsync(orderDealDto);
+                var dealId= await _contentPlatFormOrderDalService.AddAsync(orderDealDto);
 
                 //更新粉丝见面会数据
                 if (!string.IsNullOrEmpty(input.FansMeetingId))
@@ -2439,6 +2439,7 @@ namespace Fx.Amiya.Service
                     if (string.IsNullOrEmpty(id))
                         throw new Exception("该客户未参加此次粉丝见面会!");
                     generate.Id = id;
+                    generate.DealId=dealId;
                     generate.IsToHospital = input.IsToHospital;
                     generate.IsDeal = input.IsFinish;
                     generate.DealPrice = input.DealAmount ?? 0m;
@@ -2677,6 +2678,7 @@ namespace Fx.Amiya.Service
                     if (string.IsNullOrEmpty(id))
                         throw new Exception("该客户未参加此次粉丝见面会!");
                     generate.Id = id;
+                    generate.DealId = input.DealId;
                     generate.IsToHospital = input.IsToHospital;
                     generate.IsDeal = input.IsFinish;
                     generate.DealPrice = input.DealAmount ?? 0m;

@@ -33,7 +33,7 @@ namespace Fx.Amiya.IService
         /// <param name="hodpitalId"></param>
         /// <returns></returns>
         Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> HospitalGetListWithPageAsync(string contentPlafFormOrderId, int pageNum, int pageSize,int hospitalId);
-        Task AddAsync(AddContentPlatFormOrderDealInfoDto addDto);
+        Task<string> AddAsync(AddContentPlatFormOrderDealInfoDto addDto);
         Task<ContentPlatFormOrderDealInfoDto> GetByIdAsync(string id);
 
         /// <summary>

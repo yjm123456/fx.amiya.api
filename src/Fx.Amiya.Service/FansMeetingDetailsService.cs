@@ -2,10 +2,13 @@
 using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.FansMeetingDetails.Input;
 using Fx.Amiya.Dto.FansMeetingDetails.Result;
+using Fx.Amiya.Dto.OperationLog;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Common;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,9 +18,13 @@ namespace Fx.Amiya.Service
     public class FansMeetingDetailsService : IFansMeetingDetailsService
     {
         private readonly IDalFansMeetingDetails dalFansMeetingDetails;
-        public FansMeetingDetailsService(IDalFansMeetingDetails dalFansMeetingDetails)
+        private IHttpContextAccessor httpContextAccessor;
+        private IOperationLogService operationLogService;
+        public FansMeetingDetailsService(IDalFansMeetingDetails dalFansMeetingDetails, IHttpContextAccessor httpContextAccessor, IOperationLogService operationLogService)
         {
             this.dalFansMeetingDetails = dalFansMeetingDetails;
+            this.httpContextAccessor = httpContextAccessor;
+            this.operationLogService = operationLogService;
         }
 
 
@@ -87,6 +94,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task AddAsync(AddFansMeetingDetailsDto addDto)
         {
+
             try
             {
                 //查询是否存在该条手机号
@@ -261,12 +269,31 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task GenerateDealInfoAsync(GenerateDealInfoDto generate)
         {
-            var record = await dalFansMeetingDetails.GetAll().Where(e => e.Id == generate.Id).FirstOrDefaultAsync();
-            record.IsDeal = generate.IsDeal;
-            record.IsToHospital = generate.IsToHospital;
-            record.CumulativeDealPrice = generate.DealPrice;
-            record.UpdateDate = DateTime.Now;
-            await dalFansMeetingDetails.UpdateAsync(record, true);
+            OperationAddDto operationLog = new OperationAddDto();
+            operationLog.Source = (int)RequestSource.AmiyaBackground;
+            operationLog.Code = 0;
+            try
+            {
+                var record = await dalFansMeetingDetails.GetAll().Where(e => e.Id == generate.Id).FirstOrDefaultAsync();
+                record.IsDeal = generate.IsDeal;
+                record.IsToHospital = generate.IsToHospital;
+                record.CumulativeDealPrice = generate.DealPrice;
+                record.UpdateDate = DateTime.Now;
+                await dalFansMeetingDetails.UpdateAsync(record, true);
+            }
+            catch (Exception ex)
+            {
+                operationLog.Message = ex.Message;
+                operationLog.Code = -1;
+                throw ex;
+            }
+            finally
+            {
+                operationLog.Parameters = JsonConvert.SerializeObject(generate);
+                operationLog.RequestType = (int)RequestType.Update;
+                operationLog.RouteAddress = "";
+                await operationLogService.AddOperationLogAsync(operationLog);
+            }
         }
     }
 }

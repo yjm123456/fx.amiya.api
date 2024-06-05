@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Fx.Amiya.Background.Api.Vo.FansMeetingDetails.Input;
 using Fx.Amiya.Background.Api.Vo.FansMeetingDetails.Result;
 using Fx.Amiya.Dto.FansMeetingDetails.Input;
+using Fx.Amiya.Dto.OperationLog;
 using Fx.Amiya.IService;
 using Fx.Amiya.Service;
 using Fx.Authorization.Attributes;
@@ -11,6 +12,7 @@ using Fx.Common;
 using Fx.Open.Infrastructure.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Fx.Amiya.Background.Api.Controllers
 {
@@ -27,6 +29,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         private readonly IWxAppConfigService _wxAppConfigService;
         private IHttpContextAccessor _httpContextAccessor;
         private IPermissionService permissionService;
+        private IOperationLogService operationLogService;
+        
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -34,7 +38,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="contentPlateFormOrderService"></param>
         /// <param name="customerService"></param>
         /// <param name="wxAppConfigService"></param>
-        public FansMeetingDetailsController(IFansMeetingDetailsService fansMeetingDetailsService, IContentPlateFormOrderService contentPlateFormOrderService, ICustomerService customerService, IHttpContextAccessor httpContextAccessor, IPermissionService permissionService, IWxAppConfigService wxAppConfigService)
+        public FansMeetingDetailsController(IFansMeetingDetailsService fansMeetingDetailsService, IContentPlateFormOrderService contentPlateFormOrderService, ICustomerService customerService, IHttpContextAccessor httpContextAccessor, IPermissionService permissionService, IWxAppConfigService wxAppConfigService, IOperationLogService operationLogService)
         {
             this.fansMeetingDetailsService = fansMeetingDetailsService;
             this.contentPlateFormOrderService = contentPlateFormOrderService;
@@ -42,6 +46,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             this._wxAppConfigService = wxAppConfigService;
             this._httpContextAccessor = httpContextAccessor;
             this.permissionService = permissionService;
+            this.operationLogService = operationLogService;
         }
 
 
@@ -207,6 +212,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData> AddAsync(AddFansMeetingDetailsVo addVo)
         {
+            OperationAddDto operationLog = new OperationAddDto();
+            operationLog.Source = (int)RequestSource.AmiyaBackground;
+            operationLog.Code = 0;
             try
             {
                 AddFansMeetingDetailsDto addDto = new AddFansMeetingDetailsDto();
@@ -293,7 +301,16 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             catch (Exception ex)
             {
+                operationLog.Message = ex.Message;
+                operationLog.Code = -1;
                 return ResultData.Fail(ex.Message);
+            }
+            finally
+            {
+                operationLog.Parameters = JsonConvert.SerializeObject(addVo);
+                operationLog.RequestType = (int)RequestType.Add;
+                operationLog.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationLog);
             }
         }
 
@@ -354,6 +371,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData> UpdateAsync(UpdateFansMeetingDetailsVo updateVo)
         {
+            OperationAddDto operationLog = new OperationAddDto();
+            operationLog.Source = (int)RequestSource.AmiyaBackground;
+            operationLog.Code = 0;
             try
             {
                 UpdateFansMeetingDetailsDto updateDto = new UpdateFansMeetingDetailsDto();
@@ -387,7 +407,16 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             catch (Exception ex)
             {
+                operationLog.Message = ex.Message;
+                operationLog.Code = -1;
                 return ResultData.Fail(ex.Message);
+            }
+            finally
+            {
+                operationLog.Parameters = JsonConvert.SerializeObject(updateVo);
+                operationLog.RequestType = (int)RequestType.Update;
+                operationLog.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationLog);
             }
         }
 

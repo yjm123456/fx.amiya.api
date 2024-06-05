@@ -1036,6 +1036,10 @@ namespace Fx.Amiya.Service
                 groupData.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(groupData.NewCustomerDealCount, groupData.OldCustomerDealCount);
                 dataList.Add(groupData);
             }
+            foreach (var item in dataList)
+            {
+                item.Rate = DecimalExtension.CalculateTargetComplete(item.NewCustomerPerformance + item.OldCustomerPerformance, dataList.Sum(e => e.NewCustomerPerformance) + dataList.Sum(e => e.OldCustomerPerformance)).Value;
+            }
             FlowTransFormDataVo data = new FlowTransFormDataVo();
             data.GroupName = "总计";
             data.ClueCount = dataList.Sum(e => e.ClueCount);
@@ -1055,12 +1059,7 @@ namespace Fx.Amiya.Service
             data.NewCustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance, dataList.Sum(e => e.NewCustomerDealCount)).Value;
             data.CustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance + data.OldCustomerPerformance, data.DealCount).Value;
             data.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(data.NewCustomerDealCount, data.OldCustomerDealCount);
-            
             data.Rate = 100;
-            foreach (var item in dataList)
-            {
-                item.Rate = DecimalExtension.CalculateTargetComplete(item.NewCustomerPerformance + item.OldCustomerPerformance, dataList.Sum(e => e.NewCustomerPerformance) + dataList.Sum(e => e.OldCustomerPerformance)).Value;
-            }
             dataList.Add(data);
             return dataList;
         }
@@ -1102,6 +1101,24 @@ namespace Fx.Amiya.Service
             {
                 item.Rate = DecimalExtension.CalculateTargetComplete(item.NewCustomerPerformance + item.OldCustomerPerformance, list.Sum(e => e.NewCustomerPerformance) + list.Sum(e => e.OldCustomerPerformance)).Value;
             }
+            FlowTransFormDataVo data = new FlowTransFormDataVo();
+            data.GroupName = "总计";
+            data.SendOrderCount = list.Sum(e => e.SendOrderCount);
+            data.DistributeConsulationNum = list.Sum(e => e.DistributeConsulationNum);
+            data.AddWechatCount = list.Sum(e => e.AddWechatCount);
+            data.AddWechatRate = DecimalExtension.CalculateTargetComplete(data.AddWechatCount, data.DistributeConsulationNum).Value;
+            data.SendOrderRate = DecimalExtension.CalculateTargetComplete(data.SendOrderCount, data.AddWechatCount).Value;
+            data.ToHospitalCount = list.Sum(e => e.ToHospitalCount);
+            data.ToHospitalRate = DecimalExtension.CalculateTargetComplete(data.ToHospitalCount, data.SendOrderCount).Value;
+            data.DealCount = list.Sum(e => e.DealCount);
+            data.DealRate = DecimalExtension.CalculateTargetComplete(data.DealCount, data.ToHospitalCount).Value;
+            data.NewCustomerPerformance = list.Sum(e => e.NewCustomerPerformance);
+            data.OldCustomerPerformance = list.Sum(e => e.OldCustomerPerformance);
+            data.OldCustomerUnitPrice = DecimalExtension.Division(data.OldCustomerPerformance, list.Sum(e => e.OldCustomerDealCount)).Value;
+            data.NewCustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance, list.Sum(e => e.NewCustomerDealCount)).Value;
+            data.CustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance + data.OldCustomerPerformance, data.DealCount).Value;
+            data.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(data.NewCustomerDealCount, data.OldCustomerDealCount);
+            data.Rate = 100;
             return list;
         }
 
@@ -1125,6 +1142,12 @@ namespace Fx.Amiya.Service
                 query.LiveAnchorIds.Remove("0");
                 query.LiveAnchorIds.AddRange(thridLiveanchor.Select(e=>e.Id));
             }
+            if (query.LiveAnchorIds.Count==0) {
+                var thridLiveanchor = await liveAnchorBaseInfoService.GetCooperateLiveAnchorAsync(null);
+                var selfLiveanchor = await liveAnchorBaseInfoService.GetValidAsync(true);
+                query.LiveAnchorIds.AddRange(thridLiveanchor.Select(e => e.Id));
+                query.LiveAnchorIds.AddRange(selfLiveanchor.Select(e => e.Id));
+            }
             var contentPlatFormOrderSendList = await contentPlatformOrderSendService.GetTodayOrderSendDataAsync(query);
             foreach (var x in contentPlatFormOrderSendList)
             {
@@ -1138,7 +1161,6 @@ namespace Fx.Amiya.Service
                 hospitalPerformanceDto.HospitalId = x.SendHospitalId;
                 hospitalPerformanceDto.HospitalName = x.SendHospital;
                 hospitalPerformanceDto.City = x.City;
-
                 List<int> hospitalIds = new List<int>();
                 hospitalIds.Add(x.SendHospitalId);
                 query.HospitalId = hospitalIds;

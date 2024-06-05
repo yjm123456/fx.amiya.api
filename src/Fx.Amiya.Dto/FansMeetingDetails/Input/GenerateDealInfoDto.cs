@@ -10,6 +10,10 @@ namespace Fx.Amiya.Dto.FansMeetingDetails.Input
     {
         public string Id { get; set; }
         /// <summary>
+        /// 成交信息id
+        /// </summary>
+        public string DealId { get; set; }
+        /// <summary>
         /// 是否成交
         /// </summary>
         public bool IsDeal { get; set; }

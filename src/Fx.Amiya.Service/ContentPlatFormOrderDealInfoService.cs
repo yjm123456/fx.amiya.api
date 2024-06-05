@@ -875,7 +875,7 @@ namespace Fx.Amiya.Service
         }
 
 
-        public async Task AddAsync(AddContentPlatFormOrderDealInfoDto addDto)
+        public async Task<string> AddAsync(AddContentPlatFormOrderDealInfoDto addDto)
         {
             try
             {
@@ -929,6 +929,7 @@ namespace Fx.Amiya.Service
                         await contentPlatFormOrderDealDetailsService.AddAsync(x);
                     }
                 }
+                return ContentPlatFOrmOrderDealInfo.Id;
             }
             catch (Exception ex)
             {

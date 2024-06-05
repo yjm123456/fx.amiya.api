@@ -150,7 +150,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         #region 转化
 
         /// <summary>
-        /// 公司转化
+        /// 流量和客户转化情况
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
@@ -190,7 +190,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
 
         /// <summary>
-        /// 助理转化
+        /// 助理流量和客户转化情况
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
@@ -229,7 +229,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<List<FlowTransFormDataVo>>.Success().AddData("data", res);
         }
         /// <summary>
-        /// 机构转化
+        /// 机构转化情况
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
