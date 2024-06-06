@@ -212,6 +212,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData> AddAsync(AddFansMeetingDetailsVo addVo)
         {
+            
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             OperationAddDto operationLog = new OperationAddDto();
             operationLog.Source = (int)RequestSource.AmiyaBackground;
@@ -308,7 +309,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                operationLog.OperationBy = Convert.ToInt32(employee.Id);
+                int? empId=employee==null? null : Convert.ToInt32(employee.Id);
+                operationLog.OperationBy = empId;
                 operationLog.Parameters = JsonConvert.SerializeObject(addVo);
                 operationLog.RequestType = (int)RequestType.Add;
                 operationLog.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
@@ -416,7 +418,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                operationLog.OperationBy = Convert.ToInt32(employee.Id);
+                int? empId = employee == null ? null : Convert.ToInt32(employee.Id);
+                operationLog.OperationBy = empId;
                 operationLog.Parameters = JsonConvert.SerializeObject(updateVo);
                 operationLog.RequestType = (int)RequestType.Update;
                 operationLog.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
