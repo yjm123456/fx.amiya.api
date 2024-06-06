@@ -540,8 +540,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 }
             }
             addDto.AddWaitTrackCustomer = waitTrackRecordList;
-            //线上改为266
-            int result = await trackService.AddTrackRecordAsync(addDto, 193);
+            //线上改为266  ，线下193
+            int result = await trackService.AddTrackRecordAsync(addDto, 266);
             return ResultData.Success();
 
         }

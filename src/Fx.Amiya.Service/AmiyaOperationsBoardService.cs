@@ -234,8 +234,8 @@ namespace Fx.Amiya.Service
                 result.HospitalPerformance.Add(hospitalPerformanceDto);
             }
             #endregion
-            result.EmployeePerformance = result.EmployeePerformance.OrderByDescending(x => x.TotalPerformance).ToList();
-            result.HospitalPerformance = result.HospitalPerformance.OrderByDescending(x => x.TotalPerformance).ToList();
+            result.EmployeePerformance = result.EmployeePerformance.OrderByDescending(x => x.TotalPerformance).Take(15).ToList();
+            result.HospitalPerformance = result.HospitalPerformance.OrderByDescending(x => x.TotalPerformance).Take(15).ToList();
             return result;
         }
 
