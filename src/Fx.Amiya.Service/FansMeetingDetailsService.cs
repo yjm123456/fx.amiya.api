@@ -272,6 +272,7 @@ namespace Fx.Amiya.Service
             OperationAddDto operationLog = new OperationAddDto();
             operationLog.Source = (int)RequestSource.AmiyaBackground;
             operationLog.Code = 0;
+            operationLog.OperationBy = generate.EmpId;
             try
             {
                 var record = await dalFansMeetingDetails.GetAll().Where(e => e.Id == generate.Id).FirstOrDefaultAsync();
@@ -289,10 +290,9 @@ namespace Fx.Amiya.Service
             }
             finally
             {
-                operationLog.OperationBy = generate.EmpId;
                 operationLog.Parameters = JsonConvert.SerializeObject(generate);
                 operationLog.RequestType = (int)RequestType.Update;
-                operationLog.RouteAddress = "";
+                operationLog.RouteAddress = "粉丝见面会数据同步";
                 await operationLogService.AddOperationLogAsync(operationLog);
             }
         }

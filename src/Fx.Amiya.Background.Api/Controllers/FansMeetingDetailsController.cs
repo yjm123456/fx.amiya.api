@@ -217,6 +217,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             OperationAddDto operationLog = new OperationAddDto();
             operationLog.Source = (int)RequestSource.AmiyaBackground;
             operationLog.Code = 0;
+            int? empId = employee == null ? null : Convert.ToInt32(employee.Id);
+            operationLog.OperationBy = empId;
             try
             {
                 AddFansMeetingDetailsDto addDto = new AddFansMeetingDetailsDto();
@@ -309,8 +311,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                int? empId=employee==null? null : Convert.ToInt32(employee.Id);
-                operationLog.OperationBy = empId;
+                
                 operationLog.Parameters = JsonConvert.SerializeObject(addVo);
                 operationLog.RequestType = (int)RequestType.Add;
                 operationLog.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
@@ -379,6 +380,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             OperationAddDto operationLog = new OperationAddDto();
             operationLog.Source = (int)RequestSource.AmiyaBackground;
             operationLog.Code = 0;
+            int? empId = employee == null ? null : Convert.ToInt32(employee.Id);
+            operationLog.OperationBy = empId;
             try
             {
                 UpdateFansMeetingDetailsDto updateDto = new UpdateFansMeetingDetailsDto();
@@ -418,8 +421,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                int? empId = employee == null ? null : Convert.ToInt32(employee.Id);
-                operationLog.OperationBy = empId;
+                
                 operationLog.Parameters = JsonConvert.SerializeObject(updateVo);
                 operationLog.RequestType = (int)RequestType.Update;
                 operationLog.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
