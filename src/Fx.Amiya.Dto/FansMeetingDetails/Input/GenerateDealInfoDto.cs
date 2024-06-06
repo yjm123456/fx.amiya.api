@@ -29,5 +29,9 @@ namespace Fx.Amiya.Dto.FansMeetingDetails.Input
         /// 原有成交金额
         /// </summary>
         public decimal OriginalDealPrice { get; set; }
+        /// <summary>
+        /// 操作人
+        /// </summary>
+        public int EmpId { get; set; }
     }
 }

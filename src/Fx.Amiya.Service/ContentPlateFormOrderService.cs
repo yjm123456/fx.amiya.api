@@ -2438,6 +2438,7 @@ namespace Fx.Amiya.Service
                     var id = dalFansMeetingDetails.GetAll().Where(e => e.FansMeetingId == input.FansMeetingId).Where(e => e.Phone == order.Phone).Select(e => e.Id).FirstOrDefault();
                     if (string.IsNullOrEmpty(id))
                         throw new Exception("该客户未参加此次粉丝见面会!");
+                    generate.EmpId = input.EmpId;
                     generate.Id = id;
                     generate.DealId=dealId;
                     generate.IsToHospital = input.IsToHospital;
@@ -2677,6 +2678,7 @@ namespace Fx.Amiya.Service
                     var id = dalFansMeetingDetails.GetAll().Where(e => e.FansMeetingId == input.FansMeetingId).Where(e => e.Phone == order.Phone).Select(e => e.Id).FirstOrDefault();
                     if (string.IsNullOrEmpty(id))
                         throw new Exception("该客户未参加此次粉丝见面会!");
+                    generate.EmpId = input.EmpId;
                     generate.Id = id;
                     generate.DealId = input.DealId;
                     generate.IsToHospital = input.IsToHospital;

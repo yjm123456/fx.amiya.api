@@ -289,6 +289,7 @@ namespace Fx.Amiya.Service
             }
             finally
             {
+                operationLog.OperationBy = generate.EmpId;
                 operationLog.Parameters = JsonConvert.SerializeObject(generate);
                 operationLog.RequestType = (int)RequestType.Update;
                 operationLog.RouteAddress = "";
