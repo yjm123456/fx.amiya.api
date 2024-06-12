@@ -82,6 +82,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       CheckRemark = e.CheckRemark,
                                                       CheckDate = e.CheckDate,
                                                       BelongCustomerServiceName = e.BelongCustomerServiceName,
+                                                      Picture=e.Picture
                                                   };
 
                 FxPageInfo<ContentPlatFormOrderAddWorkVo> tagPageInfo = new FxPageInfo<ContentPlatFormOrderAddWorkVo>();
@@ -117,6 +118,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.AddWorkType = addVo.AddWorkType;
                 addDto.Phone = addVo.Phone;
                 addDto.SendRemark = addVo.SendRemark;
+                addDto.Picture = addVo.Picture;
                 await contentPlatFormOrderAddWorkService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -153,6 +155,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 result.CheckStateText = selectResult.CheckStateText;
                 result.CheckRemark = selectResult.CheckRemark;
                 result.CheckDate = selectResult.CheckDate;
+                result.Picture = selectResult.Picture;
                 return ResultData<ContentPlatFormOrderAddWorkVo>.Success().AddData("contentPlatFormOrderAddWork", result);
             }
             catch (Exception ex)
@@ -191,6 +194,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 result.CheckStateText = selectResult.CheckStateText;
                 result.CheckRemark = selectResult.CheckRemark;
                 result.CheckDate = selectResult.CheckDate;
+                result.Picture = selectResult.Picture;
                 return ResultData<ContentPlatFormOrderAddWorkVo>.Success().AddData("contentPlatFormOrderAddWork", result);
             }
             catch (Exception ex)
@@ -219,6 +223,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.HospitalId = updateVo.HospitalId;
                 updateDto.SendRemark = updateVo.SendRemark;
                 updateDto.AddWorkType = updateVo.AddWorkType;
+                updateDto.Picture = updateVo.Picture;
                 await contentPlatFormOrderAddWorkService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -347,7 +352,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 CheckRemark = e.CheckRemark,
                 CheckDate = e.CheckDate,
                 BelongCustomerServiceName = e.BelongCustomerServiceName,
-                Valid=e.Valid
+                Valid=e.Valid,
+                Picture=e.Picture
             }).ToList();
             return ResultData<FxPageInfo<ContentPlatFormOrderAddWorkVo>>.Success().AddData("historyData",pageInfo);
         }

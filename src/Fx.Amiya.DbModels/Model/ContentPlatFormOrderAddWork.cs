@@ -55,6 +55,10 @@ namespace Fx.Amiya.DbModels.Model
         /// 审核备注
         /// </summary>
         public string CheckRemark { get; set; }
+        /// <summary>
+        /// 截图
+        /// </summary>
+        public string Picture { get; set; }
 
         /// <summary>
         /// 审核时间

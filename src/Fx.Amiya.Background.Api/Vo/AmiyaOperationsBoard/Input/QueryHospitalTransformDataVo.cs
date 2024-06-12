@@ -7,10 +7,19 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Input
 {
     public class QueryHospitalTransformDataVo
     {
+       
         /// <summary>
-        /// 主播id集合
+        /// 刀刀
         /// </summary>
-        public List<string> LiveAnchorIds { get; set; }
+        public bool ShowDaoDao { get; set; }
+        /// <summary>
+        /// 吉娜
+        /// </summary>
+        public bool ShowJiNa { get; set; }
+        /// <summary>
+        /// 合作达人
+        /// </summary>
+        public bool ShowCooperate { get; set; }
 
         /// <summary>
         /// 开始时间

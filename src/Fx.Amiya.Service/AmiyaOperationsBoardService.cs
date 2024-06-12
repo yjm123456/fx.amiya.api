@@ -1003,17 +1003,18 @@ namespace Fx.Amiya.Service
         /// 获取流量转化和客户转化情况数据
         /// </summary>
         /// <returns></returns>
-        public async Task<List<FlowTransFormDataVo>> GetFlowTransFormDataAsync(QueryTransformDataDto query)
+        public async Task<List<FlowTransFormDataDto>> GetFlowTransFormDataAsync(QueryTransformDataDto query)
         {
             var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
             var nameList = await liveAnchorBaseInfoService.GetValidAsync(true);
             var liveAnchorIds = nameList.Select(e => e.Id).ToList();
-            List<FlowTransFormDataVo> dataList = new List<FlowTransFormDataVo>();
+            query.ContentPlatFormIds = GetContentPlatformIdList(query);
+            List<FlowTransFormDataDto> dataList = new List<FlowTransFormDataDto>();
             foreach (var liveanchorId in liveAnchorIds)
             {
                 var liveanchorName = nameList.Where(e => e.Id == liveanchorId).Select(e => e.LiveAnchorName).FirstOrDefault();
                 var groupBaseData = await shoppingCartRegistrationService.GetFlowAndCustomerTransformDataAsync(selectDate.StartDate, selectDate.EndDate, liveanchorId, query.ContentPlatFormIds);
-                FlowTransFormDataVo groupData = new FlowTransFormDataVo();
+                FlowTransFormDataDto groupData = new FlowTransFormDataDto();
                 groupData.GroupName = $"{liveanchorName}组";
                 groupData.ClueCount = groupBaseData.ClueCount;
                 groupData.SendOrderCount = groupBaseData.SendOrderCount;
@@ -1024,7 +1025,7 @@ namespace Fx.Amiya.Service
                 groupData.SendOrderRate = DecimalExtension.CalculateTargetComplete(groupBaseData.SendOrderCount, groupBaseData.AddWechatCount).Value;
                 groupData.ToHospitalCount = groupBaseData.ToHospitalCount;
                 groupData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(groupBaseData.ToHospitalCount, groupBaseData.SendOrderCount).Value;
-                groupData.DealCount = groupBaseData.NewCustomerDealCount + groupBaseData.OldCustomerCount;
+                groupData.DealCount = groupBaseData.NewCustomerDealCount + groupBaseData.OldCustomerDealCount;
                 groupData.NewCustomerDealCount = groupBaseData.NewCustomerDealCount;
                 groupData.OldCustomerDealCount = groupBaseData.OldCustomerDealCount;
                 groupData.DealRate = DecimalExtension.CalculateTargetComplete(groupData.DealCount, groupBaseData.ToHospitalCount).Value;
@@ -1040,7 +1041,7 @@ namespace Fx.Amiya.Service
             {
                 item.Rate = DecimalExtension.CalculateTargetComplete(item.NewCustomerPerformance + item.OldCustomerPerformance, dataList.Sum(e => e.NewCustomerPerformance) + dataList.Sum(e => e.OldCustomerPerformance)).Value;
             }
-            FlowTransFormDataVo data = new FlowTransFormDataVo();
+            FlowTransFormDataDto data = new FlowTransFormDataDto();
             data.GroupName = "总计";
             data.ClueCount = dataList.Sum(e => e.ClueCount);
             data.SendOrderCount = dataList.Sum(e => e.SendOrderCount);
@@ -1067,16 +1068,17 @@ namespace Fx.Amiya.Service
         /// 获取流量转化和客户转化情况数据
         /// </summary>
         /// <returns></returns>
-        public async Task<List<FlowTransFormDataVo>> GetAssistantFlowTransFormDataAsync(QueryTransformDataDto query)
+        public async Task<List<FlowTransFormDataDto>> GetAssistantFlowTransFormDataAsync(QueryTransformDataDto query)
         {
             var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
             var nameList = await liveAnchorBaseInfoService.GetValidAsync(true);
             var assistantNameList = await amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(nameList.Select(e => e.Id).ToList());
+            query.ContentPlatFormIds = GetContentPlatformIdList(query);
             var baseData = await shoppingCartRegistrationService.GetAssitantFlowAndCustomerTransformDataAsync(selectDate.StartDate, selectDate.EndDate, query.ContentPlatFormIds);
             var list = baseData.GroupBy(e => e.EmpId).Select(e =>
             {
                 var name = assistantNameList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其他";
-                FlowTransFormDataVo data = new FlowTransFormDataVo();
+                FlowTransFormDataDto data = new FlowTransFormDataDto();
                 data.GroupName = name;
                 data.SendOrderCount = e.Sum(e => e.SendOrderCount);
                 data.DistributeConsulationNum = e.Sum(e => e.TotalCount);
@@ -1101,7 +1103,7 @@ namespace Fx.Amiya.Service
             {
                 item.Rate = DecimalExtension.CalculateTargetComplete(item.NewCustomerPerformance + item.OldCustomerPerformance, list.Sum(e => e.NewCustomerPerformance) + list.Sum(e => e.OldCustomerPerformance)).Value;
             }
-            FlowTransFormDataVo data = new FlowTransFormDataVo();
+            FlowTransFormDataDto data = new FlowTransFormDataDto();
             data.GroupName = "总计";
             data.SendOrderCount = list.Sum(e => e.SendOrderCount);
             data.DistributeConsulationNum = list.Sum(e => e.DistributeConsulationNum);
@@ -1136,18 +1138,7 @@ namespace Fx.Amiya.Service
             var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
             query.StartDate = selectDate.StartDate;
             query.EndDate = selectDate.EndDate;
-            if (query.LiveAnchorIds.Contains("0"))
-            {
-                var thridLiveanchor = await liveAnchorBaseInfoService.GetCooperateLiveAnchorAsync(null);
-                query.LiveAnchorIds.Remove("0");
-                query.LiveAnchorIds.AddRange(thridLiveanchor.Select(e=>e.Id));
-            }
-            if (query.LiveAnchorIds.Count==0) {
-                var thridLiveanchor = await liveAnchorBaseInfoService.GetCooperateLiveAnchorAsync(null);
-                var selfLiveanchor = await liveAnchorBaseInfoService.GetValidAsync(true);
-                query.LiveAnchorIds.AddRange(thridLiveanchor.Select(e => e.Id));
-                query.LiveAnchorIds.AddRange(selfLiveanchor.Select(e => e.Id));
-            }
+            query.LiveAnchorIds = await GetBaseLiveAnchorIdListAsync(query);
             var contentPlatFormOrderSendList = await contentPlatformOrderSendService.GetTodayOrderSendDataAsync(query);
             foreach (var x in contentPlatFormOrderSendList)
             {
@@ -1184,7 +1175,7 @@ namespace Fx.Amiya.Service
             var totalPerformance = resultList.Sum(e => e.TotalAchievement);
             foreach (var item in res)
             {
-                item.Rate = DecimalExtension.CalculateTargetComplete(item.TotalAchievement,totalPerformance).Value;
+                item.Rate = DecimalExtension.CalculateTargetComplete(item.TotalAchievement, totalPerformance).Value;
             }
             return res;
         }
@@ -1205,7 +1196,78 @@ namespace Fx.Amiya.Service
             return (int)Math.Ceiling(DecimalExtension.Division(target, day).Value);
         }
 
+        private List<string> GetContentPlatformIdList(QueryTransformDataDto query)
+        {
+            List<string> idList = new List<string>();
+            //if (query.ShowTikTok)
+            //{
+            //    idList.Add("86db9937-dc47-45ff-a061-610bdef13c5b");
+            //}
+            //if (query.ShowWechatVideo)
+            //{
+            //    idList.Add("0f3be741-2f51-47d9-b4bc-aa8e65d2e58f");
+            //}
+            //if (query.ShowXiaoHongShu)
+            //{
+            //    idList.Add("46a08f37-c1b5-4dda-893e-e94b1403f211");
+            //}
+            //if (query.ShowPrivateDomain)
+            //{
+            //    idList.Add("9913a42a-8aa7-4644-b0dd-742480e82c12");
+            //}
+            if (query.ShowTikTok)
+            {
+                idList.Add("4e4e9564-f6c3-47b6-a7da-e4518bab66a1");
+            }
+            if (query.ShowWechatVideo)
+            {
+                idList.Add("9196b247-1ab9-4d0c-a11e-a1ef09019878");
+            }
+            if (query.ShowXiaoHongShu)
+            {
+                idList.Add("317c03b8-aff9-4961-8392-fc44d04b1725");
+            }
+            if (query.ShowPrivateDomain)
+            {
+                idList.Add("22a0b287-232d-4373-a9dd-c372aaae57dc");
+            }
+            return idList.Any() ? idList : null;
+        }
+        private async Task<List<string>> GetBaseLiveAnchorIdListAsync(QueryHospitalTransformDataDto query)
+        {
+            List<string> idList = new List<string>();
+            //if (query.ShowDaoDao)
+            //{
+            //    idList.Add("40aea761-f9c1-4078-bb2b-4aeac8e71ad6");
+            //}
+            //if (query.ShowJiNa)
+            //{
+            //    idList.Add("44b0e329-fe66-4690-9a50-1873822fa54d");
+            //}
+            if (query.ShowDaoDao)
+            {
+                idList.Add("f0a77257-c905-4719-95c4-ad2c4f33855c");
+            }
+            if (query.ShowJiNa)
+            {
+                idList.Add("af69dcf5-f749-41ea-8b50-fe685facdd8b");
+            }
+            if (query.ShowCooperate)
+            {
+                var thridLiveanchor = await liveAnchorBaseInfoService.GetCooperateLiveAnchorAsync(true);
+                idList.AddRange(thridLiveanchor.Select(e => e.Id));
+            }
 
+            if (idList.Count == 0)
+            {
+                var thridLiveanchor = await liveAnchorBaseInfoService.GetCooperateLiveAnchorAsync(true);
+                var selfLiveanchor = await liveAnchorBaseInfoService.GetValidAsync(true);
+                idList.AddRange(thridLiveanchor.Select(e => e.Id));
+                idList.AddRange(selfLiveanchor.Select(e => e.Id));
+            }
+
+            return idList;
+        }
         #endregion
     }
 }

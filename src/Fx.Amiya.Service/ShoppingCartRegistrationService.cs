@@ -1885,7 +1885,7 @@ namespace Fx.Amiya.Service
             var liveanchorIds = (await _liveAnchorService.GetLiveAnchorListByBaseInfoId(baseLiveAnchorId)).Select(e => e.Id);
             var assistantNameList = (await _amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(new List<string> { baseLiveAnchorId })).Select(e => e.Id).ToList();
             var baseData = dalShoppingCartRegistration.GetAll()
-                .Where(e => contentPlatformIds.Count==0 || contentPlatformIds.Contains(e.ContentPlatFormId))
+                .Where(e => contentPlatformIds==null || contentPlatformIds.Contains(e.ContentPlatFormId))
                 .Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && liveanchorIds.Contains(e.LiveAnchorId))
                 .Select(e => new
                 {
@@ -1940,7 +1940,7 @@ namespace Fx.Amiya.Service
             var nameList = await liveAnchorBaseInfoService.GetValidAsync(true);
             var assistantNameList = (await _amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(nameList.Select(e => e.Id).ToList())).Select(e => e.Id);
             var baseData = dalShoppingCartRegistration.GetAll()
-                .Where(e => contentPlatformIds.Count==0 || contentPlatformIds.Contains(e.ContentPlatFormId))
+                .Where(e => contentPlatformIds==null || contentPlatformIds.Contains(e.ContentPlatFormId))
                 .Where(e => e.AssignEmpId != null && e.RecordDate >= startDate && e.RecordDate < endDate)
                 .Select(e => new
                 {

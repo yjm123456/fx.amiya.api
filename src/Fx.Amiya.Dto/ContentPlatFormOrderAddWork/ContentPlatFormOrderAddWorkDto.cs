@@ -74,5 +74,9 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderAddWork
         /// 是否有效
         /// </summary>
         public bool Valid { get; set; }
+        /// <summary>
+        /// 截图
+        /// </summary>
+        public string Picture { get; set; }
     }
 }

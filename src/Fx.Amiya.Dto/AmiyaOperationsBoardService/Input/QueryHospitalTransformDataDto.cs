@@ -12,7 +12,19 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Input
         /// 主播id集合
         /// </summary>
         public List<string> LiveAnchorIds { get; set; }
-        
+        /// <summary>
+        /// 刀刀
+        /// </summary>
+        public bool ShowDaoDao { get; set; }
+        /// <summary>
+        /// 吉娜
+        /// </summary>
+        public bool ShowJiNa { get; set; }
+        /// <summary>
+        /// 合作达人
+        /// </summary>
+        public bool ShowCooperate { get; set; }
+
         /// <summary>
         /// 开始时间
         /// </summary>

@@ -63,6 +63,7 @@ namespace Fx.Amiya.Service
                     CheckStateText = ServiceClass.GetCheckTypeText(e.CheckState),
                     CheckRemark = e.CheckRemark,
                     CheckDate = e.CheckDate,
+                    Picture=e.Picture
                 });
             FxPageInfo<ContentPlatFormOrderAddWorkDto> fxPageInfo = new FxPageInfo<ContentPlatFormOrderAddWorkDto>();
             fxPageInfo.TotalCount = await record.CountAsync();
@@ -92,6 +93,7 @@ namespace Fx.Amiya.Service
             contentPlatFormOrderAddWork.Valid = true;
             contentPlatFormOrderAddWork.CreateBy = addDto.CreateBy;
             contentPlatFormOrderAddWork.CreateDate = DateTime.Now;
+            contentPlatFormOrderAddWork.Picture = addDto.Picture;
             await _dalContentPlatFormOrderAddWork.AddAsync(contentPlatFormOrderAddWork, true);
 
         }
@@ -117,6 +119,7 @@ namespace Fx.Amiya.Service
             result.CheckStateText = ServiceClass.GetCheckTypeText(selectResult.CheckState);
             result.CheckRemark = selectResult.CheckRemark;
             result.CheckDate = selectResult.CheckDate;
+            result.Picture = selectResult.Picture;
             return result;
         }
 
@@ -143,6 +146,7 @@ namespace Fx.Amiya.Service
             result.CheckStateText = ServiceClass.GetCheckTypeText(selectResult.CheckState);
             result.CheckRemark = selectResult.CheckRemark;
             result.CheckDate = selectResult.CheckDate;
+            result.Picture = selectResult.Picture;
             return result;
         }
         public async Task UpdateAsync(UpdateContentPlatFormOrderAddWorkDto updateContentPlatFormOrderAddWorkDto)
@@ -157,6 +161,7 @@ namespace Fx.Amiya.Service
             result.Phone = updateContentPlatFormOrderAddWorkDto.Phone;
             result.HospitalId = updateContentPlatFormOrderAddWorkDto.HospitalId;
             result.SendRemark = updateContentPlatFormOrderAddWorkDto.SendRemark;
+            result.Picture = updateContentPlatFormOrderAddWorkDto.Picture;
             result.UpdateDate = DateTime.Now;
             await _dalContentPlatFormOrderAddWork.UpdateAsync(result, true);
         }
@@ -278,7 +283,8 @@ namespace Fx.Amiya.Service
                     CheckStateText = ServiceClass.GetCheckTypeText(e.CheckState),
                     CheckRemark = e.CheckRemark,
                     CheckDate = e.CheckDate,
-                    Valid=e.Valid
+                    Valid=e.Valid,
+                    Picture=e.Picture
                 });
             FxPageInfo<ContentPlatFormOrderAddWorkDto> fxPageInfo = new FxPageInfo<ContentPlatFormOrderAddWorkDto>();
             fxPageInfo.TotalCount = await record.CountAsync();

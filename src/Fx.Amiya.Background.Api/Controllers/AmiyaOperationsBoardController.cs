@@ -158,9 +158,12 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<FlowTransFormDataVo>>> GetFlowTransformDataAsync([FromQuery] QueryTransformDataVo query)
         {
             QueryTransformDataDto queryDto = new QueryTransformDataDto();
-            queryDto.ContentPlatFormIds = query.ContentPlatFormIds;
             queryDto.StartDate = query.StartDate;
             queryDto.EndDate = query.EndDate;
+            queryDto.ShowTikTok = query.ShowTikTok;
+            queryDto.ShowWechatVideo = query.ShowWechatVideo;
+            queryDto.ShowXiaoHongShu = query.ShowXiaoHongShu;
+            queryDto.ShowPrivateDomain = query.ShowPrivateDomain;
             var result = await amiyaOperationsBoardService.GetFlowTransFormDataAsync(queryDto);
             var res = result.Select(e => new FlowTransFormDataVo
             {
@@ -198,9 +201,12 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<FlowTransFormDataVo>>> GetAssistantFlowTransformDataAsync([FromQuery] QueryTransformDataVo query)
         {
             QueryTransformDataDto queryDto = new QueryTransformDataDto();
-            queryDto.ContentPlatFormIds = query.ContentPlatFormIds;
             queryDto.StartDate = query.StartDate;
             queryDto.EndDate = query.EndDate;
+            queryDto.ShowTikTok = query.ShowTikTok;
+            queryDto.ShowWechatVideo = query.ShowWechatVideo;
+            queryDto.ShowXiaoHongShu = query.ShowXiaoHongShu;
+            queryDto.ShowPrivateDomain = query.ShowPrivateDomain;
             var result = await amiyaOperationsBoardService.GetAssistantFlowTransFormDataAsync(queryDto);
             var res = result.Select(e => new FlowTransFormDataVo
             {
@@ -237,9 +243,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<HospitalTransformDataVo>>> GetHospitalTransformDataAsync([FromQuery] QueryHospitalTransformDataVo query)
         {
             QueryHospitalTransformDataDto queryDto = new QueryHospitalTransformDataDto();
-            queryDto.LiveAnchorIds = query.LiveAnchorIds;
             queryDto.StartDate = query.StartDate;
             queryDto.EndDate = query.EndDate;
+            queryDto.ShowDaoDao = query.ShowDaoDao;
+            queryDto.ShowJiNa = query.ShowJiNa;
+            queryDto.ShowCooperate = query.ShowCooperate;
             var result=await amiyaOperationsBoardService.GetHospitalPerformanceByDateAsync(queryDto);
             var res = result.Select(e => new HospitalTransformDataVo {
                 City=e.City,

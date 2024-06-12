@@ -30,6 +30,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.CheckState).HasColumnName("check_state").HasColumnType("INT").IsRequired();
             builder.Property(e => e.CheckRemark).HasColumnName("check_remark").HasColumnType("VARCHAR(300)").IsRequired(false);
             builder.Property(e => e.CheckDate).HasColumnName("check_date").HasColumnType("DATETIME").IsRequired(false);
+            builder.Property(e => e.Picture).HasColumnName("picture").HasColumnType("varchar(300)").IsRequired(false);
 
             builder.HasOne(t => t.CreateEmployee).WithMany(t => t.ContentPlatFormOrderAddWorkCreateBy).HasForeignKey(t => t.CreateBy);
             builder.HasOne(t => t.HospitalInfo).WithMany(t => t.ContentPlatFormOrderAddWork).HasForeignKey(t => t.HospitalId);

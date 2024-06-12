@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
+namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
 {
     public class FlowTransFormDataVo
     {
@@ -88,7 +87,7 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
         /// 新老客占比
         /// </summary>
         public string NewAndOldCustomerRate { get; set; }
-        
+
         /// <summary>
         /// 贡献
         /// </summary>

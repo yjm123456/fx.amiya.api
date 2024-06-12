@@ -104,12 +104,12 @@ namespace Fx.Amiya.IService
         /// 获取流量转化和客户转化情况数据
         /// </summary>
         /// <returns></returns>
-        Task<List<FlowTransFormDataVo>> GetFlowTransFormDataAsync(QueryTransformDataDto query);
+        Task<List<FlowTransFormDataDto>> GetFlowTransFormDataAsync(QueryTransformDataDto query);
         /// <summary>
         /// 获取助理流量转化和客户转化情况数据
         /// </summary>
         /// <returns></returns>
-        Task<List<FlowTransFormDataVo>> GetAssistantFlowTransFormDataAsync(QueryTransformDataDto query);
+        Task<List<FlowTransFormDataDto>> GetAssistantFlowTransFormDataAsync(QueryTransformDataDto query);
         /// <summary>
         /// 根据时间获取全国机构运营数据概况
         /// </summary>

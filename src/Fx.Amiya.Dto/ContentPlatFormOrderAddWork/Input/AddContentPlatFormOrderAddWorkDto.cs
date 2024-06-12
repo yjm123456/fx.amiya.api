@@ -36,6 +36,10 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderAddWork
         /// 申请理由
         /// </summary>
         public string SendRemark { get; set; }
+        /// <summary>
+        /// 截图
+        /// </summary>
+        public string Picture { get; set; }
 
 
     }

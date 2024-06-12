@@ -71,6 +71,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderAddWork.Result
         /// 审核时间
         /// </summary>
         public DateTime? CheckDate { get; set; }
-        
+        /// <summary>
+        /// 截图
+        /// </summary>
+        public string Picture { get; set; }
+
     }
 }
