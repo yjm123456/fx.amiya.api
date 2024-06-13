@@ -88,7 +88,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getNewOrOldCustomerCompare")]
-        public async Task<ResultData<GetNewOrOldCustomerCompareDataVo>> GetNewOrOldCustomerCompareDataVoAsync([FromQuery] QueryOperationDataVo query)
+        public async Task<ResultData<GetNewOrOldCustomerCompareDataVo>> GetNewOrOldCustomerCompareDataAsync([FromQuery] QueryOperationDataVo query)
         {
             GetNewOrOldCustomerCompareDataVo result = new GetNewOrOldCustomerCompareDataVo();
             QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
@@ -110,7 +110,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getNewOrOldCustomerCompareByEmployeeAndHospital")]
-        public async Task<ResultData<NewOrOldCustomerPerformanceDataListVo>> GetNewOrOldCustomerCompareByEmployeeAndHospitalDataVoAsync([FromQuery] QueryOperationDataVo query)
+        public async Task<ResultData<NewOrOldCustomerPerformanceDataListVo>> GetNewOrOldCustomerCompareByEmployeeAndHospitalDataAsync([FromQuery] QueryOperationDataVo query)
         {
             QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
             queryOperationDataVo.startDate = query.startDate;
@@ -143,7 +143,108 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         #region 流量
+        /// <summary>
+        /// 根据条件获取流量数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getTotalFlowRateAndDateSchedule")]
+        public async Task<ResultData<OperationTotalFlowRateDataVo>> GetTotalFlowRateAndDateScheduleAsync([FromQuery] QueryOperationDataVo query)
+        {
+            OperationTotalFlowRateDataVo result = new OperationTotalFlowRateDataVo();
+            QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
+            queryOperationDataVo.startDate = query.startDate;
+            queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
+            var data = await amiyaOperationsBoardService.GetTotalAchievementAndDateScheduleAsync(queryOperationDataVo);
 
+            result.TotalFlowRate = data.NewCustomerPerformance;
+            result.TodayTotalFlowRate = data.NewCustomerPerformanceCompleteRate;
+            result.TotalFlowRateCompleteRate = data.NewCustomerPerformanceYearOnYear;
+            result.TotalFlowRateYearOnYear = data.NewCustomerPerformanceChainRatio;
+            result.TotalFlowRateChainRatio = data.TodayNewCustomerPerformance;
+
+            result.TotalDistributeConsulation = data.OldCustomerPerformance;
+            result.TodayDistributeConsulation = data.OldCustomerPerformanceCompleteRate;
+            result.DistributeConsulationCompleteRate = data.OldCustomerPerformanceYearOnYear;
+            result.DistributeConsulationYearOnYear = data.OldCustomerPerformanceChainRatio;
+            result.DistributeConsulationChainRatio = data.TodayOldCustomerPerformance;
+
+            result.TotalAddWechat = data.TotalPerformance;
+            result.TodayAddWechat = data.TotalPerformanceCompleteRate;
+            result.AddWechatCompleteRate = data.TotalPerformanceYearOnYear;
+            result.AddWechatYearOnYear = data.TotalPerformanceChainRatio;
+            result.AddWechatChainRatio = data.TodayTotalPerformance;
+
+            result.TotalRefundCard = data.TotalPerformance;
+            result.TodayRefundCard = data.TotalPerformanceCompleteRate;
+            result.RefundCardCompleteRate = data.TotalPerformanceYearOnYear;
+            result.RefundCardYearOnYear = data.TotalPerformanceChainRatio;
+            result.RefundCardChainRatio = data.TodayTotalPerformance;
+
+            result.FlowRateBrokenLineList = data.TotalPerformanceBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
+            {
+                date = x.date,
+                Performance = x.Performance
+            }).ToList();
+            result.DistributeConsulationBrokenLineList = data.NewCustomerPerformanceBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
+            {
+                date = x.date,
+                Performance = x.Performance
+            }).ToList();
+            result.AddWeChatBrokenLineList = data.OldCustomerPerformanceBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
+            {
+                date = x.date,
+                Performance = x.Performance
+            }).ToList();
+            return ResultData<OperationTotalFlowRateDataVo>.Success().AddData("data", result);
+        }
+
+        /// <summary>
+        /// 根据条件获取流量分析占比（分组）
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getGroupFlowRateCompare")]
+        public async Task<ResultData<GetGroupFlowRateCompareDataVo>> GetGroupFlowRateCompareDataAsync([FromQuery] QueryOperationDataVo query)
+        {
+            GetGroupFlowRateCompareDataVo result = new GetGroupFlowRateCompareDataVo();
+            QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
+            queryOperationDataVo.startDate = query.startDate;
+            queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
+           // var data = await amiyaOperationsBoardService.GetNewOrOldCustomerCompareDataAsync(queryOperationDataVo);
+          
+            return ResultData<GetGroupFlowRateCompareDataVo>.Success().AddData("data", result);
+        }
+
+        /// <summary>
+        /// 根据条件获取平台流量分析
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getFlowRateByContentPlatform")]
+        public async Task<ResultData<GetFlowRateByContentPlatformDataVo>> GetFlowRateByContentPlatformAsync([FromQuery] QueryOperationDataVo query)
+        {
+            GetFlowRateByContentPlatformDataVo result = new GetFlowRateByContentPlatformDataVo();
+            QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
+            queryOperationDataVo.startDate = query.startDate;
+            queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
+            // var data = await amiyaOperationsBoardService.GetNewOrOldCustomerCompareDataAsync(queryOperationDataVo);
+
+            return ResultData<GetFlowRateByContentPlatformDataVo>.Success().AddData("data", result);
+        }
+
+        /// <summary>
+        /// 根据平台获取详细流量分析
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getFlowRateDetailsByContentPlatform")]
+        public async Task<ResultData<GetFlowRateDetailsByContentPlatformDataVo>> GetFlowRateDetailsByContentPlatformAsync([FromQuery] QueryOperationDataVo query)
+        {
+            GetFlowRateDetailsByContentPlatformDataVo result = new GetFlowRateDetailsByContentPlatformDataVo();
+            QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
+            queryOperationDataVo.startDate = query.startDate;
+            queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
+            // var data = await amiyaOperationsBoardService.GetNewOrOldCustomerCompareDataAsync(queryOperationDataVo);
+
+            return ResultData<GetFlowRateDetailsByContentPlatformDataVo>.Success().AddData("data", result);
+        }
         #endregion
 
 
