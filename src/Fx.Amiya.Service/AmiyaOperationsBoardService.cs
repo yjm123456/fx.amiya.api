@@ -150,23 +150,32 @@ namespace Fx.Amiya.Service
             GetNewOrOldCustomerCompareDataDto result = new GetNewOrOldCustomerCompareDataDto();
             List<int> LiveAnchorInfo = new List<int>();
             #region 总业绩
+            OperationBoardGetNewOrOldCustomerCompareDataDetailsDto totalPerformanceData = new OperationBoardGetNewOrOldCustomerCompareDataDetailsDto();
             var order = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAndLiveAnchorIdsAsync(query.startDate.Value, query.endDate.Value, LiveAnchorInfo);
             var curTotalAchievement = order.Sum(x => x.Price);
             var curNewCustomer = order.Where(o => o.IsOldCustomer == false).Sum(o => o.Price);
             var curOldCustomer = order.Where(o => o.IsOldCustomer == true).Sum(o => o.Price);
-            result.TotalPerformanceNewCustomer = DecimalExtension.CalculateTargetComplete(curNewCustomer, curTotalAchievement);
-            result.TotalPerformanceOldCustomer = DecimalExtension.CalculateTargetComplete(curOldCustomer, curTotalAchievement);
+            totalPerformanceData.TotalPerformanceNewCustomerNumber = curNewCustomer;
+            totalPerformanceData.TotalPerformanceNewCustomerRate = DecimalExtension.CalculateTargetComplete(curNewCustomer, curTotalAchievement);
+            totalPerformanceData.TotalPerformanceOldCustomerNumber = curOldCustomer;
+            totalPerformanceData.TotalPerformanceOldCustomerRate = DecimalExtension.CalculateTargetComplete(curOldCustomer, curTotalAchievement);
+            result.TotalNewOrOldCustomer = totalPerformanceData;
             #endregion
 
 
             #region 刀刀组业绩
+            OperationBoardGetNewOrOldCustomerCompareDataDetailsDto totalPerformanceGroupDaoDaoData = new OperationBoardGetNewOrOldCustomerCompareDataDetailsDto();
             var liveAnchorDaoDao = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync("f0a77257-c905-4719-95c4-ad2c4f33855c");
             var LiveAnchorInfoDaoDaoResult = liveAnchorDaoDao.Select(x => x.Id).ToList();
             var curDaoDaoTotalAchievement = order.Sum(x => x.Price);
             var curDaoDaoNewCustomer = order.Where(o => o.IsOldCustomer == false).Where(x => LiveAnchorInfoDaoDaoResult.Contains(x.LiveAnchorId.Value)).Sum(o => o.Price);
             var curDaoDaoOldCustomer = order.Where(o => o.IsOldCustomer == true).Where(x => LiveAnchorInfoDaoDaoResult.Contains(x.LiveAnchorId.Value)).Sum(o => o.Price);
-            result.GroupDaoDaoPerformanceNewCustomer = DecimalExtension.CalculateTargetComplete(curDaoDaoNewCustomer, curDaoDaoTotalAchievement);
-            result.GroupDaoDaoPerformanceOldCustomer = DecimalExtension.CalculateTargetComplete(curDaoDaoOldCustomer, curDaoDaoTotalAchievement);
+
+            totalPerformanceGroupDaoDaoData.TotalPerformanceNewCustomerNumber = curDaoDaoNewCustomer;
+            totalPerformanceGroupDaoDaoData.TotalPerformanceNewCustomerRate = DecimalExtension.CalculateTargetComplete(curDaoDaoNewCustomer, curDaoDaoTotalAchievement);
+            totalPerformanceGroupDaoDaoData.TotalPerformanceOldCustomerNumber = curDaoDaoOldCustomer;
+            totalPerformanceGroupDaoDaoData.TotalPerformanceOldCustomerRate = DecimalExtension.CalculateTargetComplete(curDaoDaoOldCustomer, curDaoDaoTotalAchievement);
+            result.GroupDaoDaoNewOrOldCustomer = totalPerformanceGroupDaoDaoData;
             #endregion
 
 
@@ -176,8 +185,13 @@ namespace Fx.Amiya.Service
             var curJinaTotalAchievement = order.Where(x => LiveAnchorInfoJinaResult.Contains(x.LiveAnchorId.Value)).Sum(x => x.Price);
             var curJinaNewCustomer = order.Where(o => o.IsOldCustomer == false).Where(x => LiveAnchorInfoJinaResult.Contains(x.LiveAnchorId.Value)).Sum(o => o.Price);
             var curJinaOldCustomer = order.Where(o => o.IsOldCustomer == true).Where(x => LiveAnchorInfoJinaResult.Contains(x.LiveAnchorId.Value)).Sum(o => o.Price);
-            result.GroupJiNaPerformanceNewCustomer = DecimalExtension.CalculateTargetComplete(curJinaNewCustomer, curJinaTotalAchievement);
-            result.GroupJiNaPerformanceOldCustomer = DecimalExtension.CalculateTargetComplete(curJinaOldCustomer, curJinaTotalAchievement);
+
+            OperationBoardGetNewOrOldCustomerCompareDataDetailsDto totalPerformanceGroupJiNaData = new OperationBoardGetNewOrOldCustomerCompareDataDetailsDto();
+            totalPerformanceGroupJiNaData.TotalPerformanceNewCustomerNumber = curJinaNewCustomer;
+            totalPerformanceGroupJiNaData.TotalPerformanceNewCustomerRate = DecimalExtension.CalculateTargetComplete(curJinaNewCustomer, curJinaTotalAchievement);
+            totalPerformanceGroupJiNaData.TotalPerformanceOldCustomerNumber = curJinaOldCustomer;
+            totalPerformanceGroupJiNaData.TotalPerformanceOldCustomerRate = DecimalExtension.CalculateTargetComplete(curJinaOldCustomer, curJinaTotalAchievement);
+            result.GroupJiNaNewOrOldCustomer = totalPerformanceGroupJiNaData;
             #endregion
             return result;
         }

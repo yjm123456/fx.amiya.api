@@ -91,16 +91,28 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<GetNewOrOldCustomerCompareDataVo>> GetNewOrOldCustomerCompareDataAsync([FromQuery] QueryOperationDataVo query)
         {
             GetNewOrOldCustomerCompareDataVo result = new GetNewOrOldCustomerCompareDataVo();
+            result.TotalNewOrOldCustomer = new OperationBoardGetNewOrOldCustomerCompareDataDetailsVo();
+            result.GroupDaoDaoNewOrOldCustomer = new OperationBoardGetNewOrOldCustomerCompareDataDetailsVo();
+            result.GroupJiNaNewOrOldCustomer = new OperationBoardGetNewOrOldCustomerCompareDataDetailsVo();
             QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
             queryOperationDataVo.startDate = query.startDate;
             queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
             var data = await amiyaOperationsBoardService.GetNewOrOldCustomerCompareDataAsync(queryOperationDataVo);
-            result.TotalPerformanceNewCustomer = data.TotalPerformanceNewCustomer;
-            result.TotalPerformanceOldCustomer = data.TotalPerformanceOldCustomer;
-            result.GroupDaoDaoPerformanceNewCustomer = data.GroupDaoDaoPerformanceNewCustomer;
-            result.GroupDaoDaoPerformanceOldCustomer = data.GroupDaoDaoPerformanceOldCustomer;
-            result.GroupJiNaPerformanceNewCustomer = data.GroupJiNaPerformanceNewCustomer;
-            result.GroupJiNaPerformanceOldCustomer = data.GroupJiNaPerformanceOldCustomer;
+
+            result.TotalNewOrOldCustomer.TotalPerformanceNewCustomerNumber = data.TotalNewOrOldCustomer.TotalPerformanceNewCustomerNumber;
+            result.TotalNewOrOldCustomer.TotalPerformanceNewCustomerRate = data.TotalNewOrOldCustomer.TotalPerformanceNewCustomerRate;
+            result.TotalNewOrOldCustomer.TotalPerformanceOldCustomerNumber = data.TotalNewOrOldCustomer.TotalPerformanceOldCustomerNumber;
+            result.TotalNewOrOldCustomer.TotalPerformanceOldCustomerRate = data.TotalNewOrOldCustomer.TotalPerformanceOldCustomerRate;
+
+            result.GroupDaoDaoNewOrOldCustomer.TotalPerformanceNewCustomerNumber = data.GroupDaoDaoNewOrOldCustomer.TotalPerformanceNewCustomerNumber;
+            result.GroupDaoDaoNewOrOldCustomer.TotalPerformanceNewCustomerRate = data.GroupDaoDaoNewOrOldCustomer.TotalPerformanceNewCustomerRate;
+            result.GroupDaoDaoNewOrOldCustomer.TotalPerformanceOldCustomerNumber = data.GroupDaoDaoNewOrOldCustomer.TotalPerformanceOldCustomerNumber;
+            result.GroupDaoDaoNewOrOldCustomer.TotalPerformanceOldCustomerRate = data.GroupDaoDaoNewOrOldCustomer.TotalPerformanceOldCustomerRate;
+
+            result.GroupJiNaNewOrOldCustomer.TotalPerformanceNewCustomerNumber = data.GroupJiNaNewOrOldCustomer.TotalPerformanceNewCustomerNumber;
+            result.GroupJiNaNewOrOldCustomer.TotalPerformanceNewCustomerRate = data.GroupJiNaNewOrOldCustomer.TotalPerformanceNewCustomerRate;
+            result.GroupJiNaNewOrOldCustomer.TotalPerformanceOldCustomerNumber = data.GroupJiNaNewOrOldCustomer.TotalPerformanceOldCustomerNumber;
+            result.GroupJiNaNewOrOldCustomer.TotalPerformanceOldCustomerRate = data.GroupJiNaNewOrOldCustomer.TotalPerformanceOldCustomerRate;
             return ResultData<GetNewOrOldCustomerCompareDataVo>.Success().AddData("data", result);
         }
 
@@ -115,7 +127,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
             queryOperationDataVo.startDate = query.startDate;
             queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
-             var data = await amiyaOperationsBoardService.GetNewOrOldCustomerCompareByEmployeeAndHospitalAsync(queryOperationDataVo);
+            var data = await amiyaOperationsBoardService.GetNewOrOldCustomerCompareByEmployeeAndHospitalAsync(queryOperationDataVo);
 
             NewOrOldCustomerPerformanceDataListVo result = new NewOrOldCustomerPerformanceDataListVo();
             result.HospitalPerformance = new List<CustomerPerformanceDataVo>();
@@ -154,27 +166,27 @@ namespace Fx.Amiya.Background.Api.Controllers
             QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
             queryOperationDataVo.startDate = query.startDate;
             queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
-            var data = await amiyaOperationsBoardService.GetTotalAchievementAndDateScheduleAsync(queryOperationDataVo);
+            var data = await amiyaOperationsBoardService.GetCustomerDataAsync(queryOperationDataVo);
 
-            result.TotalFlowRate = data.NewCustomerPerformance;
+            result.TotalFlowRate = data.TotalFlowRateNum;
             result.TodayTotalFlowRate = data.NewCustomerPerformanceCompleteRate;
             result.TotalFlowRateCompleteRate = data.NewCustomerPerformanceYearOnYear;
             result.TotalFlowRateYearOnYear = data.NewCustomerPerformanceChainRatio;
             result.TotalFlowRateChainRatio = data.TodayNewCustomerPerformance;
 
-            result.TotalDistributeConsulation = data.OldCustomerPerformance;
+            result.TotalDistributeConsulation = data.DistributeConsulationNum;
             result.TodayDistributeConsulation = data.OldCustomerPerformanceCompleteRate;
             result.DistributeConsulationCompleteRate = data.OldCustomerPerformanceYearOnYear;
             result.DistributeConsulationYearOnYear = data.OldCustomerPerformanceChainRatio;
             result.DistributeConsulationChainRatio = data.TodayOldCustomerPerformance;
 
-            result.TotalAddWechat = data.TotalPerformance;
+            result.TotalAddWechat = data.AddWechatNum;
             result.TodayAddWechat = data.TotalPerformanceCompleteRate;
             result.AddWechatCompleteRate = data.TotalPerformanceYearOnYear;
             result.AddWechatYearOnYear = data.TotalPerformanceChainRatio;
             result.AddWechatChainRatio = data.TodayTotalPerformance;
 
-            result.TotalRefundCard = data.TotalPerformance;
+            result.TotalRefundCard = data.RefundCardNum;
             result.TodayRefundCard = data.TotalPerformanceCompleteRate;
             result.RefundCardCompleteRate = data.TotalPerformanceYearOnYear;
             result.RefundCardYearOnYear = data.TotalPerformanceChainRatio;
@@ -209,8 +221,17 @@ namespace Fx.Amiya.Background.Api.Controllers
             QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
             queryOperationDataVo.startDate = query.startDate;
             queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
-           // var data = await amiyaOperationsBoardService.GetNewOrOldCustomerCompareDataAsync(queryOperationDataVo);
-          
+            // var data = await amiyaOperationsBoardService.GetNewOrOldCustomerCompareDataAsync(queryOperationDataVo);
+            OperationBoardContentPlatFormDataVo resultDataVo = new OperationBoardContentPlatFormDataVo();
+            resultDataVo.DouYinNumber = 62;
+            resultDataVo.DouYinRate = 40;
+            resultDataVo.VideoNumberNumber = 35;
+            resultDataVo.VideoNumberRate = 25;
+            resultDataVo.XiaoHongShuNumber = 30;
+            resultDataVo.XiaoHongShuRate = 20;
+            resultDataVo.PrivateDataNumber = 20;
+            resultDataVo.PrivateDataRate = 15;
+            result.TotalFlowRate = resultDataVo;
             return ResultData<GetGroupFlowRateCompareDataVo>.Success().AddData("data", result);
         }
 
@@ -222,11 +243,42 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<GetFlowRateByContentPlatformDataVo>> GetFlowRateByContentPlatformAsync([FromQuery] QueryOperationDataVo query)
         {
             GetFlowRateByContentPlatformDataVo result = new GetFlowRateByContentPlatformDataVo();
+            result.DouYinFolwRateAnalize = new List<Vo.BaseIdNameAndRateVo>();
+            result.VideoNumberFolwRateAnalize = new List<Vo.BaseIdNameAndRateVo>();
+            result.XiaoHongShuFolwRateAnalize = new List<Vo.BaseIdNameAndRateVo>();
+            result.PrivateDataFolwRateAnalize = new List<Vo.BaseIdNameAndRateVo>();
             QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
             queryOperationDataVo.startDate = query.startDate;
             queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
             // var data = await amiyaOperationsBoardService.GetNewOrOldCustomerCompareDataAsync(queryOperationDataVo);
-
+            Vo.BaseIdNameAndRateVo baseIdNameAndRateVo = new Vo.BaseIdNameAndRateVo();
+            baseIdNameAndRateVo.Name = "直播前";
+            baseIdNameAndRateVo.Rate = 30;
+            result.DouYinFolwRateAnalize.Add(baseIdNameAndRateVo);
+            result.VideoNumberFolwRateAnalize.Add(baseIdNameAndRateVo);
+            result.XiaoHongShuFolwRateAnalize.Add(baseIdNameAndRateVo);
+            result.PrivateDataFolwRateAnalize.Add(baseIdNameAndRateVo);
+            Vo.BaseIdNameAndRateVo baseIdNameAndRateVo2 = new Vo.BaseIdNameAndRateVo();
+            baseIdNameAndRateVo2.Name = "直播中";
+            baseIdNameAndRateVo2.Rate = 20;
+            result.DouYinFolwRateAnalize.Add(baseIdNameAndRateVo2);
+            result.VideoNumberFolwRateAnalize.Add(baseIdNameAndRateVo2);
+            result.XiaoHongShuFolwRateAnalize.Add(baseIdNameAndRateVo2);
+            result.PrivateDataFolwRateAnalize.Add(baseIdNameAndRateVo2);
+            Vo.BaseIdNameAndRateVo baseIdNameAndRateVo3 = new Vo.BaseIdNameAndRateVo();
+            baseIdNameAndRateVo3.Name = "直播后";
+            baseIdNameAndRateVo3.Rate = 10;
+            result.DouYinFolwRateAnalize.Add(baseIdNameAndRateVo3);
+            result.VideoNumberFolwRateAnalize.Add(baseIdNameAndRateVo3);
+            result.XiaoHongShuFolwRateAnalize.Add(baseIdNameAndRateVo3);
+            result.PrivateDataFolwRateAnalize.Add(baseIdNameAndRateVo3);
+            Vo.BaseIdNameAndRateVo baseIdNameAndRateVo4 = new Vo.BaseIdNameAndRateVo();
+            baseIdNameAndRateVo4.Name = "其他";
+            baseIdNameAndRateVo4.Rate = 5;
+            result.DouYinFolwRateAnalize.Add(baseIdNameAndRateVo4);
+            result.VideoNumberFolwRateAnalize.Add(baseIdNameAndRateVo4);
+            result.XiaoHongShuFolwRateAnalize.Add(baseIdNameAndRateVo4);
+            result.PrivateDataFolwRateAnalize.Add(baseIdNameAndRateVo4);
             return ResultData<GetFlowRateByContentPlatformDataVo>.Success().AddData("data", result);
         }
 
@@ -238,11 +290,27 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<GetFlowRateDetailsByContentPlatformDataVo>> GetFlowRateDetailsByContentPlatformAsync([FromQuery] QueryOperationDataVo query)
         {
             GetFlowRateDetailsByContentPlatformDataVo result = new GetFlowRateDetailsByContentPlatformDataVo();
+            result.FolwRateDetailsAnalize = new List<Vo.BaseIdNameAndRateVo>();
             QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
             queryOperationDataVo.startDate = query.startDate;
             queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
             // var data = await amiyaOperationsBoardService.GetNewOrOldCustomerCompareDataAsync(queryOperationDataVo);
-
+            Vo.BaseIdNameAndRateVo baseIdNameAndRateVo = new Vo.BaseIdNameAndRateVo();
+            baseIdNameAndRateVo.Name = "小风车";
+            baseIdNameAndRateVo.Rate = 30;
+            result.FolwRateDetailsAnalize.Add(baseIdNameAndRateVo);
+            Vo.BaseIdNameAndRateVo baseIdNameAndRateVo2 = new Vo.BaseIdNameAndRateVo();
+            baseIdNameAndRateVo2.Name = "私信";
+            baseIdNameAndRateVo2.Rate = 20;
+            result.FolwRateDetailsAnalize.Add(baseIdNameAndRateVo2);
+            Vo.BaseIdNameAndRateVo baseIdNameAndRateVo3 = new Vo.BaseIdNameAndRateVo();
+            baseIdNameAndRateVo3.Name = "直播间";
+            baseIdNameAndRateVo3.Rate = 10;
+            result.FolwRateDetailsAnalize.Add(baseIdNameAndRateVo3);
+            Vo.BaseIdNameAndRateVo baseIdNameAndRateVo4 = new Vo.BaseIdNameAndRateVo();
+            baseIdNameAndRateVo4.Name = "短视频";
+            baseIdNameAndRateVo4.Rate = 5;
+            result.FolwRateDetailsAnalize.Add(baseIdNameAndRateVo4);
             return ResultData<GetFlowRateDetailsByContentPlatformDataVo>.Success().AddData("data", result);
         }
         #endregion
@@ -349,23 +417,24 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.ShowDaoDao = query.ShowDaoDao;
             queryDto.ShowJiNa = query.ShowJiNa;
             queryDto.ShowCooperate = query.ShowCooperate;
-            var result=await amiyaOperationsBoardService.GetHospitalPerformanceByDateAsync(queryDto);
-            var res = result.Select(e => new HospitalTransformDataVo {
-                City=e.City,
-                HospitalName= e.HospitalName,
-                SendNum=e.SendNum,
-                VisitNum=e.VisitNum,
-                VisitRate=e.VisitRate,
-                NewCustomerDealNum=e.NewCustomerDealNum,
-                NewCustomerDealRate=e.NewCustomerDealRate,
-                NewCustomerAchievement=e.NewCustomerAchievement,
-                NewCustomerUnitPrice=e.NewCustomerUnitPrice,
-                OldCustomerDealNum=e.OldCustomerDealNum,
-                OldCustomerAchievement=e.OldCustomerAchievement,
-                OldCustomerUnitPrice=e.OldCustomerUnitPrice,
-                TotalAchievement=e.TotalAchievement,
-                NewOrOldCustomerRate=e.NewOrOldCustomerRate,
-                Rate=e.Rate
+            var result = await amiyaOperationsBoardService.GetHospitalPerformanceByDateAsync(queryDto);
+            var res = result.Select(e => new HospitalTransformDataVo
+            {
+                City = e.City,
+                HospitalName = e.HospitalName,
+                SendNum = e.SendNum,
+                VisitNum = e.VisitNum,
+                VisitRate = e.VisitRate,
+                NewCustomerDealNum = e.NewCustomerDealNum,
+                NewCustomerDealRate = e.NewCustomerDealRate,
+                NewCustomerAchievement = e.NewCustomerAchievement,
+                NewCustomerUnitPrice = e.NewCustomerUnitPrice,
+                OldCustomerDealNum = e.OldCustomerDealNum,
+                OldCustomerAchievement = e.OldCustomerAchievement,
+                OldCustomerUnitPrice = e.OldCustomerUnitPrice,
+                TotalAchievement = e.TotalAchievement,
+                NewOrOldCustomerRate = e.NewOrOldCustomerRate,
+                Rate = e.Rate
             }).ToList();
             return ResultData<List<HospitalTransformDataVo>>.Success().AddData("data", res);
         }

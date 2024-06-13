@@ -8,33 +8,42 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
 {
     public class GetNewOrOldCustomerCompareDataDto
     {
-
         /// <summary>
-        /// 总业绩分析的新客占比
+        /// 整体流量分析
         /// </summary>
-        public decimal? TotalPerformanceNewCustomer { get; set; }
-
+        public OperationBoardGetNewOrOldCustomerCompareDataDetailsDto TotalNewOrOldCustomer { get; set; }
         /// <summary>
-        /// 总业绩分析的老客占比
+        /// 刀刀组流量分析
         /// </summary>
-        public decimal? TotalPerformanceOldCustomer { get; set; }
+        public OperationBoardGetNewOrOldCustomerCompareDataDetailsDto GroupDaoDaoNewOrOldCustomer { get; set; }
         /// <summary>
-        /// 刀刀组业绩分析的新客占比
+        /// 吉娜组流量分析
         /// </summary>
-        public decimal? GroupDaoDaoPerformanceNewCustomer { get; set; }
-
-        /// <summary>
-        /// 刀刀组业绩分析的老客占比
-        /// </summary>
-        public decimal? GroupDaoDaoPerformanceOldCustomer { get; set; }
-        /// <summary>
-        /// 吉娜组业绩分析的新客占比
-        /// </summary>
-        public decimal? GroupJiNaPerformanceNewCustomer { get; set; }
-
-        /// <summary>
-        /// 吉娜组业绩分析的老客占比
-        /// </summary>
-        public decimal? GroupJiNaPerformanceOldCustomer { get; set; }
+        public OperationBoardGetNewOrOldCustomerCompareDataDetailsDto GroupJiNaNewOrOldCustomer { get; set; }
     }
+
+    public class OperationBoardGetNewOrOldCustomerCompareDataDetailsDto
+    {
+
+        /// <summary>
+        /// 新客占比
+        /// </summary>
+        public decimal? TotalPerformanceNewCustomerRate { get; set; }
+
+        /// <summary>
+        /// 老客占比
+        /// </summary>
+        public decimal? TotalPerformanceOldCustomerRate { get; set; }
+
+        /// <summary>
+        /// 新客数值
+        /// </summary>
+        public decimal? TotalPerformanceNewCustomerNumber { get; set; }
+
+        /// <summary>
+        /// 老客数值
+        /// </summary>
+        public decimal? TotalPerformanceOldCustomerNumber { get; set; }
+    }
+
 }

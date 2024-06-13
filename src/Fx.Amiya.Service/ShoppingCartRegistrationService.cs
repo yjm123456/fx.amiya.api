@@ -1453,7 +1453,7 @@ namespace Fx.Amiya.Service
             var list = await dalShoppingCartRegistration.GetAll()
                 .Where(o => o.RecordDate >= startDate && o.RecordDate < endDate.Value).ToListAsync();
             GetCustomerDataDto result = new GetCustomerDataDto();
-            result.AddCardNum = list.Count();
+            result.TotalFlowRateNum = list.Count();
             result.RefundCardNum = list.Where(x => x.IsReturnBackPrice == true).Count();
             result.DistributeConsulationNum = list.Where(x => x.AssignEmpId.HasValue).Count();
             result.AddWechatNum = list.Where(x => x.IsAddWeChat == true).Count();

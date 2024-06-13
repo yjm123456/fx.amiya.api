@@ -9,9 +9,9 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService
     public class GetCustomerDataDto
     {
         /// <summary>
-        /// 下卡量
+        /// 线索量
         /// </summary>
-        public int AddCardNum { get; set; }
+        public int TotalFlowRateNum { get; set; }
         /// <summary>
         /// 退卡量
         /// </summary>

@@ -33,20 +33,8 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
     public class GetFlowRateDetailsByContentPlatformDataVo
     {
         /// <summary>
-        /// 小风车流量分析
+        /// 流量详情
         /// </summary>
-        public List<BaseIdNameAndRateVo> XiaoFengCheFolwRateAnalize { get; set; }
-        /// <summary>
-        /// 私信流量分析
-        /// </summary>
-        public List<BaseIdNameAndRateVo> PersonalChatFolwRateAnalize { get; set; }
-        /// <summary>
-        /// 直播间流量分析
-        /// </summary>
-        public List<BaseIdNameAndRateVo> LivingRoomFolwRateAnalize { get; set; }
-        /// <summary>
-        /// 短视频流量分析
-        /// </summary>
-        public List<BaseIdNameAndRateVo> ShortVideoFolwRateAnalize { get; set; }
+        public List<BaseIdNameAndRateVo> FolwRateDetailsAnalize { get; set; }
     }
 }
