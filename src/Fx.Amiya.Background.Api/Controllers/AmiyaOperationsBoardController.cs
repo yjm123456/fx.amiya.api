@@ -168,45 +168,45 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
             var data = await amiyaOperationsBoardService.GetCustomerDataAsync(queryOperationDataVo);
 
-            result.TotalFlowRate = data.TotalFlowRateNum;
-            result.TodayTotalFlowRate = data.NewCustomerPerformanceCompleteRate;
-            result.TotalFlowRateCompleteRate = data.NewCustomerPerformanceYearOnYear;
-            result.TotalFlowRateYearOnYear = data.NewCustomerPerformanceChainRatio;
-            result.TotalFlowRateChainRatio = data.TodayNewCustomerPerformance;
+            //result.TotalFlowRate = data.TotalFlowRateNum;
+            //result.TodayTotalFlowRate = data.NewCustomerPerformanceCompleteRate;
+            //result.TotalFlowRateCompleteRate = data.NewCustomerPerformanceYearOnYear;
+            //result.TotalFlowRateYearOnYear = data.NewCustomerPerformanceChainRatio;
+            //result.TotalFlowRateChainRatio = data.TodayNewCustomerPerformance;
 
-            result.TotalDistributeConsulation = data.DistributeConsulationNum;
-            result.TodayDistributeConsulation = data.OldCustomerPerformanceCompleteRate;
-            result.DistributeConsulationCompleteRate = data.OldCustomerPerformanceYearOnYear;
-            result.DistributeConsulationYearOnYear = data.OldCustomerPerformanceChainRatio;
-            result.DistributeConsulationChainRatio = data.TodayOldCustomerPerformance;
+            //result.TotalDistributeConsulation = data.DistributeConsulationNum;
+            //result.TodayDistributeConsulation = data.OldCustomerPerformanceCompleteRate;
+            //result.DistributeConsulationCompleteRate = data.OldCustomerPerformanceYearOnYear;
+            //result.DistributeConsulationYearOnYear = data.OldCustomerPerformanceChainRatio;
+            //result.DistributeConsulationChainRatio = data.TodayOldCustomerPerformance;
 
-            result.TotalAddWechat = data.AddWechatNum;
-            result.TodayAddWechat = data.TotalPerformanceCompleteRate;
-            result.AddWechatCompleteRate = data.TotalPerformanceYearOnYear;
-            result.AddWechatYearOnYear = data.TotalPerformanceChainRatio;
-            result.AddWechatChainRatio = data.TodayTotalPerformance;
+            //result.TotalAddWechat = data.AddWechatNum;
+            //result.TodayAddWechat = data.TotalPerformanceCompleteRate;
+            //result.AddWechatCompleteRate = data.TotalPerformanceYearOnYear;
+            //result.AddWechatYearOnYear = data.TotalPerformanceChainRatio;
+            //result.AddWechatChainRatio = data.TodayTotalPerformance;
 
-            result.TotalRefundCard = data.RefundCardNum;
-            result.TodayRefundCard = data.TotalPerformanceCompleteRate;
-            result.RefundCardCompleteRate = data.TotalPerformanceYearOnYear;
-            result.RefundCardYearOnYear = data.TotalPerformanceChainRatio;
-            result.RefundCardChainRatio = data.TodayTotalPerformance;
+            //result.TotalRefundCard = data.RefundCardNum;
+            //result.TodayRefundCard = data.TotalPerformanceCompleteRate;
+            //result.RefundCardCompleteRate = data.TotalPerformanceYearOnYear;
+            //result.RefundCardYearOnYear = data.TotalPerformanceChainRatio;
+            //result.RefundCardChainRatio = data.TodayTotalPerformance;
 
-            result.FlowRateBrokenLineList = data.TotalPerformanceBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
-            {
-                date = x.date,
-                Performance = x.Performance
-            }).ToList();
-            result.DistributeConsulationBrokenLineList = data.NewCustomerPerformanceBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
-            {
-                date = x.date,
-                Performance = x.Performance
-            }).ToList();
-            result.AddWeChatBrokenLineList = data.OldCustomerPerformanceBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
-            {
-                date = x.date,
-                Performance = x.Performance
-            }).ToList();
+            //result.FlowRateBrokenLineList = data.TotalPerformanceBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
+            //{
+            //    date = x.date,
+            //    Performance = x.Performance
+            //}).ToList();
+            //result.DistributeConsulationBrokenLineList = data.NewCustomerPerformanceBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
+            //{
+            //    date = x.date,
+            //    Performance = x.Performance
+            //}).ToList();
+            //result.AddWeChatBrokenLineList = data.OldCustomerPerformanceBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
+            //{
+            //    date = x.date,
+            //    Performance = x.Performance
+            //}).ToList();
             return ResultData<OperationTotalFlowRateDataVo>.Success().AddData("data", result);
         }
 

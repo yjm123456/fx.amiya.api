@@ -1885,7 +1885,7 @@ namespace Fx.Amiya.Service
             var liveanchorIds = (await _liveAnchorService.GetLiveAnchorListByBaseInfoId(baseLiveAnchorId)).Select(e => e.Id);
             var assistantNameList = (await _amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(new List<string> { baseLiveAnchorId })).Select(e => e.Id).ToList();
             var baseData = dalShoppingCartRegistration.GetAll()
-                .Where(e => contentPlatformIds==null || contentPlatformIds.Contains(e.ContentPlatFormId))
+                .Where(e => contentPlatformIds == null || contentPlatformIds.Contains(e.ContentPlatFormId))
                 .Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && liveanchorIds.Contains(e.LiveAnchorId))
                 .Select(e => new
                 {
@@ -1897,19 +1897,20 @@ namespace Fx.Amiya.Service
                 }).ToList();
             var phoneList = baseData.Select(e => e.Phone).Distinct().ToList();
             var sendC = dalContentPlatformOrder.GetAll()
-              //.Where(o => o.ContentPlateformId == contentPlatformId)
+              .Where(o => contentPlatformIds == null || contentPlatformIds.Contains(o.ContentPlateformId))
               .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
               .Where(o => o.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId)
-              .Where(o => phoneList.Contains(o.Phone))
-               .Select(o => o.Phone)
+              //.Where(o => phoneList.Contains(o.Phone))
+              .Select(o => o.Phone)
               .Where(o => phoneList.Contains(o))
               .Distinct().Count();
             data.ClueCount = baseData.Count();
             data.TotalCount = baseData.Where(e => e.AssignEmpId != null).Count();
             data.SendOrderCount = sendC;
             var contentOrderList = dalContentPlatFormOrderDealInfo.GetAll()
-                //.Where(e=>e.ContentPlatFormOrder.ContentPlateformId==contentPlatformId)
-                .Where(e => phoneList.Contains(e.ContentPlatFormOrder.Phone) && e.CreateDate >= startDate && e.CreateDate < endDate)
+                .Where(e => contentPlatformIds == null|| contentPlatformIds.Contains(e.ContentPlatFormOrder.ContentPlateformId))
+                //.Where(e => phoneList.Contains(e.ContentPlatFormOrder.Phone) && e.CreateDate >= startDate && e.CreateDate < endDate)
+                .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate)
                 .Where(o => o.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId)
                 .Select(e => new
                 {
@@ -1940,7 +1941,7 @@ namespace Fx.Amiya.Service
             var nameList = await liveAnchorBaseInfoService.GetValidAsync(true);
             var assistantNameList = (await _amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(nameList.Select(e => e.Id).ToList())).Select(e => e.Id);
             var baseData = dalShoppingCartRegistration.GetAll()
-                .Where(e => contentPlatformIds==null || contentPlatformIds.Contains(e.ContentPlatFormId))
+                .Where(e => contentPlatformIds == null || contentPlatformIds.Contains(e.ContentPlatFormId))
                 .Where(e => e.AssignEmpId != null && e.RecordDate >= startDate && e.RecordDate < endDate)
                 .Select(e => new
                 {
@@ -1952,17 +1953,18 @@ namespace Fx.Amiya.Service
                 }).ToList();
             var phoneList = baseData.Select(e => e.Phone).ToList();
             var sendData = dalContentPlatformOrder.GetAll()
-              //.Where(o=>o.ContentPlateformId==contentPlatformId)
+              .Where(o => contentPlatformIds == null || contentPlatformIds.Contains(o.ContentPlateformId))
               .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
-              .Where(o => phoneList.Contains(o.Phone))
+              //.Where(o => phoneList.Contains(o.Phone))
               .Select(e => new
               {
                   AssignEmpId = e.IsSupportOrder ? e.SupportEmpId : e.BelongEmpId,
                   Phone = e.Phone
               }).ToList();
             var contentOrderList = dalContentPlatFormOrderDealInfo.GetAll()
-                //.Where(e=>e.ContentPlatFormOrder.ContentPlateformId==contentPlatformId)
-                .Where(e => phoneList.Contains(e.ContentPlatFormOrder.Phone) && e.CreateDate >= startDate && e.CreateDate < endDate)
+                .Where(o => contentPlatformIds == null || contentPlatformIds.Contains(o.ContentPlatFormOrder.ContentPlateformId))
+                //.Where(e => phoneList.Contains(e.ContentPlatFormOrder.Phone) && e.CreateDate >= startDate && e.CreateDate < endDate)
+                .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate)
                 .Select(e => new
                 {
                     AssignEmpId = e.ContentPlatFormOrder.IsSupportOrder ? e.ContentPlatFormOrder.SupportEmpId : e.ContentPlatFormOrder.BelongEmpId,
@@ -1993,10 +1995,11 @@ namespace Fx.Amiya.Service
                 OldCustomerTotalPerformance = e.Where(e => e.IsOldCustomer == true).Sum(e => e.DealPrice)
             });
             var unionList = list1.Concat(list2).Concat(list3);
-            return unionList.GroupBy(e => e.EmpId).Select(e => new ShoppingCartRegistrationIndicatorBaseDataDto {
+            return unionList.GroupBy(e => e.EmpId).Select(e => new ShoppingCartRegistrationIndicatorBaseDataDto
+            {
                 EmpId = e.Key,
-                TotalCount = e.Sum(e=>e.TotalCount),
-                AddWechatCount = e.Sum(e=>e.AddWechatCount),
+                TotalCount = e.Sum(e => e.TotalCount),
+                AddWechatCount = e.Sum(e => e.AddWechatCount),
                 SendOrderCount = e.Sum(e => e.AddWechatCount),
                 ToHospitalCount = e.Sum(e => e.ToHospitalCount),
                 OldCustomerDealCount = e.Sum(e => e.OldCustomerDealCount),
@@ -2004,7 +2007,7 @@ namespace Fx.Amiya.Service
                 NewCustomerTotalPerformance = e.Sum(e => e.NewCustomerTotalPerformance),
                 OldCustomerTotalPerformance = e.Sum(e => e.OldCustomerTotalPerformance)
             }).ToList();
-            
+
         }
 
         #endregion

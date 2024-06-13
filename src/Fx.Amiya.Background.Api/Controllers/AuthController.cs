@@ -56,9 +56,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="userName"></param>
         /// <param name="password"></param>
+        /// <param name="ip">ip地址</param>
+        /// <param name="hostName">主机名称</param>
         /// <returns></returns>
         [HttpGet("amiyaLogin")]
-        public async Task<ResultData<AmiyaEmployeeAccountVo>> AmiyaLoginAsync([Required(ErrorMessage = "请输入用户名")] string userName, [Required(ErrorMessage = "请输入密码")] string password)
+        public async Task<ResultData<AmiyaEmployeeAccountVo>> AmiyaLoginAsync([Required(ErrorMessage = "请输入用户名")] string userName, [Required(ErrorMessage = "请输入密码")] string password,string ip="",string hostName="")
         {
             OperationAddDto operationLog = new OperationAddDto();
             operationLog.Source = (int)RequestSource.AmiyaBackground;
@@ -102,7 +104,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             finally
             {
                 var localOtherInfo = "";
-                var hostName = Dns.GetHostName();
+                //var hostName = Dns.GetHostName();
                 var ipAddresses = Dns.GetHostAddresses(hostName);
                 foreach (var x in ipAddresses)
                 {
@@ -112,7 +114,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 var localIP = ipAddresses.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
 
 
-                operationLog.Parameters = "用户登陆 账户："+ userName + "， 主机名称：" + hostName + "，IP地址：" + localIP + "，其他信息：" + localOtherInfo;
+                operationLog.Parameters = "用户登陆 账户："+ userName + "， 主机名称：" + hostName + "，IP地址：" + ip + "，其他信息：" + localOtherInfo;
                 operationLog.RequestType = (int)RequestType.Login;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
                 await operationLogService.AddOperationLogAsync(operationLog);

@@ -84,9 +84,10 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// <param name="password"></param>
         /// <param name="userId">企业微信UserId</param>
         /// <param name="code">企业微信Code</param>
+        /// <param name="ip">ip地址</param>
         /// <returns></returns>
         [HttpGet("amiyaLogin")]
-        public async Task<ResultData<AmiyaEmployeeAccountVo>> AmiyaLoginAsync([Required(ErrorMessage = "请输入用户名")] string userName, [Required(ErrorMessage = "请输入密码")] string password, string userId, string code)
+        public async Task<ResultData<AmiyaEmployeeAccountVo>> AmiyaLoginAsync([Required(ErrorMessage = "请输入用户名")] string userName, [Required(ErrorMessage = "请输入密码")] string password, string userId, string code,string ip="")
         {
             OperationAddDto operationLog = new OperationAddDto();
             operationLog.Source = (int)RequestSource.AmiyaBusinessWechat;
@@ -149,7 +150,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 var localIP = ipAddresses.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
 
 
-                operationLog.Parameters = "用户登陆,登陆方式：账号密码登陆，账户：" + userName + "， 主机名称：" + hostName + "，IP地址：" + localIP + "，其他信息：" + localOtherInfo;
+                operationLog.Parameters = "用户登陆,登陆方式：账号密码登陆，账户：" + userName + "， 主机名称：" + hostName + "，IP地址：" + ip + "，其他信息：" + localOtherInfo;
                 operationLog.RequestType = (int)RequestType.Login;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
                 await operationLogService.AddOperationLogAsync(operationLog);
@@ -164,7 +165,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// <param name="code">企业微信Code</param>
         /// <returns></returns>
         [HttpGet("amiyaLoginByUserIdAndCode")]
-        public async Task<ResultData<AmiyaEmployeeAccountVo>> AmiyaLoginByUserIdAndCodeAsync([Required(ErrorMessage = "请输入用户id")] string userId, [Required(ErrorMessage = "请输入用户code")] string code)
+        public async Task<ResultData<AmiyaEmployeeAccountVo>> AmiyaLoginByUserIdAndCodeAsync([Required(ErrorMessage = "请输入用户id")] string userId, [Required(ErrorMessage = "请输入用户code")] string code,string ip)
         {
             OperationAddDto operationLog = new OperationAddDto();
             operationLog.Source = (int)RequestSource.AmiyaBusinessWechat;
@@ -222,7 +223,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 var localIP = ipAddresses.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
 
 
-                operationLog.Parameters = "用户登陆, 登陆方式：企业微信授权登陆， 账户：" + userId + "， 主机名称：" + hostName + "，IP地址：" + localIP + "，其他信息：" + localOtherInfo;
+                operationLog.Parameters = "用户登陆, 登陆方式：企业微信授权登陆， 账户：" + userId + "， 主机名称：" + hostName + "，IP地址：" + ip + "，其他信息：" + localOtherInfo;
                 operationLog.RequestType = (int)RequestType.Login;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
                 await operationLogService.AddOperationLogAsync(operationLog);
