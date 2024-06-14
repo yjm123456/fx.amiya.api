@@ -2090,6 +2090,7 @@ namespace Fx.Amiya.Service
                 addRecommandDocumentSettleDto.OrderPrice = order.ActualPayment.HasValue ? order.ActualPayment.Value : 0.00M;
                 addRecommandDocumentSettleDto.IsOldCustomer = true;
                 addRecommandDocumentSettleDto.HospitalId = input.HospitalId;
+                addRecommandDocumentSettleDto.ContentPlatFormOrderAddOrderPrice = 0.00M;
                 await recommandDocumentSettleService.AddAsync(addRecommandDocumentSettleDto);
                 unitOfWork.Commit();
             }

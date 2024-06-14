@@ -55,5 +55,13 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         /// 是否为稽查订单
         /// </summary>
         public bool? IsInspectOrder { get; set; }
+        /// <summary>
+        /// 订单来源（0查询所有;1:下单平台；2：内容平台；3：消费追踪）
+        /// </summary>
+        public int OrderFrom { get; set; }
+        /// <summary>
+        /// 下单金额（0-查询0元；1：查询大于0元）
+        /// </summary>
+        public int AddOrderPrice { get; set; }
     }
 }

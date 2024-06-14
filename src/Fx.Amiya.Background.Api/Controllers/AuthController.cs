@@ -114,7 +114,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 //var localIP = ipAddresses.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
 
 
-                operationLog.Parameters = "用户登陆 账户：" + userName + "， 主机名称：" + hostName + "，IP地址：" + ip;
+                operationLog.Parameters = "用户登陆 账户：" + userName + "， 主机名称：" + hostName + " IP地址：" + ip;
                 operationLog.RequestType = (int)RequestType.Login;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
                 await operationLogService.AddOperationLogAsync(operationLog);

@@ -56,5 +56,9 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         /// 医院id
         /// </summary>
         public int HospitalId { get; set; }
+        /// <summary>
+        /// 下单金额（内容平台）
+        /// </summary>
+        public decimal ContentPlatFormOrderAddOrderPrice { get; set; }
     }
 }

@@ -52,6 +52,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.CustomerServiceOrderPerformance).HasColumnName("customer_service_order_performance").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.PerformancePercent).HasColumnName("performance_percent").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.CustomerServicePerformance).HasColumnName("customer_service_performance").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.ContentPlatFormOrderAddOrderPrice).HasColumnName("content_plat_form_order_addorderprice").HasColumnType("decimal(12,2)").IsRequired();
             //builder.HasOne(e => e.ReconciliationDocuments).WithMany(e => e.RecommandDocumentSettleList).HasForeignKey(e => e.RecommandDocumentId);
         }
     }

@@ -82,6 +82,8 @@ namespace Fx.Amiya.Service
               .Where(e => !query.ChooseHospitalId.HasValue || e.HospitalId == query.ChooseHospitalId)
               .Where(e => !query.IsOldCustoemr.HasValue || e.IsOldCustomer == query.IsOldCustoemr)
               .Where(e => !query.CheckState.HasValue || e.CompensationCheckState == query.CheckState)
+              .Where(e => query.OrderFrom == 0 || e.OrderFrom == query.OrderFrom)
+              .Where(e => query.AddOrderPrice == -1 || (query.AddOrderPrice == 0 ? e.ContentPlatFormOrderAddOrderPrice == query.AddOrderPrice : e.ContentPlatFormOrderAddOrderPrice > 0))
               .Where(e => !query.CreateEmpId.HasValue || e.CreateEmpId == query.CreateEmpId)
               .Where(e => !query.IsInspectOrder.HasValue || e.IsInspectPerformance == query.IsInspectOrder.Value)
               .Where(e => !query.InspectEmpId.HasValue || e.InspectEmpId == query.InspectEmpId.Value).OrderByDescending(x => x.CreateDate)
@@ -95,6 +97,7 @@ namespace Fx.Amiya.Service
                   OrderFrom = e.OrderFrom,
                   OrderFromText = ServiceClass.GetOrderFromText(e.OrderFrom),
                   IsOldCustomer = e.IsOldCustomer,
+                  ContentPlatFormOrderAddOrderPrice = e.ContentPlatFormOrderAddOrderPrice,
                   IsOldCustomerText = e.IsOldCustomer == true ? "老客业绩" : "新客业绩",
                   OrderPrice = e.OrderPrice,
                   CreateDate = e.CreateDate,
@@ -110,7 +113,7 @@ namespace Fx.Amiya.Service
                   CheckTypeText = ServiceClass.GetReconciliationDocumentSettleCheckType(e.CheckType),
                   IsInspectPerformance = e.IsInspectPerformance,
                   InspectPrice = e.InspectPrice,
-                  InspectPercent=e.InspectPercent,
+                  InspectPercent = e.InspectPercent,
                   InspectBy = e.InspectEmpId,
                   CustomerServiceOrderPerformance = e.CustomerServiceOrderPerformance,
                   CheckDate = e.CheckDate,
@@ -132,7 +135,7 @@ namespace Fx.Amiya.Service
             }
             if (query.IsGenerateSalry.HasValue)
             {
-                record = record.Where(e => query.IsGenerateSalry == 1 ? string.IsNullOrEmpty(e.CustomerServiceCompensationId)  : !string.IsNullOrEmpty(e.CustomerServiceCompensationId) );
+                record = record.Where(e => query.IsGenerateSalry == 1 ? string.IsNullOrEmpty(e.CustomerServiceCompensationId) : !string.IsNullOrEmpty(e.CustomerServiceCompensationId));
             }
             if (query.IsGenerateInspectSalry.HasValue)
             {
@@ -199,6 +202,7 @@ namespace Fx.Amiya.Service
             recommandDocumentSettle.AccountType = addRecommandDocumentSettleDto.AccountType;
             recommandDocumentSettle.AccountPrice = addRecommandDocumentSettleDto.AccountPrice;
             recommandDocumentSettle.HospitalId = addRecommandDocumentSettleDto.HospitalId;
+            recommandDocumentSettle.ContentPlatFormOrderAddOrderPrice = addRecommandDocumentSettleDto.ContentPlatFormOrderAddOrderPrice;
             await _dalRecommandDocumentSettle.AddAsync(recommandDocumentSettle, true);
         }
 
@@ -285,7 +289,7 @@ namespace Fx.Amiya.Service
         public async Task RemoveCustomerServiceCompensationIdAsync(string customerServiceCompensationId)
         {
             //回退薪资单
-            var list = await _dalRecommandDocumentSettle.GetAll().Where(e => e.CustomerServiceCompensationId == customerServiceCompensationId ).ToListAsync();
+            var list = await _dalRecommandDocumentSettle.GetAll().Where(e => e.CustomerServiceCompensationId == customerServiceCompensationId).ToListAsync();
             var result = list.Count();
             if (result > 0)
             {

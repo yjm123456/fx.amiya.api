@@ -162,6 +162,10 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         /// 提成金额
         /// </summary>
         public decimal CustomerServicePerformance { get; set; }
+        /// <summary>
+        /// 下单金额（内容平台）
+        /// </summary>
+        public decimal ContentPlatFormOrderAddOrderPrice { get; set; }
 
     }
 }

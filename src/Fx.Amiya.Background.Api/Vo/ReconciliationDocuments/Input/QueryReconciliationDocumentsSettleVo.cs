@@ -41,5 +41,14 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments.Input
         /// 是否生成稽查薪资单(1,未生成,2已生成)
         /// </summary>
         public int? IsGenerateInspectSalry { get; set; }
+
+        /// <summary>
+        /// 订单来源（0查询所有;1:下单平台；2：内容平台；3：消费追踪）
+        /// </summary>
+        public int OrderFrom { get; set; }
+        /// <summary>
+        /// 下单金额（0-查询0元；1：查询大于0元）
+        /// </summary>
+        public int AddOrderPrice { get; set; }
     }
 }

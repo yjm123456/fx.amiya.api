@@ -197,7 +197,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
 
-        
+
         /// <summary>
         /// 审核助理薪资
         /// </summary>
@@ -251,7 +251,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             checkReconciliationDocumentSettleDto.CheckRemark = query.CheckRemark;
             checkReconciliationDocumentSettleDto.CheckState = query.CheckState;
             checkReconciliationDocumentSettleDto.CheckType = query.CheckType;
-            checkReconciliationDocumentSettleDto.IsInspectPerformance =false;
+            checkReconciliationDocumentSettleDto.IsInspectPerformance = false;
             checkReconciliationDocumentSettleDto.IdList = query.IdList;
             checkReconciliationDocumentSettleDto.CheckBelongEmpId = query.CheckBelongEmpId;
             await billService.BatchCheckReconciliationDocumentsSettleAsync(checkReconciliationDocumentSettleDto);
@@ -284,6 +284,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryReconciliationDocumentsSettleDto.CreateEmpId = query.CreateEmpId;
                 queryReconciliationDocumentsSettleDto.IsGenerateSalry = query.IsGenerateSalry;
                 queryReconciliationDocumentsSettleDto.IsGenerateInspectSalry = query.IsGenerateInspectSalry;
+                queryReconciliationDocumentsSettleDto.AddOrderPrice = query.AddOrderPrice;
+                queryReconciliationDocumentsSettleDto.OrderFrom = query.OrderFrom;
+
                 var q = await billService.GetSettleListWithPageByCustomerCompensationAsync(queryReconciliationDocumentsSettleDto);
 
                 var reconciliationDocumentsSettle = from d in q.List
@@ -331,6 +334,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                         InspectPrice = d.InspectPrice,
                                                         InspectPercent = d.InspectPercent,
                                                         InspectEmpName = d.InspectEmpName,
+                                                        ContentPlatFormOrderAddOrderPrice = d.ContentPlatFormOrderAddOrderPrice,
                                                     };
 
                 FxPageInfo<ReconciliationDocumentsSettleVo> reconciliationDocumentsSettleResult = new FxPageInfo<ReconciliationDocumentsSettleVo>();
@@ -421,6 +425,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                         InspectPercent = d.InspectPercent,
                                                         CustomerServiceOrderPerformance = d.CustomerServiceOrderPerformance,
                                                         InspectCustomerServiceCompensationId = d.InspectCustomerServiceCompensationId,
+                                                        ContentPlatFormOrderAddOrderPrice = d.ContentPlatFormOrderAddOrderPrice,
                                                     };
 
                 FxPageInfo<ReconciliationDocumentsSettleVo> reconciliationDocumentsSettleResult = new FxPageInfo<ReconciliationDocumentsSettleVo>();

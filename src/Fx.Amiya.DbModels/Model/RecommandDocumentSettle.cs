@@ -140,6 +140,11 @@ namespace Fx.Amiya.DbModels.Model
         /// 提成金额-助理
         /// </summary>
         public decimal CustomerServicePerformance { get; set; }
+
+        /// <summary>
+        /// 下单金额（内容平台）
+        /// </summary>
+        public decimal ContentPlatFormOrderAddOrderPrice { get; set; }
         /// <summary>
         /// 对账单
         /// </summary>

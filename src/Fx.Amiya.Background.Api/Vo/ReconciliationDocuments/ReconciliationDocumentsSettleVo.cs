@@ -78,6 +78,17 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
         public string OrderFromText { get; set; }
 
         /// <summary>
+        /// 下单金额（内容平台）
+        /// </summary>
+        [Description(" 下单金额（内容平台）")]
+        public decimal ContentPlatFormOrderAddOrderPrice { get; set; }
+        /// <summary>
+        /// 新/老客业绩
+        /// </summary>
+        [Description(" 新/老客业绩")]
+        public string IsOldCustomerText { get; set; }
+
+        /// <summary>
         /// 订单金额
         /// </summary>
         [Description("订单金额")]
@@ -87,11 +98,6 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
         /// </summary>
         [Description("对账金额")]
         public decimal? RecolicationPrice { get; set; }
-        /// <summary>
-        /// 新/老客业绩
-        /// </summary>
-        [Description(" 新/老客业绩")]
-        public string IsOldCustomerText { get; set; }
         /// <summary>
         /// 信息服务费
         /// </summary>
