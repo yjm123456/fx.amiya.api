@@ -103,18 +103,18 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                var localOtherInfo = "";
+                //var localOtherInfo = "";
                 //var hostName = Dns.GetHostName();
-                var ipAddresses = Dns.GetHostAddresses(hostName);
-                foreach (var x in ipAddresses)
-                {
-                    localOtherInfo += x + ";";
-                }
-                localOtherInfo = localOtherInfo.Substring(0, localOtherInfo.Length - 1);
-                var localIP = ipAddresses.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
+                //var ipAddresses = Dns.GetHostAddresses(hostName);
+                //foreach (var x in ipAddresses)
+                //{
+                //    localOtherInfo += x + ";";
+                //}
+                //localOtherInfo = localOtherInfo.Substring(0, localOtherInfo.Length - 1);
+                //var localIP = ipAddresses.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
 
 
-                operationLog.Parameters = "用户登陆 账户："+ userName + "， 主机名称：" + hostName + "，IP地址：" + ip + "，其他信息：" + localOtherInfo;
+                operationLog.Parameters = "用户登陆 账户：" + userName + "， 主机名称：" + hostName + "，IP地址：" + ip;
                 operationLog.RequestType = (int)RequestType.Login;
                 operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
                 await operationLogService.AddOperationLogAsync(operationLog);
