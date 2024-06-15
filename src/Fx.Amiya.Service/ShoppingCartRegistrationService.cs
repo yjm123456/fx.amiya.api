@@ -2000,7 +2000,7 @@ namespace Fx.Amiya.Service
                 EmpId = e.Key,
                 TotalCount = e.Sum(e => e.TotalCount),
                 AddWechatCount = e.Sum(e => e.AddWechatCount),
-                SendOrderCount = e.Sum(e => e.AddWechatCount),
+                SendOrderCount = e.Sum(e => e.SendOrderCount),
                 ToHospitalCount = e.Sum(e => e.ToHospitalCount),
                 OldCustomerDealCount = e.Sum(e => e.OldCustomerDealCount),
                 NewCustomerDealCount = e.Sum(e => e.NewCustomerDealCount),
