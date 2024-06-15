@@ -14,11 +14,13 @@ namespace Fx.Amiya.IService
     public interface IAmiyaOperationsBoardService
     {
         #region  运营主看板
+
+        #region 【业绩】
         /// <summary>
         /// 获取时间进度和总业绩
         /// </summary>
         /// <returns></returns>
-         Task<OperationTotalAchievementDataDto> GetTotalAchievementAndDateScheduleAsync(QueryOperationDataDto query);
+        Task<OperationTotalAchievementDataDto> GetTotalAchievementAndDateScheduleAsync(QueryOperationDataDto query);
         /// <summary>
         /// 根据条件获取新老客业绩占比
         /// </summary>
@@ -32,35 +34,16 @@ namespace Fx.Amiya.IService
         /// <param name="query"></param>
         /// <returns></returns>
         Task<NewOrOldCustomerPerformanceDataListDto> GetNewOrOldCustomerCompareByEmployeeAndHospitalAsync(QueryOperationDataDto query);
+        #endregion
+        #region 【流量】
+        Task<OperationTotalFlowRateDataDto> GetCustomerDataAsync(QueryOperationDataDto query);
 
-        /// <summary>
-        /// 获取获客情况数据
-        /// </summary>
-        /// <returns></returns>
-         Task<GetCustomerDataDto> GetCustomerDataAsync(QueryOperationDataDto query);
-       
+        Task<OperationBoardContentPlatFormDataDto> GetFlowRateByContentPlatFormCompareDataAsync(QueryOperationDataDto query);
 
-        /// <summary>
-        /// 获取客户运营情况数据
-        /// </summary>
-        /// <returns></returns>
-         Task<GetCustomerAnalizeDataDto> GetCustomerAnalizeDataAsync(QueryOperationDataDto query);
-       
+        Task<GetFlowRateByContentPlatformDataDto> GetFlowRateByContentPlatformAsync(QueryOperationDataDto query);
 
-        /// <summary>
-        /// 获取客户指标转化数据
-        /// </summary>
-        /// <returns></returns>
-         Task<GetCustomerIndexTransformationResultDto> GetCustomerIndexTransformationDataAsync(QueryOperationDataDto query);
-        
-
-        /// <summary>
-        /// 获取助理业绩分析数据
-        /// </summary>
-        /// <returns></returns>
-         Task<GetEmployeePerformanceAnalizeDataDto> GetEmployeePerformanceAnalizeDataAsync(QueryOperationDataDto query);
-       
-
+        Task<GetFlowRateDetailsByContentPlatformDataDto> GetFlowRateDetailsByContentPlatformAsync(QueryOperationDataDto query);
+        #endregion
 
         #endregion
 
@@ -69,7 +52,7 @@ namespace Fx.Amiya.IService
         /// 获取公司看板业绩情况数据
         /// </summary>
         /// <returns></returns>
-         Task<List<CompanyPerformanceDataDto>> GetCompanyPerformanceDataAsync(QueryAmiyaCompanyOperationsDataDto query);
+        Task<List<CompanyPerformanceDataDto>> GetCompanyPerformanceDataAsync(QueryAmiyaCompanyOperationsDataDto query);
         
         /// <summary>
         /// 获取公司看板获客情况数据
@@ -144,7 +127,32 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
          Task<List<AssistantIndicatorConversionDataDto>> GetAssistantIndicatorConversionDataAsync(QueryAmiyaAssistantOperationsDataDto query);
-        
+
+        #endregion
+
+        #region 【历史版本】
+
+        ///// <summary>
+        ///// 获取客户运营情况数据
+        ///// </summary>
+        ///// <returns></returns>
+        //Task<GetCustomerAnalizeDataDto> GetCustomerAnalizeDataAsync(QueryOperationDataDto query);
+
+
+        ///// <summary>
+        ///// 获取客户指标转化数据
+        ///// </summary>
+        ///// <returns></returns>
+        //Task<GetCustomerIndexTransformationResultDto> GetCustomerIndexTransformationDataAsync(QueryOperationDataDto query);
+
+
+        ///// <summary>
+        ///// 获取助理业绩分析数据
+        ///// </summary>
+        ///// <returns></returns>
+        //Task<GetEmployeePerformanceAnalizeDataDto> GetEmployeePerformanceAnalizeDataAsync(QueryOperationDataDto query);
+
+
         #endregion
     }
 }

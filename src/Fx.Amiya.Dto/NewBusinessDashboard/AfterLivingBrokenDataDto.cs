@@ -12,39 +12,39 @@ namespace Fx.Amiya.Dto.NewBusinessDashboard
         /// <summary>
         /// 总业绩折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> TotalPerformanceBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> TotalPerformanceBrokenLineList { get; set; }
         /// <summary>
         /// 新客业绩折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> NewCustomerPerformanceBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> NewCustomerPerformanceBrokenLineList { get; set; }
         /// <summary>
         /// 老客业绩折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> OldCustomerPerformanceBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> OldCustomerPerformanceBrokenLineList { get; set; }
         /// <summary>
         /// 有效业绩折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> EffectivePerformanceBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> EffectivePerformanceBrokenLineList { get; set; }
         /// <summary>
         /// 潜在业绩折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> PotentialPerformanceBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> PotentialPerformanceBrokenLineList { get; set; }
         /// <summary>
         /// 新客有效业绩折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> NewCustomerEffectivePerformanceBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> NewCustomerEffectivePerformanceBrokenLineList { get; set; }
         /// <summary>
         /// 新客潜在业绩折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> NewCustomerPotentialPerformanceBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> NewCustomerPotentialPerformanceBrokenLineList { get; set; }
         /// <summary>
         /// 老客有效业绩折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> OldCustomerEffectivePerformanceBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> OldCustomerEffectivePerformanceBrokenLineList { get; set; }
         /// <summary>
         /// 老客潜在业绩折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> OldCustomerPotentialPerformanceBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> OldCustomerPotentialPerformanceBrokenLineList { get; set; }
 
     }
 }

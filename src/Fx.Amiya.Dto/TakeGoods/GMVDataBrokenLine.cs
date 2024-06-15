@@ -12,31 +12,31 @@ namespace Fx.Amiya.Dto.TakeGoods
         /// <summary>
         /// 下单GMV折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> OrderGMVBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> OrderGMVBrokenLineList { get; set; }
         /// <summary>
         /// 千川投放折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> QianChuanPutInBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> QianChuanPutInBrokenLineList { get; set; }
         /// <summary>
         /// 退款GMV折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> RefundGMVBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> RefundGMVBrokenLineList { get; set; }
         /// <summary>
         /// 下单件数折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> OrderPackagesBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> OrderPackagesBrokenLineList { get; set; }
         /// <summary>
         /// 退款件数折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> RefundPackagesBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> RefundPackagesBrokenLineList { get; set; }
         /// <summary>
         /// 下单件单价折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> SinglePriceBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> SinglePriceBrokenLineList { get; set; }
         /// <summary>
         /// 退款件单价折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> RefundSinglePriceBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> RefundSinglePriceBrokenLineList { get; set; }
 
     }
 }

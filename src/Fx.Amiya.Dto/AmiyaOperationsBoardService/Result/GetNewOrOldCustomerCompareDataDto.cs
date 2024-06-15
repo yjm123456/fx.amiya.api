@@ -9,15 +9,15 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
     public class GetNewOrOldCustomerCompareDataDto
     {
         /// <summary>
-        /// 整体流量分析
+        /// 整体业绩分析
         /// </summary>
         public OperationBoardGetNewOrOldCustomerCompareDataDetailsDto TotalNewOrOldCustomer { get; set; }
         /// <summary>
-        /// 刀刀组流量分析
+        /// 刀刀组业绩分析
         /// </summary>
         public OperationBoardGetNewOrOldCustomerCompareDataDetailsDto GroupDaoDaoNewOrOldCustomer { get; set; }
         /// <summary>
-        /// 吉娜组流量分析
+        /// 吉娜组业绩分析
         /// </summary>
         public OperationBoardGetNewOrOldCustomerCompareDataDetailsDto GroupJiNaNewOrOldCustomer { get; set; }
     }

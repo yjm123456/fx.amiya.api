@@ -12,18 +12,18 @@ namespace Fx.Amiya.Dto.NewBusinessDashboard
         /// <summary>
         /// 涨粉量趋势数据
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> IncreaseFansData { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> IncreaseFansData { get; set; }
         /// <summary>
         /// 橱窗收入趋势数据
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> ShowcaseIncomeData { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> ShowcaseIncomeData { get; set; }
         /// <summary>
         /// 涨粉付费趋势
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> IncreaseFansFeeData { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> IncreaseFansFeeData { get; set; }
         /// <summary>
         /// 橱窗付费趋势
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> ShowcaseFeeDta { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> ShowcaseFeeDta { get; set; }
     }
 }

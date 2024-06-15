@@ -223,6 +223,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 contentPlatFormOrderDealInfoVo.DealDate = contentPlatFormOrderDealInfo.DealDate;
                 contentPlatFormOrderDealInfoVo.OtherOrderId = contentPlatFormOrderDealInfo.OtherAppOrderId;
                 contentPlatFormOrderDealInfoVo.InvitationDocuments = contentPlatFormOrderDealInfo.InvitationDocuments;
+                contentPlatFormOrderDealInfoVo.CreateBy = contentPlatFormOrderDealInfo.CreateBy;
                 contentPlatFormOrderDealInfoVo.ConsumptionType = contentPlatFormOrderDealInfo.ConsumptionType;
 
 

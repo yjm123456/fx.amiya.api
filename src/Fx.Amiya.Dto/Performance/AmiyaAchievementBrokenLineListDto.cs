@@ -11,52 +11,52 @@ namespace Fx.Amiya.Dto.Performance
         /// <summary>
         /// 新客业绩折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> NewCustomerPerformanceBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> NewCustomerPerformanceBrokenLineList { get; set; }
         /// <summary>
         /// 老客业绩折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> OldCustomerPerformanceBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> OldCustomerPerformanceBrokenLineList { get; set; }
         /// <summary>
         /// 有效业绩折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> EffectivePerformanceBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> EffectivePerformanceBrokenLineList { get; set; }
         /// <summary>
         /// 潜在业绩折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> PotentialPerformanceBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> PotentialPerformanceBrokenLineList { get; set; }
         /// <summary>
         /// 当月派单业绩折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> ThisMonthSendOrderPerformanceBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> ThisMonthSendOrderPerformanceBrokenLineList { get; set; }
         /// <summary>
         /// 历史派单业绩折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> HistorySendOrderPerformanceBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> HistorySendOrderPerformanceBrokenLineList { get; set; }
         /// <summary>
         /// 抖音业绩折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> TikTokPerformanceBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> TikTokPerformanceBrokenLineList { get; set; }
         /// <summary>
         /// 视频号业绩折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> VideoPerformanceBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> VideoPerformanceBrokenLineList { get; set; }
         /// <summary>
         /// 主播视频业绩折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> LiveAnchorVideoPerformanceBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> LiveAnchorVideoPerformanceBrokenLineList { get; set; }
 
         /// <summary>
         /// 助理照片业绩折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> AssistantPhotoPerformanceBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> AssistantPhotoPerformanceBrokenLineList { get; set; }
         /// <summary>
         /// 主播接诊业绩折线图
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> LiveAnchorReceptionPerformanceBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> LiveAnchorReceptionPerformanceBrokenLineList { get; set; }
         /// <summary>
         /// 非主播接诊业绩
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> NoLiveAnchorReceptionPerformanceBrokenLineList { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> NoLiveAnchorReceptionPerformanceBrokenLineList { get; set; }
     }
     public class GroupByTimeBrokenLineListDto
     {

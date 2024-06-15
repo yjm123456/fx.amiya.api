@@ -2537,6 +2537,11 @@ namespace Fx.Amiya.Service
                     input.ConsumptionType = (int)ConsumptionType.Refund;
                 }
                 var order = await _dalContentPlatformOrder.GetAll().Include(x => x.LiveAnchor).Include(x => x.Contentplatform).Where(x => x.Id == input.Id).SingleOrDefaultAsync();
+                var orderDealInfo = await _contentPlatFormOrderDalService.GetByIdAsync(input.DealId);
+                if (input.EmpId != orderDealInfo.CreateBy)
+                {
+                    throw new Exception("该成交单不是您录入的数据，无法更改！");
+                }
                 var isoldCustomer = false;
                 var orderIsOldCustomer = false;
                 if (order.CheckState == (int)CheckType.CheckedSuccess)
@@ -2588,7 +2593,7 @@ namespace Fx.Amiya.Service
                         isoldCustomer = orderIsOldCustomer;
                     }
                 }
-                var orderDealInfo = await _contentPlatFormOrderDalService.GetByIdAsync(input.DealId);
+               
                 order.DealAmount -= orderDealInfo.Price;
 
                 if (order == null)

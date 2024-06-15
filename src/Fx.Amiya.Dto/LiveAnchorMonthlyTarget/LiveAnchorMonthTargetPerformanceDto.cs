@@ -45,6 +45,10 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// </summary>
         public int DistributeConsulationTarget { get; set; }
         /// <summary>
+        /// 小黄车退单总量
+        /// </summary>
+        public int MinivanRefundTarget { get; set; }
+        /// <summary>
         /// 派单目标
         /// </summary>
         public int SendOrderTarget { get; set; }
@@ -178,5 +182,26 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 老客成交目标
         /// </summary>
         public int OldCustomerDealTarget { get; set; }
+    }
+
+    public class LiveAnchorBaseBusinessMonthTargetBeforeLivingDto { 
+    
+        /// <summary>
+        /// 线索目标
+        /// </summary>
+        public int CluesTarget { get; set; }
+        /// <summary>
+        /// 退卡目标
+        /// </summary>
+        public int RefundCardTarget { get; set; }
+        /// <summary>
+        /// 分诊目标
+        /// </summary>
+        public int DistributeConsulationTarget { get; set; }
+
+        /// <summary>
+        /// 加v目标
+        /// </summary>
+        public int AddWechatTarget { get; set; }
     }
 }

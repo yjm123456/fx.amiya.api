@@ -12,18 +12,18 @@ namespace Fx.Amiya.Dto.NewBusinessDashboard
         /// <summary>
         /// 下单GMV
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> OrderGMVData { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> OrderGMVData { get; set; }
         /// <summary>
         /// 退单GMV
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> RefundGMVData { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> RefundGMVData { get; set; }
         /// <summary>
         /// 实际回款
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> ActualReturnBackMoneyData { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> ActualReturnBackMoneyData { get; set; }
         /// <summary>
         /// 直播付费
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> InvestFlowData { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> InvestFlowData { get; set; }
     }
 }

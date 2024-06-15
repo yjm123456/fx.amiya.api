@@ -204,6 +204,12 @@ namespace Fx.Amiya.IService
         /// <param name="endDate"></param>
         /// <returns></returns>
         Task<GetCustomerDataDto> GetCustomerDataAsync(DateTime? startDate, DateTime? endDate);
+        /// <summary>
+        /// 根据条件获取小黄车登记列表数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<List<ShoppingCartRegistrationDto>> GetShoppingCartRegistionDataByRecordDate(DateTime startDate, DateTime endDate);
         #endregion
         #region 啊美雅运营看板
         /// <summary>

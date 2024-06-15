@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Dto.Performance
 {
-    public class PeformanceBrokenLineListInfoDto
+    public class PerformanceBrokenLineListInfoDto
     {
         /// <summary>
         /// 日期（可以是年也可以是月）例：年输出1-12，月输出1-31

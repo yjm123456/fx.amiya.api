@@ -168,45 +168,45 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
             var data = await amiyaOperationsBoardService.GetCustomerDataAsync(queryOperationDataVo);
 
-            //result.TotalFlowRate = data.TotalFlowRateNum;
-            //result.TodayTotalFlowRate = data.NewCustomerPerformanceCompleteRate;
-            //result.TotalFlowRateCompleteRate = data.NewCustomerPerformanceYearOnYear;
-            //result.TotalFlowRateYearOnYear = data.NewCustomerPerformanceChainRatio;
-            //result.TotalFlowRateChainRatio = data.TodayNewCustomerPerformance;
+            result.TotalFlowRate = data.TotalFlowRate;
+            result.TodayTotalFlowRate = data.TodayTotalFlowRate;
+            result.TotalFlowRateCompleteRate = data.TotalFlowRateCompleteRate;
+            result.TotalFlowRateYearOnYear = data.TotalFlowRateYearOnYear;
+            result.TotalFlowRateChainRatio = data.TotalFlowRateChainRatio;
 
-            //result.TotalDistributeConsulation = data.DistributeConsulationNum;
-            //result.TodayDistributeConsulation = data.OldCustomerPerformanceCompleteRate;
-            //result.DistributeConsulationCompleteRate = data.OldCustomerPerformanceYearOnYear;
-            //result.DistributeConsulationYearOnYear = data.OldCustomerPerformanceChainRatio;
-            //result.DistributeConsulationChainRatio = data.TodayOldCustomerPerformance;
+            result.TotalDistributeConsulation = data.TotalDistributeConsulation;
+            result.TodayDistributeConsulation = data.TodayDistributeConsulation;
+            result.DistributeConsulationCompleteRate = data.DistributeConsulationCompleteRate;
+            result.DistributeConsulationYearOnYear = data.DistributeConsulationYearOnYear;
+            result.DistributeConsulationChainRatio = data.DistributeConsulationChainRatio;
 
-            //result.TotalAddWechat = data.AddWechatNum;
-            //result.TodayAddWechat = data.TotalPerformanceCompleteRate;
-            //result.AddWechatCompleteRate = data.TotalPerformanceYearOnYear;
-            //result.AddWechatYearOnYear = data.TotalPerformanceChainRatio;
-            //result.AddWechatChainRatio = data.TodayTotalPerformance;
+            result.TotalAddWechat = data.TotalAddWechat;
+            result.TodayAddWechat = data.TodayAddWechat;
+            result.AddWechatCompleteRate = data.AddWechatCompleteRate;
+            result.AddWechatYearOnYear = data.AddWechatYearOnYear;
+            result.AddWechatChainRatio = data.AddWechatChainRatio;
 
-            //result.TotalRefundCard = data.RefundCardNum;
-            //result.TodayRefundCard = data.TotalPerformanceCompleteRate;
-            //result.RefundCardCompleteRate = data.TotalPerformanceYearOnYear;
-            //result.RefundCardYearOnYear = data.TotalPerformanceChainRatio;
-            //result.RefundCardChainRatio = data.TodayTotalPerformance;
+            result.TotalRefundCard = data.TotalRefundCard;
+            result.TodayRefundCard = data.TodayRefundCard;
+            result.RefundCardCompleteRate = data.RefundCardCompleteRate;
+            result.RefundCardYearOnYear = data.RefundCardYearOnYear;
+            result.RefundCardChainRatio = data.RefundCardChainRatio;
 
-            //result.FlowRateBrokenLineList = data.TotalPerformanceBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
-            //{
-            //    date = x.date,
-            //    Performance = x.Performance
-            //}).ToList();
-            //result.DistributeConsulationBrokenLineList = data.NewCustomerPerformanceBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
-            //{
-            //    date = x.date,
-            //    Performance = x.Performance
-            //}).ToList();
-            //result.AddWeChatBrokenLineList = data.OldCustomerPerformanceBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
-            //{
-            //    date = x.date,
-            //    Performance = x.Performance
-            //}).ToList();
+            result.FlowRateBrokenLineList = data.FlowRateBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
+            {
+                date = x.date,
+                Performance = x.Performance
+            }).ToList();
+            result.DistributeConsulationBrokenLineList = data.DistributeConsulationBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
+            {
+                date = x.date,
+                Performance = x.Performance
+            }).ToList();
+            result.AddWeChatBrokenLineList = data.AddWeChatBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
+            {
+                date = x.date,
+                Performance = x.Performance
+            }).ToList();
             return ResultData<OperationTotalFlowRateDataVo>.Success().AddData("data", result);
         }
 
@@ -221,17 +221,39 @@ namespace Fx.Amiya.Background.Api.Controllers
             QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
             queryOperationDataVo.startDate = query.startDate;
             queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
-            // var data = await amiyaOperationsBoardService.GetNewOrOldCustomerCompareDataAsync(queryOperationDataVo);
-            OperationBoardContentPlatFormDataVo resultDataVo = new OperationBoardContentPlatFormDataVo();
-            resultDataVo.DouYinNumber = 62;
-            resultDataVo.DouYinRate = 40;
-            resultDataVo.VideoNumberNumber = 35;
-            resultDataVo.VideoNumberRate = 25;
-            resultDataVo.XiaoHongShuNumber = 30;
-            resultDataVo.XiaoHongShuRate = 20;
-            resultDataVo.PrivateDataNumber = 20;
-            resultDataVo.PrivateDataRate = 15;
-            result.TotalFlowRate = resultDataVo;
+            var data = await amiyaOperationsBoardService.GetFlowRateByContentPlatFormCompareDataAsync(queryOperationDataVo);
+            OperationBoardContentPlatFormDataVo totalResultDataVo = new OperationBoardContentPlatFormDataVo();
+            totalResultDataVo.DouYinNumber = data.TotalFlowRate.DouYinNumber;
+            totalResultDataVo.DouYinRate = data.TotalFlowRate.DouYinRate;
+            totalResultDataVo.VideoNumberNumber = data.TotalFlowRate.VideoNumberNumber;
+            totalResultDataVo.VideoNumberRate = data.TotalFlowRate.VideoNumberRate;
+            totalResultDataVo.XiaoHongShuNumber = data.TotalFlowRate.XiaoHongShuNumber;
+            totalResultDataVo.XiaoHongShuRate = data.TotalFlowRate.XiaoHongShuRate;
+            totalResultDataVo.PrivateDataNumber = data.TotalFlowRate.PrivateDataNumber;
+            totalResultDataVo.PrivateDataRate = data.TotalFlowRate.PrivateDataRate;
+            result.TotalFlowRate = totalResultDataVo;
+
+            OperationBoardContentPlatFormDataVo groupDaoDaoResultDataVo = new OperationBoardContentPlatFormDataVo();
+            groupDaoDaoResultDataVo.DouYinNumber = data.GroupDaoDaoFlowRate.DouYinNumber;
+            groupDaoDaoResultDataVo.DouYinRate = data.GroupDaoDaoFlowRate.DouYinRate;
+            groupDaoDaoResultDataVo.VideoNumberNumber = data.GroupDaoDaoFlowRate.VideoNumberNumber;
+            groupDaoDaoResultDataVo.VideoNumberRate = data.GroupDaoDaoFlowRate.VideoNumberRate;
+            groupDaoDaoResultDataVo.XiaoHongShuNumber = data.GroupDaoDaoFlowRate.XiaoHongShuNumber;
+            groupDaoDaoResultDataVo.XiaoHongShuRate = data.GroupDaoDaoFlowRate.XiaoHongShuRate;
+            groupDaoDaoResultDataVo.PrivateDataNumber = data.GroupDaoDaoFlowRate.PrivateDataNumber;
+            groupDaoDaoResultDataVo.PrivateDataRate = data.GroupDaoDaoFlowRate.PrivateDataRate;
+            result.GroupDaoDaoFlowRate = groupDaoDaoResultDataVo;
+
+            OperationBoardContentPlatFormDataVo groupJiNaResultDataVo = new OperationBoardContentPlatFormDataVo();
+            groupJiNaResultDataVo.DouYinNumber = data.GroupJiNaFlowRate.DouYinNumber;
+            groupJiNaResultDataVo.DouYinRate = data.GroupJiNaFlowRate.DouYinRate;
+            groupJiNaResultDataVo.VideoNumberNumber = data.GroupJiNaFlowRate.VideoNumberNumber;
+            groupJiNaResultDataVo.VideoNumberRate = data.GroupJiNaFlowRate.VideoNumberRate;
+            groupJiNaResultDataVo.XiaoHongShuNumber = data.GroupJiNaFlowRate.XiaoHongShuNumber;
+            groupJiNaResultDataVo.XiaoHongShuRate = data.GroupJiNaFlowRate.XiaoHongShuRate;
+            groupJiNaResultDataVo.PrivateDataNumber = data.GroupJiNaFlowRate.PrivateDataNumber;
+            groupJiNaResultDataVo.PrivateDataRate = data.GroupJiNaFlowRate.PrivateDataRate;
+            result.GroupJiNaFlowRate = groupJiNaResultDataVo;
             return ResultData<GetGroupFlowRateCompareDataVo>.Success().AddData("data", result);
         }
 
@@ -243,42 +265,34 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<GetFlowRateByContentPlatformDataVo>> GetFlowRateByContentPlatformAsync([FromQuery] QueryOperationDataVo query)
         {
             GetFlowRateByContentPlatformDataVo result = new GetFlowRateByContentPlatformDataVo();
-            result.DouYinFolwRateAnalize = new List<Vo.BaseIdNameAndRateVo>();
-            result.VideoNumberFolwRateAnalize = new List<Vo.BaseIdNameAndRateVo>();
-            result.XiaoHongShuFolwRateAnalize = new List<Vo.BaseIdNameAndRateVo>();
-            result.PrivateDataFolwRateAnalize = new List<Vo.BaseIdNameAndRateVo>();
             QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
             queryOperationDataVo.startDate = query.startDate;
             queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
-            // var data = await amiyaOperationsBoardService.GetNewOrOldCustomerCompareDataAsync(queryOperationDataVo);
-            Vo.BaseIdNameAndRateVo baseIdNameAndRateVo = new Vo.BaseIdNameAndRateVo();
-            baseIdNameAndRateVo.Name = "直播前";
-            baseIdNameAndRateVo.Rate = 30;
-            result.DouYinFolwRateAnalize.Add(baseIdNameAndRateVo);
-            result.VideoNumberFolwRateAnalize.Add(baseIdNameAndRateVo);
-            result.XiaoHongShuFolwRateAnalize.Add(baseIdNameAndRateVo);
-            result.PrivateDataFolwRateAnalize.Add(baseIdNameAndRateVo);
-            Vo.BaseIdNameAndRateVo baseIdNameAndRateVo2 = new Vo.BaseIdNameAndRateVo();
-            baseIdNameAndRateVo2.Name = "直播中";
-            baseIdNameAndRateVo2.Rate = 20;
-            result.DouYinFolwRateAnalize.Add(baseIdNameAndRateVo2);
-            result.VideoNumberFolwRateAnalize.Add(baseIdNameAndRateVo2);
-            result.XiaoHongShuFolwRateAnalize.Add(baseIdNameAndRateVo2);
-            result.PrivateDataFolwRateAnalize.Add(baseIdNameAndRateVo2);
-            Vo.BaseIdNameAndRateVo baseIdNameAndRateVo3 = new Vo.BaseIdNameAndRateVo();
-            baseIdNameAndRateVo3.Name = "直播后";
-            baseIdNameAndRateVo3.Rate = 10;
-            result.DouYinFolwRateAnalize.Add(baseIdNameAndRateVo3);
-            result.VideoNumberFolwRateAnalize.Add(baseIdNameAndRateVo3);
-            result.XiaoHongShuFolwRateAnalize.Add(baseIdNameAndRateVo3);
-            result.PrivateDataFolwRateAnalize.Add(baseIdNameAndRateVo3);
-            Vo.BaseIdNameAndRateVo baseIdNameAndRateVo4 = new Vo.BaseIdNameAndRateVo();
-            baseIdNameAndRateVo4.Name = "其他";
-            baseIdNameAndRateVo4.Rate = 5;
-            result.DouYinFolwRateAnalize.Add(baseIdNameAndRateVo4);
-            result.VideoNumberFolwRateAnalize.Add(baseIdNameAndRateVo4);
-            result.XiaoHongShuFolwRateAnalize.Add(baseIdNameAndRateVo4);
-            result.PrivateDataFolwRateAnalize.Add(baseIdNameAndRateVo4);
+            var data = await amiyaOperationsBoardService.GetFlowRateByContentPlatformAsync(queryOperationDataVo);
+
+            result.DouYinFolwRateAnalize = data.DouYinFolwRateAnalize.Select(e => new Vo.BaseIdNameAndRateVo
+            {
+                Name = e.Value,
+                Rate = e.Rate
+            }).ToList();
+
+            result.VideoNumberFolwRateAnalize = data.VideoNumberFolwRateAnalize.Select(e => new Vo.BaseIdNameAndRateVo
+            {
+                Name = e.Value,
+                Rate = e.Rate
+            }).ToList();
+
+            result.XiaoHongShuFolwRateAnalize = data.XiaoHongShuFolwRateAnalize.Select(e => new Vo.BaseIdNameAndRateVo
+            {
+                Name = e.Value,
+                Rate = e.Rate
+            }).ToList();
+
+            result.PrivateDataFolwRateAnalize = data.PrivateDataFolwRateAnalize.Select(e => new Vo.BaseIdNameAndRateVo
+            {
+                Name = e.Value,
+                Rate = e.Rate
+            }).ToList();
             return ResultData<GetFlowRateByContentPlatformDataVo>.Success().AddData("data", result);
         }
 
@@ -294,23 +308,14 @@ namespace Fx.Amiya.Background.Api.Controllers
             QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
             queryOperationDataVo.startDate = query.startDate;
             queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
-            // var data = await amiyaOperationsBoardService.GetNewOrOldCustomerCompareDataAsync(queryOperationDataVo);
-            Vo.BaseIdNameAndRateVo baseIdNameAndRateVo = new Vo.BaseIdNameAndRateVo();
-            baseIdNameAndRateVo.Name = "小风车";
-            baseIdNameAndRateVo.Rate = 30;
-            result.FolwRateDetailsAnalize.Add(baseIdNameAndRateVo);
-            Vo.BaseIdNameAndRateVo baseIdNameAndRateVo2 = new Vo.BaseIdNameAndRateVo();
-            baseIdNameAndRateVo2.Name = "私信";
-            baseIdNameAndRateVo2.Rate = 20;
-            result.FolwRateDetailsAnalize.Add(baseIdNameAndRateVo2);
-            Vo.BaseIdNameAndRateVo baseIdNameAndRateVo3 = new Vo.BaseIdNameAndRateVo();
-            baseIdNameAndRateVo3.Name = "直播间";
-            baseIdNameAndRateVo3.Rate = 10;
-            result.FolwRateDetailsAnalize.Add(baseIdNameAndRateVo3);
-            Vo.BaseIdNameAndRateVo baseIdNameAndRateVo4 = new Vo.BaseIdNameAndRateVo();
-            baseIdNameAndRateVo4.Name = "短视频";
-            baseIdNameAndRateVo4.Rate = 5;
-            result.FolwRateDetailsAnalize.Add(baseIdNameAndRateVo4);
+            queryOperationDataVo.keyWord = query.keyWord;
+            var data = await amiyaOperationsBoardService.GetFlowRateDetailsByContentPlatformAsync(queryOperationDataVo);
+
+            result.FolwRateDetailsAnalize = data.FolwRateDetailsAnalize.Select(e => new Vo.BaseIdNameAndRateVo
+            {
+                Name = e.Value,
+                Rate = e.Rate
+            }).ToList();
             return ResultData<GetFlowRateDetailsByContentPlatformDataVo>.Success().AddData("data", result);
         }
         #endregion

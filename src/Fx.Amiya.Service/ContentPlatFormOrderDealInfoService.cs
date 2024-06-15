@@ -375,7 +375,8 @@ namespace Fx.Amiya.Service
                                                        IsReturnBackPrice = d.IsReturnBackPrice,
                                                        ReturnBackDate = d.ReturnBackDate,
                                                        ReturnBackPrice = d.ReturnBackPrice,
-                                                       CreateBy = d.ContentPlatFormOrder.BelongEmpId.HasValue ? d.ContentPlatFormOrder.BelongEmpId.Value : -1,
+                                                       CreateBy = d.CreateBy,
+                                                       //CreateBy = d.ContentPlatFormOrder.BelongEmpId.HasValue ? d.ContentPlatFormOrder.BelongEmpId.Value : -1,
                                                        BelongLiveAnchor = d.ContentPlatFormOrder.LiveAnchor.Name,
                                                        ReconciliationDocumentsId = d.ReconciliationDocumentsId,
                                                        IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
@@ -1430,11 +1431,11 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<ContentPlatFormOrderDealInfoDto>> GetSendPerformanceByHospitalIdAndDateTimeAsync(QueryHospitalTransformDataDto query)
         {
-           
+
             var result = await dalContentPlatFormOrderDealInfo.GetAll()
                 .Where(o => o.IsToHospital == true && o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= query.StartDate && o.ToHospitalDate < query.EndDate)
                 .Where(o => query.HospitalId.Count == 0 || query.HospitalId.Contains(o.LastDealHospitalId.Value))
-                .Where(o=> query.LiveAnchorIds.Count==0 || query.LiveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId))
+                .Where(o => query.LiveAnchorIds.Count == 0 || query.LiveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId))
                 .ToListAsync();
             var returnInfo = result.Select(
                   d =>
@@ -2265,9 +2266,9 @@ namespace Fx.Amiya.Service
                     BelongLiveAnchor = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId,
                     LastDealHospitalId = ContentPlatFOrmOrderDealInfo.LastDealHospitalId,
                     DealDate = ContentPlatFOrmOrderDealInfo.DealDate,
-                    BelongEmployeeId= ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.BelongEmpId.Value,
-                    IsSupportOrder= ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.IsSupportOrder,
-                    SupportEmpId= ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.SupportEmpId,
+                    BelongEmployeeId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.BelongEmpId.Value,
+                    IsSupportOrder = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.IsSupportOrder,
+                    SupportEmpId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.SupportEmpId,
                 }
                 ).ToList();
         }

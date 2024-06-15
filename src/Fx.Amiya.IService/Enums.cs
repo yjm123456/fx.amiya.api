@@ -1564,18 +1564,20 @@ namespace Fx.Amiya.IService
     /// <summary>
     /// 小黄车客户归属渠道
     /// </summary>
-    public enum BelongChannel { 
+    public enum BelongChannel
+    {
+        Other = 0,
         /// <summary>
         /// 直播前
         /// </summary>
-        LiveBefore=1,
+        LiveBefore = 1,
         /// <summary>
         /// 直播中
         /// </summary>
-        Living=2,
+        Living = 2,
         /// <summary>
         /// 直播后
         /// </summary>
-        LiveAfter=3
+        LiveAfter = 3
     }
 }

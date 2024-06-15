@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Dto.AmiyaOperationsBoardService;
+﻿using Fx.Amiya.Dto;
+using Fx.Amiya.Dto.AmiyaOperationsBoardService;
 using Fx.Amiya.Dto.AmiyaOperationsBoardService.Input;
 using Fx.Amiya.Dto.AmiyaOperationsBoardService.Result;
 using Fx.Amiya.Dto.HospitalPerformance;
@@ -17,6 +18,7 @@ namespace Fx.Amiya.Service
 {
     public class AmiyaOperationsBoardServiceService : IAmiyaOperationsBoardService
     {
+        private readonly ILiveAnchorMonthlyTargetBeforeLivingService liveAnchorMonthlyTargetBeforeLivingService;
         private readonly ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService;
         private readonly ILiveAnchorBaseInfoService liveAnchorBaseInfoService;
         private readonly IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService;
@@ -30,6 +32,7 @@ namespace Fx.Amiya.Service
         private readonly ILiveAnchorMonthlyTargetAfterLivingService liveAnchorMonthlyTargetAfterLivingService;
 
         public AmiyaOperationsBoardServiceService(
+            ILiveAnchorMonthlyTargetBeforeLivingService liveAnchorMonthlyTargetBeforeLivingService,
             ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService,
             ILiveAnchorBaseInfoService liveAnchorBaseInfoService,
             IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService,
@@ -48,6 +51,7 @@ namespace Fx.Amiya.Service
             this.liveAnchorService = liveAnchorService;
             this.hospitalInfoService = hospitalInfoService;
             this.shoppingCartRegistrationService = shoppingCartRegistrationService;
+            this.liveAnchorMonthlyTargetBeforeLivingService = liveAnchorMonthlyTargetBeforeLivingService;
             this.contentPlateFormOrderService = contentPlateFormOrderService;
             this.amiyaEmployeeService = amiyaEmployeeService;
             this.employeePerformanceTargetService = employeePerformanceTargetService;
@@ -56,6 +60,7 @@ namespace Fx.Amiya.Service
         }
 
         #region  运营主看板
+        #region 【业绩】
         /// <summary>
         /// 获取时间进度和总业绩
         /// </summary>
@@ -124,9 +129,9 @@ namespace Fx.Amiya.Service
 
                 GroupList.Add(item);
             }
-            result.TotalPerformanceBrokenLineList = GroupList.Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = DecimalExtension.ChangePriceToTenThousand(e.TotalCustomerPerformance) }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
-            result.NewCustomerPerformanceBrokenLineList = GroupList.Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = DecimalExtension.ChangePriceToTenThousand(e.NewCustomerPerformance) }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
-            result.OldCustomerPerformanceBrokenLineList = GroupList.Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = DecimalExtension.ChangePriceToTenThousand(e.OldCustomerPerformance) }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            result.TotalPerformanceBrokenLineList = GroupList.Select(e => new PerformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = DecimalExtension.ChangePriceToTenThousand(e.TotalCustomerPerformance) }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            result.NewCustomerPerformanceBrokenLineList = GroupList.Select(e => new PerformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = DecimalExtension.ChangePriceToTenThousand(e.NewCustomerPerformance) }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            result.OldCustomerPerformanceBrokenLineList = GroupList.Select(e => new PerformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = DecimalExtension.ChangePriceToTenThousand(e.OldCustomerPerformance) }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
 
             if (query.startDate.Value.Year == query.endDate.Value.Year && query.startDate.Value.Month == query.endDate.Value.Month)
             {
@@ -145,6 +150,11 @@ namespace Fx.Amiya.Service
             return result;
         }
 
+        /// <summary>
+        /// 根据条件获取业绩分组
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         public async Task<GetNewOrOldCustomerCompareDataDto> GetNewOrOldCustomerCompareDataAsync(QueryOperationDataDto query)
         {
             GetNewOrOldCustomerCompareDataDto result = new GetNewOrOldCustomerCompareDataDto();
@@ -155,9 +165,9 @@ namespace Fx.Amiya.Service
             var curTotalAchievement = order.Sum(x => x.Price);
             var curNewCustomer = order.Where(o => o.IsOldCustomer == false).Sum(o => o.Price);
             var curOldCustomer = order.Where(o => o.IsOldCustomer == true).Sum(o => o.Price);
-            totalPerformanceData.TotalPerformanceNewCustomerNumber = curNewCustomer;
+            totalPerformanceData.TotalPerformanceNewCustomerNumber = DecimalExtension.ChangePriceToTenThousand(curTotalAchievement);
             totalPerformanceData.TotalPerformanceNewCustomerRate = DecimalExtension.CalculateTargetComplete(curNewCustomer, curTotalAchievement);
-            totalPerformanceData.TotalPerformanceOldCustomerNumber = curOldCustomer;
+            totalPerformanceData.TotalPerformanceOldCustomerNumber = DecimalExtension.ChangePriceToTenThousand(curOldCustomer);
             totalPerformanceData.TotalPerformanceOldCustomerRate = DecimalExtension.CalculateTargetComplete(curOldCustomer, curTotalAchievement);
             result.TotalNewOrOldCustomer = totalPerformanceData;
             #endregion
@@ -167,13 +177,13 @@ namespace Fx.Amiya.Service
             OperationBoardGetNewOrOldCustomerCompareDataDetailsDto totalPerformanceGroupDaoDaoData = new OperationBoardGetNewOrOldCustomerCompareDataDetailsDto();
             var liveAnchorDaoDao = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync("f0a77257-c905-4719-95c4-ad2c4f33855c");
             var LiveAnchorInfoDaoDaoResult = liveAnchorDaoDao.Select(x => x.Id).ToList();
-            var curDaoDaoTotalAchievement = order.Sum(x => x.Price);
+            var curDaoDaoTotalAchievement = order.Where(x => LiveAnchorInfoDaoDaoResult.Contains(x.LiveAnchorId.Value)).Sum(x => x.Price);
             var curDaoDaoNewCustomer = order.Where(o => o.IsOldCustomer == false).Where(x => LiveAnchorInfoDaoDaoResult.Contains(x.LiveAnchorId.Value)).Sum(o => o.Price);
             var curDaoDaoOldCustomer = order.Where(o => o.IsOldCustomer == true).Where(x => LiveAnchorInfoDaoDaoResult.Contains(x.LiveAnchorId.Value)).Sum(o => o.Price);
 
-            totalPerformanceGroupDaoDaoData.TotalPerformanceNewCustomerNumber = curDaoDaoNewCustomer;
+            totalPerformanceGroupDaoDaoData.TotalPerformanceNewCustomerNumber = DecimalExtension.ChangePriceToTenThousand(curDaoDaoNewCustomer);
             totalPerformanceGroupDaoDaoData.TotalPerformanceNewCustomerRate = DecimalExtension.CalculateTargetComplete(curDaoDaoNewCustomer, curDaoDaoTotalAchievement);
-            totalPerformanceGroupDaoDaoData.TotalPerformanceOldCustomerNumber = curDaoDaoOldCustomer;
+            totalPerformanceGroupDaoDaoData.TotalPerformanceOldCustomerNumber = DecimalExtension.ChangePriceToTenThousand(curDaoDaoOldCustomer);
             totalPerformanceGroupDaoDaoData.TotalPerformanceOldCustomerRate = DecimalExtension.CalculateTargetComplete(curDaoDaoOldCustomer, curDaoDaoTotalAchievement);
             result.GroupDaoDaoNewOrOldCustomer = totalPerformanceGroupDaoDaoData;
             #endregion
@@ -187,15 +197,19 @@ namespace Fx.Amiya.Service
             var curJinaOldCustomer = order.Where(o => o.IsOldCustomer == true).Where(x => LiveAnchorInfoJinaResult.Contains(x.LiveAnchorId.Value)).Sum(o => o.Price);
 
             OperationBoardGetNewOrOldCustomerCompareDataDetailsDto totalPerformanceGroupJiNaData = new OperationBoardGetNewOrOldCustomerCompareDataDetailsDto();
-            totalPerformanceGroupJiNaData.TotalPerformanceNewCustomerNumber = curJinaNewCustomer;
+            totalPerformanceGroupJiNaData.TotalPerformanceNewCustomerNumber = DecimalExtension.ChangePriceToTenThousand(curJinaNewCustomer);
             totalPerformanceGroupJiNaData.TotalPerformanceNewCustomerRate = DecimalExtension.CalculateTargetComplete(curJinaNewCustomer, curJinaTotalAchievement);
-            totalPerformanceGroupJiNaData.TotalPerformanceOldCustomerNumber = curJinaOldCustomer;
+            totalPerformanceGroupJiNaData.TotalPerformanceOldCustomerNumber = DecimalExtension.ChangePriceToTenThousand(curJinaOldCustomer);
             totalPerformanceGroupJiNaData.TotalPerformanceOldCustomerRate = DecimalExtension.CalculateTargetComplete(curJinaOldCustomer, curJinaTotalAchievement);
             result.GroupJiNaNewOrOldCustomer = totalPerformanceGroupJiNaData;
             #endregion
             return result;
         }
-
+        /// <summary>
+        /// 根据条件获取助理与机构新老客业绩对比情况
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         public async Task<NewOrOldCustomerPerformanceDataListDto> GetNewOrOldCustomerCompareByEmployeeAndHospitalAsync(QueryOperationDataDto query)
         {
             List<int> LiveAnchorInfo = new List<int>();
@@ -252,164 +266,521 @@ namespace Fx.Amiya.Service
             result.HospitalPerformance = result.HospitalPerformance.OrderByDescending(x => x.TotalPerformance).Take(15).ToList();
             return result;
         }
+        #endregion
 
+        #region 【流量】
         /// <summary>
         /// 获取获客情况数据
         /// </summary>
         /// <returns></returns>
-        public async Task<GetCustomerDataDto> GetCustomerDataAsync(QueryOperationDataDto query)
+        public async Task<OperationTotalFlowRateDataDto> GetCustomerDataAsync(QueryOperationDataDto query)
         {
-            var shoppingCartRegistionDataResult = await shoppingCartRegistrationService.GetCustomerDataAsync(query.startDate, query.endDate);
-            return shoppingCartRegistionDataResult;
-        }
+            var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.endDate.Value.Year, query.endDate.Value.Month == 0 ? 1 : query.endDate.Value.Month);
 
-        /// <summary>
-        /// 获取客户运营情况数据
-        /// </summary>
-        /// <returns></returns>
-        public async Task<GetCustomerAnalizeDataDto> GetCustomerAnalizeDataAsync(QueryOperationDataDto query)
-        {
-            GetCustomerAnalizeDataDto result = new GetCustomerAnalizeDataDto();
-            List<int> LiveAnchorInfoDaoDao = new List<int>();
-            var liveAnchorDaoDao = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync("f0a77257-c905-4719-95c4-ad2c4f33855c");
-            LiveAnchorInfoDaoDao = liveAnchorDaoDao.Select(x => x.Id).ToList();
-            var contentPlatFormOrderDataDaoDao = await contentPlateFormOrderService.GetOrderSendAndDealDataByMonthAsync(query.startDate.Value, query.endDate.Value, null, "", LiveAnchorInfoDaoDao);
+            OperationTotalFlowRateDataDto result = new OperationTotalFlowRateDataDto();
+            var dateSchedule = DateTimeExtension.GetDatetimeSchedule(query.endDate.Value).FirstOrDefault();
 
-            List<int> LiveAnchorInfoJiNa = new List<int>();
-            var liveAnchorJina = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync("af69dcf5-f749-41ea-8b50-fe685facdd8b");
-            LiveAnchorInfoJiNa = liveAnchorJina.Select(x => x.Id).ToList();
-            var contentPlatFormOrderDataJiNa = await contentPlateFormOrderService.GetOrderSendAndDealDataByMonthAsync(query.startDate.Value, query.endDate.Value, null, "", LiveAnchorInfoJiNa);
-            CustomerAnalizeByGroupDto SendGroupDto = new CustomerAnalizeByGroupDto();
-            SendGroupDto.GroupDaoDao = contentPlatFormOrderDataDaoDao.SendOrderNum;
-            SendGroupDto.GroupJiNa = contentPlatFormOrderDataJiNa.SendOrderNum;
-            SendGroupDto.TotalNum = SendGroupDto.GroupDaoDao + SendGroupDto.GroupJiNa;
-            result.SendNum = SendGroupDto;
+            //获取目标
+            var targetBeforeLiving = await liveAnchorMonthlyTargetBeforeLivingService.GetCluePerformanceTargetAsync(query.endDate.Value.Year, query.endDate.Value.Month, new List<int>());
 
-            CustomerAnalizeByGroupDto VisitGroupDto = new CustomerAnalizeByGroupDto();
-            VisitGroupDto.GroupDaoDao = contentPlatFormOrderDataDaoDao.VisitNum;
-            VisitGroupDto.GroupJiNa = contentPlatFormOrderDataJiNa.VisitNum;
-            VisitGroupDto.TotalNum = VisitGroupDto.GroupJiNa + VisitGroupDto.GroupDaoDao;
-            result.VisitNum = VisitGroupDto;
+            var targetAfterLiving = await liveAnchorMonthlyTargetAfterLivingService.GetPerformanceTargetAsync(query.endDate.Value.Year, query.endDate.Value.Month, new List<int>());
+            #region 线索
+            //总线索
+            var shoppingCartRegistionData = await shoppingCartRegistrationService.GetShoppingCartRegistionDataByRecordDate(sequentialDate.StartDate, sequentialDate.EndDate);
 
-            CustomerAnalizeByGroupDto DealGroupDto = new CustomerAnalizeByGroupDto();
-            DealGroupDto.GroupDaoDao = contentPlatFormOrderDataDaoDao.DealNum;
-            DealGroupDto.GroupJiNa = contentPlatFormOrderDataJiNa.DealNum;
-            DealGroupDto.TotalNum = DealGroupDto.GroupJiNa + DealGroupDto.GroupDaoDao;
-            result.DealNum = DealGroupDto;
-            return result;
-        }
+            var todayshoppingCartRegistionData = await shoppingCartRegistrationService.GetShoppingCartRegistionDataByRecordDate(Convert.ToDateTime(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day), DateTime.Now);
+            //同比线索
+            var flowRateYearOnYear = await shoppingCartRegistrationService.GetShoppingCartRegistionDataByRecordDate(sequentialDate.LastYearThisMonthStartDate, sequentialDate.LastYearThisMonthEndDate);
+            //环比线索
+            var flowRateChain = await shoppingCartRegistrationService.GetShoppingCartRegistionDataByRecordDate(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate);
+            result.TodayTotalFlowRate = todayshoppingCartRegistionData.Count();
+            result.TotalFlowRateCompleteRate = DecimalExtension.CalculateTargetComplete(shoppingCartRegistionData.Count(), targetBeforeLiving.CluesTarget);
+            result.TotalFlowRateChainRatio = DecimalExtension.CalculateChain(shoppingCartRegistionData.Count(), flowRateChain.Count());
+            result.TotalFlowRateYearOnYear = DecimalExtension.CalculateChain(shoppingCartRegistionData.Count(), flowRateYearOnYear.Count());
 
-        /// <summary>
-        /// 获取客户指标转化数据
-        /// </summary>
-        /// <returns></returns>
-        public async Task<GetCustomerIndexTransformationResultDto> GetCustomerIndexTransformationDataAsync(QueryOperationDataDto query)
-        {
-            GetCustomerIndexTransformationResultDto result = new GetCustomerIndexTransformationResultDto();
-            //小黄车数据
-            var baseShoppingCartRegistionData = await shoppingCartRegistrationService.GetNewBaseBusinessPerformanceByLiveAnchorNameAsync(query.startDate.Value, query.endDate.Value, null, "");
+            #endregion
 
-            //订单数据
-            var baseOrderPerformance = await contentPlateFormOrderService.GetOrderSendAndDealDataByMonthAsync(query.startDate.Value, query.endDate.Value, null, "", new List<int>());
+            #region 分诊
+            var curDistributeConsulation = shoppingCartRegistionData.Where(o => o.AssignEmpId.HasValue == true).Count();
+            var DistributeConsulationYearOnYear = flowRateYearOnYear.Where(x => x.AssignEmpId.HasValue == true).Count();
+            var DistributeConsulationChainRatio = flowRateChain.Where(x => x.AssignEmpId.HasValue == true).Count();
+            result.TodayDistributeConsulation = todayshoppingCartRegistionData.Where(x => x.AssignEmpId.HasValue == true).Count();
+            result.DistributeConsulationCompleteRate = DecimalExtension.CalculateTargetComplete(curDistributeConsulation, targetAfterLiving.DistributeConsulationTarget);
+            result.DistributeConsulationYearOnYear = DecimalExtension.CalculateChain(curDistributeConsulation, DistributeConsulationYearOnYear);
+            result.DistributeConsulationChainRatio = DecimalExtension.CalculateChain(curDistributeConsulation, DistributeConsulationChainRatio);
+            #endregion
 
-            result.AddCardNum = baseShoppingCartRegistionData.Count();
-            result.RefundCardNum = baseShoppingCartRegistionData.Where(x => x.IsReturnBackPrice == true).Count();
-            result.DistributeConsulationNum = baseShoppingCartRegistionData.Where(x => x.AssignEmpId.HasValue).Count();
-            result.AddWechatNum = baseShoppingCartRegistionData.Where(x => x.IsAddWeChat == true).Count();
-            result.SendOrderNum = baseOrderPerformance.SendOrderNum;
-            result.VisitNum = baseOrderPerformance.VisitNum;
-            result.DealNum = baseOrderPerformance.DealNum;
+            #region 加v
+            var curAddWechat = shoppingCartRegistionData.Where(o => o.IsAddWeChat == true).Count();
+            var AddWechatYearOnYear = flowRateYearOnYear.Where(x => x.IsAddWeChat == true).Count();
+            var AddWechatChainRatio = flowRateChain.Where(x => x.AssignEmpId.HasValue == true).Count();
+            result.TodayAddWechat = todayshoppingCartRegistionData.Where(x => x.IsAddWeChat == true).Count();
+            result.AddWechatCompleteRate = DecimalExtension.CalculateTargetComplete(curAddWechat, targetAfterLiving.AddWechatTarget);
+            result.AddWechatYearOnYear = DecimalExtension.CalculateChain(curAddWechat, AddWechatYearOnYear);
+            result.AddWechatChainRatio = DecimalExtension.CalculateChain(curAddWechat, AddWechatChainRatio);
+            #endregion
 
-            return result;
-        }
+            #region 退卡
+            var curMinivanRefund = shoppingCartRegistionData.Where(o => o.IsReturnBackPrice == true).Count();
+            var MinivanRefundYearOnYear = flowRateYearOnYear.Where(x => x.IsReturnBackPrice == true).Count();
+            var MinivanRefundChainRatio = flowRateChain.Where(x => x.AssignEmpId.HasValue == true).Count();
+            result.TodayRefundCard = todayshoppingCartRegistionData.Where(x => x.IsReturnBackPrice == true).Count();
+            result.RefundCardCompleteRate = DecimalExtension.CalculateTargetComplete(curMinivanRefund, targetAfterLiving.MinivanRefundTarget);
+            result.RefundCardYearOnYear = DecimalExtension.CalculateChain(curMinivanRefund, MinivanRefundYearOnYear);
+            result.RefundCardChainRatio = DecimalExtension.CalculateChain(curMinivanRefund, MinivanRefundChainRatio);
+            #endregion
 
-        /// <summary>
-        /// 获取助理业绩分析数据
-        /// </summary>
-        /// <returns></returns>
-        public async Task<GetEmployeePerformanceAnalizeDataDto> GetEmployeePerformanceAnalizeDataAsync(QueryOperationDataDto query)
-        {
-            GetEmployeePerformanceAnalizeDataDto result = new GetEmployeePerformanceAnalizeDataDto();
-
-            List<int> amiyaEmployeeIds = new List<int>();
-            //获取所有助理
-            var employeeInfos = await amiyaEmployeeService.GetemployeeByPositionIdAsync(4);
-            amiyaEmployeeIds = employeeInfos.Select(x => x.Id).ToList();
-
-            #region 【助理业绩-5条】
-            var dealInfo = await contentPlateFormOrderService.GetFourCustomerServicePerformanceByCustomerServiceIdAsync(query.startDate.Value, query.endDate.Value, amiyaEmployeeIds);
-            List<GetEmployeePerformanceDataDto> employeeDataList = new List<GetEmployeePerformanceDataDto>();
-            foreach (var x in dealInfo)
+            var dateList = shoppingCartRegistionData.GroupBy(x => x.RecordDate.Day).Select(x => new OerationTotalAchievementBrokenLineListDto
             {
-                GetEmployeePerformanceDataDto getEmployeePerformanceDataDto = new GetEmployeePerformanceDataDto();
-                getEmployeePerformanceDataDto.EmployeeName = x.CustomerServiceName;
-                getEmployeePerformanceDataDto.Performance = x.TotalServicePrice;
-                var employeeDataTarget = await employeePerformanceTargetService.GetByEmpIdAndYearMonthAsync(x.CustomerServiceId, query.endDate.Value.Year, query.endDate.Value.Month);
-                if (employeeDataTarget != 0)
+                Time = x.Key,
+                TotalCustomerPerformance = x.Count(),
+                NewCustomerPerformance = x.Where(e => e.AssignEmpId.HasValue == true).Count(),
+                OldCustomerPerformance = x.Where(e => e.IsAddWeChat == true).Count(),
+            });
+            List<OerationTotalAchievementBrokenLineListDto> GroupList = new List<OerationTotalAchievementBrokenLineListDto>();
+            for (int i = 1; i < dateSchedule.Key + 1; i++)
+            {
+                OerationTotalAchievementBrokenLineListDto item = new OerationTotalAchievementBrokenLineListDto();
+                item.Time = i;
+                item.TotalCustomerPerformance = dateList.Where(e => e.Time == i).Select(e => e.TotalCustomerPerformance).SingleOrDefault();
+                item.NewCustomerPerformance = dateList.Where(e => e.Time == i).Select(e => e.NewCustomerPerformance).SingleOrDefault();
+                item.OldCustomerPerformance = dateList.Where(e => e.Time == i).Select(e => e.OldCustomerPerformance).SingleOrDefault();
+
+                GroupList.Add(item);
+            }
+            result.FlowRateBrokenLineList = GroupList.Select(e => new PerformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.TotalCustomerPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            result.DistributeConsulationBrokenLineList = GroupList.Select(e => new PerformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.NewCustomerPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            result.AddWeChatBrokenLineList = GroupList.Select(e => new PerformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.OldCustomerPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+
+            if (query.startDate.Value.Year == query.endDate.Value.Year && query.startDate.Value.Month == query.endDate.Value.Month)
+            {
+                result.TotalFlowRate = shoppingCartRegistionData.Count();
+                result.TotalDistributeConsulation = curDistributeConsulation;
+                result.TotalAddWechat = curAddWechat;
+                result.TotalRefundCard = curMinivanRefund;
+            }
+            else
+            {
+                //非本月数据总业绩取累计数据
+                var sumShoppingCartRegistionData = await shoppingCartRegistrationService.GetShoppingCartRegistionDataByRecordDate(query.startDate.Value, query.endDate.Value);
+                result.TotalFlowRate = sumShoppingCartRegistionData.Count();
+                result.TotalDistributeConsulation = sumShoppingCartRegistionData.Where(x => x.AssignEmpId.HasValue == true).Count();
+                result.TotalAddWechat = sumShoppingCartRegistionData.Where(x => x.IsAddWeChat == true).Count();
+                result.TotalRefundCard = sumShoppingCartRegistionData.Where(x => x.IsReturnBackPrice == true).Count();
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 根据条件获取流量分析--分组
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<OperationBoardContentPlatFormDataDto> GetFlowRateByContentPlatFormCompareDataAsync(QueryOperationDataDto query)
+        {
+            OperationBoardContentPlatFormDataDto result = new OperationBoardContentPlatFormDataDto();
+            List<int> LiveAnchorInfo = new List<int>();
+            #region 总线索
+            var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.endDate.Value.Year, query.endDate.Value.Month == 0 ? 1 : query.endDate.Value.Month);
+
+            OperationBoardContentPlatFormDataDetailsDto totalFlowRateData = new OperationBoardContentPlatFormDataDetailsDto();
+            //总线索
+            var totalShoppingCartRegistionData = await shoppingCartRegistrationService.GetShoppingCartRegistionDataByRecordDate(sequentialDate.StartDate, sequentialDate.EndDate);
+
+            var curTotalFlowRate = totalShoppingCartRegistionData.Count();
+            var curTotalDouYinNumber = totalShoppingCartRegistionData.Where(o => o.ContentPlatFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Count();
+            var curTotalXiaoHongShuNumber = totalShoppingCartRegistionData.Where(o => o.ContentPlatFormId == "317c03b8-aff9-4961-8392-fc44d04b1725").Count();
+            var curTotalWeChatVideoNumber = totalShoppingCartRegistionData.Where(o => o.ContentPlatFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Count();
+            var curTotalPrivateDomainNumber = totalShoppingCartRegistionData.Where(o => o.ContentPlatFormId == "22a0b287-232d-4373-a9dd-c372aaae57dc").Count();
+            totalFlowRateData.DouYinNumber = curTotalDouYinNumber;
+            totalFlowRateData.DouYinRate = DecimalExtension.CalculateTargetComplete(curTotalDouYinNumber, curTotalFlowRate);
+            totalFlowRateData.XiaoHongShuNumber = curTotalXiaoHongShuNumber;
+            totalFlowRateData.XiaoHongShuRate = DecimalExtension.CalculateTargetComplete(curTotalXiaoHongShuNumber, curTotalFlowRate);
+            totalFlowRateData.VideoNumberNumber = curTotalWeChatVideoNumber;
+            totalFlowRateData.VideoNumberRate = DecimalExtension.CalculateTargetComplete(curTotalWeChatVideoNumber, curTotalFlowRate);
+            totalFlowRateData.PrivateDataNumber = curTotalPrivateDomainNumber;
+            totalFlowRateData.PrivateDataRate = DecimalExtension.CalculateTargetComplete(curTotalPrivateDomainNumber, curTotalFlowRate);
+            result.TotalFlowRate = totalFlowRateData;
+            #endregion
+
+
+            #region 刀刀组线索
+            OperationBoardContentPlatFormDataDetailsDto groupDaoDaoFlowRateData = new OperationBoardContentPlatFormDataDetailsDto();
+            var groupDaoDaoShoppingCartRegistionData = totalShoppingCartRegistionData.Where(x => x.BaseLiveAnchorId == "f0a77257-c905-4719-95c4-ad2c4f33855c");
+
+            var curGroupDaoDaoFlowRate = groupDaoDaoShoppingCartRegistionData.Count();
+            var curGroupDaoDaoDouYinNumber = groupDaoDaoShoppingCartRegistionData.Where(o => o.ContentPlatFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Count();
+            var curGroupDaoDaoXiaoHongShuNumber = groupDaoDaoShoppingCartRegistionData.Where(o => o.ContentPlatFormId == "317c03b8-aff9-4961-8392-fc44d04b1725").Count();
+            var curGroupDaoDaoWeChatVideoNumber = groupDaoDaoShoppingCartRegistionData.Where(o => o.ContentPlatFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Count();
+            var curGroupDaoDaoPrivateDomainNumber = groupDaoDaoShoppingCartRegistionData.Where(o => o.ContentPlatFormId == "22a0b287-232d-4373-a9dd-c372aaae57dc").Count();
+            groupDaoDaoFlowRateData.DouYinNumber = curGroupDaoDaoDouYinNumber;
+            groupDaoDaoFlowRateData.DouYinRate = DecimalExtension.CalculateTargetComplete(curGroupDaoDaoDouYinNumber, curGroupDaoDaoFlowRate);
+            groupDaoDaoFlowRateData.XiaoHongShuNumber = curGroupDaoDaoXiaoHongShuNumber;
+            groupDaoDaoFlowRateData.XiaoHongShuRate = DecimalExtension.CalculateTargetComplete(curGroupDaoDaoXiaoHongShuNumber, curGroupDaoDaoFlowRate);
+            groupDaoDaoFlowRateData.VideoNumberNumber = curGroupDaoDaoWeChatVideoNumber;
+            groupDaoDaoFlowRateData.VideoNumberRate = DecimalExtension.CalculateTargetComplete(curGroupDaoDaoWeChatVideoNumber, curGroupDaoDaoFlowRate);
+            groupDaoDaoFlowRateData.PrivateDataNumber = curGroupDaoDaoPrivateDomainNumber;
+            groupDaoDaoFlowRateData.PrivateDataRate = DecimalExtension.CalculateTargetComplete(curGroupDaoDaoPrivateDomainNumber, curGroupDaoDaoFlowRate);
+
+            result.GroupDaoDaoFlowRate = groupDaoDaoFlowRateData;
+            #endregion
+
+
+            #region 吉娜组线索
+            OperationBoardContentPlatFormDataDetailsDto groupJiNaFlowRateData = new OperationBoardContentPlatFormDataDetailsDto();
+            var groupJiNaShoppingCartRegistionData = totalShoppingCartRegistionData.Where(x => x.BaseLiveAnchorId == "af69dcf5-f749-41ea-8b50-fe685facdd8b");
+
+            var curGroupJiNaFlowRate = groupJiNaShoppingCartRegistionData.Count();
+            var curGroupJiNaDouYinNumber = groupJiNaShoppingCartRegistionData.Where(o => o.ContentPlatFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Count();
+            var curGroupJiNaXiaoHongShuNumber = groupJiNaShoppingCartRegistionData.Where(o => o.ContentPlatFormId == "317c03b8-aff9-4961-8392-fc44d04b1725").Count();
+            var curGroupJiNaWeChatVideoNumber = groupJiNaShoppingCartRegistionData.Where(o => o.ContentPlatFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Count();
+            var curGroupJiNaPrivateDomainNumber = groupJiNaShoppingCartRegistionData.Where(o => o.ContentPlatFormId == "22a0b287-232d-4373-a9dd-c372aaae57dc").Count();
+            groupJiNaFlowRateData.DouYinNumber = curGroupJiNaDouYinNumber;
+            groupJiNaFlowRateData.DouYinRate = DecimalExtension.CalculateTargetComplete(curGroupJiNaDouYinNumber, curGroupJiNaFlowRate);
+            groupJiNaFlowRateData.XiaoHongShuNumber = curGroupJiNaXiaoHongShuNumber;
+            groupJiNaFlowRateData.XiaoHongShuRate = DecimalExtension.CalculateTargetComplete(curGroupJiNaXiaoHongShuNumber, curGroupJiNaFlowRate);
+            groupJiNaFlowRateData.VideoNumberNumber = curGroupJiNaWeChatVideoNumber;
+            groupJiNaFlowRateData.VideoNumberRate = DecimalExtension.CalculateTargetComplete(curGroupJiNaWeChatVideoNumber, curGroupJiNaFlowRate);
+            groupJiNaFlowRateData.PrivateDataNumber = curGroupJiNaPrivateDomainNumber;
+            groupJiNaFlowRateData.PrivateDataRate = DecimalExtension.CalculateTargetComplete(curGroupJiNaPrivateDomainNumber, curGroupJiNaFlowRate);
+            result.GroupJiNaFlowRate = groupJiNaFlowRateData;
+            #endregion
+            return result;
+        }
+
+
+        /// <summary>
+        /// 根据条件获取流量分析-部门
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<GetFlowRateByContentPlatformDataDto> GetFlowRateByContentPlatformAsync(QueryOperationDataDto query)
+        {
+            GetFlowRateByContentPlatformDataDto result = new GetFlowRateByContentPlatformDataDto();
+            result.DouYinFolwRateAnalize = new List<BaseKeyValueAndPercentDto>();
+            result.VideoNumberFolwRateAnalize = new List<BaseKeyValueAndPercentDto>();
+            result.XiaoHongShuFolwRateAnalize = new List<BaseKeyValueAndPercentDto>();
+            result.PrivateDataFolwRateAnalize = new List<BaseKeyValueAndPercentDto>();
+            var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.endDate.Value.Year, query.endDate.Value.Month == 0 ? 1 : query.endDate.Value.Month);
+            OperationBoardContentPlatFormDataDetailsDto totalFlowRateData = new OperationBoardContentPlatFormDataDetailsDto();
+            //总线索
+            var totalShoppingCartRegistionData = await shoppingCartRegistrationService.GetShoppingCartRegistionDataByRecordDate(sequentialDate.StartDate, sequentialDate.EndDate);
+
+            //部门拆分
+            var beforeLivingData = totalShoppingCartRegistionData.Where(x => x.BelongChannel == (int)BelongChannel.LiveBefore).ToList();
+            var livingData = totalShoppingCartRegistionData.Where(x => x.BelongChannel == (int)BelongChannel.Living).ToList();
+            var afterLivingData = totalShoppingCartRegistionData.Where(x => x.BelongChannel == (int)BelongChannel.LiveAfter).ToList();
+            var otherLivingData = totalShoppingCartRegistionData.Where(x => x.BelongChannel == (int)BelongChannel.Other).ToList();
+
+            string beforeLivingName = "直播前";
+            string livingName = "直播中";
+            string afterLivingName = "直播后";
+            string otherName = "其他";
+
+            #region【抖音流量分析】
+            BaseKeyValueAndPercentDto beforeLivingTikTokBaseKeyValueAndPercentDto = new BaseKeyValueAndPercentDto();
+            beforeLivingTikTokBaseKeyValueAndPercentDto.Value = beforeLivingName;
+            beforeLivingTikTokBaseKeyValueAndPercentDto.Rate = beforeLivingData.Where(o => o.ContentPlatFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Count();
+            result.DouYinFolwRateAnalize.Add(beforeLivingTikTokBaseKeyValueAndPercentDto);
+
+            BaseKeyValueAndPercentDto LivingTikTokBaseKeyValueAndPercentDto = new BaseKeyValueAndPercentDto();
+            LivingTikTokBaseKeyValueAndPercentDto.Value = livingName;
+            LivingTikTokBaseKeyValueAndPercentDto.Rate = livingData.Where(o => o.ContentPlatFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Count();
+            result.DouYinFolwRateAnalize.Add(LivingTikTokBaseKeyValueAndPercentDto);
+
+            BaseKeyValueAndPercentDto afterLivingTikTokBaseKeyValueAndPercentDto = new BaseKeyValueAndPercentDto();
+            afterLivingTikTokBaseKeyValueAndPercentDto.Value = afterLivingName;
+            afterLivingTikTokBaseKeyValueAndPercentDto.Rate = afterLivingData.Where(o => o.ContentPlatFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Count();
+            result.DouYinFolwRateAnalize.Add(afterLivingTikTokBaseKeyValueAndPercentDto);
+
+            BaseKeyValueAndPercentDto otherTikTokBaseKeyValueAndPercentDto = new BaseKeyValueAndPercentDto();
+            otherTikTokBaseKeyValueAndPercentDto.Value = otherName;
+            otherTikTokBaseKeyValueAndPercentDto.Rate = otherLivingData.Where(o => o.ContentPlatFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Count();
+            result.DouYinFolwRateAnalize.Add(otherTikTokBaseKeyValueAndPercentDto);
+            #endregion
+
+            #region【视频号流量分析】
+            BaseKeyValueAndPercentDto beforeLivingWechatVideoBaseKeyValueAndPercentDto = new BaseKeyValueAndPercentDto();
+            beforeLivingWechatVideoBaseKeyValueAndPercentDto.Value = beforeLivingName;
+            beforeLivingWechatVideoBaseKeyValueAndPercentDto.Rate = beforeLivingData.Where(o => o.ContentPlatFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Count();
+            result.VideoNumberFolwRateAnalize.Add(beforeLivingWechatVideoBaseKeyValueAndPercentDto);
+
+            BaseKeyValueAndPercentDto LivingWechatVideoBaseKeyValueAndPercentDto = new BaseKeyValueAndPercentDto();
+            LivingWechatVideoBaseKeyValueAndPercentDto.Value = livingName;
+            LivingWechatVideoBaseKeyValueAndPercentDto.Rate = livingData.Where(o => o.ContentPlatFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Count();
+            result.VideoNumberFolwRateAnalize.Add(LivingWechatVideoBaseKeyValueAndPercentDto);
+
+            BaseKeyValueAndPercentDto afterLivingWechatVideoBaseKeyValueAndPercentDto = new BaseKeyValueAndPercentDto();
+            afterLivingWechatVideoBaseKeyValueAndPercentDto.Value = afterLivingName;
+            afterLivingWechatVideoBaseKeyValueAndPercentDto.Rate = afterLivingData.Where(o => o.ContentPlatFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Count();
+            result.VideoNumberFolwRateAnalize.Add(afterLivingWechatVideoBaseKeyValueAndPercentDto);
+
+            BaseKeyValueAndPercentDto otherWechatVideoBaseKeyValueAndPercentDto = new BaseKeyValueAndPercentDto();
+            otherWechatVideoBaseKeyValueAndPercentDto.Value = otherName;
+            otherWechatVideoBaseKeyValueAndPercentDto.Rate = otherLivingData.Where(o => o.ContentPlatFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Count();
+            result.VideoNumberFolwRateAnalize.Add(otherWechatVideoBaseKeyValueAndPercentDto);
+            #endregion
+
+            #region【小红书流量分析】
+            BaseKeyValueAndPercentDto beforeLivingXiaoHongShuBaseKeyValueAndPercentDto = new BaseKeyValueAndPercentDto();
+            beforeLivingXiaoHongShuBaseKeyValueAndPercentDto.Value = beforeLivingName;
+            beforeLivingXiaoHongShuBaseKeyValueAndPercentDto.Rate = beforeLivingData.Where(o => o.ContentPlatFormId == "317c03b8-aff9-4961-8392-fc44d04b1725").Count();
+            result.XiaoHongShuFolwRateAnalize.Add(beforeLivingXiaoHongShuBaseKeyValueAndPercentDto);
+
+            BaseKeyValueAndPercentDto LivingXiaoHongShuBaseKeyValueAndPercentDto = new BaseKeyValueAndPercentDto();
+            LivingXiaoHongShuBaseKeyValueAndPercentDto.Value = livingName;
+            LivingXiaoHongShuBaseKeyValueAndPercentDto.Rate = livingData.Where(o => o.ContentPlatFormId == "317c03b8-aff9-4961-8392-fc44d04b1725").Count();
+            result.XiaoHongShuFolwRateAnalize.Add(LivingXiaoHongShuBaseKeyValueAndPercentDto);
+
+            BaseKeyValueAndPercentDto afterLivingXiaoHongShuBaseKeyValueAndPercentDto = new BaseKeyValueAndPercentDto();
+            afterLivingXiaoHongShuBaseKeyValueAndPercentDto.Value = afterLivingName;
+            afterLivingXiaoHongShuBaseKeyValueAndPercentDto.Rate = afterLivingData.Where(o => o.ContentPlatFormId == "317c03b8-aff9-4961-8392-fc44d04b1725").Count();
+            result.XiaoHongShuFolwRateAnalize.Add(afterLivingXiaoHongShuBaseKeyValueAndPercentDto);
+
+            BaseKeyValueAndPercentDto otherXiaoHongShuBaseKeyValueAndPercentDto = new BaseKeyValueAndPercentDto();
+            otherXiaoHongShuBaseKeyValueAndPercentDto.Value = otherName;
+            otherXiaoHongShuBaseKeyValueAndPercentDto.Rate = otherLivingData.Where(o => o.ContentPlatFormId == "317c03b8-aff9-4961-8392-fc44d04b1725").Count();
+            result.XiaoHongShuFolwRateAnalize.Add(otherXiaoHongShuBaseKeyValueAndPercentDto);
+            #endregion
+
+            #region【私域流量分析】
+            BaseKeyValueAndPercentDto beforeLivingPrivateDomainBaseKeyValueAndPercentDto = new BaseKeyValueAndPercentDto();
+            beforeLivingPrivateDomainBaseKeyValueAndPercentDto.Value = beforeLivingName;
+            beforeLivingPrivateDomainBaseKeyValueAndPercentDto.Rate = beforeLivingData.Where(o => o.ContentPlatFormId == "22a0b287-232d-4373-a9dd-c372aaae57dc").Count();
+            result.PrivateDataFolwRateAnalize.Add(beforeLivingPrivateDomainBaseKeyValueAndPercentDto);
+
+            BaseKeyValueAndPercentDto LivingPrivateDomainBaseKeyValueAndPercentDto = new BaseKeyValueAndPercentDto();
+            LivingPrivateDomainBaseKeyValueAndPercentDto.Value = livingName;
+            LivingPrivateDomainBaseKeyValueAndPercentDto.Rate = livingData.Where(o => o.ContentPlatFormId == "22a0b287-232d-4373-a9dd-c372aaae57dc").Count();
+            result.PrivateDataFolwRateAnalize.Add(LivingPrivateDomainBaseKeyValueAndPercentDto);
+
+            BaseKeyValueAndPercentDto afterLivingPrivateDomainBaseKeyValueAndPercentDto = new BaseKeyValueAndPercentDto();
+            afterLivingPrivateDomainBaseKeyValueAndPercentDto.Value = afterLivingName;
+            afterLivingPrivateDomainBaseKeyValueAndPercentDto.Rate = afterLivingData.Where(o => o.ContentPlatFormId == "22a0b287-232d-4373-a9dd-c372aaae57dc").Count();
+            result.PrivateDataFolwRateAnalize.Add(afterLivingPrivateDomainBaseKeyValueAndPercentDto);
+
+            BaseKeyValueAndPercentDto otherPrivateDomainBaseKeyValueAndPercentDto = new BaseKeyValueAndPercentDto();
+            otherPrivateDomainBaseKeyValueAndPercentDto.Value = otherName;
+            otherPrivateDomainBaseKeyValueAndPercentDto.Rate = otherLivingData.Where(o => o.ContentPlatFormId == "22a0b287-232d-4373-a9dd-c372aaae57dc").Count();
+            result.PrivateDataFolwRateAnalize.Add(otherPrivateDomainBaseKeyValueAndPercentDto);
+            #endregion
+
+            return result;
+        }
+
+
+
+        /// <summary>
+        /// 根据条件获取流量分析-部门-详情
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<GetFlowRateDetailsByContentPlatformDataDto> GetFlowRateDetailsByContentPlatformAsync(QueryOperationDataDto query)
+        {
+            GetFlowRateDetailsByContentPlatformDataDto result = new GetFlowRateDetailsByContentPlatformDataDto();
+            result.FolwRateDetailsAnalize = new List<BaseKeyValueAndPercentDto>();
+            var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.endDate.Value.Year, query.endDate.Value.Month == 0 ? 1 : query.endDate.Value.Month);
+            OperationBoardContentPlatFormDataDetailsDto totalFlowRateData = new OperationBoardContentPlatFormDataDetailsDto();
+            //总线索
+            var totalShoppingCartRegistionData = await shoppingCartRegistrationService.GetShoppingCartRegistionDataByRecordDate(sequentialDate.StartDate, sequentialDate.EndDate);
+            totalShoppingCartRegistionData = totalShoppingCartRegistionData.Where(x => x.ContentPlatFormId == query.keyWord).ToList();
+            var groupData = totalShoppingCartRegistionData.GroupBy(x => x.Source).Select(e =>
+            {
+                BaseKeyValueAndPercentDto data = new BaseKeyValueAndPercentDto();
+                data.Value = ServiceClass.GetTiktokCustomerSourceText(e.Key);
+                data.Rate = e.Count();
+                return data;
+            }).OrderByDescending(x => x.Rate).ToList();
+            result.FolwRateDetailsAnalize = groupData;
+            return result;
+        }
+        #endregion
+
+        #region 【转化】
+        /// <summary>
+        /// 获取流量转化和客户转化情况数据
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<FlowTransFormDataDto>> GetFlowTransFormDataAsync(QueryTransformDataDto query)
+        {
+            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
+            var nameList = await liveAnchorBaseInfoService.GetValidAsync(true);
+            var liveAnchorIds = nameList.Select(e => e.Id).ToList();
+            query.ContentPlatFormIds = GetContentPlatformIdList(query);
+            List<FlowTransFormDataDto> dataList = new List<FlowTransFormDataDto>();
+            foreach (var liveanchorId in liveAnchorIds)
+            {
+                var liveanchorName = nameList.Where(e => e.Id == liveanchorId).Select(e => e.LiveAnchorName).FirstOrDefault();
+                var groupBaseData = await shoppingCartRegistrationService.GetFlowAndCustomerTransformDataAsync(selectDate.StartDate, selectDate.EndDate, liveanchorId, query.ContentPlatFormIds);
+                FlowTransFormDataDto groupData = new FlowTransFormDataDto();
+                groupData.GroupName = $"{liveanchorName}组";
+                groupData.ClueCount = groupBaseData.ClueCount;
+                groupData.SendOrderCount = groupBaseData.SendOrderCount;
+                groupData.DistributeConsulationNum = groupBaseData.TotalCount;
+                groupData.ClueEffectiveRate = DecimalExtension.CalculateTargetComplete(groupData.DistributeConsulationNum, groupData.ClueCount).Value;
+                groupData.AddWechatCount = groupBaseData.AddWechatCount;
+                groupData.AddWechatRate = DecimalExtension.CalculateTargetComplete(groupBaseData.AddWechatCount, groupData.DistributeConsulationNum).Value;
+                groupData.SendOrderRate = DecimalExtension.CalculateTargetComplete(groupBaseData.SendOrderCount, groupBaseData.AddWechatCount).Value;
+                groupData.ToHospitalCount = groupBaseData.ToHospitalCount;
+                groupData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(groupBaseData.ToHospitalCount, groupBaseData.SendOrderCount).Value;
+                groupData.DealCount = groupBaseData.NewCustomerDealCount + groupBaseData.OldCustomerDealCount;
+                groupData.NewCustomerDealCount = groupBaseData.NewCustomerDealCount;
+                groupData.OldCustomerDealCount = groupBaseData.OldCustomerDealCount;
+                groupData.DealRate = DecimalExtension.CalculateTargetComplete(groupData.DealCount, groupBaseData.ToHospitalCount).Value;
+                groupData.NewCustomerPerformance = groupBaseData.NewCustomerTotalPerformance;
+                groupData.OldCustomerPerformance = groupBaseData.OldCustomerTotalPerformance;
+                groupData.OldCustomerUnitPrice = DecimalExtension.Division(groupData.OldCustomerPerformance, groupBaseData.OldCustomerDealCount).Value;
+                groupData.NewCustomerUnitPrice = DecimalExtension.Division(groupData.NewCustomerPerformance, groupBaseData.NewCustomerDealCount).Value;
+                groupData.CustomerUnitPrice = DecimalExtension.Division(groupData.NewCustomerPerformance + groupData.OldCustomerPerformance, groupBaseData.OldCustomerDealCount + groupBaseData.NewCustomerDealCount).Value;
+                groupData.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(groupData.NewCustomerDealCount, groupData.OldCustomerDealCount);
+                dataList.Add(groupData);
+            }
+            foreach (var item in dataList)
+            {
+                item.Rate = DecimalExtension.CalculateTargetComplete(item.NewCustomerPerformance + item.OldCustomerPerformance, dataList.Sum(e => e.NewCustomerPerformance) + dataList.Sum(e => e.OldCustomerPerformance)).Value;
+            }
+            FlowTransFormDataDto data = new FlowTransFormDataDto();
+            data.GroupName = "总计";
+            data.ClueCount = dataList.Sum(e => e.ClueCount);
+            data.SendOrderCount = dataList.Sum(e => e.SendOrderCount);
+            data.DistributeConsulationNum = dataList.Sum(e => e.DistributeConsulationNum);
+            data.ClueEffectiveRate = DecimalExtension.CalculateTargetComplete(data.DistributeConsulationNum, data.ClueCount).Value;
+            data.AddWechatCount = dataList.Sum(e => e.AddWechatCount);
+            data.AddWechatRate = DecimalExtension.CalculateTargetComplete(data.AddWechatCount, data.DistributeConsulationNum).Value;
+            data.SendOrderRate = DecimalExtension.CalculateTargetComplete(data.SendOrderCount, data.AddWechatCount).Value;
+            data.ToHospitalCount = dataList.Sum(e => e.ToHospitalCount);
+            data.ToHospitalRate = DecimalExtension.CalculateTargetComplete(data.ToHospitalCount, data.SendOrderCount).Value;
+            data.DealCount = dataList.Sum(e => e.DealCount);
+            data.DealRate = DecimalExtension.CalculateTargetComplete(data.DealCount, data.ToHospitalCount).Value;
+            data.NewCustomerPerformance = dataList.Sum(e => e.NewCustomerPerformance);
+            data.OldCustomerPerformance = dataList.Sum(e => e.OldCustomerPerformance);
+            data.OldCustomerUnitPrice = DecimalExtension.Division(data.OldCustomerPerformance, dataList.Sum(e => e.OldCustomerDealCount)).Value;
+            data.NewCustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance, dataList.Sum(e => e.NewCustomerDealCount)).Value;
+            data.CustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance + data.OldCustomerPerformance, data.DealCount).Value;
+            data.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(data.NewCustomerDealCount, data.OldCustomerDealCount);
+            data.Rate = 100;
+            dataList.Add(data);
+            return dataList;
+        }
+        /// <summary>
+        /// 获取流量转化和客户转化情况数据
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<FlowTransFormDataDto>> GetAssistantFlowTransFormDataAsync(QueryTransformDataDto query)
+        {
+            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
+            var nameList = await liveAnchorBaseInfoService.GetValidAsync(true);
+            var assistantNameList = await amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(nameList.Select(e => e.Id).ToList());
+            query.ContentPlatFormIds = GetContentPlatformIdList(query);
+            var baseData = await shoppingCartRegistrationService.GetAssitantFlowAndCustomerTransformDataAsync(selectDate.StartDate, selectDate.EndDate, query.ContentPlatFormIds);
+            var list = baseData.GroupBy(e => e.EmpId).Select(e =>
+            {
+                var name = assistantNameList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其他";
+                FlowTransFormDataDto data = new FlowTransFormDataDto();
+                data.GroupName = name;
+                data.SendOrderCount = e.Sum(e => e.SendOrderCount);
+                data.DistributeConsulationNum = e.Sum(e => e.TotalCount);
+                data.AddWechatCount = e.Sum(e => e.AddWechatCount);
+                data.AddWechatRate = DecimalExtension.CalculateTargetComplete(data.AddWechatCount, data.DistributeConsulationNum).Value;
+                data.SendOrderRate = DecimalExtension.CalculateTargetComplete(data.SendOrderCount, data.AddWechatCount).Value;
+                data.ToHospitalCount = e.Sum(e => e.ToHospitalCount);
+                data.ToHospitalRate = DecimalExtension.CalculateTargetComplete(data.ToHospitalCount, data.SendOrderCount).Value;
+                data.NewCustomerDealCount = e.Sum(e => e.NewCustomerDealCount);
+                data.OldCustomerDealCount = e.Sum(e => e.OldCustomerDealCount);
+                data.DealCount = data.NewCustomerDealCount + data.OldCustomerDealCount;
+                data.DealRate = DecimalExtension.CalculateTargetComplete(data.DealCount, data.ToHospitalCount).Value;
+                data.NewCustomerPerformance = e.Sum(e => e.NewCustomerTotalPerformance);
+                data.OldCustomerPerformance = e.Sum(e => e.OldCustomerTotalPerformance);
+                data.OldCustomerUnitPrice = DecimalExtension.Division(data.OldCustomerPerformance, data.OldCustomerDealCount).Value;
+                data.NewCustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance, data.NewCustomerDealCount).Value;
+                data.CustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance + data.OldCustomerPerformance, data.DealCount).Value;
+                data.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(data.NewCustomerDealCount, data.OldCustomerDealCount);
+                return data;
+            }).ToList();
+            foreach (var item in list)
+            {
+                item.Rate = DecimalExtension.CalculateTargetComplete(item.NewCustomerPerformance + item.OldCustomerPerformance, list.Sum(e => e.NewCustomerPerformance) + list.Sum(e => e.OldCustomerPerformance)).Value;
+            }
+            FlowTransFormDataDto data = new FlowTransFormDataDto();
+            data.GroupName = "总计";
+            data.SendOrderCount = list.Sum(e => e.SendOrderCount);
+            data.DistributeConsulationNum = list.Sum(e => e.DistributeConsulationNum);
+            data.AddWechatCount = list.Sum(e => e.AddWechatCount);
+            data.AddWechatRate = DecimalExtension.CalculateTargetComplete(data.AddWechatCount, data.DistributeConsulationNum).Value;
+            data.SendOrderRate = DecimalExtension.CalculateTargetComplete(data.SendOrderCount, data.AddWechatCount).Value;
+            data.ToHospitalCount = list.Sum(e => e.ToHospitalCount);
+            data.ToHospitalRate = DecimalExtension.CalculateTargetComplete(data.ToHospitalCount, data.SendOrderCount).Value;
+            data.DealCount = list.Sum(e => e.DealCount);
+            data.DealRate = DecimalExtension.CalculateTargetComplete(data.DealCount, data.ToHospitalCount).Value;
+            data.NewCustomerPerformance = list.Sum(e => e.NewCustomerPerformance);
+            data.OldCustomerPerformance = list.Sum(e => e.OldCustomerPerformance);
+            data.OldCustomerUnitPrice = DecimalExtension.Division(data.OldCustomerPerformance, list.Sum(e => e.OldCustomerDealCount)).Value;
+            data.NewCustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance, list.Sum(e => e.NewCustomerDealCount)).Value;
+            data.CustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance + data.OldCustomerPerformance, data.DealCount).Value;
+            data.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(data.NewCustomerDealCount, data.OldCustomerDealCount);
+            data.Rate = 100;
+            return list;
+        }
+
+        /// <summary>
+        /// 根据时间获取全国机构运营数据概况
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isCity"></param>
+        /// <returns></returns>
+        public async Task<List<HospitalPerformanceDto>> GetHospitalPerformanceByDateAsync(QueryHospitalTransformDataDto query)
+        {
+
+            List<HospitalPerformanceDto> resultList = new List<HospitalPerformanceDto>();
+            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
+            query.StartDate = selectDate.StartDate;
+            query.EndDate = selectDate.EndDate;
+            query.LiveAnchorIds = await GetBaseLiveAnchorIdListAsync(query);
+            var contentPlatFormOrderSendList = await contentPlatformOrderSendService.GetTodayOrderSendDataAsync(query);
+            foreach (var x in contentPlatFormOrderSendList)
+            {
+
+                var isExist = resultList.Where(z => z.HospitalId == x.SendHospitalId).Count();
+                if (isExist > 0)
                 {
-                    getEmployeePerformanceDataDto.CompleteRate = Math.Round(x.TotalServicePrice / employeeDataTarget * 100, 2, MidpointRounding.AwayFromZero);
+                    continue;
                 }
-                else
-                {
-                    getEmployeePerformanceDataDto.CompleteRate = 0;
-                }
-                employeeDataList.Add(getEmployeePerformanceDataDto);
+                HospitalPerformanceDto hospitalPerformanceDto = new HospitalPerformanceDto();
+                hospitalPerformanceDto.HospitalId = x.SendHospitalId;
+                hospitalPerformanceDto.HospitalName = x.SendHospital;
+                hospitalPerformanceDto.City = x.City;
+                List<int> hospitalIds = new List<int>();
+                hospitalIds.Add(x.SendHospitalId);
+                query.HospitalId = hospitalIds;
+                hospitalPerformanceDto.SendNum = contentPlatFormOrderSendList.Where(z => hospitalIds.Contains(z.SendHospitalId)).Count();
+                var contentPlatFormOrderDealInfoList = await contentPlatFormOrderDealInfoService.GetSendPerformanceByHospitalIdAndDateTimeAsync(query);
+                hospitalPerformanceDto.VisitNum = contentPlatFormOrderDealInfoList.Count();
+                hospitalPerformanceDto.VisitRate = DecimalExtension.CalculateTargetComplete(hospitalPerformanceDto.VisitNum, hospitalPerformanceDto.SendNum).Value;
+                var dealInfoList = contentPlatFormOrderDealInfoList.Where(x => x.IsDeal == true && x.DealDate.HasValue == true);
+                hospitalPerformanceDto.NewCustomerDealNum = dealInfoList.Where(x => x.IsOldCustomer == false).Count();
+                hospitalPerformanceDto.NewCustomerDealRate = DecimalExtension.CalculateTargetComplete(hospitalPerformanceDto.NewCustomerDealNum, hospitalPerformanceDto.VisitNum).Value;
+                hospitalPerformanceDto.NewCustomerAchievement = dealInfoList.Where(x => x.IsOldCustomer == false).Sum(x => x.Price);
+                hospitalPerformanceDto.NewCustomerUnitPrice = DecimalExtension.Division(hospitalPerformanceDto.NewCustomerAchievement, hospitalPerformanceDto.NewCustomerDealNum).Value;
+                hospitalPerformanceDto.OldCustomerDealNum = dealInfoList.Where(x => x.IsOldCustomer == true).Count();
+                hospitalPerformanceDto.OldCustomerAchievement = dealInfoList.Where(x => x.IsOldCustomer == true).Sum(x => x.Price);
+                hospitalPerformanceDto.OldCustomerUnitPrice = DecimalExtension.Division(hospitalPerformanceDto.OldCustomerAchievement, hospitalPerformanceDto.OldCustomerDealNum).Value;
+                hospitalPerformanceDto.TotalAchievement = dealInfoList.Sum(x => x.Price);
+                hospitalPerformanceDto.NewOrOldCustomerRate = DecimalExtension.CalculateAccounted(hospitalPerformanceDto.NewCustomerAchievement, hospitalPerformanceDto.OldCustomerAchievement);
+                resultList.Add(hospitalPerformanceDto);
             }
-            result.EmployeeDatas = employeeDataList;
-            #endregion
-
-            #region 【助理获客情况-10条】
-            var shoppingCartRegistionData = await shoppingCartRegistrationService.GetNewBaseBusinessPerformanceByLiveAnchorNameAsync(query.startDate.Value, query.endDate.Value, null, "");
-
-            result.EmployeeDistributeConsulationNumAndAddWechats = shoppingCartRegistionData.Where(x => x.AssignEmpId.HasValue).GroupBy(x => x.AssignEmpId).Select(x => new GetEmployeeDistributeConsulationNumAndAddWechatDto
+            var res = resultList.OrderByDescending(e => e.SendNum).Skip(0).Take(10).ToList();
+            var totalPerformance = resultList.Sum(e => e.TotalAchievement);
+            foreach (var item in res)
             {
-                EmployeeId = Convert.ToInt32(x.Key.ToString()),
-                DistributeConsulationNum = x.Count(),
-                AddWechatNum = x.Where(e => e.IsAddWeChat == true).Count(),
-            }).Where(x => x.DistributeConsulationNum > 0).Take(10).ToList();
-            foreach (var x in result.EmployeeDistributeConsulationNumAndAddWechats)
-            {
-                var empInfo = await amiyaEmployeeService.GetByIdAsync(x.EmployeeId);
-                x.EmployeeName = empInfo.Name;
+                item.Rate = DecimalExtension.CalculateTargetComplete(item.TotalAchievement, totalPerformance).Value;
             }
-            #endregion
-
-            #region 【助理客户运营情况-10条】
-            List<GetEmployeeCustomerAnalizeDto> getEmployeeCustomerAnalizeDtos = new List<GetEmployeeCustomerAnalizeDto>();
-            foreach (var x in amiyaEmployeeIds)
-            {
-                GetEmployeeCustomerAnalizeDto getEmployeeCustomerAnalizeDto = new GetEmployeeCustomerAnalizeDto();
-                var empInfo = await amiyaEmployeeService.GetByIdAsync(x);
-                getEmployeeCustomerAnalizeDto.EmployeeName = empInfo.Name;
-                getEmployeeCustomerAnalizeDto.SendOrderNum = await contentPlatformOrderSendService.GetTotalSendCountByEmployeeAsync(x, query.startDate.Value, query.endDate.Value);
-                var contentPlatFormVisitAndDealNumData = await contentPlateFormOrderService.GetCustomerVisitAndIsDealByEmployeeIdAsync(query.startDate.Value, query.endDate.Value, x);
-                getEmployeeCustomerAnalizeDto.VisitNum = contentPlatFormVisitAndDealNumData.VisitNum;
-                getEmployeeCustomerAnalizeDto.DealNum = contentPlatFormVisitAndDealNumData.DealNum;
-                getEmployeeCustomerAnalizeDtos.Add(getEmployeeCustomerAnalizeDto);
-            }
-            result.GetEmployeeCustomerAnalizes = getEmployeeCustomerAnalizeDtos.Where(x => x.SendOrderNum > 0).OrderByDescending(x => x.SendOrderNum).Take(10).ToList();
-            #endregion
-
-            #region 【业绩贡献占比-根据助理业绩获取条数输出】
-            var orderDealInfo = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAndLiveAnchorIdsAsync(query.startDate.Value, query.endDate.Value, new List<int>());
-            //总业绩数据值
-            var totalAchievement = orderDealInfo.Sum(x => x.Price);
-            List<GetEmployeePerformanceRankingDto> getEmployeePerformanceRankingDtos = new List<GetEmployeePerformanceRankingDto>();
-            foreach (var x in employeeDataList)
-            {
-                GetEmployeePerformanceRankingDto getEmployeePerformanceRankingDto = new GetEmployeePerformanceRankingDto();
-                getEmployeePerformanceRankingDto.EmployeeName = x.EmployeeName;
-                getEmployeePerformanceRankingDto.Performance = DecimalExtension.CalculateTargetComplete(x.Performance, totalAchievement).Value;
-                getEmployeePerformanceRankingDtos.Add(getEmployeePerformanceRankingDto);
-            }
-            result.GetEmployeePerformanceRankings = getEmployeePerformanceRankingDtos.OrderByDescending(x => x.Performance).ToList();
-
-            #endregion
-            return result;
+            return res;
         }
-
+        #endregion
 
         #endregion
+
 
         #region 公司看板
         /// <summary>
@@ -795,22 +1166,22 @@ namespace Fx.Amiya.Service
             var assistantTarget = await employeePerformanceTargetService.GetEmployeeTargetByAssistantIdListAsync(query.StartDate.Value.Year, query.StartDate.Value.Month, assistantNameList.Select(e => e.Id).ToList());
             var order = await contentPlatFormOrderDealInfoService.GetPerformanceDetailByDateAndAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, assistantNameList.Select(e => e.Id).ToList());
             var resList = order.GroupBy(e => e.BelongEmployeeId).Select(e =>
-             {
-                 var target = assistantTarget.Where(a => a.EmployeeId == e.Key).FirstOrDefault();
-                 var name = assistantNameList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其他";
-                 AssistantPerformanceDataDto data = new AssistantPerformanceDataDto();
-                 data.AssistantName = name;
-                 data.NewCustomerPerformanceTarget = CalTarget(query.StartDate.Value, query.EndDate.Value, target?.NewCustomerPerformanceTarget ?? 0);
-                 data.CurrentMonthNewCustomerPerformance = e.Where(e => e.IsOldCustomer == false).Sum(e => e.Price);
-                 data.NewCustomerPerformanceTargetComplete = DecimalExtension.CalculateTargetComplete(data.CurrentMonthNewCustomerPerformance, data.NewCustomerPerformanceTarget).Value;
-                 data.OldCustomerTarget = CalTarget(query.StartDate.Value, query.EndDate.Value, target?.OldCustomerPerformanceTarget ?? 0);
-                 data.CurrentMonthOldCustomerPerformance = e.Where(e => e.IsOldCustomer == true).Sum(e => e.Price);
-                 data.OldCustomerTargetComplete = DecimalExtension.CalculateTargetComplete(data.CurrentMonthOldCustomerPerformance, data.OldCustomerTarget).Value;
-                 data.TotalPerformanceTarget = data.NewCustomerPerformanceTarget + data.OldCustomerTarget;
-                 data.TotalPerformance = data.CurrentMonthNewCustomerPerformance + data.CurrentMonthOldCustomerPerformance;
-                 data.TotalPerformanceTargetComplete = DecimalExtension.CalculateTargetComplete(data.TotalPerformance, data.TotalPerformanceTarget).Value;
-                 return data;
-             }).ToList();
+            {
+                var target = assistantTarget.Where(a => a.EmployeeId == e.Key).FirstOrDefault();
+                var name = assistantNameList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其他";
+                AssistantPerformanceDataDto data = new AssistantPerformanceDataDto();
+                data.AssistantName = name;
+                data.NewCustomerPerformanceTarget = CalTarget(query.StartDate.Value, query.EndDate.Value, target?.NewCustomerPerformanceTarget ?? 0);
+                data.CurrentMonthNewCustomerPerformance = e.Where(e => e.IsOldCustomer == false).Sum(e => e.Price);
+                data.NewCustomerPerformanceTargetComplete = DecimalExtension.CalculateTargetComplete(data.CurrentMonthNewCustomerPerformance, data.NewCustomerPerformanceTarget).Value;
+                data.OldCustomerTarget = CalTarget(query.StartDate.Value, query.EndDate.Value, target?.OldCustomerPerformanceTarget ?? 0);
+                data.CurrentMonthOldCustomerPerformance = e.Where(e => e.IsOldCustomer == true).Sum(e => e.Price);
+                data.OldCustomerTargetComplete = DecimalExtension.CalculateTargetComplete(data.CurrentMonthOldCustomerPerformance, data.OldCustomerTarget).Value;
+                data.TotalPerformanceTarget = data.NewCustomerPerformanceTarget + data.OldCustomerTarget;
+                data.TotalPerformance = data.CurrentMonthNewCustomerPerformance + data.CurrentMonthOldCustomerPerformance;
+                data.TotalPerformanceTargetComplete = DecimalExtension.CalculateTargetComplete(data.TotalPerformance, data.TotalPerformanceTarget).Value;
+                return data;
+            }).ToList();
             AssistantPerformanceDataDto data = new AssistantPerformanceDataDto();
             data.AssistantName = "其他";
             data.NewCustomerPerformanceTarget = 0;
@@ -965,22 +1336,22 @@ namespace Fx.Amiya.Service
             var assistantNameList = await amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(query.LiveAnchorIds);
             var baseData = await shoppingCartRegistrationService.GetIndicatorConversionDataByAssistantIdsAsync(selectDate.StartDate, selectDate.EndDate, assistantNameList.Select(e => e.Id).ToList(), query.IsEffective);
             var resList = baseData.GroupBy(e => e.EmpId).Select(e =>
-             {
-                 var name = assistantNameList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其他";
-                 AssistantIndicatorConversionDataDto data = new AssistantIndicatorConversionDataDto();
-                 data.AssistantName = name;
-                 data.SevenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.SevenDaySendOrderCount), e.Sum(e => e.TotalCount)).Value;
-                 data.FifteenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.FifteenToHospitalCount), e.Sum(e => e.TotalCount)).Value;
-                 data.OldCustomerToHospitalRate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.OldCustomerDealCount), e.Sum(e => e.OldCustomerCountEndLastMonth)).Value;
-                 data.RePurchaseRate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.OldCustomerCount), e.Sum(e => e.NewCustomerCount)).Value;
-                 data.AddWechatRate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.AddWechatCount), e.Sum(e => e.TotalCount)).Value;
-                 data.SendOrderRate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.SendOrderCount), e.Sum(e => e.AddWechatCount)).Value;
-                 data.ToHospitalRate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.ToHospitalCount), e.Sum(e => e.SendOrderCount)).Value;
-                 data.NewCustomerDealRate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.NewCustomerDealCount), e.Sum(e => e.NewCustomerToHospitalCount)).Value;
-                 data.NewCustomerUnitPrice = DecimalExtension.Division(e.Sum(e => e.NewCustomerTotalPerformance), e.Sum(e => e.NewCustomerDealCount)).Value;
-                 data.OldCustomerUnitPrice = DecimalExtension.Division(e.Sum(e => e.OldCustomerTotalPerformance), e.Sum(e => e.OldCustomerDealCount)).Value;
-                 return data;
-             }).ToList();
+            {
+                var name = assistantNameList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其他";
+                AssistantIndicatorConversionDataDto data = new AssistantIndicatorConversionDataDto();
+                data.AssistantName = name;
+                data.SevenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.SevenDaySendOrderCount), e.Sum(e => e.TotalCount)).Value;
+                data.FifteenDaySendOrderRate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.FifteenToHospitalCount), e.Sum(e => e.TotalCount)).Value;
+                data.OldCustomerToHospitalRate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.OldCustomerDealCount), e.Sum(e => e.OldCustomerCountEndLastMonth)).Value;
+                data.RePurchaseRate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.OldCustomerCount), e.Sum(e => e.NewCustomerCount)).Value;
+                data.AddWechatRate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.AddWechatCount), e.Sum(e => e.TotalCount)).Value;
+                data.SendOrderRate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.SendOrderCount), e.Sum(e => e.AddWechatCount)).Value;
+                data.ToHospitalRate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.ToHospitalCount), e.Sum(e => e.SendOrderCount)).Value;
+                data.NewCustomerDealRate = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.NewCustomerDealCount), e.Sum(e => e.NewCustomerToHospitalCount)).Value;
+                data.NewCustomerUnitPrice = DecimalExtension.Division(e.Sum(e => e.NewCustomerTotalPerformance), e.Sum(e => e.NewCustomerDealCount)).Value;
+                data.OldCustomerUnitPrice = DecimalExtension.Division(e.Sum(e => e.OldCustomerTotalPerformance), e.Sum(e => e.OldCustomerDealCount)).Value;
+                return data;
+            }).ToList();
             var otherList = baseData.Where(e => !assistantNameList.Select(e => e.Id).Contains(e.EmpId));
             AssistantIndicatorConversionDataDto other = new AssistantIndicatorConversionDataDto();
             other.AssistantName = "其他";
@@ -1009,189 +1380,6 @@ namespace Fx.Amiya.Service
             total.OldCustomerUnitPrice = DecimalExtension.Division(baseData.Sum(e => e.OldCustomerTotalPerformance), baseData.Sum(e => e.OldCustomerDealCount)).Value;
             resList.Add(total);
             return resList;
-        }
-        #endregion
-
-        #region 转化
-        /// <summary>
-        /// 获取流量转化和客户转化情况数据
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<FlowTransFormDataDto>> GetFlowTransFormDataAsync(QueryTransformDataDto query)
-        {
-            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
-            var nameList = await liveAnchorBaseInfoService.GetValidAsync(true);
-            var liveAnchorIds = nameList.Select(e => e.Id).ToList();
-            query.ContentPlatFormIds = GetContentPlatformIdList(query);
-            List<FlowTransFormDataDto> dataList = new List<FlowTransFormDataDto>();
-            foreach (var liveanchorId in liveAnchorIds)
-            {
-                var liveanchorName = nameList.Where(e => e.Id == liveanchorId).Select(e => e.LiveAnchorName).FirstOrDefault();
-                var groupBaseData = await shoppingCartRegistrationService.GetFlowAndCustomerTransformDataAsync(selectDate.StartDate, selectDate.EndDate, liveanchorId, query.ContentPlatFormIds);
-                FlowTransFormDataDto groupData = new FlowTransFormDataDto();
-                groupData.GroupName = $"{liveanchorName}组";
-                groupData.ClueCount = groupBaseData.ClueCount;
-                groupData.SendOrderCount = groupBaseData.SendOrderCount;
-                groupData.DistributeConsulationNum = groupBaseData.TotalCount;
-                groupData.ClueEffectiveRate = DecimalExtension.CalculateTargetComplete(groupData.DistributeConsulationNum, groupData.ClueCount).Value;
-                groupData.AddWechatCount = groupBaseData.AddWechatCount;
-                groupData.AddWechatRate = DecimalExtension.CalculateTargetComplete(groupBaseData.AddWechatCount, groupData.DistributeConsulationNum).Value;
-                groupData.SendOrderRate = DecimalExtension.CalculateTargetComplete(groupBaseData.SendOrderCount, groupBaseData.AddWechatCount).Value;
-                groupData.ToHospitalCount = groupBaseData.ToHospitalCount;
-                groupData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(groupBaseData.ToHospitalCount, groupBaseData.SendOrderCount).Value;
-                groupData.DealCount = groupBaseData.NewCustomerDealCount + groupBaseData.OldCustomerDealCount;
-                groupData.NewCustomerDealCount = groupBaseData.NewCustomerDealCount;
-                groupData.OldCustomerDealCount = groupBaseData.OldCustomerDealCount;
-                groupData.DealRate = DecimalExtension.CalculateTargetComplete(groupData.DealCount, groupBaseData.ToHospitalCount).Value;
-                groupData.NewCustomerPerformance = groupBaseData.NewCustomerTotalPerformance;
-                groupData.OldCustomerPerformance = groupBaseData.OldCustomerTotalPerformance;
-                groupData.OldCustomerUnitPrice = DecimalExtension.Division(groupData.OldCustomerPerformance, groupBaseData.OldCustomerDealCount).Value;
-                groupData.NewCustomerUnitPrice = DecimalExtension.Division(groupData.NewCustomerPerformance, groupBaseData.NewCustomerDealCount).Value;
-                groupData.CustomerUnitPrice = DecimalExtension.Division(groupData.NewCustomerPerformance + groupData.OldCustomerPerformance, groupBaseData.OldCustomerDealCount + groupBaseData.NewCustomerDealCount).Value;
-                groupData.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(groupData.NewCustomerDealCount, groupData.OldCustomerDealCount);
-                dataList.Add(groupData);
-            }
-            foreach (var item in dataList)
-            {
-                item.Rate = DecimalExtension.CalculateTargetComplete(item.NewCustomerPerformance + item.OldCustomerPerformance, dataList.Sum(e => e.NewCustomerPerformance) + dataList.Sum(e => e.OldCustomerPerformance)).Value;
-            }
-            FlowTransFormDataDto data = new FlowTransFormDataDto();
-            data.GroupName = "总计";
-            data.ClueCount = dataList.Sum(e => e.ClueCount);
-            data.SendOrderCount = dataList.Sum(e => e.SendOrderCount);
-            data.DistributeConsulationNum = dataList.Sum(e => e.DistributeConsulationNum);
-            data.ClueEffectiveRate = DecimalExtension.CalculateTargetComplete(data.DistributeConsulationNum, data.ClueCount).Value;
-            data.AddWechatCount = dataList.Sum(e => e.AddWechatCount);
-            data.AddWechatRate = DecimalExtension.CalculateTargetComplete(data.AddWechatCount, data.DistributeConsulationNum).Value;
-            data.SendOrderRate = DecimalExtension.CalculateTargetComplete(data.SendOrderCount, data.AddWechatCount).Value;
-            data.ToHospitalCount = dataList.Sum(e => e.ToHospitalCount);
-            data.ToHospitalRate = DecimalExtension.CalculateTargetComplete(data.ToHospitalCount, data.SendOrderCount).Value;
-            data.DealCount = dataList.Sum(e => e.DealCount);
-            data.DealRate = DecimalExtension.CalculateTargetComplete(data.DealCount, data.ToHospitalCount).Value;
-            data.NewCustomerPerformance = dataList.Sum(e => e.NewCustomerPerformance);
-            data.OldCustomerPerformance = dataList.Sum(e => e.OldCustomerPerformance);
-            data.OldCustomerUnitPrice = DecimalExtension.Division(data.OldCustomerPerformance, dataList.Sum(e => e.OldCustomerDealCount)).Value;
-            data.NewCustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance, dataList.Sum(e => e.NewCustomerDealCount)).Value;
-            data.CustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance + data.OldCustomerPerformance, data.DealCount).Value;
-            data.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(data.NewCustomerDealCount, data.OldCustomerDealCount);
-            data.Rate = 100;
-            dataList.Add(data);
-            return dataList;
-        }
-        /// <summary>
-        /// 获取流量转化和客户转化情况数据
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<FlowTransFormDataDto>> GetAssistantFlowTransFormDataAsync(QueryTransformDataDto query)
-        {
-            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
-            var nameList = await liveAnchorBaseInfoService.GetValidAsync(true);
-            var assistantNameList = await amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(nameList.Select(e => e.Id).ToList());
-            query.ContentPlatFormIds = GetContentPlatformIdList(query);
-            var baseData = await shoppingCartRegistrationService.GetAssitantFlowAndCustomerTransformDataAsync(selectDate.StartDate, selectDate.EndDate, query.ContentPlatFormIds);
-            var list = baseData.GroupBy(e => e.EmpId).Select(e =>
-            {
-                var name = assistantNameList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其他";
-                FlowTransFormDataDto data = new FlowTransFormDataDto();
-                data.GroupName = name;
-                data.SendOrderCount = e.Sum(e => e.SendOrderCount);
-                data.DistributeConsulationNum = e.Sum(e => e.TotalCount);
-                data.AddWechatCount = e.Sum(e => e.AddWechatCount);
-                data.AddWechatRate = DecimalExtension.CalculateTargetComplete(data.AddWechatCount, data.DistributeConsulationNum).Value;
-                data.SendOrderRate = DecimalExtension.CalculateTargetComplete(data.SendOrderCount, data.AddWechatCount).Value;
-                data.ToHospitalCount = e.Sum(e => e.ToHospitalCount);
-                data.ToHospitalRate = DecimalExtension.CalculateTargetComplete(data.ToHospitalCount, data.SendOrderCount).Value;
-                data.NewCustomerDealCount = e.Sum(e => e.NewCustomerDealCount);
-                data.OldCustomerDealCount = e.Sum(e => e.OldCustomerDealCount);
-                data.DealCount = data.NewCustomerDealCount + data.OldCustomerDealCount;
-                data.DealRate = DecimalExtension.CalculateTargetComplete(data.DealCount, data.ToHospitalCount).Value;
-                data.NewCustomerPerformance = e.Sum(e => e.NewCustomerTotalPerformance);
-                data.OldCustomerPerformance = e.Sum(e => e.OldCustomerTotalPerformance);
-                data.OldCustomerUnitPrice = DecimalExtension.Division(data.OldCustomerPerformance, data.OldCustomerDealCount).Value;
-                data.NewCustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance, data.NewCustomerDealCount).Value;
-                data.CustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance + data.OldCustomerPerformance, data.DealCount).Value;
-                data.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(data.NewCustomerDealCount, data.OldCustomerDealCount);
-                return data;
-            }).ToList();
-            foreach (var item in list)
-            {
-                item.Rate = DecimalExtension.CalculateTargetComplete(item.NewCustomerPerformance + item.OldCustomerPerformance, list.Sum(e => e.NewCustomerPerformance) + list.Sum(e => e.OldCustomerPerformance)).Value;
-            }
-            FlowTransFormDataDto data = new FlowTransFormDataDto();
-            data.GroupName = "总计";
-            data.SendOrderCount = list.Sum(e => e.SendOrderCount);
-            data.DistributeConsulationNum = list.Sum(e => e.DistributeConsulationNum);
-            data.AddWechatCount = list.Sum(e => e.AddWechatCount);
-            data.AddWechatRate = DecimalExtension.CalculateTargetComplete(data.AddWechatCount, data.DistributeConsulationNum).Value;
-            data.SendOrderRate = DecimalExtension.CalculateTargetComplete(data.SendOrderCount, data.AddWechatCount).Value;
-            data.ToHospitalCount = list.Sum(e => e.ToHospitalCount);
-            data.ToHospitalRate = DecimalExtension.CalculateTargetComplete(data.ToHospitalCount, data.SendOrderCount).Value;
-            data.DealCount = list.Sum(e => e.DealCount);
-            data.DealRate = DecimalExtension.CalculateTargetComplete(data.DealCount, data.ToHospitalCount).Value;
-            data.NewCustomerPerformance = list.Sum(e => e.NewCustomerPerformance);
-            data.OldCustomerPerformance = list.Sum(e => e.OldCustomerPerformance);
-            data.OldCustomerUnitPrice = DecimalExtension.Division(data.OldCustomerPerformance, list.Sum(e => e.OldCustomerDealCount)).Value;
-            data.NewCustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance, list.Sum(e => e.NewCustomerDealCount)).Value;
-            data.CustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance + data.OldCustomerPerformance, data.DealCount).Value;
-            data.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(data.NewCustomerDealCount, data.OldCustomerDealCount);
-            data.Rate = 100;
-            return list;
-        }
-
-        /// <summary>
-        /// 根据时间获取全国机构运营数据概况
-        /// </summary>
-        /// <param name="year"></param>
-        /// <param name="month"></param>
-        /// <param name="isCity"></param>
-        /// <returns></returns>
-        public async Task<List<HospitalPerformanceDto>> GetHospitalPerformanceByDateAsync(QueryHospitalTransformDataDto query)
-        {
-
-            List<HospitalPerformanceDto> resultList = new List<HospitalPerformanceDto>();
-            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
-            query.StartDate = selectDate.StartDate;
-            query.EndDate = selectDate.EndDate;
-            query.LiveAnchorIds = await GetBaseLiveAnchorIdListAsync(query);
-            var contentPlatFormOrderSendList = await contentPlatformOrderSendService.GetTodayOrderSendDataAsync(query);
-            foreach (var x in contentPlatFormOrderSendList)
-            {
-
-                var isExist = resultList.Where(z => z.HospitalId == x.SendHospitalId).Count();
-                if (isExist > 0)
-                {
-                    continue;
-                }
-                HospitalPerformanceDto hospitalPerformanceDto = new HospitalPerformanceDto();
-                hospitalPerformanceDto.HospitalId = x.SendHospitalId;
-                hospitalPerformanceDto.HospitalName = x.SendHospital;
-                hospitalPerformanceDto.City = x.City;
-                List<int> hospitalIds = new List<int>();
-                hospitalIds.Add(x.SendHospitalId);
-                query.HospitalId = hospitalIds;
-                hospitalPerformanceDto.SendNum = contentPlatFormOrderSendList.Where(z => hospitalIds.Contains(z.SendHospitalId)).Count();
-                var contentPlatFormOrderDealInfoList = await contentPlatFormOrderDealInfoService.GetSendPerformanceByHospitalIdAndDateTimeAsync(query);
-                hospitalPerformanceDto.VisitNum = contentPlatFormOrderDealInfoList.Count();
-                hospitalPerformanceDto.VisitRate = DecimalExtension.CalculateTargetComplete(hospitalPerformanceDto.VisitNum, hospitalPerformanceDto.SendNum).Value;
-                var dealInfoList = contentPlatFormOrderDealInfoList.Where(x => x.IsDeal == true && x.DealDate.HasValue == true);
-                hospitalPerformanceDto.NewCustomerDealNum = dealInfoList.Where(x => x.IsOldCustomer == false).Count();
-                hospitalPerformanceDto.NewCustomerDealRate = DecimalExtension.CalculateTargetComplete(hospitalPerformanceDto.NewCustomerDealNum, hospitalPerformanceDto.VisitNum).Value;
-                hospitalPerformanceDto.NewCustomerAchievement = dealInfoList.Where(x => x.IsOldCustomer == false).Sum(x => x.Price);
-                hospitalPerformanceDto.NewCustomerUnitPrice = DecimalExtension.Division(hospitalPerformanceDto.NewCustomerAchievement, hospitalPerformanceDto.NewCustomerDealNum).Value;
-                hospitalPerformanceDto.OldCustomerDealNum = dealInfoList.Where(x => x.IsOldCustomer == true).Count();
-                hospitalPerformanceDto.OldCustomerAchievement = dealInfoList.Where(x => x.IsOldCustomer == true).Sum(x => x.Price);
-                hospitalPerformanceDto.OldCustomerUnitPrice = DecimalExtension.Division(hospitalPerformanceDto.OldCustomerAchievement, hospitalPerformanceDto.OldCustomerDealNum).Value;
-                hospitalPerformanceDto.TotalAchievement = dealInfoList.Sum(x => x.Price);
-                hospitalPerformanceDto.NewOrOldCustomerRate = DecimalExtension.CalculateAccounted(hospitalPerformanceDto.NewCustomerAchievement, hospitalPerformanceDto.OldCustomerAchievement);
-                resultList.Add(hospitalPerformanceDto);
-            }
-            var res = resultList.OrderByDescending(e => e.SendNum).Skip(0).Take(10).ToList();
-            var totalPerformance = resultList.Sum(e => e.TotalAchievement);
-            foreach (var item in res)
-            {
-                item.Rate = DecimalExtension.CalculateTargetComplete(item.TotalAchievement, totalPerformance).Value;
-            }
-            return res;
         }
         #endregion
 
@@ -1282,6 +1470,156 @@ namespace Fx.Amiya.Service
 
             return idList;
         }
+        #endregion
+
+
+        #region 【历史版本】
+
+        ///// <summary>
+        ///// 获取客户运营情况数据
+        ///// </summary>
+        ///// <returns></returns>
+        //public async Task<GetCustomerAnalizeDataDto> GetCustomerAnalizeDataAsync(QueryOperationDataDto query)
+        //{
+        //    GetCustomerAnalizeDataDto result = new GetCustomerAnalizeDataDto();
+        //    List<int> LiveAnchorInfoDaoDao = new List<int>();
+        //    var liveAnchorDaoDao = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync("f0a77257-c905-4719-95c4-ad2c4f33855c");
+        //    LiveAnchorInfoDaoDao = liveAnchorDaoDao.Select(x => x.Id).ToList();
+        //    var contentPlatFormOrderDataDaoDao = await contentPlateFormOrderService.GetOrderSendAndDealDataByMonthAsync(query.startDate.Value, query.endDate.Value, null, "", LiveAnchorInfoDaoDao);
+
+        //    List<int> LiveAnchorInfoJiNa = new List<int>();
+        //    var liveAnchorJina = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync("af69dcf5-f749-41ea-8b50-fe685facdd8b");
+        //    LiveAnchorInfoJiNa = liveAnchorJina.Select(x => x.Id).ToList();
+        //    var contentPlatFormOrderDataJiNa = await contentPlateFormOrderService.GetOrderSendAndDealDataByMonthAsync(query.startDate.Value, query.endDate.Value, null, "", LiveAnchorInfoJiNa);
+        //    CustomerAnalizeByGroupDto SendGroupDto = new CustomerAnalizeByGroupDto();
+        //    SendGroupDto.GroupDaoDao = contentPlatFormOrderDataDaoDao.SendOrderNum;
+        //    SendGroupDto.GroupJiNa = contentPlatFormOrderDataJiNa.SendOrderNum;
+        //    SendGroupDto.TotalNum = SendGroupDto.GroupDaoDao + SendGroupDto.GroupJiNa;
+        //    result.SendNum = SendGroupDto;
+
+        //    CustomerAnalizeByGroupDto VisitGroupDto = new CustomerAnalizeByGroupDto();
+        //    VisitGroupDto.GroupDaoDao = contentPlatFormOrderDataDaoDao.VisitNum;
+        //    VisitGroupDto.GroupJiNa = contentPlatFormOrderDataJiNa.VisitNum;
+        //    VisitGroupDto.TotalNum = VisitGroupDto.GroupJiNa + VisitGroupDto.GroupDaoDao;
+        //    result.VisitNum = VisitGroupDto;
+
+        //    CustomerAnalizeByGroupDto DealGroupDto = new CustomerAnalizeByGroupDto();
+        //    DealGroupDto.GroupDaoDao = contentPlatFormOrderDataDaoDao.DealNum;
+        //    DealGroupDto.GroupJiNa = contentPlatFormOrderDataJiNa.DealNum;
+        //    DealGroupDto.TotalNum = DealGroupDto.GroupJiNa + DealGroupDto.GroupDaoDao;
+        //    result.DealNum = DealGroupDto;
+        //    return result;
+        //}
+
+        ///// <summary>
+        ///// 获取客户指标转化数据
+        ///// </summary>
+        ///// <returns></returns>
+        //public async Task<GetCustomerIndexTransformationResultDto> GetCustomerIndexTransformationDataAsync(QueryOperationDataDto query)
+        //{
+        //    GetCustomerIndexTransformationResultDto result = new GetCustomerIndexTransformationResultDto();
+        //    //小黄车数据
+        //    var baseShoppingCartRegistionData = await shoppingCartRegistrationService.GetNewBaseBusinessPerformanceByLiveAnchorNameAsync(query.startDate.Value, query.endDate.Value, null, "");
+
+        //    //订单数据
+        //    var baseOrderPerformance = await contentPlateFormOrderService.GetOrderSendAndDealDataByMonthAsync(query.startDate.Value, query.endDate.Value, null, "", new List<int>());
+
+        //    result.AddCardNum = baseShoppingCartRegistionData.Count();
+        //    result.RefundCardNum = baseShoppingCartRegistionData.Where(x => x.IsReturnBackPrice == true).Count();
+        //    result.DistributeConsulationNum = baseShoppingCartRegistionData.Where(x => x.AssignEmpId.HasValue).Count();
+        //    result.AddWechatNum = baseShoppingCartRegistionData.Where(x => x.IsAddWeChat == true).Count();
+        //    result.SendOrderNum = baseOrderPerformance.SendOrderNum;
+        //    result.VisitNum = baseOrderPerformance.VisitNum;
+        //    result.DealNum = baseOrderPerformance.DealNum;
+
+        //    return result;
+        //}
+
+        ///// <summary>
+        ///// 获取助理业绩分析数据
+        ///// </summary>
+        ///// <returns></returns>
+        //public async Task<GetEmployeePerformanceAnalizeDataDto> GetEmployeePerformanceAnalizeDataAsync(QueryOperationDataDto query)
+        //{
+        //    GetEmployeePerformanceAnalizeDataDto result = new GetEmployeePerformanceAnalizeDataDto();
+
+        //    List<int> amiyaEmployeeIds = new List<int>();
+        //    //获取所有助理
+        //    var employeeInfos = await amiyaEmployeeService.GetemployeeByPositionIdAsync(4);
+        //    amiyaEmployeeIds = employeeInfos.Select(x => x.Id).ToList();
+
+        //    #region 【助理业绩-5条】
+        //    var dealInfo = await contentPlateFormOrderService.GetFourCustomerServicePerformanceByCustomerServiceIdAsync(query.startDate.Value, query.endDate.Value, amiyaEmployeeIds);
+        //    List<GetEmployeePerformanceDataDto> employeeDataList = new List<GetEmployeePerformanceDataDto>();
+        //    foreach (var x in dealInfo)
+        //    {
+        //        GetEmployeePerformanceDataDto getEmployeePerformanceDataDto = new GetEmployeePerformanceDataDto();
+        //        getEmployeePerformanceDataDto.EmployeeName = x.CustomerServiceName;
+        //        getEmployeePerformanceDataDto.Performance = x.TotalServicePrice;
+        //        var employeeDataTarget = await employeePerformanceTargetService.GetByEmpIdAndYearMonthAsync(x.CustomerServiceId, query.endDate.Value.Year, query.endDate.Value.Month);
+        //        if (employeeDataTarget != 0)
+        //        {
+        //            getEmployeePerformanceDataDto.CompleteRate = Math.Round(x.TotalServicePrice / employeeDataTarget * 100, 2, MidpointRounding.AwayFromZero);
+        //        }
+        //        else
+        //        {
+        //            getEmployeePerformanceDataDto.CompleteRate = 0;
+        //        }
+        //        employeeDataList.Add(getEmployeePerformanceDataDto);
+        //    }
+        //    result.EmployeeDatas = employeeDataList;
+        //    #endregion
+
+        //    #region 【助理获客情况-10条】
+        //    var shoppingCartRegistionData = await shoppingCartRegistrationService.GetNewBaseBusinessPerformanceByLiveAnchorNameAsync(query.startDate.Value, query.endDate.Value, null, "");
+
+        //    result.EmployeeDistributeConsulationNumAndAddWechats = shoppingCartRegistionData.Where(x => x.AssignEmpId.HasValue).GroupBy(x => x.AssignEmpId).Select(x => new GetEmployeeDistributeConsulationNumAndAddWechatDto
+        //    {
+        //        EmployeeId = Convert.ToInt32(x.Key.ToString()),
+        //        DistributeConsulationNum = x.Count(),
+        //        AddWechatNum = x.Where(e => e.IsAddWeChat == true).Count(),
+        //    }).Where(x => x.DistributeConsulationNum > 0).Take(10).ToList();
+        //    foreach (var x in result.EmployeeDistributeConsulationNumAndAddWechats)
+        //    {
+        //        var empInfo = await amiyaEmployeeService.GetByIdAsync(x.EmployeeId);
+        //        x.EmployeeName = empInfo.Name;
+        //    }
+        //    #endregion
+
+        //    #region 【助理客户运营情况-10条】
+        //    List<GetEmployeeCustomerAnalizeDto> getEmployeeCustomerAnalizeDtos = new List<GetEmployeeCustomerAnalizeDto>();
+        //    foreach (var x in amiyaEmployeeIds)
+        //    {
+        //        GetEmployeeCustomerAnalizeDto getEmployeeCustomerAnalizeDto = new GetEmployeeCustomerAnalizeDto();
+        //        var empInfo = await amiyaEmployeeService.GetByIdAsync(x);
+        //        getEmployeeCustomerAnalizeDto.EmployeeName = empInfo.Name;
+        //        getEmployeeCustomerAnalizeDto.SendOrderNum = await contentPlatformOrderSendService.GetTotalSendCountByEmployeeAsync(x, query.startDate.Value, query.endDate.Value);
+        //        var contentPlatFormVisitAndDealNumData = await contentPlateFormOrderService.GetCustomerVisitAndIsDealByEmployeeIdAsync(query.startDate.Value, query.endDate.Value, x);
+        //        getEmployeeCustomerAnalizeDto.VisitNum = contentPlatFormVisitAndDealNumData.VisitNum;
+        //        getEmployeeCustomerAnalizeDto.DealNum = contentPlatFormVisitAndDealNumData.DealNum;
+        //        getEmployeeCustomerAnalizeDtos.Add(getEmployeeCustomerAnalizeDto);
+        //    }
+        //    result.GetEmployeeCustomerAnalizes = getEmployeeCustomerAnalizeDtos.Where(x => x.SendOrderNum > 0).OrderByDescending(x => x.SendOrderNum).Take(10).ToList();
+        //    #endregion
+
+        //    #region 【业绩贡献占比-根据助理业绩获取条数输出】
+        //    var orderDealInfo = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAndLiveAnchorIdsAsync(query.startDate.Value, query.endDate.Value, new List<int>());
+        //    //总业绩数据值
+        //    var totalAchievement = orderDealInfo.Sum(x => x.Price);
+        //    List<GetEmployeePerformanceRankingDto> getEmployeePerformanceRankingDtos = new List<GetEmployeePerformanceRankingDto>();
+        //    foreach (var x in employeeDataList)
+        //    {
+        //        GetEmployeePerformanceRankingDto getEmployeePerformanceRankingDto = new GetEmployeePerformanceRankingDto();
+        //        getEmployeePerformanceRankingDto.EmployeeName = x.EmployeeName;
+        //        getEmployeePerformanceRankingDto.Performance = DecimalExtension.CalculateTargetComplete(x.Performance, totalAchievement).Value;
+        //        getEmployeePerformanceRankingDtos.Add(getEmployeePerformanceRankingDto);
+        //    }
+        //    result.GetEmployeePerformanceRankings = getEmployeePerformanceRankingDtos.OrderByDescending(x => x.Performance).ToList();
+
+        //    #endregion
+        //    return result;
+        //}
+
         #endregion
     }
 }

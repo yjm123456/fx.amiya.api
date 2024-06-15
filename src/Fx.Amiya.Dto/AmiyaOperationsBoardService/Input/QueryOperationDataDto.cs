@@ -16,5 +16,10 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService
         /// 结束时间
         /// </summary>
         public DateTime? endDate { get; set; }
+
+        /// <summary>
+        /// 关键词
+        /// </summary>
+        public string keyWord { get; set; }
     }
 }

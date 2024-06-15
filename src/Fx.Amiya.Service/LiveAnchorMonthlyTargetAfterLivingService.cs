@@ -724,7 +724,10 @@ namespace Fx.Amiya.Service
                     PotentialPerformanceTarget = e.PotentialPerformanceTarget,
                     OldCustomerPerformanceTarget = e.OldCustomerPerformanceTarget,
                     NewCustomerPerformanceTarget = e.NewCustomerPerformanceTarget,
-                    BaseLiveAnchorId=e.LiveAnchor.LiveAnchorBaseId
+                    RefundCardTarget = e.MinivanRefundTarget,
+                    DistributeConsulationTarget = e.DistributeConsulationTarget,
+                    AddWechatTarget = e.AddWechatTarget,
+                    BaseLiveAnchorId =e.LiveAnchor.LiveAnchorBaseId
                 })
                 .ToList();
             LiveAnchorMonthTargetPerformanceDto performanceInfoDto = new LiveAnchorMonthTargetPerformanceDto
@@ -734,6 +737,9 @@ namespace Fx.Amiya.Service
                 NewCustomerPerformanceTarget=performance.Sum(t=>t.NewCustomerPerformanceTarget),
                 EffectivePerformance = performance.Sum(t => t.EffectivePerformanceTarget),
                 PotentialPerformance = performance.Sum(t => t.PotentialPerformanceTarget),
+                MinivanRefundTarget = performance.Sum(e => e.RefundCardTarget),
+                AddWechatTarget = performance.Sum(e => e.AddWechatTarget),
+                DistributeConsulationTarget = performance.Sum(t => t.DistributeConsulationTarget),
             };
             return performanceInfoDto;
         }
@@ -761,7 +767,8 @@ namespace Fx.Amiya.Service
                     NewCustomerVisitTarget = e.NewCustomerVisitTarget,
                     OldCustomerVisitTarget = e.OldCustomerVisitTarget,
                     NewCustomerDealTarget = e.NewCustomerDealTarget,
-                    OldCustomerDealTarget=e.OldCustomerDealTarget
+                    OldCustomerDealTarget=e.OldCustomerDealTarget,
+                    RefundCardTarget=e.MinivanRefundTarget,
                 })
                 .ToList();
             var dataList= performance.GroupBy(e => e.BasbaseLiveAnchorId).Select(e => new LiveAnchorMonthTargetPerformanceDto
@@ -778,6 +785,7 @@ namespace Fx.Amiya.Service
                 OldCustomerVisitTarget=e.Sum(e=>e.OldCustomerVisitTarget),
                 NewCustomerDealTarget=e.Sum(e=>e.NewCustomerDealTarget),
                 OldCustomerDealTarget=e.Sum(e=>e.OldCustomerDealTarget),
+                MinivanRefundTarget = e.Sum(e => e.RefundCardTarget),
                 BaseLiveAbchorId =e.Key
             }).ToList();
             

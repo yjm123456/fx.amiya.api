@@ -180,22 +180,22 @@ namespace Fx.Amiya.Service
                 ShowcaseFee = e.Sum(e => e.ShowcaseFee)
             }).ToList();
             dataList = this.FillDate(queryDto.Year, queryDto.Month, dataList);
-            beforeLivingBrokenDataDto.IncreaseFansData = dataList.GroupBy(e => e.Time).Select(e => new PeformanceBrokenLineListInfoDto
+            beforeLivingBrokenDataDto.IncreaseFansData = dataList.GroupBy(e => e.Time).Select(e => new PerformanceBrokenLineListInfoDto
             {
                 date = e.Key.ToString(),
                 Performance = e.Sum(e => e.IncreaseFans)
             }).ToList();
-            beforeLivingBrokenDataDto.IncreaseFansFeeData = dataList.GroupBy(e => e.Time).Select(e => new PeformanceBrokenLineListInfoDto
+            beforeLivingBrokenDataDto.IncreaseFansFeeData = dataList.GroupBy(e => e.Time).Select(e => new PerformanceBrokenLineListInfoDto
             {
                 date = e.Key.ToString(),
                 Performance = e.Sum(e => e.IncreaseFansFees)
             }).ToList();
-            beforeLivingBrokenDataDto.ShowcaseIncomeData = dataList.GroupBy(e => e.Time).Select(e => new PeformanceBrokenLineListInfoDto
+            beforeLivingBrokenDataDto.ShowcaseIncomeData = dataList.GroupBy(e => e.Time).Select(e => new PerformanceBrokenLineListInfoDto
             {
                 date = e.Key.ToString(),
                 Performance = e.Sum(e => e.ShowcaseIncome)
             }).ToList();
-            beforeLivingBrokenDataDto.ShowcaseFeeDta = dataList.GroupBy(e => e.Time).Select(e => new PeformanceBrokenLineListInfoDto
+            beforeLivingBrokenDataDto.ShowcaseFeeDta = dataList.GroupBy(e => e.Time).Select(e => new PerformanceBrokenLineListInfoDto
             {
                 date = e.Key.ToString(),
                 Performance = e.Sum(e => e.ShowcaseFee)
@@ -399,22 +399,22 @@ namespace Fx.Amiya.Service
                 InvestFlow = e.Sum(e => e.InvestFlow)
             }).ToList();
             dataList = this.FillLivingDate(queryDto.Year, queryDto.Month, dataList);
-            livingBrokenDataDto.OrderGMVData = dataList.GroupBy(e => e.Time).Select(e => new PeformanceBrokenLineListInfoDto
+            livingBrokenDataDto.OrderGMVData = dataList.GroupBy(e => e.Time).Select(e => new PerformanceBrokenLineListInfoDto
             {
                 date = e.Key.ToString(),
                 Performance = e.Sum(e => e.OrderGMV)
             }).ToList();
-            livingBrokenDataDto.RefundGMVData = dataList.GroupBy(e => e.Time).Select(e => new PeformanceBrokenLineListInfoDto
+            livingBrokenDataDto.RefundGMVData = dataList.GroupBy(e => e.Time).Select(e => new PerformanceBrokenLineListInfoDto
             {
                 date = e.Key.ToString(),
                 Performance = e.Sum(e => e.RefundGMV)
             }).ToList();
-            livingBrokenDataDto.ActualReturnBackMoneyData = dataList.GroupBy(e => e.Time).Select(e => new PeformanceBrokenLineListInfoDto
+            livingBrokenDataDto.ActualReturnBackMoneyData = dataList.GroupBy(e => e.Time).Select(e => new PerformanceBrokenLineListInfoDto
             {
                 date = e.Key.ToString(),
                 Performance = e.Sum(e => e.ActualReturnBackMoney)
             }).ToList();
-            livingBrokenDataDto.InvestFlowData = dataList.GroupBy(e => e.Time).Select(e => new PeformanceBrokenLineListInfoDto
+            livingBrokenDataDto.InvestFlowData = dataList.GroupBy(e => e.Time).Select(e => new PerformanceBrokenLineListInfoDto
             {
                 date = e.Key.ToString(),
                 Performance = e.Sum(e => e.InvestFlow)
@@ -548,17 +548,17 @@ namespace Fx.Amiya.Service
 
             }).ToList();
             dataList = this.FillLivingAestheticMedicineDate(queryDto.Year, queryDto.Month, dataList);
-            livingBrokenDataDto.DesignCardOrderData = dataList.GroupBy(e => e.Time).Select(e => new PeformanceBrokenLineListInfoDto
+            livingBrokenDataDto.DesignCardOrderData = dataList.GroupBy(e => e.Time).Select(e => new PerformanceBrokenLineListInfoDto
             {
                 date = e.Key.ToString(),
                 Performance = e.Sum(e => e.DesignCardOrder)
             }).ToList();
-            livingBrokenDataDto.DesignCardRefundData = dataList.GroupBy(e => e.Time).Select(e => new PeformanceBrokenLineListInfoDto
+            livingBrokenDataDto.DesignCardRefundData = dataList.GroupBy(e => e.Time).Select(e => new PerformanceBrokenLineListInfoDto
             {
                 date = e.Key.ToString(),
                 Performance = e.Sum(e => e.DesignCardRefund)
             }).ToList();
-            livingBrokenDataDto.DesignCardActualData = dataList.GroupBy(e => e.Time).Select(e => new PeformanceBrokenLineListInfoDto
+            livingBrokenDataDto.DesignCardActualData = dataList.GroupBy(e => e.Time).Select(e => new PerformanceBrokenLineListInfoDto
             {
                 date = e.Key.ToString(),
                 Performance = e.Sum(e => e.DesignCardActual)
@@ -723,15 +723,15 @@ namespace Fx.Amiya.Service
                          OldCustomerPotentialPerformance = x.Where(e => e.IsOldCustomer == true && e.AddOrderPrice == 0).Sum(e => e.Price),
                      }).ToList();
             dataList = this.FillAfterLivingDate(queryDto.Year, queryDto.Month, dataList);
-            amiyaAchievementDetailDataDto.TotalPerformanceBrokenLineList = dataList.Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time, Performance = e.TotalPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
-            amiyaAchievementDetailDataDto.NewCustomerPerformanceBrokenLineList = dataList.Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time, Performance = e.NewCustomerPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
-            amiyaAchievementDetailDataDto.OldCustomerPerformanceBrokenLineList = dataList.Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time, Performance = e.OldCustomerPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
-            amiyaAchievementDetailDataDto.EffectivePerformanceBrokenLineList = dataList.Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time, Performance = e.EffectivePerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
-            amiyaAchievementDetailDataDto.PotentialPerformanceBrokenLineList = dataList.Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time, Performance = e.PotentialPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
-            amiyaAchievementDetailDataDto.NewCustomerEffectivePerformanceBrokenLineList = dataList.Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time, Performance = e.NewCustomerEffectivePerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
-            amiyaAchievementDetailDataDto.NewCustomerPotentialPerformanceBrokenLineList = dataList.Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time, Performance = e.NewCustomerPotentialPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
-            amiyaAchievementDetailDataDto.OldCustomerEffectivePerformanceBrokenLineList = dataList.Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time, Performance = e.OldCustomerEffectivePerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
-            amiyaAchievementDetailDataDto.OldCustomerPotentialPerformanceBrokenLineList = dataList.Select(e => new PeformanceBrokenLineListInfoDto { date = e.Time, Performance = e.OldCustomerPotentialPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            amiyaAchievementDetailDataDto.TotalPerformanceBrokenLineList = dataList.Select(e => new PerformanceBrokenLineListInfoDto { date = e.Time, Performance = e.TotalPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            amiyaAchievementDetailDataDto.NewCustomerPerformanceBrokenLineList = dataList.Select(e => new PerformanceBrokenLineListInfoDto { date = e.Time, Performance = e.NewCustomerPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            amiyaAchievementDetailDataDto.OldCustomerPerformanceBrokenLineList = dataList.Select(e => new PerformanceBrokenLineListInfoDto { date = e.Time, Performance = e.OldCustomerPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            amiyaAchievementDetailDataDto.EffectivePerformanceBrokenLineList = dataList.Select(e => new PerformanceBrokenLineListInfoDto { date = e.Time, Performance = e.EffectivePerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            amiyaAchievementDetailDataDto.PotentialPerformanceBrokenLineList = dataList.Select(e => new PerformanceBrokenLineListInfoDto { date = e.Time, Performance = e.PotentialPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            amiyaAchievementDetailDataDto.NewCustomerEffectivePerformanceBrokenLineList = dataList.Select(e => new PerformanceBrokenLineListInfoDto { date = e.Time, Performance = e.NewCustomerEffectivePerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            amiyaAchievementDetailDataDto.NewCustomerPotentialPerformanceBrokenLineList = dataList.Select(e => new PerformanceBrokenLineListInfoDto { date = e.Time, Performance = e.NewCustomerPotentialPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            amiyaAchievementDetailDataDto.OldCustomerEffectivePerformanceBrokenLineList = dataList.Select(e => new PerformanceBrokenLineListInfoDto { date = e.Time, Performance = e.OldCustomerEffectivePerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            amiyaAchievementDetailDataDto.OldCustomerPotentialPerformanceBrokenLineList = dataList.Select(e => new PerformanceBrokenLineListInfoDto { date = e.Time, Performance = e.OldCustomerPotentialPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
             return amiyaAchievementDetailDataDto;
         }
         #endregion

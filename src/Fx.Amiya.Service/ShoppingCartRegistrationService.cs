@@ -1461,7 +1461,26 @@ namespace Fx.Amiya.Service
         }
         #endregion
 
-        #region 啊美雅运营看板
+        #region 【啊美雅运营看板】
+
+        public async Task<List<ShoppingCartRegistrationDto>> GetShoppingCartRegistionDataByRecordDate(DateTime startDate, DateTime endDate)
+        {
+            var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll()
+                                          .Where(d => (d.RecordDate >= startDate.Date && d.RecordDate < endDate.Date))
+                                           .Select(d => new ShoppingCartRegistrationDto
+                                           {
+                                               IsReturnBackPrice = d.IsReturnBackPrice,
+                                               AssignEmpId = d.AssignEmpId,
+                                               IsAddWeChat = d.IsAddWeChat,
+                                               ContentPlatFormId = d.ContentPlatFormId,
+                                               BaseLiveAnchorId = d.BaseLiveAnchorId,
+                                               BelongChannel = d.BelongChannel,
+                                               Source = d.Source,
+                                               RecordDate = d.RecordDate,
+                                           }).ToListAsync();
+            return shoppingCartRegistration;
+        }
+
         /// <summary>
         /// 获取指标转化基础数据
         /// </summary>
@@ -1908,7 +1927,7 @@ namespace Fx.Amiya.Service
             data.TotalCount = baseData.Where(e => e.AssignEmpId != null).Count();
             data.SendOrderCount = sendC;
             var contentOrderList = dalContentPlatFormOrderDealInfo.GetAll()
-                .Where(e => contentPlatformIds == null|| contentPlatformIds.Contains(e.ContentPlatFormOrder.ContentPlateformId))
+                .Where(e => contentPlatformIds == null || contentPlatformIds.Contains(e.ContentPlatFormOrder.ContentPlateformId))
                 //.Where(e => phoneList.Contains(e.ContentPlatFormOrder.Phone) && e.CreateDate >= startDate && e.CreateDate < endDate)
                 .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate)
                 .Where(o => o.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId)

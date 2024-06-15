@@ -21,7 +21,7 @@ namespace Fx.Amiya.Service
         private ILiveAnchorService _liveanchorService;
         private IAmiyaEmployeeService _amiyaEmployeeService;
         private IEmployeeBindLiveAnchorService employeeBindLiveAnchorService;
-        
+
 
         public LiveAnchorMonthlyTargetBeforeLivingService(IDalLiveAnchorMonthlyTargetBeforeLiving dalLiveAnchorMonthlyTargetBeforeLiving,
             ILiveAnchorService liveAnchorService,
@@ -124,9 +124,9 @@ namespace Fx.Amiya.Service
                                                               TikTokIncreaseFansTarget = d.TikTokIncreaseFansTarget,
                                                               CumulativeTikTokIncreaseFans = d.CumulativeTikTokIncreaseFans,
                                                               TikTokIncreaseFanseCompleteRate = d.TikTokIncreaseFanseCompleteRate,
-                                                              
-                                                              
-                                                              
+
+
+
                                                               TikTokIncreaseFansFeesTarget = d.TikTokIncreaseFansFeesTarget,
                                                               CumulativeTikTokIncreaseFansFees = d.CumulativeTikTokIncreaseFansFees,
                                                               TikTokIncreaseFansFeesCompleteRate = d.TikTokIncreaseFansFeesCompleteRate,
@@ -139,9 +139,9 @@ namespace Fx.Amiya.Service
                                                               XiaoHongShuIncreaseFansTarget = d.XiaoHongShuIncreaseFansTarget,
                                                               CumulativeXiaoHongShuIncreaseFans = d.CumulativeXiaoHongShuIncreaseFans,
                                                               XiaoHongShuIncreaseFanseCompleteRate = d.XiaoHongShuIncreaseFanseCompleteRate,
-                                                             
-                                                              
-                                                              
+
+
+
                                                               XiaoHongShuIncreaseFansFeesTarget = d.XiaoHongShuIncreaseFansFeesTarget,
                                                               CumulativeXiaoHongShuIncreaseFansFees = d.CumulativeXiaoHongShuIncreaseFansFees,
                                                               XiaoHongShuIncreaseFansFeesCompleteRate = d.XiaoHongShuIncreaseFansFeesCompleteRate,
@@ -154,9 +154,9 @@ namespace Fx.Amiya.Service
                                                               VideoIncreaseFansTarget = d.VideoIncreaseFansTarget,
                                                               CumulativeVideoIncreaseFans = d.CumulativeVideoIncreaseFans,
                                                               VideoIncreaseFanseCompleteRate = d.VideoIncreaseFanseCompleteRate,
-                                                              
-                                                              
-                                                              
+
+
+
                                                               VideoIncreaseFansFeesTarget = d.VideoIncreaseFansFeesTarget,
                                                               CumulativeVideoIncreaseFansFees = d.CumulativeVideoIncreaseFansFees,
                                                               VideoIncreaseFansFeesCompleteRate = d.VideoIncreaseFansFeesCompleteRate,
@@ -360,10 +360,10 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTargetDto.TikTokIncreaseFansTarget = liveAnchorMonthlyTarget.TikTokIncreaseFansTarget;
                 liveAnchorMonthlyTargetDto.CumulativeTikTokIncreaseFans = liveAnchorMonthlyTarget.CumulativeTikTokIncreaseFans;
                 liveAnchorMonthlyTargetDto.TikTokIncreaseFanseCompleteRate = liveAnchorMonthlyTarget.TikTokIncreaseFanseCompleteRate;
-                
-              
 
-                
+
+
+
                 liveAnchorMonthlyTargetDto.TikTokIncreaseFansFeesTarget = liveAnchorMonthlyTarget.TikTokIncreaseFansFeesTarget;
                 liveAnchorMonthlyTargetDto.CumulativeTikTokIncreaseFansFees = liveAnchorMonthlyTarget.CumulativeTikTokIncreaseFansFees;
                 liveAnchorMonthlyTargetDto.TikTokIncreaseFansFeesCompleteRate = liveAnchorMonthlyTarget.TikTokIncreaseFansFeesCompleteRate;
@@ -388,8 +388,8 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTargetDto.XiaoHongShuIncreaseFansTarget = liveAnchorMonthlyTarget.XiaoHongShuIncreaseFansTarget;
                 liveAnchorMonthlyTargetDto.CumulativeXiaoHongShuIncreaseFans = liveAnchorMonthlyTarget.CumulativeXiaoHongShuIncreaseFans;
                 liveAnchorMonthlyTargetDto.XiaoHongShuIncreaseFanseCompleteRate = liveAnchorMonthlyTarget.XiaoHongShuIncreaseFanseCompleteRate;
-                
-               
+
+
                 liveAnchorMonthlyTargetDto.XiaoHongShuIncreaseFansFeesTarget = liveAnchorMonthlyTarget.XiaoHongShuIncreaseFansFeesTarget;
                 liveAnchorMonthlyTargetDto.XiaoHongShuIncreaseFansFeesTarget = liveAnchorMonthlyTarget.XiaoHongShuIncreaseFansFeesTarget;
                 liveAnchorMonthlyTargetDto.CumulativeXiaoHongShuIncreaseFansFees = liveAnchorMonthlyTarget.CumulativeXiaoHongShuIncreaseFansFees;
@@ -425,7 +425,7 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTargetDto.VideoIncreaseFansTarget = liveAnchorMonthlyTarget.VideoIncreaseFansTarget;
                 liveAnchorMonthlyTargetDto.CumulativeVideoIncreaseFans = liveAnchorMonthlyTarget.CumulativeVideoIncreaseFans;
                 liveAnchorMonthlyTargetDto.VideoIncreaseFanseCompleteRate = liveAnchorMonthlyTarget.VideoIncreaseFanseCompleteRate;
-                
+
                 liveAnchorMonthlyTargetDto.VideoIncreaseFansFeesTarget = liveAnchorMonthlyTarget.VideoIncreaseFansFeesTarget;
                 liveAnchorMonthlyTargetDto.CumulativeVideoIncreaseFansFees = liveAnchorMonthlyTarget.CumulativeVideoIncreaseFansFees;
                 liveAnchorMonthlyTargetDto.VideoIncreaseFansFeesCompleteRate = liveAnchorMonthlyTarget.VideoIncreaseFansFeesCompleteRate;
@@ -864,20 +864,23 @@ namespace Fx.Amiya.Service
         public async Task<LiveAnchorBeforeLivingTargetDto?> GetBeforeLivingTargetByYearAndMonthAsync(QueryBeforeLivingBusinessDataDto query)
         {
             var res = dalLiveAnchorMonthlyTargetBeforeLiving.GetAll().Where(e => e.Year == query.Year && e.Month == query.Month);
-            if (!string.IsNullOrEmpty(query.BaseLiveAnchorId)) {
-                res = res.Where(e=>e.LiveAnchor.LiveAnchorBaseId==query.BaseLiveAnchorId);
+            if (!string.IsNullOrEmpty(query.BaseLiveAnchorId))
+            {
+                res = res.Where(e => e.LiveAnchor.LiveAnchorBaseId == query.BaseLiveAnchorId);
             }
             if (res.ToList().Count == 0) return null;
             LiveAnchorBeforeLivingTargetDto liveAnchorBeforeLivingTargetDto = new LiveAnchorBeforeLivingTargetDto();
-            if (query.ShowTikokData) {
-                liveAnchorBeforeLivingTargetDto.IncreaseFansFeesTarget += res.Sum(e=>e.TikTokIncreaseFansFeesTarget);
-                liveAnchorBeforeLivingTargetDto.IncreaseFansTarget += res.Sum(e=>e.TikTokIncreaseFansTarget);
-                liveAnchorBeforeLivingTargetDto.ShowcaseIncomeTarget += res.Sum(e=>e.TikTokShowcaseIncomeTarget);
-                liveAnchorBeforeLivingTargetDto.ShowcaseFeeTarget += res.Sum(e=>e.TikTokShowCaseFeeTarget);
-                liveAnchorBeforeLivingTargetDto.CluesTarget += res.Sum(e=>e.TikTokCluesTarget);
-                liveAnchorBeforeLivingTargetDto.SendNumTarget += res.Sum(e=>e.TikTokReleaseTarget);
+            if (query.ShowTikokData)
+            {
+                liveAnchorBeforeLivingTargetDto.IncreaseFansFeesTarget += res.Sum(e => e.TikTokIncreaseFansFeesTarget);
+                liveAnchorBeforeLivingTargetDto.IncreaseFansTarget += res.Sum(e => e.TikTokIncreaseFansTarget);
+                liveAnchorBeforeLivingTargetDto.ShowcaseIncomeTarget += res.Sum(e => e.TikTokShowcaseIncomeTarget);
+                liveAnchorBeforeLivingTargetDto.ShowcaseFeeTarget += res.Sum(e => e.TikTokShowCaseFeeTarget);
+                liveAnchorBeforeLivingTargetDto.CluesTarget += res.Sum(e => e.TikTokCluesTarget);
+                liveAnchorBeforeLivingTargetDto.SendNumTarget += res.Sum(e => e.TikTokReleaseTarget);
             }
-            if (query.ShowWechatVideoData) {
+            if (query.ShowWechatVideoData)
+            {
                 liveAnchorBeforeLivingTargetDto.IncreaseFansFeesTarget += res.Sum(e => e.VideoIncreaseFansFeesTarget);
                 liveAnchorBeforeLivingTargetDto.IncreaseFansTarget += res.Sum(e => e.VideoIncreaseFansTarget);
                 liveAnchorBeforeLivingTargetDto.ShowcaseIncomeTarget += res.Sum(e => e.VideoShowcaseIncomeTarget);
@@ -885,7 +888,8 @@ namespace Fx.Amiya.Service
                 liveAnchorBeforeLivingTargetDto.CluesTarget += res.Sum(e => e.VideoCluesTarget);
                 liveAnchorBeforeLivingTargetDto.SendNumTarget += res.Sum(e => e.VideoReleaseTarget);
             }
-            if (query.ShowXiaoHongShuData) {
+            if (query.ShowXiaoHongShuData)
+            {
                 liveAnchorBeforeLivingTargetDto.IncreaseFansFeesTarget += res.Sum(e => e.XiaoHongShuIncreaseFansFeesTarget);
                 liveAnchorBeforeLivingTargetDto.IncreaseFansTarget += res.Sum(e => e.XiaoHongShuIncreaseFansTarget);
                 liveAnchorBeforeLivingTargetDto.ShowcaseIncomeTarget += res.Sum(e => e.XiaoHongShuShowcaseIncomeTarget);
@@ -896,6 +900,29 @@ namespace Fx.Amiya.Service
             return liveAnchorBeforeLivingTargetDto;
         }
 
+
+        /// <summary>
+        /// 根据条件获取主播IP直播前线索目标总计
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        public async Task<LiveAnchorBaseBusinessMonthTargetBeforeLivingDto> GetCluePerformanceTargetAsync(int year, int month, List<int> liveAnchorIds)
+        {
+            var performance = dalLiveAnchorMonthlyTargetBeforeLiving.GetAll().Where(t => t.Year == year && t.Month == month)
+                .Where(o => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(o.LiveAnchorId))
+                .Select(e => new LiveAnchorBaseBusinessMonthTargetBeforeLivingDto
+                {
+                    CluesTarget = e.TikTokCluesTarget + e.XiaoHongShuCluesTarget + e.VideoCluesTarget,
+                })
+                .ToList();
+            LiveAnchorBaseBusinessMonthTargetBeforeLivingDto performanceInfoDto = new LiveAnchorBaseBusinessMonthTargetBeforeLivingDto
+            {
+                CluesTarget = performance.Sum(t => t.CluesTarget),
+            };
+            return performanceInfoDto;
+        }
 
         ///// <summary>
         ///// 获取带货业绩

@@ -12,14 +12,14 @@ namespace Fx.Amiya.Dto.NewBusinessDashboard
         /// <summary>
         /// 设计卡下单
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> DesignCardOrderData { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> DesignCardOrderData { get; set; }
         /// <summary>
         /// 设计卡退单
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> DesignCardRefundData { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> DesignCardRefundData { get; set; }
         /// <summary>
         /// 设计卡实际
         /// </summary>
-        public List<PeformanceBrokenLineListInfoDto> DesignCardActualData { get; set; }
+        public List<PerformanceBrokenLineListInfoDto> DesignCardActualData { get; set; }
     }
 }

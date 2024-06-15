@@ -27,5 +27,15 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<LiveAnchorBeforeLivingTargetDto?> GetBeforeLivingTargetByYearAndMonthAsync(QueryBeforeLivingBusinessDataDto query);
 
+
+        /// <summary>
+        /// 根据条件获取主播IP直播前线索目标总计
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="liveAnchorIds"></param>
+        /// <returns></returns>
+        Task<LiveAnchorBaseBusinessMonthTargetBeforeLivingDto> GetCluePerformanceTargetAsync(int year, int month, List<int> liveAnchorIds);
+
     }
 }
