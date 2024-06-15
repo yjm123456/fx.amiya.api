@@ -1466,7 +1466,7 @@ namespace Fx.Amiya.Service
         public async Task<List<ShoppingCartRegistrationDto>> GetShoppingCartRegistionDataByRecordDate(DateTime startDate, DateTime endDate)
         {
             var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll()
-                                          .Where(d => (d.RecordDate >= startDate.Date && d.RecordDate < endDate.Date))
+                                          .Where(d => (d.RecordDate >= startDate.Date && d.RecordDate < endDate))
                                            .Select(d => new ShoppingCartRegistrationDto
                                            {
                                                IsReturnBackPrice = d.IsReturnBackPrice,
