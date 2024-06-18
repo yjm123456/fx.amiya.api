@@ -6,6 +6,7 @@ using Fx.Amiya.Dto.AmiyaOperationsBoardService.Input;
 using Fx.Amiya.Dto.AmiyaOperationsBoardService.Result;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
+using Fx.Common.Extensions;
 using Fx.Open.Infrastructure.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,20 @@ namespace Fx.Amiya.Background.Api.Controllers
             this.liveAnchorBaseInfoService = liveAnchorBaseInfoService;
         }
         #region  业绩
+        /// <summary>
+        /// 根据结束时间获取时间进度
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("getTimeSpan")]
+        public async Task<ResultData<decimal>> GetTimeSpanAsync([FromQuery] QueryOperationDataVo query)
+        {
+            decimal result = 0.00M;
+            var date= DateTimeExtension.GetDatetimeSchedule(query.endDate.Value).FirstOrDefault();
+            result = date.Value;
+            return ResultData<decimal>.Success().AddData("data", result);
+        }
+
         /// <summary>
         /// 根据条件获取业绩数据
         /// </summary>
