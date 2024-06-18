@@ -605,7 +605,7 @@ namespace Fx.Amiya.Service
         {
             var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
             var nameList = await liveAnchorBaseInfoService.GetValidAsync(true);
-            var liveAnchorIds = nameList.Select(e => e.Id).ToList();
+            var liveAnchorIds = nameList.Where(e => e.LiveAnchorName.Contains("刀刀") || e.LiveAnchorName.Contains("吉娜")).Select(e => e.Id).ToList();
             query.ContentPlatFormIds = GetContentPlatformIdList(query);
             List<FlowTransFormDataDto> dataList = new List<FlowTransFormDataDto>();
             foreach (var liveanchorId in liveAnchorIds)
