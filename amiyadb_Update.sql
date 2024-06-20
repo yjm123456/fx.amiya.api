@@ -286,3 +286,17 @@ ALTER TABLE `amiyadb`.`tbl_recommand_document_settle`
 ADD COLUMN `content_plat_form_order_addorderprice` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `customer_service_performance`;
 ----------------------------------------------余建明 2024/06/14 END----------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+
+------------------------------------王健 2024/6/18 BEGIN--------------------------------------
+
+---员工信息添加潜在新客业绩
+
+ALTER TABLE `tbl_amiya_employee`
+	ADD COLUMN `potential_new_customer_commission` DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER `tmall_order_commission`;
+
+---员工信息添加行政客服参与稽查后提成比例
+ALTER TABLE `tbl_amiya_employee`
+	ADD COLUMN `administrative_inspection` DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER `potential_new_customer_commission`;
+
+------------------------------------王健 2024/6/18 END--------------------------------------

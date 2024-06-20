@@ -1958,10 +1958,11 @@ namespace Fx.Amiya.Service
         public async Task<List<ShoppingCartRegistrationIndicatorBaseDataDto>> GetAssitantFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate, List<string> contentPlatformIds)
         {
             var nameList = await liveAnchorBaseInfoService.GetValidAsync(true);
+            var liveanchorIds = nameList.Select(e => e.Id).ToList();
             var assistantNameList = (await _amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(nameList.Select(e => e.Id).ToList())).Select(e => e.Id);
             var baseData = dalShoppingCartRegistration.GetAll()
                 .Where(e => contentPlatformIds == null || contentPlatformIds.Contains(e.ContentPlatFormId))
-                .Where(e => e.AssignEmpId != null && e.RecordDate >= startDate && e.RecordDate < endDate)
+                .Where(e => e.AssignEmpId != null && e.RecordDate >= startDate && e.RecordDate < endDate& liveanchorIds.Contains(e.BaseLiveAnchorId))
                 .Select(e => new
                 {
                     AssignEmpId = e.AssignEmpId,
@@ -1973,7 +1974,7 @@ namespace Fx.Amiya.Service
             var phoneList = baseData.Select(e => e.Phone).ToList();
             var sendData = dalContentPlatformOrder.GetAll()
               .Where(o => contentPlatformIds == null || contentPlatformIds.Contains(o.ContentPlateformId))
-              .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
+              .Where(o => o.SendDate >= startDate && o.SendDate < endDate&&liveanchorIds.Contains(o.LiveAnchor.LiveAnchorBaseId))
               //.Where(o => phoneList.Contains(o.Phone))
               .Select(e => new
               {
@@ -1983,7 +1984,7 @@ namespace Fx.Amiya.Service
             var contentOrderList = dalContentPlatFormOrderDealInfo.GetAll()
                 .Where(o => contentPlatformIds == null || contentPlatformIds.Contains(o.ContentPlatFormOrder.ContentPlateformId))
                 //.Where(e => phoneList.Contains(e.ContentPlatFormOrder.Phone) && e.CreateDate >= startDate && e.CreateDate < endDate)
-                .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate)
+                .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate&& liveanchorIds.Contains(e.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId))
                 .Select(e => new
                 {
                     AssignEmpId = e.ContentPlatFormOrder.IsSupportOrder ? e.ContentPlatFormOrder.SupportEmpId : e.ContentPlatFormOrder.BelongEmpId,

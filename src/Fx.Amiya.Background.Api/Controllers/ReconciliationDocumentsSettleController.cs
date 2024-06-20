@@ -473,5 +473,28 @@ namespace Fx.Amiya.Background.Api.Controllers
             }).ToList();
             return ResultData<List<BaseIdAndNameVo>>.Success().AddData("reconciliationtCheckType", list);
         }
+        /// <summary>
+        /// 批量审核财务稽查数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPut("batchCheckFinanceReconciliationDocumentsSettle")]
+        [FxInternalAuthorize]
+        public async Task<ResultData> BatchCheckFinanceReconciliationDocumentsSettleAsync([FromBody] BatchCheckFinanceReconciliationDocumentSettleVo query)
+        {
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeId = Convert.ToInt32(employee.Id);
+            BatchCheckFinanceReconciliationDocumentSettleDto checkReconciliationDocumentSettleDto = new BatchCheckFinanceReconciliationDocumentSettleDto();
+            checkReconciliationDocumentSettleDto.CheckBy = employeeId;
+            checkReconciliationDocumentSettleDto.CheckRemark = query.CheckRemark;
+            checkReconciliationDocumentSettleDto.CheckState = query.CheckState;
+            checkReconciliationDocumentSettleDto.CheckType = query.CheckType;
+            checkReconciliationDocumentSettleDto.IsInspectPerformance = false;
+            checkReconciliationDocumentSettleDto.IdList = query.IdList;
+            checkReconciliationDocumentSettleDto.FinanceId = query.FinanceId;
+            await billService.BatchCheckFinanceReconciliationDocumentsSettleAsync(checkReconciliationDocumentSettleDto);
+            return ResultData.Success();
+
+        }
     }
 }

@@ -267,7 +267,8 @@ namespace Fx.Amiya.Service
                     CooperateLiveanchorNewCustomerCommission = addDto.CooperateLiveanchorNewCustomerCommission,
                     CooperateLiveanchorOldCustomerCommission = addDto.CooperateLiveanchorOldCustomerCommission,
                     TmallOrderCommission = addDto.TmallOrderCommission,
-
+                    PotentialNewCustomerCommission = addDto.PotentialNewCustomerCommission,
+                    AdministrativeInspection=addDto.AdministrativeInspection
                 };
 
                 await dalAmiyaEmployee.AddAsync(employee, true);
@@ -314,7 +315,9 @@ namespace Fx.Amiya.Service
                     CooperateLiveanchorNewCustomerCommission = employee.CooperateLiveanchorNewCustomerCommission,
                     CooperateLiveanchorOldCustomerCommission = employee.CooperateLiveanchorOldCustomerCommission,
                     TmallOrderCommission = employee.TmallOrderCommission,
-                    LiveAnchorBaseName = dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == employee.LiveAnchorBaseId).FirstOrDefault()?.LiveAnchorName
+                    LiveAnchorBaseName = dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == employee.LiveAnchorBaseId).FirstOrDefault()?.LiveAnchorName,
+                    PotentialNewCustomerCommission=employee.PotentialNewCustomerCommission,
+                    AdministrativeInspection=employee.AdministrativeInspection,
                 };
                 if (employeeDto.IsCustomerService == true || employeeDto.PositionId == 19)
                 {
@@ -529,6 +532,8 @@ namespace Fx.Amiya.Service
                 employee.CooperateLiveanchorNewCustomerCommission = updateDto.CooperateLiveanchorNewCustomerCommission;
                 employee.CooperateLiveanchorOldCustomerCommission = updateDto.CooperateLiveanchorOldCustomerCommission;
                 employee.TmallOrderCommission = updateDto.TmallOrderCommission;
+                employee.PotentialNewCustomerCommission = updateDto.PotentialNewCustomerCommission;
+                employee.AdministrativeInspection = updateDto.AdministrativeInspection;
                 await dalAmiyaEmployee.UpdateAsync(employee, true);
 
 

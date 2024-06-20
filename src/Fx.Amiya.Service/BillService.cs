@@ -516,8 +516,8 @@ namespace Fx.Amiya.Service
             if (checkDto.CheckType != (int)ReconciliationDocumentSettleCheckType.SelfLiveAnchorCheck)
                 throw new Exception("审核类型只能为自播达人");
             var employee = await amiyaEmployeeService.GetByIdAsync(checkDto.CheckBelongEmpId.Value);
-            if (employee.PositionId != 4)
-                throw new Exception("该员工不属于客服管理员,不能批量审核!");
+            //if (employee.PositionId != 4)
+            //    throw new Exception("该员工不属于客服管理员,不能批量审核!");
             var checkRecordDataList = dalRecommandDocumentSettle.GetAll()
                  .Where(e => checkDto.IdList.Contains(e.Id))
                  .Select(e => new
@@ -527,6 +527,7 @@ namespace Fx.Amiya.Service
                      CustomerServiceSettlePrice = e.CustomerServiceSettlePrice,
                      BelongEmpId = e.BelongEmpId,
                      CreateEmpId = e.CreateEmpId,
+                     ContentPlatFormOrderAddOrderPrice = e.ContentPlatFormOrderAddOrderPrice
                  }).ToList();
             if (checkRecordDataList.Count() != checkDto.IdList.Count())
                 throw new Exception("编号错误");
@@ -554,9 +555,80 @@ namespace Fx.Amiya.Service
                     }
                     else
                     {
-                        checkData.PerformancePercent = employee.NewCustomerCommission ?? 0m;
+                        checkData.PerformancePercent = item.ContentPlatFormOrderAddOrderPrice > 0 ? employee.NewCustomerCommission ?? 0m : employee.PotentialNewCustomerCommission ?? 0m;
                     }
                     checkData.CustomerServicePerformance = Math.Round(checkData.CustomerServiceOrderPerformance * checkData.PerformancePercent / 100, 2, MidpointRounding.AwayFromZero);
+                    await recommandDocumentSettleService.CheckAsync(checkData);
+                }
+                unitOfWork.Commit();
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw ex;
+            }
+        }
+        /// <summary>
+        /// 批量审核财务稽查数据
+        /// </summary>
+        /// <param name="checkDto"></param>
+        /// <returns></returns>
+        public async Task BatchCheckFinanceReconciliationDocumentsSettleAsync(BatchCheckFinanceReconciliationDocumentSettleDto checkDto)
+        {
+            if (checkDto.CheckType != (int)ReconciliationDocumentSettleCheckType.SelfLiveAnchorCheck)
+                throw new Exception("审核类型只能为自播达人");
+            var checkRecordDataList = dalRecommandDocumentSettle.GetAll()
+                 .Where(e => checkDto.IdList.Contains(e.Id))
+                 .Select(e => new
+                 {
+                     Id = e.Id,
+                     IsOldCustomer = e.IsOldCustomer,
+                     CustomerServiceSettlePrice = e.CustomerServiceSettlePrice,
+                     BelongEmpId = e.BelongEmpId,
+                     CreateEmpId = e.CreateEmpId,
+                     ContentPlatFormOrderAddOrderPrice = e.ContentPlatFormOrderAddOrderPrice,
+                     OrderFrom = e.OrderFrom
+                 }).ToList();
+            var haveOtherContentplatform = checkRecordDataList.Where(e => e.OrderFrom != (int)OrderFrom.ContentPlatFormOrder).Any();
+            if (haveOtherContentplatform)
+                throw new Exception("只能批量审核内容平台数据!");
+            if (checkRecordDataList.Count() != checkDto.IdList.Count())
+                throw new Exception("编号错误");
+            var financialIdList = (await amiyaEmployeeService.GetFinancialNameListAsync()).Select(e => e.Id).ToList();
+            if (checkRecordDataList.Where(e => financialIdList.Contains(e.CreateEmpId ?? 0)).Count() <= 0)
+                throw new Exception("所选数据包含上传人非财务数据审核失败!");
+            if (checkRecordDataList.Any(e => e.CreateEmpId != checkDto.FinanceId))
+                throw new Exception("所选数据包含其他财务数据,审核失败");
+            var currentFinancial = await amiyaEmployeeService.GetByIdAsync(checkDto.FinanceId);
+            try
+            {
+                unitOfWork.BeginTransaction();
+                foreach (var item in checkRecordDataList)
+                {
+                    var employee = await amiyaEmployeeService.GetByIdAsync(item.BelongEmpId.Value);
+                    CheckReconciliationDocumentSettleDto checkData = new CheckReconciliationDocumentSettleDto();
+                    checkData.Id = item.Id;
+                    checkData.CheckState = checkDto.CheckState;
+                    checkData.CheckBy = checkDto.CheckBy;
+                    checkData.CheckType = checkDto.CheckType;
+                    checkData.IsInspectPerformance = true;
+                    checkData.CheckRemark = checkDto.CheckRemark;
+                    checkData.CustomerServiceOrderPerformance = item.CustomerServiceSettlePrice;
+                    checkData.CheckBelongEmpId = item.BelongEmpId;
+                    checkData.PerformancePercent = employee.InspectionCommission.Value;
+                    checkData.CustomerServicePerformance = Math.Round(checkData.CustomerServiceOrderPerformance * checkData.PerformancePercent / 100, 2, MidpointRounding.AwayFromZero);
+                    checkData.InspectEmpId = item.CreateEmpId;
+                    checkData.InspectPercent = currentFinancial.AdministrativeInspectionCommission;
+                    var inspectionCommission = 0m;
+                    if (item.IsOldCustomer)
+                    {
+                        inspectionCommission = employee.OldCustomerCommission.Value;
+                    }
+                    else
+                    {
+                        inspectionCommission = item.ContentPlatFormOrderAddOrderPrice > 0 ? employee.NewCustomerCommission.Value : employee.PotentialNewCustomerCommission.Value;
+                    }
+                    checkData.InspectPrice = Math.Round(checkData.CustomerServiceOrderPerformance * (inspectionCommission > 5 ? 5 : inspectionCommission) * currentFinancial.AdministrativeInspectionCommission / 100, 2, MidpointRounding.AwayFromZero);
                     await recommandDocumentSettleService.CheckAsync(checkData);
                 }
                 unitOfWork.Commit();
@@ -971,6 +1043,7 @@ namespace Fx.Amiya.Service
             }
             return billReturnBackStateTextList;
         }
+
 
 
 

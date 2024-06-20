@@ -84,6 +84,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.CooperateLiveanchorNewCustomerCommission = addVo.CooperateLiveanchorNewCustomerCommission;
                 addDto.CooperateLiveanchorOldCustomerCommission = addVo.CooperateLiveanchorOldCustomerCommission;
                 addDto.TmallOrderCommission = addVo.TmallOrderCommission;
+                addDto.PotentialNewCustomerCommission = addVo.PotentialNewCustomerCommission;
+                addDto.AdministrativeInspection=addVo.AdministrativeInspection;
                 await employeeService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -211,7 +213,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                     employeeVo.CooperateLiveanchorNewCustomerCommission = q.CooperateLiveanchorNewCustomerCommission;
                     employeeVo.CooperateLiveanchorOldCustomerCommission = q.CooperateLiveanchorOldCustomerCommission;
                     employeeVo.TmallOrderCommission = q.TmallOrderCommission;
-
+                    employeeVo.PotentialNewCustomerCommission = q.PotentialNewCustomerCommission;
+                    employeeVo.AdministrativeInspection=q.AdministrativeInspection;
                 }
                 return ResultData<AmiyaEmployeeVo>.Success().AddData("employeeInfo", employeeVo);
             }
@@ -250,6 +253,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.CooperateLiveanchorNewCustomerCommission = updateVo.CooperateLiveanchorNewCustomerCommission;
                 updateDto.CooperateLiveanchorOldCustomerCommission = updateVo.CooperateLiveanchorOldCustomerCommission;
                 updateDto.TmallOrderCommission = updateVo.TmallOrderCommission;
+                updateDto.PotentialNewCustomerCommission = updateVo.PotentialNewCustomerCommission;
+                updateDto.AdministrativeInspection=updateVo.AdministrativeInspection;
                 await employeeService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

@@ -99,6 +99,13 @@ namespace Fx.Amiya.IService
         /// <param name="isHidePhone"></param>
         /// <returns></returns>
         Task<List<RecommandDocumentSettleDto>> ExportSettleListByPageAsync(DateTime? startDate, DateTime? endDate, bool? isSettle, bool? accountType, int chooseHospitalId, string keyword, bool isHidePhone);
+        /// <summary>
+        /// 批量审核财务稽查数据
+        /// </summary>
+        /// <param name="checkDto"></param>
+        /// <returns></returns>
+
+        Task BatchCheckFinanceReconciliationDocumentsSettleAsync(BatchCheckFinanceReconciliationDocumentSettleDto checkDto);
 
         #region 财务看板
         /// <summary>

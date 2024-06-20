@@ -60,7 +60,7 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaEmployee
         /// </summary>
         public List<int> LiveAnchorIds { get; set; }
         /// <summary>
-        /// 新客提成
+        /// 有效新客提成
         /// </summary>
         public decimal? NewCustomerCommission { get; set; }
         /// <summary>
@@ -68,9 +68,13 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaEmployee
         /// </summary>
         public decimal? OldCustomerCommission { get; set; }
         /// <summary>
-        /// 稽查提成
+        /// 财务参与稽查后提成
         /// </summary>
         public decimal? InspectionCommission { get; set; }
+        /// <summary>
+        /// 行政客服参与稽查后提成
+        /// </summary>
+        public decimal AdministrativeInspection { get; set; }
         /// <summary>
         /// 行政客户稽查提成比例
         /// </summary>
@@ -87,5 +91,9 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaEmployee
         /// 天猫升单比例
         /// </summary>
         public decimal TmallOrderCommission { get; set; }
+        /// <summary>
+        /// 潜在新客提成
+        /// </summary>
+        public decimal? PotentialNewCustomerCommission { get; set; }
     }
 }

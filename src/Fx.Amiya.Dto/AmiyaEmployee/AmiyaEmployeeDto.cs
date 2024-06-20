@@ -30,7 +30,7 @@ namespace Fx.Amiya.Dto.AmiyaEmployee
         public string LiveAnchorBaseId { get; set; }
         public string LiveAnchorBaseName { get; set; }
         /// <summary>
-        /// 新客提成
+        /// 有效新客提成
         /// </summary>
         public decimal? NewCustomerCommission { get; set; }
         /// <summary>
@@ -38,9 +38,13 @@ namespace Fx.Amiya.Dto.AmiyaEmployee
         /// </summary>
         public decimal? OldCustomerCommission { get; set; }
         /// <summary>
-        /// 稽查提成
+        /// 财务参与稽查后提成
         /// </summary>
         public decimal? InspectionCommission { get; set; }
+        /// <summary>
+        /// 行政客服参与稽查后提成
+        /// </summary>
+        public decimal AdministrativeInspection { get; set; }
         public List<int> LiveAnchorIds { get; set; }
         /// <summary>
         /// 读取数据中心直播达人数据
@@ -70,5 +74,9 @@ namespace Fx.Amiya.Dto.AmiyaEmployee
         /// 天猫升单比例
         /// </summary>
         public decimal TmallOrderCommission { get; set; }
+        /// <summary>
+        /// 潜在新客提成
+        /// </summary>
+        public decimal? PotentialNewCustomerCommission { get; set; }
     }
 }

@@ -697,6 +697,27 @@ namespace Fx.Amiya.Service
                 data.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(data.NewCustomerDealCount, data.OldCustomerDealCount);
                 return data;
             }).ToList();
+            FlowTransFormDataDto otherData = new FlowTransFormDataDto();
+            otherData.GroupName = "其他";
+            otherData.SendOrderCount = list.Where(e=>e.GroupName=="其他").Sum(e => e.SendOrderCount);
+            otherData.DistributeConsulationNum = list.Where(e => e.GroupName == "其他").Sum(e => e.DistributeConsulationNum);
+            otherData.AddWechatCount = list.Where(e => e.GroupName == "其他").Sum(e => e.AddWechatCount);
+            otherData.AddWechatRate = DecimalExtension.CalculateTargetComplete(otherData.AddWechatCount, otherData.DistributeConsulationNum).Value;
+            otherData.SendOrderRate = DecimalExtension.CalculateTargetComplete(otherData.SendOrderCount, otherData.AddWechatCount).Value;
+            otherData.ToHospitalCount = list.Where(e => e.GroupName == "其他").Sum(e => e.ToHospitalCount);
+            otherData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(otherData.ToHospitalCount, otherData.SendOrderCount).Value;
+            otherData.NewCustomerDealCount = list.Where(e => e.GroupName == "其他").Sum(e => e.NewCustomerDealCount);
+            otherData.OldCustomerDealCount = list.Where(e => e.GroupName == "其他").Sum(e => e.OldCustomerDealCount);
+            otherData.DealCount = otherData.NewCustomerDealCount + otherData.OldCustomerDealCount;
+            otherData.DealRate = DecimalExtension.CalculateTargetComplete(otherData.DealCount, otherData.ToHospitalCount).Value;
+            otherData.NewCustomerPerformance = list.Where(e => e.GroupName == "其他").Sum(e => e.NewCustomerPerformance);
+            otherData.OldCustomerPerformance = list.Where(e => e.GroupName == "其他").Sum(e => e.OldCustomerPerformance);
+            otherData.OldCustomerUnitPrice = DecimalExtension.Division(otherData.OldCustomerPerformance, otherData.OldCustomerDealCount).Value;
+            otherData.NewCustomerUnitPrice = DecimalExtension.Division(otherData.NewCustomerPerformance, otherData.NewCustomerDealCount).Value;
+            otherData.CustomerUnitPrice = DecimalExtension.Division(otherData.NewCustomerPerformance + otherData.OldCustomerPerformance, otherData.DealCount).Value;
+            otherData.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(otherData.NewCustomerDealCount, otherData.OldCustomerDealCount);
+            list.RemoveAll(e => e.GroupName == "其他");
+            list.Add(otherData);
             foreach (var item in list)
             {
                 item.Rate = DecimalExtension.CalculateTargetComplete(item.NewCustomerPerformance + item.OldCustomerPerformance, list.Sum(e => e.NewCustomerPerformance) + list.Sum(e => e.OldCustomerPerformance)).Value;
