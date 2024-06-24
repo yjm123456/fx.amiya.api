@@ -275,7 +275,15 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryReconciliationDocumentsSettleDto.ChooseHospitalId = query.ChooseHospitalId;
                 queryReconciliationDocumentsSettleDto.IsOldCustoemr = query.IsOldCustoemr;
                 queryReconciliationDocumentsSettleDto.CheckState = query.CheckState;
-                queryReconciliationDocumentsSettleDto.BelongEmpId = query.BelongEmpId;
+
+                List<int?> ids = new List<int?> { };
+                var deviceVarID = query.BelongEmpId;
+                var empIds = deviceVarID.Split(',');
+                foreach (var item in empIds)
+                {
+                    ids.Add(Convert.ToInt16(item));
+                }
+                queryReconciliationDocumentsSettleDto.BelongEmpId = ids;
                 queryReconciliationDocumentsSettleDto.KeyWord = query.KeyWord;
                 queryReconciliationDocumentsSettleDto.StartDate = query.StartDate;
                 queryReconciliationDocumentsSettleDto.EndDate = query.EndDate;
@@ -366,7 +374,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryReconciliationDocumentsSettleDto.ChooseHospitalId = query.ChooseHospitalId;
                 queryReconciliationDocumentsSettleDto.IsOldCustoemr = query.IsOldCustoemr;
                 queryReconciliationDocumentsSettleDto.CheckState = query.CheckState;
-                queryReconciliationDocumentsSettleDto.BelongEmpId = query.BelongEmpId;
+                List<int?> ids = new List<int?> { };
+                var deviceVarID = query.BelongEmpId;
+                var empIds = deviceVarID.Split(',');
+                foreach (var item in empIds)
+                {
+                    ids.Add(Convert.ToInt16(item));
+                }
+                queryReconciliationDocumentsSettleDto.BelongEmpId = ids;
                 queryReconciliationDocumentsSettleDto.InspectEmpId = query.InspectEmpId;
                 queryReconciliationDocumentsSettleDto.KeyWord = query.KeyWord;
                 queryReconciliationDocumentsSettleDto.StartDate = query.StartDate;

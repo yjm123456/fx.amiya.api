@@ -779,7 +779,7 @@ namespace Fx.Amiya.Service
         public async Task<List<AmiyaEmployeeNameDto>> GetCustomerServiceByBaseLiveAnchorid(string baseLiveAnchorId)
         {
             var employee = from d in dalAmiyaEmployee.GetAll()
-                           where d.IsCustomerService == true && d.LiveAnchorBaseId == baseLiveAnchorId
+                           where d.IsCustomerService == true && d.LiveAnchorBaseId == baseLiveAnchorId && (d.AmiyaPositionId == 4 || d.AmiyaPositionId == 30)
                            && d.Valid == true
                            select new AmiyaEmployeeNameDto
                            {
@@ -821,7 +821,7 @@ namespace Fx.Amiya.Service
                 List<AmiyaEmployeeDto> amiyaEmployeeDtos = new List<AmiyaEmployeeDto>();
                 var employeeInfo = dalAmiyaEmployee.GetAll()
                     .Include(e => e.AmiyaPositionInfo).ThenInclude(e => e.AmiyaDepartment)
-                    .Where(e => ((liveAnchorBaseId == null||liveAnchorBaseId.Count()==0) || liveAnchorBaseId.Contains(e.LiveAnchorBaseId)) && e.IsCustomerService == true);
+                    .Where(e => ((liveAnchorBaseId == null || liveAnchorBaseId.Count() == 0) || liveAnchorBaseId.Contains(e.LiveAnchorBaseId)) && e.IsCustomerService == true);
                 var employee = await employeeInfo.Select(e => new AmiyaEmployeeDto
                 {
                     Id = e.Id,

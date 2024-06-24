@@ -23,7 +23,7 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         /// <summary>
         /// 归属客服
         /// </summary>
-        public int? BelongEmpId { get; set; }
+        public List<int?> BelongEmpId { get; set; }
         /// <summary>
         /// 稽查客服
         /// </summary>

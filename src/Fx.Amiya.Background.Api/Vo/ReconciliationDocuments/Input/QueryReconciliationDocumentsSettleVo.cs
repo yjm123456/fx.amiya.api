@@ -19,7 +19,7 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments.Input
         /// <summary>
         /// 归属客服
         /// </summary>
-        public int? BelongEmpId { get; set; }
+        public string BelongEmpId { get; set; }
         /// <summary>
         /// 稽查客服
         /// </summary>

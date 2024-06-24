@@ -69,11 +69,17 @@ namespace Fx.Amiya.Service
         {
             OperationTotalAchievementDataDto result = new OperationTotalAchievementDataDto();
             var dateSchedule = DateTimeExtension.GetDatetimeSchedule(query.endDate.Value).FirstOrDefault();
-            var orderDealInfo = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAndLiveAnchorIdsAsync(query.startDate.Value, query.endDate.Value, new List<int>());
-            List<int> LiveAnchorInfo = new List<int>();
-
-            var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.endDate.Value.Year, query.endDate.Value.Month == 0 ? 1 : query.endDate.Value.Month);
             //获取各个平台的主播ID
+            List<int> LiveAnchorInfo = new List<int>();
+            var liveAnchorDaoDao = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync("f0a77257-c905-4719-95c4-ad2c4f33855c");
+            LiveAnchorInfo = liveAnchorDaoDao.Select(x => x.Id).ToList();
+
+            var liveAnchorJina = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync("af69dcf5-f749-41ea-8b50-fe685facdd8b");
+            foreach (var x in liveAnchorJina)
+            {
+                LiveAnchorInfo.Add(x.Id);
+            }
+            var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.endDate.Value.Year, query.endDate.Value.Month == 0 ? 1 : query.endDate.Value.Month);
 
             //获取目标
             var target = await liveAnchorMonthlyTargetAfterLivingService.GetPerformanceTargetAsync(query.endDate.Value.Year, query.endDate.Value.Month, LiveAnchorInfo);
@@ -157,22 +163,11 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<GetNewOrOldCustomerCompareDataDto> GetNewOrOldCustomerCompareDataAsync(QueryOperationDataDto query)
         {
-            GetNewOrOldCustomerCompareDataDto result = new GetNewOrOldCustomerCompareDataDto();
+            GetNewOrOldCustomerCompareDataDto result = new GetNewOrOldCustomerCompareDataDto();  
+            //获取各个平台的主播ID
             List<int> LiveAnchorInfo = new List<int>();
-            #region 总业绩
-            OperationBoardGetNewOrOldCustomerCompareDataDetailsDto totalPerformanceData = new OperationBoardGetNewOrOldCustomerCompareDataDetailsDto();
             var order = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAndLiveAnchorIdsAsync(query.startDate.Value, query.endDate.Value, LiveAnchorInfo);
-            var curTotalAchievement = order.Sum(x => x.Price);
-            var curNewCustomer = order.Where(o => o.IsOldCustomer == false).Sum(o => o.Price);
-            var curOldCustomer = order.Where(o => o.IsOldCustomer == true).Sum(o => o.Price);
-            totalPerformanceData.TotalPerformanceNewCustomerNumber = DecimalExtension.ChangePriceToTenThousand(curTotalAchievement);
-            totalPerformanceData.TotalPerformanceNewCustomerRate = DecimalExtension.CalculateTargetComplete(curNewCustomer, curTotalAchievement);
-            totalPerformanceData.TotalPerformanceOldCustomerNumber = DecimalExtension.ChangePriceToTenThousand(curOldCustomer);
-            totalPerformanceData.TotalPerformanceOldCustomerRate = DecimalExtension.CalculateTargetComplete(curOldCustomer, curTotalAchievement);
-            result.TotalNewOrOldCustomer = totalPerformanceData;
-            #endregion
-
-
+           
             #region 刀刀组业绩
             OperationBoardGetNewOrOldCustomerCompareDataDetailsDto totalPerformanceGroupDaoDaoData = new OperationBoardGetNewOrOldCustomerCompareDataDetailsDto();
             var liveAnchorDaoDao = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync("f0a77257-c905-4719-95c4-ad2c4f33855c");
@@ -188,7 +183,6 @@ namespace Fx.Amiya.Service
             result.GroupDaoDaoNewOrOldCustomer = totalPerformanceGroupDaoDaoData;
             #endregion
 
-
             #region 吉娜组业绩
             var liveAnchorJina = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync("af69dcf5-f749-41ea-8b50-fe685facdd8b");
             var LiveAnchorInfoJinaResult = liveAnchorJina.Select(x => x.Id).ToList();
@@ -202,6 +196,18 @@ namespace Fx.Amiya.Service
             totalPerformanceGroupJiNaData.TotalPerformanceOldCustomerNumber = DecimalExtension.ChangePriceToTenThousand(curJinaOldCustomer);
             totalPerformanceGroupJiNaData.TotalPerformanceOldCustomerRate = DecimalExtension.CalculateTargetComplete(curJinaOldCustomer, curJinaTotalAchievement);
             result.GroupJiNaNewOrOldCustomer = totalPerformanceGroupJiNaData;
+            #endregion
+
+            #region 总业绩（优化：根据刀刀和吉娜组业绩累加）
+            OperationBoardGetNewOrOldCustomerCompareDataDetailsDto totalPerformanceData = new OperationBoardGetNewOrOldCustomerCompareDataDetailsDto();
+            var curTotalAchievement = curDaoDaoTotalAchievement+ curJinaTotalAchievement;
+            var curNewCustomer = curDaoDaoNewCustomer+ curJinaNewCustomer;
+            var curOldCustomer = curDaoDaoOldCustomer+ curJinaOldCustomer;
+            totalPerformanceData.TotalPerformanceNewCustomerNumber = DecimalExtension.ChangePriceToTenThousand(curNewCustomer);
+            totalPerformanceData.TotalPerformanceNewCustomerRate = DecimalExtension.CalculateTargetComplete(curNewCustomer, curTotalAchievement);
+            totalPerformanceData.TotalPerformanceOldCustomerNumber = DecimalExtension.ChangePriceToTenThousand(curOldCustomer);
+            totalPerformanceData.TotalPerformanceOldCustomerRate = DecimalExtension.CalculateTargetComplete(curOldCustomer, curTotalAchievement);
+            result.TotalNewOrOldCustomer = totalPerformanceData;
             #endregion
             return result;
         }
@@ -218,8 +224,8 @@ namespace Fx.Amiya.Service
             result.HospitalPerformance = new List<CustomerPerformanceDataDto>();
             var orderDealInfo = await contentPlatFormOrderDealInfoService.GetPerformanceDetailByDateAsync(query.startDate.Value, query.endDate.Value, LiveAnchorInfo);
             #region 助理业绩（包含行政客服）
-            var employeeInfo = await amiyaEmployeeService.GetemployeeByPositionIdAsync(4);
-            var employeeInfo2 = await amiyaEmployeeService.GetemployeeByPositionIdAsync(30);
+            var employeeInfo = await amiyaEmployeeService.GetCustomerServiceByBaseLiveAnchorid("f0a77257-c905-4719-95c4-ad2c4f33855c");
+            var employeeInfo2 = await amiyaEmployeeService.GetCustomerServiceByBaseLiveAnchorid("af69dcf5-f749-41ea-8b50-fe685facdd8b");
             foreach (var x in employeeInfo2)
             {
                 employeeInfo.Add(x);

@@ -127,11 +127,11 @@ namespace Fx.Amiya.Service
               });
             if (query.CheckState != (int)CheckType.CheckedSuccess)
             {
-                record = record.Where(e => !query.BelongEmpId.HasValue || e.BelongEmpId == query.BelongEmpId);
+                record = record.Where(e => query.BelongEmpId.Count == 0 || query.BelongEmpId.Contains(e.BelongEmpId));
             }
             else
             {
-                record = record.Where(e => !query.BelongEmpId.HasValue || e.CheckBelongEmpId == query.BelongEmpId);
+                record = record.Where(e => query.BelongEmpId.Count == 0 || query.BelongEmpId.Contains(e.CheckBelongEmpId));
             }
             if (query.IsGenerateSalry.HasValue)
             {
@@ -143,7 +143,7 @@ namespace Fx.Amiya.Service
             }
             FxPageInfo<RecommandDocumentSettleDto> resultPageInfo = new FxPageInfo<RecommandDocumentSettleDto>();
             resultPageInfo.TotalCount = await record.CountAsync();
-            resultPageInfo.List = await record.OrderByDescending(x => x.CreateDate).Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToListAsync();
+            resultPageInfo.List  = await record.OrderByDescending(x => x.CreateDate).Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToListAsync();
             return resultPageInfo;
         }
 

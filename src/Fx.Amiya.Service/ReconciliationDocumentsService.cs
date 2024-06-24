@@ -527,8 +527,11 @@ namespace Fx.Amiya.Service
                     if (reconciliationDocuments == null)
                         throw new Exception("对账编号错误!");
 
+                    if (reconciliationDocuments.ReconciliationState == (int)ReconciliationDocumentsStateEnum.Successful)
+                        throw new Exception("对账单编号：" + id + " 对账已完成，无法删除，请重新确认选择数据!");
+
                     reconciliationDocuments.Valid = false;
-                    reconciliationDocuments.DealDate = DateTime.Now;
+                    reconciliationDocuments.DeleteDate = DateTime.Now;
                     await dalReconciliationDocuments.UpdateAsync(reconciliationDocuments, true);
                 }
                 _unitOfWork.Commit();
