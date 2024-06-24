@@ -76,6 +76,12 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<List<int>> GetLiveAnchorIdsByContentPlatformIdAndBaseId(string contentPlatformId,string baseId);
+        /// <summary>
+        /// 判断主播是否归属于自播达人
+        /// </summary>
+        /// <param name="liveANchorId"></param>
+        /// <returns></returns>
+        Task<bool> IsBelongSelfLiveAnchorAsync(int liveAnchorId);
 
     }
 }

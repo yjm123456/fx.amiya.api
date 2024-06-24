@@ -506,7 +506,6 @@ namespace Fx.Amiya.Background.Api.Controllers
             checkReconciliationDocumentSettleDto.CheckBy = employeeId;
             checkReconciliationDocumentSettleDto.CheckRemark = query.CheckRemark;
             checkReconciliationDocumentSettleDto.CheckState = query.CheckState;
-            checkReconciliationDocumentSettleDto.CheckType = query.CheckType;
             checkReconciliationDocumentSettleDto.IsInspectPerformance = false;
             checkReconciliationDocumentSettleDto.IdList = query.IdList;
             checkReconciliationDocumentSettleDto.FinanceId = query.FinanceId;

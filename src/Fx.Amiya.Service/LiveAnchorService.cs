@@ -21,11 +21,12 @@ namespace Fx.Amiya.Service
         private IAmiyaEmployeeService _amiyaEmployeeService;
         private ILiveRequirementInfoService _liveRequirementInfoService;
         private IDalOrderAppInfo dalOrderAppInfo;
+        private IDalLiveAnchorBaseInfo dalLiveAnchorBaseInfo;
         public LiveAnchorService(IDalLiveAnchor dalLiveAnchor,
             IEmployeeBindLiveAnchorService employeeBindLiveAnchorService,
             ILiveRequirementInfoService liveRequirementInfoService,
             IAmiyaEmployeeService amiyaEmployeeService,
-            IDalContentplatform contentPlateForm, IDalOrderAppInfo dalOrderAppInfo)
+            IDalContentplatform contentPlateForm, IDalOrderAppInfo dalOrderAppInfo, IDalLiveAnchorBaseInfo dalLiveAnchorBaseInfo)
         {
             this.dalLiveAnchor = dalLiveAnchor;
             this.employeeBindLiveAnchorService = employeeBindLiveAnchorService;
@@ -33,6 +34,7 @@ namespace Fx.Amiya.Service
             _liveRequirementInfoService = liveRequirementInfoService;
             _contentPlateForm = contentPlateForm;
             this.dalOrderAppInfo = dalOrderAppInfo;
+            this.dalLiveAnchorBaseInfo = dalLiveAnchorBaseInfo;
         }
 
 
@@ -409,6 +411,20 @@ namespace Fx.Amiya.Service
                 Id = e.Id,
                 LiveAnchorBaseId = e.LiveAnchorBaseId,
             }).ToListAsync();
+        }
+        /// <summary>
+        /// 判断主播是否归属于自播达人
+        /// </summary>
+        /// <param name="liveANchorId"></param>
+        /// <returns></returns>
+        public async Task<bool> IsBelongSelfLiveAnchorAsync(int liveAnchorId)
+        {
+            var baseId = await dalLiveAnchor.GetAll().Where(e => e.Id == liveAnchorId).Select(e => e.LiveAnchorBaseId).FirstOrDefaultAsync();
+            if (!string.IsNullOrEmpty(baseId))
+            {
+                return await dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == baseId).Select(e => e.IsSelfLivevAnchor).FirstOrDefaultAsync();
+            }
+            return false;
         }
     }
 }

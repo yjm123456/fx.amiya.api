@@ -16,11 +16,6 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments.Input
         /// </summary>
 
         public int CheckState { get; set; }
-
-        /// <summary>
-        /// 审核类型（0:其他，1：自播达人审核，2：供应链达人审核，3：天猫升单审核）
-        /// </summary>
-        public int CheckType { get; set; }
        
         /// <summary>
         /// 审核备注

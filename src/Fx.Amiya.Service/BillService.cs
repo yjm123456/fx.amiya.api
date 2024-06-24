@@ -34,6 +34,7 @@ namespace Fx.Amiya.Service
         private readonly IDalHospitalInfo dalHospitalInfo;
         private readonly IDalCompanyBaseInfo dalCompanyBaseInfo;
         private readonly IDalRecommandDocumentSettle dalRecommandDocumentSettle;
+
         public BillService(IDalBill dalBill,
             IReconciliationDocumentsService reconciliationDocumentsService,
             IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService,
@@ -575,8 +576,6 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task BatchCheckFinanceReconciliationDocumentsSettleAsync(BatchCheckFinanceReconciliationDocumentSettleDto checkDto)
         {
-            if (checkDto.CheckType != (int)ReconciliationDocumentSettleCheckType.SelfLiveAnchorCheck)
-                throw new Exception("审核类型只能为自播达人");
             var checkRecordDataList = dalRecommandDocumentSettle.GetAll()
                  .Where(e => checkDto.IdList.Contains(e.Id))
                  .Select(e => new
@@ -587,48 +586,71 @@ namespace Fx.Amiya.Service
                      BelongEmpId = e.BelongEmpId,
                      CreateEmpId = e.CreateEmpId,
                      ContentPlatFormOrderAddOrderPrice = e.ContentPlatFormOrderAddOrderPrice,
-                     OrderFrom = e.OrderFrom
+                     OrderFrom = e.OrderFrom,
+                     LiveAnchorId = e.BelongLiveAnchorAccount
                  }).ToList();
             var haveOtherContentplatform = checkRecordDataList.Where(e => e.OrderFrom != (int)OrderFrom.ContentPlatFormOrder).Any();
             if (haveOtherContentplatform)
                 throw new Exception("只能批量审核内容平台数据!");
             if (checkRecordDataList.Count() != checkDto.IdList.Count())
-                throw new Exception("编号错误");
+                throw new Exception("编号错误!");
             var financialIdList = (await amiyaEmployeeService.GetFinancialNameListAsync()).Select(e => e.Id).ToList();
             if (checkRecordDataList.Where(e => financialIdList.Contains(e.CreateEmpId ?? 0)).Count() <= 0)
-                throw new Exception("所选数据包含上传人非财务数据审核失败!");
+                throw new Exception("所选数据包含上传人非财务数据,审核失败!");
             if (checkRecordDataList.Any(e => e.CreateEmpId != checkDto.FinanceId))
-                throw new Exception("所选数据包含其他财务数据,审核失败");
+                throw new Exception("所选数据包含其他财务数据,审核失败!");
             var currentFinancial = await amiyaEmployeeService.GetByIdAsync(checkDto.FinanceId);
+            if (checkRecordDataList.Any(e => e.LiveAnchorId == null))
+                throw new Exception("所选数据包含未绑定主播数据,审核失败!");
             try
             {
                 unitOfWork.BeginTransaction();
                 foreach (var item in checkRecordDataList)
                 {
+                    var isSelfLiveAnchor = await liveAnchorService.IsBelongSelfLiveAnchorAsync(item.LiveAnchorId.Value);
                     var employee = await amiyaEmployeeService.GetByIdAsync(item.BelongEmpId.Value);
                     CheckReconciliationDocumentSettleDto checkData = new CheckReconciliationDocumentSettleDto();
                     checkData.Id = item.Id;
                     checkData.CheckState = checkDto.CheckState;
                     checkData.CheckBy = checkDto.CheckBy;
-                    checkData.CheckType = checkDto.CheckType;
                     checkData.IsInspectPerformance = true;
                     checkData.CheckRemark = checkDto.CheckRemark;
                     checkData.CustomerServiceOrderPerformance = item.CustomerServiceSettlePrice;
                     checkData.CheckBelongEmpId = item.BelongEmpId;
                     checkData.PerformancePercent = employee.InspectionCommission.Value;
                     checkData.CustomerServicePerformance = Math.Round(checkData.CustomerServiceOrderPerformance * checkData.PerformancePercent / 100, 2, MidpointRounding.AwayFromZero);
+                    #region 稽查
+                    
                     checkData.InspectEmpId = item.CreateEmpId;
                     checkData.InspectPercent = currentFinancial.AdministrativeInspectionCommission;
                     var inspectionCommission = 0m;
-                    if (item.IsOldCustomer)
+                    if (isSelfLiveAnchor)
                     {
-                        inspectionCommission = employee.OldCustomerCommission.Value;
+                        checkData.CheckType = (int)ReconciliationDocumentSettleCheckType.SelfLiveAnchorCheck;
+                        if (item.IsOldCustomer)
+                        {
+                            inspectionCommission = employee.OldCustomerCommission.Value;
+                        }
+                        else
+                        {
+                            inspectionCommission = item.ContentPlatFormOrderAddOrderPrice > 0 ? employee.NewCustomerCommission.Value : employee.PotentialNewCustomerCommission.Value;
+                        }
                     }
                     else
                     {
-                        inspectionCommission = item.ContentPlatFormOrderAddOrderPrice > 0 ? employee.NewCustomerCommission.Value : employee.PotentialNewCustomerCommission.Value;
+                        checkData.CheckType = (int)ReconciliationDocumentSettleCheckType.CooperationLiveAnchorCheck;
+                        if (item.IsOldCustomer)
+                        {
+                            inspectionCommission = employee.CooperateLiveanchorOldCustomerCommission;
+                        }
+                        else
+                        {
+                            inspectionCommission = employee.CooperateLiveanchorNewCustomerCommission;
+                        }
                     }
                     checkData.InspectPrice = Math.Round(checkData.CustomerServiceOrderPerformance * (inspectionCommission > 5 ? 5 : inspectionCommission) * currentFinancial.AdministrativeInspectionCommission / 100, 2, MidpointRounding.AwayFromZero);
+                    
+                    #endregion
                     await recommandDocumentSettleService.CheckAsync(checkData);
                 }
                 unitOfWork.Commit();
