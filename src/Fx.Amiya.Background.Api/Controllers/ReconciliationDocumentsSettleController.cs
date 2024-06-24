@@ -277,11 +277,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryReconciliationDocumentsSettleDto.CheckState = query.CheckState;
 
                 List<int?> ids = new List<int?> { };
-                var deviceVarID = query.BelongEmpId;
-                var empIds = deviceVarID.Split(',');
-                foreach (var item in empIds)
+                if (!string.IsNullOrEmpty(query.BelongEmpId))
                 {
-                    ids.Add(Convert.ToInt16(item));
+                    var deviceVarID = query.BelongEmpId;
+                    var empIds = deviceVarID.Split(',');
+                    foreach (var item in empIds)
+                    {
+                        ids.Add(Convert.ToInt16(item));
+                    }
                 }
                 queryReconciliationDocumentsSettleDto.BelongEmpId = ids;
                 queryReconciliationDocumentsSettleDto.KeyWord = query.KeyWord;
