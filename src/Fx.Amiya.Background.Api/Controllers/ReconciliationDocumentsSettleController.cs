@@ -515,7 +515,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             checkReconciliationDocumentSettleDto.IsInspectPerformance = false;
             checkReconciliationDocumentSettleDto.IdList = query.IdList;
             checkReconciliationDocumentSettleDto.CheckBelongEmpId = query.CheckBelongEmpId;
-            await billService.BatchCheckReconciliationDocumentsSettleAsync(checkReconciliationDocumentSettleDto);
+            await billService.BatchCheckCooperationLiveAnchorsReconciliationDocumentsSettleAsync(checkReconciliationDocumentSettleDto);
             return ResultData.Success();
 
         }
