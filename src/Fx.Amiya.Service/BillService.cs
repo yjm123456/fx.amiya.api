@@ -710,7 +710,7 @@ namespace Fx.Amiya.Service
                             inspectionCommission = employee.CooperateLiveanchorNewCustomerCommission;
                         }
                     }
-                    checkData.InspectPrice = Math.Round(checkData.CustomerServiceOrderPerformance * (inspectionCommission > 5 ? 5 : inspectionCommission) * currentFinancial.AdministrativeInspectionCommission / 100, 2, MidpointRounding.AwayFromZero);
+                    checkData.InspectPrice = Math.Round(checkData.CustomerServiceOrderPerformance * (inspectionCommission > 5 ? 5 : inspectionCommission) / 100 * currentFinancial.AdministrativeInspectionCommission / 100, 2, MidpointRounding.AwayFromZero);
 
                     #endregion
                     await recommandDocumentSettleService.CheckAsync(checkData);
