@@ -657,10 +657,10 @@ namespace Fx.Amiya.Service
             if (checkRecordDataList.Count() != checkDto.IdList.Count())
                 throw new Exception("编号错误!");
             var financialIdList = (await amiyaEmployeeService.GetFinancialNameListAsync()).Select(e => e.Id).ToList();
-            if (checkRecordDataList.Where(e => financialIdList.Contains(e.CreateEmpId ?? 0)).Count() <= 0)
-                throw new Exception("所选数据包含上传人非财务数据,审核失败!");
+            if (!financialIdList.Contains(checkDto.FinanceId))
+                throw new Exception("所选员工非财务");
             if (checkRecordDataList.Any(e => e.CreateEmpId != checkDto.FinanceId))
-                throw new Exception("所选数据包含其他财务数据,审核失败!");
+                throw new Exception("所选数据包含上传人非财务数据或其他财务数据,审核失败!");
             var currentFinancial = await amiyaEmployeeService.GetByIdAsync(checkDto.FinanceId);
             if (checkRecordDataList.Any(e => e.LiveAnchorId == null))
                 throw new Exception("所选数据包含未绑定主播数据,审核失败!");
