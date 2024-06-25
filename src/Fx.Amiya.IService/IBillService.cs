@@ -65,6 +65,12 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
 
         Task BatchCheckReconciliationDocumentsSettleAsync(BatchCheckReconciliationDocumentSettleDto checkDto);
+        /// <summary>
+        /// 批量审核合作达人薪资数据
+        /// </summary>
+        /// <param name="checkDto"></param>
+        /// <returns></returns>
+        Task BatchCheckCooperationLiveAnchorsReconciliationDocumentsSettleAsync(BatchCheckReconciliationDocumentSettleDto checkDto);
 
         /// <summary>
         /// 对账单审核记录

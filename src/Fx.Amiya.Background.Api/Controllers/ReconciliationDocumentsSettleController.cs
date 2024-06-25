@@ -235,29 +235,6 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData.Success();
 
         }
-        /// <summary>
-        /// 批量审核助理薪资
-        /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
-        [HttpPut("batchCheckReconciliationDocumentsSettle")]
-        [FxInternalAuthorize]
-        public async Task<ResultData> BatchCheckReconciliationDocumentsSettleAsync([FromBody] BatchCheckReconciliationDocumentSettleVo query)
-        {
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            int employeeId = Convert.ToInt32(employee.Id);
-            BatchCheckReconciliationDocumentSettleDto checkReconciliationDocumentSettleDto = new BatchCheckReconciliationDocumentSettleDto();
-            checkReconciliationDocumentSettleDto.CheckBy = employeeId;
-            checkReconciliationDocumentSettleDto.CheckRemark = query.CheckRemark;
-            checkReconciliationDocumentSettleDto.CheckState = query.CheckState;
-            checkReconciliationDocumentSettleDto.CheckType = query.CheckType;
-            checkReconciliationDocumentSettleDto.IsInspectPerformance = false;
-            checkReconciliationDocumentSettleDto.IdList = query.IdList;
-            checkReconciliationDocumentSettleDto.CheckBelongEmpId = query.CheckBelongEmpId;
-            await billService.BatchCheckReconciliationDocumentsSettleAsync(checkReconciliationDocumentSettleDto);
-            return ResultData.Success();
-
-        }
 
         /// <summary>
         /// 分页获取对账单审核记录(助理薪资审核相关数据)
@@ -378,11 +355,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryReconciliationDocumentsSettleDto.IsOldCustoemr = query.IsOldCustoemr;
                 queryReconciliationDocumentsSettleDto.CheckState = query.CheckState;
                 List<int?> ids = new List<int?> { };
-                var deviceVarID = query.BelongEmpId;
-                var empIds = deviceVarID.Split(',');
-                foreach (var item in empIds)
+                if (!string.IsNullOrEmpty(query.BelongEmpId))
                 {
-                    ids.Add(Convert.ToInt16(item));
+                    var deviceVarID = query.BelongEmpId;
+                    var empIds = deviceVarID.Split(',');
+                    foreach (var item in empIds)
+                    {
+                        ids.Add(Convert.ToInt16(item));
+                    }
                 }
                 queryReconciliationDocumentsSettleDto.BelongEmpId = ids;
                 queryReconciliationDocumentsSettleDto.InspectEmpId = query.InspectEmpId;
@@ -491,6 +471,54 @@ namespace Fx.Amiya.Background.Api.Controllers
             }).ToList();
             return ResultData<List<BaseIdAndNameVo>>.Success().AddData("reconciliationtCheckType", list);
         }
+        #region【批量审核薪资数据】
+
+        /// <summary>
+        /// 批量审核助理薪资
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPut("batchCheckReconciliationDocumentsSettle")]
+        [FxInternalAuthorize]
+        public async Task<ResultData> BatchCheckReconciliationDocumentsSettleAsync([FromBody] BatchCheckReconciliationDocumentSettleVo query)
+        {
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeId = Convert.ToInt32(employee.Id);
+            BatchCheckReconciliationDocumentSettleDto checkReconciliationDocumentSettleDto = new BatchCheckReconciliationDocumentSettleDto();
+            checkReconciliationDocumentSettleDto.CheckBy = employeeId;
+            checkReconciliationDocumentSettleDto.CheckRemark = query.CheckRemark;
+            checkReconciliationDocumentSettleDto.CheckState = query.CheckState;
+            checkReconciliationDocumentSettleDto.CheckType = query.CheckType;
+            checkReconciliationDocumentSettleDto.IsInspectPerformance = false;
+            checkReconciliationDocumentSettleDto.IdList = query.IdList;
+            checkReconciliationDocumentSettleDto.CheckBelongEmpId = query.CheckBelongEmpId;
+            await billService.BatchCheckReconciliationDocumentsSettleAsync(checkReconciliationDocumentSettleDto);
+            return ResultData.Success();
+
+        }
+        /// <summary>
+        /// 批量审核合作达人薪资数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPut("batchCheckCooperationLiveAnchorsReconciliationDocumentsSettle")]
+        [FxInternalAuthorize]
+        public async Task<ResultData> BatchCheckCooperationLiveAnchorsReconciliationDocumentsSettleAsync([FromBody] BatchCheckReconciliationDocumentSettleVo query)
+        {
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeId = Convert.ToInt32(employee.Id);
+            BatchCheckReconciliationDocumentSettleDto checkReconciliationDocumentSettleDto = new BatchCheckReconciliationDocumentSettleDto();
+            checkReconciliationDocumentSettleDto.CheckBy = employeeId;
+            checkReconciliationDocumentSettleDto.CheckRemark = query.CheckRemark;
+            checkReconciliationDocumentSettleDto.CheckState = query.CheckState;
+            checkReconciliationDocumentSettleDto.CheckType = query.CheckType;
+            checkReconciliationDocumentSettleDto.IsInspectPerformance = false;
+            checkReconciliationDocumentSettleDto.IdList = query.IdList;
+            checkReconciliationDocumentSettleDto.CheckBelongEmpId = query.CheckBelongEmpId;
+            await billService.BatchCheckReconciliationDocumentsSettleAsync(checkReconciliationDocumentSettleDto);
+            return ResultData.Success();
+
+        }
         /// <summary>
         /// 批量审核财务稽查数据
         /// </summary>
@@ -513,5 +541,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData.Success();
 
         }
+
+        #endregion
     }
 }

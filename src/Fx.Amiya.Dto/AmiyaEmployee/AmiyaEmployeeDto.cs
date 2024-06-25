@@ -59,7 +59,7 @@ namespace Fx.Amiya.Dto.AmiyaEmployee
         /// </summary>
         public bool ReadTakeGoodsData { get; set; }
         /// <summary>
-        /// 行政客户稽查提成比例
+        /// 参与稽查比例
         /// </summary>
         public decimal AdministrativeInspectionCommission { get; set; }
         /// <summary>

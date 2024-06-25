@@ -508,7 +508,7 @@ namespace Fx.Amiya.Service
             await recommandDocumentSettleService.CheckAsync(checkDto);
         }
         /// <summary>
-        /// 批量审核助理薪资数据
+        /// 批量审核助理/行政客服的自播达人薪资数据
         /// </summary>
         /// <param name="checkDto"></param>
         /// <returns></returns>
@@ -540,7 +540,7 @@ namespace Fx.Amiya.Service
             {
                 unitOfWork.BeginTransaction();
                 foreach (var item in checkRecordDataList)
-                {
+                {                    
                     CheckReconciliationDocumentSettleDto checkData = new CheckReconciliationDocumentSettleDto();
                     checkData.Id = item.Id;
                     checkData.CheckState = checkDto.CheckState;
@@ -557,6 +557,68 @@ namespace Fx.Amiya.Service
                     else
                     {
                         checkData.PerformancePercent = item.ContentPlatFormOrderAddOrderPrice > 0 ? employee.NewCustomerCommission ?? 0m : employee.PotentialNewCustomerCommission ?? 0m;
+                    }
+                    checkData.CustomerServicePerformance = Math.Round(checkData.CustomerServiceOrderPerformance * checkData.PerformancePercent / 100, 2, MidpointRounding.AwayFromZero);
+                    await recommandDocumentSettleService.CheckAsync(checkData);
+                }
+                unitOfWork.Commit();
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw ex;
+            }
+        }
+
+
+        /// <summary>
+        /// 批量审核合作达人薪资数据
+        /// </summary>
+        /// <param name="checkDto"></param>
+        /// <returns></returns>
+        public async Task BatchCheckCooperationLiveAnchorsReconciliationDocumentsSettleAsync(BatchCheckReconciliationDocumentSettleDto checkDto)
+        {
+            if (checkDto.CheckType != (int)ReconciliationDocumentSettleCheckType.CooperationLiveAnchorCheck)
+                throw new Exception("审核类型只能为合作达人");
+            var employee = await amiyaEmployeeService.GetByIdAsync(checkDto.CheckBelongEmpId.Value);
+            var checkRecordDataList = dalRecommandDocumentSettle.GetAll()
+                 .Where(e => checkDto.IdList.Contains(e.Id))
+                 .Select(e => new
+                 {
+                     Id = e.Id,
+                     IsOldCustomer = e.IsOldCustomer,
+                     CustomerServiceSettlePrice = e.RecolicationPrice,
+                     BelongEmpId = e.BelongEmpId,
+                     CreateEmpId = e.CreateEmpId,
+                     ContentPlatFormOrderAddOrderPrice = e.ContentPlatFormOrderAddOrderPrice
+                 }).ToList();
+            if (checkRecordDataList.Count() != checkDto.IdList.Count())
+                throw new Exception("编号错误");
+            if (checkRecordDataList.Where(e => e.CreateEmpId != checkDto.CheckBelongEmpId).Count() > 0)
+                throw new Exception("所选数据包含归属于其他客服的数据,审核失败");
+            try
+            {
+                //定义外达人所占业绩比例（10%）
+                decimal CooperationLiveAnchorPercent = 0.1M;
+                unitOfWork.BeginTransaction();
+                foreach (var item in checkRecordDataList)
+                {
+                    CheckReconciliationDocumentSettleDto checkData = new CheckReconciliationDocumentSettleDto();
+                    checkData.Id = item.Id;
+                    checkData.CheckState = checkDto.CheckState;
+                    checkData.CheckBy = checkDto.CheckBy;
+                    checkData.CheckType = checkDto.CheckType;
+                    checkData.IsInspectPerformance = checkDto.IsInspectPerformance;
+                    checkData.CheckRemark = checkDto.CheckRemark;
+                    checkData.CustomerServiceOrderPerformance = Math.Round(item.CustomerServiceSettlePrice.Value * CooperationLiveAnchorPercent, 2, MidpointRounding.AwayFromZero);
+                    checkData.CheckBelongEmpId = checkDto.CheckBelongEmpId;
+                    if (item.IsOldCustomer)
+                    {
+                        checkData.PerformancePercent = employee.CooperateLiveanchorOldCustomerCommission;
+                    }
+                    else
+                    {
+                        checkData.PerformancePercent = employee.CooperateLiveanchorNewCustomerCommission;
                     }
                     checkData.CustomerServicePerformance = Math.Round(checkData.CustomerServiceOrderPerformance * checkData.PerformancePercent / 100, 2, MidpointRounding.AwayFromZero);
                     await recommandDocumentSettleService.CheckAsync(checkData);
@@ -620,7 +682,7 @@ namespace Fx.Amiya.Service
                     checkData.PerformancePercent = employee.InspectionCommission.Value;
                     checkData.CustomerServicePerformance = Math.Round(checkData.CustomerServiceOrderPerformance * checkData.PerformancePercent / 100, 2, MidpointRounding.AwayFromZero);
                     #region 稽查
-                    
+
                     checkData.InspectEmpId = item.CreateEmpId;
                     checkData.InspectPercent = currentFinancial.AdministrativeInspectionCommission;
                     var inspectionCommission = 0m;
@@ -649,7 +711,7 @@ namespace Fx.Amiya.Service
                         }
                     }
                     checkData.InspectPrice = Math.Round(checkData.CustomerServiceOrderPerformance * (inspectionCommission > 5 ? 5 : inspectionCommission) * currentFinancial.AdministrativeInspectionCommission / 100, 2, MidpointRounding.AwayFromZero);
-                    
+
                     #endregion
                     await recommandDocumentSettleService.CheckAsync(checkData);
                 }
