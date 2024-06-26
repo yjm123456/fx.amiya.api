@@ -163,11 +163,11 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<GetNewOrOldCustomerCompareDataDto> GetNewOrOldCustomerCompareDataAsync(QueryOperationDataDto query)
         {
-            GetNewOrOldCustomerCompareDataDto result = new GetNewOrOldCustomerCompareDataDto();  
+            GetNewOrOldCustomerCompareDataDto result = new GetNewOrOldCustomerCompareDataDto();
             //获取各个平台的主播ID
             List<int> LiveAnchorInfo = new List<int>();
             var order = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAndLiveAnchorIdsAsync(query.startDate.Value, query.endDate.Value, LiveAnchorInfo);
-           
+
             #region 刀刀组业绩
             OperationBoardGetNewOrOldCustomerCompareDataDetailsDto totalPerformanceGroupDaoDaoData = new OperationBoardGetNewOrOldCustomerCompareDataDetailsDto();
             var liveAnchorDaoDao = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync("f0a77257-c905-4719-95c4-ad2c4f33855c");
@@ -200,9 +200,9 @@ namespace Fx.Amiya.Service
 
             #region 总业绩（优化：根据刀刀和吉娜组业绩累加）
             OperationBoardGetNewOrOldCustomerCompareDataDetailsDto totalPerformanceData = new OperationBoardGetNewOrOldCustomerCompareDataDetailsDto();
-            var curTotalAchievement = curDaoDaoTotalAchievement+ curJinaTotalAchievement;
-            var curNewCustomer = curDaoDaoNewCustomer+ curJinaNewCustomer;
-            var curOldCustomer = curDaoDaoOldCustomer+ curJinaOldCustomer;
+            var curTotalAchievement = curDaoDaoTotalAchievement + curJinaTotalAchievement;
+            var curNewCustomer = curDaoDaoNewCustomer + curJinaNewCustomer;
+            var curOldCustomer = curDaoDaoOldCustomer + curJinaOldCustomer;
             totalPerformanceData.TotalPerformanceNewCustomerNumber = DecimalExtension.ChangePriceToTenThousand(curNewCustomer);
             totalPerformanceData.TotalPerformanceNewCustomerRate = DecimalExtension.CalculateTargetComplete(curNewCustomer, curTotalAchievement);
             totalPerformanceData.TotalPerformanceOldCustomerNumber = DecimalExtension.ChangePriceToTenThousand(curOldCustomer);
@@ -665,7 +665,7 @@ namespace Fx.Amiya.Service
             data.CustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance + data.OldCustomerPerformance, data.DealCount).Value;
             data.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(data.NewCustomerDealCount, data.OldCustomerDealCount);
             data.Rate = 100;
-           
+
             dataList.Add(data);
             return dataList;
         }
@@ -706,7 +706,7 @@ namespace Fx.Amiya.Service
             }).ToList();
             FlowTransFormDataDto otherData = new FlowTransFormDataDto();
             otherData.GroupName = "其他";
-            otherData.SendOrderCount = list.Where(e=>e.GroupName=="其他").Sum(e => e.SendOrderCount);
+            otherData.SendOrderCount = list.Where(e => e.GroupName == "其他").Sum(e => e.SendOrderCount);
             otherData.DistributeConsulationNum = list.Where(e => e.GroupName == "其他").Sum(e => e.DistributeConsulationNum);
             otherData.AddWechatCount = list.Where(e => e.GroupName == "其他").Sum(e => e.AddWechatCount);
             otherData.AddWechatRate = DecimalExtension.CalculateTargetComplete(otherData.AddWechatCount, otherData.DistributeConsulationNum).Value;
@@ -747,8 +747,8 @@ namespace Fx.Amiya.Service
             data.CustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance + data.OldCustomerPerformance, data.DealCount).Value;
             data.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(data.NewCustomerDealCount, data.OldCustomerDealCount);
             data.Rate = 100;
-            list.OrderByDescending(e => e.DistributeConsulationNum);
-            list.Add(data);
+            var res = list.OrderByDescending(e => e.DistributeConsulationNum).ToList();
+            res.Add(data);
             return list;
         }
 
