@@ -420,7 +420,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 OldCustomerUnitPrice = e.OldCustomerUnitPrice,
                 CustomerUnitPrice = e.CustomerUnitPrice,
                 Rate = e.Rate
-            }).OrderByDescending(e=>e.DistributeConsulationNum).ToList();
+            }).ToList();
             return ResultData<List<FlowTransFormDataVo>>.Success().AddData("data", res);
         }
         /// <summary>

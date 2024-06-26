@@ -1920,6 +1920,8 @@ namespace Fx.Amiya.Service
               .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
               .Where(o => o.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId)
               //.Where(o => phoneList.Contains(o.Phone))
+              .Select(o=>o.Phone)
+              .Distinct()
               .Count();
             data.ClueCount = baseData.Count();
             data.TotalCount = baseData.Where(e => e.AssignEmpId != null).Count();
