@@ -749,7 +749,7 @@ namespace Fx.Amiya.Service
             data.Rate = 100;
             var res = list.OrderByDescending(e => e.DistributeConsulationNum).ToList();
             res.Add(data);
-            return list;
+            return res;
         }
 
         /// <summary>
