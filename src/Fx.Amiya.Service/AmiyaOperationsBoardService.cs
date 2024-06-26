@@ -746,6 +746,7 @@ namespace Fx.Amiya.Service
             data.CustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance + data.OldCustomerPerformance, data.DealCount).Value;
             data.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(data.NewCustomerDealCount, data.OldCustomerDealCount);
             data.Rate = 100;
+            list.Add(data);
             return list;
         }
 

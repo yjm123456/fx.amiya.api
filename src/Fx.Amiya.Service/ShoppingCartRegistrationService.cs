@@ -1920,9 +1920,7 @@ namespace Fx.Amiya.Service
               .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
               .Where(o => o.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId)
               //.Where(o => phoneList.Contains(o.Phone))
-              .Select(o => o.Phone)
-              .Where(o => phoneList.Contains(o))
-              .Distinct().Count();
+              .Count();
             data.ClueCount = baseData.Count();
             data.TotalCount = baseData.Where(e => e.AssignEmpId != null).Count();
             data.SendOrderCount = sendC;
@@ -1958,7 +1956,7 @@ namespace Fx.Amiya.Service
         public async Task<List<ShoppingCartRegistrationIndicatorBaseDataDto>> GetAssitantFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate, List<string> contentPlatformIds)
         {
             var nameList = await liveAnchorBaseInfoService.GetValidAsync(true);
-            var liveanchorIds = nameList.Select(e => e.Id).ToList();
+            var liveanchorIds = nameList.Where(e => e.LiveAnchorName.Contains("刀刀") || e.LiveAnchorName.Contains("吉娜")).Select(e => e.Id).ToList();
             var assistantNameList = (await _amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(nameList.Select(e => e.Id).ToList())).Select(e => e.Id);
             var baseData = dalShoppingCartRegistration.GetAll()
                 .Where(e => contentPlatformIds == null || contentPlatformIds.Contains(e.ContentPlatFormId))
