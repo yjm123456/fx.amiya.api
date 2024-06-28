@@ -1392,14 +1392,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.UnDealReason = updateVo.UnDealReason;
                 updateDto.IsToHospital = updateVo.IsToHospital;
                 updateDto.ToHospitalType = updateVo.ToHospitalType;
-                updateDto.DealPerformanceType = updateVo.DealPerformanceType.HasValue ? 0 : updateVo.DealPerformanceType.Value;
+                updateDto.DealPerformanceType = updateVo.DealPerformanceType.HasValue ? updateVo.DealPerformanceType.Value : 0;
                 updateDto.UnDealPictureUrl = updateVo.UnDealPictureUrl;
                 updateDto.DealDate = updateVo.DealDate;
                 updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
                 updateDto.EmpId = Convert.ToInt32(employee.Id);
                 updateDto.ConsumptionType = updateVo.ConsumptionType;
                 updateDto.InvitationDocuments = updateVo.InvitationDocuments;
-                updateDto.FansMeetingId=updateVo.FansMeetingId;
+                updateDto.FansMeetingId = updateVo.FansMeetingId;
                 List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
                 if (updateDto.IsFinish == true)
                 {
