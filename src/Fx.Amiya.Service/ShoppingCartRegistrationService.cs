@@ -539,6 +539,9 @@ namespace Fx.Amiya.Service
                 throw new Exception("小黄车登记编号错误！");
             if (updateDto.OperationBy != shoppingCartRegistration.CreateBy)
             {
+                shoppingCartRegistration.LiveAnchorWechatNo = updateDto.LiveAnchorWechatNo;
+                shoppingCartRegistration.CustomerNickName = updateDto.CustomerNickName;
+                shoppingCartRegistration.Phone = updateDto.Phone;
                 shoppingCartRegistration.IsAddWeChat = updateDto.IsAddWeChat;
                 shoppingCartRegistration.Remark = updateDto.Remark;
                 await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);

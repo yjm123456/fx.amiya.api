@@ -48,6 +48,11 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderAddWork
         public string SendRemark { get; set; }
 
         /// <summary>
+        /// 截图
+        /// </summary>
+        public string Picture { get; set; }
+
+        /// <summary>
         /// 归属客服
         /// </summary>
         public int? BelongCustomerServiceId { get; set; }
