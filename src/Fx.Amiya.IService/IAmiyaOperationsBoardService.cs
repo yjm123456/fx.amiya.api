@@ -8,6 +8,7 @@ using Fx.Amiya.Dto.AmiyaOperationsBoardService;
 using Fx.Amiya.Dto.AmiyaOperationsBoardService.Result;
 using Fx.Amiya.Dto.AmiyaOperationsBoardService.Input;
 using Fx.Amiya.Dto.HospitalPerformance;
+using Fx.Amiya.Dto.ReconciliationDocuments;
 
 namespace Fx.Amiya.IService
 {
@@ -129,7 +130,12 @@ namespace Fx.Amiya.IService
          Task<List<AssistantIndicatorConversionDataDto>> GetAssistantIndicatorConversionDataAsync(QueryAmiyaAssistantOperationsDataDto query);
 
         #endregion
-
+        /// <summary>
+        /// 获取助理新客上门人数和目标完成率
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<NewCustomerToHospiatlAndTargetCompleteDto> GetNewCustomerToHospiatlAndTargetCompleteAsync(QueryNewCustomerToHospiatlAndTargetCompleteDto query);
         #region 【历史版本】
 
         ///// <summary>

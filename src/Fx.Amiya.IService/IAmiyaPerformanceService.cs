@@ -51,7 +51,7 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<List<PerformanceBrokenLine>> GetHistorySendThisMonthDealOrders(int year, int month, bool isOldSendOrder, string liveAnchorName);
 
-
+        
         #endregion
 
         #region 【分组业绩】

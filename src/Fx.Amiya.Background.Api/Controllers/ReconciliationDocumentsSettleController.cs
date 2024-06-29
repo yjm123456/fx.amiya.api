@@ -30,17 +30,19 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IOperationLogService operationLogService;
         private IHttpContextAccessor httpContextAccessor;
         private IRecommandDocumentSettleService reconciliationDocumentsSettleService;
+        private IAmiyaOperationsBoardService amiyaOperationsBoardService;
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="billService"></param>
-        public ReconciliationDocumentsSettleController(IBillService billService, IOperationLogService operationLogService, IHttpContextAccessor httpContextAccessor, IRecommandDocumentSettleService reconciliationDocumentsSettleService)
+        public ReconciliationDocumentsSettleController(IBillService billService, IOperationLogService operationLogService, IHttpContextAccessor httpContextAccessor, IRecommandDocumentSettleService reconciliationDocumentsSettleService, IAmiyaOperationsBoardService amiyaOperationsBoardService)
         {
 
             this.billService = billService;
             this.operationLogService = operationLogService;
             this.httpContextAccessor = httpContextAccessor;
             this.reconciliationDocumentsSettleService = reconciliationDocumentsSettleService;
+            this.amiyaOperationsBoardService = amiyaOperationsBoardService;
         }
 
 
@@ -470,6 +472,24 @@ namespace Fx.Amiya.Background.Api.Controllers
                 Name = c.Value
             }).ToList();
             return ResultData<List<BaseIdAndNameVo>>.Success().AddData("reconciliationtCheckType", list);
+        }
+        /// <summary>
+        /// 获取助理目标完成率和新客上门人数
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [FxInternalAuthorize]
+        [HttpGet("getNewCustomerToHospiatlAndTargetComplete")]
+        public async Task<ResultData<NewCustomerToHospiatlAndTargetCompleteVo>> GetNewCustomerToHospiatlAndTargetCompleteAsync([FromQuery]QueryNewCustomerToHospiatlAndTargetCompleteVo query) {
+            QueryNewCustomerToHospiatlAndTargetCompleteDto queryDto = new QueryNewCustomerToHospiatlAndTargetCompleteDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate=query.EndDate;
+            queryDto.EmpId = query.EmpId;
+            var data=await amiyaOperationsBoardService.GetNewCustomerToHospiatlAndTargetCompleteAsync(queryDto);
+            NewCustomerToHospiatlAndTargetCompleteVo res = new NewCustomerToHospiatlAndTargetCompleteVo();
+            res.TargetComplete = data.TargetComplete;
+            res.NewCustomerToHospitalCount = data.NewCustomerToHospitalCount;
+            return ResultData<NewCustomerToHospiatlAndTargetCompleteVo>.Success().AddData("data", res);
         }
         #region【批量审核薪资数据】
 

@@ -4,10 +4,12 @@ using Fx.Amiya.Dto.AmiyaOperationsBoardService.Input;
 using Fx.Amiya.Dto.AmiyaOperationsBoardService.Result;
 using Fx.Amiya.Dto.HospitalPerformance;
 using Fx.Amiya.Dto.Performance;
+using Fx.Amiya.Dto.ReconciliationDocuments;
 using Fx.Amiya.Dto.ShoppingCartRegistration;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Common.Extensions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +32,8 @@ namespace Fx.Amiya.Service
         private readonly IEmployeePerformanceTargetService employeePerformanceTargetService;
         private readonly IContentPlatformOrderSendService contentPlatformOrderSendService;
         private readonly ILiveAnchorMonthlyTargetAfterLivingService liveAnchorMonthlyTargetAfterLivingService;
-
+        private readonly IDalEmployeePerformanceTarget dalEmployeePerformanceTarget;
+        private readonly IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo;
         public AmiyaOperationsBoardServiceService(
             ILiveAnchorMonthlyTargetBeforeLivingService liveAnchorMonthlyTargetBeforeLivingService,
             ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService,
@@ -43,7 +46,7 @@ namespace Fx.Amiya.Service
             IAmiyaEmployeeService amiyaEmployeeService,
             IEmployeePerformanceTargetService employeePerformanceTargetService,
             IContentPlatformOrderSendService contentPlatformOrderSendService,
-            ILiveAnchorMonthlyTargetAfterLivingService liveAnchorMonthlyTargetAfterLivingService)
+            ILiveAnchorMonthlyTargetAfterLivingService liveAnchorMonthlyTargetAfterLivingService, IDalEmployeePerformanceTarget dalEmployeePerformanceTarget, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo)
         {
             this.liveAnchorMonthlyTargetLivingService = liveAnchorMonthlyTargetLivingService;
             this.liveAnchorBaseInfoService = liveAnchorBaseInfoService;
@@ -57,6 +60,8 @@ namespace Fx.Amiya.Service
             this.employeePerformanceTargetService = employeePerformanceTargetService;
             this.contentPlatformOrderSendService = contentPlatformOrderSendService;
             this.liveAnchorMonthlyTargetAfterLivingService = liveAnchorMonthlyTargetAfterLivingService;
+            this.dalEmployeePerformanceTarget = dalEmployeePerformanceTarget;
+            this.dalContentPlatFormOrderDealInfo = dalContentPlatFormOrderDealInfo;
         }
 
         #region  运营主看板
@@ -629,7 +634,8 @@ namespace Fx.Amiya.Service
                 groupData.SendOrderRate = DecimalExtension.CalculateTargetComplete(groupBaseData.SendOrderCount, groupBaseData.AddWechatCount).Value;
                 groupData.ToHospitalCount = groupBaseData.ToHospitalCount;
                 groupData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(groupBaseData.ToHospitalCount, groupBaseData.SendOrderCount).Value;
-                groupData.DealCount = groupBaseData.NewCustomerDealCount + groupBaseData.OldCustomerDealCount;
+                //groupData.DealCount = groupBaseData.NewCustomerDealCount + groupBaseData.OldCustomerDealCount;
+                groupData.DealCount = groupBaseData.NewCustomerDealCount;
                 groupData.NewCustomerDealCount = groupBaseData.NewCustomerDealCount;
                 groupData.OldCustomerDealCount = groupBaseData.OldCustomerDealCount;
                 groupData.DealRate = DecimalExtension.CalculateTargetComplete(groupData.DealCount, groupBaseData.ToHospitalCount).Value;
@@ -694,7 +700,8 @@ namespace Fx.Amiya.Service
                 data.ToHospitalRate = DecimalExtension.CalculateTargetComplete(data.ToHospitalCount, data.SendOrderCount).Value;
                 data.NewCustomerDealCount = e.Sum(e => e.NewCustomerDealCount);
                 data.OldCustomerDealCount = e.Sum(e => e.OldCustomerDealCount);
-                data.DealCount = data.NewCustomerDealCount + data.OldCustomerDealCount;
+                //data.DealCount = data.NewCustomerDealCount + data.OldCustomerDealCount;
+                data.DealCount = data.NewCustomerDealCount;
                 data.DealRate = DecimalExtension.CalculateTargetComplete(data.DealCount, data.ToHospitalCount).Value;
                 data.NewCustomerPerformance = e.Sum(e => e.NewCustomerTotalPerformance);
                 data.OldCustomerPerformance = e.Sum(e => e.OldCustomerTotalPerformance);
@@ -1431,22 +1438,6 @@ namespace Fx.Amiya.Service
         private List<string> GetContentPlatformIdList(QueryTransformDataDto query)
         {
             List<string> idList = new List<string>();
-            //if (query.ShowTikTok)
-            //{
-            //    idList.Add("86db9937-dc47-45ff-a061-610bdef13c5b");
-            //}
-            //if (query.ShowWechatVideo)
-            //{
-            //    idList.Add("0f3be741-2f51-47d9-b4bc-aa8e65d2e58f");
-            //}
-            //if (query.ShowXiaoHongShu)
-            //{
-            //    idList.Add("46a08f37-c1b5-4dda-893e-e94b1403f211");
-            //}
-            //if (query.ShowPrivateDomain)
-            //{
-            //    idList.Add("9913a42a-8aa7-4644-b0dd-742480e82c12");
-            //}
             if (query.ShowTikTok)
             {
                 idList.Add("4e4e9564-f6c3-47b6-a7da-e4518bab66a1");
@@ -1468,14 +1459,6 @@ namespace Fx.Amiya.Service
         private async Task<List<string>> GetBaseLiveAnchorIdListAsync(QueryHospitalTransformDataDto query)
         {
             List<string> idList = new List<string>();
-            //if (query.ShowDaoDao)
-            //{
-            //    idList.Add("40aea761-f9c1-4078-bb2b-4aeac8e71ad6");
-            //}
-            //if (query.ShowJiNa)
-            //{
-            //    idList.Add("44b0e329-fe66-4690-9a50-1873822fa54d");
-            //}
             if (query.ShowDaoDao)
             {
                 idList.Add("f0a77257-c905-4719-95c4-ad2c4f33855c");
@@ -1500,8 +1483,36 @@ namespace Fx.Amiya.Service
 
             return idList;
         }
-        #endregion
 
+        #endregion
+        /// <summary>
+        /// 获取助理新客上门人数和目标完成率
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<NewCustomerToHospiatlAndTargetCompleteDto> GetNewCustomerToHospiatlAndTargetCompleteAsync(QueryNewCustomerToHospiatlAndTargetCompleteDto query)
+        {
+            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate,query.EndDate);
+            var target = dalEmployeePerformanceTarget.GetAll().Where(e => e.EmployeeId == query.EmpId && e.BelongYear == query.StartDate.Year && e.BelongMonth == query.StartDate.Month).FirstOrDefault();
+            if (target == null)
+                throw new Exception("请先填写归属月份的目标");
+            var totalTarget = target.PerformanceTarget;
+            var data =await dalContentPlatFormOrderDealInfo.GetAll()
+                .Where(e => e.CreateDate >= selectDate.StartDate && e.CreateDate < selectDate.EndDate)
+                .Where(e => e.ContentPlatFormOrder.IsSupportOrder ? e.ContentPlatFormOrder.SupportEmpId == query.EmpId : e.ContentPlatFormOrder.BelongEmpId == query.EmpId)
+                .Select(e => new
+                {
+                    IsOldCustomer = e.IsOldCustomer,
+                    IsToHospital = e.IsToHospital,
+                    IsDeal = e.IsDeal,
+                    DealPrice = e.Price,
+                    Phone=e.ContentPlatFormOrder.Phone
+                }).ToListAsync();
+            NewCustomerToHospiatlAndTargetCompleteDto dataDto = new NewCustomerToHospiatlAndTargetCompleteDto();
+            dataDto.NewCustomerToHospitalCount = data.Where(e => e.IsOldCustomer == false && e.IsToHospital == true).Select(e=>e.Phone).Distinct().Count();
+            dataDto.TargetComplete = DecimalExtension.CalculateTargetComplete(data.Where(e=>e.IsDeal==true).Sum(e=>e.DealPrice),totalTarget).Value;
+            return dataDto;
+        }
 
         #region 【历史版本】
 
