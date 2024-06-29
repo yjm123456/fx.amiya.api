@@ -37,11 +37,17 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<FxPageInfo<EmployeePerformanceTargetDto>> GetListAsync(QueryEmployeePerformanceTargetDto query)
         {
+            var year = DateTime.Now.Year;
+            var month = DateTime.Now.Month;
+            if (query.EndDate.HasValue)
+            {
+                year = query.EndDate.Value.Year;
+                month = query.EndDate.Value.Month;
+            }
             var cmployeePerformanceTargets = from d in dalEmployeePerformanceTarget.GetAll().Include(x => x.AmiyaEmployee)
                                              where (!query.EmployeeId.HasValue || d.EmployeeId == query.EmployeeId.Value)
                                              && (d.Valid == true)
-                                             && (!query.StartDate.HasValue || d.CreateDate >= query.StartDate.Value)
-                                             && (!query.EndDate.HasValue || d.CreateDate < query.EndDate.Value.AddDays(1).AddMilliseconds(-1))
+                                             && (!query.EndDate.HasValue || d.BelongYear == year && d.BelongMonth == month)
                                              select new EmployeePerformanceTargetDto
                                              {
                                                  Id = d.Id,
@@ -139,7 +145,7 @@ namespace Fx.Amiya.Service
             returnResult.PotentialConsulationCardTarget = result.PotentialConsulationCardTarget;
             returnResult.SendOrderTarget = result.SendOrderTarget;
             returnResult.OldCustomerVisitTarget = result.OldCustomerVisitTarget;
-            returnResult.NewCustomerVisitTarget=result.NewCustomerVisitTarget;
+            returnResult.NewCustomerVisitTarget = result.NewCustomerVisitTarget;
             returnResult.NewCustomerDealTarget = result.NewCustomerDealTarget;
             returnResult.OldCustomerDealTarget = result.OldCustomerDealTarget;
             returnResult.NewCustomerPerformanceTarget = result.NewCustomerPerformanceTarget;
@@ -261,14 +267,14 @@ namespace Fx.Amiya.Service
                     PotentialAddWechatTarget = e.PotentialAddWechatTarget,
                     EffectiveConsulationCardTarget = e.EffectiveConsulationCardTarget,
                     PotentialConsulationCardTarget = e.PotentialConsulationCardTarget,
-                    OldCustomerPerformanceTarget=e.OldCustomerPerformanceTarget,
-                    NewCustomerPerformanceTarget=e.NewCustomerPerformanceTarget,
-                    NewCustomerVisitTarget=e.NewCustomerVisitTarget,
-                    OldCustomerVisitTarget=e.OldCustomerVisitTarget,
-                    SendOrderTarget=e.SendOrderTarget,
-                    NewCustomerDealNumTarget=e.NewCustomerDealTarget,
-                    OldCustomerDealNumTarget=e.OldCustomerDealTarget
-                }).ToListAsync(); 
+                    OldCustomerPerformanceTarget = e.OldCustomerPerformanceTarget,
+                    NewCustomerPerformanceTarget = e.NewCustomerPerformanceTarget,
+                    NewCustomerVisitTarget = e.NewCustomerVisitTarget,
+                    OldCustomerVisitTarget = e.OldCustomerVisitTarget,
+                    SendOrderTarget = e.SendOrderTarget,
+                    NewCustomerDealNumTarget = e.NewCustomerDealTarget,
+                    OldCustomerDealNumTarget = e.OldCustomerDealTarget
+                }).ToListAsync();
         }
     }
 }
