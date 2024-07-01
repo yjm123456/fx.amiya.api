@@ -44,7 +44,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<decimal>> GetTimeSpanAsync([FromQuery] QueryOperationDataVo query)
         {
             decimal result = 0.00M;
-            var date= DateTimeExtension.GetDatetimeSchedule(query.endDate.Value).FirstOrDefault();
+            var date = DateTimeExtension.GetDatetimeSchedule(query.endDate.Value).FirstOrDefault();
             result = date.Value;
             return ResultData<decimal>.Success().AddData("data", result);
         }
@@ -118,6 +118,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             result.TotalNewOrOldCustomer.TotalPerformanceNewCustomerRate = data.TotalNewOrOldCustomer.TotalPerformanceNewCustomerRate;
             result.TotalNewOrOldCustomer.TotalPerformanceOldCustomerNumber = data.TotalNewOrOldCustomer.TotalPerformanceOldCustomerNumber;
             result.TotalNewOrOldCustomer.TotalPerformanceOldCustomerRate = data.TotalNewOrOldCustomer.TotalPerformanceOldCustomerRate;
+            result.TotalNewOrOldCustomer.TotalPerformanceNumber = data.TotalNewOrOldCustomer.TotalPerformanceOldCustomerRate;
 
             result.GroupDaoDaoNewOrOldCustomer.TotalPerformanceNewCustomerNumber = data.GroupDaoDaoNewOrOldCustomer.TotalPerformanceNewCustomerNumber;
             result.GroupDaoDaoNewOrOldCustomer.TotalPerformanceNewCustomerRate = data.GroupDaoDaoNewOrOldCustomer.TotalPerformanceNewCustomerRate;
@@ -152,6 +153,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 CustomerPerformanceDataVo employeePerformanceVo = new CustomerPerformanceDataVo();
                 employeePerformanceVo.NewCustomerPerformance = x.NewCustomerPerformance;
                 employeePerformanceVo.OldCustomerPerformance = x.OldCustomerPerformance;
+                employeePerformanceVo.TotalCustomerPerformance = x.TotalPerformance;
                 employeePerformanceVo.Name = x.Name;
                 result.EmployeePerformance.Add(employeePerformanceVo);
             }
@@ -160,6 +162,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 CustomerPerformanceDataVo hospitalPerformanceVo = new CustomerPerformanceDataVo();
                 hospitalPerformanceVo.NewCustomerPerformance = x.NewCustomerPerformance;
                 hospitalPerformanceVo.OldCustomerPerformance = x.OldCustomerPerformance;
+                hospitalPerformanceVo.TotalCustomerPerformance = x.TotalPerformance;
                 hospitalPerformanceVo.Name = x.Name;
                 result.HospitalPerformance.Add(hospitalPerformanceVo);
             }

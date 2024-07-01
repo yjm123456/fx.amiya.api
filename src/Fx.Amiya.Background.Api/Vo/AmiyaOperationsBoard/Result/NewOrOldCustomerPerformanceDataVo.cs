@@ -30,6 +30,10 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
         /// 老客业绩
         /// </summary>
         public decimal OldCustomerPerformance { get; set; }
+        /// <summary>
+        /// 总业绩
+        /// </summary>
+        public decimal TotalCustomerPerformance { get; set; }
 
         /// <summary>
         /// 名称

@@ -44,6 +44,11 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
         /// 老客数值
         /// </summary>
         public decimal? TotalPerformanceOldCustomerNumber { get; set; }
+
+        /// <summary>
+        /// 总业绩数值
+        /// </summary>
+        public decimal? TotalPerformanceNumber { get; set; }
     }
 
 }

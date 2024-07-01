@@ -181,6 +181,7 @@ namespace Fx.Amiya.Service
             var curDaoDaoNewCustomer = order.Where(o => o.IsOldCustomer == false).Where(x => LiveAnchorInfoDaoDaoResult.Contains(x.LiveAnchorId.Value)).Sum(o => o.Price);
             var curDaoDaoOldCustomer = order.Where(o => o.IsOldCustomer == true).Where(x => LiveAnchorInfoDaoDaoResult.Contains(x.LiveAnchorId.Value)).Sum(o => o.Price);
 
+            totalPerformanceGroupDaoDaoData.TotalPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curDaoDaoTotalAchievement);
             totalPerformanceGroupDaoDaoData.TotalPerformanceNewCustomerNumber = DecimalExtension.ChangePriceToTenThousand(curDaoDaoNewCustomer);
             totalPerformanceGroupDaoDaoData.TotalPerformanceNewCustomerRate = DecimalExtension.CalculateTargetComplete(curDaoDaoNewCustomer, curDaoDaoTotalAchievement);
             totalPerformanceGroupDaoDaoData.TotalPerformanceOldCustomerNumber = DecimalExtension.ChangePriceToTenThousand(curDaoDaoOldCustomer);
@@ -196,6 +197,7 @@ namespace Fx.Amiya.Service
             var curJinaOldCustomer = order.Where(o => o.IsOldCustomer == true).Where(x => LiveAnchorInfoJinaResult.Contains(x.LiveAnchorId.Value)).Sum(o => o.Price);
 
             OperationBoardGetNewOrOldCustomerCompareDataDetailsDto totalPerformanceGroupJiNaData = new OperationBoardGetNewOrOldCustomerCompareDataDetailsDto();
+            totalPerformanceGroupJiNaData.TotalPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curJinaTotalAchievement);
             totalPerformanceGroupJiNaData.TotalPerformanceNewCustomerNumber = DecimalExtension.ChangePriceToTenThousand(curJinaNewCustomer);
             totalPerformanceGroupJiNaData.TotalPerformanceNewCustomerRate = DecimalExtension.CalculateTargetComplete(curJinaNewCustomer, curJinaTotalAchievement);
             totalPerformanceGroupJiNaData.TotalPerformanceOldCustomerNumber = DecimalExtension.ChangePriceToTenThousand(curJinaOldCustomer);
@@ -208,6 +210,7 @@ namespace Fx.Amiya.Service
             var curTotalAchievement = curDaoDaoTotalAchievement + curJinaTotalAchievement;
             var curNewCustomer = curDaoDaoNewCustomer + curJinaNewCustomer;
             var curOldCustomer = curDaoDaoOldCustomer + curJinaOldCustomer;
+            totalPerformanceData.TotalPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curTotalAchievement);
             totalPerformanceData.TotalPerformanceNewCustomerNumber = DecimalExtension.ChangePriceToTenThousand(curNewCustomer);
             totalPerformanceData.TotalPerformanceNewCustomerRate = DecimalExtension.CalculateTargetComplete(curNewCustomer, curTotalAchievement);
             totalPerformanceData.TotalPerformanceOldCustomerNumber = DecimalExtension.ChangePriceToTenThousand(curOldCustomer);
@@ -241,13 +244,13 @@ namespace Fx.Amiya.Service
                 customerPerformanceDataDto.Name = empInfo.Name;
                 var newPerformance = orderDealInfo.Where(x => x.IsSupportOrder == false && x.IsOldCustomer == false && x.BelongEmployeeId == empInfo.Id).Sum(x => x.Price);
                 newPerformance += orderDealInfo.Where(x => x.IsSupportOrder == true && x.IsOldCustomer == false && x.SupportEmpId == empInfo.Id).Sum(x => x.Price);
-                customerPerformanceDataDto.NewCustomerPerformance = newPerformance;
+                customerPerformanceDataDto.NewCustomerPerformance = DecimalExtension.ChangePriceToTenThousand(newPerformance);
 
 
                 var oldPerformance = orderDealInfo.Where(x => x.IsSupportOrder == false && x.IsOldCustomer == true && x.BelongEmployeeId == empInfo.Id).Sum(x => x.Price);
                 oldPerformance += orderDealInfo.Where(x => x.IsSupportOrder == true && x.IsOldCustomer == true && x.SupportEmpId == empInfo.Id).Sum(x => x.Price);
-                customerPerformanceDataDto.OldCustomerPerformance = oldPerformance;
-                customerPerformanceDataDto.TotalPerformance = customerPerformanceDataDto.NewCustomerPerformance + customerPerformanceDataDto.OldCustomerPerformance;
+                customerPerformanceDataDto.OldCustomerPerformance = DecimalExtension.ChangePriceToTenThousand(oldPerformance);
+                customerPerformanceDataDto.TotalPerformance = DecimalExtension.ChangePriceToTenThousand(customerPerformanceDataDto.NewCustomerPerformance + customerPerformanceDataDto.OldCustomerPerformance);
 
                 result.EmployeePerformance.Add(customerPerformanceDataDto);
             }
@@ -264,12 +267,12 @@ namespace Fx.Amiya.Service
                 var hospital = await hospitalInfoService.GetByIdAsync(lastHospitalId.Value);
                 hospitalPerformanceDto.Name = hospital.Name;
                 var newPerformance = orderDealInfo.Where(x => x.IsOldCustomer == false && x.LastDealHospitalId == lastHospitalId.Value).Sum(x => x.Price);
-                hospitalPerformanceDto.NewCustomerPerformance = newPerformance;
+                hospitalPerformanceDto.NewCustomerPerformance = DecimalExtension.ChangePriceToTenThousand(newPerformance);
 
 
                 var oldPerformance = orderDealInfo.Where(x => x.IsOldCustomer == true && x.LastDealHospitalId == lastHospitalId.Value).Sum(x => x.Price);
-                hospitalPerformanceDto.OldCustomerPerformance = oldPerformance;
-                hospitalPerformanceDto.TotalPerformance = hospitalPerformanceDto.NewCustomerPerformance + hospitalPerformanceDto.OldCustomerPerformance;
+                hospitalPerformanceDto.OldCustomerPerformance = DecimalExtension.ChangePriceToTenThousand(oldPerformance);
+                hospitalPerformanceDto.TotalPerformance = DecimalExtension.ChangePriceToTenThousand(hospitalPerformanceDto.NewCustomerPerformance + hospitalPerformanceDto.OldCustomerPerformance);
                 result.HospitalPerformance.Add(hospitalPerformanceDto);
             }
             #endregion
@@ -1492,12 +1495,12 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<NewCustomerToHospiatlAndTargetCompleteDto> GetNewCustomerToHospiatlAndTargetCompleteAsync(QueryNewCustomerToHospiatlAndTargetCompleteDto query)
         {
-            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate,query.EndDate);
+            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
             var target = dalEmployeePerformanceTarget.GetAll().Where(e => e.EmployeeId == query.EmpId && e.BelongYear == query.StartDate.Year && e.BelongMonth == query.StartDate.Month).FirstOrDefault();
             if (target == null)
                 throw new Exception("请先填写归属月份的目标");
             var totalTarget = target.PerformanceTarget;
-            var data =await dalContentPlatFormOrderDealInfo.GetAll()
+            var data = await dalContentPlatFormOrderDealInfo.GetAll()
                 .Where(e => e.CreateDate >= selectDate.StartDate && e.CreateDate < selectDate.EndDate)
                 .Where(e => e.ContentPlatFormOrder.IsSupportOrder ? e.ContentPlatFormOrder.SupportEmpId == query.EmpId : e.ContentPlatFormOrder.BelongEmpId == query.EmpId)
                 .Select(e => new
@@ -1506,11 +1509,11 @@ namespace Fx.Amiya.Service
                     IsToHospital = e.IsToHospital,
                     IsDeal = e.IsDeal,
                     DealPrice = e.Price,
-                    Phone=e.ContentPlatFormOrder.Phone
+                    Phone = e.ContentPlatFormOrder.Phone
                 }).ToListAsync();
             NewCustomerToHospiatlAndTargetCompleteDto dataDto = new NewCustomerToHospiatlAndTargetCompleteDto();
-            dataDto.NewCustomerToHospitalCount = data.Where(e => e.IsOldCustomer == false && e.IsToHospital == true).Select(e=>e.Phone).Distinct().Count();
-            dataDto.TargetComplete = DecimalExtension.CalculateTargetComplete(data.Where(e=>e.IsDeal==true).Sum(e=>e.DealPrice),totalTarget).Value;
+            dataDto.NewCustomerToHospitalCount = data.Where(e => e.IsOldCustomer == false && e.IsToHospital == true).Select(e => e.Phone).Distinct().Count();
+            dataDto.TargetComplete = DecimalExtension.CalculateTargetComplete(data.Where(e => e.IsDeal == true).Sum(e => e.DealPrice), totalTarget).Value;
             return dataDto;
         }
 
