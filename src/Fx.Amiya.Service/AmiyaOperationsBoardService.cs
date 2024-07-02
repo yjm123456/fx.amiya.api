@@ -1498,7 +1498,7 @@ namespace Fx.Amiya.Service
             var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
             var target = dalEmployeePerformanceTarget.GetAll().Where(e => e.EmployeeId == query.EmpId && e.BelongYear == query.StartDate.Year && e.BelongMonth == query.StartDate.Month).FirstOrDefault();
             if (target == null)
-                throw new Exception("请先填写归属月份的目标");
+                throw new Exception($"请先填写{query.StartDate.Year}-{query.StartDate.Month}月份的目标");
             var totalTarget = target.PerformanceTarget;
             var data = await dalContentPlatFormOrderDealInfo.GetAll()
                 .Where(e => e.CreateDate >= selectDate.StartDate && e.CreateDate < selectDate.EndDate)

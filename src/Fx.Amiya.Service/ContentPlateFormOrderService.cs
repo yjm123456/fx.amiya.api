@@ -250,6 +250,7 @@ namespace Fx.Amiya.Service
                 order.SettlePrice = 0.00M;
                 order.BelongEmpId = input.EmployeeId;
                 order.IsRepeatProfundityOrder = false;
+                order.BelongChannel = input.BelongChannel;
                 await _dalContentPlatformOrder.AddAsync(order, true);
 
                 foreach (var z in input.CustomerPictures)
@@ -419,7 +420,9 @@ namespace Fx.Amiya.Service
                                 ReturnBackPrice = d.ReturnBackPrice,
                                 IsReturnBackPrice = d.IsReturnBackPrice,
                                 ReturnBackDate = d.ReturnBackDate,
-                                IsRepeatProfundityOrder = d.IsRepeatProfundityOrder
+                                IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
+                                BelongChannel = d.BelongChannel,
+                                BelongChannelText = ServiceClass.BelongChannelText(d.BelongChannel)
                             };
 
 
@@ -1557,6 +1560,8 @@ namespace Fx.Amiya.Service
             result.DepositAmount = order.DepositAmount;
             result.ConsultingContent = order.ConsultingContent;
             result.Remark = order.Remark;
+            result.BelongChannel = order.BelongChannel;
+            result.BelongChannelText = ServiceClass.BelongChannelText(order.BelongChannel);
             result.ConsultationEmpId = order.ConsultationEmpId == null ? 0 : order.ConsultationEmpId.Value;
             if (result.ConsultationEmpId != 0)
             {
@@ -1660,6 +1665,7 @@ namespace Fx.Amiya.Service
             result.CustomerServiceSettlePrice = order.CustomerServiceSettlePrice;
             var pictures = await _contentPlatFormCustomerPictureService.GetListAsync(order.Id, null);
             result.CustomerPictures = pictures.Select(x => x.CustomerPicture).ToList();
+            
             return result;
         }
 
@@ -1899,7 +1905,7 @@ namespace Fx.Amiya.Service
                 order.UnSendReason = input.UnSendReason;
                 order.CustomerSource = input.CustomerSource;
                 order.CustomerType = input.CustomerType;
-
+                order.BelongChannel = input.BelongChannel;
                 await _contentPlatFormCustomerPictureService.DeleteByContentPlatFormOrderIdAsync(order.Id);
                 foreach (var z in input.CustomerPictures)
                 {

@@ -284,6 +284,14 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 获客方式文本
         /// </summary>
         public string GetCustomerTypeText { get; set; }
+        /// <summary>
+        /// 归属部门
+        /// </summary>
+        public int BelongChannel { get; set; }
+        /// <summary>
+        /// 归属部门名称
+        /// </summary>
+        public string BelongChannelText { get; set; }
 
     }
 }

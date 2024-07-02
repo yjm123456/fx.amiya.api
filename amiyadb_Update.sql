@@ -300,3 +300,13 @@ ALTER TABLE `tbl_amiya_employee`
 	ADD COLUMN `administrative_inspection` DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER `potential_new_customer_commission`;
 
 ------------------------------------王健 2024/6/18 END--------------------------------------
+
+
+------------------------------------王健 2024/7/1 BEGIN--------------------------------------
+
+
+---内容平台订单添加归属部门
+ALTER TABLE `tbl_content_platform_order`
+	ADD COLUMN `belong_channel` INT NOT NULL DEFAULT 0 AFTER `customer_type`;
+
+------------------------------------王健 2024/7/1 END--------------------------------------

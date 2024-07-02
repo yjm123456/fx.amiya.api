@@ -128,6 +128,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 addDto.GetCustomerType = addVo.GetCustomerType;
                 addDto.CustomerSource = addVo.CustomerSource;
                 addDto.CustomerType = addVo.CustomerType;
+                addDto.BelongChannel = addVo.BelongChannel;
                 await _orderService.AddContentPlateFormOrderAsync(addDto);
 
 
@@ -253,7 +254,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                     resultVo.ReturnBackPrice = x.ReturnBackPrice;
                     resultVo.OtherContentPlatFormOrderId = x.OtherContentPlatFormOrderId;
                     resultVo.IsRepeatProfundityOrder = x.IsRepeatProfundityOrder;
-
+                    resultVo.BelongChannel=x.BelongChannel;
+                    resultVo.BelongChannelText=x.BelongChannelText;
                     //    if (x.BelongEmpId != 0)
                     //    {
                     //        var empInfo = await amiyaEmployeeService.GetByIdAsync(x.BelongEmpId.Value);
@@ -481,6 +483,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             orderUpdateInfo.CustomerTypeText = order.CustomerTypeText;
             orderUpdateInfo.CustomerSource = order.CustomerSource;
             orderUpdateInfo.CustomerSourceText = order.CustomerSourceText;
+            orderUpdateInfo.BelongChannel=order.BelongChannel;
+            orderUpdateInfo.BelongChannelText = order.BelongChannelText;
             return ResultData<ContentPlateFormOrderVo>.Success().AddData("orderInfo", orderUpdateInfo);
         }
 
@@ -545,6 +549,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             updateDto.WechatNumber = updateVo.WechatNumber;
             updateDto.CustomerSource = updateVo.CustomerSource;
             updateDto.CustomerType = updateVo.CustomerType;
+            updateDto.BelongChannel=updateVo.BelongChannel;
             await _orderService.UpdateContentPlateFormOrderAsync(updateDto);
 
 

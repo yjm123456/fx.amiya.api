@@ -423,5 +423,13 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder
         /// 顾客类型文本
         /// </summary>
         public string CustomerTypeText { get; set; }
+        /// <summary>
+        /// 归属部门
+        /// </summary>
+        public int BelongChannel { get; set; }
+        /// <summary>
+        /// 归属部门名称
+        /// </summary>
+        public string BelongChannelText { get; set; }
     }
 }

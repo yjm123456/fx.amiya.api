@@ -168,6 +168,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.GetCustomerType = addVo.GetCustomerType;
                 addDto.CustomerType = addVo.CustomerType;
                 addDto.CustomerSource = addVo.CustomerSource;
+                addDto.BelongChannel = addVo.BelongChannel;
                 await _orderService.AddContentPlateFormOrderAsync(addDto);
 
 
@@ -309,7 +310,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                     resultVo.CheckPrice = x.CheckPrice;
                     resultVo.Sender = x.Sender;
                     resultVo.SendDate = x.SendDate;
-
+                    resultVo.BelongChannel= x.BelongChannel;
+                    resultVo.BelongChannelText = x.BelongChannelText;
                     resultVo.CheckRemark = x.CheckRemark;
                     resultVo.SettlePrice = x.SettlePrice;
                     resultVo.IsReturnBackPrice = x.IsReturnBackPrice;
@@ -940,6 +942,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderUpdateInfo.CustomerTypeText = order.CustomerTypeText;
             orderUpdateInfo.CustomerSource = order.CustomerSource;
             orderUpdateInfo.CustomerSourceText = order.CustomerSourceText;
+            orderUpdateInfo.BelongChannel=order.BelongChannel;
+            orderUpdateInfo.BelongChannelText = order.BelongChannelText;
             return ResultData<ContentPlateFormOrderVo>.Success().AddData("orderInfo", orderUpdateInfo);
         }
 
@@ -1073,6 +1077,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.WechatNumber = updateVo.WechatNumber;
             updateDto.CustomerType = updateVo.CustomerType;
             updateDto.CustomerSource = updateVo.CustomerSource;
+            updateDto.BelongChannel=updateVo.BelongChannel;
             await _orderService.UpdateContentPlateFormOrderAsync(updateDto);
 
 

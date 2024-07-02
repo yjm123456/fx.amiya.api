@@ -217,5 +217,13 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder
         /// 是否是重单深度订单
         /// </summary>
         public bool IsRepeatProfundityOrder { get; set; }
+        /// <summary>
+        /// 归属部门
+        /// </summary>
+        public int BelongChannel { get; set; }
+        /// <summary>
+        /// 归属部门名称
+        /// </summary>
+        public string BelongChannelText { get; set; }
     }
 }

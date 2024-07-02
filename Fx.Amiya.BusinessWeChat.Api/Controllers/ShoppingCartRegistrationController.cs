@@ -18,6 +18,7 @@ using Fx.Amiya.Core.Interfaces.Integration;
 using Fx.Authorization.Attributes;
 using Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo;
 using Fx.Amiya.BusinessWeChat.Api.Vo.Base;
+using Fx.Amiya.BusinessWeChat.Api.Vo;
 
 namespace Fx.Amiya.BusinessWechat.Api.Controllers
 {
@@ -71,6 +72,21 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             }).ToList();
             return ResultData<List<BaseKeyAndValueVo<int>>>.Success().AddData("sourceList", result);
 
+        }
+        /// <summary>
+        /// 获取归属部门列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("shoppingCartGetBelongChannelList")]
+        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetBelongChannelListAsync()
+        {
+            var nameList = shoppingCartRegistrationService.GetBelongDepartmentList();
+            var result = nameList.Select(e => new BaseIdAndNameVo<int>
+            {
+                Id = e.Id,
+                Name = e.Name
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("belongChannelList", result);
         }
 
     }

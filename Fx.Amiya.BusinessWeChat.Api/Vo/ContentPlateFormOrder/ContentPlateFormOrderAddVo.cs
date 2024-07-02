@@ -172,5 +172,9 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder
         /// 顾客类型
         /// </summary>
         public int CustomerType { get; set; }
+        /// <summary>
+        /// 归属部门
+        /// </summary>
+        public int BelongChannel { get; set; }
     }
 }
