@@ -252,6 +252,21 @@ namespace Fx.Amiya.Service
                 throw new Exception(er.Message.ToString());
             }
         }
-
+        /// <summary>
+        /// 复制薪资单
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="createEmpId">创建人</param>
+        /// <returns></returns>
+        public async Task CopyAsync(string id,int createEmpId)
+        {
+            var data = dalCustomerServiceCompensation.GetAll().Where(e => e.Id == id).SingleOrDefault();
+            if (data == null)
+                throw new Exception("薪资单编号错误");
+            data.Id= Guid.NewGuid().ToString();
+            data.Name = $"{data.Name}-复制";
+            data.CreateBy = createEmpId;
+            await dalCustomerServiceCompensation.AddAsync(data,true);
+        }
     }
 }

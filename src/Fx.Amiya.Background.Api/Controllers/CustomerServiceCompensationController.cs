@@ -46,7 +46,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("listWithPage")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<CustomerServiceCompensationVo>>> GetListWithPageAsync([FromQuery]QueryCustomerServiceCompensationVo query)
+        public async Task<ResultData<FxPageInfo<CustomerServiceCompensationVo>>> GetListWithPageAsync([FromQuery] QueryCustomerServiceCompensationVo query)
         {
             try
             {
@@ -75,7 +75,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       TotalPrice = d.TotalPrice,
                                                       OtherPrice = d.OtherPrice,
                                                       Remark = d.Remark,
-                                                      Salary = d.Salary,                                                     
+                                                      Salary = d.Salary,
                                                       CustomerServicePerformance = d.CustomerServicePerformance,
                                                       ToHospitalRate = d.ToHospitalRate,
                                                       ToHospitalRateReword = d.ToHospitalRateReword,
@@ -258,7 +258,20 @@ namespace Fx.Amiya.Background.Api.Controllers
                 return ResultData.Fail(ex.Message);
             }
         }
-
+        /// <summary>
+        /// 复制助理薪资单
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [FxInternalAuthorize]
+        [HttpPost("copyCompensation")]
+        public async Task<ResultData> CopyCompensation(CopyCompensationVo copy)
+        {
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeId = Convert.ToInt32(employee.Id);
+            await customerServiceCompensationService.CopyAsync(copy.Id,employeeId);
+            return ResultData.Success();
+        }
         /// <summary>
         /// 作废助理薪资单
         /// </summary>
@@ -270,7 +283,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                
+
                 await customerServiceCompensationService.DeleteAsync(id);
                 return ResultData.Success();
             }

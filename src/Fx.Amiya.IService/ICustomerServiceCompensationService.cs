@@ -22,5 +22,6 @@ namespace Fx.Amiya.IService
         Task<CustomerServiceCompensationDto> GetByIdAsync(string id);
         Task UpdateAsync(UpdateCustomerServiceCompensationDto updateDto);
         Task DeleteAsync(string id);
+        Task CopyAsync(string id, int createEmpId);
     }
 }
