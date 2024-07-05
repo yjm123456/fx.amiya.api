@@ -8,29 +8,6 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
 {
     public class OperationTotalFlowRateDataVo
     {
-        /// <summary>
-        /// 总线索
-        /// </summary>
-        public decimal TotalFlowRate { get; set; }
-        /// <summary>
-        /// 当日总线索
-        /// </summary>
-        public decimal? TodayTotalFlowRate { get; set; }
-
-        /// <summary>
-        /// 总线索目标完成率
-        /// </summary>
-        public decimal? TotalFlowRateCompleteRate { get; set; }
-
-        /// <summary>
-        /// 总线索同比
-        /// </summary>
-        public decimal? TotalFlowRateYearOnYear { get; set; }
-
-        /// <summary>
-        /// 总线索环比
-        /// </summary>
-        public decimal? TotalFlowRateChainRatio { get; set; }
 
         /// <summary>
         /// 总分诊
@@ -82,35 +59,54 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
         /// </summary>
         public decimal? AddWechatChainRatio { get; set; }
 
+        /// <summary>
+        /// 总派单
+        /// </summary>
+        public decimal TotalSendOrder { get; set; }
+        /// <summary>
+        /// 当日总派单
+        /// </summary>
+        public decimal? TodayTotalSendOrder { get; set; }
 
         /// <summary>
-        /// 总退卡
+        /// 总派单目标完成率
         /// </summary>
-        public decimal TotalRefundCard { get; set; }
+        public decimal? TotalSendOrderCompleteRate { get; set; }
+
         /// <summary>
-        /// 当日退卡
+        /// 总派单同比
         /// </summary>
-        public decimal? TodayRefundCard { get; set; }
+        public decimal? TotalSendOrderYearOnYear { get; set; }
+
+        /// <summary>
+        /// 总派单环比
+        /// </summary>
+        public decimal? TotalSendOrderChainRatio { get; set; }
+
+        /// <summary>
+        /// 总上门
+        /// </summary>
+        public decimal TotalVisit { get; set; }
+        /// <summary>
+        /// 当日上门
+        /// </summary>
+        public decimal? TodayVisit { get; set; }
 
 
         /// <summary>
-        /// 退卡目标完成率
+        /// 上门目标完成率
         /// </summary>
-        public decimal? RefundCardCompleteRate { get; set; }
+        public decimal? VisitCompleteRate { get; set; }
 
         /// <summary>
-        /// 退卡同比
+        /// 上门同比
         /// </summary>
-        public decimal? RefundCardYearOnYear { get; set; }
+        public decimal? VisitYearOnYear { get; set; }
 
         /// <summary>
-        /// 退卡环比
+        /// 上门环比
         /// </summary>
-        public decimal? RefundCardChainRatio { get; set; }
-        /// <summary>
-        /// 线索折线图
-        /// </summary>
-        public List<PerformanceBrokenLineListInfoVo> FlowRateBrokenLineList { get; set; }
+        public decimal? VisitChainRatio { get; set; }
         /// <summary>
         /// 分诊折线图
         /// </summary>
@@ -119,5 +115,9 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
         /// 加v折线图
         /// </summary>
         public List<PerformanceBrokenLineListInfoVo> AddWeChatBrokenLineList { get; set; }
+        /// <summary>
+        /// 派单折线图
+        /// </summary>
+        public List<PerformanceBrokenLineListInfoVo> SendOrderBrokenLineList { get; set; }
     }
 }

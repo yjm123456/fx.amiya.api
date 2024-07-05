@@ -1665,7 +1665,7 @@ namespace Fx.Amiya.Service
             result.CustomerServiceSettlePrice = order.CustomerServiceSettlePrice;
             var pictures = await _contentPlatFormCustomerPictureService.GetListAsync(order.Id, null);
             result.CustomerPictures = pictures.Select(x => x.CustomerPicture).ToList();
-            
+
             return result;
         }
 
@@ -2434,7 +2434,7 @@ namespace Fx.Amiya.Service
                 orderDealDto.CreateBy = input.EmpId;
                 orderDealDto.InvitationDocuments = input.InvitationDocuments;
                 orderDealDto.AddContentPlatFormOrderDealDetailsDtoList = input.AddContentPlatFormOrderDealDetailsDtoList;
-                var dealId= await _contentPlatFormOrderDalService.AddAsync(orderDealDto);
+                var dealId = await _contentPlatFormOrderDalService.AddAsync(orderDealDto);
 
                 //更新粉丝见面会数据
                 if (!string.IsNullOrEmpty(input.FansMeetingId))
@@ -2447,7 +2447,7 @@ namespace Fx.Amiya.Service
                         throw new Exception("该客户未参加此次粉丝见面会!");
                     generate.EmpId = input.EmpId;
                     generate.Id = id;
-                    generate.DealId=dealId;
+                    generate.DealId = dealId;
                     generate.IsToHospital = input.IsToHospital;
                     generate.IsDeal = input.IsFinish;
                     generate.DealPrice = input.DealAmount ?? 0m;
@@ -2529,7 +2529,7 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
-                
+
                 if (input.IsFinish == true)
                 {
                     if (input.ConsumptionType == (int)ConsumptionType.OTHER) throw new Exception("成交订单不能选择其他消费类型！");
@@ -2563,7 +2563,7 @@ namespace Fx.Amiya.Service
                 if (dealCount != null)
                 {
                     var dealinfo = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
-                    
+
                     var realDealCount = dealinfo.Where(x => x.IsDeal == true && x.Id != input.DealId && x.ToHospitalType != (int)ContentPlateFormOrderToHospitalType.REFUND && x.ConsumptionType != (int)ConsumptionType.Deposit && x.ConsumptionType != (int)ConsumptionType.Refund).Count();
                     if (realDealCount > 1)
                     {
@@ -2599,7 +2599,7 @@ namespace Fx.Amiya.Service
                         isoldCustomer = orderIsOldCustomer;
                     }
                 }
-               
+
                 order.DealAmount -= orderDealInfo.Price;
 
                 if (order == null)
@@ -4287,6 +4287,32 @@ namespace Fx.Amiya.Service
             dealPerformanceDataDto.NewCustomerPerformance = performanceList.Where(e => e.IsOldCustomer == false).Sum(e => e.Price);
             dealPerformanceDataDto.OldCustomerPerformance = performanceList.Where(e => e.IsOldCustomer == true).Sum(e => e.Price);
             return dealPerformanceDataDto;
+        }
+
+        /// <summary>
+        /// 根据手机号和时间获取新客上门条数
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="PhoneList"></param>
+        /// <returns></returns>
+        public async Task<int> GetToHospitalCountDataAsync(DateTime startDate, DateTime endDate, List<string> phoneList)
+        {
+            var performanceList = await _dalContentPlatformOrder.GetAll().Where(e => e.ToHospitalDate >= startDate && e.ToHospitalDate < endDate && e.IsToHospital == true && phoneList.Contains(e.Phone)).CountAsync();
+            return performanceList;
+        }
+        /// <summary>
+        /// 根据手机号和时间获取派单医院id合集
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="phoneList"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        public async Task<List<int>> GetDealCountDataByPhoneListAsync(DateTime startDate, DateTime endDate, List<string> phoneList)
+        {
+            var performanceList = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList).Where(e => phoneList.Contains(e.Phone) && e.SendDate >= startDate && e.SendDate < endDate).SelectMany(x => x.ContentPlatformOrderSendList).Select(x => x.HospitalId).ToListAsync();
+            return performanceList;
         }
         /// <summary>
         /// 获取机构端成交看板科室排名数据

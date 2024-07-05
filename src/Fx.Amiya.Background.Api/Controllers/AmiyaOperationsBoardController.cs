@@ -118,17 +118,19 @@ namespace Fx.Amiya.Background.Api.Controllers
             result.TotalNewOrOldCustomer.TotalPerformanceNewCustomerRate = data.TotalNewOrOldCustomer.TotalPerformanceNewCustomerRate;
             result.TotalNewOrOldCustomer.TotalPerformanceOldCustomerNumber = data.TotalNewOrOldCustomer.TotalPerformanceOldCustomerNumber;
             result.TotalNewOrOldCustomer.TotalPerformanceOldCustomerRate = data.TotalNewOrOldCustomer.TotalPerformanceOldCustomerRate;
-            result.TotalNewOrOldCustomer.TotalPerformanceNumber = data.TotalNewOrOldCustomer.TotalPerformanceOldCustomerRate;
+            result.TotalNewOrOldCustomer.TotalPerformanceNumber = data.TotalNewOrOldCustomer.TotalPerformanceNumber;
 
             result.GroupDaoDaoNewOrOldCustomer.TotalPerformanceNewCustomerNumber = data.GroupDaoDaoNewOrOldCustomer.TotalPerformanceNewCustomerNumber;
             result.GroupDaoDaoNewOrOldCustomer.TotalPerformanceNewCustomerRate = data.GroupDaoDaoNewOrOldCustomer.TotalPerformanceNewCustomerRate;
             result.GroupDaoDaoNewOrOldCustomer.TotalPerformanceOldCustomerNumber = data.GroupDaoDaoNewOrOldCustomer.TotalPerformanceOldCustomerNumber;
             result.GroupDaoDaoNewOrOldCustomer.TotalPerformanceOldCustomerRate = data.GroupDaoDaoNewOrOldCustomer.TotalPerformanceOldCustomerRate;
+            result.GroupDaoDaoNewOrOldCustomer.TotalPerformanceNumber = data.GroupDaoDaoNewOrOldCustomer.TotalPerformanceNumber;
 
             result.GroupJiNaNewOrOldCustomer.TotalPerformanceNewCustomerNumber = data.GroupJiNaNewOrOldCustomer.TotalPerformanceNewCustomerNumber;
             result.GroupJiNaNewOrOldCustomer.TotalPerformanceNewCustomerRate = data.GroupJiNaNewOrOldCustomer.TotalPerformanceNewCustomerRate;
             result.GroupJiNaNewOrOldCustomer.TotalPerformanceOldCustomerNumber = data.GroupJiNaNewOrOldCustomer.TotalPerformanceOldCustomerNumber;
             result.GroupJiNaNewOrOldCustomer.TotalPerformanceOldCustomerRate = data.GroupJiNaNewOrOldCustomer.TotalPerformanceOldCustomerRate;
+            result.GroupJiNaNewOrOldCustomer.TotalPerformanceNumber = data.GroupJiNaNewOrOldCustomer.TotalPerformanceNumber;
             return ResultData<GetNewOrOldCustomerCompareDataVo>.Success().AddData("data", result);
         }
 
@@ -181,16 +183,12 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<OperationTotalFlowRateDataVo>> GetTotalFlowRateAndDateScheduleAsync([FromQuery] QueryOperationDataVo query)
         {
             OperationTotalFlowRateDataVo result = new OperationTotalFlowRateDataVo();
-            QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
-            queryOperationDataVo.startDate = query.startDate;
-            queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
-            var data = await amiyaOperationsBoardService.GetCustomerDataAsync(queryOperationDataVo);
+            QueryOperationDataDto queryOperationDataDto = new QueryOperationDataDto();
+            queryOperationDataDto.startDate = query.startDate;
+            queryOperationDataDto.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
+            queryOperationDataDto.keyWord = query.keyWord;
+            var data = await amiyaOperationsBoardService.GetCustomerDataAsync(queryOperationDataDto);
 
-            result.TotalFlowRate = data.TotalFlowRate;
-            result.TodayTotalFlowRate = data.TodayTotalFlowRate;
-            result.TotalFlowRateCompleteRate = data.TotalFlowRateCompleteRate;
-            result.TotalFlowRateYearOnYear = data.TotalFlowRateYearOnYear;
-            result.TotalFlowRateChainRatio = data.TotalFlowRateChainRatio;
 
             result.TotalDistributeConsulation = data.TotalDistributeConsulation;
             result.TodayDistributeConsulation = data.TodayDistributeConsulation;
@@ -204,23 +202,30 @@ namespace Fx.Amiya.Background.Api.Controllers
             result.AddWechatYearOnYear = data.AddWechatYearOnYear;
             result.AddWechatChainRatio = data.AddWechatChainRatio;
 
-            result.TotalRefundCard = data.TotalRefundCard;
-            result.TodayRefundCard = data.TodayRefundCard;
-            result.RefundCardCompleteRate = data.RefundCardCompleteRate;
-            result.RefundCardYearOnYear = data.RefundCardYearOnYear;
-            result.RefundCardChainRatio = data.RefundCardChainRatio;
+            result.TotalSendOrder = data.TotalSendOrder;
+            result.TodayTotalSendOrder = data.TodayTotalSendOrder;
+            result.TotalSendOrderCompleteRate = data.TotalSendOrderCompleteRate;
+            result.TotalSendOrderYearOnYear = data.TotalSendOrderYearOnYear;
+            result.TotalSendOrderChainRatio = data.TotalSendOrderChainRatio;
 
-            result.FlowRateBrokenLineList = data.FlowRateBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
-            {
-                date = x.date,
-                Performance = x.Performance
-            }).ToList();
+            result.TotalVisit = data.TotalVisit;
+            result.TodayVisit = data.TodayVisit;
+            result.VisitCompleteRate = data.VisitCompleteRate;
+            result.VisitYearOnYear = data.VisitYearOnYear;
+            result.VisitChainRatio = data.VisitChainRatio;
+
             result.DistributeConsulationBrokenLineList = data.DistributeConsulationBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
             {
                 date = x.date,
                 Performance = x.Performance
             }).ToList();
             result.AddWeChatBrokenLineList = data.AddWeChatBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
+            {
+                date = x.date,
+                Performance = x.Performance
+            }).ToList();
+
+            result.SendOrderBrokenLineList = data.SendOrderBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
             {
                 date = x.date,
                 Performance = x.Performance
@@ -240,39 +245,143 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryOperationDataVo.startDate = query.startDate;
             queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
             var data = await amiyaOperationsBoardService.GetFlowRateByContentPlatFormCompareDataAsync(queryOperationDataVo);
-            OperationBoardContentPlatFormDataVo totalResultDataVo = new OperationBoardContentPlatFormDataVo();
-            totalResultDataVo.DouYinNumber = data.TotalFlowRate.DouYinNumber;
-            totalResultDataVo.DouYinRate = data.TotalFlowRate.DouYinRate;
-            totalResultDataVo.VideoNumberNumber = data.TotalFlowRate.VideoNumberNumber;
-            totalResultDataVo.VideoNumberRate = data.TotalFlowRate.VideoNumberRate;
-            totalResultDataVo.XiaoHongShuNumber = data.TotalFlowRate.XiaoHongShuNumber;
-            totalResultDataVo.XiaoHongShuRate = data.TotalFlowRate.XiaoHongShuRate;
-            totalResultDataVo.PrivateDataNumber = data.TotalFlowRate.PrivateDataNumber;
-            totalResultDataVo.PrivateDataRate = data.TotalFlowRate.PrivateDataRate;
-            result.TotalFlowRate = totalResultDataVo;
+            #region 【平台线索分析】
+            OperationBoardContentPlatFormDataVo totalResultDataByContentPlatFormVo = new OperationBoardContentPlatFormDataVo();
+            totalResultDataByContentPlatFormVo.DouYinNumber = data.TotalFlowRateByContentPlatForm.DouYinNumber;
+            totalResultDataByContentPlatFormVo.DouYinRate = data.TotalFlowRateByContentPlatForm.DouYinRate;
+            totalResultDataByContentPlatFormVo.VideoNumberNumber = data.TotalFlowRateByContentPlatForm.VideoNumberNumber;
+            totalResultDataByContentPlatFormVo.VideoNumberRate = data.TotalFlowRateByContentPlatForm.VideoNumberRate;
+            totalResultDataByContentPlatFormVo.XiaoHongShuNumber = data.TotalFlowRateByContentPlatForm.XiaoHongShuNumber;
+            totalResultDataByContentPlatFormVo.XiaoHongShuRate = data.TotalFlowRateByContentPlatForm.XiaoHongShuRate;
+            totalResultDataByContentPlatFormVo.PrivateDataNumber = data.TotalFlowRateByContentPlatForm.PrivateDataNumber;
+            totalResultDataByContentPlatFormVo.PrivateDataRate = data.TotalFlowRateByContentPlatForm.PrivateDataRate;
+            result.TotalFlowRateByContentPlatForm = totalResultDataByContentPlatFormVo;
 
-            OperationBoardContentPlatFormDataVo groupDaoDaoResultDataVo = new OperationBoardContentPlatFormDataVo();
-            groupDaoDaoResultDataVo.DouYinNumber = data.GroupDaoDaoFlowRate.DouYinNumber;
-            groupDaoDaoResultDataVo.DouYinRate = data.GroupDaoDaoFlowRate.DouYinRate;
-            groupDaoDaoResultDataVo.VideoNumberNumber = data.GroupDaoDaoFlowRate.VideoNumberNumber;
-            groupDaoDaoResultDataVo.VideoNumberRate = data.GroupDaoDaoFlowRate.VideoNumberRate;
-            groupDaoDaoResultDataVo.XiaoHongShuNumber = data.GroupDaoDaoFlowRate.XiaoHongShuNumber;
-            groupDaoDaoResultDataVo.XiaoHongShuRate = data.GroupDaoDaoFlowRate.XiaoHongShuRate;
-            groupDaoDaoResultDataVo.PrivateDataNumber = data.GroupDaoDaoFlowRate.PrivateDataNumber;
-            groupDaoDaoResultDataVo.PrivateDataRate = data.GroupDaoDaoFlowRate.PrivateDataRate;
-            result.GroupDaoDaoFlowRate = groupDaoDaoResultDataVo;
+            OperationBoardContentPlatFormDataVo groupDaoDaoResultDataByContentPlatFormVo = new OperationBoardContentPlatFormDataVo();
+            groupDaoDaoResultDataByContentPlatFormVo.DouYinNumber = data.GroupDaoDaoFlowRateByContentPlatForm.DouYinNumber;
+            groupDaoDaoResultDataByContentPlatFormVo.DouYinRate = data.GroupDaoDaoFlowRateByContentPlatForm.DouYinRate;
+            groupDaoDaoResultDataByContentPlatFormVo.VideoNumberNumber = data.GroupDaoDaoFlowRateByContentPlatForm.VideoNumberNumber;
+            groupDaoDaoResultDataByContentPlatFormVo.VideoNumberRate = data.GroupDaoDaoFlowRateByContentPlatForm.VideoNumberRate;
+            groupDaoDaoResultDataByContentPlatFormVo.XiaoHongShuNumber = data.GroupDaoDaoFlowRateByContentPlatForm.XiaoHongShuNumber;
+            groupDaoDaoResultDataByContentPlatFormVo.XiaoHongShuRate = data.GroupDaoDaoFlowRateByContentPlatForm.XiaoHongShuRate;
+            groupDaoDaoResultDataByContentPlatFormVo.PrivateDataNumber = data.GroupDaoDaoFlowRateByContentPlatForm.PrivateDataNumber;
+            groupDaoDaoResultDataByContentPlatFormVo.PrivateDataRate = data.GroupDaoDaoFlowRateByContentPlatForm.PrivateDataRate;
+            result.GroupDaoDaoFlowRateByContentPlatForm = groupDaoDaoResultDataByContentPlatFormVo;
 
-            OperationBoardContentPlatFormDataVo groupJiNaResultDataVo = new OperationBoardContentPlatFormDataVo();
-            groupJiNaResultDataVo.DouYinNumber = data.GroupJiNaFlowRate.DouYinNumber;
-            groupJiNaResultDataVo.DouYinRate = data.GroupJiNaFlowRate.DouYinRate;
-            groupJiNaResultDataVo.VideoNumberNumber = data.GroupJiNaFlowRate.VideoNumberNumber;
-            groupJiNaResultDataVo.VideoNumberRate = data.GroupJiNaFlowRate.VideoNumberRate;
-            groupJiNaResultDataVo.XiaoHongShuNumber = data.GroupJiNaFlowRate.XiaoHongShuNumber;
-            groupJiNaResultDataVo.XiaoHongShuRate = data.GroupJiNaFlowRate.XiaoHongShuRate;
-            groupJiNaResultDataVo.PrivateDataNumber = data.GroupJiNaFlowRate.PrivateDataNumber;
-            groupJiNaResultDataVo.PrivateDataRate = data.GroupJiNaFlowRate.PrivateDataRate;
-            result.GroupJiNaFlowRate = groupJiNaResultDataVo;
+            OperationBoardContentPlatFormDataVo groupJiNaResultDataByContentPlatFormVo = new OperationBoardContentPlatFormDataVo();
+            groupJiNaResultDataByContentPlatFormVo.DouYinNumber = data.GroupJiNaFlowRateByContentPlatForm.DouYinNumber;
+            groupJiNaResultDataByContentPlatFormVo.DouYinRate = data.GroupJiNaFlowRateByContentPlatForm.DouYinRate;
+            groupJiNaResultDataByContentPlatFormVo.VideoNumberNumber = data.GroupJiNaFlowRateByContentPlatForm.VideoNumberNumber;
+            groupJiNaResultDataByContentPlatFormVo.VideoNumberRate = data.GroupJiNaFlowRateByContentPlatForm.VideoNumberRate;
+            groupJiNaResultDataByContentPlatFormVo.XiaoHongShuNumber = data.GroupJiNaFlowRateByContentPlatForm.XiaoHongShuNumber;
+            groupJiNaResultDataByContentPlatFormVo.XiaoHongShuRate = data.GroupJiNaFlowRateByContentPlatForm.XiaoHongShuRate;
+            groupJiNaResultDataByContentPlatFormVo.PrivateDataNumber = data.GroupJiNaFlowRateByContentPlatForm.PrivateDataNumber;
+            groupJiNaResultDataByContentPlatFormVo.PrivateDataRate = data.GroupJiNaFlowRateByContentPlatForm.PrivateDataRate;
+            result.GroupJiNaFlowRateByContentPlatForm = groupJiNaResultDataByContentPlatFormVo;
+            #endregion
+
+            #region 【部门线索分析】
+            OperationBoardDepartmentDataVo totalResultDataByDepartmentVo = new OperationBoardDepartmentDataVo();
+            totalResultDataByDepartmentVo.BeforeLivingNumber = data.TotalFlowRateByDepartment.BeforeLivingNumber;
+            totalResultDataByDepartmentVo.BeforeLivingRate = data.TotalFlowRateByDepartment.BeforeLivingRate;
+            totalResultDataByDepartmentVo.LivingNumber = data.TotalFlowRateByDepartment.LivingNumber;
+            totalResultDataByDepartmentVo.LivingRate = data.TotalFlowRateByDepartment.LivingRate;
+            totalResultDataByDepartmentVo.AfterLivingNumber = data.TotalFlowRateByDepartment.AfterLivingNumber;
+            totalResultDataByDepartmentVo.AftereLivingRate = data.TotalFlowRateByDepartment.AftereLivingRate;
+            totalResultDataByDepartmentVo.OtherRate = data.TotalFlowRateByDepartment.OtherRate;
+            totalResultDataByDepartmentVo.OtherNumber = data.TotalFlowRateByDepartment.OtherNumber;
+            result.TotalFlowRateByDepartment = totalResultDataByDepartmentVo;
+
+            OperationBoardDepartmentDataVo groupDaoDaoResultDataByDepartmentVo = new OperationBoardDepartmentDataVo();
+            groupDaoDaoResultDataByDepartmentVo.BeforeLivingNumber = data.GroupDaoDaoFlowRateByDepartment.BeforeLivingNumber;
+            groupDaoDaoResultDataByDepartmentVo.BeforeLivingRate = data.GroupDaoDaoFlowRateByDepartment.BeforeLivingRate;
+            groupDaoDaoResultDataByDepartmentVo.LivingNumber = data.GroupDaoDaoFlowRateByDepartment.LivingNumber;
+            groupDaoDaoResultDataByDepartmentVo.LivingRate = data.GroupDaoDaoFlowRateByDepartment.LivingRate;
+            groupDaoDaoResultDataByDepartmentVo.AfterLivingNumber = data.GroupDaoDaoFlowRateByDepartment.AfterLivingNumber;
+            groupDaoDaoResultDataByDepartmentVo.AftereLivingRate = data.GroupDaoDaoFlowRateByDepartment.AftereLivingRate;
+            groupDaoDaoResultDataByDepartmentVo.OtherRate = data.GroupDaoDaoFlowRateByDepartment.OtherRate;
+            groupDaoDaoResultDataByDepartmentVo.OtherNumber = data.GroupDaoDaoFlowRateByDepartment.OtherNumber;
+            result.GroupDaoDaoFlowRateByDepartment = groupDaoDaoResultDataByDepartmentVo;
+
+            OperationBoardDepartmentDataVo groupJiNaResultDataByDepartmentVo = new OperationBoardDepartmentDataVo();
+            groupJiNaResultDataByDepartmentVo.BeforeLivingNumber = data.GroupJiNaFlowRateByDepartment.BeforeLivingNumber;
+            groupJiNaResultDataByDepartmentVo.BeforeLivingRate = data.GroupJiNaFlowRateByDepartment.BeforeLivingRate;
+            groupJiNaResultDataByDepartmentVo.LivingNumber = data.GroupJiNaFlowRateByDepartment.LivingNumber;
+            groupJiNaResultDataByDepartmentVo.LivingRate = data.GroupJiNaFlowRateByDepartment.LivingRate;
+            groupJiNaResultDataByDepartmentVo.AfterLivingNumber = data.GroupJiNaFlowRateByDepartment.AfterLivingNumber;
+            groupJiNaResultDataByDepartmentVo.AftereLivingRate = data.GroupJiNaFlowRateByDepartment.AftereLivingRate;
+            groupJiNaResultDataByDepartmentVo.OtherRate = data.GroupJiNaFlowRateByDepartment.OtherRate;
+            groupJiNaResultDataByDepartmentVo.OtherNumber = data.GroupJiNaFlowRateByDepartment.OtherNumber;
+            result.GroupJiNaFlowRateByDepartment = groupJiNaResultDataByDepartmentVo;
+            #endregion
+
+            #region【分组线索分析】
+            result.TotalFlowRate = data.TotalFlowRate;
+            result.GroupJiNaFlowRate = data.GroupJiNaFlowRate;
+            result.GroupDaoDaoFlowRate = data.GroupDaoDaoFlowRate;
+            #endregion
+
+            #region 【有效/潜在线索分析】
+            OperationBoardIsEffictiveDataVo totalResultDataByIsEffictiveVo = new OperationBoardIsEffictiveDataVo();
+            totalResultDataByIsEffictiveVo.EffictiveNumber = data.TotalFlowRateByIsEffictive.EffictiveNumber;
+            totalResultDataByIsEffictiveVo.EffictiveRate = data.TotalFlowRateByIsEffictive.EffictiveRate;
+            totalResultDataByIsEffictiveVo.NotEffictiveNumber = data.TotalFlowRateByIsEffictive.NotEffictiveNumber;
+            totalResultDataByIsEffictiveVo.NotEffictiveRate = data.TotalFlowRateByIsEffictive.NotEffictiveRate;
+            result.TotalFlowRateByIsEffictive = totalResultDataByIsEffictiveVo;
+
+            OperationBoardIsEffictiveDataVo groupDaoDaoResultDataByIsEffictiveVo = new OperationBoardIsEffictiveDataVo();
+            groupDaoDaoResultDataByIsEffictiveVo.EffictiveNumber = data.GroupDaoDaoFlowRateByIsEffictive.EffictiveNumber;
+            groupDaoDaoResultDataByIsEffictiveVo.EffictiveRate = data.GroupDaoDaoFlowRateByIsEffictive.EffictiveRate;
+            groupDaoDaoResultDataByIsEffictiveVo.NotEffictiveNumber = data.GroupDaoDaoFlowRateByIsEffictive.NotEffictiveNumber;
+            groupDaoDaoResultDataByIsEffictiveVo.NotEffictiveRate = data.GroupDaoDaoFlowRateByIsEffictive.NotEffictiveRate;
+            result.GroupDaoDaoFlowRateByIsEffictive = groupDaoDaoResultDataByIsEffictiveVo;
+
+            OperationBoardIsEffictiveDataVo groupJiNaResultDataByIsEffictiveVo = new OperationBoardIsEffictiveDataVo();
+            groupJiNaResultDataByIsEffictiveVo.EffictiveNumber = data.GroupJiNaFlowRateByIsEffictive.EffictiveNumber;
+            groupJiNaResultDataByIsEffictiveVo.EffictiveRate = data.GroupJiNaFlowRateByIsEffictive.EffictiveRate;
+            groupJiNaResultDataByIsEffictiveVo.NotEffictiveNumber = data.GroupJiNaFlowRateByIsEffictive.NotEffictiveNumber;
+            groupJiNaResultDataByIsEffictiveVo.NotEffictiveRate = data.GroupJiNaFlowRateByIsEffictive.NotEffictiveRate;
+            result.GroupJiNaFlowRateByIsEffictive = groupJiNaResultDataByIsEffictiveVo;
+            #endregion
+
             return ResultData<GetGroupFlowRateCompareDataVo>.Success().AddData("data", result);
+        }
+
+
+        /// <summary>
+        /// 根据条件获取线索分析柱状图（助理与机构）
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getCustomerFlowRateByEmployeeAndHospital")]
+        public async Task<ResultData<CustomerFlowRateDataListVo>> GetCustomerFlowRateByEmployeeAndHospitalAsync([FromQuery] QueryOperationDataVo query)
+        {
+            QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
+            queryOperationDataVo.startDate = query.startDate;
+            queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
+            var data = await amiyaOperationsBoardService.GetCustomerFlowRateByEmployeeAndHospitalAsync(queryOperationDataVo);
+
+            CustomerFlowRateDataListVo result = new CustomerFlowRateDataListVo();
+            result.HospitalFlowRate = new List<CustomerFlowRateDataVo>();
+            result.EmployeeFlowRate = new List<CustomerFlowRateDataVo>();
+            foreach (var x in data.EmployeeFlowRate)
+            {
+                CustomerFlowRateDataVo employeePerformanceVo = new CustomerFlowRateDataVo();
+                employeePerformanceVo.DistributeConsulationNum = x.DistributeConsulationNum;
+                employeePerformanceVo.SendOrderNum = x.SendOrderNum;
+                employeePerformanceVo.VisitNum = x.VisitNum;
+                employeePerformanceVo.Name = x.Name;
+                result.EmployeeFlowRate.Add(employeePerformanceVo);
+            }
+            foreach (var x in data.HospitalFlowRate)
+            {
+                CustomerFlowRateDataVo hospitalPerformanceVo = new CustomerFlowRateDataVo();
+                hospitalPerformanceVo.SendOrderNum = x.SendOrderNum;
+                hospitalPerformanceVo.VisitNum = x.VisitNum;
+                hospitalPerformanceVo.NewCustomerDealNum = x.NewCustomerDealNum;
+                hospitalPerformanceVo.Name = x.Name;
+                result.HospitalFlowRate.Add(hospitalPerformanceVo);
+            }
+            return ResultData<CustomerFlowRateDataListVo>.Success().AddData("data", result);
         }
 
         /// <summary>

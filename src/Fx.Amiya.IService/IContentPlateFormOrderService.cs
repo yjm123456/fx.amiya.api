@@ -505,6 +505,24 @@ namespace Fx.Amiya.IService
         /// <param name="hospitalId"></param>
         /// <returns></returns>
         Task<DealPerformanceDataDto> GetDealDataAsync(DateTime startDate, DateTime endDate, int hospitalId);
+
+        /// <summary>
+        /// 根据手机号和时间获取新客上门条数
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="phoneList"></param>
+        /// <returns></returns>
+        Task<int> GetToHospitalCountDataAsync(DateTime startDate, DateTime endDate, List<string> phoneList);
+
+        /// <summary>
+        /// 根据手机号和时间获取派单医院id合集
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="phoneList"></param>
+        /// <returns></returns>
+        Task<List<int>> GetDealCountDataByPhoneListAsync(DateTime startDate, DateTime endDate, List<string> phoneList);
         /// <summary>
         /// 获取机构端成交看板科室排名数据
         /// </summary>

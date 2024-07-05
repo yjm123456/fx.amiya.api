@@ -41,6 +41,8 @@ namespace Fx.Amiya.IService
 
         Task<OperationBoardContentPlatFormDataDto> GetFlowRateByContentPlatFormCompareDataAsync(QueryOperationDataDto query);
 
+        Task<CustomerFlowRateDataListDto> GetCustomerFlowRateByEmployeeAndHospitalAsync(QueryOperationDataDto query);
+
         Task<GetFlowRateByContentPlatformDataDto> GetFlowRateByContentPlatformAsync(QueryOperationDataDto query);
 
         Task<GetFlowRateDetailsByContentPlatformDataDto> GetFlowRateDetailsByContentPlatformAsync(QueryOperationDataDto query);

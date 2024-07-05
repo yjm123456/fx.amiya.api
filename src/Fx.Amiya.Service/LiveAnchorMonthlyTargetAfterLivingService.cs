@@ -727,6 +727,8 @@ namespace Fx.Amiya.Service
                     RefundCardTarget = e.MinivanRefundTarget,
                     DistributeConsulationTarget = e.DistributeConsulationTarget,
                     AddWechatTarget = e.AddWechatTarget,
+                    SendOrderTarget=e.SendOrderTarget,
+                    NewCustomerVisitTarget = e.NewCustomerVisitTarget,
                     BaseLiveAnchorId =e.LiveAnchor.LiveAnchorBaseId
                 })
                 .ToList();
@@ -739,6 +741,8 @@ namespace Fx.Amiya.Service
                 PotentialPerformance = performance.Sum(t => t.PotentialPerformanceTarget),
                 MinivanRefundTarget = performance.Sum(e => e.RefundCardTarget),
                 AddWechatTarget = performance.Sum(e => e.AddWechatTarget),
+                SendOrderTarget = performance.Sum(e => e.SendOrderTarget),
+                NewCustomerVisitTarget = performance.Sum(e => e.NewCustomerVisitTarget),
                 DistributeConsulationTarget = performance.Sum(t => t.DistributeConsulationTarget),
             };
             return performanceInfoDto;
