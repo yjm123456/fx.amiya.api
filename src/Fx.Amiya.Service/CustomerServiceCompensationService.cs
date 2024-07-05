@@ -266,6 +266,7 @@ namespace Fx.Amiya.Service
             data.Id= Guid.NewGuid().ToString();
             data.Name = $"{data.Name}-复制";
             data.CreateBy = createEmpId;
+            data.CreateDate=DateTime.Now;
             await dalCustomerServiceCompensation.AddAsync(data,true);
         }
     }
