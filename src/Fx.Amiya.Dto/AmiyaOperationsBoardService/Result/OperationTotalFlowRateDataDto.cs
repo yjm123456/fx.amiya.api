@@ -108,6 +108,8 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
         /// 上门环比
         /// </summary>
         public decimal? VisitChainRatio { get; set; }
+
+
         /// <summary>
         /// 分诊折线图
         /// </summary>

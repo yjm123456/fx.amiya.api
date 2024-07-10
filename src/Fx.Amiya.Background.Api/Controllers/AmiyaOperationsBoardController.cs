@@ -106,13 +106,53 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<GetNewOrOldCustomerCompareDataVo>> GetNewOrOldCustomerCompareDataAsync([FromQuery] QueryOperationDataVo query)
         {
             GetNewOrOldCustomerCompareDataVo result = new GetNewOrOldCustomerCompareDataVo();
-            result.TotalNewOrOldCustomer = new OperationBoardGetNewOrOldCustomerCompareDataDetailsVo();
-            result.GroupDaoDaoNewOrOldCustomer = new OperationBoardGetNewOrOldCustomerCompareDataDetailsVo();
-            result.GroupJiNaNewOrOldCustomer = new OperationBoardGetNewOrOldCustomerCompareDataDetailsVo();
             QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
             queryOperationDataVo.startDate = query.startDate;
             queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
             var data = await amiyaOperationsBoardService.GetNewOrOldCustomerCompareDataAsync(queryOperationDataVo);
+
+            #region【部门】
+
+            result.TotalBelongChannelPerformance = new OperationBoardBelongChannelPerformanceDataVo();
+            result.GroupDaoDaoBelongChannelPerformance = new OperationBoardBelongChannelPerformanceDataVo();
+            result.GroupJiNaBelongChannelPerformance = new OperationBoardBelongChannelPerformanceDataVo();
+
+            result.TotalBelongChannelPerformance.BeforeLivingNumber = data.TotalBelongChannelPerformance.BeforeLivingNumber;
+            result.TotalBelongChannelPerformance.BeforeLivingRate = data.TotalBelongChannelPerformance.BeforeLivingRate;
+            result.TotalBelongChannelPerformance.LivingNumber = data.TotalBelongChannelPerformance.LivingNumber;
+            result.TotalBelongChannelPerformance.LivingRate = data.TotalBelongChannelPerformance.LivingRate;
+            result.TotalBelongChannelPerformance.AfterLivingNumber = data.TotalBelongChannelPerformance.AfterLivingNumber;
+            result.TotalBelongChannelPerformance.AfterLivingRate = data.TotalBelongChannelPerformance.AfterLivingRate;
+            result.TotalBelongChannelPerformance.OtherNumber = data.TotalBelongChannelPerformance.OtherNumber;
+            result.TotalBelongChannelPerformance.OtherRate = data.TotalBelongChannelPerformance.OtherRate;
+            result.TotalBelongChannelPerformance.TotalPerformanceNumber = data.TotalBelongChannelPerformance.TotalPerformanceNumber;
+
+            result.GroupDaoDaoBelongChannelPerformance.BeforeLivingNumber = data.GroupDaoDaoBelongChannelPerformance.BeforeLivingNumber;
+            result.GroupDaoDaoBelongChannelPerformance.BeforeLivingRate = data.GroupDaoDaoBelongChannelPerformance.BeforeLivingRate;
+            result.GroupDaoDaoBelongChannelPerformance.LivingNumber = data.GroupDaoDaoBelongChannelPerformance.LivingNumber;
+            result.GroupDaoDaoBelongChannelPerformance.LivingRate = data.GroupDaoDaoBelongChannelPerformance.LivingRate;
+            result.GroupDaoDaoBelongChannelPerformance.AfterLivingNumber = data.GroupDaoDaoBelongChannelPerformance.AfterLivingNumber;
+            result.GroupDaoDaoBelongChannelPerformance.AfterLivingRate = data.GroupDaoDaoBelongChannelPerformance.AfterLivingRate;
+            result.GroupDaoDaoBelongChannelPerformance.OtherNumber = data.GroupDaoDaoBelongChannelPerformance.OtherNumber;
+            result.GroupDaoDaoBelongChannelPerformance.OtherRate = data.GroupDaoDaoBelongChannelPerformance.OtherRate;
+            result.GroupDaoDaoBelongChannelPerformance.TotalPerformanceNumber = data.GroupDaoDaoBelongChannelPerformance.TotalPerformanceNumber;
+
+            result.GroupJiNaBelongChannelPerformance.BeforeLivingNumber = data.GroupJiNaBelongChannelPerformance.BeforeLivingNumber;
+            result.GroupJiNaBelongChannelPerformance.BeforeLivingRate = data.GroupJiNaBelongChannelPerformance.BeforeLivingRate;
+            result.GroupJiNaBelongChannelPerformance.LivingNumber = data.GroupJiNaBelongChannelPerformance.LivingNumber;
+            result.GroupJiNaBelongChannelPerformance.LivingRate = data.GroupJiNaBelongChannelPerformance.LivingRate;
+            result.GroupJiNaBelongChannelPerformance.AfterLivingNumber = data.GroupJiNaBelongChannelPerformance.AfterLivingNumber;
+            result.GroupJiNaBelongChannelPerformance.AfterLivingRate = data.GroupJiNaBelongChannelPerformance.AfterLivingRate;
+            result.GroupJiNaBelongChannelPerformance.OtherNumber = data.GroupJiNaBelongChannelPerformance.OtherNumber;
+            result.GroupJiNaBelongChannelPerformance.OtherRate = data.GroupJiNaBelongChannelPerformance.OtherRate;
+            result.GroupJiNaBelongChannelPerformance.TotalPerformanceNumber = data.GroupJiNaBelongChannelPerformance.TotalPerformanceNumber;
+            #endregion
+
+            #region【新老客】
+
+            result.TotalNewOrOldCustomer = new OperationBoardGetNewOrOldCustomerCompareDataDetailsVo();
+            result.GroupDaoDaoNewOrOldCustomer = new OperationBoardGetNewOrOldCustomerCompareDataDetailsVo();
+            result.GroupJiNaNewOrOldCustomer = new OperationBoardGetNewOrOldCustomerCompareDataDetailsVo();
 
             result.TotalNewOrOldCustomer.TotalPerformanceNewCustomerNumber = data.TotalNewOrOldCustomer.TotalPerformanceNewCustomerNumber;
             result.TotalNewOrOldCustomer.TotalPerformanceNewCustomerRate = data.TotalNewOrOldCustomer.TotalPerformanceNewCustomerRate;
@@ -131,6 +171,57 @@ namespace Fx.Amiya.Background.Api.Controllers
             result.GroupJiNaNewOrOldCustomer.TotalPerformanceOldCustomerNumber = data.GroupJiNaNewOrOldCustomer.TotalPerformanceOldCustomerNumber;
             result.GroupJiNaNewOrOldCustomer.TotalPerformanceOldCustomerRate = data.GroupJiNaNewOrOldCustomer.TotalPerformanceOldCustomerRate;
             result.GroupJiNaNewOrOldCustomer.TotalPerformanceNumber = data.GroupJiNaNewOrOldCustomer.TotalPerformanceNumber;
+            #endregion
+
+            #region【有效/潜在】
+
+            result.TotalIsEffictivePerformance = new OperationBoardGetIsEffictivePerformanceVo();
+            result.GroupDaoDaoIsEffictivePerformance = new OperationBoardGetIsEffictivePerformanceVo();
+            result.GroupJiNaIsEffictivePerformance = new OperationBoardGetIsEffictivePerformanceVo();
+
+            result.TotalIsEffictivePerformance.EffictivePerformanceNumber = data.TotalIsEffictivePerformance.EffictivePerformanceNumber;
+            result.TotalIsEffictivePerformance.EffictivePerformanceRate = data.TotalIsEffictivePerformance.EffictivePerformanceRate;
+            result.TotalIsEffictivePerformance.NotEffictivePerformanceNumber = data.TotalIsEffictivePerformance.NotEffictivePerformanceNumber;
+            result.TotalIsEffictivePerformance.NotEffictivePerformanceRate = data.TotalIsEffictivePerformance.NotEffictivePerformanceRate;
+            result.TotalIsEffictivePerformance.TotalPerformanceNumber = data.TotalIsEffictivePerformance.TotalPerformanceNumber;
+
+            result.GroupDaoDaoIsEffictivePerformance.EffictivePerformanceNumber = data.GroupDaoDaoIsEffictivePerformance.EffictivePerformanceNumber;
+            result.GroupDaoDaoIsEffictivePerformance.EffictivePerformanceRate = data.GroupDaoDaoIsEffictivePerformance.EffictivePerformanceRate;
+            result.GroupDaoDaoIsEffictivePerformance.NotEffictivePerformanceNumber = data.GroupDaoDaoIsEffictivePerformance.NotEffictivePerformanceNumber;
+            result.GroupDaoDaoIsEffictivePerformance.NotEffictivePerformanceRate = data.GroupDaoDaoIsEffictivePerformance.NotEffictivePerformanceRate;
+            result.GroupDaoDaoIsEffictivePerformance.TotalPerformanceNumber = data.GroupDaoDaoIsEffictivePerformance.TotalPerformanceNumber;
+
+            result.GroupJiNaIsEffictivePerformance.EffictivePerformanceNumber = data.GroupJiNaIsEffictivePerformance.EffictivePerformanceNumber;
+            result.GroupJiNaIsEffictivePerformance.EffictivePerformanceRate = data.GroupJiNaIsEffictivePerformance.EffictivePerformanceRate;
+            result.GroupJiNaIsEffictivePerformance.NotEffictivePerformanceNumber = data.GroupJiNaIsEffictivePerformance.NotEffictivePerformanceNumber;
+            result.GroupJiNaIsEffictivePerformance.NotEffictivePerformanceRate = data.GroupJiNaIsEffictivePerformance.NotEffictivePerformanceRate;
+            result.GroupJiNaIsEffictivePerformance.TotalPerformanceNumber = data.GroupJiNaIsEffictivePerformance.TotalPerformanceNumber;
+            #endregion
+
+            #region【当月/历史】
+
+            result.TotalIsHistoryPerformance = new OperationBoardGetIsHistoryPerformanceVo();
+            result.GroupDaoDaoIsHistoryPerformance = new OperationBoardGetIsHistoryPerformanceVo();
+            result.GroupJiNaIsHistoryPerformance = new OperationBoardGetIsHistoryPerformanceVo();
+
+            result.TotalIsHistoryPerformance.HistoryPerformanceNumber = data.TotalIsHistoryPerformance.HistoryPerformanceNumber;
+            result.TotalIsHistoryPerformance.HistoryPerformanceRate = data.TotalIsHistoryPerformance.HistoryPerformanceRate;
+            result.TotalIsHistoryPerformance.ThisMonthPerformanceNumber = data.TotalIsHistoryPerformance.ThisMonthPerformanceNumber;
+            result.TotalIsHistoryPerformance.ThisMonthPerformanceRate = data.TotalIsHistoryPerformance.ThisMonthPerformanceRate;
+            result.TotalIsHistoryPerformance.TotalPerformanceNumber = data.TotalIsHistoryPerformance.TotalPerformanceNumber;
+
+            result.GroupDaoDaoIsHistoryPerformance.HistoryPerformanceNumber = data.GroupDaoDaoIsHistoryPerformance.HistoryPerformanceNumber;
+            result.GroupDaoDaoIsHistoryPerformance.HistoryPerformanceRate = data.GroupDaoDaoIsHistoryPerformance.HistoryPerformanceRate;
+            result.GroupDaoDaoIsHistoryPerformance.ThisMonthPerformanceNumber = data.GroupDaoDaoIsHistoryPerformance.ThisMonthPerformanceNumber;
+            result.GroupDaoDaoIsHistoryPerformance.ThisMonthPerformanceRate = data.GroupDaoDaoIsHistoryPerformance.ThisMonthPerformanceRate;
+            result.GroupDaoDaoIsHistoryPerformance.TotalPerformanceNumber = data.GroupDaoDaoIsHistoryPerformance.TotalPerformanceNumber;
+
+            result.GroupJiNaIsHistoryPerformance.HistoryPerformanceNumber = data.GroupJiNaIsHistoryPerformance.HistoryPerformanceNumber;
+            result.GroupJiNaIsHistoryPerformance.HistoryPerformanceRate = data.GroupJiNaIsHistoryPerformance.HistoryPerformanceRate;
+            result.GroupJiNaIsHistoryPerformance.ThisMonthPerformanceNumber = data.GroupJiNaIsHistoryPerformance.ThisMonthPerformanceNumber;
+            result.GroupJiNaIsHistoryPerformance.ThisMonthPerformanceRate = data.GroupJiNaIsHistoryPerformance.ThisMonthPerformanceRate;
+            result.GroupJiNaIsHistoryPerformance.TotalPerformanceNumber = data.GroupJiNaIsHistoryPerformance.TotalPerformanceNumber;
+            #endregion
             return ResultData<GetNewOrOldCustomerCompareDataVo>.Success().AddData("data", result);
         }
 
@@ -174,7 +265,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         #endregion
 
 
-        #region 流量
+        #region 【流量】
         /// <summary>
         /// 根据条件获取流量数据
         /// </summary>
@@ -255,6 +346,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             totalResultDataByContentPlatFormVo.XiaoHongShuRate = data.TotalFlowRateByContentPlatForm.XiaoHongShuRate;
             totalResultDataByContentPlatFormVo.PrivateDataNumber = data.TotalFlowRateByContentPlatForm.PrivateDataNumber;
             totalResultDataByContentPlatFormVo.PrivateDataRate = data.TotalFlowRateByContentPlatForm.PrivateDataRate;
+            totalResultDataByContentPlatFormVo.TotalFlowRateNumber = data.TotalFlowRateByContentPlatForm.TotalFlowRateNumber;
             result.TotalFlowRateByContentPlatForm = totalResultDataByContentPlatFormVo;
 
             OperationBoardContentPlatFormDataVo groupDaoDaoResultDataByContentPlatFormVo = new OperationBoardContentPlatFormDataVo();
@@ -266,6 +358,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             groupDaoDaoResultDataByContentPlatFormVo.XiaoHongShuRate = data.GroupDaoDaoFlowRateByContentPlatForm.XiaoHongShuRate;
             groupDaoDaoResultDataByContentPlatFormVo.PrivateDataNumber = data.GroupDaoDaoFlowRateByContentPlatForm.PrivateDataNumber;
             groupDaoDaoResultDataByContentPlatFormVo.PrivateDataRate = data.GroupDaoDaoFlowRateByContentPlatForm.PrivateDataRate;
+            groupDaoDaoResultDataByContentPlatFormVo.TotalFlowRateNumber = data.GroupDaoDaoFlowRateByContentPlatForm.TotalFlowRateNumber;
             result.GroupDaoDaoFlowRateByContentPlatForm = groupDaoDaoResultDataByContentPlatFormVo;
 
             OperationBoardContentPlatFormDataVo groupJiNaResultDataByContentPlatFormVo = new OperationBoardContentPlatFormDataVo();
@@ -277,6 +370,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             groupJiNaResultDataByContentPlatFormVo.XiaoHongShuRate = data.GroupJiNaFlowRateByContentPlatForm.XiaoHongShuRate;
             groupJiNaResultDataByContentPlatFormVo.PrivateDataNumber = data.GroupJiNaFlowRateByContentPlatForm.PrivateDataNumber;
             groupJiNaResultDataByContentPlatFormVo.PrivateDataRate = data.GroupJiNaFlowRateByContentPlatForm.PrivateDataRate;
+            groupJiNaResultDataByContentPlatFormVo.TotalFlowRateNumber = data.GroupJiNaFlowRateByContentPlatForm.TotalFlowRateNumber;
             result.GroupJiNaFlowRateByContentPlatForm = groupJiNaResultDataByContentPlatFormVo;
             #endregion
 
@@ -290,6 +384,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             totalResultDataByDepartmentVo.AftereLivingRate = data.TotalFlowRateByDepartment.AftereLivingRate;
             totalResultDataByDepartmentVo.OtherRate = data.TotalFlowRateByDepartment.OtherRate;
             totalResultDataByDepartmentVo.OtherNumber = data.TotalFlowRateByDepartment.OtherNumber;
+            totalResultDataByDepartmentVo.TotalFlowRateNumber = data.TotalFlowRateByDepartment.TotalFlowRateNumber;
             result.TotalFlowRateByDepartment = totalResultDataByDepartmentVo;
 
             OperationBoardDepartmentDataVo groupDaoDaoResultDataByDepartmentVo = new OperationBoardDepartmentDataVo();
@@ -301,6 +396,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             groupDaoDaoResultDataByDepartmentVo.AftereLivingRate = data.GroupDaoDaoFlowRateByDepartment.AftereLivingRate;
             groupDaoDaoResultDataByDepartmentVo.OtherRate = data.GroupDaoDaoFlowRateByDepartment.OtherRate;
             groupDaoDaoResultDataByDepartmentVo.OtherNumber = data.GroupDaoDaoFlowRateByDepartment.OtherNumber;
+            groupDaoDaoResultDataByDepartmentVo.TotalFlowRateNumber = data.GroupDaoDaoFlowRateByDepartment.TotalFlowRateNumber;
             result.GroupDaoDaoFlowRateByDepartment = groupDaoDaoResultDataByDepartmentVo;
 
             OperationBoardDepartmentDataVo groupJiNaResultDataByDepartmentVo = new OperationBoardDepartmentDataVo();
@@ -312,6 +408,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             groupJiNaResultDataByDepartmentVo.AftereLivingRate = data.GroupJiNaFlowRateByDepartment.AftereLivingRate;
             groupJiNaResultDataByDepartmentVo.OtherRate = data.GroupJiNaFlowRateByDepartment.OtherRate;
             groupJiNaResultDataByDepartmentVo.OtherNumber = data.GroupJiNaFlowRateByDepartment.OtherNumber;
+            groupJiNaResultDataByDepartmentVo.TotalFlowRateNumber = data.GroupJiNaFlowRateByDepartment.TotalFlowRateNumber;
             result.GroupJiNaFlowRateByDepartment = groupJiNaResultDataByDepartmentVo;
             #endregion
 
@@ -327,6 +424,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             totalResultDataByIsEffictiveVo.EffictiveRate = data.TotalFlowRateByIsEffictive.EffictiveRate;
             totalResultDataByIsEffictiveVo.NotEffictiveNumber = data.TotalFlowRateByIsEffictive.NotEffictiveNumber;
             totalResultDataByIsEffictiveVo.NotEffictiveRate = data.TotalFlowRateByIsEffictive.NotEffictiveRate;
+            totalResultDataByIsEffictiveVo.TotalFlowRateNumber = data.TotalFlowRateByIsEffictive.TotalFlowRateNumber;
             result.TotalFlowRateByIsEffictive = totalResultDataByIsEffictiveVo;
 
             OperationBoardIsEffictiveDataVo groupDaoDaoResultDataByIsEffictiveVo = new OperationBoardIsEffictiveDataVo();
@@ -334,6 +432,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             groupDaoDaoResultDataByIsEffictiveVo.EffictiveRate = data.GroupDaoDaoFlowRateByIsEffictive.EffictiveRate;
             groupDaoDaoResultDataByIsEffictiveVo.NotEffictiveNumber = data.GroupDaoDaoFlowRateByIsEffictive.NotEffictiveNumber;
             groupDaoDaoResultDataByIsEffictiveVo.NotEffictiveRate = data.GroupDaoDaoFlowRateByIsEffictive.NotEffictiveRate;
+            groupDaoDaoResultDataByIsEffictiveVo.TotalFlowRateNumber = data.GroupDaoDaoFlowRateByIsEffictive.TotalFlowRateNumber;
             result.GroupDaoDaoFlowRateByIsEffictive = groupDaoDaoResultDataByIsEffictiveVo;
 
             OperationBoardIsEffictiveDataVo groupJiNaResultDataByIsEffictiveVo = new OperationBoardIsEffictiveDataVo();
@@ -341,6 +440,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             groupJiNaResultDataByIsEffictiveVo.EffictiveRate = data.GroupJiNaFlowRateByIsEffictive.EffictiveRate;
             groupJiNaResultDataByIsEffictiveVo.NotEffictiveNumber = data.GroupJiNaFlowRateByIsEffictive.NotEffictiveNumber;
             groupJiNaResultDataByIsEffictiveVo.NotEffictiveRate = data.GroupJiNaFlowRateByIsEffictive.NotEffictiveRate;
+            groupJiNaResultDataByIsEffictiveVo.TotalFlowRateNumber = data.GroupJiNaFlowRateByIsEffictive.TotalFlowRateNumber;
             result.GroupJiNaFlowRateByIsEffictive = groupJiNaResultDataByIsEffictiveVo;
             #endregion
 
@@ -381,6 +481,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                 hospitalPerformanceVo.Name = x.Name;
                 result.HospitalFlowRate.Add(hospitalPerformanceVo);
             }
+            result.TotalDistributeConsulationByEmployee = result.EmployeeFlowRate.Sum(x => x.DistributeConsulationNum);
+            result.TotalSendOrderByEmployee = result.EmployeeFlowRate.Sum(x => x.SendOrderNum);
+            result.TotalVisitByEmployee = result.EmployeeFlowRate.Sum(x => x.VisitNum);
+            result.TotalSendOrderByHospital = result.HospitalFlowRate.Sum(x => x.SendOrderNum);
+            result.TotalVisitByHospital = result.HospitalFlowRate.Sum(x => x.VisitNum);
+            result.TotalDealByHospital = result.HospitalFlowRate.Sum(x => x.NewCustomerDealNum);
             return ResultData<CustomerFlowRateDataListVo>.Success().AddData("data", result);
         }
 

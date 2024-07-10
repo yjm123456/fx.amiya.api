@@ -101,6 +101,10 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
         /// 私域（数值）
         /// </summary>
         public decimal? PrivateDataNumber { get; set; }
+        /// <summary>
+        /// 总线索量
+        /// </summary>
+        public decimal? TotalFlowRateNumber { get; set; }
     }
 
 
@@ -141,6 +145,10 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
         /// 其他（数值）
         /// </summary>
         public decimal? OtherNumber { get; set; }
+        /// <summary>
+        /// 总线索量
+        /// </summary>
+        public decimal? TotalFlowRateNumber { get; set; }
     }
 
     public class OperationBoardIsEffictiveDataDto
@@ -161,5 +169,9 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
         /// 潜在（数值）
         /// </summary>
         public decimal? NotEffictiveNumber { get; set; }
+        /// <summary>
+        /// 总线索量
+        /// </summary>
+        public decimal? TotalFlowRateNumber { get; set; }
     }
 }

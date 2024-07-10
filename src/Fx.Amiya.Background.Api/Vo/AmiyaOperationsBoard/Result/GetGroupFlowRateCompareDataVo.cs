@@ -106,6 +106,10 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
         /// 私域（数值）
         /// </summary>
         public decimal? PrivateDataNumber { get; set; }
+        /// <summary>
+        /// 总线索量
+        /// </summary>
+        public decimal? TotalFlowRateNumber { get; set; }
     }
 
     public class OperationBoardDepartmentDataVo
@@ -146,6 +150,10 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
         /// 其他（数值）
         /// </summary>
         public decimal? OtherNumber { get; set; }
+        /// <summary>
+        /// 总线索量
+        /// </summary>
+        public decimal? TotalFlowRateNumber { get; set; }
     }
 
     public class OperationBoardIsEffictiveDataVo
@@ -166,6 +174,10 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
         /// 潜在（数值）
         /// </summary>
         public decimal? NotEffictiveNumber { get; set; }
+        /// <summary>
+        /// 总线索量
+        /// </summary>
+        public decimal? TotalFlowRateNumber { get; set; }
     }
 
 }

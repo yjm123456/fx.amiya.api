@@ -27,6 +27,19 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
     public class CustomerFlowRateDataListVo
     {
         /// <summary>
+        /// 助理总分诊
+        /// </summary>
+        public int TotalDistributeConsulationByEmployee { get; set; }
+
+        /// <summary>
+        /// 助理总派单
+        /// </summary>
+        public int TotalSendOrderByEmployee { get; set; }
+        /// <summary>
+        /// 助理总上门
+        /// </summary>
+        public int TotalVisitByEmployee { get; set; }
+        /// <summary>
         /// 助理业绩分析
         /// </summary>
         public List<CustomerFlowRateDataVo> EmployeeFlowRate { get; set; }
@@ -34,6 +47,19 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
         /// 机构业绩分析
         /// </summary>
         public List<CustomerFlowRateDataVo> HospitalFlowRate { get; set; }
+
+        /// <summary>
+        /// 机构总派单
+        /// </summary>
+        public int TotalSendOrderByHospital { get; set; }
+        /// <summary>
+        /// 机构总上门
+        /// </summary>
+        public int TotalVisitByHospital { get; set; }
+        /// <summary>
+        /// 机构总成交
+        /// </summary>
+        public int TotalDealByHospital { get; set; }
     }
 
     public class CustomerPerformanceDataVo

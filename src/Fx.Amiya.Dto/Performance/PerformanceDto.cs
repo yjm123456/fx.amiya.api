@@ -14,5 +14,9 @@ namespace Fx.Amiya.Dto.Performance
         public DateTime CreateDate { get; set; }
 
         public bool IsOldCustomer { get; set; }
+        public int BelongChannel { get; set; }
+        public DateTime SendDate { get; set; }
+
+        public decimal AddOrderPrice { get; set; }
     }
 }
