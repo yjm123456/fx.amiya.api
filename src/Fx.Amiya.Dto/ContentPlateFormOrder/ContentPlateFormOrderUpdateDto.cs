@@ -368,5 +368,9 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 归属部门名称
         /// </summary>
         public string BelongChannelText { get; set; }
+        /// <summary>
+        /// 是否有成交信息
+        /// </summary>
+        public bool HasDealInfo { get; set; }
     }
 }

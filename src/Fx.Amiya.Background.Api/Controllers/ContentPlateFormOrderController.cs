@@ -1285,7 +1285,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.IsUncertainDate = updateVo.IsUncertainDate;
                 updateDto.AppointmentDate = updateVo.AppointmentDate;
                 updateDto.Remark = updateVo.Remark;
-
+                updateDto.OtherHospitalId = updateVo.OtherHospitalId;
+                updateDto.SendBy = updateVo.SendBy;
                 await _orderService.UpdateAsync(updateDto, employeeId);
                 return ResultData.Success();
             }

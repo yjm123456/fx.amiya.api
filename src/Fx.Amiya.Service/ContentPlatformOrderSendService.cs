@@ -152,7 +152,7 @@ namespace Fx.Amiya.Service
         public async Task<ContentPlatFormSendOrderInfoSimpleDto> GetSimpleByIdAsync(int id)
         {
             var sendOrderInfo = await _dalContentPlatformOrderSend.GetAll()
-                .Include(e => e.ContentPlatformOrder).SingleOrDefaultAsync(e => e.Id == id);
+                .Include(e => e.ContentPlatformOrder).ThenInclude(e=>e.ContentPlatformOrderDealInfoList).SingleOrDefaultAsync(e => e.Id == id);
             if (sendOrderInfo == null)
                 throw new Exception();
             ContentPlatFormSendOrderInfoSimpleDto sendOrderInfoDto = new ContentPlatFormSendOrderInfoSimpleDto();
@@ -163,6 +163,12 @@ namespace Fx.Amiya.Service
             sendOrderInfoDto.Remark = sendOrderInfo.Remark;
             sendOrderInfoDto.SendBy = sendOrderInfo.Sender;
             sendOrderInfoDto.IsMainHospital = sendOrderInfo.IsMainHospital;
+            sendOrderInfoDto.OtherHospitalId = new List<int>();
+            if (sendOrderInfo.IsMainHospital) {
+                sendOrderInfoDto.OtherHospitalId = _dalContentPlatformOrderSend.GetAll().Where(e => e.ContentPlatformOrderId == sendOrderInfo.ContentPlatformOrderId && e.IsMainHospital == false).Select(e => e.HospitalId).ToList();
+            }
+            sendOrderInfoDto.IsThenTime = sendOrderInfo.ContentPlatformOrder.DealDate.HasValue ? (DateTime.Now > sendOrderInfo.ContentPlatformOrder.DealDate.Value.AddDays(180) ? false : true): false;
+            sendOrderInfoDto.HasDealInfo = sendOrderInfo.ContentPlatformOrder.ContentPlatformOrderDealInfoList.Count() > 0;
             return sendOrderInfoDto;
         }
 
@@ -260,6 +266,33 @@ namespace Fx.Amiya.Service
             if (sendOrderInfo.ContentPlatformOrder.OrderStatus == Convert.ToInt16(ContentPlateFormOrderStatus.WithoutCompleteOrder))
                 throw new Exception("该订单医院已经处理完毕，无法改派医院");
 
+            sendOrderInfo.HospitalId = updateDto.HospitalId;
+            sendOrderInfo.Sender = employeeId;
+            sendOrderInfo.SendDate = DateTime.Now;
+            sendOrderInfo.IsUncertainDate = updateDto.IsUncertainDate;
+            sendOrderInfo.Remark = updateDto.Remark;
+            if (updateDto.IsUncertainDate == true)
+            {
+                sendOrderInfo.AppointmentDate = null;
+            }
+            else
+            {
+                sendOrderInfo.AppointmentDate = updateDto.AppointmentDate;
+            }
+
+
+            await _dalContentPlatformOrderSend.UpdateAsync(sendOrderInfo, true);
+        }
+        /// <summary>
+        /// 新的修改派单
+        /// </summary>
+        /// <param name="updateDto"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        public async Task NewUpdateOrderSend(UpdateContentPlatFormSendOrderInfoDto updateDto, int employeeId)
+        {
+
+            var sendOrderInfo = await _dalContentPlatformOrderSend.GetAll().Include(e => e.ContentPlatformOrder).SingleOrDefaultAsync(e => e.Id == updateDto.Id);
             sendOrderInfo.HospitalId = updateDto.HospitalId;
             sendOrderInfo.Sender = employeeId;
             sendOrderInfo.SendDate = DateTime.Now;

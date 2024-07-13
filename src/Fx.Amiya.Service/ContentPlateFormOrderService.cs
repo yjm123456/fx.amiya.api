@@ -833,6 +833,99 @@ namespace Fx.Amiya.Service
                 throw new Exception(ex.Message.ToString());
             }
         }
+        /// <summary>
+        /// 新派单(针对改派)
+        /// </summary>
+        /// <param name="addDto"></param>
+        /// <param name="hospitalDic"></param>
+        /// <returns></returns>
+        private async Task NewSendOrderAsync(AddContentPlatFormSendOrderInfoDto addDto, Dictionary<int, bool> hospitalDic)
+        {
+
+            try
+            {
+                foreach (var item in hospitalDic)
+                {
+                    var orderInfo = await this.GetByOrderIdAsync(addDto.OrderId);
+                    var phone = orderInfo.Phone;
+                    addDto.HospitalId = item.Key;
+                    await _contentPlatformOrderSend.AddMultiAsync(addDto, item.Value);
+                    if (orderInfo.HasDealInfo)
+                    {
+                        //var contentPlatFormOrder = await this.GetByOrderIdAsync(addDto.OrderId);
+                        //修改订单状态
+                        await this.NewUpdateStateAndRepeateOrderPicAsync(addDto.OrderId, addDto.SendBy, orderInfo.BelongEmpId, addDto.EmployeeId);
+                        //获取医院客户列表
+                        var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(addDto.HospitalId, orderInfo.Phone);
+                        //操作医院客户表
+                        if (!string.IsNullOrEmpty(customer.Id))
+                        {
+                            UpdateSendHospitalCustomerInfoDto updateSendHospitalCustomerInfoDto = new UpdateSendHospitalCustomerInfoDto();
+                            updateSendHospitalCustomerInfoDto.Id = customer.Id;
+                            updateSendHospitalCustomerInfoDto.NewGoodsDemand = orderInfo.GoodsName;
+                            updateSendHospitalCustomerInfoDto.hospitalId = addDto.HospitalId;
+                            updateSendHospitalCustomerInfoDto.SendAmount += 1;
+                            await hospitalCustomerInfoService.InsertSendAmountAsync(updateSendHospitalCustomerInfoDto);
+                        }
+                        else
+                        {
+                            AddSendHospitalCustomerInfoDto addSendHospitalCustomerInfoDto = new AddSendHospitalCustomerInfoDto();
+                            addSendHospitalCustomerInfoDto.NewGoodsDemand = orderInfo.GoodsName;
+                            addSendHospitalCustomerInfoDto.SendAmount = 1;
+                            addSendHospitalCustomerInfoDto.CustomerPhone = orderInfo.Phone;
+                            addSendHospitalCustomerInfoDto.hospitalId = addDto.HospitalId;
+                            addSendHospitalCustomerInfoDto.DealAmount = 0;
+                            await hospitalCustomerInfoService.AddAsync(addSendHospitalCustomerInfoDto);
+                        }
+                    }
+                    else {
+                        //var contentPlatFormOrder = await this.GetByOrderIdAsync(addDto.OrderId);
+                        //修改订单状态
+                        await this.UpdateStateAndRepeateOrderPicAsync(addDto.OrderId, addDto.SendBy, orderInfo.BelongEmpId, addDto.EmployeeId);
+
+                        //当派单为新医院时更新医院接单人数据
+                        //await hospitalBindCustomerService.UpdateBindCustomerToZeroAsync(contentPlatFormOrder.Phone);
+
+                        //小黄车更新派单触达
+                        await _shoppingCartRegistration.UpdateSendOrderAsync(orderInfo.Phone);
+
+
+                        //获取医院客户列表
+                        var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(addDto.HospitalId, orderInfo.Phone);
+                        //操作医院客户表
+                        if (!string.IsNullOrEmpty(customer.Id))
+                        {
+                            UpdateSendHospitalCustomerInfoDto updateSendHospitalCustomerInfoDto = new UpdateSendHospitalCustomerInfoDto();
+                            updateSendHospitalCustomerInfoDto.Id = customer.Id;
+                            updateSendHospitalCustomerInfoDto.NewGoodsDemand = orderInfo.GoodsName;
+                            updateSendHospitalCustomerInfoDto.hospitalId = addDto.HospitalId;
+                            updateSendHospitalCustomerInfoDto.SendAmount += 1;
+                            await hospitalCustomerInfoService.InsertSendAmountAsync(updateSendHospitalCustomerInfoDto);
+                        }
+                        else
+                        {
+                            AddSendHospitalCustomerInfoDto addSendHospitalCustomerInfoDto = new AddSendHospitalCustomerInfoDto();
+                            addSendHospitalCustomerInfoDto.NewGoodsDemand = orderInfo.GoodsName;
+                            addSendHospitalCustomerInfoDto.SendAmount = 1;
+                            addSendHospitalCustomerInfoDto.CustomerPhone = orderInfo.Phone;
+                            addSendHospitalCustomerInfoDto.hospitalId = addDto.HospitalId;
+                            addSendHospitalCustomerInfoDto.DealAmount = 0;
+                            await hospitalCustomerInfoService.AddAsync(addSendHospitalCustomerInfoDto);
+
+                        }
+                        //完成视频预约到诊
+                        await customerAppointmentScheduleService.UpdateAppointmentCompleteStatusAsync(phone, (int)AppointmentType.VideoAppointment);
+                    }
+                    
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message.ToString());
+            }
+        }
 
         ///// <summary>
         ///// 派单
@@ -914,19 +1007,143 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task UpdateAsync(UpdateContentPlatFormSendOrderInfoDto updateDto, int employeeId)
         {
+            //try
+            //{
+            //    unitOfWork.BeginTransaction();
+            //    var sendOrderList = dalContentPlatformOrderSend.GetAll().Where(e => e.ContentPlatformOrderId == updateDto.OrderId).Select(e => e.HospitalId).ToList();
+            //    if (sendOrderList.Contains(updateDto.HospitalId)) throw new Exception("该订单已有该医院的派单数据请勿重复派单!");
+            //    await _contentPlatformOrderSend.UpdateOrderSend(updateDto, employeeId);
+            //    //修改订单状态
+            //    var send = await _contentPlatformOrderSend.GetSimpleByIdAsync(updateDto.Id);
+            //    var contentPlatFormOrder = await this.GetByOrderIdAsync(updateDto.OrderId);
+            //    //重置机构接单人
+            //    // await hospitalBindCustomerService.UpdateBindCustomerToZeroAsync(contentPlatFormOrder.Phone);
+            //    await this.UpdateStateAndRepeateOrderPicAsync(updateDto.OrderId, send.SendBy, contentPlatFormOrder.BelongEmpId, employeeId);
+
+            //    var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(updateDto.HospitalId, contentPlatFormOrder.Phone);
+            //    //操作医院客户表
+            //    if (!string.IsNullOrEmpty(customer.Id))
+            //    {
+            //        UpdateSendHospitalCustomerInfoDto updateSendHospitalCustomerInfoDto = new UpdateSendHospitalCustomerInfoDto();
+            //        updateSendHospitalCustomerInfoDto.Id = customer.Id;
+            //        updateSendHospitalCustomerInfoDto.NewGoodsDemand = contentPlatFormOrder.GoodsName;
+            //        updateSendHospitalCustomerInfoDto.hospitalId = updateDto.HospitalId;
+            //        updateSendHospitalCustomerInfoDto.SendAmount += 1;
+            //        await hospitalCustomerInfoService.InsertSendAmountAsync(updateSendHospitalCustomerInfoDto);
+            //    }
+            //    else
+            //    {
+            //        AddSendHospitalCustomerInfoDto addSendHospitalCustomerInfoDto = new AddSendHospitalCustomerInfoDto();
+            //        addSendHospitalCustomerInfoDto.NewGoodsDemand = contentPlatFormOrder.GoodsName;
+            //        addSendHospitalCustomerInfoDto.SendAmount = 1;
+            //        addSendHospitalCustomerInfoDto.CustomerPhone = contentPlatFormOrder.Phone;
+            //        addSendHospitalCustomerInfoDto.hospitalId = updateDto.HospitalId;
+            //        addSendHospitalCustomerInfoDto.DealAmount = 0;
+            //        await hospitalCustomerInfoService.AddAsync(addSendHospitalCustomerInfoDto);
+
+            //    }
+            //    unitOfWork.Commit();
+            //}
+            //catch (Exception ex)
+            //{
+            //    unitOfWork.RollBack();
+            //    throw new Exception(ex.Message.ToString());
+            //}
             try
             {
                 unitOfWork.BeginTransaction();
-                var sendOrderList = dalContentPlatformOrderSend.GetAll().Where(e => e.ContentPlatformOrderId == updateDto.OrderId).Select(e => e.HospitalId).ToList();
-                if (sendOrderList.Contains(updateDto.HospitalId)) throw new Exception("该订单已有该医院的派单数据请勿重复派单!");
-                await _contentPlatformOrderSend.UpdateOrderSend(updateDto, employeeId);
-                //修改订单状态
-                var send = await _contentPlatformOrderSend.GetSimpleByIdAsync(updateDto.Id);
-                var contentPlatFormOrder = await this.GetByOrderIdAsync(updateDto.OrderId);
-                //重置机构接单人
-                // await hospitalBindCustomerService.UpdateBindCustomerToZeroAsync(contentPlatFormOrder.Phone);
-                await this.UpdateStateAndRepeateOrderPicAsync(updateDto.OrderId, send.SendBy, contentPlatFormOrder.BelongEmpId, employeeId);
+                var sendInfo = dalContentPlatformOrderSend.GetAll().Where(e => e.Id == updateDto.Id).SingleOrDefault();
+                if (sendInfo == null)
+                    throw new Exception("派单编号错误");
+                if (!sendInfo.IsMainHospital)
+                {
+                    //次派订单修改逻辑
+                    await UpdateOtherSendInfoAsync(updateDto,employeeId);
+                }
+                else {
+                    //主派订单修改
+                    await UpdateMainSendInfoAsync(updateDto,sendInfo, employeeId);
+                }
+                unitOfWork.Commit();
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw new Exception(ex.Message.ToString());
+            }
+        }
+        /// <summary>
+        /// 修改次派派单信息
+        /// </summary>
+        /// <param name="updateDto"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        private async Task UpdateOtherSendInfoAsync(UpdateContentPlatFormSendOrderInfoDto updateDto, int employeeId) {
+            var sendOrderList = dalContentPlatformOrderSend.GetAll().Where(e => e.ContentPlatformOrderId == updateDto.OrderId).Select(e => e.HospitalId).ToList();
+            if (sendOrderList.Contains(updateDto.HospitalId)) throw new Exception("该订单已有该医院的派单数据请勿重复派单!");
+            var contentPlatFormOrder = await this.GetByOrderIdAsync(updateDto.OrderId);
+            await _contentPlatformOrderSend.NewUpdateOrderSend(updateDto, employeeId);
 
+            //修改订单状态
+            var send = await _contentPlatformOrderSend.GetSimpleByIdAsync(updateDto.Id);
+            
+            //重置机构接单人
+            await this.NewUpdateStateAndRepeateOrderPicAsync(updateDto.OrderId, send.SendBy, contentPlatFormOrder.BelongEmpId, employeeId);
+
+            var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(updateDto.HospitalId, contentPlatFormOrder.Phone);
+            //操作医院客户表
+            if (!string.IsNullOrEmpty(customer.Id))
+            {
+                UpdateSendHospitalCustomerInfoDto updateSendHospitalCustomerInfoDto = new UpdateSendHospitalCustomerInfoDto();
+                updateSendHospitalCustomerInfoDto.Id = customer.Id;
+                updateSendHospitalCustomerInfoDto.NewGoodsDemand = contentPlatFormOrder.GoodsName;
+                updateSendHospitalCustomerInfoDto.hospitalId = updateDto.HospitalId;
+                updateSendHospitalCustomerInfoDto.SendAmount += 1;
+                await hospitalCustomerInfoService.InsertSendAmountAsync(updateSendHospitalCustomerInfoDto);
+            }
+            else
+            {
+                AddSendHospitalCustomerInfoDto addSendHospitalCustomerInfoDto = new AddSendHospitalCustomerInfoDto();
+                addSendHospitalCustomerInfoDto.NewGoodsDemand = contentPlatFormOrder.GoodsName;
+                addSendHospitalCustomerInfoDto.SendAmount = 1;
+                addSendHospitalCustomerInfoDto.CustomerPhone = contentPlatFormOrder.Phone;
+                addSendHospitalCustomerInfoDto.hospitalId = updateDto.HospitalId;
+                addSendHospitalCustomerInfoDto.DealAmount = 0;
+                await hospitalCustomerInfoService.AddAsync(addSendHospitalCustomerInfoDto);
+
+            }
+        }
+        /// <summary>
+        /// 修改主派订单信息
+        /// </summary>
+        /// <param name="updateDto"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        private async Task UpdateMainSendInfoAsync(UpdateContentPlatFormSendOrderInfoDto updateDto, ContentPlatformOrderSend sendInfo, int employeeId) {
+            if (updateDto.OtherHospitalId.Contains(updateDto.HospitalId))
+                throw new Exception("主派医院和次派医院重复");
+            if (updateDto.OtherHospitalId.Distinct().Count() != updateDto.OtherHospitalId.Count())
+                throw new Exception("次派医院重复");
+            //已有派单信息
+            var otherHospitalList = dalContentPlatformOrderSend.GetAll().Where(e => e.ContentPlatformOrderId == sendInfo.ContentPlatformOrderId && e.IsMainHospital == false).ToList();
+            
+            //如果主派医院修改了则修改主派信息
+            if (updateDto.HospitalId != sendInfo.HospitalId) {
+                var contentPlatFormOrder = await this.GetByOrderIdAsync(updateDto.OrderId);
+                if (contentPlatFormOrder.HasDealInfo)
+                    throw new Exception("该订单已有成交信息,不能修改主派医院");
+                //主派和次派数据重复删除次派
+                if (otherHospitalList.Select(e=>e.HospitalId).Contains(updateDto.HospitalId))
+                {
+                    var deleteSendInfo= otherHospitalList.Where(e => e.HospitalId == updateDto.HospitalId);
+                    foreach (var item in deleteSendInfo) {
+                        dalContentPlatformOrderSend.Delete(item, true);
+                    }
+                }
+                await _contentPlatformOrderSend.NewUpdateOrderSend(updateDto, employeeId);
+               
+                //重置机构接单人
+                await this.NewUpdateStateAndRepeateOrderPicAsync(updateDto.OrderId,employeeId, contentPlatFormOrder.BelongEmpId, employeeId);
                 var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(updateDto.HospitalId, contentPlatFormOrder.Phone);
                 //操作医院客户表
                 if (!string.IsNullOrEmpty(customer.Id))
@@ -947,17 +1164,35 @@ namespace Fx.Amiya.Service
                     addSendHospitalCustomerInfoDto.hospitalId = updateDto.HospitalId;
                     addSendHospitalCustomerInfoDto.DealAmount = 0;
                     await hospitalCustomerInfoService.AddAsync(addSendHospitalCustomerInfoDto);
-
                 }
-                unitOfWork.Commit();
             }
-            catch (Exception ex)
-            {
-                unitOfWork.RollBack();
-                throw new Exception(ex.Message.ToString());
-            }
-        }
 
+            //已存在数据更新
+            //var existData = otherHospitalList.Where(e => updateDto.OtherHospitalId.Contains(e.HospitalId)).ToList();
+            var existData = otherHospitalList.Where(e => updateDto.OtherHospitalId.Contains(e.HospitalId)).ToList();
+            foreach (var item in existData) {
+                var updateInfo = dalContentPlatformOrderSend.GetAll().Where(e => e.Id == item.Id).FirstOrDefault();
+                updateInfo.IsUncertainDate = updateDto.IsUncertainDate;
+                updateInfo.AppointmentDate = updateDto.AppointmentDate;
+                updateInfo.Remark = updateDto.Remark;
+                updateInfo.Sender = employeeId;
+                await dalContentPlatformOrderSend.UpdateAsync(updateInfo,true);
+            }
+            // 不存在数据添加
+            //var newAdd = updateDto.OtherHospitalId.Where(e=> !otherHospitalList.Select(e=>e.Id).Contains(e));
+            var newAdd = updateDto.OtherHospitalId.Where(e => !otherHospitalList.Select(e => e.HospitalId).Contains(e));
+            Dictionary<int, bool> sendDic = new Dictionary<int, bool>();
+            foreach (var id in newAdd) {
+                sendDic.Add(id, false);
+            }
+            AddContentPlatFormSendOrderInfoDto addSendInfo = new AddContentPlatFormSendOrderInfoDto();
+            addSendInfo.OrderId = sendInfo.ContentPlatformOrderId;
+            addSendInfo.IsUncertainDate = updateDto.IsUncertainDate;
+            addSendInfo.AppointmentDate = updateDto.AppointmentDate;
+            addSendInfo.Remark = updateDto.Remark;
+            addSendInfo.SendBy = employeeId;
+            await NewSendOrderAsync(addSendInfo,sendDic);
+        }
         /// <summary>
         /// 判断是否派单决定删除录单订单信息
         /// </summary>
@@ -1510,7 +1745,7 @@ namespace Fx.Amiya.Service
         public async Task<ContentPlateFormOrderUpdateDto> GetByOrderIdAsync(string orderId)
         {
             var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
-            var order = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList).Where(x => x.Id == orderId).FirstOrDefaultAsync();
+            var order = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList).Include(x=>x.ContentPlatformOrderDealInfoList).Where(x => x.Id == orderId).FirstOrDefaultAsync();
             if (order == null)
             {
                 return new ContentPlateFormOrderUpdateDto();
@@ -1665,7 +1900,7 @@ namespace Fx.Amiya.Service
             result.CustomerServiceSettlePrice = order.CustomerServiceSettlePrice;
             var pictures = await _contentPlatFormCustomerPictureService.GetListAsync(order.Id, null);
             result.CustomerPictures = pictures.Select(x => x.CustomerPicture).ToList();
-
+            result.HasDealInfo = order.ContentPlatformOrderDealInfoList.Count() > 0;
             return result;
         }
 
@@ -2255,7 +2490,64 @@ namespace Fx.Amiya.Service
             await _dalContentPlatformOrder.UpdateAsync(order, true);
         }
 
+        /// <summary>
+        ///  派单后修改订单状态并删除重单截图（针对派单/重单再派单/未成交再派单）
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="sendBy"></param>
+        /// <returns></returns>
+        public async Task NewUpdateStateAndRepeateOrderPicAsync(string orderId, int sendBy, int? belongEmpId, int employee)
+        {
+            var order = await _dalContentPlatformOrder.GetAll().Include(e=>e.ContentPlatformOrderDealInfoList).Where(x => x.Id == orderId).SingleOrDefaultAsync();
+            if (order == null)
+            {
+                throw new Exception("未找到该订单的相关信息！");
+            }
+            //验证手机号是否有归属
+            if (string.IsNullOrEmpty(order.Phone))
+            {
+                throw new Exception("该订单没有手机号，不能绑定客服");
+            }
 
+            var contentPlatForm = await _contentPlatformService.GetByIdAsync(order.ContentPlateformId);
+            var bind = await _dalBindCustomerService.GetAll()
+              .Include(e => e.CustomerServiceAmiyaEmployee)
+              .SingleOrDefaultAsync(e => e.BuyerPhone == order.Phone);
+
+            //所有人都可以派单，不受绑定限制
+            if (bind == null)
+            {
+                //添加绑定客服
+                BindCustomerService bindCustomerService = new BindCustomerService();
+                bindCustomerService.CustomerServiceId = belongEmpId.HasValue ? belongEmpId.Value : employee;
+                bindCustomerService.BuyerPhone = order.Phone;
+                bindCustomerService.UserId = null;
+                bindCustomerService.CreateBy = employee;
+                bindCustomerService.CreateDate = DateTime.Now;
+                var goodsInfo = await amiyaGoodsDemandService.GetByIdAsync(order.GoodsId);
+                bindCustomerService.FirstProjectDemand = "(" + goodsInfo.HospitalDepartmentName + ")" + goodsInfo.ProjectNname;
+                bindCustomerService.FirstConsumptionDate = order.CreateDate;
+                bindCustomerService.NewConsumptionDate = order.CreateDate;
+                bindCustomerService.NewConsumptionContentPlatform = (int)OrderFrom.ContentPlatFormOrder;
+                bindCustomerService.NewContentPlatForm = contentPlatForm.ContentPlatformName;
+                bindCustomerService.AllPrice = order.DepositAmount;
+                bindCustomerService.AllOrderCount = 1;
+                await _dalBindCustomerService.AddAsync(bindCustomerService, true);
+            }
+            if (order.ContentPlatformOrderDealInfoList.Count() > 0)
+            {
+                order.SendDate = DateTime.Now;
+            }
+            else {
+                order.IsRepeatProfundityOrder = false;
+                order.RepeatOrderPictureUrl = "";
+                order.OrderStatus = Convert.ToInt16(ContentPlateFormOrderStatus.SendOrder);
+                order.SendDate = DateTime.Now;
+            }
+            
+            
+            await _dalContentPlatformOrder.UpdateAsync(order, true);
+        }
         /// <summary>
         /// 删除录单订单信息
         /// </summary>

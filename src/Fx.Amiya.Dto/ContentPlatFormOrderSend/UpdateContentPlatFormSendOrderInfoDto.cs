@@ -30,5 +30,13 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 备注
         /// </summary>
         public string Remark { get; set; }
+        /// <summary>
+        /// 次派医院
+        /// </summary>
+        public List<int> OtherHospitalId { get; set; }
+        /// <summary>
+        /// 派单人
+        /// </summary>
+        public int SendBy { get; set; }
     }
 }

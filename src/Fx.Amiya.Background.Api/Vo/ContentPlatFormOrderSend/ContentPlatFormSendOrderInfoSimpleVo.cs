@@ -31,5 +31,21 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend
         /// 是否主派
         /// </summary>
         public bool IsMainHospital { get; set; }
+        /// <summary>
+        /// 次派医院
+        /// </summary>
+        public List<int> OtherHospitalId { get; set; }
+        /// <summary>
+        /// 派单人
+        /// </summary>
+        public int SendBy { get; set; }
+        /// <summary>
+        /// 据上次成交是否大于180天
+        /// </summary>
+        public bool IsThenTime { get; set; }
+        /// <summary>
+        /// 是否有成交信息
+        /// </summary>
+        public bool HasDealInfo { get; set; }
     }
 }

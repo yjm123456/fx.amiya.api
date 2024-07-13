@@ -71,6 +71,13 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task UpdateOrderSend(UpdateContentPlatFormSendOrderInfoDto updateDto, int employeeId);
         /// <summary>
+        /// 新的修改派单
+        /// </summary>
+        /// <param name="updateDto"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        Task NewUpdateOrderSend(UpdateContentPlatFormSendOrderInfoDto updateDto, int employeeId);
+        /// <summary>
         /// 医院获取派单列表
         /// </summary>
         /// <param name="hospitalId"></param>

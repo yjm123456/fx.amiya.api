@@ -71,6 +71,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             sendOrderInfoSimpleVo.AppointmentDate = sendOrderInfo.AppointmentDate;
             sendOrderInfoSimpleVo.IsUncertainDate = sendOrderInfo.IsUncertainDate;
             sendOrderInfoSimpleVo.IsMainHospital = sendOrderInfo.IsMainHospital;
+            sendOrderInfoSimpleVo.OtherHospitalId=sendOrderInfo.OtherHospitalId;
+            sendOrderInfoSimpleVo.SendBy=sendOrderInfo.SendBy;
+            sendOrderInfoSimpleVo.IsThenTime=sendOrderInfo.IsThenTime;
+            sendOrderInfoSimpleVo.HasDealInfo=sendOrderInfo.HasDealInfo;
             return ResultData<ContentPlatFormSendOrderInfoSimpleVo>.Success().AddData("sendOrderInfo", sendOrderInfoSimpleVo);
         }
 

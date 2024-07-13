@@ -36,5 +36,6 @@ namespace Fx.Amiya.Dto.OperationLog
         /// 操作来源
         /// </summary>
         public int Source { get; set; }
+        
     }
 }

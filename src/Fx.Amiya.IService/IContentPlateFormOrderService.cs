@@ -217,6 +217,15 @@ namespace Fx.Amiya.IService
         /// <param name="orderId"></param>
         /// <returns></returns>
         Task UpdateStateAndRepeateOrderPicAsync(string orderId, int sendBy, int? belongEmpId, int employee);
+        /// <summary>
+        /// 新的派单后修改订单状态并删除重单截图（针对新的改派规则）
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="sendBy"></param>
+        /// <param name="belongEmpId"></param>
+        /// <param name="employee"></param>
+        /// <returns></returns>
+        Task NewUpdateStateAndRepeateOrderPicAsync(string orderId, int sendBy, int? belongEmpId, int employee);
 
         /// <summary>
         /// 删除录单的订单
