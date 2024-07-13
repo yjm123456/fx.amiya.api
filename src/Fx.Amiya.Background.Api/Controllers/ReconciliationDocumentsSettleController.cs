@@ -377,6 +377,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryReconciliationDocumentsSettleDto.IsGenerateSalry = query.IsGenerateSalry;
                 queryReconciliationDocumentsSettleDto.IsGenerateInspectSalry = query.IsGenerateInspectSalry;
                 queryReconciliationDocumentsSettleDto.IsInspectOrder = true;
+                queryReconciliationDocumentsSettleDto.AddOrderPrice = query.AddOrderPrice;
                 var q = await billService.GetSettleListWithPageByCustomerCompensationAsync(queryReconciliationDocumentsSettleDto);
 
                 var reconciliationDocumentsSettle = from d in q.List

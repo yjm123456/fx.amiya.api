@@ -4006,6 +4006,11 @@ namespace Fx.Amiya.Service
             .Where(e => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(e.LiveAnchorId.HasValue ? e.LiveAnchorId.Value : 0))
                 .ToListAsync();
 
+            string ids = "";
+            foreach (var x in visitCount)
+            {
+                ids += x.Id.ToString() + ",";
+            }
 
             orderData.VisitNum = visitCount
                 .Select(e => e.Phone)

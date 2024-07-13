@@ -60,6 +60,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
             queryOperationDataVo.startDate = query.startDate;
             queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
+            queryOperationDataVo.keyWord = query.keyWord;
             var data = await amiyaOperationsBoardService.GetTotalAchievementAndDateScheduleAsync(queryOperationDataVo);
 
             result.NewCustomerPerformance = data.NewCustomerPerformance;
