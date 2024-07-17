@@ -47,7 +47,7 @@ namespace Fx.Amiya.IService
         /// 获取客户来源
         /// </summary>
         /// <returns></returns>
-        List<BaseKeyValueDto<int>> GetCustomerSourceList();
+        List<BaseKeyValueDto<int>> GetCustomerSourceList(string contentPlatFormId, int? channel);
 
         /// <summary>
         /// 获取客户类型列表

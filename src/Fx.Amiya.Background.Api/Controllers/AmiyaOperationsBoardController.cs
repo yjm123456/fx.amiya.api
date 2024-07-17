@@ -282,42 +282,42 @@ namespace Fx.Amiya.Background.Api.Controllers
             var data = await amiyaOperationsBoardService.GetCustomerDataAsync(queryOperationDataDto);
 
 
-            result.TotalDistributeConsulation = data.TotalDistributeConsulation;
-            result.TodayDistributeConsulation = data.TodayDistributeConsulation;
-            result.DistributeConsulationCompleteRate = data.DistributeConsulationCompleteRate;
-            result.DistributeConsulationYearOnYear = data.DistributeConsulationYearOnYear;
-            result.DistributeConsulationChainRatio = data.DistributeConsulationChainRatio;
+            result.TotalBeforeLivingClue = data.TotalBeforeLivingClue;
+            result.TodayBeforeLivingClue = data.TodayBeforeLivingClue;
+            result.BeforeLivingClueCompleteRate = data.BeforeLivingClueCompleteRate;
+            result.BeforeLivingClueYearOnYear = data.BeforeLivingClueYearOnYear;
+            result.BeforeLivingClueChainRatio = data.BeforeLivingClueChainRatio;
 
-            result.TotalAddWechat = data.TotalAddWechat;
-            result.TodayAddWechat = data.TodayAddWechat;
-            result.AddWechatCompleteRate = data.AddWechatCompleteRate;
-            result.AddWechatYearOnYear = data.AddWechatYearOnYear;
-            result.AddWechatChainRatio = data.AddWechatChainRatio;
+            result.TotalLivingClue = data.TotalLivingClue;
+            result.TodayLivingClue = data.TodayLivingClue;
+            result.LivingClueCompleteRate = data.LivingClueCompleteRate;
+            result.LivingClueYearOnYear = data.LivingClueYearOnYear;
+            result.LivingClueChainRatio = data.LivingClueChainRatio;
 
-            result.TotalSendOrder = data.TotalSendOrder;
-            result.TodayTotalSendOrder = data.TodayTotalSendOrder;
-            result.TotalSendOrderCompleteRate = data.TotalSendOrderCompleteRate;
-            result.TotalSendOrderYearOnYear = data.TotalSendOrderYearOnYear;
-            result.TotalSendOrderChainRatio = data.TotalSendOrderChainRatio;
+            result.TotalAfterLivingClue = data.TotalAfterLivingClue;
+            result.TodayTotalAfterLivingClue = data.TodayTotalAfterLivingClue;
+            result.TotalAfterLivingClueCompleteRate = data.TotalAfterLivingClueCompleteRate;
+            result.TotalAfterLivingClueYearOnYear = data.TotalAfterLivingClueYearOnYear;
+            result.TotalAfterLivingClueChainRatio = data.TotalAfterLivingClueChainRatio;
 
-            result.TotalVisit = data.TotalVisit;
-            result.TodayVisit = data.TodayVisit;
-            result.VisitCompleteRate = data.VisitCompleteRate;
-            result.VisitYearOnYear = data.VisitYearOnYear;
-            result.VisitChainRatio = data.VisitChainRatio;
+            result.TotalClue = data.TotalClue;
+            result.TodayClue = data.TodayClue;
+            result.ClueCompleteRate = data.ClueCompleteRate;
+            result.ClueYearOnYear = data.ClueYearOnYear;
+            result.ClueChainRatio = data.ClueChainRatio;
 
-            result.DistributeConsulationBrokenLineList = data.DistributeConsulationBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
+            result.BeforeLivingClueBrokenLineList = data.BeforeLivingClueBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
             {
                 date = x.date,
                 Performance = x.Performance
             }).ToList();
-            result.AddWeChatBrokenLineList = data.AddWeChatBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
+            result.LivingClueBrokenLineList = data.LivingClueBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
             {
                 date = x.date,
                 Performance = x.Performance
             }).ToList();
 
-            result.SendOrderBrokenLineList = data.SendOrderBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
+            result.AfterLivingClueBrokenLineList = data.AfterLivingClueBrokenLineList.Select(x => new PerformanceBrokenLineListInfoVo
             {
                 date = x.date,
                 Performance = x.Performance

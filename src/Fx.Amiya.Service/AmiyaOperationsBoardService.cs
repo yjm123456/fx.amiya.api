@@ -362,7 +362,7 @@ namespace Fx.Amiya.Service
             #region 吉娜组业绩-当月/历史
             OperationBoardGetIsHistoryPerformanceDto totalPerformanceIsHistoryGroupJiNaData = new OperationBoardGetIsHistoryPerformanceDto();
             var curJiNaHistory = curJiNaTotalAchievement.Where(x => x.SendDate < query.startDate).Sum(x => x.Price);
-            var curJiNaThisMonth = curJiNaTotalAchievement.Where(x => x.SendDate>=query.startDate).Sum(x => x.Price);
+            var curJiNaThisMonth = curJiNaTotalAchievement.Where(x => x.SendDate >= query.startDate).Sum(x => x.Price);
 
             totalPerformanceIsHistoryGroupJiNaData.TotalPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curJiNaTotalAchievementPrice);
             totalPerformanceIsHistoryGroupJiNaData.HistoryPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curJiNaHistory);
@@ -469,7 +469,7 @@ namespace Fx.Amiya.Service
 
             //获取目标
             var targetBeforeLiving = await liveAnchorMonthlyTargetBeforeLivingService.GetCluePerformanceTargetAsync(query.endDate.Value.Year, query.endDate.Value.Month, new List<int>());
-
+            var targetLiving = await liveAnchorMonthlyTargetLivingService.GetBasePerformanceTargetAsync(query.endDate.Value.Year, query.endDate.Value.Month, new List<int>());
             var targetAfterLiving = await liveAnchorMonthlyTargetAfterLivingService.GetPerformanceTargetAsync(query.endDate.Value.Year, query.endDate.Value.Month, new List<int>());
 
 
@@ -482,49 +482,49 @@ namespace Fx.Amiya.Service
             var shoppingCartRegistionChain = await shoppingCartRegistrationService.GetShoppingCartRegistionDataByRecordDate(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate);
 
 
-            #region 分诊
-            var curDistributeConsulation = shoppingCartRegistionData.Where(o => o.AssignEmpId.HasValue == true).Count();
-            var DistributeConsulationYearOnYear = shoppingCartRegistionYearOnYear.Where(x => x.AssignEmpId.HasValue == true).Count();
-            var DistributeConsulationChainRatio = shoppingCartRegistionChain.Where(x => x.AssignEmpId.HasValue == true).Count();
-            result.TodayDistributeConsulation = todayshoppingCartRegistionData.Where(x => x.AssignEmpId.HasValue == true).Count();
-            result.DistributeConsulationCompleteRate = DecimalExtension.CalculateTargetComplete(curDistributeConsulation, targetAfterLiving.DistributeConsulationTarget);
-            result.DistributeConsulationYearOnYear = DecimalExtension.CalculateChain(curDistributeConsulation, DistributeConsulationYearOnYear);
-            result.DistributeConsulationChainRatio = DecimalExtension.CalculateChain(curDistributeConsulation, DistributeConsulationChainRatio);
+            #region 直播前
+            var curBeforeLivingClues = shoppingCartRegistionData.Where(o => o.BelongChannel == (int)BelongChannel.LiveBefore).Count();
+            var BeforeLivingCluesYearOnYear = shoppingCartRegistionYearOnYear.Where(x => x.BelongChannel == (int)BelongChannel.LiveBefore).Count();
+            var BeforeLivingCluesChainRatio = shoppingCartRegistionChain.Where(x => x.BelongChannel == (int)BelongChannel.LiveBefore).Count();
+            result.TodayBeforeLivingClue = todayshoppingCartRegistionData.Where(x => x.BelongChannel == (int)BelongChannel.LiveBefore).Count();
+            result.BeforeLivingClueCompleteRate = DecimalExtension.CalculateTargetComplete(curBeforeLivingClues, targetBeforeLiving.CluesTarget);
+            result.BeforeLivingClueYearOnYear = DecimalExtension.CalculateChain(curBeforeLivingClues, BeforeLivingCluesYearOnYear);
+            result.BeforeLivingClueChainRatio = DecimalExtension.CalculateChain(curBeforeLivingClues, BeforeLivingCluesChainRatio);
             #endregion
 
-            #region 加v
-            var curAddWechat = shoppingCartRegistionData.Where(o => o.IsAddWeChat == true).Count();
-            var AddWechatYearOnYear = shoppingCartRegistionYearOnYear.Where(x => x.IsAddWeChat == true).Count();
-            var AddWechatChainRatio = shoppingCartRegistionChain.Where(x => x.AssignEmpId.HasValue == true).Count();
-            result.TodayAddWechat = todayshoppingCartRegistionData.Where(x => x.IsAddWeChat == true).Count();
-            result.AddWechatCompleteRate = DecimalExtension.CalculateTargetComplete(curAddWechat, targetAfterLiving.AddWechatTarget);
-            result.AddWechatYearOnYear = DecimalExtension.CalculateChain(curAddWechat, AddWechatYearOnYear);
-            result.AddWechatChainRatio = DecimalExtension.CalculateChain(curAddWechat, AddWechatChainRatio);
+            #region 直播中
+            var curLivingClue = shoppingCartRegistionData.Where(o => o.BelongChannel == (int)BelongChannel.Living).Count();
+            var LivingClueYearOnYear = shoppingCartRegistionYearOnYear.Where(x => x.BelongChannel == (int)BelongChannel.Living).Count();
+            var LivingClueChainRatio = shoppingCartRegistionChain.Where(x => x.BelongChannel == (int)BelongChannel.Living).Count();
+            result.TodayLivingClue = todayshoppingCartRegistionData.Where(x => x.BelongChannel == (int)BelongChannel.Living).Count();
+            result.LivingClueCompleteRate = DecimalExtension.CalculateTargetComplete(curLivingClue, targetLiving.ConsulationCardTarget);
+            result.LivingClueYearOnYear = DecimalExtension.CalculateChain(curLivingClue, LivingClueYearOnYear);
+            result.LivingClueChainRatio = DecimalExtension.CalculateChain(curLivingClue, LivingClueChainRatio);
             #endregion
 
-            #region 派单
-            var sendOrderList = shoppingCartRegistionData.Where(o => o.IsSendOrder == true).ToList();
-            var curSendOrder = sendOrderList.Count();
-            var historyYearSendOrderList = shoppingCartRegistionYearOnYear.Where(x => x.IsSendOrder == true).ToList();
-            var SendOrderYearOnYear = historyYearSendOrderList.Count();
-            var lastMonthSendOrder = shoppingCartRegistionChain.Where(x => x.AssignEmpId.HasValue == true).ToList();
-            var SendOrderChainRatio = lastMonthSendOrder.Count();
-            var todaySendOrder = todayshoppingCartRegistionData.Where(x => x.IsSendOrder == true).ToList();
-            result.TodayTotalSendOrder = todaySendOrder.Count();
-            result.TotalSendOrderCompleteRate = DecimalExtension.CalculateTargetComplete(curSendOrder, targetAfterLiving.SendOrderTarget);
-            result.TotalSendOrderYearOnYear = DecimalExtension.CalculateChain(curSendOrder, SendOrderYearOnYear);
-            result.TotalSendOrderChainRatio = DecimalExtension.CalculateChain(curSendOrder, SendOrderChainRatio);
+            #region 直播后
+            var AfterLivingClueList = shoppingCartRegistionData.Where(o => o.BelongChannel == (int)BelongChannel.LiveAfter).ToList();
+            var curAfterLivingClue = AfterLivingClueList.Count();
+            var historyYearAfterLivingClueList = shoppingCartRegistionYearOnYear.Where(x => x.BelongChannel == (int)BelongChannel.LiveAfter).ToList();
+            var AfterLivingClueYearOnYear = historyYearAfterLivingClueList.Count();
+            var lastMonthAfterLivingClue = shoppingCartRegistionChain.Where(x => x.BelongChannel == (int)BelongChannel.LiveAfter).ToList();
+            var AfterLivingClueChainRatio = lastMonthAfterLivingClue.Count();
+            var todayAfterLivingClue = todayshoppingCartRegistionData.Where(x => x.BelongChannel == (int)BelongChannel.LiveAfter).ToList();
+            result.TodayTotalAfterLivingClue = todayAfterLivingClue.Count();
+            result.TotalAfterLivingClueCompleteRate = DecimalExtension.CalculateTargetComplete(curAfterLivingClue, targetAfterLiving.CluesTarget);
+            result.TotalAfterLivingClueYearOnYear = DecimalExtension.CalculateChain(curAfterLivingClue, AfterLivingClueYearOnYear);
+            result.TotalAfterLivingClueChainRatio = DecimalExtension.CalculateChain(curAfterLivingClue, AfterLivingClueChainRatio);
             #endregion
 
-            #region 上门
+            #region 总线索
 
-            var curVisit = await contentPlateFormOrderService.GetToHospitalCountDataAsync(sequentialDate.StartDate, sequentialDate.EndDate, sendOrderList.Select(x => x.Phone).ToList());
-            var VisitYearOnYear = await contentPlateFormOrderService.GetToHospitalCountDataAsync(sequentialDate.LastYearThisMonthStartDate, sequentialDate.LastYearThisMonthEndDate, historyYearSendOrderList.Select(x => x.Phone).ToList());
-            var VisitChainRatio = await contentPlateFormOrderService.GetToHospitalCountDataAsync(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate, lastMonthSendOrder.Select(x => x.Phone).ToList());
-            result.TodayVisit = await contentPlateFormOrderService.GetToHospitalCountDataAsync(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate, todaySendOrder.Select(x => x.Phone).ToList());
-            result.VisitCompleteRate = DecimalExtension.CalculateTargetComplete(curVisit, targetAfterLiving.NewCustomerVisitTarget);
-            result.VisitYearOnYear = DecimalExtension.CalculateChain(curVisit, VisitYearOnYear);
-            result.VisitChainRatio = DecimalExtension.CalculateChain(curVisit, VisitChainRatio);
+            var curClue = shoppingCartRegistionData.Count();
+            var ClueYearOnYear = shoppingCartRegistionYearOnYear.Count();
+            var ClueChainRatio = shoppingCartRegistionChain.Count();
+            result.TodayClue = todayshoppingCartRegistionData.Count();
+            result.ClueCompleteRate = DecimalExtension.CalculateTargetComplete(curClue, targetAfterLiving.CluesTarget + targetLiving.ConsulationCardTarget + targetBeforeLiving.CluesTarget);
+            result.ClueYearOnYear = DecimalExtension.CalculateChain(curClue, ClueYearOnYear);
+            result.ClueChainRatio = DecimalExtension.CalculateChain(curClue, ClueChainRatio);
             #endregion
             if (!string.IsNullOrEmpty(query.keyWord))
             {
@@ -533,9 +533,9 @@ namespace Fx.Amiya.Service
             var dateList = shoppingCartRegistionData.GroupBy(x => x.RecordDate.Day).Select(x => new OerationTotalAchievementBrokenLineListDto
             {
                 Time = x.Key,
-                TotalCustomerPerformance = x.Where(e => e.IsSendOrder == true).Count(),
-                NewCustomerPerformance = x.Where(e => e.AssignEmpId.HasValue == true).Count(),
-                OldCustomerPerformance = x.Where(e => e.IsAddWeChat == true).Count(),
+                TotalCustomerPerformance = x.Where(e => e.BelongChannel == (int)BelongChannel.LiveBefore).Count(),
+                NewCustomerPerformance = x.Where(e => e.BelongChannel == (int)BelongChannel.Living).Count(),
+                OldCustomerPerformance = x.Where(e => e.BelongChannel == (int)BelongChannel.LiveAfter).Count(),
             });
             List<OerationTotalAchievementBrokenLineListDto> GroupList = new List<OerationTotalAchievementBrokenLineListDto>();
             for (int i = 1; i < dateSchedule.Key + 1; i++)
@@ -549,25 +549,25 @@ namespace Fx.Amiya.Service
                 GroupList.Add(item);
             }
 
-            result.DistributeConsulationBrokenLineList = GroupList.Select(e => new PerformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.NewCustomerPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
-            result.AddWeChatBrokenLineList = GroupList.Select(e => new PerformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.OldCustomerPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
-            result.SendOrderBrokenLineList = GroupList.Select(e => new PerformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.TotalCustomerPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            result.LivingClueBrokenLineList = GroupList.Select(e => new PerformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.NewCustomerPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            result.AfterLivingClueBrokenLineList = GroupList.Select(e => new PerformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.OldCustomerPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
+            result.BeforeLivingClueBrokenLineList = GroupList.Select(e => new PerformanceBrokenLineListInfoDto { date = e.Time.ToString(), Performance = e.TotalCustomerPerformance }).OrderBy(e => Convert.ToInt32(e.date)).ToList();
 
             if (query.startDate.Value.Year == query.endDate.Value.Year && query.startDate.Value.Month == query.endDate.Value.Month)
             {
-                result.TotalDistributeConsulation = curDistributeConsulation;
-                result.TotalAddWechat = curAddWechat;
-                result.TotalSendOrder = curSendOrder;
-                result.TotalVisit = curVisit;
+                result.TotalBeforeLivingClue = curBeforeLivingClues;
+                result.TotalLivingClue = curLivingClue;
+                result.TotalAfterLivingClue = curAfterLivingClue;
+                result.TotalClue = curClue;
             }
             else
             {
                 //非本月数据总业绩取累计数据
                 var sumShoppingCartRegistionData = await shoppingCartRegistrationService.GetShoppingCartRegistionDataByRecordDate(query.startDate.Value, query.endDate.Value);
-                result.TotalDistributeConsulation = sumShoppingCartRegistionData.Where(x => x.AssignEmpId.HasValue == true).Count();
-                result.TotalAddWechat = sumShoppingCartRegistionData.Where(x => x.IsAddWeChat == true).Count();
-                result.TotalSendOrder = sumShoppingCartRegistionData.Where(x => x.IsSendOrder == true).Count();
-                result.TotalVisit = await contentPlateFormOrderService.GetToHospitalCountDataAsync(query.startDate.Value, query.endDate.Value, sumShoppingCartRegistionData.Select(x => x.Phone).ToList()); ;
+                result.TotalBeforeLivingClue = sumShoppingCartRegistionData.Where(x => x.BelongChannel == (int)BelongChannel.LiveBefore).Count();
+                result.TotalLivingClue = sumShoppingCartRegistionData.Where(x => x.BelongChannel == (int)BelongChannel.Living).Count();
+                result.TotalAfterLivingClue = sumShoppingCartRegistionData.Where(x => x.BelongChannel == (int)BelongChannel.LiveAfter).Count();
+                result.TotalClue = sumShoppingCartRegistionData.Count() ;
             }
             return result;
         }

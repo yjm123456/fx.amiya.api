@@ -505,9 +505,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("customerSourceList")]
-        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetCustomerSourceListAsync()
+        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetCustomerSourceListAsync(string contentPlatFormId, int? channel)
         {
-            var nameList = shoppingCartRegistrationService.GetCustomerSourceList();
+            var nameList = shoppingCartRegistrationService.GetCustomerSourceList(contentPlatFormId, channel);
             var result = nameList.Select(e => new BaseIdAndNameVo<int>
             {
                 Id = e.Key,
@@ -928,6 +928,21 @@ namespace Fx.Amiya.Background.Api.Controllers
                         if (worksheet.Cells[x, 9].Value != null)
                         {
                             addDto.Remark += "--" + worksheet.Cells[x, 9].Value.ToString();
+                        }
+                        if (worksheet.Cells[x, 10].Value != null)
+                        {
+                            if (worksheet.Cells[x, 10].Value.ToString() == "医美顾客")
+                            {
+                                addDto.ShoppingCartRegistrationCustomerType = (int)ShoppingCartRegistionCustomerSource.AestheticMedicine;
+                            }
+                            else if (worksheet.Cells[x, 10].Value.ToString() == "带货顾客")
+                            {
+                                addDto.ShoppingCartRegistrationCustomerType = (int)ShoppingCartRegistionCustomerSource.TakeGoods;
+                            }
+                            else
+                            {
+                                addDto.ShoppingCartRegistrationCustomerType = (int)ShoppingCartRegistionCustomerSource.Other;
+                            }
                         }
                         addDto.SubPhone = "";
                         addDto.IsConsultation = false;

@@ -1028,6 +1028,10 @@ namespace Fx.Amiya.IService
         /// 视频号福袋
         /// </summary>
         WechatVideoLuckyBag = 8,
+        /// <summary>
+        /// 直播间公屏
+        /// </summary>
+        LivingRoomScreen = 9,
 
     }
 

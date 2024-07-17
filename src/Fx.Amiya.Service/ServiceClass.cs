@@ -807,10 +807,9 @@ namespace Fx.Amiya.Service
                 case 8:
                     sourceText = "福袋";
                     break;
-
-                //case 7:
-                //    sourceText = "带货";
-                //    break;
+                case 9:
+                    sourceText = "直播间公屏";
+                    break;
                 default:
                     sourceText = "";
                     break;

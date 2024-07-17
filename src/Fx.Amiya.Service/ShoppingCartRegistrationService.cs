@@ -744,16 +744,141 @@ namespace Fx.Amiya.Service
         /// 获取客户来源列表
         /// </summary>
         /// <returns></returns>
-        public List<BaseKeyValueDto<int>> GetCustomerSourceList()
+        public List<BaseKeyValueDto<int>> GetCustomerSourceList(string contentPlatFormId, int? channel)
         {
             var emergencyLevels = Enum.GetValues(typeof(TiktokCustomerSource));
             List<BaseKeyValueDto<int>> emergencyLevelList = new List<BaseKeyValueDto<int>>();
+            List<GetBaseIdAndNameDictionaryList> resultList = new List<GetBaseIdAndNameDictionaryList>();
             foreach (var item in emergencyLevels)
             {
-                BaseKeyValueDto<int> emergencyLevelDto = new BaseKeyValueDto<int>();
-                emergencyLevelDto.Key = Convert.ToInt32(item);
-                emergencyLevelDto.Value = ServiceClass.GetTiktokCustomerSourceText(emergencyLevelDto.Key);
-                emergencyLevelList.Add(emergencyLevelDto);
+                GetBaseIdAndNameDictionaryList addRes = new GetBaseIdAndNameDictionaryList();
+
+              
+                addRes.Key = Convert.ToInt32(item);
+                addRes.Name = ServiceClass.GetTiktokCustomerSourceText(Convert.ToInt32(item));
+
+                Dictionary<List<string>, List<int>> res = new Dictionary<List<string>, List<int>>();
+                List<string> contentPlatFormIds = new List<string>();
+                List<int> channels = new List<int>();
+                switch (addRes.Key)
+                {
+                    case 0:
+                        //抖音
+                        contentPlatFormIds.Add("4e4e9564-f6c3-47b6-a7da-e4518bab66a1");
+                        //视频号
+                        contentPlatFormIds.Add("9196b247-1ab9-4d0c-a11e-a1ef09019878");
+                        //小红书
+                        contentPlatFormIds.Add("317c03b8-aff9-4961-8392-fc44d04b1725");
+                        //快手
+                        contentPlatFormIds.Add("7a9d6564-e273-4847-9047-e7bbb7c6805c");
+                        channels.Add((int)BelongChannel.LiveBefore);
+                        res.Add(contentPlatFormIds, channels);
+                        break;
+                    case 1:
+                        //抖音
+                        contentPlatFormIds.Add("4e4e9564-f6c3-47b6-a7da-e4518bab66a1");
+                        //视频号
+                        contentPlatFormIds.Add("9196b247-1ab9-4d0c-a11e-a1ef09019878");
+                        //快手
+                        contentPlatFormIds.Add("7a9d6564-e273-4847-9047-e7bbb7c6805c");
+                        //私域
+                        contentPlatFormIds.Add("22a0b287-232d-4373-a9dd-c372aaae57dc");
+                        channels.Add((int)BelongChannel.Living);
+                        res.Add(contentPlatFormIds, channels);
+                        break;
+                    case 2:
+                        //抖音
+                        contentPlatFormIds.Add("4e4e9564-f6c3-47b6-a7da-e4518bab66a1");
+                        //视频号
+                        contentPlatFormIds.Add("9196b247-1ab9-4d0c-a11e-a1ef09019878");
+                        //快手
+                        contentPlatFormIds.Add("7a9d6564-e273-4847-9047-e7bbb7c6805c");
+                        //小红书
+                        contentPlatFormIds.Add("317c03b8-aff9-4961-8392-fc44d04b1725");
+                        channels.Add((int)BelongChannel.LiveAfter);
+                        channels.Add((int)BelongChannel.LiveBefore);
+                        res.Add(contentPlatFormIds, channels);
+                        break;
+                    case 3:
+                        //抖音
+                        contentPlatFormIds.Add("4e4e9564-f6c3-47b6-a7da-e4518bab66a1");
+                        //视频号
+                        contentPlatFormIds.Add("9196b247-1ab9-4d0c-a11e-a1ef09019878");
+                        //小红书
+                        contentPlatFormIds.Add("317c03b8-aff9-4961-8392-fc44d04b1725");
+                        //快手
+                        contentPlatFormIds.Add("7a9d6564-e273-4847-9047-e7bbb7c6805c");
+                        channels.Add((int)BelongChannel.LiveBefore);
+                        channels.Add((int)BelongChannel.LiveAfter);
+                        res.Add(contentPlatFormIds, channels);
+                        break;
+                    case 5:
+                        //抖音
+                        contentPlatFormIds.Add("4e4e9564-f6c3-47b6-a7da-e4518bab66a1");
+                        //啊美雅官网
+                        contentPlatFormIds.Add("b0e992ad-1b7b-4397-a5fe-1bfbc1f0130e");
+                        //合作达人
+                        contentPlatFormIds.Add("d2e71501-7327-4883-9294-371a77c4cabd");
+                        channels.Add((int)BelongChannel.LiveAfter);
+                        res.Add(contentPlatFormIds, channels);
+                        break;
+                    case 6:
+                        //抖音
+                        contentPlatFormIds.Add("4e4e9564-f6c3-47b6-a7da-e4518bab66a1");
+                        //视频号
+                        contentPlatFormIds.Add("9196b247-1ab9-4d0c-a11e-a1ef09019878");
+                        //小红书
+                        contentPlatFormIds.Add("317c03b8-aff9-4961-8392-fc44d04b1725");
+                        //快手
+                        contentPlatFormIds.Add("7a9d6564-e273-4847-9047-e7bbb7c6805c");
+                        channels.Add((int)BelongChannel.LiveAfter);
+                        res.Add(contentPlatFormIds, channels);
+                        break;
+                    case 7:
+                        //抖音
+                        contentPlatFormIds.Add("4e4e9564-f6c3-47b6-a7da-e4518bab66a1");
+                        channels.Add((int)BelongChannel.LiveBefore);
+                        channels.Add((int)BelongChannel.Living);
+                        res.Add(contentPlatFormIds, channels);
+                        break;
+                    case 8:
+                        //视频号
+                        contentPlatFormIds.Add("9196b247-1ab9-4d0c-a11e-a1ef09019878");
+                        channels.Add((int)BelongChannel.Living);
+                        res.Add(contentPlatFormIds, channels);
+                        break;
+                    case 9:
+                        //抖音
+                        contentPlatFormIds.Add("4e4e9564-f6c3-47b6-a7da-e4518bab66a1");
+                        //视频号
+                        contentPlatFormIds.Add("9196b247-1ab9-4d0c-a11e-a1ef09019878");
+                        //快手
+                        contentPlatFormIds.Add("7a9d6564-e273-4847-9047-e7bbb7c6805c");
+                        channels.Add((int)BelongChannel.LiveAfter);
+                        res.Add(contentPlatFormIds, channels);
+                        break;
+                }
+                addRes.BaseIdAndName = res;
+                resultList.Add(addRes);
+            }
+            if (channel.HasValue && !string.IsNullOrEmpty(contentPlatFormId))
+            {
+                foreach (var k in resultList)
+                {
+                    var existValue = k.BaseIdAndName.Where(x => x.Value.Contains(channel.Value)).ToList();
+                    foreach (var y in existValue)
+                    {
+                        var existKey = y.Key.Where(x => x. Contains(contentPlatFormId)).ToList();
+                        if (existKey.Count() > 0)
+                        {
+                            BaseKeyValueDto<int> emergencyLevelDto = new BaseKeyValueDto<int>();
+                            emergencyLevelDto.Key =k.Key;
+                            emergencyLevelDto.Value = ServiceClass.GetTiktokCustomerSourceText(emergencyLevelDto.Key);
+                            emergencyLevelList.Add(emergencyLevelDto);
+
+                        }
+                    }
+                }
             }
             return emergencyLevelList;
         }

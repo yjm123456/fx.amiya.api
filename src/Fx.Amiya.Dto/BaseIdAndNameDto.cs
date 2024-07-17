@@ -16,4 +16,11 @@ namespace Fx.Amiya.Dto
         public T Id { get; set; }
         public string Name { get; set; }
     }
+    public class GetBaseIdAndNameDictionaryList
+    {
+        public Dictionary<List<string>, List<int>> BaseIdAndName { get; set; }
+        public int Key { get; set; }
+        public string Name { get; set; }
+    }
+
 }

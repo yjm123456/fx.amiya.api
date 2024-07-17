@@ -9,6 +9,11 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
     public class LiveAnchorMonthTargetPerformanceDto
     {
         /// <summary>
+        /// 线索目标
+        /// </summary>
+        public int CluesTarget { get; set; }
+
+        /// <summary>
         /// 业绩目标
         /// </summary>
         public decimal TotalPerformanceTarget { get; set; }

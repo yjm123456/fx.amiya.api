@@ -4352,7 +4352,7 @@ namespace Fx.Amiya.Service
         {
             startDate = startDate == null ? DateTime.Now.Date : startDate;
             endDate = startDate == null ? DateTime.Now.AddDays(1).Date : endDate;
-            var dataList = _dalContentPlatformOrder.GetAll().Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CheckState == 2)
+            var dataList =await _dalContentPlatformOrder.GetAll().Where(e => e.CheckDate >= startDate && e.CheckDate < endDate && e.CheckState == 2)
                 .Where(e => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(e.LiveAnchorId.HasValue ? e.LiveAnchorId.Value : 0))
                 .GroupBy(e => new { e.LiveAnchorId, e.BelongCompany })
                 .Select(e => new LiveAnchorBoardDataDto
@@ -4365,7 +4365,7 @@ namespace Fx.Amiya.Service
                     OldCustomerPrice = e.Sum(item => item.IsOldCustomer == true ? item.CheckPrice : 0) ?? 0m,
                     NewCustomerServicePrice = e.Sum(item => item.IsOldCustomer == false ? item.SettlePrice : 0) ?? 0m,
                     OldCustomerServicePrice = e.Sum(item => item.IsOldCustomer == true ? item.SettlePrice : 0) ?? 0m,
-                }).ToList();
+                }).ToListAsync();
             foreach (var item in dataList)
             {
                 item.LiveAnchorName = dalLiveAnchor.GetAll().Where(e => e.Id == Convert.ToInt32(item.LiveAnchorName)).Select(e => e.Name).SingleOrDefault() ?? "未知(订单没有主播归属信息)";
@@ -4389,12 +4389,12 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<OrderBaseDto> GetOrderDataByMonthAsync(DateTime startDate, DateTime endDate, int hospitalId, int type)
         {
-            var sendCount = dalContentPlatformOrderSend.GetAll()
+            var sendCount =await dalContentPlatformOrderSend.GetAll()
                 .Include(e => e.ContentPlatformOrder)
                 .ThenInclude(e => e.ContentPlatformOrderDealInfoList)
                 .Where(e => e.SendDate >= startDate && e.SendDate < endDate && e.HospitalId == hospitalId && e.ContentPlatformOrder.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder)
                 .Select(e => new { Phone = e.ContentPlatformOrder.Phone, OrderStatus = e.ContentPlatformOrder.OrderStatus })
-                .ToList();
+                .ToListAsync();
             OrderBaseDto orderData = new OrderBaseDto();
             orderData.SendOrderCount = sendCount.Select(e => e.Phone).Distinct().Count();
 
@@ -4428,12 +4428,12 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<OrderBaseDto> GetAccumulateOrderDataAsync(int hospitalId)
         {
-            var accumulateSendCount = dalContentPlatformOrderSend.GetAll()
+            var accumulateSendCount =await dalContentPlatformOrderSend.GetAll()
                 .Include(e => e.ContentPlatformOrder)
                 .ThenInclude(e => e.ContentPlatformOrderDealInfoList)
                 .Where(e => e.HospitalId == hospitalId && e.ContentPlatformOrder.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder)
                 .Select(e => new { Phone = e.ContentPlatformOrder.Phone, OrderStatus = e.ContentPlatformOrder.OrderStatus })
-                .ToList();
+                .ToListAsync();
             OrderBaseDto orderData = new OrderBaseDto();
             orderData.AccumulateSendOrderCount = accumulateSendCount
                 .Select(e => e.Phone)
@@ -4567,8 +4567,8 @@ namespace Fx.Amiya.Service
             var startSelectDate = startDate.Date;
 
             //老客总数
-            var lastMonthCustomer = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.LastDealHospitalId == hospitalId && e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true && e.IsOldCustomer == true && e.ContentPlatFormOrderId != null).Select(e => e.ContentPlatFormOrder.Phone).Distinct().ToList();
-            var lastNewMonthCustomer = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.LastDealHospitalId == hospitalId && e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true && e.IsOldCustomer == false && (e.ConsumptionType == (int)ConsumptionType.Deal || e.ConsumptionType == null) && e.ContentPlatFormOrderId != null).Select(e => e.ContentPlatFormOrder.Phone).Distinct().ToList();
+            var lastMonthCustomer =await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.LastDealHospitalId == hospitalId && e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true && e.IsOldCustomer == true && e.ContentPlatFormOrderId != null).Select(e => e.ContentPlatFormOrder.Phone).Distinct().ToListAsync();
+            var lastNewMonthCustomer =await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.LastDealHospitalId == hospitalId && e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true && e.IsOldCustomer == false && (e.ConsumptionType == (int)ConsumptionType.Deal || e.ConsumptionType == null) && e.ContentPlatFormOrderId != null).Select(e => e.ContentPlatFormOrder.Phone).Distinct().ToListAsync();
             var c = lastMonthCustomer.Intersect(lastNewMonthCustomer).Count();
             var count = lastMonthCustomer.Count() - c;
 
@@ -4597,11 +4597,11 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<DealPerformanceDataDto> GetDealDataAsync(DateTime startDate, DateTime endDate, int hospitalId)
         {
-            var performanceList = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true && e.LastDealHospitalId == hospitalId && e.ContentPlatFormOrderId != null).Select(e => new
+            var performanceList =await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true && e.LastDealHospitalId == hospitalId && e.ContentPlatFormOrderId != null).Select(e => new
             {
                 Price = e.Price,
                 IsOldCustomer = e.IsOldCustomer
-            }).ToList();
+            }).ToListAsync();
             DealPerformanceDataDto dealPerformanceDataDto = new DealPerformanceDataDto();
             dealPerformanceDataDto.TotalPerformance = performanceList.Sum(e => e.Price);
             dealPerformanceDataDto.NewCustomerPerformance = performanceList.Where(e => e.IsOldCustomer == false).Sum(e => e.Price);

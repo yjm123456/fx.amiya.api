@@ -126,12 +126,12 @@ namespace Fx.Amiya.Service
                                                              PotentialPerformanceTarget = d.PotentialPerformanceTarget,
                                                              CumulativePotentialPerformance = d.CumulativePotentialPerformance,
                                                              PotentialPerformanceCompleteRate = d.PotentialPerformanceCompleteRate,
-                                                             DistributeConsulationTarget=d.DistributeConsulationTarget,
-                                                             CumulativeDistributeConsulation=d.CumulativeDistributeConsulation,
-                                                             DistributeConsulationCompleteRate=d.DistributeConsulationCompleteRate,
-                                                             CluesTarget= d.CluesTarget,
-                                                             CumulativeClues=d.CumulativeClues,
-                                                             CluesCompleteRate=d.CluesCompleteRate
+                                                             DistributeConsulationTarget = d.DistributeConsulationTarget,
+                                                             CumulativeDistributeConsulation = d.CumulativeDistributeConsulation,
+                                                             DistributeConsulationCompleteRate = d.DistributeConsulationCompleteRate,
+                                                             CluesTarget = d.CluesTarget,
+                                                             CumulativeClues = d.CumulativeClues,
+                                                             CluesCompleteRate = d.CluesCompleteRate
                                                          };
 
                 FxPageInfo<LiveAnchorMonthlyTargetAfterLivingDto> liveAnchorMonthlyTargetAfterLivingPageInfo = new FxPageInfo<LiveAnchorMonthlyTargetAfterLivingDto>();
@@ -409,7 +409,7 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.EffectivePerformanceTarget = updateDto.EffectivePerformanceTarget;
                 liveAnchorMonthlyTarget.PotentialPerformanceTarget = updateDto.PotentialPerformanceTarget;
                 liveAnchorMonthlyTarget.DistributeConsulationTarget = updateDto.DistributeConsulationTarget;
-                liveAnchorMonthlyTarget.CluesTarget=updateDto.CluesTarget;
+                liveAnchorMonthlyTarget.CluesTarget = updateDto.CluesTarget;
                 await dalLiveAnchorMonthlyTargetAfterLiving.UpdateAsync(liveAnchorMonthlyTarget, true);
             }
             catch (Exception ex)
@@ -738,27 +738,30 @@ namespace Fx.Amiya.Service
         }
         public async Task<LiveAnchorMonthTargetPerformanceDto> GetPerformanceTargetAsync(int year, int month, List<int> liveAnchorIds)
         {
-            var performance = dalLiveAnchorMonthlyTargetAfterLiving.GetAll().Where(t => t.Year == year && t.Month== month)
+            var performance = dalLiveAnchorMonthlyTargetAfterLiving.GetAll().Where(t => t.Year == year && t.Month == month)
                 .Where(o => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(o.LiveAnchorId))
-                .Select(e=>new { 
-                    PerformanceTarget=e.PerformanceTarget, 
-                    EffectivePerformanceTarget = e.EffectivePerformanceTarget, 
+                .Select(e => new
+                {
+                    PerformanceTarget = e.PerformanceTarget,
+                    EffectivePerformanceTarget = e.EffectivePerformanceTarget,
                     PotentialPerformanceTarget = e.PotentialPerformanceTarget,
                     OldCustomerPerformanceTarget = e.OldCustomerPerformanceTarget,
                     NewCustomerPerformanceTarget = e.NewCustomerPerformanceTarget,
                     RefundCardTarget = e.MinivanRefundTarget,
                     DistributeConsulationTarget = e.DistributeConsulationTarget,
                     AddWechatTarget = e.AddWechatTarget,
-                    SendOrderTarget=e.SendOrderTarget,
+                    SendOrderTarget = e.SendOrderTarget,
                     NewCustomerVisitTarget = e.NewCustomerVisitTarget,
-                    BaseLiveAnchorId =e.LiveAnchor.LiveAnchorBaseId
+                    BaseLiveAnchorId = e.LiveAnchor.LiveAnchorBaseId,
+                    CluesTaget = e.CluesTarget,
+
                 })
                 .ToList();
             LiveAnchorMonthTargetPerformanceDto performanceInfoDto = new LiveAnchorMonthTargetPerformanceDto
             {
-                TotalPerformanceTarget =performance.Sum(t => t.PerformanceTarget),
-                OldCustomerPerformanceTarget=performance.Sum(t=>t.OldCustomerPerformanceTarget),
-                NewCustomerPerformanceTarget=performance.Sum(t=>t.NewCustomerPerformanceTarget),
+                TotalPerformanceTarget = performance.Sum(t => t.PerformanceTarget),
+                OldCustomerPerformanceTarget = performance.Sum(t => t.OldCustomerPerformanceTarget),
+                NewCustomerPerformanceTarget = performance.Sum(t => t.NewCustomerPerformanceTarget),
                 EffectivePerformance = performance.Sum(t => t.EffectivePerformanceTarget),
                 PotentialPerformance = performance.Sum(t => t.PotentialPerformanceTarget),
                 MinivanRefundTarget = performance.Sum(e => e.RefundCardTarget),
@@ -766,6 +769,7 @@ namespace Fx.Amiya.Service
                 SendOrderTarget = performance.Sum(e => e.SendOrderTarget),
                 NewCustomerVisitTarget = performance.Sum(e => e.NewCustomerVisitTarget),
                 DistributeConsulationTarget = performance.Sum(t => t.DistributeConsulationTarget),
+                CluesTarget = performance.Sum(e => e.CluesTaget),
             };
             return performanceInfoDto;
         }
@@ -779,42 +783,43 @@ namespace Fx.Amiya.Service
         public async Task<List<LiveAnchorMonthTargetPerformanceDto>> GetPerformanceTargetByBaseLiveAnchorIdAsync(int year, int month, List<string> baseLiveAnchorIds)
         {
             var performance = dalLiveAnchorMonthlyTargetAfterLiving.GetAll().Include(x => x.LiveAnchor).Where(t => t.Year == year && t.Month == month)
-                .Where(t=> baseLiveAnchorIds.Contains(t.LiveAnchor.LiveAnchorBaseId))
-                .Select(e => new {
+                .Where(t => baseLiveAnchorIds.Contains(t.LiveAnchor.LiveAnchorBaseId))
+                .Select(e => new
+                {
                     PerformanceTarget = e.PerformanceTarget,
                     EffectivePerformanceTarget = e.EffectivePerformanceTarget,
                     PotentialPerformanceTarget = e.PotentialPerformanceTarget,
                     OldCustomerPerformanceTarget = e.OldCustomerPerformanceTarget,
                     NewCustomerPerformanceTarget = e.NewCustomerPerformanceTarget,
-                    DistributeConsulationTarget=e.DistributeConsulationTarget,
-                    AddWechatTarget=e.AddWechatTarget,
+                    DistributeConsulationTarget = e.DistributeConsulationTarget,
+                    AddWechatTarget = e.AddWechatTarget,
                     BasbaseLiveAnchorId = e.LiveAnchor.LiveAnchorBaseId,
-                    SendOrderTarget=e.SendOrderTarget,
+                    SendOrderTarget = e.SendOrderTarget,
                     NewCustomerVisitTarget = e.NewCustomerVisitTarget,
                     OldCustomerVisitTarget = e.OldCustomerVisitTarget,
                     NewCustomerDealTarget = e.NewCustomerDealTarget,
-                    OldCustomerDealTarget=e.OldCustomerDealTarget,
-                    RefundCardTarget=e.MinivanRefundTarget,
+                    OldCustomerDealTarget = e.OldCustomerDealTarget,
+                    RefundCardTarget = e.MinivanRefundTarget,
                 })
                 .ToList();
-            var dataList= performance.GroupBy(e => e.BasbaseLiveAnchorId).Select(e => new LiveAnchorMonthTargetPerformanceDto
+            var dataList = performance.GroupBy(e => e.BasbaseLiveAnchorId).Select(e => new LiveAnchorMonthTargetPerformanceDto
             {
                 TotalPerformanceTarget = e.Sum(t => t.PerformanceTarget),
                 OldCustomerPerformanceTarget = e.Sum(t => t.OldCustomerPerformanceTarget),
                 NewCustomerPerformanceTarget = e.Sum(t => t.NewCustomerPerformanceTarget),
                 EffectivePerformance = e.Sum(t => t.EffectivePerformanceTarget),
                 PotentialPerformance = e.Sum(t => t.PotentialPerformanceTarget),
-                DistributeConsulationTarget=e.Sum(t => t.DistributeConsulationTarget),
-                AddWechatTarget=e.Sum(e=>e.AddWechatTarget),
-                SendOrderTarget=e.Sum(e=>e.SendOrderTarget),
-                NewCustomerVisitTarget=e.Sum(e=>e.NewCustomerVisitTarget),
-                OldCustomerVisitTarget=e.Sum(e=>e.OldCustomerVisitTarget),
-                NewCustomerDealTarget=e.Sum(e=>e.NewCustomerDealTarget),
-                OldCustomerDealTarget=e.Sum(e=>e.OldCustomerDealTarget),
+                DistributeConsulationTarget = e.Sum(t => t.DistributeConsulationTarget),
+                AddWechatTarget = e.Sum(e => e.AddWechatTarget),
+                SendOrderTarget = e.Sum(e => e.SendOrderTarget),
+                NewCustomerVisitTarget = e.Sum(e => e.NewCustomerVisitTarget),
+                OldCustomerVisitTarget = e.Sum(e => e.OldCustomerVisitTarget),
+                NewCustomerDealTarget = e.Sum(e => e.NewCustomerDealTarget),
+                OldCustomerDealTarget = e.Sum(e => e.OldCustomerDealTarget),
                 MinivanRefundTarget = e.Sum(e => e.RefundCardTarget),
-                BaseLiveAbchorId =e.Key
+                BaseLiveAbchorId = e.Key
             }).ToList();
-            
+
             return dataList;
         }
 

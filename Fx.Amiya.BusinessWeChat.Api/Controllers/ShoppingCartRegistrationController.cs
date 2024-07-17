@@ -46,9 +46,9 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("customerSourceList")]
-        public async Task<ResultData<List<BaseKeyAndValueVo<int>>>> GetCustomerSourceListAsync()
+        public async Task<ResultData<List<BaseKeyAndValueVo<int>>>> GetCustomerSourceListAsync(string contentPlatFormId, int? channel)
         {
-            var nameList = shoppingCartRegistrationService.GetCustomerSourceList();
+            var nameList = shoppingCartRegistrationService.GetCustomerSourceList(contentPlatFormId, channel);
             var result = nameList.Select(e => new BaseKeyAndValueVo<int>
             {
                 Id = e.Key,
