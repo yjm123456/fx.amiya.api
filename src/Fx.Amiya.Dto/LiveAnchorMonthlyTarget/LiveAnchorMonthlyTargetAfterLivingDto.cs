@@ -331,5 +331,17 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 分诊目标完成率
         /// </summary>
         public decimal DistributeConsulationCompleteRate { get; set; }
+        /// <summary>
+        /// 线索量目标
+        /// </summary>
+        public int CluesTarget { get; set; }
+        /// <summary>
+        /// 累计线索量
+        /// </summary>
+        public int CumulativeClues { get; set; }
+        /// <summary>
+        /// 线索量目标完成率
+        /// </summary>
+        public decimal CluesCompleteRate { get; set; }
     }
 }

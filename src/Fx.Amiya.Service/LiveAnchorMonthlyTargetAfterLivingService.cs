@@ -128,7 +128,10 @@ namespace Fx.Amiya.Service
                                                              PotentialPerformanceCompleteRate = d.PotentialPerformanceCompleteRate,
                                                              DistributeConsulationTarget=d.DistributeConsulationTarget,
                                                              CumulativeDistributeConsulation=d.CumulativeDistributeConsulation,
-                                                             DistributeConsulationCompleteRate=d.DistributeConsulationCompleteRate
+                                                             DistributeConsulationCompleteRate=d.DistributeConsulationCompleteRate,
+                                                             CluesTarget= d.CluesTarget,
+                                                             CumulativeClues=d.CumulativeClues,
+                                                             CluesCompleteRate=d.CluesCompleteRate
                                                          };
 
                 FxPageInfo<LiveAnchorMonthlyTargetAfterLivingDto> liveAnchorMonthlyTargetAfterLivingPageInfo = new FxPageInfo<LiveAnchorMonthlyTargetAfterLivingDto>();
@@ -230,6 +233,10 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.DistributeConsulationTarget = addDto.DistributeConsulationTarget;
                 liveAnchorMonthlyTarget.CumulativeDistributeConsulation = 0;
                 liveAnchorMonthlyTarget.DistributeConsulationCompleteRate = 0.00m;
+
+                liveAnchorMonthlyTarget.CluesTarget = addDto.CluesTarget;
+                liveAnchorMonthlyTarget.CumulativeClues = 0;
+                liveAnchorMonthlyTarget.CluesCompleteRate = 0.00m;
 
                 liveAnchorMonthlyTarget.CreateDate = DateTime.Now;
 
@@ -354,6 +361,10 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTargetDto.CumulativeDistributeConsulation = liveAnchorMonthlyTarget.CumulativeDistributeConsulation;
                 liveAnchorMonthlyTargetDto.DistributeConsulationCompleteRate = liveAnchorMonthlyTarget.DistributeConsulationCompleteRate;
 
+                liveAnchorMonthlyTargetDto.CluesTarget = liveAnchorMonthlyTarget.CluesTarget;
+                liveAnchorMonthlyTargetDto.CumulativeClues = liveAnchorMonthlyTarget.CumulativeClues;
+                liveAnchorMonthlyTargetDto.CluesCompleteRate = liveAnchorMonthlyTarget.CluesCompleteRate;
+
                 var liveAnchor = await _liveanchorService.GetByIdAsync(liveAnchorMonthlyTargetDto.LiveAnchorId);
                 liveAnchorMonthlyTargetDto.ContentPlatFormId = liveAnchor.ContentPlateFormId;
                 liveAnchorMonthlyTargetDto.CreateDate = liveAnchorMonthlyTarget.CreateDate;
@@ -398,7 +409,7 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.EffectivePerformanceTarget = updateDto.EffectivePerformanceTarget;
                 liveAnchorMonthlyTarget.PotentialPerformanceTarget = updateDto.PotentialPerformanceTarget;
                 liveAnchorMonthlyTarget.DistributeConsulationTarget = updateDto.DistributeConsulationTarget;
-
+                liveAnchorMonthlyTarget.CluesTarget=updateDto.CluesTarget;
                 await dalLiveAnchorMonthlyTargetAfterLiving.UpdateAsync(liveAnchorMonthlyTarget, true);
             }
             catch (Exception ex)
@@ -662,6 +673,17 @@ namespace Fx.Amiya.Service
                 else
                 {
                     liveAnchorMonthlyTargetAfterLiving.DistributeConsulationCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetAfterLiving.CumulativeDistributeConsulation) / Convert.ToDecimal(liveAnchorMonthlyTargetAfterLiving.DistributeConsulationTarget)) * 100, 2);
+                }
+                #endregion
+                #region 线索量
+                liveAnchorMonthlyTargetAfterLiving.CumulativeClues += editDto.CumulativeClues;
+                if (liveAnchorMonthlyTargetAfterLiving.CumulativeClues <= 0)
+                {
+                    liveAnchorMonthlyTargetAfterLiving.CluesCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetAfterLiving.CluesCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetAfterLiving.CumulativeClues) / Convert.ToDecimal(liveAnchorMonthlyTargetAfterLiving.CluesTarget)) * 100, 2);
                 }
                 #endregion
 

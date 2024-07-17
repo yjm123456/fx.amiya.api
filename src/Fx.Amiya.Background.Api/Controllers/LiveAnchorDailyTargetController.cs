@@ -322,7 +322,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 MiniVanBadReviews = d.MiniVanBadReviews,
                                                 EffectivePerformance = d.EffectivePerformance,
                                                 PotentialPerformance = d.PotentialPerformance,
-                                                DistributeConsulation=d.DistributeConsulation
+                                                DistributeConsulation=d.DistributeConsulation,
+                                                Clues=d.Clues
                                             };
 
                 FxPageInfo<AfterLivingDailyTargetVo> liveAnchorDailyTargetPageInfo = new FxPageInfo<AfterLivingDailyTargetVo>();
@@ -405,7 +406,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorDailyTargetVo.WeiXinDou = liveAnchorDailyTarget.WeiXinDou;
 
 
-                liveAnchorDailyTargetVo.CluesNum = liveAnchorDailyTarget.CluesNum;
                 liveAnchorDailyTargetVo.AddFansNum = liveAnchorDailyTarget.AddFansNum;
                 liveAnchorDailyTargetVo.AddWechatNum = liveAnchorDailyTarget.AddWechatNum;
                 liveAnchorDailyTargetVo.Consultation = liveAnchorDailyTarget.Consultation;
@@ -439,6 +439,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorDailyTargetVo.PotentialPerformance = liveAnchorDailyTarget.PotentialPerformance;
                 liveAnchorDailyTargetVo.DistributeConsulation=liveAnchorDailyTarget.DistributeConsulation;
                 liveAnchorDailyTargetVo.RefundGMV = liveAnchorDailyTarget.RefundGMV;
+                liveAnchorDailyTargetVo.Clues=liveAnchorDailyTarget.Clues;
 
                 return ResultData<LiveAnchorDailyTargetByIdVo>.Success().AddData("liveAnchorDailyTargetInfo", liveAnchorDailyTargetVo);
             }
@@ -1009,6 +1010,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.EffectivePerformance = addVo.EffectivePerformance;
                     addDto.PotentialPerformance = addVo.PotentialPerformance;
                     addDto.DistributeConsulation=addVo.DistributeConsulation;
+                    addDto.Clues=addVo.Clues;
                     await _liveAnchorDailyTargetService.AfterLivingAddAsync(addDto);
                 }
                 return ResultData.Success();
@@ -1060,6 +1062,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.PotentialPerformance = updateVo.PotentialPerformance;
                 updateDto.EffectivePerformance = updateVo.EffectivePerformance;
                 updateDto.DistributeConsulation = updateVo.DistributeConsulation;
+                updateDto.Clues=updateVo.Clues;
                 await _liveAnchorDailyTargetService.AfterLivingUpdateAsync(updateDto);
                 return ResultData.Success();
             }

@@ -143,10 +143,10 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 微信豆
         /// </summary>
         public decimal WeiXinDou { get; set; }
-        /// <summary>
-        /// 今日线索量
-        /// </summary>
-        public int CluesNum { get; set; }
+        ///// <summary>
+        ///// 今日线索量
+        ///// </summary>
+        //public int CluesNum { get; set; }
 
         /// <summary>
         /// 今日涨粉量
@@ -357,6 +357,10 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 今日分诊量
         /// </summary>
         public int DistributeConsulation { get; set; }
+        /// <summary>
+        /// 今日线索量
+        /// </summary>
+        public int Clues { get; set; }
 
     }
 }

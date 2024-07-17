@@ -106,5 +106,9 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 今日分诊量
         /// </summary>
         public int DistributeConsulation { get; set; }
+        /// <summary>
+        /// 今日线索量
+        /// </summary>
+        public int CumulativeClues { get; set; }
     }
 }

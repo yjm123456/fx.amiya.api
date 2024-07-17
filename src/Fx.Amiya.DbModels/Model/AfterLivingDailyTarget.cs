@@ -118,6 +118,10 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public int DistributeConsulation { get; set; }
         public DateTime RecordDate { get; set; }
+        /// <summary>
+        /// 线索量
+        /// </summary>
+        public int Clues { get; set; }
 
         public LiveAnchorMonthlyTargetAfterLiving LiveAnchorMonthlyTargetAfterLiving { get; set; }
 

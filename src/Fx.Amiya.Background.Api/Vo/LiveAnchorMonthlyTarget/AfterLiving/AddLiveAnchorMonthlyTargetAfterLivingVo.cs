@@ -123,6 +123,11 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.AfterLiving
         /// 分诊目标
         /// </summary>
         public int DistributeConsulationTarget { get; set; }
+        /// <summary>
+        /// 线索量目标
+        /// </summary>
+        public int CluesTarget { get; set; }
+        
 
     }
 }

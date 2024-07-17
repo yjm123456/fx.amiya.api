@@ -674,6 +674,10 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 填报日期
         /// </summary>
         public DateTime RecordDate { get; set; }
+        /// <summary>
+        /// 今日线索量
+        /// </summary>
+        public int Clues { get; set; }
     }
 
 

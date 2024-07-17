@@ -38,6 +38,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.EffectivePerformance).HasColumnName("effective_performance").HasColumnType("decimal(10,2)").IsRequired();
             builder.Property(t => t.PotentialPerformance).HasColumnName("potential_performance").HasColumnType("decimal(10,2)").IsRequired();
             builder.Property(t => t.DistributeConsulation).HasColumnName("distribute_consulation").HasColumnType("int").IsRequired();
+            builder.Property(t=>t.Clues).HasColumnName("clues").HasColumnType("int").IsRequired();
             builder.Property(e => e.RecordDate).HasColumnName("record_date").HasColumnType("datetime").IsRequired();
             builder.Property(e => e.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
             builder.Property(e => e.UpdateDate).HasColumnName("update_date").HasColumnType("datetime").IsRequired(false);

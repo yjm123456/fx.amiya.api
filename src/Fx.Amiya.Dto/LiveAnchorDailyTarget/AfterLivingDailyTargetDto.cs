@@ -280,5 +280,9 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 今日分诊量
         /// </summary>
         public int DistributeConsulation { get; set; }
+        /// <summary>
+        /// 线索量
+        /// </summary>
+        public int Clues { get; set; }
     }
 }

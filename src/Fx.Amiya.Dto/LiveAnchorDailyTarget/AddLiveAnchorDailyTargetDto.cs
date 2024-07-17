@@ -1064,6 +1064,10 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 今日分诊量
         /// </summary>
         public int DistributeConsulation { get; set; }
+        /// <summary>
+        /// 今日线索量
+        /// </summary>
+        public int Clues { get; set; }
     }
 
     /// <summary>
@@ -1199,5 +1203,9 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 今日分诊量
         /// </summary>
         public int DistributeConsulation { get; set; }
+        /// <summary>
+        /// 今日线索量
+        /// </summary>
+        public int Clues { get; set; }
     }
 }

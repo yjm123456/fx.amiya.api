@@ -126,6 +126,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                         DistributeConsulationTarget=d.DistributeConsulationTarget,
                                                         DistributeConsulationCompleteRate=d.DistributeConsulationCompleteRate,
                                                         CumulativeDistributeConsulation=d.CumulativeDistributeConsulation,
+                                                        CluesTarget=d.CluesTarget,
+                                                        CumulativeClues=d.CumulativeClues,
+                                                        CluesCompleteRate=d.CluesCompleteRate
                                                     };
 
                 FxPageInfo<LiveAnchorMonthlyTargetAfterLivingVo> liveAnchorMonthlyTargetAfterLivingPageInfo = new FxPageInfo<LiveAnchorMonthlyTargetAfterLivingVo>();
@@ -210,6 +213,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.EffectivePerformanceTarget = addVo.EffectivePerformanceTarget;
                 addDto.PotentialPerformanceTarget = addVo.PotentialPerformanceTarget;
                 addDto.DistributeConsulationTarget = addVo.DistributeConsulationTarget;
+                addDto.CluesTarget= addVo.CluesTarget;
                 await _liveAnchorMonthlyTargetAfterLivingService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -316,6 +320,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorMonthlyTargetVo.CumulativeDistributeConsulation = liveAnchorMonthlyTarget.CumulativeDistributeConsulation;
                 liveAnchorMonthlyTargetVo.DistributeConsulationCompleteRate = liveAnchorMonthlyTarget.DistributeConsulationCompleteRate;
 
+                liveAnchorMonthlyTargetVo.CluesTarget=liveAnchorMonthlyTarget.CluesTarget;
+                liveAnchorMonthlyTargetVo.CumulativeClues = liveAnchorMonthlyTarget.CumulativeClues;
+                liveAnchorMonthlyTargetVo.CluesCompleteRate = liveAnchorMonthlyTarget.CluesCompleteRate;
+
                 return ResultData<LiveAnchorMonthlyTargetAfterLivingVo>.Success().AddData("liveAnchorMonthlyTargetAfterLivingInfo", liveAnchorMonthlyTargetVo);
             }
             catch (Exception ex)
@@ -362,7 +370,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.EffectivePerformanceTarget = updateVo.EffectivePerformanceTarget;
                 updateDto.PotentialPerformanceTarget = updateVo.PotentialPerformanceTarget;
                 updateDto.DistributeConsulationTarget=updateVo.DistributeConsulationTarget;
-
+                updateDto.CluesTarget=updateVo.CluesTarget;
                 await _liveAnchorMonthlyTargetAfterLivingService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

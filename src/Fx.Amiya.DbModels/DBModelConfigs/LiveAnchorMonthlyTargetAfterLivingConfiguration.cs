@@ -102,6 +102,9 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.CumulativeDistributeConsulation).HasColumnName("cumulative_distribute_consulation").HasColumnType("decimal(10,2)").IsRequired();
             builder.Property(t => t.DistributeConsulationCompleteRate).HasColumnName("distribute_consulation_completeRate").HasColumnType("decimal(10,2)").IsRequired();
 
+            builder.Property(t => t.CluesTarget).HasColumnName("clues_target").HasColumnType("int").IsRequired();
+            builder.Property(t => t.CumulativeClues).HasColumnName("cumulative_clues").HasColumnType("int").IsRequired();
+            builder.Property(t => t.CluesCompleteRate).HasColumnName("clues_complete_rate").HasColumnType("decimal(10,2)").IsRequired();
 
             builder.Property(t => t.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
 
