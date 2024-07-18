@@ -164,9 +164,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HistoryDataBase", "HistoryD
 		amiyadbHistory-2021.sql = amiyadbHistory-2021.sql
 		amiyadbHistory-2022.sql = amiyadbHistory-2022.sql
 		amiyadbHistory-2023.sql = amiyadbHistory-2023.sql
+		amiyadbHistory-2024.sql = amiyadbHistory-2024.sql
 		amiyadbUpdateHistory-2021.sql = amiyadbUpdateHistory-2021.sql
 		amiyadbUpdateHistory-2022.sql = amiyadbUpdateHistory-2022.sql
 		amiyadbUpdateHistory-2023.sql = amiyadbUpdateHistory-2023.sql
+		amiyadbUpdateHistory-2024.sql = amiyadbUpdateHistory-2024.sql
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fx.Amiya.SyncOrder.WeChatVideo", "Fx.Amiya.SyncOrder.WeChatVideo\Fx.Amiya.SyncOrder.WeChatVideo.csproj", "{F3FA4120-22B4-459E-8C3C-8A1B366DCC94}"
@@ -176,7 +178,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fx.Amiya.SyncFeishuMultidimensionalTable", "Fx.Amiya.SyncFeishuMultidimensionalTable\Fx.Amiya.SyncFeishuMultidimensionalTable.csproj", "{F9B345FB-764F-4540-A86B-746A1A0D7DBE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fx.Amiya.SyncFeishuMultidimensionalTable", "Fx.Amiya.SyncFeishuMultidimensionalTable\Fx.Amiya.SyncFeishuMultidimensionalTable.csproj", "{F9B345FB-764F-4540-A86B-746A1A0D7DBE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
