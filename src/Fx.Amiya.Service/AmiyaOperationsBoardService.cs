@@ -1017,7 +1017,7 @@ namespace Fx.Amiya.Service
                 groupData.OldCustomerUnitPrice = DecimalExtension.Division(groupData.OldCustomerPerformance, groupBaseData.OldCustomerDealCount).Value;
                 groupData.NewCustomerUnitPrice = DecimalExtension.Division(groupData.NewCustomerPerformance, groupBaseData.NewCustomerDealCount).Value;
                 groupData.CustomerUnitPrice = DecimalExtension.Division(groupData.NewCustomerPerformance + groupData.OldCustomerPerformance, groupBaseData.OldCustomerDealCount + groupBaseData.NewCustomerDealCount).Value;
-                groupData.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(groupData.NewCustomerDealCount, groupData.OldCustomerDealCount);
+                groupData.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(groupData.NewCustomerPerformance, groupData.OldCustomerPerformance);
                 dataList.Add(groupData);
             }
             foreach (var item in dataList)
@@ -1042,7 +1042,7 @@ namespace Fx.Amiya.Service
             data.OldCustomerUnitPrice = DecimalExtension.Division(data.OldCustomerPerformance, dataList.Sum(e => e.OldCustomerDealCount)).Value;
             data.NewCustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance, dataList.Sum(e => e.NewCustomerDealCount)).Value;
             data.CustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance + data.OldCustomerPerformance, data.DealCount).Value;
-            data.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(data.NewCustomerDealCount, data.OldCustomerDealCount);
+            data.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(data.NewCustomerPerformance, data.OldCustomerPerformance);
             data.Rate = 100;
 
             dataList.Add(data);
@@ -1081,7 +1081,7 @@ namespace Fx.Amiya.Service
                 data.OldCustomerUnitPrice = DecimalExtension.Division(data.OldCustomerPerformance, data.OldCustomerDealCount).Value;
                 data.NewCustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance, data.NewCustomerDealCount).Value;
                 data.CustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance + data.OldCustomerPerformance, data.DealCount).Value;
-                data.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(data.NewCustomerDealCount, data.OldCustomerDealCount);
+                data.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(data.NewCustomerPerformance, data.OldCustomerPerformance);
                 return data;
             }).ToList();
             FlowTransFormDataDto otherData = new FlowTransFormDataDto();
@@ -1102,7 +1102,7 @@ namespace Fx.Amiya.Service
             otherData.OldCustomerUnitPrice = DecimalExtension.Division(otherData.OldCustomerPerformance, otherData.OldCustomerDealCount).Value;
             otherData.NewCustomerUnitPrice = DecimalExtension.Division(otherData.NewCustomerPerformance, otherData.NewCustomerDealCount).Value;
             otherData.CustomerUnitPrice = DecimalExtension.Division(otherData.NewCustomerPerformance + otherData.OldCustomerPerformance, otherData.DealCount).Value;
-            otherData.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(otherData.NewCustomerDealCount, otherData.OldCustomerDealCount);
+            otherData.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(otherData.NewCustomerPerformance, otherData.OldCustomerPerformance);
             list.RemoveAll(e => e.GroupName == "其他");
             list.Add(otherData);
             foreach (var item in list)
@@ -1125,7 +1125,7 @@ namespace Fx.Amiya.Service
             data.OldCustomerUnitPrice = DecimalExtension.Division(data.OldCustomerPerformance, list.Sum(e => e.OldCustomerDealCount)).Value;
             data.NewCustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance, list.Sum(e => e.NewCustomerDealCount)).Value;
             data.CustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance + data.OldCustomerPerformance, data.DealCount).Value;
-            data.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(data.NewCustomerDealCount, data.OldCustomerDealCount);
+            data.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(data.NewCustomerPerformance, data.OldCustomerPerformance);
             data.Rate = 100;
             var res = list.OrderByDescending(e => e.DistributeConsulationNum).ToList();
             res.Add(data);

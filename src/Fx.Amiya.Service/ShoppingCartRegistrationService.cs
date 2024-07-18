@@ -2045,7 +2045,7 @@ namespace Fx.Amiya.Service
                     RecordDate = e.RecordDate,
                     IsAddWeChat = e.IsAddWeChat,
                 }).ToList();
-            var phoneList = baseData.Select(e => e.Phone).Distinct().ToList();
+            var phoneList = baseData.Select(e => e.Phone).ToList();
             var sendC = dalContentPlatformOrder.GetAll()
               .Where(o => contentPlatformIds == null || contentPlatformIds.Contains(o.ContentPlateformId))
               .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
@@ -2093,7 +2093,7 @@ namespace Fx.Amiya.Service
             var assistantNameList = (await _amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(nameList.Select(e => e.Id).ToList())).Select(e => e.Id);
             var baseData = dalShoppingCartRegistration.GetAll()
                 .Where(e => contentPlatformIds == null || contentPlatformIds.Contains(e.ContentPlatFormId))
-                .Where(e => e.AssignEmpId != null && e.RecordDate >= startDate && e.RecordDate < endDate & liveanchorIds.Contains(e.BaseLiveAnchorId))
+                .Where(e => e.AssignEmpId != null && e.RecordDate >= startDate && e.RecordDate < endDate && liveanchorIds.Contains(e.BaseLiveAnchorId))
                 .Select(e => new
                 {
                     AssignEmpId = e.AssignEmpId,
