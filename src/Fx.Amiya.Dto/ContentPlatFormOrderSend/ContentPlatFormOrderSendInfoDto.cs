@@ -172,5 +172,29 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 是否是重单可深度订单
         /// </summary>
         public bool IsRepeatProfundityOrder { get; set; }
+        /// <summary>
+        /// 是否为辅助订单
+        /// </summary>
+        public bool IsSupportOrder { get; set; }
+
+        /// <summary>
+        /// 辅助客服
+        /// </summary>
+        public int SupportEmpId { get; set; }
+
+        /// <summary>
+        /// 辅助客服名称
+        /// </summary>
+        public string SupportEmpName { get; set; }
+
+        /// <summary>
+        /// 归属客服
+        /// </summary>
+        public int BelongEmpId { get; set; }
+
+        /// <summary>
+        /// 归属客服名称
+        /// </summary>
+        public string BelongEmpName { get; set; }
     }
 }

@@ -152,7 +152,7 @@ namespace Fx.Amiya.Service
         public async Task<ContentPlatFormSendOrderInfoSimpleDto> GetSimpleByIdAsync(int id)
         {
             var sendOrderInfo = await _dalContentPlatformOrderSend.GetAll()
-                .Include(e => e.ContentPlatformOrder).ThenInclude(e=>e.ContentPlatformOrderDealInfoList).SingleOrDefaultAsync(e => e.Id == id);
+                .Include(e => e.ContentPlatformOrder).ThenInclude(e => e.ContentPlatformOrderDealInfoList).SingleOrDefaultAsync(e => e.Id == id);
             if (sendOrderInfo == null)
                 throw new Exception();
             ContentPlatFormSendOrderInfoSimpleDto sendOrderInfoDto = new ContentPlatFormSendOrderInfoSimpleDto();
@@ -164,10 +164,11 @@ namespace Fx.Amiya.Service
             sendOrderInfoDto.SendBy = sendOrderInfo.Sender;
             sendOrderInfoDto.IsMainHospital = sendOrderInfo.IsMainHospital;
             sendOrderInfoDto.OtherHospitalId = new List<int>();
-            if (sendOrderInfo.IsMainHospital) {
+            if (sendOrderInfo.IsMainHospital)
+            {
                 sendOrderInfoDto.OtherHospitalId = _dalContentPlatformOrderSend.GetAll().Where(e => e.ContentPlatformOrderId == sendOrderInfo.ContentPlatformOrderId && e.IsMainHospital == false).Select(e => e.HospitalId).ToList();
             }
-            sendOrderInfoDto.IsThenTime = sendOrderInfo.ContentPlatformOrder.DealDate.HasValue ? (DateTime.Now > sendOrderInfo.ContentPlatformOrder.DealDate.Value.AddDays(180) ? false : true): false;
+            sendOrderInfoDto.IsThenTime = sendOrderInfo.ContentPlatformOrder.DealDate.HasValue ? (DateTime.Now > sendOrderInfo.ContentPlatformOrder.DealDate.Value.AddDays(180) ? false : true) : false;
             sendOrderInfoDto.HasDealInfo = sendOrderInfo.ContentPlatformOrder.ContentPlatformOrderDealInfoList.Count() > 0;
             return sendOrderInfoDto;
         }
@@ -392,7 +393,10 @@ namespace Fx.Amiya.Service
                                 ToHospitalDate = d.ContentPlatformOrder.ToHospitalDate,
                                 ToHospitalType = d.ContentPlatformOrder.ToHospitalType,
                                 ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ContentPlatformOrder.ToHospitalType),
-                                IsRepeatProfundityOrder = d.ContentPlatformOrder.IsRepeatProfundityOrder
+                                IsRepeatProfundityOrder = d.ContentPlatformOrder.IsRepeatProfundityOrder,
+                                IsSupportOrder = d.ContentPlatformOrder.IsSupportOrder,
+                                SupportEmpId = d.ContentPlatformOrder.SupportEmpId,
+                                BelongEmpId = d.ContentPlatformOrder.BelongEmpId.HasValue ? d.ContentPlatformOrder.BelongEmpId.Value : 0,
                             };
             FxPageInfo<ContentPlatFormOrderSendInfoDto> sendOrderPageInfo = new FxPageInfo<ContentPlatFormOrderSendInfoDto>();
             sendOrderPageInfo.TotalCount = await sendOrder.CountAsync();
@@ -402,6 +406,17 @@ namespace Fx.Amiya.Service
                 var baseInfo = await customerBaseInfoService.GetByPhoneAsync(x.Phone);
                 x.City = x.OrderStatusIntType > ((int)ContentPlateFormOrderStatus.SendOrder) && x.OrderStatusIntType != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? baseInfo.City : "****";
                 x.WeChatNo = x.OrderStatusIntType > ((int)ContentPlateFormOrderStatus.SendOrder) && x.OrderStatusIntType != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? baseInfo.WechatNumber : "****";
+
+                if (x.SupportEmpId != 0)
+                {
+                    var empInfo = await _amiyaEmployeeService.GetByIdAsync(x.SupportEmpId);
+                    x.SupportEmpName = empInfo.Name;
+                }
+                if (x.BelongEmpId != 0)
+                {
+                    var empInfo = await _amiyaEmployeeService.GetByIdAsync(x.BelongEmpId);
+                    x.BelongEmpName = empInfo.Name;
+                }
 
                 //var departmentInfo = await amiyaDepartmentService.GetByIdAsync(x.DepartmentId);
                 x.DepartmentName = x.OrderStatusIntType > ((int)ContentPlateFormOrderStatus.SendOrder) && x.OrderStatusIntType != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? "" : "****";
@@ -994,7 +1009,7 @@ namespace Fx.Amiya.Service
             return result;
         }
 
-  
+
         /// <summary>
         /// 获取选取时间内已派单数据
         /// </summary>
@@ -1002,9 +1017,9 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<SendContentPlatformOrderDto>> GetTodayOrderSendDataAsync(QueryHospitalTransformDataDto query)
         {
-            
+
             var orders = from d in _dalContentPlatformOrderSend.GetAll().Include(x => x.HospitalInfo).ThenInclude(x => x.CooperativeHospitalCity)
-                         where d.SendDate >= query.StartDate && d.SendDate < query.EndDate&&(query.LiveAnchorIds.Count==0||query.LiveAnchorIds.Contains(d.ContentPlatformOrder.LiveAnchor.LiveAnchorBaseId))
+                         where d.SendDate >= query.StartDate && d.SendDate < query.EndDate && (query.LiveAnchorIds.Count == 0 || query.LiveAnchorIds.Contains(d.ContentPlatformOrder.LiveAnchor.LiveAnchorBaseId))
                          select new SendContentPlatformOrderDto
                          {
                              OrderId = d.ContentPlatformOrderId,
@@ -1014,7 +1029,7 @@ namespace Fx.Amiya.Service
                              City = d.HospitalInfo.CooperativeHospitalCity.Name,
                              SendDate = d.SendDate,
                          };
-            var result =await orders.ToListAsync();
+            var result = await orders.ToListAsync();
             return result;
         }
 

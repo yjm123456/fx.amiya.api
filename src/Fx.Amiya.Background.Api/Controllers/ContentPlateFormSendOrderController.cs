@@ -71,10 +71,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             sendOrderInfoSimpleVo.AppointmentDate = sendOrderInfo.AppointmentDate;
             sendOrderInfoSimpleVo.IsUncertainDate = sendOrderInfo.IsUncertainDate;
             sendOrderInfoSimpleVo.IsMainHospital = sendOrderInfo.IsMainHospital;
-            sendOrderInfoSimpleVo.OtherHospitalId=sendOrderInfo.OtherHospitalId;
-            sendOrderInfoSimpleVo.SendBy=sendOrderInfo.SendBy;
-            sendOrderInfoSimpleVo.IsThenTime=sendOrderInfo.IsThenTime;
-            sendOrderInfoSimpleVo.HasDealInfo=sendOrderInfo.HasDealInfo;
+            sendOrderInfoSimpleVo.OtherHospitalId = sendOrderInfo.OtherHospitalId;
+            sendOrderInfoSimpleVo.SendBy = sendOrderInfo.SendBy;
+            sendOrderInfoSimpleVo.IsThenTime = sendOrderInfo.IsThenTime;
+            sendOrderInfoSimpleVo.HasDealInfo = sendOrderInfo.HasDealInfo;
             return ResultData<ContentPlatFormSendOrderInfoSimpleVo>.Success().AddData("sendOrderInfo", sendOrderInfoSimpleVo);
         }
 
@@ -138,7 +138,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 LiveAnchor = d.LiveAnchor,
                                 ToHospitalTypeText = d.ToHospitalTypeText,
                                 CheckState = d.CheckState,
-                                IsRepeatProfundityOrder = d.IsRepeatProfundityOrder
+                                IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
+                                IsSupportOrder = d.IsSupportOrder,
+                                SupportEmpName = d.SupportEmpName,
+                                BelongEmpName = d.BelongEmpName,
+
                             };
 
             FxPageInfo<ContentPlatFormOrderSendInfoVo> sendOrderPageInfo = new FxPageInfo<ContentPlatFormOrderSendInfoVo>();
