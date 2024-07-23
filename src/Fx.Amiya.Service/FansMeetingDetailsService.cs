@@ -279,6 +279,11 @@ namespace Fx.Amiya.Service
                 record.IsDeal = generate.IsDeal;
                 record.IsToHospital = generate.IsToHospital;
                 record.CumulativeDealPrice = generate.DealPrice;
+                record.UnDealReason = generate.UnDealReason;
+                record.FansMeetingProject = generate.FansMeetingProject;
+                record.FollowUpContent = generate.FollowUpContent;
+                record.NextAppointmentDate = generate.NextAppointmentDate;
+                record.IsNeedHospitalHelp = generate.IsNeedHospitalHelp;
                 record.UpdateDate = DateTime.Now;
                 await dalFansMeetingDetails.UpdateAsync(record, true);
             }

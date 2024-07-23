@@ -99,6 +99,26 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 粉丝见面会id
         /// </summary>
         public string FansMeetingId { get; set; }
+
+        /// <summary>
+        /// 见面会铺垫项目
+        /// </summary>
+        public string FansMeetingProject { get; set; }
+
+        /// <summary>
+        /// 追踪内容
+        /// </summary>
+        public string FollowUpContent { get; set; }
+
+        /// <summary>
+        /// 下次邀约时间
+        /// </summary>
+        public DateTime? NextAppointmentDate { get; set; }
+        /// <summary>
+        /// 是否需要机构协助邀约
+        /// </summary>
+        public bool IsNeedHospitalHelp { get; set; }
+
         /// <summary>
         /// 成交明细
         /// </summary>

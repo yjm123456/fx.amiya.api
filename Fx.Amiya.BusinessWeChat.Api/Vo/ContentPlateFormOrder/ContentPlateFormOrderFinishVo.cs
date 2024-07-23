@@ -94,6 +94,26 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder
         public string FansMeetingId { get; set; }
 
         /// <summary>
+        /// 见面会铺垫项目
+        /// </summary>
+        public string FansMeetingProject { get; set; }
+
+        /// <summary>
+        /// 追踪内容
+        /// </summary>
+        public string FollowUpContent { get; set; }
+
+        /// <summary>
+        /// 下次邀约时间
+        /// </summary>
+        public DateTime? NextAppointmentDate { get; set; }
+        /// <summary>
+        /// 是否需要机构协助邀约
+        /// </summary>
+        public bool IsNeedHospitalHelp { get; set; }
+
+
+        /// <summary>
         /// 邀约凭证
         /// </summary>
         public List<string> InvitationDocuments { get; set; }

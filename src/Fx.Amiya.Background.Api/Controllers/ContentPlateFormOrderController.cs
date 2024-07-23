@@ -1414,6 +1414,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.ConsumptionType = updateVo.ConsumptionType;
                 updateDto.InvitationDocuments = updateVo.InvitationDocuments;
                 updateDto.FansMeetingId = updateVo.FansMeetingId;
+
+                updateDto.FansMeetingProject = updateVo.FansMeetingProject;
+                updateDto.FollowUpContent = updateVo.FollowUpContent;
+                updateDto.NextAppointmentDate = updateVo.NextAppointmentDate;
+                updateDto.IsNeedHospitalHelp = updateVo.IsNeedHospitalHelp;
                 List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
                 if (updateDto.IsFinish == true)
                 {
@@ -1441,6 +1446,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     }
                 }
                 updateDto.AddContentPlatFormOrderDealDetailsDtoList = addContentPlatFormOrderDealDetailsDtos;
+
                 await _orderService.FinishContentPlateFormOrderAsync(updateDto);
                 return ResultData.Success();
             }
@@ -1509,6 +1515,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.InvitationDocuments = updateVo.InvitationDocuments;
                 updateDto.ConsumptionType = updateVo.ConsumptionType;
                 updateDto.FansMeetingId = updateVo.FansMeetingId;
+                updateDto.FansMeetingProject = updateVo.FansMeetingProject;
+                updateDto.FollowUpContent = updateVo.FollowUpContent;
+                updateDto.NextAppointmentDate = updateVo.NextAppointmentDate;
+                updateDto.IsNeedHospitalHelp = updateVo.IsNeedHospitalHelp;
                 updateDto.EmpId = employeeId;
                 List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
                 if (updateDto.IsFinish == true)

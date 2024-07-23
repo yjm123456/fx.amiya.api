@@ -995,7 +995,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         ShortVideo = 0,
         /// <summary>
-        /// 直播前
+        /// 直播间
         /// </summary>
         LiveRoom = 1,
         /// <summary>
@@ -1003,7 +1003,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         FansGroup = 2,
         /// <summary>
-        /// 私信
+        /// 主账号私信
         /// </summary>
         PrivateMessage = 3,
         /// <summary>
@@ -1033,6 +1033,10 @@ namespace Fx.Amiya.IService
         /// </summary>
         LivingRoomScreen = 9,
 
+        /// <summary>
+        /// 助理号私信
+        /// </summary>
+        CustomerServicePrivateMessage = 10
     }
 
 

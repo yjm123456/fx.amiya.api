@@ -2775,6 +2775,11 @@ namespace Fx.Amiya.Service
                     generate.IsToHospital = input.IsToHospital;
                     generate.IsDeal = input.IsFinish;
                     generate.DealPrice = input.DealAmount ?? 0m;
+                    generate.UnDealReason = input.UnDealReason;
+                    generate.FansMeetingProject = input.FansMeetingProject;
+                    generate.FollowUpContent = input.FollowUpContent;
+                    generate.NextAppointmentDate = input.NextAppointmentDate;
+                    generate.IsNeedHospitalHelp = input.IsNeedHospitalHelp;
                     await fansMeetingDetailsService.GenerateDealInfoAsync(generate);
                 }
 
@@ -3021,6 +3026,12 @@ namespace Fx.Amiya.Service
                     generate.IsDeal = input.IsFinish;
                     generate.DealPrice = input.DealAmount ?? 0m;
                     generate.OriginalDealPrice = dealInfo.Price;
+
+                    generate.UnDealReason = input.UnDealReason;
+                    generate.FansMeetingProject = input.FansMeetingProject;
+                    generate.FollowUpContent = input.FollowUpContent;
+                    generate.NextAppointmentDate = input.NextAppointmentDate;
+                    generate.IsNeedHospitalHelp = input.IsNeedHospitalHelp;
                     await fansMeetingDetailsService.GenerateDealInfoAsync(generate);
                 }
 

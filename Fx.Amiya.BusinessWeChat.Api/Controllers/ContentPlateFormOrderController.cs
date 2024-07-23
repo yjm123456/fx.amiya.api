@@ -718,6 +718,11 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
                 updateDto.EmpId = Convert.ToInt32(employee.Id);
                 updateDto.FansMeetingId = updateVo.FansMeetingId;
+
+                updateDto.FansMeetingProject = updateVo.FansMeetingProject;
+                updateDto.FollowUpContent = updateVo.FollowUpContent;
+                updateDto.NextAppointmentDate = updateVo.NextAppointmentDate;
+                updateDto.IsNeedHospitalHelp = updateVo.IsNeedHospitalHelp;
                 //企业微信新版本发布后退回
                 updateDto.ConsumptionType = updateVo.ConsumptionType;
                 //updateDto.ConsumptionType = (int)ConsumptionType.Deal;

@@ -34,3 +34,13 @@ ALTER TABLE `tbl_content_platform_order`
 
 
 ------------------------------------王健 2024/7/23 END--------------------------------------
+
+------------------------------------余建明 2024/7/23 BEGIN--------------------------------------
+
+ALTER TABLE `amiyadb`.`tbl_fans_meeting_details` 
+ADD COLUMN `un_deal_reason` VARCHAR(500) NULL AFTER `cumulative_deal_price`,
+ADD COLUMN `fans_meeting_project` VARCHAR(500) NULL AFTER `un_deal_reason`,
+ADD COLUMN `follow_up_content` VARCHAR(500) NULL AFTER `fans_meeting_project`,
+ADD COLUMN `next_appointment_date` DATETIME NULL AFTER `follow_up_content`,
+ADD COLUMN `is_need_hospital_help` BIT(1) NOT NULL AFTER `next_appointment_date`;
+------------------------------------余建明 2024/7/23 END--------------------------------------

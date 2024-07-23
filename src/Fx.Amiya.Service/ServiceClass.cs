@@ -790,7 +790,7 @@ namespace Fx.Amiya.Service
                     sourceText = "粉丝群";
                     break;
                 case 3:
-                    sourceText = "私信";
+                    sourceText = "主账号私信";
                     break;
                 case 4:
                     sourceText = "智能AI";
@@ -809,6 +809,9 @@ namespace Fx.Amiya.Service
                     break;
                 case 9:
                     sourceText = "直播间公屏";
+                    break;
+                case 10:
+                    sourceText = "助理号私信";
                     break;
                 default:
                     sourceText = "";

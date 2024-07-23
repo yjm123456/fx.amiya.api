@@ -809,7 +809,6 @@ namespace Fx.Amiya.Service
                         //快手
                         contentPlatFormIds.Add("7a9d6564-e273-4847-9047-e7bbb7c6805c");
                         channels.Add((int)BelongChannel.LiveBefore);
-                        channels.Add((int)BelongChannel.LiveAfter);
                         res.Add(contentPlatFormIds, channels);
                         break;
                     case 5:
@@ -852,6 +851,19 @@ namespace Fx.Amiya.Service
                         contentPlatFormIds.Add("4e4e9564-f6c3-47b6-a7da-e4518bab66a1");
                         //视频号
                         contentPlatFormIds.Add("9196b247-1ab9-4d0c-a11e-a1ef09019878");
+                        //快手
+                        contentPlatFormIds.Add("7a9d6564-e273-4847-9047-e7bbb7c6805c");
+                        channels.Add((int)BelongChannel.LiveAfter);
+                        res.Add(contentPlatFormIds, channels);
+                        break;
+
+                    case 10:
+                        //抖音
+                        contentPlatFormIds.Add("4e4e9564-f6c3-47b6-a7da-e4518bab66a1");
+                        //视频号
+                        contentPlatFormIds.Add("9196b247-1ab9-4d0c-a11e-a1ef09019878");
+                        //小红书
+                        contentPlatFormIds.Add("317c03b8-aff9-4961-8392-fc44d04b1725");
                         //快手
                         contentPlatFormIds.Add("7a9d6564-e273-4847-9047-e7bbb7c6805c");
                         channels.Add((int)BelongChannel.LiveAfter);
