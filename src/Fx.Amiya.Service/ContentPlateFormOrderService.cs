@@ -559,6 +559,7 @@ namespace Fx.Amiya.Service
                                   BelongEmpId = o.BelongEmpId.HasValue ? o.BelongEmpId.Value : 0,
                                   ThumbPictureUrl = o.AmiyaGoodsDemand.ThumbPictureUrl,
                                   ConsultingContent = o.ConsultingContent,
+                                  ConsultingContent2=o.ConsultingContent2,
                                   CreateDate = o.CreateDate,
                                   CustomerName = ServiceClass.GetIncompleteCustomerName(o.CustomerName),
                                   Phone = config.EnablePhoneEncrypt == true ? ServiceClass.GetIncompletePhone(o.Phone) : o.Phone,
@@ -1432,7 +1433,8 @@ namespace Fx.Amiya.Service
                                 ReturnBackDate = d.ReturnBackDate,
                                 ReturnBackPrice = d.ReturnBackPrice,
                                 CommissionRatio = d.CommissionRatio,
-                                CustomerServiceSettlePrice = d.CustomerServiceSettlePrice
+                                CustomerServiceSettlePrice = d.CustomerServiceSettlePrice,
+                                ConsultingContent2=d.ConsultingContent2
                             };
 
 

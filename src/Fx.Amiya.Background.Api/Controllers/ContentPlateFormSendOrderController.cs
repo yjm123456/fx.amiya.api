@@ -463,7 +463,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             CheckState = d.CheckState,
                                             OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
                                             IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
-                                            IsMainHospital = d.IsMainHospital
+                                            IsMainHospital = d.IsMainHospital,
+                                            ConsultingContent2=d.ConsultingContent2
                                         };
             FxPageInfo<SendContentPlatformOrderVo> pageInfo = new FxPageInfo<SendContentPlatformOrderVo>();
             pageInfo.TotalCount = orders.TotalCount;

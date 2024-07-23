@@ -771,7 +771,8 @@ namespace Fx.Amiya.Service
                                             OrderSourceText = ServiceClass.GerContentPlatFormOrderSourceText(d.ContentPlatformOrder.OrderSource.Value),
                                             AcceptConsulting = d.ContentPlatformOrder.AcceptConsulting,
                                             IsRepeatProfundityOrder = d.ContentPlatformOrder.IsRepeatProfundityOrder,
-                                            IsMainHospital = d.IsMainHospital
+                                            IsMainHospital = d.IsMainHospital,
+                                            ConsultingContent2=d.ContentPlatformOrder.ConsultingContent2
                                         };
 
             FxPageInfo<SendContentPlatformOrderDto> pageInfo = new FxPageInfo<SendContentPlatformOrderDto>();

@@ -77,9 +77,13 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// </summary>
         public string LateProjectStage { get; set; }
         /// <summary>
-        /// 咨询内容
+        /// 主派咨询内容
         /// </summary>
         public string ConsultingContent { get; set; }
+        /// <summary>
+        /// 次派咨询内容
+        /// </summary>
+        public string ConsultingContent2 { get; set; }
 
         /// <summary>
         /// 订单类型
