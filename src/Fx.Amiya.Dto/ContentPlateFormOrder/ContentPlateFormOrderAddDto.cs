@@ -115,6 +115,10 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// </summary>
         public string ConsultingContent { get; set; }
         /// <summary>
+        /// 次派咨询内容
+        /// </summary>
+        public string ConsultingContent2 { get; set; }
+        /// <summary>
         /// 后期项目铺垫
         /// </summary>
         public string LateProjectStage { get; set; }

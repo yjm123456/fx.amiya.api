@@ -42,7 +42,14 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         public string GoodsDepartmentId { get; set; }
         public string DepartmentName { get; set; }
         public string ThumbPictureUrl { get; set; }
+        /// <summary>
+        /// 主派咨询内容
+        /// </summary>
         public string ConsultingContent { get; set; }
+        /// <summary>
+        /// 次派咨询内容
+        /// </summary>
+        public string ConsultingContent2 { get; set; }
         public int OrderStatus { get; set; }
         public string OrderStatusText { get; set; }
         public bool IsToHospital { get; set; }

@@ -39,9 +39,13 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         public string GoodsName { get; set; }
         /// <summary>
-        /// 咨询内容
+        /// 主派咨询内容
         /// </summary>
         public string ConsultingContent { get; set; }
+        /// <summary>
+        /// 次派咨询内容
+        /// </summary>
+        public string ConsultingContent2 { get; set; }
         /// <summary>
         /// 订单状态
         /// </summary>

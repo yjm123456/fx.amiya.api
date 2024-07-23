@@ -121,9 +121,13 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         public decimal? DepositAmount { get; set; }
         /// <summary>
-        /// 咨询内容
+        /// 主派咨询内容
         /// </summary>
         public string ConsultingContent { get; set; }
+        /// <summary>
+        /// 辅派咨询内容
+        /// </summary>
+        public string ConsultingContent2 { get; set; }
 
         /// <summary>
         /// 后期项目铺垫

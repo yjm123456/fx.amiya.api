@@ -932,8 +932,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             result.ConsultationCardConsumed = cardConsumed.Where(x => x.ConsultationType == (int)ShoppingCartConsultationType.Picture).Count();
             result.ConsultationCardConsumed2 = cardConsumed.Where(x => x.ConsultationType == (int)ShoppingCartConsultationType.Video).Count();
             result.ActivateHistoricalConsultation = cardConsumed.Where(x => x.RecordDate.Month != x.ConsultationDate.Value.Month).Count();
-            var addWeChatOrSendOrderInfo = await shoppingCartRegistrationService.GetDialyAddWeChatInfoByLiveAnchorId(liveAnchorId, recordDate);
-            result.AddWechatNum = addWeChatOrSendOrderInfo.Count();
+            var addWeChatOrSendOrderInfo = await shoppingCartRegistrationService.GetAfterLiveDataByLiveAnchorIdAsync(liveAnchorId, recordDate);
+            result.AddWechatNum = addWeChatOrSendOrderInfo.AddWechatCount;
+            result.DistributeConsulation = addWeChatOrSendOrderInfo.DistributeConsulation;
+            result.Clues = addWeChatOrSendOrderInfo.ClueCount;
             var sendOrderInfo = await contentPlatformOrderSendService.GetTodaySendOrderByLiveAnchorIdAsync(liveAnchorId, recordDate);
 
             result.SendOrderNum = sendOrderInfo.Count();
@@ -962,6 +964,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             result.MiniVanBadReviews = shoppingCardBadViewInfo.Count();
             result.EffectivePerformance = toHospitalAndDealInfo.Where(x => x.IsDeal == true && x.AddOrderPrice > 0).Sum(x => x.Price);
             result.PotentialPerformance = toHospitalAndDealInfo.Where(x => x.IsDeal == true && x.AddOrderPrice <= 0).Sum(x => x.Price);
+            result.DistributeConsulation = addWeChatOrSendOrderInfo.DistributeConsulation;
+            result.Clues = addWeChatOrSendOrderInfo.ClueCount;
             return result;
         }
 

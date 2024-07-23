@@ -36,9 +36,13 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend
         public string ConsultationTypeText { get; set; }
 
         /// <summary>
-        /// 咨询内容
+        /// 主派咨询内容
         /// </summary>
         public string ConsultingContent { get; set; }
+        /// <summary>
+        /// 次派咨询内容
+        /// </summary>
+        public string ConsultingContent2 { get; set; }
         /// <summary>
         /// 归属客服
         /// </summary>

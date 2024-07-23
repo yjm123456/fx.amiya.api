@@ -129,6 +129,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 addDto.CustomerSource = addVo.CustomerSource;
                 addDto.CustomerType = addVo.CustomerType;
                 addDto.BelongChannel = addVo.BelongChannel;
+                addDto.ConsultingContent2 = addVo.ConsultingContent2;
                 await _orderService.AddContentPlateFormOrderAsync(addDto);
 
 
@@ -485,6 +486,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             orderUpdateInfo.CustomerSourceText = order.CustomerSourceText;
             orderUpdateInfo.BelongChannel=order.BelongChannel;
             orderUpdateInfo.BelongChannelText = order.BelongChannelText;
+            orderUpdateInfo.ConsultingContent2 = order.ConsultingContent2;
             return ResultData<ContentPlateFormOrderVo>.Success().AddData("orderInfo", orderUpdateInfo);
         }
 
@@ -550,6 +552,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             updateDto.CustomerSource = updateVo.CustomerSource;
             updateDto.CustomerType = updateVo.CustomerType;
             updateDto.BelongChannel=updateVo.BelongChannel;
+            updateDto.ConsultingContent2=updateVo.ConsultingContent2;
             await _orderService.UpdateContentPlateFormOrderAsync(updateDto);
 
 

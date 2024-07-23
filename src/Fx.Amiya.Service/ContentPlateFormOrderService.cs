@@ -243,6 +243,7 @@ namespace Fx.Amiya.Service
                 order.UnDealReason = "";
                 order.LateProjectStage = input.LateProjectStage;
                 order.ConsultingContent = input.ConsultingContent;
+                order.ConsultingContent2 = input.ConsultingContent2;
                 order.Remark = input.Remark;
                 order.CheckBy = 0;
                 order.CheckPrice = 0.00M;
@@ -422,7 +423,8 @@ namespace Fx.Amiya.Service
                                 ReturnBackDate = d.ReturnBackDate,
                                 IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
                                 BelongChannel = d.BelongChannel,
-                                BelongChannelText = ServiceClass.BelongChannelText(d.BelongChannel)
+                                BelongChannelText = ServiceClass.BelongChannelText(d.BelongChannel),
+                                ConsultingContent2=d.ConsultingContent2
                             };
 
 
@@ -1706,7 +1708,8 @@ namespace Fx.Amiya.Service
                                 SendDate = d.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate).FirstOrDefault().SendDate,
                                 Sender = d.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate).FirstOrDefault().AmiyaEmployee.Name,
                                 SendHospital = d.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate).FirstOrDefault().HospitalInfo.Name,
-                                IsRepeatProfundityOrder = d.IsRepeatProfundityOrder
+                                IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
+                                ConsultingContent2=d.ConsultingContent2
                             };
                 var result = await order.OrderByDescending(e => e.CreateDate).ToListAsync();
                 foreach (var x in result)
@@ -1839,6 +1842,7 @@ namespace Fx.Amiya.Service
             result.DealPictureUrl = order.DealPictureUrl;
             result.ToHospitalDate = order.ToHospitalDate;
             result.IsReturnBackPrice = order.IsReturnBackPrice;
+            result.ConsultingContent2 = order.ConsultingContent2;
             if (result.IsReturnBackPrice == true)
             {
                 result.ReturnBackPrice = order.ReturnBackPrice;
@@ -2000,6 +2004,7 @@ namespace Fx.Amiya.Service
                                 OrderTypeText = ServiceClass.GetContentPlateFormOrderTypeText((byte)d.OrderType),
                                 ContentPlatformName = d.Contentplatform.ContentPlatformName,
                                 ConsultingContent = d.ConsultingContent,
+                                ConsultingContent2=d.ConsultingContent2,
                                 LateProjectStage = d.LateProjectStage,
                                 CreateDate = d.CreateDate,
                                 LiveAnchorName = d.LiveAnchor.HostAccountName,
@@ -2154,6 +2159,8 @@ namespace Fx.Amiya.Service
                 order.DepositAmount = input.DepositAmount;
                 order.ConsultationEmpId = input.ConsultationEmpId;
                 order.ConsultingContent = input.ConsultingContent;
+                // 次派咨询内容
+                order.ConsultingContent2 = input.ConsultingContent2;
                 order.UpdateDate = DateTime.Now;
                 order.Remark = input.Remark;
                 order.LateProjectStage = input.LateProjectStage;

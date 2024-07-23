@@ -169,6 +169,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.CustomerType = addVo.CustomerType;
                 addDto.CustomerSource = addVo.CustomerSource;
                 addDto.BelongChannel = addVo.BelongChannel;
+                addDto.ConsultingContent2 = addVo.ConsultingContent2;
                 await _orderService.AddContentPlateFormOrderAsync(addDto);
 
 
@@ -319,7 +320,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     resultVo.ReturnBackPrice = x.ReturnBackPrice;
                     resultVo.OtherContentPlatFormOrderId = x.OtherContentPlatFormOrderId;
                     resultVo.IsRepeatProfundityOrder = x.IsRepeatProfundityOrder;
-
+                    resultVo.ConsultingContent2 = x.ConsultingContent2;
                     //    if (x.BelongEmpId != 0)
                     //    {
                     //        var empInfo = await amiyaEmployeeService.GetByIdAsync(x.BelongEmpId.Value);
@@ -441,6 +442,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   LateProjectStage = d.LateProjectStage,
                                   UnSendReason = d.UnSendReason,
                                   OrderSourceText = d.OrderSourceText,
+                                  ConsultingContent2=d.ConsultingContent2
                               };
             FxPageInfo<UnContentPlateFormSendOrderInfoVo> pageInfo = new FxPageInfo<UnContentPlateFormSendOrderInfoVo>();
             pageInfo.TotalCount = q.TotalCount;
@@ -680,7 +682,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 //ReturnBackPrice = d.ReturnBackPrice,
                                 OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
                                 SendHospital = d.SendHospital,
-                                IsRepeatProfundityOrder = d.IsRepeatProfundityOrder == true ? "是" : "否"
+                                IsRepeatProfundityOrder = d.IsRepeatProfundityOrder == true ? "是" : "否",
+                                ConsultingContent2=d.ConsultingContent2
                             };
                 exportSendOrder = order.ToList();
                 foreach (var x in exportSendOrder)
@@ -803,7 +806,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
                                 CommissionRatio = d.CommissionRatio,
                                 IsOldCustomer = d.IsOldCustomer == false ? "新客业绩" : "老客业绩",
-                                CustomerServiceSettlePrice = d.CustomerServiceSettlePrice
+                                CustomerServiceSettlePrice = d.CustomerServiceSettlePrice,
+                                ConsultingContent2=d.ConsultingContent2
                             };
                 FxPageInfo<ContentPlatFormCompleteOrderInfoVo> orderPageInfo = new FxPageInfo<ContentPlatFormCompleteOrderInfoVo>();
                 orderPageInfo.TotalCount = q.TotalCount;
@@ -944,6 +948,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderUpdateInfo.CustomerSourceText = order.CustomerSourceText;
             orderUpdateInfo.BelongChannel=order.BelongChannel;
             orderUpdateInfo.BelongChannelText = order.BelongChannelText;
+            orderUpdateInfo.ConsultingContent2 = order.ConsultingContent2;
             return ResultData<ContentPlateFormOrderVo>.Success().AddData("orderInfo", orderUpdateInfo);
         }
 
@@ -1005,6 +1010,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 LiveAnchorName = d.LiveAnchorName,
                                 GoodsName = d.GoodsName,
                                 ConsultingContent = d.ConsultingContent,
+                                ConsultingContent2= d.ConsultingContent2,
                                 DealAmount = d.DealAmount,
                                 DepositAmount = d.DepositAmount.HasValue ? d.DepositAmount : 0,
                                 OrderTypeText = d.OrderTypeText,
@@ -1013,7 +1019,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 AppointmentDate = d.AppointmentDate,
                                 UnDealReason = d.UnDealReason,
                                 LateProjectStage = d.LateProjectStage,
-                                Remark = d.Remark
+                                Remark = d.Remark,
+                                
                             };
 
                 FxPageInfo<ContentPlatFormOrderInfoSimpleVo> orderPageInfo = new FxPageInfo<ContentPlatFormOrderInfoSimpleVo>();
@@ -1078,6 +1085,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.CustomerType = updateVo.CustomerType;
             updateDto.CustomerSource = updateVo.CustomerSource;
             updateDto.BelongChannel=updateVo.BelongChannel;
+            updateDto.ConsultingContent2=updateVo.ConsultingContent2;
             await _orderService.UpdateContentPlateFormOrderAsync(updateDto);
 
 

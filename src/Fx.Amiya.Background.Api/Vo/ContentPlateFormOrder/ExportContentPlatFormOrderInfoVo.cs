@@ -72,10 +72,15 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         public string GoodsName { get; set; }
 
         /// <summary>
-        /// 咨询内容
+        /// 主派咨询内容
         /// </summary>
-        [Description("咨询内容")]
+        [Description("主派咨询内容")]
         public string ConsultingContent { get; set; }
+        /// <summary>
+        /// 次派咨询内容
+        /// </summary>
+        [Description("次派咨询内容")]
+        public string ConsultingContent2 { get; set; }
         /// <summary>
         /// 下单时间
         /// </summary>

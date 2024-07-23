@@ -17,8 +17,14 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         public DateTime CreateDate { get; set; }
         public string GoodsName { get; set; }
         public string ThumbPictureUrl { get; set; }
-
+        /// <summary>
+        /// 主派咨询内容
+        /// </summary>
         public string ConsultingContent { get; set; }
+        /// <summary>
+        /// /次派咨询内容
+        /// </summary>
+        public string ConsultingContent2 { get; set; }
         public string CustomerName { get; set; }
         public decimal? DepositAmount { get; set; }
         public decimal? DealAmount { get; set; }

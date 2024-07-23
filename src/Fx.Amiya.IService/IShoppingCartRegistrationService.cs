@@ -96,7 +96,13 @@ namespace Fx.Amiya.IService
         /// <param name="liveAnchorId"></param>
         /// <returns></returns>
         Task<List<ShoppingCartRegistrationDto>> GetDialyAddWeChatInfoByLiveAnchorId(int liveAnchorId, DateTime recordDate);
-
+        /// <summary>
+        /// 获取直播后小黄车相关日运营数据
+        /// </summary>
+        /// <param name="liveAnchorId"></param>
+        /// <param name="recordDate"></param>
+        /// <returns></returns>
+        Task<AfterLiveDataDto> GetAfterLiveDataByLiveAnchorIdAsync(int liveAnchorId, DateTime recordDate);
         /// <summary>
         /// 根据条件获取今日小黄车退款量
         /// </summary>

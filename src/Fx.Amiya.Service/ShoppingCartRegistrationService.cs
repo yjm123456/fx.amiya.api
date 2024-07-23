@@ -1047,6 +1047,29 @@ namespace Fx.Amiya.Service
                          };
             return await result.ToListAsync();
         }
+        /// <summary>
+        /// 获取直播后小黄车相关日运营数据
+        /// </summary>
+        /// <param name="liveAnchorId"></param>
+        /// <param name="recordDate"></param>
+        /// <returns></returns>
+        public async Task<AfterLiveDataDto> GetAfterLiveDataByLiveAnchorIdAsync(int liveAnchorId, DateTime recordDate)
+        {
+            //筛选结束的月份
+            DateTime endDate = recordDate.Date.AddDays(1);
+            //选定的月份
+            DateTime currentDate = recordDate.Date;
+            var result =dalShoppingCartRegistration.GetAll()
+                .Where(o => o.RecordDate >= currentDate && o.RecordDate < endDate && o.LiveAnchorId == liveAnchorId).Select(e=>new { 
+                    IsAddWechat=e.IsAddWeChat,
+                    AssignEmpId = e.AssignEmpId
+                }).ToList();
+            AfterLiveDataDto afterLiveData=new AfterLiveDataDto();
+            afterLiveData.ClueCount = result.Count();
+            afterLiveData.AddWechatCount = result.Where(e => e.IsAddWechat == true).Count();
+            afterLiveData.DistributeConsulation = result.Where(e => e.AssignEmpId != null).Count();
+            return afterLiveData;
+        }
 
         /// <summary>
         /// 根据条件获取今日小黄车退款量

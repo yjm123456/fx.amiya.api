@@ -73,7 +73,14 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public string UnDealPictureUrl { get; set; }
         public string LateProjectStage { get; set; }
+        /// <summary>
+        /// 主派咨询内容
+        /// </summary>
         public string ConsultingContent { get; set; }
+        /// <summary>
+        /// 次派咨询内容
+        /// </summary>
+        public string ConsultingContent2 { get; set; }
         public string Remark { get; set; }
         public bool IsToHospital { get; set; }
 
