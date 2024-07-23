@@ -540,7 +540,7 @@ namespace Fx.Amiya.Service
             {
                 unitOfWork.BeginTransaction();
                 foreach (var item in checkRecordDataList)
-                {                    
+                {
                     CheckReconciliationDocumentSettleDto checkData = new CheckReconciliationDocumentSettleDto();
                     checkData.Id = item.Id;
                     checkData.CheckState = checkDto.CheckState;
@@ -723,6 +723,69 @@ namespace Fx.Amiya.Service
                 throw ex;
             }
         }
+        /// <summary>
+        /// 批量审核消费追踪薪资数据
+        /// </summary>
+        /// <param name="checkDto"></param>
+        /// <returns></returns>
+        public async Task BatchCheckConsumptionRrackingReconciliationDocumentsSettleAsync(BatchCheckReconciliationDocumentSettleDto checkDto)
+        {
+            if (checkDto.CheckType != (int)ReconciliationDocumentSettleCheckType.OtherPlatformBuyAgainCheck)
+                throw new Exception("审核类型只能为三方订单升单审核");
+            var employee = await amiyaEmployeeService.GetByIdAsync(checkDto.CheckBelongEmpId.Value);
+            if (employee.PositionId == 13)
+            {
+                if (checkDto.CheckBelongEmpId != 128)
+                    throw new Exception("财务上传数据最终归属客服应为啊美雅");
+            }
+            var checkRecordDataList = dalRecommandDocumentSettle.GetAll()
+                 .Where(e => checkDto.IdList.Contains(e.Id))
+                 .Select(e => new
+                 {
+                     Id = e.Id,
+                     IsOldCustomer = e.IsOldCustomer,
+                     CustomerServiceSettlePrice = e.RecolicationPrice,
+                     BelongEmpId = e.BelongEmpId,
+                     CreateEmpId = e.CreateEmpId,
+                     ContentPlatFormOrderAddOrderPrice = e.ContentPlatFormOrderAddOrderPrice,
+                     OrderFrom = e.OrderFrom
+                 }).ToList();
+            if (checkRecordDataList.Where(e => e.OrderFrom != (int)OrderFrom.BuyAgainOrder).Count() > 0)
+                throw new Exception("所选订单来源包含非消费追踪数据");
+            if (checkRecordDataList.Count() != checkDto.IdList.Count())
+                throw new Exception("编号错误");
+            if (checkRecordDataList.Where(e => e.BelongEmpId != e.CreateEmpId).Count() > 0)
+                throw new Exception("所选数据包含稽查业绩,审核失败!");
+            if (checkRecordDataList.Where(e => e.BelongEmpId != checkDto.CheckBelongEmpId).Count() > 0)
+                throw new Exception("所选数据包含归属于其他客服的数据,审核失败");
+            try
+            {
+                unitOfWork.BeginTransaction();
+                decimal OtherPlatformBuyAgain = 0.25m;
+                foreach (var item in checkRecordDataList)
+                {
+                    CheckReconciliationDocumentSettleDto checkData = new CheckReconciliationDocumentSettleDto();
+                    checkData.Id = item.Id;
+                    checkData.CheckState = checkDto.CheckState;
+                    checkData.CheckBy = checkDto.CheckBy;
+                    checkData.CheckType = checkDto.CheckType;
+                    checkData.IsInspectPerformance = checkDto.IsInspectPerformance;
+                    checkData.CheckRemark = checkDto.CheckRemark;
+                    checkData.CustomerServiceOrderPerformance = item.CustomerServiceSettlePrice ?? 0m * OtherPlatformBuyAgain;
+                    checkData.CheckBelongEmpId = checkDto.CheckBelongEmpId;
+                    checkData.PerformancePercent = employee.TmallOrderCommission;
+                    checkData.CustomerServicePerformance = Math.Round((checkData.CustomerServiceOrderPerformance) * checkData.PerformancePercent / 100, 2, MidpointRounding.AwayFromZero);
+                    await recommandDocumentSettleService.CheckAsync(checkData);
+                }
+                unitOfWork.Commit();
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw ex;
+            }
+        }
+
         /// <summary>
         /// 分页获取审核记录数据
         /// </summary>
@@ -1127,6 +1190,8 @@ namespace Fx.Amiya.Service
             }
             return billReturnBackStateTextList;
         }
+
+
 
 
 

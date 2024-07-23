@@ -562,6 +562,26 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData.Success();
 
         }
+        /// <summary>
+        /// 批量审核消费追踪数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut("batchCheckConsumptionRracking")]
+        [FxInternalAuthorize]
+        public async Task<ResultData> BatchCheckConsumptionRrackingAsync([FromBody] BatchCheckReconciliationDocumentSettleVo query) {
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeId = Convert.ToInt32(employee.Id);
+            BatchCheckReconciliationDocumentSettleDto checkReconciliationDocumentSettleDto = new BatchCheckReconciliationDocumentSettleDto();
+            checkReconciliationDocumentSettleDto.CheckBy = employeeId;
+            checkReconciliationDocumentSettleDto.CheckRemark = query.CheckRemark;
+            checkReconciliationDocumentSettleDto.CheckState = query.CheckState;
+            checkReconciliationDocumentSettleDto.CheckType = query.CheckType;
+            checkReconciliationDocumentSettleDto.IsInspectPerformance = false;
+            checkReconciliationDocumentSettleDto.IdList = query.IdList;
+            checkReconciliationDocumentSettleDto.CheckBelongEmpId = query.CheckBelongEmpId;
+            await billService.BatchCheckConsumptionRrackingReconciliationDocumentsSettleAsync(checkReconciliationDocumentSettleDto);
+            return ResultData.Success();
+        }
 
         #endregion
     }
