@@ -30,7 +30,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IHttpContextAccessor _httpContextAccessor;
         private IPermissionService permissionService;
         private IOperationLogService operationLogService;
-        
+
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -102,7 +102,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                                              CustomerPictureUrl = d.CustomerPictureUrl,
                                              IsDeal = d.IsDeal,
                                              IsToHospital = d.IsToHospital,
-                                             CumulativeDealPrice = d.CumulativeDealPrice
+                                             CumulativeDealPrice = d.CumulativeDealPrice,
+                                             UnDealReason = d.UnDealReason,
+                                             FansMeetingProject = d.FansMeetingProject,
+                                             FollowUpContent = d.FollowUpContent,
+                                             NextAppointmentDate = d.NextAppointmentDate,
+                                             IsNeedHospitalHelp = d.IsNeedHospitalHelp,
                                          };
 
                 FxPageInfo<FansMeetingDetailsVo> pageInfo = new FxPageInfo<FansMeetingDetailsVo>();
@@ -186,7 +191,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                                              CustomerPictureUrl = d.CustomerPictureUrl,
                                              IsDeal = d.IsDeal,
                                              IsToHospital = d.IsToHospital,
-                                             CumulativeDealPrice = d.CumulativeDealPrice
+                                             CumulativeDealPrice = d.CumulativeDealPrice,
+                                             UnDealReason = d.UnDealReason,
+                                             FansMeetingProject = d.FansMeetingProject,
+                                             FollowUpContent = d.FollowUpContent,
+                                             NextAppointmentDate = d.NextAppointmentDate,
+                                             IsNeedHospitalHelp = d.IsNeedHospitalHelp,
                                          };
 
                 FxPageInfo<FansMeetingDetailsVo> pageInfo = new FxPageInfo<FansMeetingDetailsVo>();
@@ -212,7 +222,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData> AddAsync(AddFansMeetingDetailsVo addVo)
         {
-            
+
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             OperationAddDto operationLog = new OperationAddDto();
             operationLog.Source = (int)RequestSource.AmiyaBackground;
@@ -311,7 +321,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                
+
                 operationLog.Parameters = JsonConvert.SerializeObject(addVo);
                 operationLog.RequestType = (int)RequestType.Add;
                 operationLog.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
@@ -357,6 +367,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                 fansMeetingDetailsVo.IsDeal = fansMeetingDetails.IsDeal;
                 fansMeetingDetailsVo.IsToHospital = fansMeetingDetails.IsToHospital;
                 fansMeetingDetailsVo.CumulativeDealPrice = fansMeetingDetails.CumulativeDealPrice;
+
+                fansMeetingDetailsVo.UnDealReason = fansMeetingDetails.UnDealReason;
+                fansMeetingDetailsVo.FansMeetingProject = fansMeetingDetails.FansMeetingProject;
+                fansMeetingDetailsVo.FollowUpContent = fansMeetingDetails.FollowUpContent;
+                fansMeetingDetailsVo.NextAppointmentDate = fansMeetingDetails.NextAppointmentDate;
+                fansMeetingDetailsVo.IsNeedHospitalHelp = fansMeetingDetails.IsNeedHospitalHelp;
                 return ResultData<FansMeetingDetailsVo>.Success().AddData("fansMeetingDetails", fansMeetingDetailsVo);
             }
             catch (Exception ex)
@@ -410,6 +426,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.IsDeal = updateVo.IsDeal;
                 updateDto.IsToHospital = updateVo.IsToHospital;
                 updateDto.CumulativeDealPrice = updateVo.CumulativeDealPrice;
+
+                updateDto.UnDealReason = updateVo.UnDealReason;
+                updateDto.FansMeetingProject = updateVo.FansMeetingProject;
+                updateDto.FollowUpContent = updateVo.FollowUpContent;
+                updateDto.NextAppointmentDate = updateVo.NextAppointmentDate;
+                updateDto.IsNeedHospitalHelp = updateVo.IsNeedHospitalHelp;
                 await fansMeetingDetailsService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -421,7 +443,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                
+
                 operationLog.Parameters = JsonConvert.SerializeObject(updateVo);
                 operationLog.RequestType = (int)RequestType.Update;
                 operationLog.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;

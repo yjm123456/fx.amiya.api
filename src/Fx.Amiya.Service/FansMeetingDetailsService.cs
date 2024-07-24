@@ -78,7 +78,12 @@ namespace Fx.Amiya.Service
                                           CustomerPictureUrl = d.CustomerPictureUrl,
                                           IsDeal = d.IsDeal,
                                           IsToHospital = d.IsToHospital,
-                                          CumulativeDealPrice = d.CumulativeDealPrice
+                                          CumulativeDealPrice = d.CumulativeDealPrice,
+                                          UnDealReason = d.UnDealReason,
+                                          FansMeetingProject = d.FansMeetingProject,
+                                          FollowUpContent = d.FollowUpContent,
+                                          NextAppointmentDate = d.NextAppointmentDate,
+                                          IsNeedHospitalHelp = d.IsNeedHospitalHelp,
                                       };
             FxPageInfo<FansMeetingDetailsDto> fansMeetingDetailsPageInfo = new FxPageInfo<FansMeetingDetailsDto>();
             fansMeetingDetailsPageInfo.TotalCount = await fansMeetingDetailss.CountAsync();
@@ -172,6 +177,11 @@ namespace Fx.Amiya.Service
             returnResult.IsDeal = result.IsDeal;
             returnResult.IsToHospital = result.IsToHospital;
             returnResult.CumulativeDealPrice = result.CumulativeDealPrice;
+            returnResult.UnDealReason = result.UnDealReason;
+            returnResult.FansMeetingProject = result.FansMeetingProject;
+            returnResult.FollowUpContent = result.FollowUpContent;
+            returnResult.NextAppointmentDate = result.NextAppointmentDate;
+            returnResult.IsNeedHospitalHelp = result.IsNeedHospitalHelp;
 
             return returnResult;
         }
@@ -219,6 +229,12 @@ namespace Fx.Amiya.Service
             result.IsDeal = updateDto.IsDeal;
             result.IsToHospital = updateDto.IsToHospital;
             result.CumulativeDealPrice = updateDto.CumulativeDealPrice;
+
+            result.UnDealReason = updateDto.UnDealReason;
+            result.FansMeetingProject = updateDto.FansMeetingProject;
+            result.FollowUpContent = updateDto.FollowUpContent;
+            result.NextAppointmentDate = updateDto.NextAppointmentDate;
+            result.IsNeedHospitalHelp = updateDto.IsNeedHospitalHelp;
             await dalFansMeetingDetails.UpdateAsync(result, true);
         }
         /// <summary>

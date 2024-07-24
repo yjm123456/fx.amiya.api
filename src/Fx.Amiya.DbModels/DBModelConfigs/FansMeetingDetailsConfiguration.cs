@@ -42,6 +42,12 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.Valid).HasColumnName("valid").HasColumnType("BIT(1)").IsRequired();
             builder.Property(e => e.DeleteDate).HasColumnName("delete_date").HasColumnType("DATETIME").IsRequired(false);
 
+            builder.Property(e => e.UnDealReason).HasColumnName("un_deal_reason").HasColumnType("VARCHAR(500)").IsRequired(false);
+            builder.Property(e => e.FollowUpContent).HasColumnName("follow_up_content").HasColumnType("VARCHAR(500)").IsRequired(false);
+            builder.Property(e => e.FansMeetingProject).HasColumnName("fans_meeting_project").HasColumnType("VARCHAR(500)").IsRequired(false);
+            builder.Property(e => e.NextAppointmentDate).HasColumnName("next_appointment_date").HasColumnType("DATETIME").IsRequired(false);
+            builder.Property(e => e.IsNeedHospitalHelp).HasColumnName("is_need_hospital_help").HasColumnType("BIT(1)").IsRequired();
+
             builder.HasOne(t => t.FansMeetingInfo).WithMany(t => t.FansMeetingDetailsList).HasForeignKey(t => t.FansMeetingId);
             builder.HasOne(t => t.AmiyaEmployeeInfo).WithMany(t => t.FansMeetingDetailsList).HasForeignKey(t => t.AmiyaConsulationId);
         }

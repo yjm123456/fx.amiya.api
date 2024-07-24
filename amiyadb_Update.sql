@@ -36,7 +36,7 @@ ALTER TABLE `tbl_content_platform_order`
 ------------------------------------王健 2024/7/23 END--------------------------------------
 
 ------------------------------------余建明 2024/7/23 BEGIN--------------------------------------
-
+--粉丝见面会详情表新增未成交数据和下次邀约数据
 ALTER TABLE `amiyadb`.`tbl_fans_meeting_details` 
 ADD COLUMN `un_deal_reason` VARCHAR(500) NULL AFTER `cumulative_deal_price`,
 ADD COLUMN `fans_meeting_project` VARCHAR(500) NULL AFTER `un_deal_reason`,
