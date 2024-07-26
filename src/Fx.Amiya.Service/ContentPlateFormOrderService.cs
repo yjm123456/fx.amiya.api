@@ -1134,6 +1134,7 @@ namespace Fx.Amiya.Service
                     {
                         dalContentPlatformOrderSend.Delete(item, true);
                     }
+                    otherHospitalList.RemoveAll(e => e.HospitalId == updateDto.HospitalId);
                 }
                 await this.NewUpdateStateAndRepeateOrderPicAsync(updateDto.OrderId, employeeId, contentPlatFormOrder.BelongEmpId, employeeId);
                 await _contentPlatformOrderSend.NewUpdateOrderSend(updateDto, employeeId);
