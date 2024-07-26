@@ -23,7 +23,6 @@ ALTER TABLE `tbl_liveanchor_monthly_target_after_living`
 	ADD COLUMN `clues_complete_rate` DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER `cumulative_clues`;
 
 ------------------------------------王健 2024/7/16 END--------------------------------------
---------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 ------------------------------------王健 2024/7/23 BEGIN--------------------------------------
 
@@ -44,3 +43,4 @@ ADD COLUMN `follow_up_content` VARCHAR(500) NULL AFTER `fans_meeting_project`,
 ADD COLUMN `next_appointment_date` DATETIME NULL AFTER `follow_up_content`,
 ADD COLUMN `is_need_hospital_help` BIT(1) NOT NULL AFTER `next_appointment_date`;
 ------------------------------------余建明 2024/7/23 END--------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
