@@ -1135,6 +1135,7 @@ namespace Fx.Amiya.Service
                         dalContentPlatformOrderSend.Delete(item, true);
                     }
                 }
+                await this.NewUpdateStateAndRepeateOrderPicAsync(updateDto.OrderId, employeeId, contentPlatFormOrder.BelongEmpId, employeeId);
                 await _contentPlatformOrderSend.NewUpdateOrderSend(updateDto, employeeId);
                 var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(updateDto.HospitalId, contentPlatFormOrder.Phone);
                 //操作医院客户表

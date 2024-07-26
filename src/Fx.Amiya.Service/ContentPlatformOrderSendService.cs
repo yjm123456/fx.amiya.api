@@ -1225,7 +1225,7 @@ namespace Fx.Amiya.Service
                           Remark = e.Remark,
                           SendBy = e.Sender,
                           IsMainHospital = e.IsMainHospital,
-                          SendDate = e.ContentPlatformOrder.SendDate,
+                          SendDate = e.SendDate,
                           SenderName = e.AmiyaEmployee.Name
                       });
             pageInfo.TotalCount = await res.CountAsync();
