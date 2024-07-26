@@ -285,14 +285,13 @@ namespace Fx.Amiya.Service
             await _dalContentPlatformOrderSend.UpdateAsync(sendOrderInfo, true);
         }
         /// <summary>
-        /// 新的修改派单
+        /// 新的修改派单(更新派单数据)
         /// </summary>
         /// <param name="updateDto"></param>
         /// <param name="employeeId"></param>
         /// <returns></returns>
         public async Task NewUpdateOrderSend(UpdateContentPlatFormSendOrderInfoDto updateDto, int employeeId)
         {
-
             var sendOrderInfo = await _dalContentPlatformOrderSend.GetAll().Include(e => e.ContentPlatformOrder).SingleOrDefaultAsync(e => e.Id == updateDto.Id);
             sendOrderInfo.HospitalId = updateDto.HospitalId;
             sendOrderInfo.Sender = employeeId;
@@ -307,8 +306,6 @@ namespace Fx.Amiya.Service
             {
                 sendOrderInfo.AppointmentDate = updateDto.AppointmentDate;
             }
-
-
             await _dalContentPlatformOrderSend.UpdateAsync(sendOrderInfo, true);
         }
 
@@ -721,8 +718,6 @@ namespace Fx.Amiya.Service
             var orderCount = await orders.CountAsync();
             var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
             var contentPlatformOrders = from d in orders
-                                        join p in _dalHospitalCheckPhoneRecord.GetAll() on d.ContentPlatformOrderId equals p.OrderId into pd
-                                        from p in pd.DefaultIfEmpty()
                                         select new SendContentPlatformOrderDto
                                         {
                                             Id = d.Id,
@@ -739,7 +734,6 @@ namespace Fx.Amiya.Service
                                             CustomerName = ServiceClass.GetIncompleteCustomerName(d.ContentPlatformOrder.CustomerName),
                                             Phone = config.EnablePhoneEncrypt == true ? ServiceClass.GetIncompletePhone(d.ContentPlatformOrder.Phone) : d.ContentPlatformOrder.Phone,
                                             EncryptPhone = ServiceClass.Encrypt(d.ContentPlatformOrder.Phone, config.PhoneEncryptKey),
-                                            IsHospitalCheckPhone = p.HospitalId == d.HospitalId && p.OrderPlatformType == (byte)CheckPhoneRecordOrderType.ContentPlatformOrder,
                                             AppointmentHospital = d.ContentPlatformOrder.HospitalInfo.Name,
                                             SendHospitalId = d.HospitalId,
                                             AppointmentDate = d.AppointmentDate.HasValue ? d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "未确认时间",
@@ -780,6 +774,7 @@ namespace Fx.Amiya.Service
             pageInfo.List = await contentPlatformOrders.OrderByDescending(x => x.SendDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
             foreach (var x in pageInfo.List)
             {
+                x.IsHospitalCheckPhone = _dalHospitalCheckPhoneRecord.GetAll().Where(e => e.OrderId == x.OrderId && e.HospitalId == x.SendHospitalId).Any();
                 x.SendHospital = _hospitalInfoService.GetByIdAsync(x.SendHospitalId).Result.Name;
                 if (!string.IsNullOrEmpty(x.LiveAnchorWeChatNo))
                 {

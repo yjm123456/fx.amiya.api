@@ -284,7 +284,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                     resultVo.Phone = x.Phone;
                     var customerBaseInfo = await customerService.GetCustomerBaseInfoByEncryptPhoneAsync(x.EncryptPhone);
                     resultVo.City = customerBaseInfo.City;
-                    resultVo.DepartmentName =
                     resultVo.AppointmentDate = x.AppointmentDate == null ? "未预约时间" : x.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss");
                     resultVo.AppointmentHospitalName = x.AppointmentHospitalName;
                     resultVo.GoodsName = x.GoodsName;

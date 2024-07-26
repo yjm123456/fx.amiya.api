@@ -771,10 +771,10 @@ namespace Fx.Amiya.Service
                     checkData.CheckType = checkDto.CheckType;
                     checkData.IsInspectPerformance = checkDto.IsInspectPerformance;
                     checkData.CheckRemark = checkDto.CheckRemark;
-                    checkData.CustomerServiceOrderPerformance = item.CustomerServiceSettlePrice ?? 0m * OtherPlatformBuyAgain;
+                    checkData.CustomerServiceOrderPerformance = (item.CustomerServiceSettlePrice ?? 0m) * OtherPlatformBuyAgain;
                     checkData.CheckBelongEmpId = checkDto.CheckBelongEmpId;
                     checkData.PerformancePercent = employee.TmallOrderCommission;
-                    checkData.CustomerServicePerformance = Math.Round((checkData.CustomerServiceOrderPerformance) * checkData.PerformancePercent / 100, 2, MidpointRounding.AwayFromZero);
+                    checkData.CustomerServicePerformance = Math.Round((checkData.CustomerServiceOrderPerformance) * (checkData.PerformancePercent / 100), 2, MidpointRounding.AwayFromZero);
                     await recommandDocumentSettleService.CheckAsync(checkData);
                 }
                 unitOfWork.Commit();

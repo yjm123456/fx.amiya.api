@@ -2043,7 +2043,6 @@ namespace Fx.Amiya.Service
                     ToHospitalDate = e.ToHospitalDate
                 }).ToList();
             data.ToHospitalCount = contentOrderList.Where(e => e.IsToHospital == true && e.ToHospitalDate > startDate).Select(e => e.Phone).Distinct().Count();
-
             data.NewCustomerDealCount = contentOrderList.Where(e => e.IsDeal == true).Select(e => e.Phone).Distinct().Count();
             data.NewCustomerTotalPerformance = contentOrderList.Sum(e => e.DealPrice);
             CompanyNewCustomerConversionBaseDataDto baseData = new CompanyNewCustomerConversionBaseDataDto();
