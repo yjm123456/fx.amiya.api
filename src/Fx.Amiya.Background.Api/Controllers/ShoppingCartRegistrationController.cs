@@ -895,6 +895,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 case "福袋":
                                     lastSource = 8;
                                     break;
+                                case "直播间公屏":
+                                    lastSource = 9;
+                                    break;
+                                case "老带新":
+                                    lastSource = 10;
+                                    break;
                             }
                             addDto.Source = lastSource;
 

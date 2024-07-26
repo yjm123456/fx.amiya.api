@@ -1003,7 +1003,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         FansGroup = 2,
         /// <summary>
-        /// 主账号私信
+        /// 私信
         /// </summary>
         PrivateMessage = 3,
         /// <summary>
@@ -1032,11 +1032,10 @@ namespace Fx.Amiya.IService
         /// 直播间公屏
         /// </summary>
         LivingRoomScreen = 9,
-
         /// <summary>
-        /// 助理号私信
+        /// 老带新
         /// </summary>
-        CustomerServicePrivateMessage = 10
+        OldTakeNewCustomer = 10,
     }
 
 
