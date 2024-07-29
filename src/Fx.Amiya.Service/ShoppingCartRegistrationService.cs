@@ -796,7 +796,6 @@ namespace Fx.Amiya.Service
                         //快手
                         contentPlatFormIds.Add("7a9d6564-e273-4847-9047-e7bbb7c6805c");
                         channels.Add((int)BelongChannel.LiveAfter);
-                        channels.Add((int)BelongChannel.LiveBefore);
                         res.Add(contentPlatFormIds, channels);
                         break;
                     case 3:
@@ -809,6 +808,7 @@ namespace Fx.Amiya.Service
                         //快手
                         contentPlatFormIds.Add("7a9d6564-e273-4847-9047-e7bbb7c6805c");
                         channels.Add((int)BelongChannel.LiveBefore);
+                        channels.Add((int)BelongChannel.LiveAfter);
                         res.Add(contentPlatFormIds, channels);
                         break;
                     case 5:
