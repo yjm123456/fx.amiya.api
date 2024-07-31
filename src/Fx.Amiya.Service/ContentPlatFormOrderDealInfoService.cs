@@ -2277,6 +2277,7 @@ namespace Fx.Amiya.Service
                     BelongChannel = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.BelongChannel,
                     SendDate = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.SendDate.Value,
                     AddOrderPrice = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.AddOrderPrice,
+                    ContentPlatFormId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.ContentPlateformId,
                 }
                 ).ToListAsync();
         }

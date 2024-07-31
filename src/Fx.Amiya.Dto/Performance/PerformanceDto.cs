@@ -18,5 +18,7 @@ namespace Fx.Amiya.Dto.Performance
         public DateTime SendDate { get; set; }
 
         public decimal AddOrderPrice { get; set; }
+
+        public string ContentPlatFormId { get; set; }
     }
 }

@@ -12,6 +12,18 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
 
 
         /// <summary>
+        /// 整体流量分析-平台
+        /// </summary>
+        public OperationBoardContentPlatFormDataDetailsDto TotalFlowRateByContentPlatForm { get; set; }
+        /// <summary>
+        /// 刀刀组流量分析-平台
+        /// </summary>
+        public OperationBoardContentPlatFormDataDetailsDto GroupDaoDaoFlowRateByContentPlatForm { get; set; }
+        /// <summary>
+        /// 吉娜组流量分析-平台
+        /// </summary>
+        public OperationBoardContentPlatFormDataDetailsDto GroupJiNaFlowRateByContentPlatForm { get; set; }
+        /// <summary>
         /// 整体流量分析-部门
         /// </summary>
         public OperationBoardBelongChannelPerformanceDataDto TotalBelongChannelPerformance { get; set; }
@@ -36,6 +48,20 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
         /// 吉娜组流量分析-新老客
         /// </summary>
         public OperationBoardGetNewOrOldCustomerCompareDataDetailsDto GroupJiNaNewOrOldCustomer { get; set; }
+
+
+        /// <summary>
+        /// 整体流量分析-新老客人数
+        /// </summary>
+        public OperationBoardGetNewOrOldCustomerCompareDataDetailsDto TotalNewOrOldCustomerNum { get; set; }
+        /// <summary>
+        /// 刀刀组流量分析-新老客人数
+        /// </summary>
+        public OperationBoardGetNewOrOldCustomerCompareDataDetailsDto GroupDaoDaoNewOrOldCustomerNum { get; set; }
+        /// <summary>
+        /// 吉娜组流量分析-新老客人数
+        /// </summary>
+        public OperationBoardGetNewOrOldCustomerCompareDataDetailsDto GroupJiNaNewOrOldCustomerNum { get; set; }
 
 
         /// <summary>
@@ -64,6 +90,20 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
         /// 吉娜组流量分析-当月/历史
         /// </summary>
         public OperationBoardGetIsHistoryPerformanceDto GroupJiNaIsHistoryPerformance { get; set; }
+
+
+        /// <summary>
+        /// 整体流量分析-当月/历史-人数
+        /// </summary>
+        public OperationBoardGetIsHistoryPerformanceDto TotalIsHistoryPerformanceNum { get; set; }
+        /// <summary>
+        /// 刀刀组流量分析-当月/历史-人数
+        /// </summary>
+        public OperationBoardGetIsHistoryPerformanceDto GroupDaoDaoIsHistoryPerformanceNum { get; set; }
+        /// <summary>
+        /// 吉娜组流量分析-当月/历史-人数
+        /// </summary>
+        public OperationBoardGetIsHistoryPerformanceDto GroupJiNaIsHistoryPerformanceNum { get; set; }
     }
     /// <summary>
     /// 新老客占比

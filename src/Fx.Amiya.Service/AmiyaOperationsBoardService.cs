@@ -188,81 +188,148 @@ namespace Fx.Amiya.Service
             var curDaoDaoTotalAchievement = order.Where(x => LiveAnchorInfoDaoDaoResult.Contains(x.LiveAnchorId.Value)).ToList();
             //刀刀总业绩
             var curDaoDaoTotalAchievementPrice = curDaoDaoTotalAchievement.Sum(x => x.Price);
+            var curDaoDaoTotalCount = curDaoDaoTotalAchievement.Count();
 
             var liveAnchorJina = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync("af69dcf5-f749-41ea-8b50-fe685facdd8b");
             var LiveAnchorInfoJinaResult = liveAnchorJina.Select(x => x.Id).ToList();
             var curJiNaTotalAchievement = order.Where(x => LiveAnchorInfoJinaResult.Contains(x.LiveAnchorId.Value)).ToList();
             //吉娜总业绩
             var curJiNaTotalAchievementPrice = curJiNaTotalAchievement.Sum(x => x.Price);
+            var curJiNaTotalCount = curJiNaTotalAchievement.Count();
             //合计总业绩
             var curTotalAchievement = curDaoDaoTotalAchievementPrice + curJiNaTotalAchievementPrice;
+            var curTotalCount = curJiNaTotalCount + curDaoDaoTotalCount;
+
+
+            #region 【平台】
+            #region 刀刀组业绩-平台
+            OperationBoardContentPlatFormDataDetailsDto totalPerformanceContentPlatFormGroupDaoDaoData = new OperationBoardContentPlatFormDataDetailsDto();
+            var curDaoDaoDouYin = curDaoDaoTotalAchievement.Where(x => x.ContentPlatFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Count();
+            var curDaoDaoVideoNumber = curDaoDaoTotalAchievement.Where(x => x.ContentPlatFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Count();
+            var curDaoDaoXiaoHongShu = curDaoDaoTotalAchievement.Where(x => x.ContentPlatFormId == "317c03b8-aff9-4961-8392-fc44d04b1725").Count();
+            var curDaoDaoPrivateDomain = curDaoDaoTotalAchievement.Where(x => x.ContentPlatFormId == "22a0b287-232d-4373-a9dd-c372aaae57dc").Count();
+
+            totalPerformanceContentPlatFormGroupDaoDaoData.TotalFlowRateNumber = curDaoDaoTotalCount;
+            totalPerformanceContentPlatFormGroupDaoDaoData.DouYinNumber = curDaoDaoDouYin;
+            totalPerformanceContentPlatFormGroupDaoDaoData.DouYinRate = DecimalExtension.CalculateTargetComplete(curDaoDaoDouYin, curDaoDaoTotalCount);
+            totalPerformanceContentPlatFormGroupDaoDaoData.VideoNumberNumber = curDaoDaoVideoNumber;
+            totalPerformanceContentPlatFormGroupDaoDaoData.VideoNumberRate = DecimalExtension.CalculateTargetComplete(curDaoDaoVideoNumber, curDaoDaoTotalCount);
+            totalPerformanceContentPlatFormGroupDaoDaoData.XiaoHongShuNumber = curDaoDaoXiaoHongShu;
+            totalPerformanceContentPlatFormGroupDaoDaoData.XiaoHongShuRate = DecimalExtension.CalculateTargetComplete(curDaoDaoXiaoHongShu, curDaoDaoTotalCount);
+            totalPerformanceContentPlatFormGroupDaoDaoData.PrivateDataNumber = curDaoDaoPrivateDomain;
+            totalPerformanceContentPlatFormGroupDaoDaoData.PrivateDataRate = DecimalExtension.CalculateTargetComplete(curDaoDaoPrivateDomain, curDaoDaoTotalAchievementPrice);
+
+            result.GroupDaoDaoFlowRateByContentPlatForm = totalPerformanceContentPlatFormGroupDaoDaoData;
+            #endregion
+
+            #region 吉娜组业绩-平台
+            OperationBoardContentPlatFormDataDetailsDto totalPerformanceContentPlatFormGroupJiNaData = new OperationBoardContentPlatFormDataDetailsDto();
+            var curJiNaDouYin = curJiNaTotalAchievement.Where(x => x.ContentPlatFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Count();
+            var curJiNaVideoNumber = curJiNaTotalAchievement.Where(x => x.ContentPlatFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Count();
+            var curJiNaXiaoHongShu = curJiNaTotalAchievement.Where(x => x.ContentPlatFormId == "317c03b8-aff9-4961-8392-fc44d04b1725").Count();
+            var curJiNaPrivateDomain = curJiNaTotalAchievement.Where(x => x.ContentPlatFormId == "22a0b287-232d-4373-a9dd-c372aaae57dc").Count();
+
+            totalPerformanceContentPlatFormGroupJiNaData.TotalFlowRateNumber = curJiNaTotalCount;
+            totalPerformanceContentPlatFormGroupJiNaData.DouYinNumber = curJiNaDouYin;
+            totalPerformanceContentPlatFormGroupJiNaData.DouYinRate = DecimalExtension.CalculateTargetComplete(curJiNaDouYin, curJiNaTotalCount);
+            totalPerformanceContentPlatFormGroupJiNaData.VideoNumberNumber = curJiNaVideoNumber;
+            totalPerformanceContentPlatFormGroupJiNaData.VideoNumberRate = DecimalExtension.CalculateTargetComplete(curJiNaVideoNumber, curJiNaTotalCount);
+            totalPerformanceContentPlatFormGroupJiNaData.XiaoHongShuNumber = curJiNaXiaoHongShu;
+            totalPerformanceContentPlatFormGroupJiNaData.XiaoHongShuRate = DecimalExtension.CalculateTargetComplete(curJiNaXiaoHongShu, curJiNaTotalCount);
+            totalPerformanceContentPlatFormGroupJiNaData.PrivateDataNumber = curJiNaPrivateDomain;
+            totalPerformanceContentPlatFormGroupJiNaData.PrivateDataRate = DecimalExtension.CalculateTargetComplete(curJiNaPrivateDomain, curJiNaTotalAchievementPrice);
+
+            result.GroupJiNaFlowRateByContentPlatForm = totalPerformanceContentPlatFormGroupJiNaData;
+            #endregion
+
+            #region 总业绩（优化：根据刀刀和吉娜组业绩累加）-平台
+            OperationBoardContentPlatFormDataDetailsDto totalPerformanceContentPlatFormData = new OperationBoardContentPlatFormDataDetailsDto();
+            var curDouYin = curJiNaDouYin + curDaoDaoDouYin;
+            var curVideoNumber = curJiNaVideoNumber + curDaoDaoVideoNumber;
+            var curXiaoHongShu = curJiNaXiaoHongShu + curDaoDaoXiaoHongShu;
+            var curPrivateDomain = curJiNaPrivateDomain + curDaoDaoPrivateDomain;
+
+            totalPerformanceContentPlatFormData.TotalFlowRateNumber = curTotalCount;
+            totalPerformanceContentPlatFormData.DouYinNumber = curDouYin;
+            totalPerformanceContentPlatFormData.DouYinRate = DecimalExtension.CalculateTargetComplete(curDouYin, curTotalCount);
+            totalPerformanceContentPlatFormData.XiaoHongShuNumber = curXiaoHongShu;
+            totalPerformanceContentPlatFormData.XiaoHongShuRate = DecimalExtension.CalculateTargetComplete(curXiaoHongShu, curTotalCount);
+            totalPerformanceContentPlatFormData.VideoNumberNumber = curVideoNumber;
+            totalPerformanceContentPlatFormData.VideoNumberRate = DecimalExtension.CalculateTargetComplete(curVideoNumber, curTotalCount);
+            totalPerformanceContentPlatFormData.PrivateDataNumber = curVideoNumber;
+            totalPerformanceContentPlatFormData.PrivateDataRate = DecimalExtension.CalculateTargetComplete(curVideoNumber, curTotalCount);
+            result.TotalFlowRateByContentPlatForm = totalPerformanceContentPlatFormData;
+            #endregion
+            #endregion
 
             #region 【部门】
             #region 刀刀组业绩-部门
-            OperationBoardBelongChannelPerformanceDataDto totalPerformanceContentPlatFormGroupDaoDaoData = new OperationBoardBelongChannelPerformanceDataDto();
+            OperationBoardBelongChannelPerformanceDataDto totalPerformanceDepartmentGroupDaoDaoData = new OperationBoardBelongChannelPerformanceDataDto();
             var curDaoDaoBeforeLiving = curDaoDaoTotalAchievement.Where(x => x.BelongChannel == (int)BelongChannel.LiveBefore).Sum(x => x.Price);
             var curDaoDaoLiving = curDaoDaoTotalAchievement.Where(x => x.BelongChannel == (int)BelongChannel.Living).Sum(x => x.Price);
             var curDaoDaoAfterLiving = curDaoDaoTotalAchievement.Where(x => x.BelongChannel == (int)BelongChannel.LiveAfter).Sum(x => x.Price);
             var curDaoDaoOther = curDaoDaoTotalAchievement.Where(x => x.BelongChannel == (int)BelongChannel.Other).Sum(x => x.Price);
 
-            totalPerformanceContentPlatFormGroupDaoDaoData.TotalPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curDaoDaoTotalAchievementPrice);
-            totalPerformanceContentPlatFormGroupDaoDaoData.BeforeLivingNumber = DecimalExtension.ChangePriceToTenThousand(curDaoDaoBeforeLiving);
-            totalPerformanceContentPlatFormGroupDaoDaoData.BeforeLivingRate = DecimalExtension.CalculateTargetComplete(curDaoDaoBeforeLiving, curDaoDaoTotalAchievementPrice);
-            totalPerformanceContentPlatFormGroupDaoDaoData.LivingNumber = DecimalExtension.ChangePriceToTenThousand(curDaoDaoLiving);
-            totalPerformanceContentPlatFormGroupDaoDaoData.LivingRate = DecimalExtension.CalculateTargetComplete(curDaoDaoLiving, curDaoDaoTotalAchievementPrice);
-            totalPerformanceContentPlatFormGroupDaoDaoData.AfterLivingNumber = DecimalExtension.ChangePriceToTenThousand(curDaoDaoAfterLiving);
-            totalPerformanceContentPlatFormGroupDaoDaoData.AfterLivingRate = DecimalExtension.CalculateTargetComplete(curDaoDaoAfterLiving, curDaoDaoTotalAchievementPrice);
-            totalPerformanceContentPlatFormGroupDaoDaoData.OtherNumber = DecimalExtension.ChangePriceToTenThousand(curDaoDaoOther);
-            totalPerformanceContentPlatFormGroupDaoDaoData.OtherRate = DecimalExtension.CalculateTargetComplete(curDaoDaoOther, curDaoDaoTotalAchievementPrice);
+            totalPerformanceDepartmentGroupDaoDaoData.TotalPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curDaoDaoTotalAchievementPrice);
+            totalPerformanceDepartmentGroupDaoDaoData.BeforeLivingNumber = DecimalExtension.ChangePriceToTenThousand(curDaoDaoBeforeLiving);
+            totalPerformanceDepartmentGroupDaoDaoData.BeforeLivingRate = DecimalExtension.CalculateTargetComplete(curDaoDaoBeforeLiving, curDaoDaoTotalAchievementPrice);
+            totalPerformanceDepartmentGroupDaoDaoData.LivingNumber = DecimalExtension.ChangePriceToTenThousand(curDaoDaoLiving);
+            totalPerformanceDepartmentGroupDaoDaoData.LivingRate = DecimalExtension.CalculateTargetComplete(curDaoDaoLiving, curDaoDaoTotalAchievementPrice);
+            totalPerformanceDepartmentGroupDaoDaoData.AfterLivingNumber = DecimalExtension.ChangePriceToTenThousand(curDaoDaoAfterLiving);
+            totalPerformanceDepartmentGroupDaoDaoData.AfterLivingRate = DecimalExtension.CalculateTargetComplete(curDaoDaoAfterLiving, curDaoDaoTotalAchievementPrice);
+            totalPerformanceDepartmentGroupDaoDaoData.OtherNumber = DecimalExtension.ChangePriceToTenThousand(curDaoDaoOther);
+            totalPerformanceDepartmentGroupDaoDaoData.OtherRate = DecimalExtension.CalculateTargetComplete(curDaoDaoOther, curDaoDaoTotalAchievementPrice);
 
-            result.GroupDaoDaoBelongChannelPerformance = totalPerformanceContentPlatFormGroupDaoDaoData;
+            result.GroupDaoDaoBelongChannelPerformance = totalPerformanceDepartmentGroupDaoDaoData;
             #endregion
 
             #region 吉娜组业绩-部门
-            OperationBoardBelongChannelPerformanceDataDto totalPerformanceContentPlatFormGroupJiNaData = new OperationBoardBelongChannelPerformanceDataDto();
+            OperationBoardBelongChannelPerformanceDataDto totalPerformanceDepartmentGroupJiNaData = new OperationBoardBelongChannelPerformanceDataDto();
             var curJiNaBeforeLiving = curJiNaTotalAchievement.Where(x => x.BelongChannel == (int)BelongChannel.LiveBefore).Sum(x => x.Price);
             var curJiNaLiving = curJiNaTotalAchievement.Where(x => x.BelongChannel == (int)BelongChannel.Living).Sum(x => x.Price);
             var curJiNaAfterLiving = curJiNaTotalAchievement.Where(x => x.BelongChannel == (int)BelongChannel.LiveAfter).Sum(x => x.Price);
             var curJiNaOther = curJiNaTotalAchievement.Where(x => x.BelongChannel == (int)BelongChannel.Other).Sum(x => x.Price);
 
-            totalPerformanceContentPlatFormGroupJiNaData.TotalPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curJiNaTotalAchievementPrice);
-            totalPerformanceContentPlatFormGroupJiNaData.BeforeLivingNumber = DecimalExtension.ChangePriceToTenThousand(curJiNaBeforeLiving);
-            totalPerformanceContentPlatFormGroupJiNaData.BeforeLivingRate = DecimalExtension.CalculateTargetComplete(curJiNaBeforeLiving, curJiNaTotalAchievementPrice);
-            totalPerformanceContentPlatFormGroupJiNaData.LivingNumber = DecimalExtension.ChangePriceToTenThousand(curJiNaLiving);
-            totalPerformanceContentPlatFormGroupJiNaData.LivingRate = DecimalExtension.CalculateTargetComplete(curJiNaLiving, curJiNaTotalAchievementPrice);
-            totalPerformanceContentPlatFormGroupJiNaData.AfterLivingNumber = DecimalExtension.ChangePriceToTenThousand(curJiNaAfterLiving);
-            totalPerformanceContentPlatFormGroupJiNaData.AfterLivingRate = DecimalExtension.CalculateTargetComplete(curJiNaAfterLiving, curJiNaTotalAchievementPrice);
-            totalPerformanceContentPlatFormGroupJiNaData.OtherNumber = DecimalExtension.ChangePriceToTenThousand(curJiNaOther);
-            totalPerformanceContentPlatFormGroupJiNaData.OtherRate = DecimalExtension.CalculateTargetComplete(curJiNaOther, curJiNaTotalAchievementPrice);
+            totalPerformanceDepartmentGroupJiNaData.TotalPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curJiNaTotalAchievementPrice);
+            totalPerformanceDepartmentGroupJiNaData.BeforeLivingNumber = DecimalExtension.ChangePriceToTenThousand(curJiNaBeforeLiving);
+            totalPerformanceDepartmentGroupJiNaData.BeforeLivingRate = DecimalExtension.CalculateTargetComplete(curJiNaBeforeLiving, curJiNaTotalAchievementPrice);
+            totalPerformanceDepartmentGroupJiNaData.LivingNumber = DecimalExtension.ChangePriceToTenThousand(curJiNaLiving);
+            totalPerformanceDepartmentGroupJiNaData.LivingRate = DecimalExtension.CalculateTargetComplete(curJiNaLiving, curJiNaTotalAchievementPrice);
+            totalPerformanceDepartmentGroupJiNaData.AfterLivingNumber = DecimalExtension.ChangePriceToTenThousand(curJiNaAfterLiving);
+            totalPerformanceDepartmentGroupJiNaData.AfterLivingRate = DecimalExtension.CalculateTargetComplete(curJiNaAfterLiving, curJiNaTotalAchievementPrice);
+            totalPerformanceDepartmentGroupJiNaData.OtherNumber = DecimalExtension.ChangePriceToTenThousand(curJiNaOther);
+            totalPerformanceDepartmentGroupJiNaData.OtherRate = DecimalExtension.CalculateTargetComplete(curJiNaOther, curJiNaTotalAchievementPrice);
 
-            result.GroupJiNaBelongChannelPerformance = totalPerformanceContentPlatFormGroupJiNaData;
+            result.GroupJiNaBelongChannelPerformance = totalPerformanceDepartmentGroupJiNaData;
             #endregion
 
             #region 总业绩（优化：根据刀刀和吉娜组业绩累加）-部门
-            OperationBoardBelongChannelPerformanceDataDto totalPerformanceContentPlatFormData = new OperationBoardBelongChannelPerformanceDataDto();
+            OperationBoardBelongChannelPerformanceDataDto totalPerformanceDepartmentData = new OperationBoardBelongChannelPerformanceDataDto();
             var curBeforeLiving = curJiNaBeforeLiving + curDaoDaoBeforeLiving;
             var curLiving = curJiNaLiving + curDaoDaoLiving;
             var curAfterLiving = curJiNaAfterLiving + curDaoDaoAfterLiving;
             var curOther = curJiNaOther + curDaoDaoOther;
 
-            totalPerformanceContentPlatFormData.TotalPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curTotalAchievement);
-            totalPerformanceContentPlatFormData.BeforeLivingNumber = DecimalExtension.ChangePriceToTenThousand(curBeforeLiving);
-            totalPerformanceContentPlatFormData.BeforeLivingRate = DecimalExtension.CalculateTargetComplete(curBeforeLiving, curTotalAchievement);
-            totalPerformanceContentPlatFormData.LivingNumber = DecimalExtension.ChangePriceToTenThousand(curLiving);
-            totalPerformanceContentPlatFormData.LivingRate = DecimalExtension.CalculateTargetComplete(curLiving, curTotalAchievement);
-            totalPerformanceContentPlatFormData.AfterLivingNumber = DecimalExtension.ChangePriceToTenThousand(curAfterLiving);
-            totalPerformanceContentPlatFormData.AfterLivingRate = DecimalExtension.CalculateTargetComplete(curAfterLiving, curTotalAchievement);
-            totalPerformanceContentPlatFormData.OtherNumber = DecimalExtension.ChangePriceToTenThousand(curOther);
-            totalPerformanceContentPlatFormData.OtherRate = DecimalExtension.CalculateTargetComplete(curOther, curTotalAchievement);
-            result.TotalBelongChannelPerformance = totalPerformanceContentPlatFormData;
+            totalPerformanceDepartmentData.TotalPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curTotalAchievement);
+            totalPerformanceDepartmentData.BeforeLivingNumber = DecimalExtension.ChangePriceToTenThousand(curBeforeLiving);
+            totalPerformanceDepartmentData.BeforeLivingRate = DecimalExtension.CalculateTargetComplete(curBeforeLiving, curTotalAchievement);
+            totalPerformanceDepartmentData.LivingNumber = DecimalExtension.ChangePriceToTenThousand(curLiving);
+            totalPerformanceDepartmentData.LivingRate = DecimalExtension.CalculateTargetComplete(curLiving, curTotalAchievement);
+            totalPerformanceDepartmentData.AfterLivingNumber = DecimalExtension.ChangePriceToTenThousand(curAfterLiving);
+            totalPerformanceDepartmentData.AfterLivingRate = DecimalExtension.CalculateTargetComplete(curAfterLiving, curTotalAchievement);
+            totalPerformanceDepartmentData.OtherNumber = DecimalExtension.ChangePriceToTenThousand(curOther);
+            totalPerformanceDepartmentData.OtherRate = DecimalExtension.CalculateTargetComplete(curOther, curTotalAchievement);
+            result.TotalBelongChannelPerformance = totalPerformanceDepartmentData;
             #endregion
             #endregion
 
             #region 【新老客】
             #region 刀刀组业绩-新/老客
             OperationBoardGetNewOrOldCustomerCompareDataDetailsDto totalPerformanceNewOrOldCustomerGroupDaoDaoData = new OperationBoardGetNewOrOldCustomerCompareDataDetailsDto();
-            var curDaoDaoNewCustomer = order.Where(o => o.IsOldCustomer == false).Where(x => LiveAnchorInfoDaoDaoResult.Contains(x.LiveAnchorId.Value)).Sum(o => o.Price);
-            var curDaoDaoOldCustomer = order.Where(o => o.IsOldCustomer == true).Where(x => LiveAnchorInfoDaoDaoResult.Contains(x.LiveAnchorId.Value)).Sum(o => o.Price);
+            var daoDaoNewCount = order.Where(o => o.IsOldCustomer == false).Where(x => LiveAnchorInfoDaoDaoResult.Contains(x.LiveAnchorId.Value)).ToList();
+            var curDaoDaoNewCustomer = daoDaoNewCount.Sum(o => o.Price);
+            var daoDaoOldCount = order.Where(o => o.IsOldCustomer == true).Where(x => LiveAnchorInfoDaoDaoResult.Contains(x.LiveAnchorId.Value)).ToList();
+            var curDaoDaoOldCustomer = daoDaoOldCount.Sum(o => o.Price);
 
             totalPerformanceNewOrOldCustomerGroupDaoDaoData.TotalPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curDaoDaoTotalAchievementPrice);
 
@@ -271,11 +338,22 @@ namespace Fx.Amiya.Service
             totalPerformanceNewOrOldCustomerGroupDaoDaoData.TotalPerformanceOldCustomerNumber = DecimalExtension.ChangePriceToTenThousand(curDaoDaoOldCustomer);
             totalPerformanceNewOrOldCustomerGroupDaoDaoData.TotalPerformanceOldCustomerRate = DecimalExtension.CalculateTargetComplete(curDaoDaoOldCustomer, curDaoDaoTotalAchievementPrice);
             result.GroupDaoDaoNewOrOldCustomer = totalPerformanceNewOrOldCustomerGroupDaoDaoData;
+
+            //人数
+            OperationBoardGetNewOrOldCustomerCompareDataDetailsDto totalPerformanceNewOrOldCustomerNumGroupDaoDaoData = new OperationBoardGetNewOrOldCustomerCompareDataDetailsDto();
+            totalPerformanceNewOrOldCustomerNumGroupDaoDaoData.TotalPerformanceNumber = curDaoDaoTotalCount;
+            totalPerformanceNewOrOldCustomerNumGroupDaoDaoData.TotalPerformanceNewCustomerNumber = daoDaoNewCount.Count();
+            totalPerformanceNewOrOldCustomerNumGroupDaoDaoData.TotalPerformanceNewCustomerRate = DecimalExtension.CalculateTargetComplete(daoDaoNewCount.Count(), curDaoDaoTotalCount);
+            totalPerformanceNewOrOldCustomerNumGroupDaoDaoData.TotalPerformanceOldCustomerNumber = daoDaoOldCount.Count();
+            totalPerformanceNewOrOldCustomerNumGroupDaoDaoData.TotalPerformanceOldCustomerRate = DecimalExtension.CalculateTargetComplete(daoDaoOldCount.Count(), curDaoDaoTotalCount);
+            result.GroupDaoDaoNewOrOldCustomerNum = totalPerformanceNewOrOldCustomerNumGroupDaoDaoData;
             #endregion
 
             #region 吉娜组业绩-新/老客
-            var curJinaNewCustomer = order.Where(o => o.IsOldCustomer == false).Where(x => LiveAnchorInfoJinaResult.Contains(x.LiveAnchorId.Value)).Sum(o => o.Price);
-            var curJinaOldCustomer = order.Where(o => o.IsOldCustomer == true).Where(x => LiveAnchorInfoJinaResult.Contains(x.LiveAnchorId.Value)).Sum(o => o.Price);
+            var JiNaNewCount = order.Where(o => o.IsOldCustomer == false).Where(x => LiveAnchorInfoJinaResult.Contains(x.LiveAnchorId.Value)).ToList();
+            var curJinaNewCustomer = JiNaNewCount.Sum(o => o.Price);
+            var JiNaOldCount = order.Where(o => o.IsOldCustomer == true).Where(x => LiveAnchorInfoJinaResult.Contains(x.LiveAnchorId.Value)).ToList();
+            var curJinaOldCustomer = JiNaOldCount.Sum(o => o.Price);
 
             OperationBoardGetNewOrOldCustomerCompareDataDetailsDto totalPerformanceNewOrOldCustomerGroupJiNaData = new OperationBoardGetNewOrOldCustomerCompareDataDetailsDto();
             totalPerformanceNewOrOldCustomerGroupJiNaData.TotalPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curJiNaTotalAchievementPrice);
@@ -284,6 +362,15 @@ namespace Fx.Amiya.Service
             totalPerformanceNewOrOldCustomerGroupJiNaData.TotalPerformanceOldCustomerNumber = DecimalExtension.ChangePriceToTenThousand(curJinaOldCustomer);
             totalPerformanceNewOrOldCustomerGroupJiNaData.TotalPerformanceOldCustomerRate = DecimalExtension.CalculateTargetComplete(curJinaOldCustomer, curJiNaTotalAchievementPrice);
             result.GroupJiNaNewOrOldCustomer = totalPerformanceNewOrOldCustomerGroupJiNaData;
+
+            //人数
+            OperationBoardGetNewOrOldCustomerCompareDataDetailsDto totalPerformanceNewOrOldCustomerNumGroupJiNaData = new OperationBoardGetNewOrOldCustomerCompareDataDetailsDto();
+            totalPerformanceNewOrOldCustomerNumGroupJiNaData.TotalPerformanceNumber = curJiNaTotalCount;
+            totalPerformanceNewOrOldCustomerNumGroupJiNaData.TotalPerformanceNewCustomerNumber = JiNaNewCount.Count();
+            totalPerformanceNewOrOldCustomerNumGroupJiNaData.TotalPerformanceNewCustomerRate = DecimalExtension.CalculateTargetComplete(JiNaNewCount.Count(), curJiNaTotalCount);
+            totalPerformanceNewOrOldCustomerNumGroupJiNaData.TotalPerformanceOldCustomerNumber = JiNaOldCount.Count();
+            totalPerformanceNewOrOldCustomerNumGroupJiNaData.TotalPerformanceOldCustomerRate = DecimalExtension.CalculateTargetComplete(JiNaOldCount.Count(), curJiNaTotalCount);
+            result.GroupJiNaNewOrOldCustomerNum = totalPerformanceNewOrOldCustomerNumGroupJiNaData;
             #endregion
 
             #region 总业绩（优化：根据刀刀和吉娜组业绩累加）-新/老客
@@ -296,6 +383,16 @@ namespace Fx.Amiya.Service
             totalPerformanceNewOrOldCustomerData.TotalPerformanceOldCustomerNumber = DecimalExtension.ChangePriceToTenThousand(curOldCustomer);
             totalPerformanceNewOrOldCustomerData.TotalPerformanceOldCustomerRate = DecimalExtension.CalculateTargetComplete(curOldCustomer, curTotalAchievement);
             result.TotalNewOrOldCustomer = totalPerformanceNewOrOldCustomerData;
+
+
+            //人数
+            OperationBoardGetNewOrOldCustomerCompareDataDetailsDto totalPerformanceNewOrOldCustomerNumData = new OperationBoardGetNewOrOldCustomerCompareDataDetailsDto();
+            totalPerformanceNewOrOldCustomerNumData.TotalPerformanceNumber = curTotalCount;
+            totalPerformanceNewOrOldCustomerNumData.TotalPerformanceNewCustomerNumber = JiNaNewCount.Count() + daoDaoNewCount.Count();
+            totalPerformanceNewOrOldCustomerNumData.TotalPerformanceNewCustomerRate = DecimalExtension.CalculateTargetComplete(JiNaNewCount.Count() + daoDaoNewCount.Count(), curTotalCount);
+            totalPerformanceNewOrOldCustomerNumData.TotalPerformanceOldCustomerNumber = JiNaOldCount.Count() + daoDaoNewCount.Count();
+            totalPerformanceNewOrOldCustomerNumData.TotalPerformanceOldCustomerRate = DecimalExtension.CalculateTargetComplete(JiNaNewCount.Count() + daoDaoNewCount.Count(), curTotalCount);
+            result.TotalNewOrOldCustomerNum = totalPerformanceNewOrOldCustomerNumData;
             #endregion
             #endregion
 
@@ -347,8 +444,10 @@ namespace Fx.Amiya.Service
             #region 【当月/历史】
             #region 刀刀组业绩-当月/历史
             OperationBoardGetIsHistoryPerformanceDto totalPerformanceIsHistoryGroupDaoDaoData = new OperationBoardGetIsHistoryPerformanceDto();
-            var curDaoDaoHistory = curDaoDaoTotalAchievement.Where(x => x.SendDate < query.startDate).Sum(x => x.Price);
-            var curDaoDaoThisMonth = curDaoDaoTotalAchievement.Where(x => x.SendDate >= query.startDate).Sum(x => x.Price);
+            var DaoDaoHistoryCount = curDaoDaoTotalAchievement.Where(x => x.SendDate < query.startDate).ToList();
+            var curDaoDaoHistory = DaoDaoHistoryCount.Sum(x => x.Price);
+            var DaoDaoThisMonthCount = curDaoDaoTotalAchievement.Where(x => x.SendDate >= query.startDate).ToList();
+            var curDaoDaoThisMonth = DaoDaoThisMonthCount.Sum(x => x.Price);
 
             totalPerformanceIsHistoryGroupDaoDaoData.TotalPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curDaoDaoTotalAchievementPrice);
             totalPerformanceIsHistoryGroupDaoDaoData.HistoryPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curDaoDaoHistory);
@@ -357,12 +456,24 @@ namespace Fx.Amiya.Service
             totalPerformanceIsHistoryGroupDaoDaoData.ThisMonthPerformanceRate = DecimalExtension.CalculateTargetComplete(curDaoDaoThisMonth, curDaoDaoTotalAchievementPrice);
 
             result.GroupDaoDaoIsHistoryPerformance = totalPerformanceIsHistoryGroupDaoDaoData;
+
+
+            //人数
+            OperationBoardGetIsHistoryPerformanceDto totalPerformanceIsHistoryNumGroupDaoDaoData = new OperationBoardGetIsHistoryPerformanceDto();
+            totalPerformanceIsHistoryNumGroupDaoDaoData.TotalPerformanceNumber = curDaoDaoTotalCount;
+            totalPerformanceIsHistoryNumGroupDaoDaoData.ThisMonthPerformanceNumber = DaoDaoThisMonthCount.Count();
+            totalPerformanceIsHistoryNumGroupDaoDaoData.ThisMonthPerformanceRate = DecimalExtension.CalculateTargetComplete(DaoDaoThisMonthCount.Count(), curDaoDaoTotalCount);
+            totalPerformanceIsHistoryNumGroupDaoDaoData.HistoryPerformanceNumber = DaoDaoHistoryCount.Count();
+            totalPerformanceIsHistoryNumGroupDaoDaoData.HistoryPerformanceRate = DecimalExtension.CalculateTargetComplete(DaoDaoHistoryCount.Count(), curDaoDaoTotalCount);
+            result.GroupDaoDaoIsHistoryPerformanceNum = totalPerformanceIsHistoryNumGroupDaoDaoData;
             #endregion
 
             #region 吉娜组业绩-当月/历史
             OperationBoardGetIsHistoryPerformanceDto totalPerformanceIsHistoryGroupJiNaData = new OperationBoardGetIsHistoryPerformanceDto();
-            var curJiNaHistory = curJiNaTotalAchievement.Where(x => x.SendDate < query.startDate).Sum(x => x.Price);
-            var curJiNaThisMonth = curJiNaTotalAchievement.Where(x => x.SendDate >= query.startDate).Sum(x => x.Price);
+            var JiNaHistoryCount = curJiNaTotalAchievement.Where(x => x.SendDate < query.startDate).ToList();
+            var curJiNaHistory = JiNaHistoryCount.Sum(x => x.Price);
+            var JiNaThisMonthCount = curJiNaTotalAchievement.Where(x => x.SendDate >= query.startDate).ToList();
+            var curJiNaThisMonth = JiNaThisMonthCount.Sum(x => x.Price);
 
             totalPerformanceIsHistoryGroupJiNaData.TotalPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curJiNaTotalAchievementPrice);
             totalPerformanceIsHistoryGroupJiNaData.HistoryPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curJiNaHistory);
@@ -371,6 +482,16 @@ namespace Fx.Amiya.Service
             totalPerformanceIsHistoryGroupJiNaData.ThisMonthPerformanceRate = DecimalExtension.CalculateTargetComplete(curJiNaThisMonth, curJiNaTotalAchievementPrice);
 
             result.GroupJiNaIsHistoryPerformance = totalPerformanceIsHistoryGroupJiNaData;
+
+
+            //人数
+            OperationBoardGetIsHistoryPerformanceDto totalPerformanceIsHistoryNumGroupJiNaData = new OperationBoardGetIsHistoryPerformanceDto();
+            totalPerformanceIsHistoryNumGroupJiNaData.TotalPerformanceNumber = curJiNaTotalCount;
+            totalPerformanceIsHistoryNumGroupJiNaData.ThisMonthPerformanceNumber = JiNaThisMonthCount.Count();
+            totalPerformanceIsHistoryNumGroupJiNaData.ThisMonthPerformanceRate = DecimalExtension.CalculateTargetComplete(JiNaThisMonthCount.Count(), curJiNaTotalCount);
+            totalPerformanceIsHistoryNumGroupJiNaData.HistoryPerformanceNumber = JiNaHistoryCount.Count();
+            totalPerformanceIsHistoryNumGroupJiNaData.HistoryPerformanceRate = DecimalExtension.CalculateTargetComplete(JiNaHistoryCount.Count(), curJiNaTotalCount);
+            result.GroupJiNaIsHistoryPerformanceNum = totalPerformanceIsHistoryNumGroupJiNaData;
             #endregion
 
             #region 总业绩（优化：根据刀刀和吉娜组业绩累加）-当月/历史
@@ -386,6 +507,16 @@ namespace Fx.Amiya.Service
             totalPerformanceIsHistoryGroupData.ThisMonthPerformanceRate = DecimalExtension.CalculateTargetComplete(curThisMonth, curTotalAchievement);
 
             result.TotalIsHistoryPerformance = totalPerformanceIsHistoryGroupData;
+
+
+            //人数
+            OperationBoardGetIsHistoryPerformanceDto totalPerformanceIsHistoryNumData = new OperationBoardGetIsHistoryPerformanceDto();
+            totalPerformanceIsHistoryNumData.TotalPerformanceNumber = curTotalCount;
+            totalPerformanceIsHistoryNumData.ThisMonthPerformanceNumber = JiNaNewCount.Count() + daoDaoNewCount.Count();
+            totalPerformanceIsHistoryNumData.ThisMonthPerformanceRate = DecimalExtension.CalculateTargetComplete(JiNaNewCount.Count() + daoDaoNewCount.Count(), curTotalCount);
+            totalPerformanceIsHistoryNumData.HistoryPerformanceNumber = JiNaOldCount.Count() + daoDaoNewCount.Count();
+            totalPerformanceIsHistoryNumData.HistoryPerformanceRate = DecimalExtension.CalculateTargetComplete(JiNaNewCount.Count() + daoDaoNewCount.Count(), curTotalCount);
+            result.TotalIsHistoryPerformanceNum = totalPerformanceIsHistoryNumData;
             #endregion
             #endregion
             return result;
@@ -567,7 +698,7 @@ namespace Fx.Amiya.Service
                 result.TotalBeforeLivingClue = sumShoppingCartRegistionData.Where(x => x.BelongChannel == (int)BelongChannel.LiveBefore).Count();
                 result.TotalLivingClue = sumShoppingCartRegistionData.Where(x => x.BelongChannel == (int)BelongChannel.Living).Count();
                 result.TotalAfterLivingClue = sumShoppingCartRegistionData.Where(x => x.BelongChannel == (int)BelongChannel.LiveAfter).Count();
-                result.TotalClue = sumShoppingCartRegistionData.Count() ;
+                result.TotalClue = sumShoppingCartRegistionData.Count();
             }
             return result;
         }
