@@ -2557,7 +2557,8 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
-
+                if (input.LastDealHospitalId == null)
+                    throw new Exception("到院医院不能未空");
                 //验证唯一标识
                 if (!string.IsNullOrEmpty(input.OtherContentPlatFormOrderId))
                 {
@@ -2817,7 +2818,8 @@ namespace Fx.Amiya.Service
             unitOfWork.BeginTransaction();
             try
             {
-
+                if (input.LastDealHospitalId == null)
+                    throw new Exception("到院医院不能未空");
                 if (input.IsFinish == true)
                 {
                     if (input.ConsumptionType == (int)ConsumptionType.OTHER) throw new Exception("成交订单不能选择其他消费类型！");
@@ -2830,6 +2832,9 @@ namespace Fx.Amiya.Service
                 {
                     input.ConsumptionType = (int)ConsumptionType.Refund;
                 }
+                var sendInfo = dalContentPlatformOrderSend.GetAll().Where(e => e.ContentPlatformOrderId == input.Id && e.HospitalId == input.LastDealHospitalId).FirstOrDefault();
+                if (sendInfo == null)
+                    throw new Exception("没有该医院的派单信息");
                 var order = await _dalContentPlatformOrder.GetAll().Include(x => x.LiveAnchor).Include(x => x.Contentplatform).Where(x => x.Id == input.Id).SingleOrDefaultAsync();
                 var orderDealInfo = await _contentPlatFormOrderDalService.GetByIdAsync(input.DealId);
                 if (input.EmpId != orderDealInfo.CreateBy)
@@ -2994,7 +2999,7 @@ namespace Fx.Amiya.Service
                     await fansMeetingDetailsService.GenerateDealInfoAsync(generate);
                 }
                 //更新派单信息中的订单状态
-                await _contentPlatformOrderSend.UpdateSendOrderStatusAsync(input.SendOrderId, order.OrderStatus);
+                await _contentPlatformOrderSend.UpdateSendOrderStatusAsync(sendInfo.Id, order.OrderStatus);
 
                 unitOfWork.Commit();
             }

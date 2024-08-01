@@ -249,9 +249,8 @@ namespace Fx.Amiya.Service
             {
                 sendOrderInfo.AppointmentDate = addDto.AppointmentDate;
             }
+            sendOrderInfo.OrderStatus = (int)ContentPlateFormOrderStatus.SendOrder;
             await _dalContentPlatformOrderSend.AddAsync(sendOrderInfo, true);
-            //修改派单中的订单状态
-            await this.UpdateSendOrderStatusAsync(sendOrderInfo.Id,(int)ContentPlateFormOrderStatus.SendOrder);
         }
         /// <summary>
         /// 修改派单
@@ -261,7 +260,6 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task UpdateOrderSend(UpdateContentPlatFormSendOrderInfoDto updateDto, int employeeId)
         {
-
             var sendOrderInfo = await _dalContentPlatformOrderSend.GetAll().Include(e => e.ContentPlatformOrder).SingleOrDefaultAsync(e => e.Id == updateDto.Id);
             if (sendOrderInfo == null)
                 throw new Exception("派单编号错误");
@@ -270,7 +268,6 @@ namespace Fx.Amiya.Service
                 throw new Exception("该订单已交易完成，无法改派医院");
             if (sendOrderInfo.ContentPlatformOrder.OrderStatus == Convert.ToInt16(ContentPlateFormOrderStatus.WithoutCompleteOrder))
                 throw new Exception("该订单医院已经处理完毕，无法改派医院");
-
             sendOrderInfo.HospitalId = updateDto.HospitalId;
             sendOrderInfo.Sender = employeeId;
             sendOrderInfo.SendDate = DateTime.Now;
@@ -284,8 +281,6 @@ namespace Fx.Amiya.Service
             {
                 sendOrderInfo.AppointmentDate = updateDto.AppointmentDate;
             }
-
-
             await _dalContentPlatformOrderSend.UpdateAsync(sendOrderInfo, true);
         }
         /// <summary>
@@ -393,10 +388,9 @@ namespace Fx.Amiya.Service
                                 HospitalRemark = d.HospitalRemark,
                                 UnDealPictureUrl = d.ContentPlatformOrder.UnDealPictureUrl,
                                 OrderSourceText = d.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? ServiceClass.GerContentPlatFormOrderSourceText(d.ContentPlatformOrder.OrderSource.Value) : "****",
-
                                 CheckState = d.ContentPlatformOrder.CheckState,
                                 DealDate = d.ContentPlatformOrder.DealDate,
-                                IsToHospital = d.ContentPlatformOrder.IsToHospital,
+                                IsToHospital = (d.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete|| d.OrderStatus == (int)ContentPlateFormOrderStatus.WithoutCompleteOrder)?true:false,
                                 ToHospitalDate = d.ContentPlatformOrder.ToHospitalDate,
                                 ToHospitalType = d.ContentPlatformOrder.ToHospitalType,
                                 ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ContentPlatformOrder.ToHospitalType),
@@ -528,10 +522,9 @@ namespace Fx.Amiya.Service
                                 HospitalRemark = d.HospitalRemark,
                                 UnDealPictureUrl = d.ContentPlatformOrder.UnDealPictureUrl,
                                 OrderSourceText = d.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? ServiceClass.GerContentPlatFormOrderSourceText(d.ContentPlatformOrder.OrderSource.Value) : "****",
-
                                 CheckState = d.ContentPlatformOrder.CheckState,
                                 DealDate = d.ContentPlatformOrder.DealDate,
-                                IsToHospital = d.ContentPlatformOrder.IsToHospital,
+                                IsToHospital = (d.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete || d.OrderStatus == (int)ContentPlateFormOrderStatus.WithoutCompleteOrder) ? true : false,
                                 ToHospitalDate = d.ContentPlatformOrder.ToHospitalDate,
                                 ToHospitalType = d.ContentPlatformOrder.ToHospitalType,
                                 ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ContentPlatformOrder.ToHospitalType),
@@ -681,7 +674,7 @@ namespace Fx.Amiya.Service
             var orders = _dalContentPlatformOrderSend.GetAll().Include(x => x.ContentPlatformOrder)
                        .Where(e => string.IsNullOrWhiteSpace(keyword) || e.ContentPlatformOrderId == keyword || e.ContentPlatformOrder.Phone.Contains(keyword) || e.ContentPlatformOrder.LiveAnchorWeChatNo.Contains(keyword))
                        .Where(e => hospitalId == 0 || e.HospitalId == hospitalId)
-                       .Where(e=>!isMainHospital.HasValue||e.IsMainHospital==e.IsMainHospital)
+                       .Where(e=>!isMainHospital.HasValue||e.IsMainHospital==isMainHospital)
                        .Where(e => orderSource == -1 || e.ContentPlatformOrder.OrderSource == orderSource)
                        .Where(e => !IsToHospital.HasValue || e.ContentPlatformOrder.IsToHospital == IsToHospital.Value)
                        .Where(e => !belongMonth.HasValue || e.ContentPlatformOrder.BelongMonth == belongMonth.Value)
@@ -768,7 +761,7 @@ namespace Fx.Amiya.Service
                                             DepositAmount = d.ContentPlatformOrder.DepositAmount,
                                             DealAmount = d.ContentPlatformOrder.DealAmount,
                                             DealPictureUrl = d.ContentPlatformOrder.DealPictureUrl,
-                                            IsToHospital = d.ContentPlatformOrder.IsToHospital,
+                                            IsToHospital = (d.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete || d.OrderStatus == (int)ContentPlateFormOrderStatus.WithoutCompleteOrder) ? true : false,
                                             ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ContentPlatformOrder.ToHospitalType),
                                             UnDealReason = d.ContentPlatformOrder.UnDealReason,
                                             ConsultationType = d.ContentPlatformOrder.ConsultationType,

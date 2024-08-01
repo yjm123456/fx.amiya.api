@@ -1521,7 +1521,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.NextAppointmentDate = updateVo.NextAppointmentDate;
                 updateDto.IsNeedHospitalHelp = updateVo.IsNeedHospitalHelp;
                 updateDto.EmpId = employeeId;
-                updateDto.SendOrderId = updateVo.SendOrderId;
+                
                 List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
                 if (updateDto.IsFinish == true)
                 {
