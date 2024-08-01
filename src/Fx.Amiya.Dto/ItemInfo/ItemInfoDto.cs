@@ -53,7 +53,18 @@ namespace Fx.Amiya.Dto.ItemInfo
         public bool Valid { get; set; }
         public string Remark { get; set; }
 
-
+        /// <summary>
+        /// 讲解次数
+        /// </summary>
+        public int ExplainTimes { get; set; }
+        /// <summary>
+        /// 首次上架时间
+        /// </summary>
+        public DateTime? FirstTimeOnSell { get; set; }
+        /// <summary>
+        /// 是否是新品
+        /// </summary>
+        public bool IsNewGoods { get; set; }
 
     }
 }

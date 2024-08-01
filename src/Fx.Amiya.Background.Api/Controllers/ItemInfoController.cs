@@ -81,7 +81,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                     UpdateName = d.UpdateName,
                                     Valid = d.Valid,
                                     Remark = d.Remark,
-
+                                    ExplainTimes=d.ExplainTimes,
+                                    FirstTimeOnSell=d.FirstTimeOnSell,
+                                    IsNewGoods=d.IsNewGoods
                                 };
 
                 FxPageInfo<ItemInfoVo> itemPageInfo = new FxPageInfo<ItemInfoVo>();
@@ -125,7 +127,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                            LivePrice = d.LivePrice,
                            IsLimitBuy = d.IsLimitBuy,
                            LimitBuyQuantity = d.LimitBuyQuantity,
-                           Remark = d.Remark
+                           Remark = d.Remark,
+                           ExplainTimes=d.ExplainTimes,
+                           FirstTimeOnSell=d.FirstTimeOnSell,
+                           IsNewGoods=d.IsNewGoods
                        };
 
             FxPageInfo<ItemInfoSimpleVo> itemPageInfo = new FxPageInfo<ItemInfoSimpleVo>();
@@ -170,7 +175,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.Guarantee = addVo.Guarantee;
                 addDto.AppointmentNotice = addVo.AppointmentNotice;
                 addDto.Remark = addVo.Remark;
-
+                addDto.FirstTimeOnSell=addVo.FirstTimeOnSell;
+                addDto.ExplainTimes=addVo.ExplainTimes;
                 await itemInfoService.AddAsync(addDto, employeeId);
                 return ResultData.Success();
             }
@@ -222,6 +228,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 itemInfoVo.UpdateBy = itemInfo.UpdateBy;
                 itemInfoVo.UpdateName = itemInfo.UpdateName;
                 itemInfoVo.UpdateDate = itemInfo.UpdateDate;
+                itemInfoVo.ExplainTimes = itemInfo.ExplainTimes;
+                itemInfoVo.FirstTimeOnSell = itemInfo.FirstTimeOnSell;
                 itemInfoVo.Remark = itemInfo.Remark;
 
                 return ResultData<ItemInfoVo>.Success().AddData("itemInfo", itemInfoVo);
@@ -270,7 +278,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.AppointmentNotice = updateVo.AppointmentNotice;
                 updateDto.Valid = updateVo.Valid;
                 updateDto.Remark = updateVo.Remark;
-
+                updateDto.FirstTimeOnSell=updateVo.FirstTimeOnSell;
+                updateDto.ExplainTimes=updateVo.ExplainTimes;
                 await itemInfoService.UpdateAsync(updateDto, employeeId);
                 return ResultData.Success();
             }
@@ -345,5 +354,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                         };
             return ResultData<List<BaseIdAndNameVo>>.Success().AddData("items", items.ToList());
         }
+       
     }
 }

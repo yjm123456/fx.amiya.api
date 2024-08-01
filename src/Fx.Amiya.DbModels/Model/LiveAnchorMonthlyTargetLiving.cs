@@ -148,6 +148,18 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public decimal EliminateCardGMVTargetCompleteRate { get; set; }
         /// <summary>
+        /// 线索量目标目标
+        /// </summary>
+        public int CluesTarget { get; set; }
+        /// <summary>
+        /// 月累计线索量
+        /// </summary>
+        public int CumulativeClues{ get; set; }
+        /// <summary>
+        /// 线索量目标完成率
+        /// </summary>
+        public decimal CluesTargetCompleteRate { get; set; }
+        /// <summary>
         /// 创建日期
         /// </summary>
         public DateTime CreateDate { get; set; }

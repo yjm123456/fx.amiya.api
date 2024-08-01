@@ -39,6 +39,9 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.ItemDetailId).HasColumnName("item_detail_id").HasColumnType("int").IsRequired(false);
             builder.Property(t => t.OtherAppItemId).HasColumnName("other_app_item_id").HasColumnType("varchar(100)").IsRequired(false);
             builder.Property(t => t.Remark).HasColumnName("remark").HasColumnType("varchar(200)").IsRequired(false);
+            builder.Property(t => t.ExplanTimes).HasColumnName("explan_times").HasColumnType("int").IsRequired();
+            builder.Property(t => t.FirstTimeOnSell).HasColumnName("firsttime_on_sell").HasColumnType("datetime").IsRequired(false);
+            
 
             builder.HasOne(t => t.CreateEmployee).WithMany(t => t.CreateByItemInfoList).HasForeignKey(t=>t.CreateBy);
             builder.HasOne(t => t.UpdateEmployee).WithMany(t => t.UpdateByItemInfoList).HasForeignKey(t=>t.UpdateBy);

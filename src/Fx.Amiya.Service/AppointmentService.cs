@@ -551,6 +551,7 @@ namespace Fx.Amiya.Service
                     Remark = appointment.Remark,
                     ItemInfoName = appointment.ItemInfoName,
                     AppointArea=appointment.AppointArea,
+                    Address=appointment.Address,
                     HospitalInfo = new AppointmentHospitalDto
                     {
                         HospitalId = appointment.HospitalId,
@@ -561,7 +562,7 @@ namespace Fx.Amiya.Service
                         HospitalPhone = appointment.HospitalInfo.Phone,
                         Address = appointment.HospitalInfo.Address
                     },
-                    Address= appointment.Address
+                    
                 };
 
                 return appointmentInfo;

@@ -113,6 +113,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 是否需要机构协助邀约
         /// </summary>
         public bool IsNeedHospitalHelp { get; set; }
+        /// <summary>
+        /// 派单编号
+        /// </summary>
+        public int SendOrderId { get; set; }
 
         /// <summary>
         /// 成交明细

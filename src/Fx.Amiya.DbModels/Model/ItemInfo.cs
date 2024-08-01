@@ -35,6 +35,15 @@ namespace Fx.Amiya.DbModels.Model
         public int? ItemDetailId { get; set; }
         public string OtherAppItemId { get; set; }
         public string Remark { get; set; }
+        /// <summary>
+        /// 解说次数
+        /// </summary>
+        public int ExplanTimes { get; set; }
+        /// <summary>
+        /// 首次商家时间
+        /// </summary>
+        public DateTime? FirstTimeOnSell { get; set; }
+        
 
         public AmiyaEmployee CreateEmployee { get; set; }
         public AmiyaEmployee UpdateEmployee { get; set; }

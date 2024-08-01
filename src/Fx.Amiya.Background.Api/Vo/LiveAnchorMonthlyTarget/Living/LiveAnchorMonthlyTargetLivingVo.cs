@@ -152,5 +152,18 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.Living
         /// </summary>
 
         public decimal RefundGMVTargetCompleteRate { get; set; }
+        /// <summary>
+        /// 线索量目标目标
+        /// </summary>
+        public int CluesTarget { get; set; }
+        /// <summary>
+        /// 月累计线索量
+        /// </summary>
+        public int CumulativeClues { get; set; }
+        /// <summary>
+        /// 线索量目标完成率
+        /// </summary>
+        public decimal CluesTargetCompleteRate { get; set; }
+
     }
 }

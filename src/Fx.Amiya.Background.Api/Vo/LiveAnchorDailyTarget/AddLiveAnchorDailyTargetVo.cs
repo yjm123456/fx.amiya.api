@@ -544,6 +544,10 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 退款GMV
         /// </summary>
         public decimal RefundGMV { get; set; }
+        /// <summary>
+        /// 今日线索量
+        /// </summary>
+        public int Clues { get; set; }
     }
 
     /// <summary>

@@ -123,6 +123,10 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 邀约凭证
         /// </summary>
         public List<string> InvitationDocuments { get; set; }
+        /// <summary>
+        /// 派单编号
+        /// </summary>
+        public int SendOrderId { get; set; }
         public List<AddContentPlatFormOrderDealDetailsDto> AddContentPlatFormOrderDealDetailsDtoList { get; set; }
     }
 }

@@ -21,6 +21,14 @@ namespace Fx.Amiya.DbModels.Model
         /// 是否是主派医院
         /// </summary>
         public bool IsMainHospital { get; set; }
+        /// <summary>
+        /// 是否是重单可深度订单
+        /// </summary>
+        public bool IsRepeatProfundityOrder { get; set; }
+        /// <summary>
+        /// 订单状态
+        /// </summary>
+        public int OrderStatus { get; set; }
         public ContentPlatformOrder ContentPlatformOrder { get; set; }
         public AmiyaEmployee AmiyaEmployee { get; set; }
         public HospitalInfo HospitalInfo { get; set; }

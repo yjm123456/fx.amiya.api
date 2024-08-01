@@ -51,6 +51,10 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.RefundGMVTargetCompleteRate).HasColumnName("refund_gmv_target_completerate").HasColumnType("decimal(10,2)").IsRequired();
             builder.Property(t => t.CumulativeRefundGMV).HasColumnName("cumulative_refund_gmv").HasColumnType("decimal(10,2)").IsRequired();
 
+            builder.Property(t => t.CluesTarget).HasColumnName("clues_target").HasColumnType("int").IsRequired();
+            builder.Property(t => t.CluesTargetCompleteRate).HasColumnName("clues_target_completerate").HasColumnType("decimal(10,2)").IsRequired();
+            builder.Property(t => t.CumulativeClues).HasColumnName("cumulative_clues").HasColumnType("int").IsRequired();
+
             builder.Property(t => t.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
 
             

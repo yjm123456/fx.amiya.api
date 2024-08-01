@@ -416,5 +416,9 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 今日线索量
         /// </summary>
         public int Clues { get; set; }
+        /// <summary>
+        /// 直播中今日线索量
+        /// </summary>
+        public int LivingClues { get; set; }
     }
 }

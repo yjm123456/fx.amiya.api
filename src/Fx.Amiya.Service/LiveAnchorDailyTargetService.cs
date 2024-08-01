@@ -708,7 +708,8 @@ namespace Fx.Amiya.Service
                                           TikTokPlusNum = d.TikTokPlusNum,
                                           QianChuanNum = d.QianChuanNum,
                                           ShuiXinTuiNum = d.ShuiXinTuiNum,
-                                          WeiXinDou = d.WeiXinDou
+                                          WeiXinDou = d.WeiXinDou,
+                                          Clues=d.Clues
                                       };
                 var result = await tikTokDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
 
@@ -986,6 +987,7 @@ namespace Fx.Amiya.Service
                     liveAnchorDailyTargetDto.GMV = liveAnchorDailyTarget.GMV;
                     liveAnchorDailyTargetDto.EliminateCardGMV = liveAnchorDailyTarget.EliminateCardGMV;
                     liveAnchorDailyTargetDto.RefundGMV = liveAnchorDailyTarget.RefundGMV;
+                    liveAnchorDailyTargetDto.LivingClues = liveAnchorDailyTarget.Clues;
                 }
 
                 if (type == 7)
@@ -1994,6 +1996,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.QianChuanNum = addDto.QianChuanNum;
                 liveAnchorDailyTarget.ShuiXinTuiNum = addDto.ShuiXinTuiNum;
                 liveAnchorDailyTarget.WeiXinDou = addDto.WeiXinDou;
+                liveAnchorDailyTarget.Clues = addDto.Clues;
                 await _livingDailyTarget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyLivingTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyLivingTargetRateAndNumDto();
@@ -2006,6 +2009,7 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTarget.GMV = addDto.GMV;
                 editLiveAnchorMonthlyTarget.EliminateCardGMV = addDto.EliminateCardGMV;
                 editLiveAnchorMonthlyTarget.RefundGMV = addDto.RefundGMV;
+                editLiveAnchorMonthlyTarget.Clues = addDto.Clues;
                 await _liveAnchorMonthlyTargetLivingService.EditAsync(editLiveAnchorMonthlyTarget);
                 unitOfWork.Commit();
             }
@@ -2043,6 +2047,7 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTarget.GMV = -liveAnchorDailyTarget.GMV;
                 editLiveAnchorMonthlyTarget.EliminateCardGMV = -liveAnchorDailyTarget.EliminateCardGMV;
                 editLiveAnchorMonthlyTarget.RefundGMV = -liveAnchorDailyTarget.RefundGMV;
+                editLiveAnchorMonthlyTarget.Clues=-liveAnchorDailyTarget.Clues;
                 await _liveAnchorMonthlyTargetLivingService.EditAsync(editLiveAnchorMonthlyTarget);
 
                 liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
@@ -2061,6 +2066,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.QianChuanNum = updateDto.QianChuanNum;
                 liveAnchorDailyTarget.ShuiXinTuiNum = updateDto.ShuiXinTuiNum;
                 liveAnchorDailyTarget.WeiXinDou = updateDto.WeiXinDou;
+                liveAnchorDailyTarget.Clues = updateDto.Clues;
                 await _livingDailyTarget.UpdateAsync(liveAnchorDailyTarget, true);
 
                 //添加修改后的
@@ -2074,6 +2080,7 @@ namespace Fx.Amiya.Service
                 lasteditLiveAnchorMonthlyTarget.GMV = updateDto.GMV;
                 lasteditLiveAnchorMonthlyTarget.EliminateCardGMV = updateDto.EliminateCardGMV;
                 lasteditLiveAnchorMonthlyTarget.RefundGMV = updateDto.RefundGMV;
+                lasteditLiveAnchorMonthlyTarget.Clues = updateDto.Clues;
                 await _liveAnchorMonthlyTargetLivingService.EditAsync(lasteditLiveAnchorMonthlyTarget);
                 unitOfWork.Commit();
             }

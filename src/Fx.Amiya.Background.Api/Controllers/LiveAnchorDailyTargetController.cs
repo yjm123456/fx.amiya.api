@@ -255,7 +255,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 TikTokPlusNum = d.TikTokPlusNum,
                                                 QianChuanNum = d.QianChuanNum,
                                                 ShuiXinTuiNum = d.ShuiXinTuiNum,
-                                                WeiXinDou = d.WeiXinDou
+                                                WeiXinDou = d.WeiXinDou,
+                                                Clues=d.Clues
                                             };
 
                 FxPageInfo<LivingDailyTargetVo> liveAnchorDailyTargetPageInfo = new FxPageInfo<LivingDailyTargetVo>();
@@ -440,7 +441,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorDailyTargetVo.DistributeConsulation=liveAnchorDailyTarget.DistributeConsulation;
                 liveAnchorDailyTargetVo.RefundGMV = liveAnchorDailyTarget.RefundGMV;
                 liveAnchorDailyTargetVo.Clues=liveAnchorDailyTarget.Clues;
-
+                liveAnchorDailyTargetVo.LivingClues=liveAnchorDailyTarget.LivingClues;
                 return ResultData<LiveAnchorDailyTargetByIdVo>.Success().AddData("liveAnchorDailyTargetInfo", liveAnchorDailyTargetVo);
             }
             catch (Exception ex)
@@ -866,6 +867,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.QianChuanNum = addVo.QianChuanNum;
                     addDto.ShuiXinTuiNum = addVo.ShuiXinTuiNum;
                     addDto.WeiXinDou = addVo.WeiXinDou;
+                    addDto.Clues=addVo.Clues;
                     await _liveAnchorDailyTargetService.LivingAddAsync(addDto);
                 }
                 return ResultData.Success();
@@ -905,6 +907,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.QianChuanNum = updateVo.QianChuanNum;
                 updateDto.ShuiXinTuiNum = updateVo.ShuiXinTuiNum;
                 updateDto.WeiXinDou = updateVo.WeiXinDou;
+                updateDto.Clues=updateVo.Clues;
                 await _liveAnchorDailyTargetService.LivingUpdateAsync(updateDto);
                 return ResultData.Success();
             }

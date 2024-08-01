@@ -64,6 +64,10 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 退款GMV目标
         /// </summary>
         public decimal RefundGMVTarget { get; set; }
+        /// <summary>
+        /// 线索量目标
+        /// </summary>
+        public int CluesTarget { get; set; }
 
     }
 }

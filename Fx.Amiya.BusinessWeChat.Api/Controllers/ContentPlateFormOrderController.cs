@@ -728,6 +728,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 //updateDto.ConsumptionType = (int)ConsumptionType.Deal;
                 updateDto.InvitationDocuments = updateVo.InvitationDocuments;
                 List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
+                updateDto.SendOrderId= updateVo.SendOrderId;
                 if (updateDto.IsFinish == true && updateVo.AddContentPlatFormOrderDealDetailsVoList != null)
                 {
                     foreach (var x in updateVo.AddContentPlatFormOrderDealDetailsVoList)
@@ -798,6 +799,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 updateDto.ConsumptionType = updateVo.ConsumptionType;
                 updateDto.FansMeetingId=updateVo.FansMeetingId;
                 updateDto.EmpId = employeeId;
+                updateDto.SendOrderId=updateVo.SendOrderId;
                 List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
                 if (updateDto.IsFinish == true)
                 {

@@ -173,7 +173,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="orderId"></param>
         /// <returns></returns>
-        Task HospitalConfirmOrderAsync(string orderId, int hospitalEmpId, int hospitalId, string netWorkConsulationName, string sceneConsulationName);
+        Task HospitalConfirmOrderAsync(int sendOrderId,string orderId, int hospitalEmpId, int hospitalId, string netWorkConsulationName, string sceneConsulationName);
         /// <summary>
         ///  医院重单退回
         /// </summary>
@@ -224,6 +224,7 @@ namespace Fx.Amiya.IService
         /// <param name="sendBy"></param>
         /// <param name="belongEmpId"></param>
         /// <param name="employee"></param>
+        /// <param name="isChangeData">是否需要更改主订单数据</param>
         /// <returns></returns>
         Task NewUpdateStateAndRepeateOrderPicAsync(string orderId, int sendBy, int? belongEmpId, int employee);
 
@@ -324,7 +325,13 @@ namespace Fx.Amiya.IService
         /// <param name="encryphone"></param>
         /// <returns></returns>
         Task<FxPageInfo<ContentPlateformOrderSimpleInfoDto>> GetContentOrderInfoByEncryPhone(string phone, int pageNum,int pageSize);
-
+        /// <summary>
+        /// 修该订单状态
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="orderStatus"></param>
+        /// <returns></returns>
+        Task UpdateOrderStatusAsync(string id,int orderStatus);
         #region 财务看板
 
         Task<List<CustomerServiceDetailsPerformanceDto>> GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, List<int> belongCustomerServiceIds);

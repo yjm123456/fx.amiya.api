@@ -865,6 +865,10 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 退款GMV
         /// </summary>
         public decimal RefundGMV { get; set; }
+        /// <summary>
+        /// 今日线索量
+        /// </summary>
+        public int Clues { get; set; }
     }
 
 
@@ -938,6 +942,10 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 退款GMV
         /// </summary>
         public decimal RefundGMV { get; set; }
+        /// <summary>
+        /// 线索量
+        /// </summary>
+        public int Clues { get; set; }
     }
 
     public class AfterLivingAddLiveAnchorDailyTargetDto

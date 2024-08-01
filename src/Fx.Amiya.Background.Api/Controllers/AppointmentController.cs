@@ -163,6 +163,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             appointmentInfo.ItemName = appointment.ItemInfoName;
             appointmentInfo.Phone = appointment.Phone;
             appointmentInfo.AppointArea = appointment.AppointArea;
+            appointmentInfo.Address = appointment.Address;
             appointmentInfo.HospitalId = appointment.HospitalInfo.HospitalId;
             return ResultData<AppointmentInfoVo>.Success().AddData("appointment", appointmentInfo);
         }

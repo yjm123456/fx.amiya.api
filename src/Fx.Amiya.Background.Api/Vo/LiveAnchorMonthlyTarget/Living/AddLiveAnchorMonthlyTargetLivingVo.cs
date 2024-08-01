@@ -59,6 +59,11 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.Living
         /// 退款GMV
         /// </summary>
         public decimal RefundGMVTarget { get; set; }
+        /// <summary>
+        /// 线索量目标目标
+        /// </summary>
+        public int CluesTarget { get; set; }
+       
 
     }
 }

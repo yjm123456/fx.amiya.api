@@ -44,3 +44,37 @@ ADD COLUMN `next_appointment_date` DATETIME NULL AFTER `follow_up_content`,
 ADD COLUMN `is_need_hospital_help` BIT(1) NOT NULL AFTER `next_appointment_date`;
 ------------------------------------余建明 2024/7/23 END--------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+------------------------------------王健 2024/7/30 BEGIN--------------------------------------
+
+--直播中月目标添加 线索量,累计线索量,线索量目标完成率
+ALTER TABLE `tbl_liveanchor_monthly_target_living`
+	ADD COLUMN `clues_target` INT NOT NULL DEFAULT 0 AFTER `cumulative_refund_gmv`,
+	ADD COLUMN `clues_target_completerate` DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER `clues_target`,
+	ADD COLUMN `cumulative_clues` DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER `clues_target_completerate`;
+
+
+--直播中日运营数据添加 今日线索量
+ALTER TABLE `tbl_living_daily_target`
+	ADD COLUMN `clues` INT NOT NULL DEFAULT 0 AFTER `weixin_dou`;
+
+
+------------------------------------王健 2024/7/30 END--------------------------------------
+
+
+------------------------------------王健 2024/7/31 BEGIN--------------------------------------
+
+--带货商品添加讲解时间,和首次上架时间
+ALTER TABLE `tbl_item_info`
+	ADD COLUMN `explan_times` INT NULL DEFAULT 0 AFTER `remark`,
+	ADD COLUMN `firsttime_on_sell` DATETIME NULL DEFAULT NULL AFTER `explan_times`;
+
+--派单信息添加订单状态
+ALTER TABLE `tbl_content_platform_order_send`
+	ADD COLUMN `order_status` INT NOT NULL DEFAULT 0 AFTER `is_main_hospital`;
+
+--派单信息添加是否重单可深度
+ALTER TABLE `tbl_content_platform_order_send`
+	ADD COLUMN `is_repeat_profundity_order` BIT NOT NULL DEFAULT 0 AFTER `order_status`;
+
+------------------------------------王健 2024/7/31 BEGIN--------------------------------------

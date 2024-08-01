@@ -102,6 +102,10 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder
         /// 粉丝见面会id
         /// </summary>
         public string FansMeetingId { get; set; }
+        /// <summary>
+        /// 派单编号
+        /// </summary>
+        public int SendOrderId { get; set; }
         public List<AddContentPlatFormOrderDealDetailsVo> AddContentPlatFormOrderDealDetailsVoList { get; set; }
     }
 }

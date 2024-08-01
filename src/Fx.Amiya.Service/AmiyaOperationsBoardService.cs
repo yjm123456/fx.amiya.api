@@ -1226,7 +1226,7 @@ namespace Fx.Amiya.Service
             otherData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(otherData.ToHospitalCount, otherData.SendOrderCount).Value;
             otherData.NewCustomerDealCount = list.Where(e => e.GroupName == "其他").Sum(e => e.NewCustomerDealCount);
             otherData.OldCustomerDealCount = list.Where(e => e.GroupName == "其他").Sum(e => e.OldCustomerDealCount);
-            otherData.DealCount = otherData.NewCustomerDealCount + otherData.OldCustomerDealCount;
+            otherData.DealCount = otherData.NewCustomerDealCount;
             otherData.DealRate = DecimalExtension.CalculateTargetComplete(otherData.DealCount, otherData.ToHospitalCount).Value;
             otherData.NewCustomerPerformance = list.Where(e => e.GroupName == "其他").Sum(e => e.NewCustomerPerformance);
             otherData.OldCustomerPerformance = list.Where(e => e.GroupName == "其他").Sum(e => e.OldCustomerPerformance);
@@ -1250,6 +1250,7 @@ namespace Fx.Amiya.Service
             data.ToHospitalCount = list.Sum(e => e.ToHospitalCount);
             data.ToHospitalRate = DecimalExtension.CalculateTargetComplete(data.ToHospitalCount, data.SendOrderCount).Value;
             data.DealCount = list.Sum(e => e.DealCount);
+            data.OldCustomerDealCount = list.Sum(e => e.OldCustomerDealCount);
             data.DealRate = DecimalExtension.CalculateTargetComplete(data.DealCount, data.ToHospitalCount).Value;
             data.NewCustomerPerformance = list.Sum(e => e.NewCustomerPerformance);
             data.OldCustomerPerformance = list.Sum(e => e.OldCustomerPerformance);

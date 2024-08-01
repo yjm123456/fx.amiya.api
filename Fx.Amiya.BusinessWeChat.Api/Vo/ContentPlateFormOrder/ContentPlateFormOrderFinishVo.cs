@@ -111,8 +111,10 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder
         /// 是否需要机构协助邀约
         /// </summary>
         public bool IsNeedHospitalHelp { get; set; }
-
-
+        /// <summary>
+        /// 派单编号
+        /// </summary>
+        public int SendOrderId { get; set; }
         /// <summary>
         /// 邀约凭证
         /// </summary>

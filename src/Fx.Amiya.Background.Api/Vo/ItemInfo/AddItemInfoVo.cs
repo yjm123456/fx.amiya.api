@@ -112,5 +112,13 @@ namespace Fx.Amiya.Background.Api.Vo.ItemInfo
         /// 备注
         /// </summary>
         public string Remark { get; set; }
+        /// <summary>
+        /// 讲解次数
+        /// </summary>
+        public int ExplainTimes { get; set; }
+        /// <summary>
+        /// 首次上架时间
+        /// </summary>
+        public DateTime? FirstTimeOnSell { get; set; }
     }
 }

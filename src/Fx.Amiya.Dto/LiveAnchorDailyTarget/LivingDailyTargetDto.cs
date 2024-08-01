@@ -115,5 +115,9 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 今日退款gmv
         /// </summary>
         public decimal RefundGMV { get; set; }
+        /// <summary>
+        /// 今日线索量
+        /// </summary>
+        public int Clues { get; set; }
     }
 }

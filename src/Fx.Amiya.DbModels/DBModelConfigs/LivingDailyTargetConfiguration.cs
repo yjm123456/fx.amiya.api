@@ -33,6 +33,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.GMV).HasColumnName("gmv").HasColumnType("decimal(10,2)").IsRequired();
             builder.Property(e => e.EliminateCardGMV).HasColumnName("eliminate_card_gmv").HasColumnType("decimal(10,2)").IsRequired();
             builder.Property(e => e.RefundGMV).HasColumnName("refund_gmv").HasColumnType("decimal(10,2)").IsRequired();
+            builder.Property(e => e.Clues).HasColumnName("clues").HasColumnType("int").IsRequired();
 
             builder.HasOne(e => e.LiveAnchorMonthlyTargetLiving).WithMany(e => e.LivingDailyTargets).HasForeignKey(e => e.LiveAnchorMonthlyTargetId);
 

@@ -53,6 +53,10 @@ namespace Fx.Amiya.DbModels.Model
         /// 退款gmv
         /// </summary>
         public decimal RefundGMV { get; set; }
+        /// <summary>
+        /// 今日线索量
+        /// </summary>
+        public int Clues { get; set; }
 
 
         public DateTime RecordDate { get; set; }

@@ -1234,15 +1234,16 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="orderId">订单号</param>
         /// <param name="netWorkConsulationName">医院网咨人员</param>
         /// <param name="sceneConsulationName">医院现场咨询人员</param>
+        /// <param name="sendOrderId">派单编号</param>
         /// <returns></returns>
         [HttpGet("contentPlateFormOrderConfirm")]
         [FxTenantAuthorize]
-        public async Task<ResultData> RepeateOrderAsync(string orderId, string netWorkConsulationName, string sceneConsulationName)
+        public async Task<ResultData> RepeateOrderAsync(int sendOrderId, string orderId, string netWorkConsulationName, string sceneConsulationName)
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
             int hospitalempId = Convert.ToInt32(employee.Id);
             int hospitalId = Convert.ToInt32(employee.HospitalId);
-            await _orderService.HospitalConfirmOrderAsync(orderId, hospitalempId, hospitalId, netWorkConsulationName, sceneConsulationName);
+            await _orderService.HospitalConfirmOrderAsync(sendOrderId,orderId, hospitalempId, hospitalId, netWorkConsulationName, sceneConsulationName);
             return ResultData.Success();
         }
         /// <summary>
@@ -1418,6 +1419,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.FollowUpContent = updateVo.FollowUpContent;
                 updateDto.NextAppointmentDate = updateVo.NextAppointmentDate;
                 updateDto.IsNeedHospitalHelp = updateVo.IsNeedHospitalHelp;
+                updateDto.SendOrderId = updateVo.SendOrderId;
                 List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
                 if (updateDto.IsFinish == true)
                 {
@@ -1519,6 +1521,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.NextAppointmentDate = updateVo.NextAppointmentDate;
                 updateDto.IsNeedHospitalHelp = updateVo.IsNeedHospitalHelp;
                 updateDto.EmpId = employeeId;
+                updateDto.SendOrderId = updateVo.SendOrderId;
                 List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
                 if (updateDto.IsFinish == true)
                 {
@@ -1596,6 +1599,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.InvitationDocuments = updateVo.InvitationDocuments;
             updateDto.ConsumptionType = updateVo.ConsumptionType;
             updateDto.EmpId = 266;
+            updateDto.SendOrderId = updateVo.SendOrderId;
             List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
             if (updateDto.IsFinish == true)
             {

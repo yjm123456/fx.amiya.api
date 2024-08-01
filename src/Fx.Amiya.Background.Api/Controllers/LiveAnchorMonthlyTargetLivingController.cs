@@ -89,7 +89,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                         EliminateCardGMVTargetCompleteRate = d.EliminateCardGMVTargetCompleteRate,
                                                         RefundGMVTarget=d.RefundGMVTarget,
                                                         CumulativeRefundGMV=d.CumulativeRefundGMV,
-                                                        RefundGMVTargetCompleteRate=d.RefundGMVTargetCompleteRate
+                                                        RefundGMVTargetCompleteRate=d.RefundGMVTargetCompleteRate,
+                                                        CluesTarget=d.CluesTarget,
+                                                        CluesTargetCompleteRate=d.CluesTargetCompleteRate,
+                                                        CumulativeClues=d.CumulativeClues
                                                     };
 
                 FxPageInfo<LiveAnchorMonthlyTargetLivingVo> liveAnchorMonthlyTargetLivingPageInfo = new FxPageInfo<LiveAnchorMonthlyTargetLivingVo>();
@@ -161,6 +164,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.GMVTarget = addVo.GMVTarget;
                 addDto.EliminateCardGMVTarget = addVo.EliminateCardGMVTarget;
                 addDto.RefundGMVTarget = addVo.RefundGMVTarget;
+                addDto.CluesTarget=addVo.CluesTarget;
                 await _liveAnchorMonthlyTargetLivingService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -220,6 +224,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorMonthlyTargetVo.CumulativeRefundGMV = liveAnchorMonthlyTarget.CumulativeRefundGMV;
                 liveAnchorMonthlyTargetVo.RefundGMVTargetCompleteRate = liveAnchorMonthlyTarget.RefundGMVTargetCompleteRate;
 
+                liveAnchorMonthlyTargetVo.CluesTarget = liveAnchorMonthlyTarget.CluesTarget;
+                liveAnchorMonthlyTargetVo.CumulativeClues = liveAnchorMonthlyTarget.CumulativeClues;
+                liveAnchorMonthlyTargetVo.CluesTargetCompleteRate = liveAnchorMonthlyTarget.CluesTargetCompleteRate;
+
                 liveAnchorMonthlyTargetVo.CreateDate = liveAnchorMonthlyTarget.CreateDate;
 
                 return ResultData<LiveAnchorMonthlyTargetLivingVo>.Success().AddData("liveAnchorMonthlyTargetLivingInfo", liveAnchorMonthlyTargetVo);
@@ -255,6 +263,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.GMVTarget = updateVo.GMVTarget;
                 updateDto.EliminateCardGMVTarget = updateVo.EliminateCardGMVTarget;
                 updateDto.RefundGMVTarget = updateVo.RefundGMVTarget;
+                updateDto.CluesTarget=updateVo.CluesTarget;
                 await _liveAnchorMonthlyTargetLivingService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

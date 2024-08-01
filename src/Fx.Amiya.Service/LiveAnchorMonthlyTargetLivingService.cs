@@ -101,7 +101,12 @@ namespace Fx.Amiya.Service
 
                                                         RefundGMVTarget=d.RefundGMVTarget,
                                                         CumulativeRefundGMV=d.CumulativeRefundGMV,
-                                                        RefundGMVTargetCompleteRate=d.RefundGMVTargetCompleteRate
+                                                        RefundGMVTargetCompleteRate=d.RefundGMVTargetCompleteRate,
+
+                                                        CluesTarget =d.CluesTarget,
+                                                        CumulativeClues=d.CumulativeClues,
+                                                        CluesTargetCompleteRate=d.CluesTargetCompleteRate
+                                                        
                                                     };
 
                 FxPageInfo<LiveAnchorMonthlyTargetLivingDto> liveAnchorMonthlyTargetLivingPageInfo = new FxPageInfo<LiveAnchorMonthlyTargetLivingDto>();
@@ -156,6 +161,10 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.RefundGMVTarget = addDto.RefundGMVTarget;
                 liveAnchorMonthlyTarget.CumulativeRefundGMV = 0.00m;
                 liveAnchorMonthlyTarget.RefundGMVTargetCompleteRate = 0.00m;
+
+                liveAnchorMonthlyTarget.CluesTarget = addDto.CluesTarget;
+                liveAnchorMonthlyTarget.CumulativeClues = 0;
+                liveAnchorMonthlyTarget.CluesTargetCompleteRate = 0.00m;
 
                 liveAnchorMonthlyTarget.CreateDate = DateTime.Now;
 
@@ -235,6 +244,10 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTargetDto.CumulativeRefundGMV = liveAnchorMonthlyTarget.CumulativeRefundGMV;
                 liveAnchorMonthlyTargetDto.RefundGMVTargetCompleteRate = liveAnchorMonthlyTarget.RefundGMVTargetCompleteRate;
 
+                liveAnchorMonthlyTargetDto.CluesTarget=liveAnchorMonthlyTarget.CluesTarget;
+                liveAnchorMonthlyTargetDto.CumulativeClues = liveAnchorMonthlyTarget.CumulativeClues;
+                liveAnchorMonthlyTargetDto.CluesTargetCompleteRate = liveAnchorMonthlyTarget.CluesTargetCompleteRate;
+
                 liveAnchorMonthlyTargetDto.CreateDate = liveAnchorMonthlyTarget.CreateDate;
                 var liveAnchor = await _liveanchorService.GetByIdAsync(liveAnchorMonthlyTargetDto.LiveAnchorId);
                 liveAnchorMonthlyTargetDto.ContentPlatFormId = liveAnchor.ContentPlateFormId;
@@ -268,6 +281,7 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.GMVTarget = updateDto.GMVTarget;
                 liveAnchorMonthlyTarget.EliminateCardGMVTarget = updateDto.EliminateCardGMVTarget;
                 liveAnchorMonthlyTarget.RefundGMVTarget = updateDto.RefundGMVTarget;
+                liveAnchorMonthlyTarget.CluesTarget=updateDto.CluesTarget;
 
                 await dalLiveAnchorMonthlyTargetLiving.UpdateAsync(liveAnchorMonthlyTarget, true);
             }
@@ -383,7 +397,7 @@ namespace Fx.Amiya.Service
 
                 #region 退款gmv
 
-                liveAnchorMonthlyTargetLiving.CumulativeRefundGMV += editDto.RefundGMV;
+                liveAnchorMonthlyTargetLiving.CumulativeRefundGMV += editDto.Clues;
                 if (liveAnchorMonthlyTargetLiving.CumulativeRefundGMV <= 0)
                 {
                     liveAnchorMonthlyTargetLiving.RefundGMVTargetCompleteRate = 0.00M;
@@ -391,6 +405,20 @@ namespace Fx.Amiya.Service
                 else
                 {
                     liveAnchorMonthlyTargetLiving.RefundGMVTargetCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetLiving.CumulativeRefundGMV) / Convert.ToDecimal(liveAnchorMonthlyTargetLiving.RefundGMVTarget)) * 100, 2);
+                }
+
+                #endregion
+
+                #region 线索量
+
+                liveAnchorMonthlyTargetLiving.CumulativeClues += editDto.Clues;
+                if (liveAnchorMonthlyTargetLiving.CumulativeClues <= 0)
+                {
+                    liveAnchorMonthlyTargetLiving.CluesTargetCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetLiving.CluesTargetCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetLiving.CumulativeClues) / Convert.ToDecimal(liveAnchorMonthlyTargetLiving.CluesTarget)) * 100, 2);
                 }
 
                 #endregion

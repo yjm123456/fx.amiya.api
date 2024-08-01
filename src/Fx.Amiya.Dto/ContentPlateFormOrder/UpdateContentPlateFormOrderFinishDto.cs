@@ -129,7 +129,11 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// </summary>
         public string ConsumptionTypeText { get; set; }
         public int EmpId { get; set; }
+        /// <summary>
+        /// 派单编号
+        /// </summary>
 
+        public int SendOrderId { get; set; }
         public List<AddContentPlatFormOrderDealDetailsDto> AddContentPlatFormOrderDealDetailsDtoList { get; set; }
 
     }

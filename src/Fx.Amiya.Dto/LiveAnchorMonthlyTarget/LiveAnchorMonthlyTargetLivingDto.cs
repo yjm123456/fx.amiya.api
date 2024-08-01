@@ -155,5 +155,17 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 去卡GMV目标完成率
         /// </summary>
         public decimal EliminateCardGMVTargetCompleteRate { get; set; }
+        /// <summary>
+        /// 线索量目标目标
+        /// </summary>
+        public int CluesTarget { get; set; }
+        /// <summary>
+        /// 月累计线索量
+        /// </summary>
+        public int CumulativeClues { get; set; }
+        /// <summary>
+        /// 线索量目标完成率
+        /// </summary>
+        public decimal CluesTargetCompleteRate { get; set; }
     }
 }

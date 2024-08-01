@@ -96,7 +96,10 @@ namespace Fx.Amiya.Service
                                    CreateDate = d.CreateDate,
                                    UpdateBy = d.UpdateBy,
                                    UpdateName = d.UpdateEmployee.Name,
-                                   UpdateDate = d.UpdateDate
+                                   UpdateDate = d.UpdateDate,
+                                   ExplainTimes=d.ExplanTimes,
+                                   FirstTimeOnSell=d.FirstTimeOnSell,
+                                   IsNewGoods=d.FirstTimeOnSell==null?false:d.FirstTimeOnSell.Value.AddMonths(3)<DateTime.Now
                                };
 
                 FxPageInfo<ItemInfoDto> itemPageInfo = new FxPageInfo<ItemInfoDto>();
@@ -172,7 +175,10 @@ namespace Fx.Amiya.Service
                            LivePrice = d.LivePrice == null ? d.SalePrice : d.LivePrice,
                            IsLimitBuy = d.IsLimitBuy,
                            LimitBuyQuantity = d.LimitBuyQuantity,
-                           Remark = d.Remark
+                           Remark = d.Remark,
+                           ExplainTimes = d.ExplanTimes,
+                           FirstTimeOnSell = d.FirstTimeOnSell,
+                           IsNewGoods = d.FirstTimeOnSell == null ? false : d.FirstTimeOnSell.Value.AddMonths(3) < DateTime.Now
                        };
 
             FxPageInfo<ItemInfoSimpleDto> itemPageInfo = new FxPageInfo<ItemInfoSimpleDto>();
@@ -226,7 +232,8 @@ namespace Fx.Amiya.Service
                 itemInfo.CreateBy = amiyaEmployeeId;
                 itemInfo.CreateDate = DateTime.Now;
                 itemInfo.Remark = addDto.Remark;
-
+                itemInfo.ExplanTimes = addDto.ExplainTimes;
+                itemInfo.FirstTimeOnSell = addDto.FirstTimeOnSell;
                 await dalItemInfo.AddAsync(itemInfo, true);
             }
             catch (Exception ex)
@@ -290,7 +297,9 @@ namespace Fx.Amiya.Service
                 itemInfoDto.UpdateName = itemInfo.UpdateEmployee?.Name;
                 itemInfoDto.UpdateDate = itemInfo.UpdateDate;
                 itemInfoDto.Remark = itemInfo.Remark;
-
+                itemInfoDto.ExplainTimes = itemInfo.ExplanTimes;
+                itemInfoDto.FirstTimeOnSell=itemInfo.FirstTimeOnSell;
+                
                 return itemInfoDto;
             }
             catch (Exception ex)
@@ -391,7 +400,8 @@ namespace Fx.Amiya.Service
                 itemInfo.UpdateBy = employeeId;
                 itemInfo.UpdateDate = DateTime.Now;
                 itemInfo.Remark = updateDto.Remark;
-
+                itemInfo.FirstTimeOnSell=updateDto.FirstTimeOnSell;
+                itemInfo.ExplanTimes = updateDto.ExplainTimes;
                 await dalItemInfo.UpdateAsync(itemInfo, true);
             }
             catch (Exception ex)
