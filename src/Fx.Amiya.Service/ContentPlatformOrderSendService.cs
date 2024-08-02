@@ -323,8 +323,8 @@ namespace Fx.Amiya.Service
             var q = from d in _dalContentPlatformOrderSend.GetAll().Include(x => x.ContentPlatformOrder)
                     where (d.HospitalId == hospitalId)
                      && (string.IsNullOrEmpty(keyword) || d.ContentPlatformOrder.Id.Contains(keyword) || d.ContentPlatformOrder.Phone.Contains(keyword) || d.ContentPlatformOrder.CustomerName.Contains(keyword))
-                     && (!IsToHospital.HasValue || d.ContentPlatformOrder.IsToHospital == IsToHospital)
-                     && (!toHospitalType.HasValue || d.ContentPlatformOrder.ToHospitalType == toHospitalType.Value)
+                     //&& (!IsToHospital.HasValue || d.ContentPlatformOrder.IsToHospital == IsToHospital)
+                     //&& (!toHospitalType.HasValue || d.ContentPlatformOrder.ToHospitalType == toHospitalType.Value)
                        && (!OrderStatus.HasValue || d.OrderStatus == OrderStatus.Value)
                     select d;
             if (IsToHospital.HasValue) {
@@ -582,7 +582,7 @@ namespace Fx.Amiya.Service
         {
             var q = from d in _dalContentPlatformOrderSend.GetAll()
                     where d.HospitalId == hospitalId
-                    && d.ContentPlatformOrder.OrderStatus == (int)ContentPlateFormOrderStatus.SendOrder
+                    && d.OrderStatus == (int)ContentPlateFormOrderStatus.SendOrder
                     select d;
             return await q.CountAsync();
         }

@@ -1102,6 +1102,7 @@ namespace Fx.Amiya.Service
                         dalContentPlatformOrderSend.Update(item, true);
                         await UpdateOrderStatusAsync(updateDto.OrderId, item.OrderStatus);
                     }
+                    otherHospitalList.RemoveAll(e => e.HospitalId == updateDto.HospitalId);
                 }
                 await this.NewUpdateStateAndRepeateOrderPicAsync(updateDto.OrderId, employeeId, contentPlatFormOrder.BelongEmpId, employeeId);
                 //await _contentPlatformOrderSend.NewUpdateOrderSend(updateDto, employeeId);
@@ -1130,11 +1131,31 @@ namespace Fx.Amiya.Service
             Dictionary<int, bool> sendDic = new Dictionary<int, bool>();
             if (!contentPlatFormOrder.HasDealInfo)
             {
-                //没有成交信息删除原有次派
-                foreach (var item in otherHospitalList)
+                //foreach (var item in otherHospitalList)
+                //{
+                //    dalContentPlatformOrderSend.Delete(item, true);
+                //}
+                //foreach (var item in updateDto.OtherHospitalId)
+                //{
+                //    sendDic.Add(item, false);
+                //}
+                //删除次派订单状态为已派单或重单的数据 
+                foreach (var item in otherHospitalList.Where(e=>(e.OrderStatus == (int)ContentPlateFormOrderStatus.SendOrder)|| e.OrderStatus == (int)ContentPlateFormOrderStatus.RepeatOrder))
                 {
                     dalContentPlatformOrderSend.Delete(item, true);
                 }
+                //订单状态不为已派单或重单的派单数据保留并更新数据
+                var updateSend = otherHospitalList.Where(e => (e.OrderStatus != (int)ContentPlateFormOrderStatus.SendOrder) && e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder);
+                foreach (var item in updateSend) {
+                    var updateInfo = dalContentPlatformOrderSend.GetAll().Where(e => e.Id == item.Id).FirstOrDefault();
+                    updateInfo.IsUncertainDate = updateDto.IsUncertainDate;
+                    updateInfo.AppointmentDate = updateDto.AppointmentDate;
+                    updateInfo.Remark = updateDto.Remark;
+                    updateInfo.Sender = employeeId;
+                    await dalContentPlatformOrderSend.UpdateAsync(updateInfo, true);
+                }
+                //需要添加的派单
+                var newAdd = updateDto.OtherHospitalId.Where(e => !updateSend.Select(e => e.HospitalId).Contains(e));
                 foreach (var item in updateDto.OtherHospitalId)
                 {
                     sendDic.Add(item, false);

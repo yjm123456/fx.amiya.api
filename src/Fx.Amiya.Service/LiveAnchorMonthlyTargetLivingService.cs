@@ -397,7 +397,7 @@ namespace Fx.Amiya.Service
 
                 #region 退款gmv
 
-                liveAnchorMonthlyTargetLiving.CumulativeRefundGMV += editDto.Clues;
+                liveAnchorMonthlyTargetLiving.CumulativeRefundGMV += editDto.RefundGMV;
                 if (liveAnchorMonthlyTargetLiving.CumulativeRefundGMV <= 0)
                 {
                     liveAnchorMonthlyTargetLiving.RefundGMVTargetCompleteRate = 0.00M;
