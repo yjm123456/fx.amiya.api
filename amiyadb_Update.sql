@@ -43,8 +43,6 @@ ADD COLUMN `follow_up_content` VARCHAR(500) NULL AFTER `fans_meeting_project`,
 ADD COLUMN `next_appointment_date` DATETIME NULL AFTER `follow_up_content`,
 ADD COLUMN `is_need_hospital_help` BIT(1) NOT NULL AFTER `next_appointment_date`;
 ------------------------------------余建明 2024/7/23 END--------------------------------------
---------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
-
 ------------------------------------王健 2024/7/30 BEGIN--------------------------------------
 
 --直播中月目标添加 线索量,累计线索量,线索量目标完成率
@@ -78,3 +76,4 @@ ALTER TABLE `tbl_content_platform_order_send`
 	ADD COLUMN `is_repeat_profundity_order` BIT NOT NULL DEFAULT 0 AFTER `order_status`;
 
 ------------------------------------王健 2024/7/31 BEGIN--------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
