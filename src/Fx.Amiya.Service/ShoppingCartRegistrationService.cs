@@ -753,7 +753,7 @@ namespace Fx.Amiya.Service
             {
                 GetBaseIdAndNameDictionaryList addRes = new GetBaseIdAndNameDictionaryList();
 
-              
+
                 addRes.Key = Convert.ToInt32(item);
                 addRes.Name = ServiceClass.GetTiktokCustomerSourceText(Convert.ToInt32(item));
 
@@ -876,11 +876,11 @@ namespace Fx.Amiya.Service
                     var existValue = k.BaseIdAndName.Where(x => x.Value.Contains(channel.Value)).ToList();
                     foreach (var y in existValue)
                     {
-                        var existKey = y.Key.Where(x => x. Contains(contentPlatFormId)).ToList();
+                        var existKey = y.Key.Where(x => x.Contains(contentPlatFormId)).ToList();
                         if (existKey.Count() > 0)
                         {
                             BaseKeyValueDto<int> emergencyLevelDto = new BaseKeyValueDto<int>();
-                            emergencyLevelDto.Key =k.Key;
+                            emergencyLevelDto.Key = k.Key;
                             emergencyLevelDto.Value = ServiceClass.GetTiktokCustomerSourceText(emergencyLevelDto.Key);
                             emergencyLevelList.Add(emergencyLevelDto);
 
@@ -1067,12 +1067,13 @@ namespace Fx.Amiya.Service
             DateTime endDate = recordDate.Date.AddDays(1);
             //选定的月份
             DateTime currentDate = recordDate.Date;
-            var result =dalShoppingCartRegistration.GetAll()
-                .Where(o => o.RecordDate >= currentDate && o.RecordDate < endDate && o.LiveAnchorId == liveAnchorId).Select(e=>new { 
-                    IsAddWechat=e.IsAddWeChat,
+            var result = dalShoppingCartRegistration.GetAll()
+                .Where(o => o.RecordDate >= currentDate && o.RecordDate < endDate && o.LiveAnchorId == liveAnchorId).Select(e => new
+                {
+                    IsAddWechat = e.IsAddWeChat,
                     AssignEmpId = e.AssignEmpId
                 }).ToList();
-            AfterLiveDataDto afterLiveData=new AfterLiveDataDto();
+            AfterLiveDataDto afterLiveData = new AfterLiveDataDto();
             afterLiveData.ClueCount = result.Count();
             afterLiveData.AddWechatCount = result.Where(e => e.IsAddWechat == true).Count();
             afterLiveData.DistributeConsulation = result.Where(e => e.AssignEmpId != null).Count();
@@ -1622,10 +1623,11 @@ namespace Fx.Amiya.Service
 
         #region 【啊美雅运营看板】
 
-        public async Task<List<ShoppingCartRegistrationDto>> GetShoppingCartRegistionDataByRecordDate(DateTime startDate, DateTime endDate)
+        public async Task<List<ShoppingCartRegistrationDto>> GetShoppingCartRegistionDataByRecordDate(DateTime startDate, DateTime endDate, string liveAnchorBaseId)
         {
             var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll()
                                           .Where(d => (d.RecordDate >= startDate.Date && d.RecordDate < endDate))
+                                          .Where(x => string.IsNullOrEmpty(liveAnchorBaseId) || x.BaseLiveAnchorId == liveAnchorBaseId)
                                            .Select(d => new ShoppingCartRegistrationDto
                                            {
                                                AddPrice = d.Price,

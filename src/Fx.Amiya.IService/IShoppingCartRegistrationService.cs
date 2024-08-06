@@ -215,7 +215,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        Task<List<ShoppingCartRegistrationDto>> GetShoppingCartRegistionDataByRecordDate(DateTime startDate, DateTime endDate);
+        Task<List<ShoppingCartRegistrationDto>> GetShoppingCartRegistionDataByRecordDate(DateTime startDate, DateTime endDate, string liveAnchorBaseId);
         #endregion
         #region 啊美雅运营看板
         /// <summary>
