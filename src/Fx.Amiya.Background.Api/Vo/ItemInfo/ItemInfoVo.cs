@@ -83,7 +83,7 @@ namespace Fx.Amiya.Background.Api.Vo.ItemInfo
         /// <summary>
         /// 单价
         /// </summary>
-        public decimal SalePrice { get; set; }
+        public decimal? SalePrice { get; set; }
 
         /// <summary>
         /// 直播价

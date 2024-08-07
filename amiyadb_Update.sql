@@ -77,3 +77,22 @@ ALTER TABLE `tbl_content_platform_order_send`
 
 ------------------------------------王健 2024/7/31 BEGIN--------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+------------------------------------王健 2024/8/5 BEGIN--------------------------------------
+
+--带货商品字段约束修改
+
+ALTER TABLE `tbl_item_info`
+	CHANGE COLUMN `brand_id` `brand_id` VARCHAR(50) NULL DEFAULT NULL  AFTER `other_app_item_id`,
+	CHANGE COLUMN `category_id` `category_id` VARCHAR(50) NULL DEFAULT NULL  AFTER `brand_id`,
+	CHANGE COLUMN `item_details_id` `item_details_id` VARCHAR(50) NULL DEFAULT NULL AFTER `category_id`;
+
+
+ALTER TABLE `tbl_item_info`
+	CHANGE COLUMN `thumb_pic_url` `thumb_pic_url` VARCHAR(500) NULL DEFAULT NULL  AFTER `department_name`,
+	CHANGE COLUMN `description` `description` VARCHAR(200) NULL DEFAULT NULL  AFTER `thumb_pic_url`,
+	CHANGE COLUMN `standard` `standard` VARCHAR(100) NULL DEFAULT NULL  AFTER `description`,
+	CHANGE COLUMN `parts` `parts` VARCHAR(100) NULL DEFAULT NULL  AFTER `standard`,
+	CHANGE COLUMN `sale_price` `sale_price` DECIMAL(10,2) NULL AFTER `parts`;
+
+------------------------------------王健 2024/8/5 END--------------------------------------

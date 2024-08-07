@@ -69,6 +69,7 @@ namespace Fx.Amiya.Service
                                where (string.IsNullOrEmpty(categoryId) || d.CategoryId == categoryId)
                                where (string.IsNullOrEmpty(itemDetailsId) || d.ItemDetailsId == itemDetailsId)
                                && (valid == null || d.Valid == valid)
+                               orderby d.CreateDate descending
                                select new ItemInfoDto
                                {
                                    Id = d.Id,
@@ -100,7 +101,7 @@ namespace Fx.Amiya.Service
                                    ExplainTimes=d.ExplanTimes,
                                    FirstTimeOnSell=d.FirstTimeOnSell,
                                    IsNewGoods=d.FirstTimeOnSell==null?false:d.FirstTimeOnSell.Value.AddMonths(3)<DateTime.Now
-                               };
+                               } ;
 
                 FxPageInfo<ItemInfoDto> itemPageInfo = new FxPageInfo<ItemInfoDto>();
                 itemPageInfo.TotalCount = await itemInfo.CountAsync();
@@ -242,6 +243,63 @@ namespace Fx.Amiya.Service
             }
         }
 
+        /// <summary>
+        /// 导入项目
+        /// </summary>
+        /// <param name="addDto"></param>
+        /// <param name="amiyaEmployeeId"></param>
+        /// <returns></returns>
+        public async Task ImportAsync(List<AddItemInfoDto> importList,int employeeId)
+        {
+            try
+            {
+                //已存在数据更新
+                var existList = dalItemInfo.GetAll().Where(e => importList.Select(e => e.OtherAppItemId).Contains(e.OtherAppItemId)).ToList();
+                foreach (var item in existList) { 
+                    item.Name=importList.Where(e=>e.OtherAppItemId==item.OtherAppItemId).FirstOrDefault()?.Name ?? "";
+                    item.ExplanTimes = importList.Where(e => e.OtherAppItemId == item.OtherAppItemId).FirstOrDefault()?.ExplainTimes ?? 0;
+                    item.FirstTimeOnSell = importList.Where(e => e.OtherAppItemId == item.OtherAppItemId).FirstOrDefault()?.FirstTimeOnSell ?? null;
+                    dalItemInfo.Update(item,true);
+                }
+
+                //不存在数据添加
+                List<ItemInfo> addList = new List<ItemInfo>();
+                var temp = importList.Where(e => !existList.Select(e => e.OtherAppItemId).Contains(e.OtherAppItemId));
+                foreach (var item in temp) {
+                    ItemInfo itemInfo = new ItemInfo();
+                    itemInfo.Name = item.Name;
+                    itemInfo.HospitalDepartmentId = item.HospitalDepartmentId;
+                    itemInfo.ThumbPicUrl = item.ThumbPicUrl;
+                    itemInfo.Description = item.Description;
+                    itemInfo.Standard = item.Standard;
+                    itemInfo.Parts = item.Parts;
+                    itemInfo.SalePrice = item.SalePrice;
+                    itemInfo.LivePrice = item.LivePrice;
+                    itemInfo.AppType = item.AppType;
+                    itemInfo.BrandId = item.BrandId;
+                    itemInfo.CategoryId = item.CategoryId;
+                    itemInfo.ItemDetailsId = item.ItemDetailsId;
+                    itemInfo.IsLimitBuy = item.IsLimitBuy;
+                    itemInfo.LimitBuyQuantity = item.LimitBuyQuantity;
+                    itemInfo.Commitment = item.Commitment;
+                    itemInfo.Guarantee = item.Guarantee;
+                    itemInfo.AppointmentNotice = item.AppointmentNotice;
+                    itemInfo.OtherAppItemId = item.OtherAppItemId;
+                    itemInfo.Valid = true;
+                    itemInfo.CreateBy = employeeId;
+                    itemInfo.CreateDate = DateTime.Now;
+                    itemInfo.Remark = item.Remark;
+                    itemInfo.ExplanTimes = item.ExplainTimes;
+                    itemInfo.FirstTimeOnSell = item.FirstTimeOnSell;
+                    addList.Add(itemInfo);
+                }
+                await dalItemInfo.AddCollectionAsync(addList, true);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message.ToString());
+            }
+        }
 
 
         /// <summary>

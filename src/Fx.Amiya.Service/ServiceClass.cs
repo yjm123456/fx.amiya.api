@@ -2508,5 +2508,37 @@ namespace Fx.Amiya.Service
             }
             return text;
         }
+        /// <summary>
+        /// 直播中带货订单状态
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public static string LivingTakeGoodsOrderStatusText(int status) {
+            string text = "";
+            switch (status) {
+                case 3:
+                    text = "已付款";
+                    break;
+                case 4:
+                    text = "待发货";
+                    break;
+                case 5:
+                    text = "已发货";
+                    break;
+                case 8:
+                    text = "已收货";
+                    break;
+                case 9:
+                    text = "已退款";
+                    break;
+                case 11:
+                    text = "订单完成";
+                    break;
+                default:
+                    text = "";
+                    break;
+            }
+            return text;
+        }
     }
 }

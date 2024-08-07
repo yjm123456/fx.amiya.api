@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Fx.Amiya.Background.Api.Vo;
@@ -12,6 +13,7 @@ using Fx.Infrastructure;
 using Fx.Open.Infrastructure.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
 
 namespace Fx.Amiya.Background.Api.Controllers
 {
@@ -46,7 +48,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             try
             {
                 var q = await itemInfoService.GetListWithPageAsync(keyword,brandId,categoryId,itemDetailsId, pageNum, pageSize, valid);
-                var itemInfos = from d in q.List
+                var itemInfos = from d in q.List 
                                 select new ItemInfoVo
                                 {
                                     Id = d.Id,
@@ -354,6 +356,64 @@ namespace Fx.Amiya.Background.Api.Controllers
                         };
             return ResultData<List<BaseIdAndNameVo>>.Success().AddData("items", items.ToList());
         }
-       
+
+        /// <summary>
+        /// 导入接口
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        [HttpPut("import")]
+        [FxInternalAuthorize]
+        public async Task<ResultData> ImportDataAsync(IFormFile file) {
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeId = Convert.ToInt32(employee.Id);
+            if (file == null || file.Length <= 0)
+                throw new Exception("请检查文件是否存在");
+            using (var stream = new MemoryStream())
+            {
+                await file.CopyToAsync(stream);//取到文件流
+
+                using (ExcelPackage package = new ExcelPackage(stream))
+                {
+
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets["sheet1"];
+                    if (worksheet == null)
+                    {
+                        throw new Exception("请另外新建一个excel文件'.xlsx'后将填写好的数据复制到新文件中上传，勿采用当前导出文件进行上传！");
+                    }
+                    //获取表格的列数和行数
+                    int rowCount = worksheet.Dimension.Rows;
+                    List<AddItemInfoDto> addDtoList = new List<AddItemInfoDto>();
+                    for (int x = 2; x <= rowCount; x++)
+                    {
+                        AddItemInfoDto addDto = new AddItemInfoDto();
+                        addDto.OtherAppItemId = worksheet.Cells[x, 1].Value.ToString().Trim();
+                        addDto.Name = worksheet.Cells[x, 2].Value.ToString();
+                        addDto.HospitalDepartmentId = null;
+                        addDto.ThumbPicUrl = null;
+                        addDto.AppType = Convert.ToString((int)AppType.Douyin);
+                        addDto.BrandId = null;
+                        addDto.CategoryId = null;
+                        addDto.ItemDetailsId = null;
+                        addDto.Description = null;
+                        addDto.Standard = null;
+                        addDto.Parts = null;
+                        addDto.SalePrice = Convert.ToDecimal(worksheet.Cells[x, 5].Value.ToString().Replace("¥", "").Replace(",",""));
+                        addDto.LivePrice = addDto.SalePrice;
+                        addDto.IsLimitBuy = false;
+                        addDto.LimitBuyQuantity = null;
+                        addDto.Commitment = "";
+                        addDto.Guarantee = "";
+                        addDto.AppointmentNotice = "";
+                        addDto.Remark = "";
+                        addDto.ExplainTimes = Convert.ToInt32(worksheet.Cells[x, 3].Value);
+                        addDto.FirstTimeOnSell = Convert.ToDateTime(worksheet.Cells[x, 4].Value);
+                        addDtoList.Add(addDto);
+                    }
+                    await itemInfoService.ImportAsync(addDtoList,employeeId);
+                }
+            }
+            return ResultData.Success();
+        }
     }
 }

@@ -44,8 +44,13 @@ namespace Fx.Amiya.IService
         /// <param name="amiyaEmployeeId"></param>
         /// <returns></returns>
        Task AddAsync(AddItemInfoDto addDto, int amiyaEmployeeId);
-
-
+        /// <summary>
+        /// 导入抖音带货商品
+        /// </summary>
+        /// <param name="importList"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        Task ImportAsync(List<AddItemInfoDto> importList, int employeeId);
 
         /// <summary>
         /// 根据项目编号获取项目信息

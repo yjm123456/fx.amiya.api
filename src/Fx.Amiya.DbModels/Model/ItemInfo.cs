@@ -11,16 +11,16 @@ namespace Fx.Amiya.DbModels.Model
         /// <summary>
         /// 科室id
         /// </summary>
-        public string HospitalDepartmentId { get; set; }
-        public string ThumbPicUrl { get; set; }
+        public string? HospitalDepartmentId { get; set; }
+        public string? ThumbPicUrl { get; set; }
         public string AppType { get; set; }
-        public string BrandId { get; set; }
-        public string CategoryId { get; set; }
-        public string ItemDetailsId { get; set; }
-        public string Description { get; set; }
-        public string Standard { get; set; }
-        public string Parts { get; set; }
-        public decimal SalePrice { get; set; }
+        public string? BrandId { get; set; }
+        public string? CategoryId { get; set; }
+        public string? ItemDetailsId { get; set; }
+        public string? Description { get; set; }
+        public string? Standard { get; set; }
+        public string? Parts { get; set; }
+        public decimal? SalePrice { get; set; }
         public decimal? LivePrice { get; set; }
         public bool IsLimitBuy { get; set; }
         public int? LimitBuyQuantity { get; set; }

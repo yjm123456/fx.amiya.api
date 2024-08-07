@@ -12,7 +12,7 @@ namespace Fx.Amiya.Dto.HospitalPartakeItem
         public string Description { get; set; }
         public string Standard { get; set; }
         public string Parts { get; set; }
-        public decimal SalePrice { get; set; }
+        public decimal? SalePrice { get; set; }
         public decimal? LivePrice { get; set; }
         /// <summary>
         /// 是否同意直播价

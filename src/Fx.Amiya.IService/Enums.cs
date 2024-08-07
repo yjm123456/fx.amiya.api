@@ -1587,4 +1587,34 @@ namespace Fx.Amiya.IService
         /// </summary>
         LiveAfter = 3
     }
+    /// <summary>
+    /// 直播中带货订单状态
+    /// </summary>
+    public enum LivingTakeGoodsOrderStatus {
+        /// <summary>
+        /// 已付款
+        /// </summary>
+        Payed=3,
+        /// <summary>
+        /// 待发货
+        /// </summary>
+        WaitSendOrder=4,
+        /// <summary>
+        /// 已发货
+        /// </summary>
+        SendOrder=5,
+        /// <summary>
+        /// 已收货
+        /// </summary>
+        Delivery=8,
+        /// <summary>
+        /// 退款
+        /// </summary>
+        Refund=9,
+        /// <summary>
+        /// 订单完成(即已结算)
+        /// </summary>
+        Complete=11
+
+    }
 }

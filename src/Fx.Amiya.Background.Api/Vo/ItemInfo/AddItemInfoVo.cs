@@ -16,41 +16,41 @@ namespace Fx.Amiya.Background.Api.Vo.ItemInfo
         /// <summary>
         /// 项目名称
         /// </summary>
-        [Required(ErrorMessage ="项目名称不能为空")]
-        [StringLength(100,ErrorMessage ="项目名称最多{1}个字符")]
+        //[Required(ErrorMessage ="项目名称不能为空")]
+        //[StringLength(100,ErrorMessage ="项目名称最多{1}个字符")]
         public string Name { get; set; }
 
         /// <summary>
         /// 科室id
         /// </summary>
-        [Required(ErrorMessage = "请选择所属科室")]
+        //[Required(ErrorMessage = "请选择所属科室")]
         public string HospitalDepartmentId { get; set; }
 
         /// <summary>
         /// 缩略图
         /// </summary>
-        [Required(ErrorMessage ="缩略图不能为空")]
+        //[Required(ErrorMessage ="缩略图不能为空")]
         public string ThumbPicUrl { get; set; }
 
         /// <summary>
         /// 项目简介
         /// </summary>
-        [StringLength(200,ErrorMessage = "项目简介最多{1}个字符")]
+        //[StringLength(200,ErrorMessage = "项目简介最多{1}个字符")]
         public string Description { get; set; }
 
 
         /// <summary>
         /// 项目规格
         /// </summary>
-        [Required(ErrorMessage = "项目规格不能为空")]
-       [StringLength(100,ErrorMessage = "项目规格最多{1}个字符")]
+       // [Required(ErrorMessage = "项目规格不能为空")]
+       //[StringLength(100,ErrorMessage = "项目规格最多{1}个字符")]
         public string Standard { get; set; }
 
 
         /// <summary>
         /// 治疗部位
         /// </summary>
-        [StringLength(100, ErrorMessage = "治疗部位最多{1}个字符")]
+        //[StringLength(100, ErrorMessage = "治疗部位最多{1}个字符")]
         public string Parts { get; set; }
 
         /// <summary>
@@ -92,20 +92,20 @@ namespace Fx.Amiya.Background.Api.Vo.ItemInfo
         /// <summary>
         /// 承诺
         /// </summary>
-        [StringLength(150,ErrorMessage ="承诺最多{1}个字符")]
+        //[StringLength(150,ErrorMessage ="承诺最多{1}个字符")]
         public string Commitment { get; set; }
 
         /// <summary>
         /// 保障
         /// </summary>
-        [StringLength(150, ErrorMessage = "保障最多{1}个字符")]
+        //[StringLength(150, ErrorMessage = "保障最多{1}个字符")]
         public string Guarantee { get; set; }
 
 
         /// <summary>
         /// 预约须知
         /// </summary>
-        [StringLength(500, ErrorMessage = "预约须知最多{1}个字符")]
+        //[StringLength(500, ErrorMessage = "预约须知最多{1}个字符")]
         public string AppointmentNotice { get; set; }
 
         /// <summary>
