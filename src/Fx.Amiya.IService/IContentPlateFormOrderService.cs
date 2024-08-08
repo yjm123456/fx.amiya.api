@@ -332,6 +332,11 @@ namespace Fx.Amiya.IService
         /// <param name="orderStatus"></param>
         /// <returns></returns>
         Task UpdateOrderStatusAsync(string id,int orderStatus);
+        /// <summary>
+        /// 获取仅有主派派单的订单数据
+        /// </summary>
+        /// <returns></returns>
+        Task<FxPageInfo<SendContentPlatformOrderDto>> GetOnlyMainHospitalOrderAsync(QueryOnlyMainHospitalOrderByPageDto queryDto);
         #region 财务看板
 
         Task<List<CustomerServiceDetailsPerformanceDto>> GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, List<int> belongCustomerServiceIds);

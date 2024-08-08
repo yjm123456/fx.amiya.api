@@ -1667,6 +1667,53 @@ namespace Fx.Amiya.Background.Api.Controllers
             result.VisitNum = orders.VisitNum;
             return ResultData<GetCooperationLiveAnchorSendAndVisitNumVo>.Success().AddData("CooperationLiveAnchorSendAndVisitNum", result);
         }
+        /// <summary>
+        /// 获取仅有主派派单数据的订单
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("getOnlyMainHospitalOrder")]
+        [FxInternalAuthorize]
+        public async Task<ResultData<FxPageInfo<SendContentPlatformOrderVo>>> GetOnlyMainHospitalOrderAsync([FromQuery]QueryOnlyMainHospitalOrderByPageVo query) {
+            QueryOnlyMainHospitalOrderByPageDto queryDto = new QueryOnlyMainHospitalOrderByPageDto();
+            queryDto.PageNum = query.PageNum;
+            queryDto.PageSize = query.PageSize;
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            var res =await _orderService.GetOnlyMainHospitalOrderAsync(queryDto);
+            FxPageInfo<SendContentPlatformOrderVo> pageInfo = new FxPageInfo<SendContentPlatformOrderVo>();
+            pageInfo.TotalCount = res.TotalCount;
+            pageInfo.List = res.List.Select(d => new SendContentPlatformOrderVo {
+                Id = d.Id,
+                OrderId = d.OrderId,
+                ContentPlatFormName = d.ContentPlatFormName,
+                LiveAnchorName = d.LiveAnchorName,
+                CustomerName = ServiceClass.GetIncompleteCustomerName(d.CustomerName),
+                Phone = d.Phone,
+                EncryptPhone = d.EncryptPhone,
+                SendHospitalId = d.SendHospitalId,
+                GoodsName = d.GoodsName,
+                ThumbPictureUrl = d.ThumbPictureUrl,
+                ConsultingContent = d.ConsultingContent,
+                OrderTypeText = d.OrderTypeText,
+                OrderStatusText = d.OrderStatusText,
+                IsToHospital = d.IsToHospital,
+                ToHospitalTypeText = d.ToHospitalTypeText,
+                SenderName = d.SenderName,
+                SendDate = d.SendDate,
+                SendOrderRemark = d.SendOrderRemark,
+                OrderRemark = d.OrderRemark,
+                HospitalRemark = d.HospitalRemark,
+                OrderSourceText =d.OrderSourceText,
+                IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
+                IsMainHospital = d.IsMainHospital,
+                ConsultingContent2 = d.ConsultingContent2,
+                BelongEmpName=d.BelongEmpName,
+                SendHospital=d.SendHospital,
+                IsHospitalCheckPhone=d.IsHospitalCheckPhone
+            }).ToList();
+            return ResultData<FxPageInfo<SendContentPlatformOrderVo>>.Success().AddData("data", pageInfo);
+        }
 
         #region {医院对接同步}
         ///// <summary>

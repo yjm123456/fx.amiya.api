@@ -77,7 +77,7 @@ namespace Fx.Amiya.Service
         private IFansMeetingService fansMeetingService;
         private IDalFansMeeting dalFansMeeting;
         private IDalFansMeetingDetails dalFansMeetingDetails;
-
+        private IDalHospitalCheckPhoneRecord _dalHospitalCheckPhoneRecord;
         public ContentPlateFormOrderService(
            IDalContentPlatformOrder dalContentPlatformOrder,
            IDalAmiyaEmployee dalAmiyaEmployee,
@@ -104,7 +104,7 @@ namespace Fx.Amiya.Service
             IContentPlatFormOrderDealInfoService contentPlatFormOrderDalService,
              IDalBindCustomerService dalBindCustomerService,
              IDalConfig dalConfig,
-             IWxAppConfigService wxAppConfigService, IDalLiveAnchor dalLiveAnchor, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalAmiyaHospitalDepartment dalAmiyaHospitalDepartment, IDalHospitalInfo dalHospitalInfo, ICustomerAppointmentScheduleService customerAppointmentScheduleService, IDalContentPlatformOrderSend dalContentPlatformOrderSend, ITrackService trackService, IFansMeetingDetailsService fansMeetingDetailsService, IFansMeetingService fansMeetingService, IDalFansMeetingDetails dalFansMeetingDetails)
+             IWxAppConfigService wxAppConfigService, IDalLiveAnchor dalLiveAnchor, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalAmiyaHospitalDepartment dalAmiyaHospitalDepartment, IDalHospitalInfo dalHospitalInfo, ICustomerAppointmentScheduleService customerAppointmentScheduleService, IDalContentPlatformOrderSend dalContentPlatformOrderSend, ITrackService trackService, IFansMeetingDetailsService fansMeetingDetailsService, IFansMeetingService fansMeetingService, IDalFansMeetingDetails dalFansMeetingDetails, IDalHospitalCheckPhoneRecord dalHospitalCheckPhoneRecord)
         {
             _dalContentPlatformOrder = dalContentPlatformOrder;
             this.unitOfWork = unitOfWork;
@@ -143,6 +143,7 @@ namespace Fx.Amiya.Service
             this.fansMeetingDetailsService = fansMeetingDetailsService;
             this.fansMeetingService = fansMeetingService;
             this.dalFansMeetingDetails = dalFansMeetingDetails;
+            _dalHospitalCheckPhoneRecord = dalHospitalCheckPhoneRecord;
         }
 
         /// <summary>
@@ -1140,13 +1141,14 @@ namespace Fx.Amiya.Service
                 //    sendDic.Add(item, false);
                 //}
                 //删除次派订单状态为已派单或重单的数据 
-                foreach (var item in otherHospitalList.Where(e=>(e.OrderStatus == (int)ContentPlateFormOrderStatus.SendOrder)|| e.OrderStatus == (int)ContentPlateFormOrderStatus.RepeatOrder))
+                foreach (var item in otherHospitalList.Where(e => (e.OrderStatus == (int)ContentPlateFormOrderStatus.SendOrder) || e.OrderStatus == (int)ContentPlateFormOrderStatus.RepeatOrder))
                 {
                     dalContentPlatformOrderSend.Delete(item, true);
                 }
                 //订单状态不为已派单或重单的派单数据保留并更新数据
                 var updateSend = otherHospitalList.Where(e => (e.OrderStatus != (int)ContentPlateFormOrderStatus.SendOrder) && e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder);
-                foreach (var item in updateSend) {
+                foreach (var item in updateSend)
+                {
                     var updateInfo = dalContentPlatformOrderSend.GetAll().Where(e => e.Id == item.Id).FirstOrDefault();
                     updateInfo.IsUncertainDate = updateDto.IsUncertainDate;
                     updateInfo.AppointmentDate = updateDto.AppointmentDate;
@@ -5227,6 +5229,86 @@ namespace Fx.Amiya.Service
         }
 
         #endregion
+        /// <summary>
+        /// 获取仅有主派派单的订单数据
+        /// </summary>
+        /// <returns></returns>
+        public async Task<FxPageInfo<SendContentPlatformOrderDto>> GetOnlyMainHospitalOrderAsync(QueryOnlyMainHospitalOrderByPageDto queryDto)
+        {
+            var employee = await _amiyaEmployeeService.GetByIdAsync(queryDto.employeeId);
+            var orders = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderSendList).Where(e => e.ContentPlatformOrderSendList.Count() == 1);
+            if (!string.IsNullOrEmpty(queryDto.KeyWord))
+            {
+                orders = from d in orders
+                         where (d.Id.Contains(queryDto.KeyWord) || d.Phone.Contains(queryDto.KeyWord))
+                         select d;
+            }
+            if (queryDto.StartDate != null && queryDto.EndDate != null)
+            {
+                DateTime startrq = ((DateTime)queryDto.StartDate).Date;
+                DateTime endrq = ((DateTime)queryDto.EndDate).Date.AddDays(1);
+                orders = from d in orders
+                         where (d.SendDate >= startrq && d.SendDate < endrq)
+                         select d;
+            }
+            //普通客服角色过滤其他订单信息只展示自己录单信息
+            if (employee.IsCustomerService && !employee.IsDirector)
+            {
+                orders = from d in orders
+                         where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == queryDto.employeeId && e.BuyerPhone == d.Phone) > 0
+                         || d.SupportEmpId == queryDto.employeeId
+                         || d.BelongEmpId == queryDto.employeeId
+                         || (d.IsSupportOrder == false || d.SupportEmpId == queryDto.employeeId)
+                         select d;
+            }
+            var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
+            FxPageInfo<SendContentPlatformOrderDto> pageInfo = new FxPageInfo<SendContentPlatformOrderDto>();
+            pageInfo.TotalCount = orders.Count();
+            pageInfo.List = await orders
+                .OrderByDescending(e => e.SendDate)
+                .Skip((queryDto.PageNum.Value - 1) * queryDto.PageSize.Value)
+                .Take(queryDto.PageSize.Value)
+                .Select(d => new SendContentPlatformOrderDto
+                {
+                    Id = d.ContentPlatformOrderSendList.First().Id,
+                    OrderId = d.Id,
+                    ContentPlatFormName = d.Contentplatform.ContentPlatformName,
+                    LiveAnchorName = d.LiveAnchor.HostAccountName,
+                    BelongEmpId = d.BelongEmpId.HasValue ? d.BelongEmpId.Value : 0,
+                    CustomerName = ServiceClass.GetIncompleteCustomerName(d.CustomerName),
+                    Phone = config.EnablePhoneEncrypt == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
+                    EncryptPhone = ServiceClass.Encrypt(d.Phone, config.PhoneEncryptKey),
+                    SendHospitalId = d.ContentPlatformOrderSendList.First().HospitalId,
+                    GoodsName = d.AmiyaGoodsDemand.ProjectNname,
+                    ThumbPictureUrl = d.AmiyaGoodsDemand.ThumbPictureUrl,
+                    ConsultingContent = d.ConsultingContent,
+                    OrderTypeText = ServiceClass.GetContentPlateFormOrderTypeText((byte)d.OrderType),
+                    OrderStatusText = ServiceClass.GetContentPlateFormOrderStatusText((byte)d.OrderStatus),
+                    IsToHospital = (d.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete || d.OrderStatus == (int)ContentPlateFormOrderStatus.WithoutCompleteOrder) ? true : false,
+                    ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ToHospitalType),
+                    SenderName = d.ContentPlatformOrderSendList.First().AmiyaEmployee.Name,
+                    SendDate = d.ContentPlatformOrderSendList.First().SendDate,
+                    SendOrderRemark = d.ContentPlatformOrderSendList.First().Remark,
+                    OrderRemark = d.Remark,
+                    HospitalRemark = d.ContentPlatformOrderSendList.First().HospitalRemark,
+                    OrderSourceText = ServiceClass.GerContentPlatFormOrderSourceText(d.OrderSource.Value),
+                    IsRepeatProfundityOrder = d.ContentPlatformOrderSendList.First().IsRepeatProfundityOrder,
+                    IsMainHospital = d.ContentPlatformOrderSendList.First().IsMainHospital,
+                    ConsultingContent2 = d.ConsultingContent2
+                })
+                .ToListAsync();
+            foreach (var x in pageInfo.List)
+            {
+                x.IsHospitalCheckPhone = _dalHospitalCheckPhoneRecord.GetAll().Where(e => e.OrderId == x.OrderId && e.HospitalId == x.SendHospitalId).Any();
+                x.SendHospital = _hospitalInfoService.GetByIdAsync(x.SendHospitalId).Result.Name;
+                if (x.BelongEmpId != 0)
+                {
+                    var empInfo = await _amiyaEmployeeService.GetByIdAsync(x.BelongEmpId);
+                    x.BelongEmpName = empInfo.Name.ToString();
+                }
+            }
+            return pageInfo;
+        }
 
     }
 }
