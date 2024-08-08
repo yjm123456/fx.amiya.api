@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -84,10 +85,74 @@ namespace Fx.Amiya.Service
                                           FollowUpContent = d.FollowUpContent,
                                           NextAppointmentDate = d.NextAppointmentDate,
                                           IsNeedHospitalHelp = d.IsNeedHospitalHelp,
+                                          HospitalMemberCardId = d.HospitalMemberCardId,
                                       };
             FxPageInfo<FansMeetingDetailsDto> fansMeetingDetailsPageInfo = new FxPageInfo<FansMeetingDetailsDto>();
             fansMeetingDetailsPageInfo.TotalCount = await fansMeetingDetailss.CountAsync();
             fansMeetingDetailsPageInfo.List = await fansMeetingDetailss.OrderBy(x => x.AppointmentDate.Value).ThenBy(x => x.AppointmentDetailsDate).Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToListAsync();
+            return fansMeetingDetailsPageInfo;
+        }
+
+
+        /// <summary>
+        /// 根据条件获取粉丝见面会详情信息（非分页）
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<List<FansMeetingDetailsDto>> GetExportListAsync(QueryFansMeetingDetailsDto query)
+        {
+            var fansMeetingDetailss = from d in dalFansMeetingDetails.GetAll().Include(x => x.FansMeetingInfo).Include(x => x.AmiyaEmployeeInfo)
+                                      where (d.Valid == true && d.FansMeetingId == query.FansMeetingId)
+                                      && (string.IsNullOrEmpty(query.KeyWord) || d.Phone.Contains(query.KeyWord))
+                                      && (!query.StartDate.HasValue || d.AppointmentDate.Value >= query.StartDate.Value)
+                                      && (!query.EndDate.HasValue || d.AppointmentDate.Value < query.EndDate.Value.AddDays(1).AddMilliseconds(-1))
+
+                                      && (!query.IsToHospital.HasValue || d.IsToHospital == query.IsToHospital.Value)
+                                      && (!query.IsDeal.HasValue || d.IsDeal == query.IsDeal.Value)
+                                      && (!query.AmiyaEmployeeId.HasValue || d.AmiyaConsulationId == query.AmiyaEmployeeId.Value)
+                                      && (!query.CustomerQuantity.HasValue || d.CustomerQuantity == query.CustomerQuantity.Value)
+                                      && (!query.IsOdCustomer.HasValue || d.IsOldCustomer == query.IsOdCustomer.Value)
+                                      && (!query.StartDealPrice.HasValue || d.CumulativeDealPrice >= query.StartDealPrice.Value)
+                                      && (!query.EndDealPrice.HasValue || d.CumulativeDealPrice <= query.EndDealPrice.Value)
+                                      select new FansMeetingDetailsDto
+                                      {
+                                          Id = d.Id,
+                                          CreateDate = d.CreateDate,
+                                          AmiyaConsulationId = d.AmiyaConsulationId,
+                                          AmiyaConsulationName = d.AmiyaEmployeeInfo.Name,
+                                          UpdateDate = d.UpdateDate,
+                                          Valid = d.Valid,
+                                          DeleteDate = d.DeleteDate,
+                                          FansMeetingId = d.FansMeetingId,
+                                          FansMeetingName = d.FansMeetingInfo.Name,
+                                          OrderId = d.OrderId,
+                                          AppointmentDate = d.AppointmentDate,
+                                          AppointmentDetailsDate = d.AppointmentDetailsDate,
+                                          CustomerName = d.CustomerName,
+                                          Phone = query.IsHidePhone == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
+                                          CustomerQuantity = d.CustomerQuantity,
+                                          CustomerQuantityText = ServiceClass.CustomerQuantityText(d.CustomerQuantity),
+                                          IsOldCustomer = d.IsOldCustomer,
+                                          HospitalConsulationName = d.HospitalConsulationName,
+                                          City = d.City,
+                                          TravelInformation = d.TravelInformation,
+                                          IsNeedDriver = d.IsNeedDriver,
+                                          HotelPlan = d.HotelPlan,
+                                          PlanConsumption = d.PlanConsumption,
+                                          Remark = d.Remark,
+                                          CustomerPictureUrl = d.CustomerPictureUrl,
+                                          IsDeal = d.IsDeal,
+                                          IsToHospital = d.IsToHospital,
+                                          CumulativeDealPrice = d.CumulativeDealPrice,
+                                          UnDealReason = d.UnDealReason,
+                                          FansMeetingProject = d.FansMeetingProject,
+                                          FollowUpContent = d.FollowUpContent,
+                                          NextAppointmentDate = d.NextAppointmentDate,
+                                          IsNeedHospitalHelp = d.IsNeedHospitalHelp,
+                                          HospitalMemberCardId = d.HospitalMemberCardId,
+                                      };
+            List<FansMeetingDetailsDto> fansMeetingDetailsPageInfo = new List<FansMeetingDetailsDto>();
+            fansMeetingDetailsPageInfo = await fansMeetingDetailss.OrderBy(x => x.AppointmentDate.Value).ThenBy(x => x.AppointmentDetailsDate).ToListAsync();
             return fansMeetingDetailsPageInfo;
         }
 
@@ -182,7 +247,7 @@ namespace Fx.Amiya.Service
             returnResult.FollowUpContent = result.FollowUpContent;
             returnResult.NextAppointmentDate = result.NextAppointmentDate;
             returnResult.IsNeedHospitalHelp = result.IsNeedHospitalHelp;
-
+            returnResult.HospitalMemberCardId = result.HospitalMemberCardId;
             return returnResult;
         }
 
@@ -204,9 +269,12 @@ namespace Fx.Amiya.Service
             {
                 throw new Exception("粉丝见面会中已存在该手机号，请重新确认后再添加！手机号：" + updateDto.Phone);
             }
-            if (result.AmiyaConsulationId != updateDto.AmiyaConsulationId)
+            if (updateDto.IsHospitalUpdate != true)
             {
-                throw new Exception("无法修改其他助理数据信息！");
+                if (result.AmiyaConsulationId != updateDto.AmiyaConsulationId)
+                {
+                    throw new Exception("无法修改其他助理数据信息！");
+                }
             }
             result.FansMeetingId = updateDto.FansMeetingId;
             result.OrderId = updateDto.OrderId;
@@ -235,6 +303,7 @@ namespace Fx.Amiya.Service
             result.FollowUpContent = updateDto.FollowUpContent;
             result.NextAppointmentDate = updateDto.NextAppointmentDate;
             result.IsNeedHospitalHelp = updateDto.IsNeedHospitalHelp;
+            result.HospitalMemberCardId = updateDto.HospitalMemberCardId;
             await dalFansMeetingDetails.UpdateAsync(result, true);
         }
         /// <summary>

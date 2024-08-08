@@ -120,5 +120,14 @@ namespace Fx.Amiya.Dto.FansMeetingDetails.Input
         /// 是否需要机构协助邀约
         /// </summary>
         public bool IsNeedHospitalHelp { get; set; }
+        /// <summary>
+        /// 医院会员卡号
+        /// </summary>
+        public string HospitalMemberCardId { get; set; }
+
+        /// <summary>
+        /// 是否为医院端编辑
+        /// </summary>
+        public bool IsHospitalUpdate { get; set; }
     }
 }

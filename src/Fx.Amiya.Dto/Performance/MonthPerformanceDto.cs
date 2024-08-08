@@ -857,15 +857,24 @@ namespace Fx.Amiya.Dto.Performance
         /// 成交率健康值(当月)
         /// </summary>
         public decimal DealRateHealthValueThisMonth { get; set; }
+        /// <summary>
+        /// 下卡成交能效（元）
+        /// </summary>
+        public decimal? FlowClueToDealPrice { get; set; }
+        /// <summary>
+        /// 分诊成交能效（元）
+        /// </summary>
+        public decimal? AllocationConsulationToDealPrice { get; set; }
 
         /// <summary>
         /// 分诊成交转化率
         /// </summary>
         public decimal? AllocationConsulationToDealRate { get; set; }
+
         /// <summary>
-        /// 分诊成交能效（元）
+        /// 加v成交能效（元）
         /// </summary>
-        public decimal? AllocationConsulationToDealPrice { get; set; }
+        public decimal? AddWeChatToDealPrice { get; set; }
         /// <summary>
         /// 派单成交转化率
         /// </summary>
@@ -874,6 +883,10 @@ namespace Fx.Amiya.Dto.Performance
         /// 派单成交能效（元）
         /// </summary>
         public decimal? SendOrderToDealPrice { get; set; }
+        /// <summary>
+        /// 上门成交能效（元）
+        /// </summary>
+        public decimal? VisitToDealPrice { get; set; }
 
         /// <summary>
         /// 漏斗图详情数据

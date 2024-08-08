@@ -96,3 +96,10 @@ ALTER TABLE `tbl_item_info`
 	CHANGE COLUMN `sale_price` `sale_price` DECIMAL(10,2) NULL AFTER `parts`;
 
 ------------------------------------王健 2024/8/5 END--------------------------------------
+
+
+------------------------------------余建明 2024/8/08 BEGIN--------------------------------------
+--粉丝见面会详情表新增未成交数据和下次邀约数据
+ALTER TABLE `amiyadb`.`tbl_fans_meeting_details` 
+ADD COLUMN `hospital_member_card_id`  VARCHAR(100) NULL AFTER `is_need_hospital_help`;
+------------------------------------余建明 2024/8/08 END--------------------------------------

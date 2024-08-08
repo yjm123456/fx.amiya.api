@@ -119,5 +119,9 @@ namespace Fx.Amiya.Background.Api.Vo.FansMeetingDetails.Input
         /// 是否需要机构协助邀约
         /// </summary>
         public bool IsNeedHospitalHelp { get; set; }
+        /// <summary>
+        /// 医院会员卡号
+        /// </summary>
+        public string HospitalMemberCardId { get; set; }
     }
 }

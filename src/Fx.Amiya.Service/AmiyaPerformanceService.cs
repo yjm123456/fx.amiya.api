@@ -1402,7 +1402,7 @@ namespace Fx.Amiya.Service
             //面诊卡下单
             NewCustomerOperationDataDetails addCarddetails = new NewCustomerOperationDataDetails();
             addCarddetails.Key = "AddCard";
-            addCarddetails.Name = "下卡量";
+            addCarddetails.Name = "线索量";
             addCarddetails.Value = baseBusinessPerformance.Count();
 
 
@@ -1418,26 +1418,26 @@ namespace Fx.Amiya.Service
             #endregion
 
             #region 【面诊卡退单】
-            //面诊卡退款
-            NewCustomerOperationDataDetails refundCarddetails = new NewCustomerOperationDataDetails();
-            refundCarddetails.Key = "RefundCard";
-            refundCarddetails.Name = "退卡量";
-            refundCarddetails.Value = baseBusinessPerformance.Where(x => x.IsReturnBackPrice == true).Count();
+            ////面诊卡退款
+            //NewCustomerOperationDataDetails refundCarddetails = new NewCustomerOperationDataDetails();
+            //refundCarddetails.Key = "RefundCard";
+            //refundCarddetails.Name = "退卡量";
+            //refundCarddetails.Value = baseBusinessPerformance.Where(x => x.IsReturnBackPrice == true).Count();
 
-            //上月的面诊卡退款
-            var lastMonthConsulationRefundCardPerformanceCount = lastMonthShoppingCardPerformance.Where(x => x.IsReturnBackPrice == true).Count();
-            refundCarddetails.ChainRatioValue = CalculateChainratio(refundCarddetails.Value, lastMonthConsulationRefundCardPerformanceCount);
-            //上年的面诊卡退款
-            var lastYearTotalConsulationRefundCardPerformance = lastYearShoppingCardPerformance.Where(x => x.IsReturnBackPrice == true).Count();
-            refundCarddetails.YearToYearValue = CalculateYearOnYear(refundCarddetails.Value, lastYearTotalConsulationRefundCardPerformance);
-            //目标达成
-            refundCarddetails.TargetCompleteRate = CalculateTargetComplete(refundCarddetails.Value, groupPerformanceTargetLiving.LivingRefundCardTarget + groupPerformanceTarget.ConsulationCardRefundTarget);
-            newCustomerOperationDataDto.newCustomerOperationDataDetails.Add(refundCarddetails);
+            ////上月的面诊卡退款
+            //var lastMonthConsulationRefundCardPerformanceCount = lastMonthShoppingCardPerformance.Where(x => x.IsReturnBackPrice == true).Count();
+            //refundCarddetails.ChainRatioValue = CalculateChainratio(refundCarddetails.Value, lastMonthConsulationRefundCardPerformanceCount);
+            ////上年的面诊卡退款
+            //var lastYearTotalConsulationRefundCardPerformance = lastYearShoppingCardPerformance.Where(x => x.IsReturnBackPrice == true).Count();
+            //refundCarddetails.YearToYearValue = CalculateYearOnYear(refundCarddetails.Value, lastYearTotalConsulationRefundCardPerformance);
+            ////目标达成
+            //refundCarddetails.TargetCompleteRate = CalculateTargetComplete(refundCarddetails.Value, groupPerformanceTargetLiving.LivingRefundCardTarget + groupPerformanceTarget.ConsulationCardRefundTarget);
+            //newCustomerOperationDataDto.newCustomerOperationDataDetails.Add(refundCarddetails);
             #endregion
             //退卡率
-            newCustomerOperationDataDto.RefundCardRate = CalculateTargetComplete(refundCarddetails.Value, addCarddetails.Value);
-            newCustomerOperationDataDto.RefundCardRateHealthValueSum = await healthValueService.GetValueByCode("RefundCardHealthValueSum");
-            newCustomerOperationDataDto.RefundCardRateHealthValueThisMonth = await healthValueService.GetValueByCode("RefundCardHealthValueThisMonth");
+            //newCustomerOperationDataDto.RefundCardRate = CalculateTargetComplete(refundCarddetails.Value, addCarddetails.Value);
+            //newCustomerOperationDataDto.RefundCardRateHealthValueSum = await healthValueService.GetValueByCode("RefundCardHealthValueSum");
+            //newCustomerOperationDataDto.RefundCardRateHealthValueThisMonth = await healthValueService.GetValueByCode("RefundCardHealthValueThisMonth");
 
             #region 【分诊】
             //分诊
@@ -1552,19 +1552,37 @@ namespace Fx.Amiya.Service
             newCustomerOperationDataDto.AllocationConsulationToDealRate = CalculateTargetComplete(dealdetails.Value, consulationdetails.Value);
             if (baseOrderPerformance.DealPrice.HasValue)
             {
-                if (sendOrderdetails.Value != 0)
-                    //派单成交能效
-                    newCustomerOperationDataDto.SendOrderToDealPrice = Math.Round(baseOrderPerformance.DealPrice.Value / sendOrderdetails.Value, 2, MidpointRounding.AwayFromZero);
+                if (addCarddetails.Value != 0)
+                {
+                    //线索成交能效
+                    newCustomerOperationDataDto.FlowClueToDealPrice = Math.Round(baseOrderPerformance.DealPrice.Value / addCarddetails.Value, 2, MidpointRounding.AwayFromZero);
+                }
                 if (consulationdetails.Value != 0)
                     //分诊成交能效
                     newCustomerOperationDataDto.AllocationConsulationToDealPrice = Math.Round(baseOrderPerformance.DealPrice.Value / consulationdetails.Value, 2, MidpointRounding.AwayFromZero);
+                if (addWechatdetails.Value != 0)
+                    //加v成交能效
+                    newCustomerOperationDataDto.AddWeChatToDealPrice = Math.Round(baseOrderPerformance.DealPrice.Value / addWechatdetails.Value, 2, MidpointRounding.AwayFromZero);
+
+                if (sendOrderdetails.Value != 0)
+                    //派单成交能效
+                    newCustomerOperationDataDto.SendOrderToDealPrice = Math.Round(baseOrderPerformance.DealPrice.Value / sendOrderdetails.Value, 2, MidpointRounding.AwayFromZero);
+                if (visitdetails.Value != 0)
+                    //上门成交能效
+                    newCustomerOperationDataDto.VisitToDealPrice = Math.Round(baseOrderPerformance.DealPrice.Value / visitdetails.Value, 2, MidpointRounding.AwayFromZero);
             }
             else
             {
-                //派单成交能效
-                newCustomerOperationDataDto.SendOrderToDealPrice = 0.00M;
+                //线索成交能效
+                newCustomerOperationDataDto.FlowClueToDealPrice = 0.00M;
                 //分诊成交能效
                 newCustomerOperationDataDto.AllocationConsulationToDealPrice = 0.00M;
+                //加v成交能效
+                newCustomerOperationDataDto.AddWeChatToDealPrice = 0.00M;
+                //派单成交能效
+                newCustomerOperationDataDto.SendOrderToDealPrice = 0.00M;
+                //上门成交能效
+                newCustomerOperationDataDto.VisitToDealPrice = 0.00M;
             }
 
             amiyaOperationDataDto.NewCustomerData = newCustomerOperationDataDto;

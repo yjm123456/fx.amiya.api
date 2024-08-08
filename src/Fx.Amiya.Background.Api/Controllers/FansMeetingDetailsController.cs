@@ -10,6 +10,7 @@ using Fx.Amiya.Service;
 using Fx.Authorization.Attributes;
 using Fx.Common;
 using Fx.Open.Infrastructure.Web;
+using Jd.Api.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -108,6 +109,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                              FollowUpContent = d.FollowUpContent,
                                              NextAppointmentDate = d.NextAppointmentDate,
                                              IsNeedHospitalHelp = d.IsNeedHospitalHelp,
+                                             HospitalMemberCardId = d.HospitalMemberCardId,
                                          };
 
                 FxPageInfo<FansMeetingDetailsVo> pageInfo = new FxPageInfo<FansMeetingDetailsVo>();
@@ -121,6 +123,66 @@ namespace Fx.Amiya.Background.Api.Controllers
                 return ResultData<FxPageInfo<FansMeetingDetailsVo>>.Fail(ex.Message);
             }
         }
+
+        /// <summary>
+        /// 医院端根据条件导出粉丝见面会详情信息
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("ExportByHospital")]
+        [FxInternalAuthorize]
+        public async Task<FileStreamResult> ExportByHospitalAsync([FromQuery] QueryFansMeetingDetailsVo query)
+        {
+            try
+            {
+                QueryFansMeetingDetailsDto queryDto = new QueryFansMeetingDetailsDto();
+                queryDto.StartDate = query.StartDate;
+                queryDto.EndDate = query.EndDate;
+                queryDto.PageNum = query.PageNum;
+                queryDto.KeyWord = query.KeyWord;
+                queryDto.PageSize = query.PageSize;
+
+                queryDto.IsHidePhone = true;
+                queryDto.FansMeetingId = query.FansMeetingId;
+                var q = await fansMeetingDetailsService.GetExportListAsync(queryDto);
+                var fansMeetingDetails = from d in q
+                                         select new ExportFansMeetingDetailsVo
+                                         {
+                                             AmiyaConsulationName = d.AmiyaConsulationName,
+                                             FansMeetingName = d.FansMeetingName,
+                                             AppointmentDate = d.AppointmentDate,
+                                             AppointmentDetailsDate = d.AppointmentDetailsDate,
+                                             CustomerName = d.CustomerName,
+                                             Phone = d.Phone,
+                                             CustomerQuantity = d.CustomerQuantityText,
+                                             IsOldCustomer = d.IsOldCustomer,
+                                             HospitalConsulationName = d.HospitalConsulationName,
+                                             City = d.City,
+                                             TravelInformation = d.TravelInformation,
+                                             IsNeedDriver = d.IsNeedDriver == true ? "是" : "否",
+                                             HotelPlan = d.HotelPlan,
+                                             PlanConsumption = d.PlanConsumption,
+                                             Remark = d.Remark,
+                                             CustomerPictureUrl = d.CustomerPictureUrl,
+                                             FansMeetingProject = d.FansMeetingProject,
+                                             FollowUpContent = d.FollowUpContent,
+                                             NextAppointmentDate = d.NextAppointmentDate,
+                                             IsNeedHospitalHelp = d.IsNeedHospitalHelp,
+                                             HospitalMemberCardId = d.HospitalMemberCardId,
+                                         };
+
+                FxPageInfo<FansMeetingDetailsVo> pageInfo = new FxPageInfo<FansMeetingDetailsVo>();
+                var exportSendOrder = fansMeetingDetails.ToList();
+                var stream = ExportExcelHelper.ExportExcel(exportSendOrder);
+                var result = File(stream, "application/vnd.ms-excel", $"粉丝见面会详情信息.xls");
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message.ToString());
+            }
+        }
+
 
 
         /// <summary>
@@ -197,6 +259,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                              FollowUpContent = d.FollowUpContent,
                                              NextAppointmentDate = d.NextAppointmentDate,
                                              IsNeedHospitalHelp = d.IsNeedHospitalHelp,
+                                             HospitalMemberCardId = d.HospitalMemberCardId,
                                          };
 
                 FxPageInfo<FansMeetingDetailsVo> pageInfo = new FxPageInfo<FansMeetingDetailsVo>();
@@ -373,6 +436,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 fansMeetingDetailsVo.FollowUpContent = fansMeetingDetails.FollowUpContent;
                 fansMeetingDetailsVo.NextAppointmentDate = fansMeetingDetails.NextAppointmentDate;
                 fansMeetingDetailsVo.IsNeedHospitalHelp = fansMeetingDetails.IsNeedHospitalHelp;
+                fansMeetingDetailsVo.HospitalMemberCardId = fansMeetingDetails.HospitalMemberCardId;
                 return ResultData<FansMeetingDetailsVo>.Success().AddData("fansMeetingDetails", fansMeetingDetailsVo);
             }
             catch (Exception ex)
@@ -401,6 +465,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             try
             {
                 UpdateFansMeetingDetailsDto updateDto = new UpdateFansMeetingDetailsDto();
+                if (!empId.HasValue)
+                {
+                    updateDto.IsHospitalUpdate = true;
+                }
                 updateDto.Id = updateVo.Id;
                 updateDto.FansMeetingId = updateVo.FansMeetingId;
                 updateDto.OrderId = updateVo.OrderId;
@@ -432,6 +500,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.FollowUpContent = updateVo.FollowUpContent;
                 updateDto.NextAppointmentDate = updateVo.NextAppointmentDate;
                 updateDto.IsNeedHospitalHelp = updateVo.IsNeedHospitalHelp;
+                updateDto.HospitalMemberCardId = updateVo.HospitalMemberCardId;
                 await fansMeetingDetailsService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

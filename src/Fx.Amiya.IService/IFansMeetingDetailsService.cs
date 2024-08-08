@@ -18,6 +18,8 @@ namespace Fx.Amiya.IService
     public interface IFansMeetingDetailsService
     {
         Task<FxPageInfo<FansMeetingDetailsDto>> GetListAsync(QueryFansMeetingDetailsDto query);
+
+        Task<List<FansMeetingDetailsDto>> GetExportListAsync(QueryFansMeetingDetailsDto query);
         Task AddAsync(AddFansMeetingDetailsDto addDto);
         Task<FansMeetingDetailsDto> GetByIdAsync(string id);
         Task UpdateAsync(UpdateFansMeetingDetailsDto updateDto);
