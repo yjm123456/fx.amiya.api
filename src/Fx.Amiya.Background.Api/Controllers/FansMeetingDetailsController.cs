@@ -130,7 +130,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("ExportByHospital")]
-        [FxInternalAuthorize]
+        [FxTenantAuthorize]
         public async Task<FileStreamResult> ExportByHospitalAsync([FromQuery] QueryFansMeetingDetailsVo query)
         {
             try
@@ -155,7 +155,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                              CustomerName = d.CustomerName,
                                              Phone = d.Phone,
                                              CustomerQuantity = d.CustomerQuantityText,
-                                             IsOldCustomer = d.IsOldCustomer,
+                                             IsOldCustomer = d.IsOldCustomer == true ? "是" : "否",
                                              HospitalConsulationName = d.HospitalConsulationName,
                                              City = d.City,
                                              TravelInformation = d.TravelInformation,
@@ -167,7 +167,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                              FansMeetingProject = d.FansMeetingProject,
                                              FollowUpContent = d.FollowUpContent,
                                              NextAppointmentDate = d.NextAppointmentDate,
-                                             IsNeedHospitalHelp = d.IsNeedHospitalHelp,
+                                             IsNeedHospitalHelp = d.IsNeedHospitalHelp == true ? "是" : "否",
                                              HospitalMemberCardId = d.HospitalMemberCardId,
                                          };
 
