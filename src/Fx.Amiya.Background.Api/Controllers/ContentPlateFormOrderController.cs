@@ -1675,11 +1675,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("getOnlyMainHospitalOrder")]
         [FxInternalAuthorize]
         public async Task<ResultData<FxPageInfo<SendContentPlatformOrderVo>>> GetOnlyMainHospitalOrderAsync([FromQuery]QueryOnlyMainHospitalOrderByPageVo query) {
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int loginEmployeeId = Convert.ToInt32(employee.Id);
             QueryOnlyMainHospitalOrderByPageDto queryDto = new QueryOnlyMainHospitalOrderByPageDto();
             queryDto.PageNum = query.PageNum;
             queryDto.PageSize = query.PageSize;
             queryDto.StartDate = query.StartDate;
             queryDto.EndDate = query.EndDate;
+            queryDto.employeeId = loginEmployeeId;
             var res =await _orderService.GetOnlyMainHospitalOrderAsync(queryDto);
             FxPageInfo<SendContentPlatformOrderVo> pageInfo = new FxPageInfo<SendContentPlatformOrderVo>();
             pageInfo.TotalCount = res.TotalCount;
