@@ -5256,7 +5256,7 @@ namespace Fx.Amiya.Service
             {
                 orders = from d in orders
                          where (_dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == queryDto.employeeId && e.BuyerPhone == d.Phone) > 0
-                         || d.SupportEmpId == queryDto.employeeId
+                         || (d.IsSupportOrder == true && d.SupportEmpId == queryDto.employeeId)
                          || d.BelongEmpId == queryDto.employeeId)
                          select d;
             }
