@@ -176,7 +176,7 @@ namespace Fx.Amiya.Background.Api.Vo.FansMeetingDetails.Result
         /// 新/老客
         /// </summary>
         [Description("新/老客")]
-        public bool IsOldCustomer { get; set; }
+        public string IsOldCustomer { get; set; }
         /// <summary>
         /// 啊美雅助理名称
         /// </summary>
@@ -253,6 +253,6 @@ namespace Fx.Amiya.Background.Api.Vo.FansMeetingDetails.Result
         /// 是否需要机构协助邀约
         /// </summary>
         [Description("是否需要机构协助邀约")]
-        public bool IsNeedHospitalHelp { get; set; }
+        public string IsNeedHospitalHelp { get; set; }
     }
 }

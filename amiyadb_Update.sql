@@ -76,7 +76,6 @@ ALTER TABLE `tbl_content_platform_order_send`
 	ADD COLUMN `is_repeat_profundity_order` BIT NOT NULL DEFAULT 0 AFTER `order_status`;
 
 ------------------------------------王健 2024/7/31 BEGIN--------------------------------------
---------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
 
 ------------------------------------王健 2024/8/5 BEGIN--------------------------------------
 
@@ -87,13 +86,12 @@ ALTER TABLE `tbl_item_info`
 	CHANGE COLUMN `category_id` `category_id` VARCHAR(50) NULL DEFAULT NULL  AFTER `brand_id`,
 	CHANGE COLUMN `item_details_id` `item_details_id` VARCHAR(50) NULL DEFAULT NULL AFTER `category_id`;
 
-
-ALTER TABLE `tbl_item_info`
-	CHANGE COLUMN `thumb_pic_url` `thumb_pic_url` VARCHAR(500) NULL DEFAULT NULL  AFTER `department_name`,
-	CHANGE COLUMN `description` `description` VARCHAR(200) NULL DEFAULT NULL  AFTER `thumb_pic_url`,
-	CHANGE COLUMN `standard` `standard` VARCHAR(100) NULL DEFAULT NULL  AFTER `description`,
-	CHANGE COLUMN `parts` `parts` VARCHAR(100) NULL DEFAULT NULL  AFTER `standard`,
-	CHANGE COLUMN `sale_price` `sale_price` DECIMAL(10,2) NULL AFTER `parts`;
+	ALTER TABLE `tbl_item_info`
+        CHANGE COLUMN `thumb_pic_url` `thumb_pic_url` VARCHAR(500) NULL DEFAULT NULL  AFTER `hospital_department_id`,
+        CHANGE COLUMN `description` `description` VARCHAR(200) NULL DEFAULT NULL  AFTER `thumb_pic_url`,
+        CHANGE COLUMN `standard` `standard` VARCHAR(100) NULL DEFAULT NULL  AFTER `description`,
+        CHANGE COLUMN `parts` `parts` VARCHAR(100) NULL DEFAULT NULL  AFTER `standard`,
+        CHANGE COLUMN `sale_price` `sale_price` DECIMAL(10,2) NULL AFTER `parts`;
 
 ------------------------------------王健 2024/8/5 END--------------------------------------
 
@@ -103,3 +101,4 @@ ALTER TABLE `tbl_item_info`
 ALTER TABLE `amiyadb`.`tbl_fans_meeting_details` 
 ADD COLUMN `hospital_member_card_id`  VARCHAR(100) NULL AFTER `is_need_hospital_help`;
 ------------------------------------余建明 2024/8/08 END--------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
