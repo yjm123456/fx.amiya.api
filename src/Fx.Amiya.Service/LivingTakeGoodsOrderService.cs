@@ -35,7 +35,7 @@ namespace Fx.Amiya.Service
             if (existFlag)
                 throw new Exception("该订单号已存在");
             var goodsExistFlag = dalItemInfo.GetAll().Where(e => e.OtherAppItemId == addDto.GoodsId).Any();
-            if (goodsExistFlag)
+            if (!goodsExistFlag)
                 throw new Exception($"带货商品列表中不包含编号为:{addDto.GoodsId}的商品,请先完善带货商品列表再添加");
             LivingTakeGoodsOrder order = new LivingTakeGoodsOrder();
             order.Id = addDto.Id;
