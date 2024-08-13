@@ -1105,6 +1105,20 @@ namespace Fx.Amiya.Service
                     }
                     otherHospitalList.RemoveAll(e => e.HospitalId == updateDto.HospitalId);
                 }
+                else {
+                    //主派和次派不重复,修改主派
+                    var originMainSend =await dalContentPlatformOrderSend.GetAll().Where(e => e.Id == sendInfo.Id).FirstOrDefaultAsync();
+                    originMainSend.SendDate = DateTime.Now;
+                    originMainSend.HospitalId = updateDto.HospitalId;
+                    originMainSend.IsUncertainDate = updateDto.IsUncertainDate;
+                    originMainSend.AppointmentDate = updateDto.AppointmentDate;
+                    originMainSend.Remark = updateDto.Remark;
+                    originMainSend.Sender = employeeId;
+                    originMainSend.OrderStatus = (int)ContentPlateFormOrderStatus.SendOrder;
+                    originMainSend.IsRepeatProfundityOrder = false;
+                    await dalContentPlatformOrderSend.UpdateAsync(originMainSend,true);
+                    await UpdateOrderStatusAsync(updateDto.OrderId, originMainSend.OrderStatus);
+                }
                 await this.NewUpdateStateAndRepeateOrderPicAsync(updateDto.OrderId, employeeId, contentPlatFormOrder.BelongEmpId, employeeId);
                 //await _contentPlatformOrderSend.NewUpdateOrderSend(updateDto, employeeId);
                 var customer = await hospitalCustomerInfoService.GetByHospitalIdAndPhoneAsync(updateDto.HospitalId, contentPlatFormOrder.Phone);

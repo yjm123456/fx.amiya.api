@@ -682,6 +682,47 @@ namespace Fx.Amiya.Background.Api.Controllers
         #region 转化
 
         /// <summary>
+        /// 获取助理业绩目标达成情况
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("assistantTargetCompleteData")]
+        public async Task<ResultData<List<AssistantTargetCompleteVo>>> GetAssistantTargetCompleteDataAsync([FromQuery]QueryAssistantTargetCompleteDataVo query)
+        {
+            QueryAssistantTargetCompleteDataDto queryDto = new QueryAssistantTargetCompleteDataDto();
+            queryDto.ShowPrivateDomain = query.ShowPrivateDomain;
+            queryDto.ShowTikTok = query.ShowTikTok;
+            queryDto.ShowWechatVideo = query.ShowWechatVideo;
+            queryDto.ShowXiaoHongShu = query.ShowXiaoHongShu;
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            var dataList = await amiyaOperationsBoardService.GetAssitantTargetCompleteAsync(queryDto);
+            var res= dataList.Select(e => new AssistantTargetCompleteVo
+            {
+                Sort=e.Sort,
+                Name = e.Name,
+                NewCustomerPerformanceTarget = e.NewCustomerPerformanceTarget,
+                CurrentMonthNewCustomerPerformance = e.CurrentMonthNewCustomerPerformance,
+                HistoryMonthNewCustomerPerformance = e.HistoryMonthNewCustomerPerformance,
+                NewCustomerTargetComplete = e.NewCustomerTargetComplete,
+                NewCustomerChainRatio = e.NewCustomerChainRatio,
+                OldCustomerPerformanceTarget = e.OldCustomerPerformanceTarget,
+                CurrentMonthOldCustomerPerformance = e.CurrentMonthOldCustomerPerformance,
+                HistoryMonthOldCustomerPerformance = e.HistoryMonthOldCustomerPerformance,
+                OldCustomerTargetComplete = e.OldCustomerTargetComplete,
+                OldCustomerChainRatio = e.OldCustomerChainRatio,
+                TotalCustomerPerformanceTarget = e.TotalCustomerPerformanceTarget,
+                CurrentMonthTotalCustomerPerformance = e.CurrentMonthTotalCustomerPerformance,
+                HistoryMonthTotalCustomerPerformance = e.HistoryMonthTotalCustomerPerformance,
+                TotalCustomerTargetComplete = e.TotalCustomerTargetComplete,
+                TotalCustomerChainRatio = e.TotalCustomerChainRatio,
+                NewAndOldCustomerRate = e.NewAndOldCustomerRate,
+                PerformanceRate=e.PerformanceRate
+            }).ToList();
+            return ResultData<List<AssistantTargetCompleteVo>>.Success().AddData("data",res);
+        }
+
+        /// <summary>
         /// 流量和客户转化情况
         /// </summary>
         /// <param name="query"></param>
@@ -739,6 +780,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.ShowWechatVideo = query.ShowWechatVideo;
             queryDto.ShowXiaoHongShu = query.ShowXiaoHongShu;
             queryDto.ShowPrivateDomain = query.ShowPrivateDomain;
+            queryDto.IsCurrentMonth = query.IsCurrentMonth;
             var result = await amiyaOperationsBoardService.GetAssistantFlowTransFormDataAsync(queryDto);
             var res = result.Select(e => new FlowTransFormDataVo
             {

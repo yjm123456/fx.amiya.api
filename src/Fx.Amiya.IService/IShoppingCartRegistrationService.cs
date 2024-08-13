@@ -277,7 +277,7 @@ namespace Fx.Amiya.IService
         /// <param name="endDate"></param>
         /// <param name="baseLiveAnchorId"></param>
         /// <returns></returns>
-        Task<List<ShoppingCartRegistrationIndicatorBaseDataDto>> GetAssitantFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate, List<string> contentPlatformIds);
+        Task<List<ShoppingCartRegistrationIndicatorBaseDataDto>> GetAssitantFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate, bool? isCurrentMonth, List<string> contentPlatformIds);
         #endregion
     }
 }

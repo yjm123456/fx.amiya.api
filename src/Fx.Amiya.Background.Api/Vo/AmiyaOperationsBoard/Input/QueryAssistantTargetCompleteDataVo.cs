@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Input
 {
-    public class QueryTransformDataVo
+    public class QueryAssistantTargetCompleteDataVo
     {
-      
+        
         /// <summary>
         /// 抖音
         /// </summary>
@@ -32,9 +32,5 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Input
         /// 结束时间
         /// </summary>
         public DateTime EndDate { get; set; }
-        /// <summary>
-        /// 是否是当月数据
-        /// </summary>
-        public bool? IsCurrentMonth { get; set; }
     }
 }

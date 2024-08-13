@@ -36,5 +36,9 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Input
         /// 结束时间
         /// </summary>
         public DateTime EndDate { get; set; }
+        /// <summary>
+        /// 是否是当月数据
+        /// </summary>
+        public bool? IsCurrentMonth { get; set; }
     }
 }

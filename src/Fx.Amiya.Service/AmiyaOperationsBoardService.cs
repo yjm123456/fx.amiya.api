@@ -297,7 +297,7 @@ namespace Fx.Amiya.Service
             var curLiving = curTotalAchievement.Where(x => x.BelongChannel == (int)BelongChannel.Living).Sum(x => x.Price);
             var curAfterLiving = curTotalAchievement.Where(x => x.BelongChannel == (int)BelongChannel.LiveAfter).Sum(x => x.Price);
             var curOther = curTotalAchievement.Where(x => x.BelongChannel == (int)BelongChannel.Other).Sum(x => x.Price);
-          
+
             totalPerformanceDepartmentData.TotalPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curTotalAchievementPrice);
             totalPerformanceDepartmentData.BeforeLivingNumber = DecimalExtension.ChangePriceToTenThousand(curBeforeLiving);
             totalPerformanceDepartmentData.BeforeLivingRate = DecimalExtension.CalculateTargetComplete(curBeforeLiving, curTotalAchievementPrice);
@@ -363,7 +363,7 @@ namespace Fx.Amiya.Service
             #endregion
 
             #region 【新老客】
-         
+
             OperationBoardGetNewOrOldCustomerCompareDataDetailsDto totalPerformanceNewOrOldCustomerData = new OperationBoardGetNewOrOldCustomerCompareDataDetailsDto();
             var NewCount = order.Where(o => o.IsOldCustomer == false).Where(x => LiveAnchorInfo.Contains(x.LiveAnchorId.Value)).ToList();
             var curNewCustomer = NewCount.Sum(o => o.Price);
@@ -828,7 +828,7 @@ namespace Fx.Amiya.Service
         {
             OperationBoardContentPlatFormDataDto result = new OperationBoardContentPlatFormDataDto();
 
-            var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.endDate.Value.Year, query.endDate.Value.Month == 0 ? 1 : query.endDate.Value.Month); 
+            var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.endDate.Value.Year, query.endDate.Value.Month == 0 ? 1 : query.endDate.Value.Month);
 
             //总线索
             var totalShoppingCartRegistionData = await shoppingCartRegistrationService.GetShoppingCartRegistionDataByRecordDate(sequentialDate.StartDate, sequentialDate.EndDate, query.keyWord);
@@ -1256,7 +1256,6 @@ namespace Fx.Amiya.Service
                 groupData.SendOrderRate = DecimalExtension.CalculateTargetComplete(groupBaseData.SendOrderCount, groupBaseData.AddWechatCount).Value;
                 groupData.ToHospitalCount = groupBaseData.ToHospitalCount;
                 groupData.ToHospitalRate = DecimalExtension.CalculateTargetComplete(groupBaseData.ToHospitalCount, groupBaseData.SendOrderCount).Value;
-                //groupData.DealCount = groupBaseData.NewCustomerDealCount + groupBaseData.OldCustomerDealCount;
                 groupData.DealCount = groupBaseData.NewCustomerDealCount;
                 groupData.NewCustomerDealCount = groupBaseData.NewCustomerDealCount;
                 groupData.OldCustomerDealCount = groupBaseData.OldCustomerDealCount;
@@ -1307,7 +1306,7 @@ namespace Fx.Amiya.Service
             var nameList = await liveAnchorBaseInfoService.GetValidAsync(true);
             var assistantNameList = await amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(nameList.Select(e => e.Id).ToList());
             query.ContentPlatFormIds = GetContentPlatformIdList(query);
-            var baseData = await shoppingCartRegistrationService.GetAssitantFlowAndCustomerTransformDataAsync(selectDate.StartDate, selectDate.EndDate, query.ContentPlatFormIds);
+            var baseData = await shoppingCartRegistrationService.GetAssitantFlowAndCustomerTransformDataAsync(selectDate.StartDate, selectDate.EndDate, query.IsCurrentMonth, query.ContentPlatFormIds);
             var list = baseData.GroupBy(e => e.EmpId).Select(e =>
             {
                 var name = assistantNameList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其他";
@@ -2079,6 +2078,27 @@ namespace Fx.Amiya.Service
             }
             return idList.Any() ? idList : null;
         }
+        private List<string> TargetGetContentPlatformIdList(QueryAssistantTargetCompleteDataDto query)
+        {
+            List<string> idList = new List<string>();
+            if (query.ShowTikTok)
+            {
+                idList.Add("4e4e9564-f6c3-47b6-a7da-e4518bab66a1");
+            }
+            if (query.ShowWechatVideo)
+            {
+                idList.Add("9196b247-1ab9-4d0c-a11e-a1ef09019878");
+            }
+            if (query.ShowXiaoHongShu)
+            {
+                idList.Add("317c03b8-aff9-4961-8392-fc44d04b1725");
+            }
+            if (query.ShowPrivateDomain)
+            {
+                idList.Add("22a0b287-232d-4373-a9dd-c372aaae57dc");
+            }
+            return idList.Any() ? idList : null;
+        }
         private async Task<List<string>> GetBaseLiveAnchorIdListAsync(QueryHospitalTransformDataDto query)
         {
             List<string> idList = new List<string>();
@@ -2135,6 +2155,82 @@ namespace Fx.Amiya.Service
             dataDto.NewCustomerToHospitalCount = data.Where(e => e.IsOldCustomer == false && e.IsToHospital == true).Select(e => e.Phone).Distinct().Count();
             dataDto.TargetComplete = DecimalExtension.CalculateTargetComplete(data.Where(e => e.IsDeal == true).Sum(e => e.DealPrice), totalTarget).Value;
             return dataDto;
+        }
+        /// <summary>
+        /// 助理业绩目标达成情况
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<List<AssitantTargetCompleteDto>> GetAssitantTargetCompleteAsync(QueryAssistantTargetCompleteDataDto query)
+        {
+
+            List<AssitantTargetCompleteDto> assitantTargetCompletes = new List<AssitantTargetCompleteDto>();
+            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
+            var nameList = await liveAnchorBaseInfoService.GetValidAsync(true);
+            var liveanchorIds = nameList.Where(e => e.LiveAnchorName.Contains("刀刀") || e.LiveAnchorName.Contains("吉娜")).Select(e => e.Id).ToList();
+            var assistantNameList = await amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(liveanchorIds);
+            var assistantTarget = await dalEmployeePerformanceTarget.GetAll()
+                .Where(e => e.Valid == true)
+                .Where(e => e.BelongYear == selectDate.StartDate.Year && e.BelongMonth == selectDate.StartDate.Month)
+                .Where(e => assistantNameList.Select(e => e.Id).ToList().Contains(e.EmployeeId))
+                .Select(e => new
+                {
+                    EmpId = e.EmployeeId,
+                    NewCustomerTarget = e.NewCustomerPerformanceTarget,
+                    OldCustomerTarget = e.OldCustomerPerformanceTarget
+                }).ToListAsync();
+            query.ContentPlatFormIds = TargetGetContentPlatformIdList(query);
+            var currentContentOrderList = dalContentPlatFormOrderDealInfo.GetAll()
+               .Where(e => e.IsDeal == true)
+               .Where(o => query.ContentPlatFormIds == null || query.ContentPlatFormIds.Contains(o.ContentPlatFormOrder.ContentPlateformId))
+               .Where(e => e.CreateDate >= selectDate.StartDate && e.CreateDate < selectDate.EndDate && liveanchorIds.Contains(e.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId))
+               .Select(e => new
+               {
+                   AssignEmpId = e.ContentPlatFormOrder.IsSupportOrder ? e.ContentPlatFormOrder.SupportEmpId : e.ContentPlatFormOrder.BelongEmpId,
+                   DealPrice = e.Price,
+                   IsOldCustomer = e.IsOldCustomer
+               }).ToList();
+            var historyStartDate = query.StartDate.AddMonths(-1);
+            var historyEndDate = query.EndDate.AddMonths(-1);
+            var historyContentOrderList = dalContentPlatFormOrderDealInfo.GetAll()
+               .Where(e => e.IsDeal == true)
+               .Where(o => query.ContentPlatFormIds == null || query.ContentPlatFormIds.Contains(o.ContentPlatFormOrder.ContentPlateformId))
+               .Where(e => e.CreateDate >= historyStartDate && e.CreateDate < historyEndDate && liveanchorIds.Contains(e.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId))
+               .Select(e => new
+               {
+                   AssignEmpId = e.ContentPlatFormOrder.IsSupportOrder ? e.ContentPlatFormOrder.SupportEmpId : e.ContentPlatFormOrder.BelongEmpId,
+                   DealPrice = e.Price,
+                   IsOldCustomer = e.IsOldCustomer
+               }).ToList();
+            foreach (var assistant in assistantNameList)
+            {
+                AssitantTargetCompleteDto data = new AssitantTargetCompleteDto();
+                data.Name = assistant.Name;
+                data.NewCustomerPerformanceTarget = assistantTarget.Where(e => e.EmpId == assistant.Id).Select(e => e.NewCustomerTarget).FirstOrDefault();
+                data.CurrentMonthNewCustomerPerformance = currentContentOrderList.Where(e => e.IsOldCustomer == false && e.AssignEmpId == assistant.Id).Sum(e => e.DealPrice);
+                data.HistoryMonthNewCustomerPerformance = historyContentOrderList.Where(e => e.IsOldCustomer == false && e.AssignEmpId == assistant.Id).Sum(e => e.DealPrice);
+                data.NewCustomerTargetComplete = DecimalExtension.CalculateTargetComplete(data.CurrentMonthNewCustomerPerformance, data.NewCustomerPerformanceTarget).Value;
+                data.NewCustomerChainRatio = DecimalExtension.CalculateChain(data.CurrentMonthNewCustomerPerformance, data.HistoryMonthNewCustomerPerformance).Value;
+                data.OldCustomerPerformanceTarget = assistantTarget.Where(e => e.EmpId == assistant.Id).Select(e => e.OldCustomerTarget).FirstOrDefault();
+                data.CurrentMonthOldCustomerPerformance = currentContentOrderList.Where(e => e.IsOldCustomer == true && e.AssignEmpId == assistant.Id).Sum(e => e.DealPrice);
+                data.HistoryMonthOldCustomerPerformance = historyContentOrderList.Where(e => e.IsOldCustomer == true && e.AssignEmpId == assistant.Id).Sum(e => e.DealPrice);
+                data.OldCustomerTargetComplete = DecimalExtension.CalculateTargetComplete(data.CurrentMonthOldCustomerPerformance, data.OldCustomerPerformanceTarget).Value;
+                data.OldCustomerChainRatio = DecimalExtension.CalculateChain(data.CurrentMonthOldCustomerPerformance, data.HistoryMonthOldCustomerPerformance).Value;
+                data.TotalCustomerPerformanceTarget = data.NewCustomerPerformanceTarget + data.OldCustomerPerformanceTarget;
+                data.CurrentMonthTotalCustomerPerformance = data.CurrentMonthNewCustomerPerformance + data.CurrentMonthOldCustomerPerformance;
+                data.HistoryMonthTotalCustomerPerformance = data.HistoryMonthNewCustomerPerformance + data.HistoryMonthOldCustomerPerformance;
+                data.TotalCustomerTargetComplete = DecimalExtension.CalculateTargetComplete(data.CurrentMonthTotalCustomerPerformance, data.TotalCustomerPerformanceTarget).Value;
+                data.TotalCustomerChainRatio = DecimalExtension.CalculateChain(data.CurrentMonthTotalCustomerPerformance, data.HistoryMonthTotalCustomerPerformance).Value;
+                data.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(data.CurrentMonthNewCustomerPerformance, data.CurrentMonthOldCustomerPerformance);
+                assitantTargetCompletes.Add(data);
+            }
+            var sumPerformance = assitantTargetCompletes.Sum(e => e.CurrentMonthTotalCustomerPerformance);
+            assitantTargetCompletes = assitantTargetCompletes.OrderByDescending(e => e.CurrentMonthTotalCustomerPerformance).ToList();
+            for (int i=0;i<assitantTargetCompletes.Count;i++) {
+                assitantTargetCompletes[i].Sort = i + 1;
+                assitantTargetCompletes[i].PerformanceRate = DecimalExtension.CalculateTargetComplete(assitantTargetCompletes[i].CurrentMonthTotalCustomerPerformance, sumPerformance).Value;
+            }
+            return assitantTargetCompletes;
         }
 
         #region 【历史版本】

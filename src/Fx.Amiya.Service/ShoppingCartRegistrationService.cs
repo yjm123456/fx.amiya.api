@@ -2078,12 +2078,21 @@ namespace Fx.Amiya.Service
                     IsAddWeChat = e.IsAddWeChat,
                 }).ToList();
             var phoneList = baseData.Select(e => e.Phone).ToList();
-            var sendC = dalContentPlatformOrder.GetAll()
-              .Where(o => contentPlatformIds == null || contentPlatformIds.Contains(o.ContentPlateformId))
+            //var sendC = dalContentPlatformOrder.GetAll()
+            //  .Where(o => contentPlatformIds == null || contentPlatformIds.Contains(o.ContentPlateformId))
+            //  .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
+            //  .Where(o => o.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId)
+            //  .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder)
+            //  .Select(o => o.Phone)
+            //  .Distinct()
+            //  .Count();
+            var sendC = dalContentPlatformOrderSend.GetAll()
+              .Where(o => contentPlatformIds == null || contentPlatformIds.Contains(o.ContentPlatformOrder.ContentPlateformId))
               .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
-              .Where(o => o.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId)
+              .Where(o => o.ContentPlatformOrder.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId)
               .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder)
-              .Select(o => o.Phone)
+              .Where(e=>e.IsMainHospital==true)
+              .Select(o => o.ContentPlatformOrder.Phone)
               .Distinct()
               .Count();
             data.ClueCount = baseData.Count();
@@ -2118,31 +2127,32 @@ namespace Fx.Amiya.Service
         /// <param name="endDate"></param>
         /// <param name="baseLiveAnchorId"></param>
         /// <returns></returns>
-        public async Task<List<ShoppingCartRegistrationIndicatorBaseDataDto>> GetAssitantFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate, List<string> contentPlatformIds)
+        public async Task<List<ShoppingCartRegistrationIndicatorBaseDataDto>> GetAssitantFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate,bool? isCurrentMonth, List<string> contentPlatformIds)
         {
             var nameList = await liveAnchorBaseInfoService.GetValidAsync(true);
             var liveanchorIds = nameList.Where(e => e.LiveAnchorName.Contains("刀刀") || e.LiveAnchorName.Contains("吉娜")).Select(e => e.Id).ToList();
             var assistantNameList = (await _amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(nameList.Select(e => e.Id).ToList())).Select(e => e.Id);
             var baseData = dalShoppingCartRegistration.GetAll()
-                .Where(e => contentPlatformIds == null || contentPlatformIds.Contains(e.ContentPlatFormId))
-                .Where(e => e.AssignEmpId != null && e.RecordDate >= startDate && e.RecordDate < endDate && liveanchorIds.Contains(e.BaseLiveAnchorId))
-                .Select(e => new
-                {
-                    AssignEmpId = e.AssignEmpId,
-                    IsSendOrder = e.IsSendOrder,
-                    Phone = e.Phone,
-                    RecordDate = e.RecordDate,
-                    IsAddWeChat = e.IsAddWeChat,
-                }).ToList();
+               .Where(e => contentPlatformIds == null || contentPlatformIds.Contains(e.ContentPlatFormId))
+               .Where(e => e.AssignEmpId != null && e.RecordDate >= startDate && e.RecordDate < endDate && liveanchorIds.Contains(e.BaseLiveAnchorId))
+               .Select(e => new
+               {
+                   AssignEmpId = e.AssignEmpId,
+                   IsSendOrder = e.IsSendOrder,
+                   Phone = e.Phone,
+                   RecordDate = e.RecordDate,
+                   IsAddWeChat = e.IsAddWeChat,
+               }).ToList();
             var phoneList = baseData.Select(e => e.Phone).ToList();
-            var sendData = dalContentPlatformOrder.GetAll()
-              .Where(o => contentPlatformIds == null || contentPlatformIds.Contains(o.ContentPlateformId))
-              .Where(o => o.SendDate >= startDate && o.SendDate < endDate && liveanchorIds.Contains(o.LiveAnchor.LiveAnchorBaseId))
+            var sendData = dalContentPlatformOrderSend.GetAll()
+              .Where(o => contentPlatformIds == null || contentPlatformIds.Contains(o.ContentPlatformOrder.ContentPlateformId))
+              .Where(o => o.SendDate >= startDate && o.SendDate < endDate && liveanchorIds.Contains(o.ContentPlatformOrder.LiveAnchor.LiveAnchorBaseId))
               .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder)
+              .Where(e => e.IsMainHospital == true)
               .Select(e => new
               {
-                  AssignEmpId = e.IsSupportOrder ? e.SupportEmpId : e.BelongEmpId,
-                  Phone = e.Phone
+                  AssignEmpId = e.ContentPlatformOrder.IsSupportOrder ? e.ContentPlatformOrder.SupportEmpId : e.ContentPlatformOrder.BelongEmpId,
+                  Phone = e.ContentPlatformOrder.Phone
               }).ToList();
             var contentOrderList = dalContentPlatFormOrderDealInfo.GetAll()
                 .Where(o => contentPlatformIds == null || contentPlatformIds.Contains(o.ContentPlatFormOrder.ContentPlateformId))
@@ -2157,6 +2167,31 @@ namespace Fx.Amiya.Service
                     IsDeal = e.IsDeal,
                     IsOldCustomer = e.IsOldCustomer
                 }).ToList();
+            //var sendData = dalContentPlatformOrderSend.GetAll()
+            //  .Where(o => !isCurrentMonth.HasValue || (isCurrentMonth.Value ? phoneList.Contains(o.ContentPlatformOrder.Phone): !phoneList.Contains(o.ContentPlatformOrder.Phone)))
+            //  .Where(o => contentPlatformIds == null || contentPlatformIds.Contains(o.ContentPlatformOrder.ContentPlateformId))
+            //  .Where(o => o.SendDate >= startDate && o.SendDate < endDate && liveanchorIds.Contains(o.ContentPlatformOrder.LiveAnchor.LiveAnchorBaseId))
+            //  .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder)
+            //  .Where(e => e.IsMainHospital == true)
+            //  .Select(e => new
+            //  {
+            //      AssignEmpId = e.ContentPlatformOrder.IsSupportOrder ? e.ContentPlatformOrder.SupportEmpId : e.ContentPlatformOrder.BelongEmpId,
+            //      Phone = e.ContentPlatformOrder.Phone
+            //  }).ToList();
+            //var contentOrderList = dalContentPlatFormOrderDealInfo.GetAll()
+            //    .Where(o => !isCurrentMonth.HasValue || (isCurrentMonth.Value ? phoneList.Contains(o.ContentPlatFormOrder.Phone) : !phoneList.Contains(o.ContentPlatFormOrder.Phone)))
+            //    .Where(o => contentPlatformIds == null || contentPlatformIds.Contains(o.ContentPlatFormOrder.ContentPlateformId))
+            //    .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && liveanchorIds.Contains(e.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId))
+            //    .Select(e => new
+            //    {
+            //        AssignEmpId = e.ContentPlatFormOrder.IsSupportOrder ? e.ContentPlatFormOrder.SupportEmpId : e.ContentPlatFormOrder.BelongEmpId,
+            //        Phone = e.ContentPlatFormOrder.Phone,
+            //        IsToHospital = (e.IsOldCustomer == false && e.IsToHospital == true) ? true : false,
+            //        RealToHospital = e.IsToHospital,
+            //        DealPrice = e.Price,
+            //        IsDeal = e.IsDeal,
+            //        IsOldCustomer = e.IsOldCustomer
+            //    }).ToList();
             var list1 = baseData.GroupBy(e => e.AssignEmpId).Select(e => new ShoppingCartRegistrationIndicatorBaseDataDto
             {
                 EmpId = e.Key.Value,
