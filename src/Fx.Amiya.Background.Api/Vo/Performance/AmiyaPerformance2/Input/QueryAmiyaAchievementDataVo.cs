@@ -52,6 +52,10 @@ namespace Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Input
         /// <summary>
         /// 是否为有效客资
         /// </summary>
-        public bool IsEffectiveCustomerData { get; set; }
+        public bool? IsEffectiveCustomerData { get; set; }
+        /// <summary>
+        /// 主播基础id
+        /// </summary>
+        public string LiveAnchorBaseId { get; set; }
     }
 }

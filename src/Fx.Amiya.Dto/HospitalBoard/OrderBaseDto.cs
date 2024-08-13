@@ -90,6 +90,7 @@ namespace Fx.Amiya.Dto.HospitalBoard
         public int TotalDealCustomer { get; set; }
         public int SecondDealCustomer { get; set; }
         public int ThirdDealCustomer { get; set; }
-        public int FourthOrMoreDealCustomer { get; set; }
+        public int FourthDealCustomer { get; set; }
+        public int FifThOrMoreOrMoreDealCustomer { get; set; }
     }
 }

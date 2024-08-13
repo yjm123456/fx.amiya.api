@@ -162,7 +162,7 @@ namespace Fx.Amiya.IService
         /// <param name="isEffectiveCustomerData"></param>
         /// <param name="contentPlatFormId"></param>
         /// <returns></returns>
-        Task<List<ShoppingCartRegistrationDto>> GetNewBaseBusinessPerformanceByLiveAnchorNameAsync(DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, string contentPlatFormId);
+        Task<List<ShoppingCartRegistrationDto>> GetNewBaseBusinessPerformanceByLiveAnchorNameAsync(DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, string contentPlatFormId, string liveAnchorBaseId);
         /// <summary>
         /// 根据基础主播获取获取潜在/有效 加v,分诊
         /// </summary>

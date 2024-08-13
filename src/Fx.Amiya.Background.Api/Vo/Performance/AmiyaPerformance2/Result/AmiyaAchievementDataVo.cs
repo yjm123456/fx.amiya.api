@@ -568,6 +568,14 @@ namespace Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result
     public class NewCustomerOperationDataVo
     {
         /// <summary>
+        /// 线索有效率
+        /// </summary>
+        public decimal? ClueEffictiveRate { get; set; }
+        /// <summary>
+        /// 线索有效率健康值（当月）
+        /// </summary>
+        public decimal? ClueEffictiveRateHealthValueThisMonth { get; set; }
+        /// <summary>
         /// 退卡率
         /// </summary>
         public decimal? RefundCardRate { get; set; }
@@ -659,6 +667,10 @@ namespace Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result
         /// </summary>
         public decimal? VisitToDealPrice { get; set; }
         /// <summary>
+        /// 成交能效（元）
+        /// </summary>
+        public decimal? DealToPrice { get; set; }
+        /// <summary>
         /// 漏斗图详情数据
         /// </summary>
         public List<NewCustomerOperationDataDetails> newCustomerOperationDataDetails { get; set; }
@@ -687,9 +699,13 @@ namespace Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result
         public int ThirdDealPeople { get; set; }
 
         /// <summary>
-        /// 四次及以上复购人数
+        /// 四次复购人数
         /// </summary>
-        public int FourthOrMoreDealPeople { get; set; }
+        public int FourthDealCustomer { get; set; }
+        /// <summary>
+        /// 五次及以上复购人数
+        /// </summary>
+        public int FifThOrMoreOrMoreDealCustomer { get; set; }
 
 
         /// <summary>
@@ -709,13 +725,21 @@ namespace Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result
         /// </summary>
         public decimal ThirdTimeBuyRateProportion { get; set; }
         /// <summary>
-        /// 四次及以上转换率
+        /// 四次转换率
         /// </summary>
-        public decimal FourthTimeOrMoreBuyRate { get; set; }
+        public decimal FourthTimeBuyRate { get; set; }
         /// <summary>
-        /// 四次及以上复购占比
+        /// 四次复购占比
         /// </summary>
-        public decimal FourthTimeOrMoreBuyRateProportion { get; set; }
+        public decimal FourthTimeBuyRateProportion { get; set; }
+        /// <summary>
+        /// 五次转换率
+        /// </summary>
+        public decimal FifthTimeOrMoreBuyRate { get; set; }
+        /// <summary>
+        /// 五次及以上复购占比
+        /// </summary>
+        public decimal FifthTimeOrMoreBuyRateProportion { get; set; }
         /// <summary>
         /// 复购率
         /// </summary>

@@ -1324,10 +1324,11 @@ namespace Fx.Amiya.Service
         /// <param name="isEffectiveCustomerData"></param>
         /// <param name="contentPlatFormId"></param>
         /// <returns></returns>
-        public async Task<List<ShoppingCartRegistrationDto>> GetNewBaseBusinessPerformanceByLiveAnchorNameAsync(DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, string contentPlatFormId)
+        public async Task<List<ShoppingCartRegistrationDto>> GetNewBaseBusinessPerformanceByLiveAnchorNameAsync(DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, string contentPlatFormId,string liveAnchorBaseId)
         {
             var result = from d in dalShoppingCartRegistration.GetAll()
             .Where(o => string.IsNullOrEmpty(contentPlatFormId) || o.ContentPlatFormId == contentPlatFormId)
+            .Where(o => string.IsNullOrEmpty(liveAnchorBaseId) || o.BaseLiveAnchorId == liveAnchorBaseId)
             .Where(o => o.RecordDate >= startDate && o.RecordDate < endDate)
 
                          select d;

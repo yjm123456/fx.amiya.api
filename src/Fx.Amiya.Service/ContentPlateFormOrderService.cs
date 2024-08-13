@@ -1105,9 +1105,10 @@ namespace Fx.Amiya.Service
                     }
                     otherHospitalList.RemoveAll(e => e.HospitalId == updateDto.HospitalId);
                 }
-                else {
+                else
+                {
                     //主派和次派不重复,修改主派
-                    var originMainSend =await dalContentPlatformOrderSend.GetAll().Where(e => e.Id == sendInfo.Id).FirstOrDefaultAsync();
+                    var originMainSend = await dalContentPlatformOrderSend.GetAll().Where(e => e.Id == sendInfo.Id).FirstOrDefaultAsync();
                     originMainSend.SendDate = DateTime.Now;
                     originMainSend.HospitalId = updateDto.HospitalId;
                     originMainSend.IsUncertainDate = updateDto.IsUncertainDate;
@@ -1116,7 +1117,7 @@ namespace Fx.Amiya.Service
                     originMainSend.Sender = employeeId;
                     originMainSend.OrderStatus = (int)ContentPlateFormOrderStatus.SendOrder;
                     originMainSend.IsRepeatProfundityOrder = false;
-                    await dalContentPlatformOrderSend.UpdateAsync(originMainSend,true);
+                    await dalContentPlatformOrderSend.UpdateAsync(originMainSend, true);
                     await UpdateOrderStatusAsync(updateDto.OrderId, originMainSend.OrderStatus);
                 }
                 await this.NewUpdateStateAndRepeateOrderPicAsync(updateDto.OrderId, employeeId, contentPlatFormOrder.BelongEmpId, employeeId);
@@ -4038,7 +4039,8 @@ namespace Fx.Amiya.Service
         public async Task<OrderSendAndDealNumDto> GetOrderSendAndDealDataByMonthAsync(DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, string contentPlatFormId, List<int> liveAnchorIds)
         {
             OrderSendAndDealNumDto orderData = new OrderSendAndDealNumDto();
-            orderData.SendOrderNum = await _dalContentPlatformOrder.GetAll()
+            orderData.SendOrderNum = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList)
+                .Where(e => e.ContentPlatformOrderSendList.Count == 1)
               .Where(e => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(e.LiveAnchorId.HasValue ? e.LiveAnchorId.Value : 0))
              .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
              .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsOldCustomer == false)
@@ -4205,12 +4207,13 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="date">时间</param>
         /// <returns></returns>
-        public async Task<OldCustomerDealNumDto> GetOldCustomerBuyAgainByMonthAsync(DateTime date, bool isEffectiveCustomerData, string contentPlatFormId)
+        public async Task<OldCustomerDealNumDto> GetOldCustomerBuyAgainByMonthAsync(DateTime date, bool? isEffectiveCustomerData, string contentPlatFormId, List<int> liveAnchorIds)
         {
             DateTime startDate = Convert.ToDateTime("2000-01-01");
             var dealDate = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderDealInfoList)
+              .Where(e => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(e.LiveAnchorId.HasValue ? e.LiveAnchorId.Value : 0))
              .Where(o => string.IsNullOrEmpty(contentPlatFormId) || o.ContentPlateformId == contentPlatFormId)
-             .Where(o => isEffectiveCustomerData == true ? o.AddOrderPrice > 0 : o.AddOrderPrice == 0)
+             .Where(o => (!isEffectiveCustomerData.HasValue || (isEffectiveCustomerData.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0)))
                 .Where(e => e.IsToHospital == true && e.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete && e.DealDate.Value >= startDate && e.DealDate.Value < date).ToListAsync();
             OldCustomerDealNumDto orderData = new OldCustomerDealNumDto();
             orderData.TotalDealCustomer = dealDate
@@ -4225,7 +4228,11 @@ namespace Fx.Amiya.Service
             orderData.ThirdDealCustomer = dealDate.Where(x => x.ContentPlatformOrderDealInfoList.Where(x => x.IsDeal == true).Count() == 3).Select(e => e.Phone)
                 .Distinct()
                 .Count();
-            orderData.FourthOrMoreDealCustomer = dealDate.Where(x => x.ContentPlatformOrderDealInfoList.Where(x => x.IsDeal == true).Count() >= 4).Select(e => e.Phone)
+            orderData.FourthDealCustomer = dealDate.Where(x => x.ContentPlatformOrderDealInfoList.Where(x => x.IsDeal == true).Count() == 4).Select(e => e.Phone)
+                .Distinct()
+                .Count();
+
+            orderData.FifThOrMoreOrMoreDealCustomer = dealDate.Where(x => x.ContentPlatformOrderDealInfoList.Where(x => x.IsDeal == true).Count() >= 5).Select(e => e.Phone)
                 .Distinct()
                 .Count();
 

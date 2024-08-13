@@ -228,7 +228,12 @@ namespace Fx.Amiya.IService
         #endregion
 
         #region[新运营看板业务层]
-        Task<AmiyaOperationDataDto> GetPerformanceOperationDataAsync(int year, int month, string contentPlatFormId, bool isEffectiveCustomerData);
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="contentPlatFormId">平台</param>
+        /// <param name="isEffectiveCustomerData">有效/潜在；空查询所有</param>
+        /// <param name="iveAnchorBaseId">主播基础id；空查询所有</param>
+        Task<AmiyaOperationDataDto> GetPerformanceOperationDataAsync(int year, int month, string contentPlatFormId, bool? isEffectiveCustomerData,string liveAnchorBaseId);
         #endregion
 
         #region 【企业微信】

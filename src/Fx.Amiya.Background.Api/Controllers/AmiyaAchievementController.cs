@@ -1328,7 +1328,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<AmiyaAchievementDataVo>> GetAmiyaAchievementDataAsync([FromQuery] QueryAmiyaAchievementDataVo query)
         {
             AmiyaAchievementDataVo dataVo = new AmiyaAchievementDataVo();
-            var performance = await amiyaPerformanceService.GetTotalAndLiveanchorPerformanceAsync(query.LiveAnchorBaseId,query.Year,query.Month,query.Day);
+            var performance = await amiyaPerformanceService.GetTotalAndLiveanchorPerformanceAsync(query.LiveAnchorBaseId, query.Year, query.Month, query.Day);
             #region 总业绩
             dataVo.TotalPerformance = performance.TotalPerformance;
             dataVo.TotalPerformanceCompleteRate = performance.TotalPerformanceCompleteRate;
@@ -1381,11 +1381,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<AmiyaAchievementDetailDataVo>> GetAmiyaAchievementDetailedDataAsync([FromQuery] QueryAmiyaAchievementDataVo query)
         {
             AmiyaAchievementDetailDataVo dataVo = new AmiyaAchievementDetailDataVo();
-            var performance =await amiyaPerformanceService.GetDetailPerformanceAsync(query.LiveAnchorBaseId,query.Year,query.Month,query.Day);
+            var performance = await amiyaPerformanceService.GetDetailPerformanceAsync(query.LiveAnchorBaseId, query.Year, query.Month, query.Day);
             #region 新客业绩
 
             dataVo.NewCustomerPerformance = performance.NewCustomerPerformance;
-            dataVo.NewCustomerPerformanceProportion= performance.NewCustomerPerformanceProportion;
+            dataVo.NewCustomerPerformanceProportion = performance.NewCustomerPerformanceProportion;
             dataVo.NewCustomerPerformanceCompleteRate = performance.NewCustomerPerformanceCompleteRate;
             dataVo.NewCustomerPerformanceYearOnYear = performance.NewCustomerPerformanceYearOnYear;
             dataVo.NewCustomerPerformanceChainRatio = performance.NewCustomerPerformanceChainRatio;
@@ -1518,8 +1518,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<AmiyaAchievementBrokenLineListVo>> GetAmiyaAchievementBrokenLineListDataAsync([FromQuery] QueryAmiyaAchievementDataVo query)
         {
             AmiyaAchievementBrokenLineListVo dataVo = new AmiyaAchievementBrokenLineListVo();
-            var brokenLineList =await amiyaPerformanceService.GetAmiyaAchievementBrokenLineListDataAsync(query.LiveAnchorBaseId,query.Year,query.Month);
-            dataVo.NewCustomerPerformanceBrokenLineList = brokenLineList.NewCustomerPerformanceBrokenLineList.Select(e=>new PerformanceBrokenLineListInfoVo { date=e.date,Performance=e.Performance}).ToList();
+            var brokenLineList = await amiyaPerformanceService.GetAmiyaAchievementBrokenLineListDataAsync(query.LiveAnchorBaseId, query.Year, query.Month);
+            dataVo.NewCustomerPerformanceBrokenLineList = brokenLineList.NewCustomerPerformanceBrokenLineList.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
             dataVo.OldCustomerPerformanceBrokenLineList = brokenLineList.OldCustomerPerformanceBrokenLineList.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
             dataVo.EffectivePerformanceBrokenLineList = brokenLineList.EffectivePerformanceBrokenLineList.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
             dataVo.PotentialPerformanceBrokenLineList = brokenLineList.PotentialPerformanceBrokenLineList.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
@@ -1546,32 +1546,35 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<AmiyaOperationDataVo>> GetPerformanceOperationDataAsync([FromQuery] QueryAmiyaOperationDataVo query)
         {
             //获取当前月同比,环比等数据
-            var performance = await amiyaPerformanceService.GetPerformanceOperationDataAsync(query.Year.Value, query.Month.Value, query.ContentPlatFormId, query.IsEffectiveCustomerData);
+            var performance = await amiyaPerformanceService.GetPerformanceOperationDataAsync(query.Year.Value, query.Month.Value, query.ContentPlatFormId, query.IsEffectiveCustomerData, query.LiveAnchorBaseId);
             AmiyaOperationDataVo performanceVo = new AmiyaOperationDataVo();
             NewCustomerOperationDataVo newCustomerOperationDataVo = new NewCustomerOperationDataVo();
-            newCustomerOperationDataVo.RefundCardRate = performance.NewCustomerData.RefundCardRate.HasValue? performance.NewCustomerData.RefundCardRate.Value:0.00M;
+            newCustomerOperationDataVo.RefundCardRate = performance.NewCustomerData.RefundCardRate.HasValue ? performance.NewCustomerData.RefundCardRate.Value : 0.00M;
             newCustomerOperationDataVo.RefundCardRateHealthValueSum = performance.NewCustomerData.RefundCardRateHealthValueSum;
             newCustomerOperationDataVo.RefundCardRateHealthValueThisMonth = performance.NewCustomerData.RefundCardRateHealthValueThisMonth;
-            newCustomerOperationDataVo.AddWeChatRate = performance.NewCustomerData.AddWeChatRate.HasValue? performance.NewCustomerData.AddWeChatRate.Value:0.00M;
+            newCustomerOperationDataVo.ClueEffictiveRate = performance.NewCustomerData.ClueEffictiveRate.HasValue ? performance.NewCustomerData.ClueEffictiveRate.Value : 0.00M;
+            newCustomerOperationDataVo.ClueEffictiveRateHealthValueThisMonth = performance.NewCustomerData.ClueEffictiveRateHealthValueThisMonth;
+            newCustomerOperationDataVo.AddWeChatRate = performance.NewCustomerData.AddWeChatRate.HasValue ? performance.NewCustomerData.AddWeChatRate.Value : 0.00M;
             newCustomerOperationDataVo.AddWeChatRateHealthValueSum = performance.NewCustomerData.AddWeChatRateHealthValueSum;
             newCustomerOperationDataVo.AddWeChatRateHealthValueThisMonth = performance.NewCustomerData.AddWeChatRateHealthValueThisMonth;
-            newCustomerOperationDataVo.SendOrderRate = performance.NewCustomerData.SendOrderRate.HasValue? performance.NewCustomerData.SendOrderRate.Value:0.00M;
+            newCustomerOperationDataVo.SendOrderRate = performance.NewCustomerData.SendOrderRate.HasValue ? performance.NewCustomerData.SendOrderRate.Value : 0.00M;
             newCustomerOperationDataVo.SendOrderRateHealthValueSum = performance.NewCustomerData.SendOrderRateHealthValueSum;
             newCustomerOperationDataVo.SendOrderRateHealthValueThisMonth = performance.NewCustomerData.SendOrderRateHealthValueThisMonth;
-            newCustomerOperationDataVo.ToHospitalRate = performance.NewCustomerData.ToHospitalRate.HasValue? performance.NewCustomerData.ToHospitalRate.Value:0.00M;
+            newCustomerOperationDataVo.ToHospitalRate = performance.NewCustomerData.ToHospitalRate.HasValue ? performance.NewCustomerData.ToHospitalRate.Value : 0.00M;
             newCustomerOperationDataVo.ToHospitalRateHealthValueSum = performance.NewCustomerData.ToHospitalRateHealthValueSum;
             newCustomerOperationDataVo.ToHospitalRateHealthValueThisMonth = performance.NewCustomerData.ToHospitalRateHealthValueThisMonth;
-            newCustomerOperationDataVo.DealRate = performance.NewCustomerData.DealRate.HasValue? performance.NewCustomerData.DealRate.Value:0.00M;
+            newCustomerOperationDataVo.DealRate = performance.NewCustomerData.DealRate.HasValue ? performance.NewCustomerData.DealRate.Value : 0.00M;
             newCustomerOperationDataVo.DealRateHealthValueSum = performance.NewCustomerData.DealRateHealthValueSum;
             newCustomerOperationDataVo.DealRateHealthValueThisMonth = performance.NewCustomerData.DealRateHealthValueThisMonth;
             //能效转化
             newCustomerOperationDataVo.FlowClueToDealPrice = performance.NewCustomerData.FlowClueToDealPrice.HasValue ? performance.NewCustomerData.FlowClueToDealPrice.Value : 0.00M;
-            newCustomerOperationDataVo.AllocationConsulationToDealRate = performance.NewCustomerData.AllocationConsulationToDealRate.HasValue? performance.NewCustomerData.AllocationConsulationToDealRate.Value:0.00M;
+            newCustomerOperationDataVo.AllocationConsulationToDealRate = performance.NewCustomerData.AllocationConsulationToDealRate.HasValue ? performance.NewCustomerData.AllocationConsulationToDealRate.Value : 0.00M;
             newCustomerOperationDataVo.AllocationConsulationToDealPrice = performance.NewCustomerData.AllocationConsulationToDealPrice.HasValue ? performance.NewCustomerData.AllocationConsulationToDealPrice.Value : 0.00M;
             newCustomerOperationDataVo.AddWeChatToDealPrice = performance.NewCustomerData.AddWeChatToDealPrice.HasValue ? performance.NewCustomerData.AddWeChatToDealPrice.Value : 0.00M;
             newCustomerOperationDataVo.SendOrderToDealRate = performance.NewCustomerData.SendOrderToDealRate.HasValue ? performance.NewCustomerData.SendOrderToDealRate.Value : 0.00M;
             newCustomerOperationDataVo.SendOrderToDealPrice = performance.NewCustomerData.SendOrderToDealPrice.HasValue ? performance.NewCustomerData.SendOrderToDealPrice.Value : 0.00M;
             newCustomerOperationDataVo.VisitToDealPrice = performance.NewCustomerData.VisitToDealPrice.HasValue ? performance.NewCustomerData.VisitToDealPrice.Value : 0.00M;
+            newCustomerOperationDataVo.DealToPrice = performance.NewCustomerData.DealToPrice.HasValue ? performance.NewCustomerData.DealToPrice.Value : 0.00M;
             newCustomerOperationDataVo.newCustomerOperationDataDetails = new List<Vo.Performance.AmiyaPerformance2.Result.NewCustomerOperationDataDetails>();
             foreach (var x in performance.NewCustomerData.newCustomerOperationDataDetails)
             {
@@ -1579,7 +1582,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 newCustomerOperationDataDetails.Key = x.Key;
                 newCustomerOperationDataDetails.Name = x.Name;
                 newCustomerOperationDataDetails.Value = x.Value;
-                newCustomerOperationDataDetails.YearToYearValue = x.YearToYearValue.HasValue? x.YearToYearValue.Value:0.00M;
+                newCustomerOperationDataDetails.YearToYearValue = x.YearToYearValue.HasValue ? x.YearToYearValue.Value : 0.00M;
                 newCustomerOperationDataDetails.ChainRatioValue = x.ChainRatioValue.HasValue ? x.ChainRatioValue.Value : 0.00M;
                 newCustomerOperationDataDetails.TargetCompleteRate = x.TargetCompleteRate.HasValue ? x.TargetCompleteRate.Value : 0.00M;
                 newCustomerOperationDataVo.newCustomerOperationDataDetails.Add(newCustomerOperationDataDetails);
@@ -1589,13 +1592,16 @@ namespace Fx.Amiya.Background.Api.Controllers
             oldCustomerOperationDataVo.TotalDealPeople = performance.OldCustomerData.TotalDealPeople;
             oldCustomerOperationDataVo.SecondDealPeople = performance.OldCustomerData.SecondDealPeople;
             oldCustomerOperationDataVo.ThirdDealPeople = performance.OldCustomerData.ThirdDealPeople;
-            oldCustomerOperationDataVo.FourthOrMoreDealPeople = performance.OldCustomerData.FourthOrMoreDealPeople;
+            oldCustomerOperationDataVo.FourthDealCustomer = performance.OldCustomerData.FourthDealCustomer;
+            oldCustomerOperationDataVo.FifThOrMoreOrMoreDealCustomer = performance.OldCustomerData.FifThOrMoreOrMoreDealCustomer;
             oldCustomerOperationDataVo.SecondTimeBuyRate = performance.OldCustomerData.SecondTimeBuyRate;
             oldCustomerOperationDataVo.SecondTimeBuyRateProportion = performance.OldCustomerData.SecondTimeBuyRateProportion;
             oldCustomerOperationDataVo.ThirdTimeBuyRate = performance.OldCustomerData.ThirdTimeBuyRate;
             oldCustomerOperationDataVo.ThirdTimeBuyRateProportion = performance.OldCustomerData.ThirdTimeBuyRateProportion;
-            oldCustomerOperationDataVo.FourthTimeOrMoreBuyRate = performance.OldCustomerData.FourthTimeOrMoreBuyRate;
-            oldCustomerOperationDataVo.FourthTimeOrMoreBuyRateProportion = performance.OldCustomerData.FourthTimeOrMoreBuyRateProportion;
+            oldCustomerOperationDataVo.FourthTimeBuyRate = performance.OldCustomerData.FourthTimeBuyRate;
+            oldCustomerOperationDataVo.FourthTimeBuyRateProportion = performance.OldCustomerData.FourthTimeBuyRateProportion;
+            oldCustomerOperationDataVo.FifthTimeOrMoreBuyRate = performance.OldCustomerData.FifthTimeOrMoreBuyRate;
+            oldCustomerOperationDataVo.FifthTimeOrMoreBuyRateProportion = performance.OldCustomerData.FifthTimeOrMoreBuyRateProportion;
             oldCustomerOperationDataVo.BuyRate = performance.OldCustomerData.BuyRate;
 
             performanceVo.NewCustomerData = newCustomerOperationDataVo;

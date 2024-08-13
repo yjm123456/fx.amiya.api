@@ -428,7 +428,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="date"></param>
         /// <returns></returns>
-        Task<OldCustomerDealNumDto> GetOldCustomerBuyAgainByMonthAsync(DateTime date, bool isEffectiveCustomerData, string contentPlatFormId);
+        Task<OldCustomerDealNumDto> GetOldCustomerBuyAgainByMonthAsync(DateTime date, bool? isEffectiveCustomerData, string contentPlatFormId, List<int> liveAnchorIds);
 
         /// <summary>
         /// 根据助理id获取上门和成交量
