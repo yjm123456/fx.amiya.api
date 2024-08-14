@@ -831,7 +831,7 @@ namespace Fx.Amiya.Service
             var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.endDate.Value.Year, query.endDate.Value.Month == 0 ? 1 : query.endDate.Value.Month);
 
             //总线索
-            var totalShoppingCartRegistionData = await shoppingCartRegistrationService.GetShoppingCartRegistionDataByRecordDate(sequentialDate.StartDate, sequentialDate.EndDate, query.keyWord);
+            var totalShoppingCartRegistionData = await shoppingCartRegistrationService.GetShoppingCartRegistionDataByRecordDate(query.startDate.Value, query.endDate.Value, query.keyWord);
             //var groupDaoDaoShoppingCartRegistionData = totalShoppingCartRegistionData.Where(x => x.BaseLiveAnchorId == "f0a77257-c905-4719-95c4-ad2c4f33855c");
             //var curGroupDaoDaoFlowRate = groupDaoDaoShoppingCartRegistionData.Count();
             //var groupJiNaShoppingCartRegistionData = totalShoppingCartRegistionData.Where(x => x.BaseLiveAnchorId == "af69dcf5-f749-41ea-8b50-fe685facdd8b");
@@ -2226,7 +2226,8 @@ namespace Fx.Amiya.Service
             }
             var sumPerformance = assitantTargetCompletes.Sum(e => e.CurrentMonthTotalCustomerPerformance);
             assitantTargetCompletes = assitantTargetCompletes.OrderByDescending(e => e.CurrentMonthTotalCustomerPerformance).ToList();
-            for (int i=0;i<assitantTargetCompletes.Count;i++) {
+            for (int i = 0; i < assitantTargetCompletes.Count; i++)
+            {
                 assitantTargetCompletes[i].Sort = i + 1;
                 assitantTargetCompletes[i].PerformanceRate = DecimalExtension.CalculateTargetComplete(assitantTargetCompletes[i].CurrentMonthTotalCustomerPerformance, sumPerformance).Value;
             }
