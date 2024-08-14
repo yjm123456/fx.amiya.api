@@ -215,6 +215,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<FansMeeting> FansMeeting { get; set; }
         public virtual DbSet<FansMeetingDetails> FansMeetingDetails { get; set; }
         public virtual DbSet<LivingTakeGoodsOrder> LivingTakeGoodsOrders { get; set; }
+        public virtual DbSet<AppointmentActivity> AppointmentActivities { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new WxMiniUserInfoConfiguration());
@@ -424,6 +425,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new FansMeetingConfiguration());
             modelBuilder.ApplyConfiguration(new FansMeetingDetailsConfiguration());
             modelBuilder.ApplyConfiguration(new LivingTakeGoodsOrderConfiguration());
+            modelBuilder.ApplyConfiguration(new AppointmentActivityConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

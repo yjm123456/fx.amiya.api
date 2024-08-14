@@ -1683,6 +1683,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.StartDate = query.StartDate;
             queryDto.EndDate = query.EndDate;
             queryDto.employeeId = loginEmployeeId;
+            queryDto.KeyWord = query.KeyWord;
             var res =await _orderService.GetOnlyMainHospitalOrderAsync(queryDto);
             FxPageInfo<SendContentPlatformOrderVo> pageInfo = new FxPageInfo<SendContentPlatformOrderVo>();
             pageInfo.TotalCount = res.TotalCount;

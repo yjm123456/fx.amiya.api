@@ -19,3 +19,19 @@ ALTER TABLE `tbl_living_take_goods_order`
 	ADD PRIMARY KEY (`id`);
 
 ------------------------------------王健 2024/8/6 END--------------------------------------
+
+
+------------------------------------王健 2024/8/14 BEGIN--------------------------------------
+
+--小程序预约活动
+CREATE TABLE `tbl_appointment_activity` (
+	`id` VARCHAR(50) NOT NULL,
+	`user_id` VARCHAR(50) NOT NULL,
+	`is_appointment` BIT NOT NULL,
+	`create_date` DATETIME NOT NULL,
+	`update_date` DATETIME NULL DEFAULT NULL,
+	`valid` BIT NOT NULL,
+	`delete_date` DATETIME NULL DEFAULT NULL
+);
+
+------------------------------------王健 2024/8/14 END--------------------------------------
