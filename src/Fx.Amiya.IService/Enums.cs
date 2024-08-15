@@ -1036,6 +1036,10 @@ namespace Fx.Amiya.IService
         /// 老带新
         /// </summary>
         OldTakeNewCustomer = 10,
+        /// <summary>
+        /// 日不落直播
+        /// </summary>
+        RiBuLuoLiving = 11,
     }
 
 
@@ -1590,31 +1594,32 @@ namespace Fx.Amiya.IService
     /// <summary>
     /// 直播中带货订单状态
     /// </summary>
-    public enum LivingTakeGoodsOrderStatus {
+    public enum LivingTakeGoodsOrderStatus
+    {
         /// <summary>
         /// 已付款
         /// </summary>
-        Payed=3,
+        Payed = 3,
         /// <summary>
         /// 待发货
         /// </summary>
-        WaitSendOrder=4,
+        WaitSendOrder = 4,
         /// <summary>
         /// 已发货
         /// </summary>
-        SendOrder=5,
+        SendOrder = 5,
         /// <summary>
         /// 已收货
         /// </summary>
-        Delivery=8,
+        Delivery = 8,
         /// <summary>
         /// 退款
         /// </summary>
-        Refund=9,
+        Refund = 9,
         /// <summary>
         /// 订单完成(即已结算)
         /// </summary>
-        Complete=11
+        Complete = 11
 
     }
 }

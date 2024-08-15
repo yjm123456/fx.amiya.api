@@ -865,6 +865,15 @@ namespace Fx.Amiya.Service
                         channels.Add((int)BelongChannel.LiveAfter);
                         res.Add(contentPlatFormIds, channels);
                         break;
+                    case 11:
+                        //抖音
+                        contentPlatFormIds.Add("4e4e9564-f6c3-47b6-a7da-e4518bab66a1");
+                        //视频号
+                        contentPlatFormIds.Add("9196b247-1ab9-4d0c-a11e-a1ef09019878");
+                        channels.Add((int)BelongChannel.Living);
+                        channels.Add((int)BelongChannel.LiveAfter);
+                        res.Add(contentPlatFormIds, channels);
+                        break;
                 }
                 addRes.BaseIdAndName = res;
                 resultList.Add(addRes);

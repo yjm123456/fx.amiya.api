@@ -813,6 +813,9 @@ namespace Fx.Amiya.Service
                 case 10:
                     sourceText = "老带新";
                     break;
+                case 11:
+                    sourceText = "日不落直播";
+                    break;
                 default:
                     sourceText = "";
                     break;
