@@ -901,13 +901,12 @@ namespace Fx.Amiya.IService
     }
     public enum EmergencyLevel
     {
-        //可忽略
+        //三级客资
         Ignorable = 0,
-        //轻微
-        //Slight=1,
-        //一般
+       
+        //二级客资
         Generally = 2,
-        //重要
+        //一级客资
         Important = 3,
         //非常重要
         // VeryImportant=4

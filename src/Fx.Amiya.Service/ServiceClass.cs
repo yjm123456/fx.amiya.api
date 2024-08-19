@@ -533,22 +533,22 @@ namespace Fx.Amiya.Service
             switch (emergencyLevel)
             {
                 case 0:
-                    emergencyLevelText = "可忽略";
+                    emergencyLevelText = "三级客资";
                     break;
                 /*case 1:
                     emergencyLevelText = "轻微";
                     break;*/
                 case 2:
-                    emergencyLevelText = "一般";
+                    emergencyLevelText = "二级客资";
                     break;
                 case 3:
-                    emergencyLevelText = "重要";
+                    emergencyLevelText = "一级客资";
                     break;
                 /*case 4:
                     emergencyLevelText = "非常重要";
                     break;*/
                 default:
-                    emergencyLevelText = "可忽略";
+                    emergencyLevelText = "三级客资";
                     break;
 
             }

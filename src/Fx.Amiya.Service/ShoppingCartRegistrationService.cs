@@ -478,6 +478,33 @@ namespace Fx.Amiya.Service
             }
         }
 
+        public async Task<ShoppingCartRegistrationDto> GetAddOrderPriceByPhoneAndLiveAnchorIdAsync(string phone, int liveAnchorId)
+        {
+            try
+            {
+                var liveAnchorInfo = await _liveAnchorService.GetByIdAsync(liveAnchorId);
+                if (liveAnchorInfo == null)
+                {
+                    return new ShoppingCartRegistrationDto();
+                }
+                var shoppingCartRegistration = dalShoppingCartRegistration.GetAll().Where(k => k.BaseLiveAnchorId == liveAnchorInfo.LiveAnchorBaseId).Where(e => e.Phone == phone || e.SubPhone == phone).OrderByDescending(k => k.CreateDate).FirstOrDefault();
+                if (shoppingCartRegistration == null)
+                {
+                    return new ShoppingCartRegistrationDto();
+                }
+
+                ShoppingCartRegistrationDto shoppingCartRegistrationDto = new ShoppingCartRegistrationDto();
+                shoppingCartRegistrationDto.Id = shoppingCartRegistration.Id;
+                shoppingCartRegistrationDto.Price = shoppingCartRegistration.Price;
+                return shoppingCartRegistrationDto;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message.ToString());
+            }
+        }
+
         public async Task<ShoppingCartRegistrationDto> GetByPhoneAsync(string phone)
         {
             try
@@ -1333,7 +1360,7 @@ namespace Fx.Amiya.Service
         /// <param name="isEffectiveCustomerData"></param>
         /// <param name="contentPlatFormId"></param>
         /// <returns></returns>
-        public async Task<List<ShoppingCartRegistrationDto>> GetNewBaseBusinessPerformanceByLiveAnchorNameAsync(DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, string contentPlatFormId,string liveAnchorBaseId)
+        public async Task<List<ShoppingCartRegistrationDto>> GetNewBaseBusinessPerformanceByLiveAnchorNameAsync(DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, string contentPlatFormId, string liveAnchorBaseId)
         {
             var result = from d in dalShoppingCartRegistration.GetAll()
             .Where(o => string.IsNullOrEmpty(contentPlatFormId) || o.ContentPlatFormId == contentPlatFormId)
@@ -2101,7 +2128,7 @@ namespace Fx.Amiya.Service
               .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
               .Where(o => o.ContentPlatformOrder.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId)
               .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder)
-              .Where(e=>e.IsMainHospital==true)
+              .Where(e => e.IsMainHospital == true)
               .Select(o => o.ContentPlatformOrder.Phone)
               .Distinct()
               .Count();
@@ -2137,7 +2164,7 @@ namespace Fx.Amiya.Service
         /// <param name="endDate"></param>
         /// <param name="baseLiveAnchorId"></param>
         /// <returns></returns>
-        public async Task<List<ShoppingCartRegistrationIndicatorBaseDataDto>> GetAssitantFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate,bool? isCurrentMonth, List<string> contentPlatformIds)
+        public async Task<List<ShoppingCartRegistrationIndicatorBaseDataDto>> GetAssitantFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate, bool? isCurrentMonth, List<string> contentPlatformIds)
         {
             var nameList = await liveAnchorBaseInfoService.GetValidAsync(true);
             var liveanchorIds = nameList.Where(e => e.LiveAnchorName.Contains("刀刀") || e.LiveAnchorName.Contains("吉娜")).Select(e => e.Id).ToList();

@@ -359,6 +359,31 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
 
+
+        /// <summary>
+        /// 根据小黄车登记手机号获取小黄车登记信息
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <param name="liveAnchorId">主播IP账户id</param>
+        /// <returns></returns>
+        [HttpGet("byPhoneAndLiveAnchorId")]
+        public async Task<ResultData<ShoppingCartRegistrationVo>> GetByPhoneAndLiveAnchorIdAsync(string phone,int liveAnchorId)
+        {
+            try
+            {
+                var shoppingCartRegistration = await shoppingCartRegistrationService.GetAddOrderPriceByPhoneAndLiveAnchorIdAsync(phone, liveAnchorId);
+                ShoppingCartRegistrationVo shoppingCartRegistrationVo = new ShoppingCartRegistrationVo();
+                shoppingCartRegistrationVo.Id = shoppingCartRegistration.Id;
+                shoppingCartRegistrationVo.Price = shoppingCartRegistration.Price;
+
+                return ResultData<ShoppingCartRegistrationVo>.Success().AddData("shoppingCartRegistrationInfo", shoppingCartRegistrationVo);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<ShoppingCartRegistrationVo>.Fail(ex.Message);
+            }
+        }
+
         /// <summary>
         /// 修改小黄车登记信息
         /// </summary>

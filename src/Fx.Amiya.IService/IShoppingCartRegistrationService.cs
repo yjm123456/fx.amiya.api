@@ -21,6 +21,7 @@ namespace Fx.Amiya.IService
         Task AddListAsync(List<AddShoppingCartRegistrationDto> addDtoList);
         Task<ShoppingCartRegistrationDto> GetByIdAsync(string id);
         Task<ShoppingCartRegistrationDto> GetByPhoneAsync(string phone, int createBy);
+        Task<ShoppingCartRegistrationDto> GetAddOrderPriceByPhoneAndLiveAnchorIdAsync(string phone, int liveAnchorId);
         Task<ShoppingCartRegistrationDto> GetByPhoneAsync(string phone);
         Task UpdateAsync(UpdateShoppingCartRegistrationDto updateDto);
 
