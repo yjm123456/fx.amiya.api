@@ -74,5 +74,9 @@ namespace Fx.Amiya.Dto.EmployeePerformanceTarget.Result
         /// 总业绩目标
         /// </summary>
         public decimal PerformanceTarget { get; set; }
+        /// <summary>
+        /// 线索登记目标
+        /// </summary>
+        public int CluesRegisterTarget { get; set; }
     }
 }

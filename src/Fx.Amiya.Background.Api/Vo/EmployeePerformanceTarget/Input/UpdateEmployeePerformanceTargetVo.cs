@@ -68,5 +68,9 @@ namespace Fx.Amiya.Background.Api.Vo.EmployeePerformanceTarget.Input
         /// 总业绩目标
         /// </summary>
         public decimal PerformanceTarget { get; set; }
+        /// <summary>
+        /// 线索登记目标
+        /// </summary>
+        public int CluesRegisterTarget { get; set; }
     }
 }

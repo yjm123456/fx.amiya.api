@@ -79,6 +79,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       NewCustomerPerformanceTarget = d.NewCustomerPerformanceTarget,
                                                       OldCustomerPerformanceTarget = d.OldCustomerPerformanceTarget,
                                                       PerformanceTarget = d.PerformanceTarget,
+                                                      CluesRegisterTarget= d.CluesRegisterTarget,
                                                   };
 
                 FxPageInfo<EmployeePerformanceTargetVo> pageInfo = new FxPageInfo<EmployeePerformanceTargetVo>();
@@ -123,6 +124,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.NewCustomerPerformanceTarget = addVo.NewCustomerPerformanceTarget;
                 addDto.OldCustomerPerformanceTarget = addVo.OldCustomerPerformanceTarget;
                 addDto.PerformanceTarget = addVo.PerformanceTarget;
+                addDto.CluesRegisterTarget = addVo.CluesRegisterTarget;
                 await employeePerformanceTargetService.AddAsync(addDto);
 
                 return ResultData.Success();
@@ -166,6 +168,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 employeePerformanceTargetVo.NewCustomerPerformanceTarget = employeePerformanceTarget.NewCustomerPerformanceTarget;
                 employeePerformanceTargetVo.OldCustomerPerformanceTarget = employeePerformanceTarget.OldCustomerPerformanceTarget;
                 employeePerformanceTargetVo.PerformanceTarget = employeePerformanceTarget.PerformanceTarget;
+                employeePerformanceTargetVo.CluesRegisterTarget=employeePerformanceTarget.CluesRegisterTarget;
                 return ResultData<EmployeePerformanceTargetVo>.Success().AddData("employeePerformanceTarget", employeePerformanceTargetVo);
             }
             catch (Exception ex)
@@ -204,6 +207,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.NewCustomerPerformanceTarget = updateVo.NewCustomerPerformanceTarget;
                 updateDto.OldCustomerPerformanceTarget = updateVo.OldCustomerPerformanceTarget;
                 updateDto.PerformanceTarget = updateVo.PerformanceTarget;
+                updateDto.CluesRegisterTarget=updateVo.CluesRegisterTarget;
                 await employeePerformanceTargetService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

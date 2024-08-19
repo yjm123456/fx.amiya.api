@@ -102,3 +102,12 @@ ALTER TABLE `amiyadb`.`tbl_fans_meeting_details`
 ADD COLUMN `hospital_member_card_id`  VARCHAR(100) NULL AFTER `is_need_hospital_help`;
 ------------------------------------余建明 2024/8/08 END--------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------以上已发布至线上
+
+
+------------------------------------王健 2024/8/19 BEGIN--------------------------------------
+
+--助理业绩目标添加线索登记量目标
+ALTER TABLE `tbl_employee_performance_target`
+	ADD COLUMN `clues_register_target` INT NOT NULL DEFAULT 0 AFTER `new_customer_visit_target`;
+
+------------------------------------王健 2024/8/19 END--------------------------------------

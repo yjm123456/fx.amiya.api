@@ -31,6 +31,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.NewCustomerPerformanceTarget).HasColumnName("new_customer_performance_target").HasColumnType("DECIMAL(12,2)").IsRequired();
             builder.Property(e => e.OldCustomerPerformanceTarget).HasColumnName("old_customer_performance_target").HasColumnType("DECIMAL(12,2)").IsRequired();
             builder.Property(e => e.PerformanceTarget).HasColumnName("performance_target").HasColumnType("DECIMAL(12,2)").IsRequired();
+            builder.Property(e => e.CluesRegisterTarget).HasColumnName("clues_register_target").HasColumnType("int").IsRequired().HasDefaultValue(0);
 
             builder.Property(e => e.CreateDate).HasColumnName("create_date").HasColumnType("DATETIME").IsRequired();
             builder.Property(e => e.UpdateDate).HasColumnName("update_date").HasColumnType("DATETIME").IsRequired(false);

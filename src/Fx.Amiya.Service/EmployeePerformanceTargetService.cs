@@ -71,6 +71,7 @@ namespace Fx.Amiya.Service
                                                  NewCustomerPerformanceTarget = d.NewCustomerPerformanceTarget,
                                                  OldCustomerPerformanceTarget = d.OldCustomerPerformanceTarget,
                                                  PerformanceTarget = d.PerformanceTarget,
+                                                 CluesRegisterTarget=d.CluesRegisterTarget
                                              };
             FxPageInfo<EmployeePerformanceTargetDto> cmployeePerformanceTargetPageInfo = new FxPageInfo<EmployeePerformanceTargetDto>();
             cmployeePerformanceTargetPageInfo.TotalCount = await cmployeePerformanceTargets.CountAsync();
@@ -112,6 +113,7 @@ namespace Fx.Amiya.Service
                 cmployeePerformanceTarget.NewCustomerPerformanceTarget = addDto.NewCustomerPerformanceTarget;
                 cmployeePerformanceTarget.OldCustomerPerformanceTarget = addDto.OldCustomerPerformanceTarget;
                 cmployeePerformanceTarget.PerformanceTarget = addDto.PerformanceTarget;
+                cmployeePerformanceTarget.CluesRegisterTarget=addDto.CluesRegisterTarget;
                 await dalEmployeePerformanceTarget.AddAsync(cmployeePerformanceTarget, true);
 
             }
@@ -151,6 +153,7 @@ namespace Fx.Amiya.Service
             returnResult.NewCustomerPerformanceTarget = result.NewCustomerPerformanceTarget;
             returnResult.OldCustomerPerformanceTarget = result.OldCustomerPerformanceTarget;
             returnResult.PerformanceTarget = result.PerformanceTarget;
+            returnResult.CluesRegisterTarget= result.CluesRegisterTarget;
 
             return returnResult;
         }
@@ -188,6 +191,7 @@ namespace Fx.Amiya.Service
             result.OldCustomerPerformanceTarget = updateDto.OldCustomerPerformanceTarget;
             result.PerformanceTarget = updateDto.PerformanceTarget;
             result.UpdateDate = DateTime.Now;
+            result.CluesRegisterTarget=updateDto.CluesRegisterTarget;
             await dalEmployeePerformanceTarget.UpdateAsync(result, true);
         }
 
