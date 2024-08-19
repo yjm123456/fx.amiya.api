@@ -111,3 +111,11 @@ ALTER TABLE `tbl_employee_performance_target`
 	ADD COLUMN `clues_register_target` INT NOT NULL DEFAULT 0 AFTER `new_customer_visit_target`;
 
 ------------------------------------王健 2024/8/19 END--------------------------------------
+
+------------------------------------王健 2024/8/19 BEGIN--------------------------------------
+--商品编号字段加长
+ALTER TABLE `tbl_item_info`
+	CHANGE COLUMN `other_app_item_id` `other_app_item_id` VARCHAR(1000) NULL DEFAULT NULL COLLATE 'utf8mb4_unicode_ci' AFTER `app_type`;
+
+
+------------------------------------王健 2024/8/19 BEGIN--------------------------------------
