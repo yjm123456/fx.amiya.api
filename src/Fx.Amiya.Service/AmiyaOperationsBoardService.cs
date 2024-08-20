@@ -1237,8 +1237,17 @@ namespace Fx.Amiya.Service
         public async Task<List<FlowTransFormDataDto>> GetFlowTransFormDataAsync(QueryTransformDataDto query)
         {
             var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
+            var liveAnchorIds = new List<string>();
             var nameList = await liveAnchorBaseInfoService.GetValidAsync(true);
-            var liveAnchorIds = nameList.Where(e => e.LiveAnchorName.Contains("刀刀") || e.LiveAnchorName.Contains("吉娜")).Select(e => e.Id).ToList();
+            if (string.IsNullOrEmpty(query.BaseLiveAnchorId))
+            {
+                liveAnchorIds = nameList.Where(e => e.LiveAnchorName.Contains("刀刀") || e.LiveAnchorName.Contains("吉娜")).Select(e => e.Id).ToList();
+            }
+            else
+            {
+                liveAnchorIds = new List<string>() { query.BaseLiveAnchorId };
+            }
+
             query.ContentPlatFormIds = GetContentPlatformIdList(query);
             List<FlowTransFormDataDto> dataList = new List<FlowTransFormDataDto>();
             foreach (var liveanchorId in liveAnchorIds)
@@ -1272,28 +1281,30 @@ namespace Fx.Amiya.Service
             {
                 item.Rate = DecimalExtension.CalculateTargetComplete(item.NewCustomerPerformance + item.OldCustomerPerformance, dataList.Sum(e => e.NewCustomerPerformance) + dataList.Sum(e => e.OldCustomerPerformance)).Value;
             }
-            FlowTransFormDataDto data = new FlowTransFormDataDto();
-            data.GroupName = "总计";
-            data.ClueCount = dataList.Sum(e => e.ClueCount);
-            data.SendOrderCount = dataList.Sum(e => e.SendOrderCount);
-            data.DistributeConsulationNum = dataList.Sum(e => e.DistributeConsulationNum);
-            data.ClueEffectiveRate = DecimalExtension.CalculateTargetComplete(data.DistributeConsulationNum, data.ClueCount).Value;
-            data.AddWechatCount = dataList.Sum(e => e.AddWechatCount);
-            data.AddWechatRate = DecimalExtension.CalculateTargetComplete(data.AddWechatCount, data.DistributeConsulationNum).Value;
-            data.SendOrderRate = DecimalExtension.CalculateTargetComplete(data.SendOrderCount, data.AddWechatCount).Value;
-            data.ToHospitalCount = dataList.Sum(e => e.ToHospitalCount);
-            data.ToHospitalRate = DecimalExtension.CalculateTargetComplete(data.ToHospitalCount, data.SendOrderCount).Value;
-            data.DealCount = dataList.Sum(e => e.DealCount);
-            data.DealRate = DecimalExtension.CalculateTargetComplete(data.DealCount, data.ToHospitalCount).Value;
-            data.NewCustomerPerformance = dataList.Sum(e => e.NewCustomerPerformance);
-            data.OldCustomerPerformance = dataList.Sum(e => e.OldCustomerPerformance);
-            data.OldCustomerUnitPrice = DecimalExtension.Division(data.OldCustomerPerformance, dataList.Sum(e => e.OldCustomerDealCount)).Value;
-            data.NewCustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance, dataList.Sum(e => e.NewCustomerDealCount)).Value;
-            data.CustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance + data.OldCustomerPerformance, data.DealCount).Value;
-            data.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(data.NewCustomerPerformance, data.OldCustomerPerformance);
-            data.Rate = 100;
-
-            dataList.Add(data);
+            if (string.IsNullOrEmpty(query.BaseLiveAnchorId))
+            {
+                FlowTransFormDataDto data = new FlowTransFormDataDto();
+                data.GroupName = "总计";
+                data.ClueCount = dataList.Sum(e => e.ClueCount);
+                data.SendOrderCount = dataList.Sum(e => e.SendOrderCount);
+                data.DistributeConsulationNum = dataList.Sum(e => e.DistributeConsulationNum);
+                data.ClueEffectiveRate = DecimalExtension.CalculateTargetComplete(data.DistributeConsulationNum, data.ClueCount).Value;
+                data.AddWechatCount = dataList.Sum(e => e.AddWechatCount);
+                data.AddWechatRate = DecimalExtension.CalculateTargetComplete(data.AddWechatCount, data.DistributeConsulationNum).Value;
+                data.SendOrderRate = DecimalExtension.CalculateTargetComplete(data.SendOrderCount, data.AddWechatCount).Value;
+                data.ToHospitalCount = dataList.Sum(e => e.ToHospitalCount);
+                data.ToHospitalRate = DecimalExtension.CalculateTargetComplete(data.ToHospitalCount, data.SendOrderCount).Value;
+                data.DealCount = dataList.Sum(e => e.DealCount);
+                data.DealRate = DecimalExtension.CalculateTargetComplete(data.DealCount, data.ToHospitalCount).Value;
+                data.NewCustomerPerformance = dataList.Sum(e => e.NewCustomerPerformance);
+                data.OldCustomerPerformance = dataList.Sum(e => e.OldCustomerPerformance);
+                data.OldCustomerUnitPrice = DecimalExtension.Division(data.OldCustomerPerformance, dataList.Sum(e => e.OldCustomerDealCount)).Value;
+                data.NewCustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance, dataList.Sum(e => e.NewCustomerDealCount)).Value;
+                data.CustomerUnitPrice = DecimalExtension.Division(data.NewCustomerPerformance + data.OldCustomerPerformance, data.DealCount).Value;
+                data.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(data.NewCustomerPerformance, data.OldCustomerPerformance);
+                data.Rate = 100;
+                dataList.Add(data);
+            }
             return dataList;
         }
         /// <summary>
@@ -1304,9 +1315,13 @@ namespace Fx.Amiya.Service
         {
             var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
             var nameList = await liveAnchorBaseInfoService.GetValidAsync(true);
+            if (!string.IsNullOrEmpty(query.BaseLiveAnchorId))
+            {
+                nameList = nameList.Where(e => e.Id == query.BaseLiveAnchorId).ToList();
+            }
             var assistantNameList = await amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(nameList.Select(e => e.Id).ToList());
             query.ContentPlatFormIds = GetContentPlatformIdList(query);
-            var baseData = await shoppingCartRegistrationService.GetAssitantFlowAndCustomerTransformDataAsync(selectDate.StartDate, selectDate.EndDate, query.IsCurrentMonth, query.ContentPlatFormIds);
+            var baseData = await shoppingCartRegistrationService.GetAssitantFlowAndCustomerTransformDataAsync(selectDate.StartDate, selectDate.EndDate, query.IsCurrentMonth,query.BaseLiveAnchorId, query.ContentPlatFormIds);
             var list = baseData.GroupBy(e => e.EmpId).Select(e =>
             {
                 var name = assistantNameList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其他";
@@ -2166,8 +2181,17 @@ namespace Fx.Amiya.Service
 
             List<AssitantTargetCompleteDto> assitantTargetCompletes = new List<AssitantTargetCompleteDto>();
             var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
-            var nameList = await liveAnchorBaseInfoService.GetValidAsync(true);
-            var liveanchorIds = nameList.Where(e => e.LiveAnchorName.Contains("刀刀") || e.LiveAnchorName.Contains("吉娜")).Select(e => e.Id).ToList();
+            var liveanchorIds = new List<string>();
+            if (string.IsNullOrEmpty(query.BaseLiveAnchorId))
+            {
+                var nameList = await liveAnchorBaseInfoService.GetValidAsync(true);
+                liveanchorIds = nameList.Where(e => e.LiveAnchorName.Contains("刀刀") || e.LiveAnchorName.Contains("吉娜")).Select(e => e.Id).ToList();
+            }
+            else
+            {
+                liveanchorIds = new List<string> { query.BaseLiveAnchorId };
+            }
+
             var assistantNameList = await amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(liveanchorIds);
             var assistantTarget = await dalEmployeePerformanceTarget.GetAll()
                 .Where(e => e.Valid == true)

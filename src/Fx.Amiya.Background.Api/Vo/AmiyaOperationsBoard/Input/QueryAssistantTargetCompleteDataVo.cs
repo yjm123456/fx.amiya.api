@@ -7,7 +7,10 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Input
 {
     public class QueryAssistantTargetCompleteDataVo
     {
-        
+        /// <summary>
+        /// 基础主播id
+        /// </summary>
+        public string BaseLiveAnchorId { get; set; }
         /// <summary>
         /// 抖音
         /// </summary>

@@ -9,6 +9,10 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Input
     public class QueryTransformDataDto
     {
         /// <summary>
+        /// 基础主播id
+        /// </summary>
+        public string BaseLiveAnchorId { get; set; }
+        /// <summary>
         /// 平台id
         /// </summary>
         public List<string> ContentPlatFormIds { get; set; }

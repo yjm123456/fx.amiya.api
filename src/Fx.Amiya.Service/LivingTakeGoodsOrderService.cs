@@ -34,7 +34,7 @@ namespace Fx.Amiya.Service
             var existFlag = dalLivingTakeGoodsOrder.GetAll().Where(e => e.Id == addDto.Id).Any();
             if (existFlag)
                 throw new Exception("该订单号已存在");
-            var goodsExistFlag = dalItemInfo.GetAll().Where(e => e.OtherAppItemId == addDto.GoodsId).Any();
+            var goodsExistFlag = dalItemInfo.GetAll().Where(e => e.OtherAppItemId.Contains(addDto.GoodsId)).Any();
             if (!goodsExistFlag)
                 throw new Exception($"带货商品列表中不包含编号为:{addDto.GoodsId}的商品,请先完善带货商品列表再添加");
             LivingTakeGoodsOrder order = new LivingTakeGoodsOrder();
@@ -120,7 +120,7 @@ namespace Fx.Amiya.Service
             var order = await dalLivingTakeGoodsOrder.GetAll().Where(e => e.Id == updateDto.Id).FirstOrDefaultAsync();
             if (order == null)
                 throw new Exception("订单编号错误");
-            var goodsExistFlag = dalItemInfo.GetAll().Where(e => e.OtherAppItemId == updateDto.GoodsId).Any();
+            var goodsExistFlag = dalItemInfo.GetAll().Where(e => e.OtherAppItemId.Contains(updateDto.GoodsId)).Any();
             if (goodsExistFlag)
                 throw new Exception($"带货商品列表中不包含编号为:{updateDto.GoodsId}的商品,请先完善带货商品列表再添加");
             order.GoodsId = updateDto.GoodsId;

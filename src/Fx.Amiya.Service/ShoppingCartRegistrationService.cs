@@ -2164,11 +2164,18 @@ namespace Fx.Amiya.Service
         /// <param name="endDate"></param>
         /// <param name="baseLiveAnchorId"></param>
         /// <returns></returns>
-        public async Task<List<ShoppingCartRegistrationIndicatorBaseDataDto>> GetAssitantFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate, bool? isCurrentMonth, List<string> contentPlatformIds)
+        public async Task<List<ShoppingCartRegistrationIndicatorBaseDataDto>> GetAssitantFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate, bool? isCurrentMonth,string baseLiveAnchorId, List<string> contentPlatformIds)
         {
             var nameList = await liveAnchorBaseInfoService.GetValidAsync(true);
-            var liveanchorIds = nameList.Where(e => e.LiveAnchorName.Contains("刀刀") || e.LiveAnchorName.Contains("吉娜")).Select(e => e.Id).ToList();
-            var assistantNameList = (await _amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(nameList.Select(e => e.Id).ToList())).Select(e => e.Id);
+            var liveanchorIds = new List<string>();
+            if (string.IsNullOrEmpty(baseLiveAnchorId))
+            {
+                liveanchorIds = nameList.Where(e => e.LiveAnchorName.Contains("刀刀") || e.LiveAnchorName.Contains("吉娜")).Select(e => e.Id).ToList();
+            }
+            else
+            {
+                liveanchorIds = new List<string>() { baseLiveAnchorId };
+            }
             var baseData = dalShoppingCartRegistration.GetAll()
                .Where(e => contentPlatformIds == null || contentPlatformIds.Contains(e.ContentPlatFormId))
                .Where(e => e.AssignEmpId != null && e.RecordDate >= startDate && e.RecordDate < endDate && liveanchorIds.Contains(e.BaseLiveAnchorId))

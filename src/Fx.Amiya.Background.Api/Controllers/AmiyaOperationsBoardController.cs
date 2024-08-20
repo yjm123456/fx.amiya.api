@@ -696,6 +696,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.ShowXiaoHongShu = query.ShowXiaoHongShu;
             queryDto.StartDate = query.StartDate;
             queryDto.EndDate = query.EndDate;
+            queryDto.BaseLiveAnchorId = query.BaseLiveAnchorId;
             var dataList = await amiyaOperationsBoardService.GetAssitantTargetCompleteAsync(queryDto);
             var res= dataList.Select(e => new AssistantTargetCompleteVo
             {
@@ -737,6 +738,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.ShowWechatVideo = query.ShowWechatVideo;
             queryDto.ShowXiaoHongShu = query.ShowXiaoHongShu;
             queryDto.ShowPrivateDomain = query.ShowPrivateDomain;
+            queryDto.BaseLiveAnchorId = query.BaseLiveAnchorId;
             var result = await amiyaOperationsBoardService.GetFlowTransFormDataAsync(queryDto);
             var res = result.Select(e => new FlowTransFormDataVo
             {
@@ -781,6 +783,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.ShowXiaoHongShu = query.ShowXiaoHongShu;
             queryDto.ShowPrivateDomain = query.ShowPrivateDomain;
             queryDto.IsCurrentMonth = query.IsCurrentMonth;
+            queryDto.BaseLiveAnchorId = query.BaseLiveAnchorId;
             var result = await amiyaOperationsBoardService.GetAssistantFlowTransFormDataAsync(queryDto);
             var res = result.Select(e => new FlowTransFormDataVo
             {
