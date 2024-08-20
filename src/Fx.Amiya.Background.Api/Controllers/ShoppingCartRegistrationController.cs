@@ -367,7 +367,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="liveAnchorId">主播IP账户id</param>
         /// <returns></returns>
         [HttpGet("byPhoneAndLiveAnchorId")]
-        public async Task<ResultData<ShoppingCartRegistrationVo>> GetByPhoneAndLiveAnchorIdAsync(string phone,int liveAnchorId)
+        public async Task<ResultData<ShoppingCartRegistrationVo>> GetByPhoneAndLiveAnchorIdAsync(string phone, int liveAnchorId)
         {
             try
             {
@@ -1013,6 +1013,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                 GetShoppingCartRegistionAddWechatNumVo result = new GetShoppingCartRegistionAddWechatNumVo();
                 result.BeautyCustomerAddWechatNum = shoppingCartRegistration.BeautyCustomerAddWechatNum;
                 result.TakeGoodsCustomerAddWechatNum = shoppingCartRegistration.TakeGoodsCustomerAddWechatNum;
+                result.AddWeChatRate = shoppingCartRegistration.AddWeChatRate;
+                result.shoppingCartRegistionAddNumAndCompleteRateVo  = new ShoppingCartRegistionAddNumAndCompleteRateVo();
+                result.shoppingCartRegistionAddNumAndCompleteRateVo.CreateNum = shoppingCartRegistration.shoppingCartRegistionAddNumAndCompleteRateDto.CreateNum;
+                result.shoppingCartRegistionAddNumAndCompleteRateVo.CreateNumTarget = shoppingCartRegistration.shoppingCartRegistionAddNumAndCompleteRateDto.CreateNumTarget;
+                result.shoppingCartRegistionAddNumAndCompleteRateVo.CreateNumCompleteRate = shoppingCartRegistration.shoppingCartRegistionAddNumAndCompleteRateDto.CreateNumCompleteRate;
                 return ResultData<GetShoppingCartRegistionAddWechatNumVo>.Success().AddData("AddWechatNumByCreateEmpInfoAndDate", result);
             }
             catch (Exception ex)

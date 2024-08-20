@@ -21,11 +21,13 @@ using Fx.Amiya.Dto.AssistantHomePage.Input;
 using Fx.Amiya.Dto.AmiyaOperationsBoardService;
 using Fx.Amiya.Dto.AmiyaOperationsBoardService.Result;
 using Fx.Amiya.Dto.HospitalBoard;
+using Fx.Common.Extensions;
 
 namespace Fx.Amiya.Service
 {
     public class ShoppingCartRegistrationService : IShoppingCartRegistrationService
     {
+        private readonly IEmployeePerformanceTargetService employeePerformanceTargetService;
         private IDalShoppingCartRegistration dalShoppingCartRegistration;
         private IContentPlatformService _contentPlatformService;
         private ILiveAnchorWeChatInfoService _liveAnchorWeChatInfoService;
@@ -44,6 +46,7 @@ namespace Fx.Amiya.Service
 
         public ShoppingCartRegistrationService(IDalShoppingCartRegistration dalShoppingCartRegistration,
             IContentPlatformService contentPlatformService,
+            IEmployeePerformanceTargetService employeePerformanceTargetService,
              IMessageNoticeService messageNoticeService,
             IAmiyaEmployeeService amiyaEmployeeService,
             IUnitOfWork unitOfWork,
@@ -58,6 +61,7 @@ namespace Fx.Amiya.Service
             this.messageNoticeService = messageNoticeService;
             this.dalConfig = dalConfig;
             this.unitOfWork = unitOfWork;
+            this.employeePerformanceTargetService = employeePerformanceTargetService;
             _liveAnchorWeChatInfoService = liveAnchorWeChatInfoService;
             _amiyaEmployeeService = amiyaEmployeeService;
             this.dalAmiyaEmployee = dalAmiyaEmployee;
@@ -1028,10 +1032,17 @@ namespace Fx.Amiya.Service
             try
             {
                 var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == query.EmployeeId);
-                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().Where(k => k.BaseLiveAnchorId == employee.LiveAnchorBaseId && k.IsAddWeChat == true && k.RecordDate >= query.StartDate && k.RecordDate <= query.EndDate.AddDays(1).AddMilliseconds(-1)).ToListAsync();
+                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().Where(k => k.BaseLiveAnchorId == employee.LiveAnchorBaseId && k.RecordDate >= query.StartDate && k.RecordDate <= query.EndDate.AddDays(1).AddMilliseconds(-1)).ToListAsync();
+                var shoppingCartRegistrationAddWechat = shoppingCartRegistration.Where(k => k.IsAddWeChat == true).ToList();
                 GetShoppingCartRegistionAddWechatNumDto result = new GetShoppingCartRegistionAddWechatNumDto();
-                result.BeautyCustomerAddWechatNum = shoppingCartRegistration.Where(x => x.ShoppingCartRegistrationCustomerType == (int)ShoppingCartRegistionCustomerSource.AestheticMedicine).Count();
-                result.TakeGoodsCustomerAddWechatNum = shoppingCartRegistration.Where(x => x.ShoppingCartRegistrationCustomerType == (int)ShoppingCartRegistionCustomerSource.TakeGoods).Count();
+                result.BeautyCustomerAddWechatNum = shoppingCartRegistrationAddWechat.Where(x => x.ShoppingCartRegistrationCustomerType == (int)ShoppingCartRegistionCustomerSource.AestheticMedicine).Count();
+                result.TakeGoodsCustomerAddWechatNum = shoppingCartRegistrationAddWechat.Where(x => x.ShoppingCartRegistrationCustomerType == (int)ShoppingCartRegistionCustomerSource.TakeGoods).Count();
+                result.AddWeChatRate = DecimalExtension.CalculateTargetComplete(shoppingCartRegistrationAddWechat.Count(), shoppingCartRegistration.Count());
+                result.shoppingCartRegistionAddNumAndCompleteRateDto = new ShoppingCartRegistionAddNumAndCompleteRateDto();
+                result.shoppingCartRegistionAddNumAndCompleteRateDto.CreateNum = shoppingCartRegistration.Where(x => x.CreateBy == query.EmployeeId).Count();
+                result.shoppingCartRegistionAddNumAndCompleteRateDto.CreateNumTarget = await employeePerformanceTargetService.GetClueTargetByEmpIdAndYearMonthAsync(query.EmployeeId, query.StartDate.Year, query.EndDate.Month);
+                result.shoppingCartRegistionAddNumAndCompleteRateDto.CreateNumCompleteRate = DecimalExtension.CalculateTargetComplete(result.shoppingCartRegistionAddNumAndCompleteRateDto.CreateNum, result.shoppingCartRegistionAddNumAndCompleteRateDto.CreateNumTarget);
+
                 return result;
             }
             catch (Exception ex)

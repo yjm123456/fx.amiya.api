@@ -71,7 +71,7 @@ namespace Fx.Amiya.Service
                                                  NewCustomerPerformanceTarget = d.NewCustomerPerformanceTarget,
                                                  OldCustomerPerformanceTarget = d.OldCustomerPerformanceTarget,
                                                  PerformanceTarget = d.PerformanceTarget,
-                                                 CluesRegisterTarget=d.CluesRegisterTarget
+                                                 CluesRegisterTarget = d.CluesRegisterTarget
                                              };
             FxPageInfo<EmployeePerformanceTargetDto> cmployeePerformanceTargetPageInfo = new FxPageInfo<EmployeePerformanceTargetDto>();
             cmployeePerformanceTargetPageInfo.TotalCount = await cmployeePerformanceTargets.CountAsync();
@@ -113,7 +113,7 @@ namespace Fx.Amiya.Service
                 cmployeePerformanceTarget.NewCustomerPerformanceTarget = addDto.NewCustomerPerformanceTarget;
                 cmployeePerformanceTarget.OldCustomerPerformanceTarget = addDto.OldCustomerPerformanceTarget;
                 cmployeePerformanceTarget.PerformanceTarget = addDto.PerformanceTarget;
-                cmployeePerformanceTarget.CluesRegisterTarget=addDto.CluesRegisterTarget;
+                cmployeePerformanceTarget.CluesRegisterTarget = addDto.CluesRegisterTarget;
                 await dalEmployeePerformanceTarget.AddAsync(cmployeePerformanceTarget, true);
 
             }
@@ -153,7 +153,7 @@ namespace Fx.Amiya.Service
             returnResult.NewCustomerPerformanceTarget = result.NewCustomerPerformanceTarget;
             returnResult.OldCustomerPerformanceTarget = result.OldCustomerPerformanceTarget;
             returnResult.PerformanceTarget = result.PerformanceTarget;
-            returnResult.CluesRegisterTarget= result.CluesRegisterTarget;
+            returnResult.CluesRegisterTarget = result.CluesRegisterTarget;
 
             return returnResult;
         }
@@ -191,7 +191,7 @@ namespace Fx.Amiya.Service
             result.OldCustomerPerformanceTarget = updateDto.OldCustomerPerformanceTarget;
             result.PerformanceTarget = updateDto.PerformanceTarget;
             result.UpdateDate = DateTime.Now;
-            result.CluesRegisterTarget=updateDto.CluesRegisterTarget;
+            result.CluesRegisterTarget = updateDto.CluesRegisterTarget;
             await dalEmployeePerformanceTarget.UpdateAsync(result, true);
         }
 
@@ -233,6 +233,23 @@ namespace Fx.Amiya.Service
                 return 0.00M;
             }
             return result.PerformanceTarget;
+        }
+
+        /// <summary>
+        /// 根据年月和助理id获取线索目标
+        /// </summary>
+        /// <param name="employeeId"></param>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        public async Task<int> GetClueTargetByEmpIdAndYearMonthAsync(int employeeId, int year, int month)
+        {
+            var result = await dalEmployeePerformanceTarget.GetAll().Include(x => x.AmiyaEmployee).Where(x => x.EmployeeId == employeeId && x.BelongYear == year && x.BelongMonth == month && x.Valid == true).FirstOrDefaultAsync();
+            if (result == null)
+            {
+                return 0;
+            }
+            return result.CluesRegisterTarget;
         }
         /// <summary>
         /// 根据基础主播id获取有效/潜在 分诊,加v目标

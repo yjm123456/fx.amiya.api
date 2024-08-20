@@ -195,11 +195,17 @@ namespace Fx.Amiya.Background.Api.Vo.FansMeetingDetails.Result
 
 
         /// <summary>
-        /// 粉丝见面会名称
+        /// 是否到院
         /// </summary>
 
-        [Description("粉丝见面会名称")]
-        public string FansMeetingName { get; set; }
+        [Description("是否到院")]
+        public string IsToHospital { get; set; }
+        /// <summary>
+        /// 是否成交
+        /// </summary>
+
+        [Description("是否成交")]
+        public string IsDeal { get; set; }
         /// <summary>
         /// 预估消费
         /// </summary>

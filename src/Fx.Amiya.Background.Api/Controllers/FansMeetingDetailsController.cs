@@ -149,7 +149,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                          select new ExportFansMeetingDetailsVo
                                          {
                                              AmiyaConsulationName = d.AmiyaConsulationName,
-                                             FansMeetingName = d.FansMeetingName,
+                                             IsToHospital = d.IsToHospital == true ? "是" : "否",
+                                             IsDeal = d.IsDeal == true ? "是" : "否",
                                              AppointmentDate = d.AppointmentDate,
                                              AppointmentDetailsDate = d.AppointmentDetailsDate,
                                              CustomerName = d.CustomerName,
@@ -169,6 +170,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                              NextAppointmentDate = d.NextAppointmentDate,
                                              IsNeedHospitalHelp = d.IsNeedHospitalHelp == true ? "是" : "否",
                                              HospitalMemberCardId = d.HospitalMemberCardId,
+
                                          };
 
                 FxPageInfo<FansMeetingDetailsVo> pageInfo = new FxPageInfo<FansMeetingDetailsVo>();
