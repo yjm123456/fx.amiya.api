@@ -632,15 +632,29 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<ResultData> DeleteAsync(string id)
         {
+            OperationAddDto operationLog = new OperationAddDto();
             try
             {
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationLog.OperationBy = employeeId;
+                var data = await shoppingCartRegistrationService.GetByIdAsync(id);
+                operationLog .Parameters = JsonConvert.SerializeObject(data);
                 await shoppingCartRegistrationService.DeleteAsync(id);
                 return ResultData.Success();
             }
             catch (Exception ex)
             {
-
-                throw new Exception(ex.Message.ToString());
+                operationLog.Message = ex.Message;
+                operationLog.Code = -1;
+                return ResultData.Fail(ex.Message);
+            }
+            finally
+            {
+                operationLog.Source = (int)RequestSource.AmiyaBackground;
+                operationLog.RequestType = (int)RequestType.Update;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationLog);
             }
         }
 
@@ -1014,7 +1028,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 result.BeautyCustomerAddWechatNum = shoppingCartRegistration.BeautyCustomerAddWechatNum;
                 result.TakeGoodsCustomerAddWechatNum = shoppingCartRegistration.TakeGoodsCustomerAddWechatNum;
                 result.AddWeChatRate = shoppingCartRegistration.AddWeChatRate;
-                result.shoppingCartRegistionAddNumAndCompleteRateVo  = new ShoppingCartRegistionAddNumAndCompleteRateVo();
+                result.shoppingCartRegistionAddNumAndCompleteRateVo = new ShoppingCartRegistionAddNumAndCompleteRateVo();
                 result.shoppingCartRegistionAddNumAndCompleteRateVo.CreateNum = shoppingCartRegistration.shoppingCartRegistionAddNumAndCompleteRateDto.CreateNum;
                 result.shoppingCartRegistionAddNumAndCompleteRateVo.CreateNumTarget = shoppingCartRegistration.shoppingCartRegistionAddNumAndCompleteRateDto.CreateNumTarget;
                 result.shoppingCartRegistionAddNumAndCompleteRateVo.CreateNumCompleteRate = shoppingCartRegistration.shoppingCartRegistionAddNumAndCompleteRateDto.CreateNumCompleteRate;
