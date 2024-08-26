@@ -118,3 +118,11 @@ ALTER TABLE `tbl_item_info`
 
 
 ------------------------------------王健 2024/8/19 BEGIN--------------------------------------
+
+
+------------------------------------余建明 2024/8/21 BEGIN--------------------------------------
+ALTER TABLE `amiyadb`.`tbl_customer_service_compensation` 
+ADD COLUMN `addclue_complete_price` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cooperation_live_anchor_to_hospital_price`,
+ADD COLUMN `addwechat_complete_price` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `addclue_complete_price`;
+------------------------------------余建明 2024/8/21 END--------------------------------------
+-----------------------------------------------------------以上部分已更新到线上--------------------------------------

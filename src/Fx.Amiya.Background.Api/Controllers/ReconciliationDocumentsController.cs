@@ -557,6 +557,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                             }
                             else
                             {
+                                if (worksheet.Cells[x, 4].Value.ToString() == "0000-00-00")
+                                {
+                                    throw new Exception("成交时间有参数列异常，请检查表格数据！");
+                                }
                                 addDto.DealDate = Convert.ToDateTime(worksheet.Cells[x, 4].Value.ToString());
                             }
                         }
@@ -595,6 +599,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                         addDto.HospitalId = hospitalId;
                         addDto.CreateBy = hospitalEmpId;
                         addDtoList.Add(addDto);
+                        if (addDtoList.Count > 147)
+                        {
+                            var xx = "123";
+                        }
                     }
                     await reconciliationDocumentsService.AddAsync(addDtoList);
                 }

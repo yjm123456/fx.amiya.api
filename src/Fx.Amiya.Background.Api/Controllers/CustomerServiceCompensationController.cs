@@ -85,6 +85,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       OldCustomerToHospitalReword = d.OldCustomerToHospitalReword,
                                                       TargetFinishReword = d.TargetFinishReword,
                                                       OtherChargebacks = d.OtherChargebacks,
+                                                      AddClueCompletePrice = d.AddClueCompletePrice,
+                                                      AddWechatCompletePrice = d.AddWechatCompletePrice,
                                                       BeautyAddWechatPrice = d.BeautyAddWechatPrice,
                                                       TakeGoodsAddWechatPrice = d.TakeGoodsAddWechatPrice,
                                                       ConsulationCardPrice = d.ConsulationCardPrice,
@@ -141,6 +143,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.TargetFinishReword = addVo.TargetFinishReword;
                 addDto.OtherChargebacks = addVo.OtherChargebacks;
 
+                addDto.AddClueCompletePrice = addVo.AddClueCompletePrice;
+                addDto.AddWechatCompletePrice = addVo.AddWechatCompletePrice;
                 addDto.BeautyAddWechatPrice = addVo.BeautyAddWechatPrice;
                 addDto.TakeGoodsAddWechatPrice = addVo.TakeGoodsAddWechatPrice;
                 addDto.ConsulationCardPrice = addVo.ConsulationCardPrice;
@@ -197,6 +201,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 customerServiceCompensationVo.OtherChargebacks = customerServiceCompensation.OtherChargebacks;
 
 
+                customerServiceCompensationVo.AddClueCompletePrice = customerServiceCompensation.AddClueCompletePrice;
+                customerServiceCompensationVo.AddWechatCompletePrice = customerServiceCompensation.AddWechatCompletePrice;
                 customerServiceCompensationVo.BeautyAddWechatPrice = customerServiceCompensation.BeautyAddWechatPrice;
                 customerServiceCompensationVo.TakeGoodsAddWechatPrice = customerServiceCompensation.TakeGoodsAddWechatPrice;
                 customerServiceCompensationVo.ConsulationCardPrice = customerServiceCompensation.ConsulationCardPrice;
@@ -243,7 +249,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.TargetFinishReword = updateVo.TargetFinishReword;
                 updateDto.OtherChargebacks = updateVo.OtherChargebacks;
 
-
+                updateDto.AddClueCompletePrice = updateVo.AddClueCompletePrice;
+                updateDto.AddWechatCompletePrice = updateVo.AddWechatCompletePrice;
                 updateDto.BeautyAddWechatPrice = updateVo.BeautyAddWechatPrice;
                 updateDto.TakeGoodsAddWechatPrice = updateVo.TakeGoodsAddWechatPrice;
                 updateDto.ConsulationCardPrice = updateVo.ConsulationCardPrice;

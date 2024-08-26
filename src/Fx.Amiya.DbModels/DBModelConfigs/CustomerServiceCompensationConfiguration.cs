@@ -34,6 +34,8 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.OtherChargebacks).HasColumnName("other_chargebacks").HasColumnType("decimal(12,2)").IsRequired();
 
 
+            builder.Property(e => e.AddClueCompletePrice).HasColumnName("addclue_complete_price").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.AddWechatCompletePrice).HasColumnName("addwechat_complete_price").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.BeautyAddWechatPrice).HasColumnName("beauty_add_wechat_price").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.TakeGoodsAddWechatPrice).HasColumnName("take_goods_add_wechat_price").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.ConsulationCardPrice).HasColumnName("consulation_card_price").HasColumnType("decimal(12,2)").IsRequired();

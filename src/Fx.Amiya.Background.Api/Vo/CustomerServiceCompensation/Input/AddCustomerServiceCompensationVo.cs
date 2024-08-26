@@ -44,6 +44,7 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerServiceCompensation.Input
         /// 提成金额
         /// </summary>
         public decimal CustomerServicePerformance { get; set; }
+
         /// <summary>
         /// 上门率
         /// </summary>
@@ -75,6 +76,16 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerServiceCompensation.Input
 
 
         #region 行政客服
+
+        /// <summary>
+        /// 当前组加v率达成情况（若低于健康值则扣款300）
+        /// </summary>
+        public decimal AddWechatCompletePrice { get; set; }
+
+        /// <summary>
+        /// 个人线索登记完成率（高于特定值奖励500，低于特定值扣款300）
+        /// </summary>
+        public decimal AddClueCompletePrice { get; set; }
         /// <summary>
         /// 医美客资加V业绩
         /// </summary>

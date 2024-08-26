@@ -72,6 +72,8 @@ namespace Fx.Amiya.Service
                                                    OldCustomerToHospitalReword = d.OldCustomerToHospitalReword,
                                                    TargetFinishReword = d.TargetFinishReword,
                                                    OtherChargebacks = d.OtherChargebacks,
+                                                   AddClueCompletePrice = d.AddClueCompletePrice,
+                                                   AddWechatCompletePrice = d.AddWechatCompletePrice,
                                                    BeautyAddWechatPrice = d.BeautyAddWechatPrice,
                                                    TakeGoodsAddWechatPrice = d.TakeGoodsAddWechatPrice,
                                                    ConsulationCardPrice = d.ConsulationCardPrice,
@@ -118,7 +120,8 @@ namespace Fx.Amiya.Service
                 customerServiceCompensation.TargetFinishReword = addDto.TargetFinishReword;
                 customerServiceCompensation.OtherChargebacks = addDto.OtherChargebacks;
 
-
+                customerServiceCompensation.AddClueCompletePrice = addDto.AddClueCompletePrice;
+                customerServiceCompensation.AddWechatCompletePrice = addDto.AddWechatCompletePrice;
                 customerServiceCompensation.BeautyAddWechatPrice = addDto.BeautyAddWechatPrice;
                 customerServiceCompensation.TakeGoodsAddWechatPrice = addDto.TakeGoodsAddWechatPrice;
                 customerServiceCompensation.ConsulationCardPrice = addDto.ConsulationCardPrice;
@@ -176,6 +179,8 @@ namespace Fx.Amiya.Service
             returnResult.OtherChargebacks = result.OtherChargebacks;
 
 
+            returnResult.AddClueCompletePrice = result.AddClueCompletePrice;
+            returnResult.AddWechatCompletePrice = result.AddWechatCompletePrice;
             returnResult.BeautyAddWechatPrice = result.BeautyAddWechatPrice;
             returnResult.TakeGoodsAddWechatPrice = result.TakeGoodsAddWechatPrice;
             returnResult.ConsulationCardPrice = result.ConsulationCardPrice;
@@ -217,6 +222,8 @@ namespace Fx.Amiya.Service
             result.OtherChargebacks = updateDto.OtherChargebacks;
 
 
+            result.AddClueCompletePrice = updateDto.AddClueCompletePrice;
+            result.AddWechatCompletePrice = updateDto.AddWechatCompletePrice;
             result.BeautyAddWechatPrice = updateDto.BeautyAddWechatPrice;
             result.TakeGoodsAddWechatPrice = updateDto.TakeGoodsAddWechatPrice;
             result.ConsulationCardPrice = updateDto.ConsulationCardPrice;
@@ -258,16 +265,16 @@ namespace Fx.Amiya.Service
         /// <param name="id"></param>
         /// <param name="createEmpId">创建人</param>
         /// <returns></returns>
-        public async Task CopyAsync(string id,int createEmpId)
+        public async Task CopyAsync(string id, int createEmpId)
         {
             var data = dalCustomerServiceCompensation.GetAll().Where(e => e.Id == id).SingleOrDefault();
             if (data == null)
                 throw new Exception("薪资单编号错误");
-            data.Id= Guid.NewGuid().ToString();
+            data.Id = Guid.NewGuid().ToString();
             data.Name = $"{data.Name}-复制";
             data.CreateBy = createEmpId;
-            data.CreateDate=DateTime.Now;
-            await dalCustomerServiceCompensation.AddAsync(data,true);
+            data.CreateDate = DateTime.Now;
+            await dalCustomerServiceCompensation.AddAsync(data, true);
         }
     }
 }

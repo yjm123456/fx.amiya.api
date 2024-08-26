@@ -51,8 +51,8 @@ namespace Fx.Amiya.Service
             }
 
             var liveAnchors = from d in dalLiveAnchor.GetAll()
-                              where d.Valid == true
-                              && d.LiveAnchorBaseId == liveAnchorBaseId
+                                  //where d.Valid == true
+                              where d.LiveAnchorBaseId == liveAnchorBaseId
                               select new LiveAnchorDto
                               {
                                   Id = d.Id,
@@ -70,8 +70,8 @@ namespace Fx.Amiya.Service
         {
 
             var liveAnchors = from d in dalLiveAnchor.GetAll()
-                              where d.Valid == true
-                              && d.ContentPlateFormId == contentPlatFormId
+                                  // d.Valid == true
+                              where d.ContentPlateFormId == contentPlatFormId
                               && d.Name.Contains(name)
                               select new LiveAnchorDto
                               {
@@ -98,8 +98,8 @@ namespace Fx.Amiya.Service
                 throw new Exception("主播基础id为空！");
             }
             return (from d in dalLiveAnchor.GetAll()
-                    where d.Valid == true
-                    && liveAnchorBaseIds.Contains(d.LiveAnchorBaseId)
+                        // d.Valid == true
+                    where liveAnchorBaseIds.Contains(d.LiveAnchorBaseId)
                     select new LiveAnchorDto
                     {
                         Id = d.Id,
@@ -137,7 +137,7 @@ namespace Fx.Amiya.Service
 
             var liveAnchors = from d in dalLiveAnchor.GetAll()
                               where d.Valid == true
-                              && d.ContentPlateFormId == contentPlatFormId
+                               && d.ContentPlateFormId == contentPlatFormId
                               && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.Id))
                               select new LiveAnchorDto
                               {

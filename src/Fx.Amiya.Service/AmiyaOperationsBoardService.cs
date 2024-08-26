@@ -91,6 +91,12 @@ namespace Fx.Amiya.Service
                 {
                     LiveAnchorInfo.Add(x.Id);
                 }
+
+                var liveAnchorZhenLu = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync("fed06778-06f2-4c92-afee-f098b77ac81c");
+                foreach (var x in liveAnchorZhenLu)
+                {
+                    LiveAnchorInfo.Add(x.Id);
+                }
             }
             var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.endDate.Value.Year, query.endDate.Value.Month == 0 ? 1 : query.endDate.Value.Month);
 
@@ -137,9 +143,14 @@ namespace Fx.Amiya.Service
                     var liveAnchorDaoDao = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync("f0a77257-c905-4719-95c4-ad2c4f33855c");
                     order = order.Where(x => liveAnchorDaoDao.Select(x => x.Id).ToList().Contains(x.LiveAnchorId.Value)).ToList();
                 }
-                else
+                else if (query.keyWord == "af69dcf5-f749-41ea-8b50-fe685facdd8b")
                 {
                     var liveAnchorJina = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync("af69dcf5-f749-41ea-8b50-fe685facdd8b");
+                    order = order.Where(x => liveAnchorJina.Select(x => x.Id).ToList().Contains(x.LiveAnchorId.Value)).ToList();
+                }
+                else
+                {
+                    var liveAnchorJina = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync("fed06778-06f2-4c92-afee-f098b77ac81c");
                     order = order.Where(x => liveAnchorJina.Select(x => x.Id).ToList().Contains(x.LiveAnchorId.Value)).ToList();
                 }
             }
@@ -204,6 +215,11 @@ namespace Fx.Amiya.Service
 
                 var liveAnchorJina = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync("af69dcf5-f749-41ea-8b50-fe685facdd8b");
                 foreach (var x in liveAnchorJina)
+                {
+                    LiveAnchorInfo.Add(x.Id);
+                }
+                var liveAnchorZhenLu = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync("fed06778-06f2-4c92-afee-f098b77ac81c");
+                foreach (var x in liveAnchorZhenLu)
                 {
                     LiveAnchorInfo.Add(x.Id);
                 }
@@ -707,6 +723,12 @@ namespace Fx.Amiya.Service
 
                 var liveAnchorJina = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync("af69dcf5-f749-41ea-8b50-fe685facdd8b");
                 foreach (var x in liveAnchorJina)
+                {
+                    LiveAnchorInfo.Add(x.Id);
+                }
+
+                var liveAnchorZhenLu = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync("fed06778-06f2-4c92-afee-f098b77ac81c");
+                foreach (var x in liveAnchorZhenLu)
                 {
                     LiveAnchorInfo.Add(x.Id);
                 }
