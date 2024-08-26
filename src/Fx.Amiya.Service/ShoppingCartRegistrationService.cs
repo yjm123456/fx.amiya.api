@@ -1445,7 +1445,37 @@ namespace Fx.Amiya.Service
                         IsReturnBackPrice = d.IsReturnBackPrice,
                         AssignEmpId = d.AssignEmpId,
                         IsAddWeChat = d.IsAddWeChat,
+                        IsSendOrder=d.IsSendOrder
                     };
+            return await x.ToListAsync();
+        }
+        /// <summary>
+        /// 根据条件获取助理小黄车业绩
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="isEffectiveCustomerData"></param>
+        /// <param name="assistantIdList"></param>
+        /// <returns></returns>
+        public async Task<List<ShoppingCartRegistrationDto>> GetShopCartRegisterPerformanceByAssistantIdListAsync(DateTime startDate, DateTime endDate,bool? isEffectiveCustomerData, List<int> assistantIdList)
+        {
+
+            var result = from d in dalShoppingCartRegistration.GetAll()
+            .Where(o => o.RecordDate >= startDate && o.RecordDate < endDate)
+            .Where(o => assistantIdList.Contains(o.AssignEmpId.Value))
+                         select d;
+
+            var x = from d in result
+                    select new ShoppingCartRegistrationDto
+                    {
+                        IsReturnBackPrice = d.IsReturnBackPrice,
+                        AssignEmpId = d.AssignEmpId,
+                        IsAddWeChat = d.IsAddWeChat,
+                    };
+            if (isEffectiveCustomerData.HasValue)
+            {
+                result = result.Where(o => isEffectiveCustomerData == true ? o.Price > 0 : o.Price == 0);
+            }
             return await x.ToListAsync();
         }
 

@@ -19,6 +19,17 @@ namespace Fx.Amiya.Background.Api.Vo
         /// </summary>
         public string Name { get; set; }
     }
+    public class BaseIdAndNameVo<K,V>
+    {
+        /// <summary>
+        /// 编号（Key）
+        /// </summary>
+        public K Id { get; set; }
+        /// <summary>
+        /// 数据值（Value）
+        /// </summary>
+        public V Name { get; set; }
+    }
     public class BaseIdAndNameVo<T>
     {
         /// <summary>

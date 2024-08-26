@@ -16,6 +16,17 @@ namespace Fx.Amiya.Dto
         /// </summary>
         public string Value { get; set; }
     }
+    public class BaseKeyValueDto<K,V>
+    {
+        /// <summary>
+        /// 编号
+        /// </summary>
+        public K Key { get; set; }
+        /// <summary>
+        /// 值
+        /// </summary>
+        public V Value { get; set; }
+    }
     /// <summary>
     /// 获取枚举下拉框专用类
     /// </summary>

@@ -79,6 +79,16 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<List<AmiyaEmployeeDto>> GetByLiveAnchorBaseIdListAsync(List<string> liveAnchorBaseId);
         /// <summary>
+        /// 获取助理(包含行政客服)
+        /// </summary>
+        /// <returns></returns>
+        Task<List<AmiyaEmployeeNameDto>> GetAllAssistantAsync();
+        /// <summary>
+        /// 获取助理(不包含行政客服)
+        /// </summary>
+        /// <returns></returns>
+        Task<List<AmiyaEmployeeNameDto>> GetAssistantAsync();
+        /// <summary>
         /// 跟进员工姓名获取啊美雅员工信息
         /// </summary>
         /// <param name="name"></param>

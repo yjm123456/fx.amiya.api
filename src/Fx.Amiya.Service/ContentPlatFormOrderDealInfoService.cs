@@ -1536,6 +1536,7 @@ namespace Fx.Amiya.Service
                   d =>
                        new ContentPlatFormOrderDealInfoDto
                        {
+                           LastDealHospitalId=d.LastDealHospitalId,
                            IsToHospital = d.IsToHospital,
                            IsDeal = d.IsDeal,
                            IsOldCustomer = d.IsOldCustomer,
@@ -2316,9 +2317,13 @@ namespace Fx.Amiya.Service
                 .Where(o => assistantId.Count == 0 || (o.ContentPlatFormOrder.IsSupportOrder == false && assistantId.Contains(o.ContentPlatFormOrder.BelongEmpId.Value)))
                 .Select(ContentPlatFOrmOrderDealInfo => new ContentPlatFormOrderDealInfoDto
                 {
+                    Phone= ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.Phone,
                     BelongEmployeeId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.BelongEmpId.Value,
                     Price = ContentPlatFOrmOrderDealInfo.Price,
                     IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer,
+                    AddOrderPrice= ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.AddOrderPrice,
+                    LastDealHospitalId= ContentPlatFOrmOrderDealInfo.LastDealHospitalId,
+                    SendDate= ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.SendDate
                 }
                 ).ToList();
             var supportData = dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
@@ -2329,6 +2334,9 @@ namespace Fx.Amiya.Service
                 BelongEmployeeId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.SupportEmpId,
                 Price = ContentPlatFOrmOrderDealInfo.Price,
                 IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer,
+                AddOrderPrice = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.AddOrderPrice,
+                LastDealHospitalId = ContentPlatFOrmOrderDealInfo.LastDealHospitalId,
+                SendDate = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.SendDate
             }
             ).ToList();
             belongData.AddRange(supportData);

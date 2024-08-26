@@ -429,6 +429,14 @@ namespace Fx.Amiya.IService
         /// <param name="date"></param>
         /// <returns></returns>
         Task<OldCustomerDealNumDto> GetOldCustomerBuyAgainByMonthAsync(DateTime date, bool? isEffectiveCustomerData, string contentPlatFormId, List<int> liveAnchorIds);
+        /// <summary>
+        /// 获取助理老客复购数据
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="isEffectiveCustomerData"></param>
+        /// <param name="assistantIdList"></param>
+        /// <returns></returns>
+        Task<OldCustomerDealNumDto> GetAssistantOldCustomerBuyAgainByMonthAsync(DateTime date, bool? isEffectiveCustomerData, List<int> assistantIdList);
 
         /// <summary>
         /// 根据助理id获取上门和成交量
@@ -494,6 +502,15 @@ namespace Fx.Amiya.IService
         /// <param name="baseLiveAbchorId"></param>
         /// <returns></returns>
         Task<List<OrderSendAndDealNumDto>> GetOrderSendAndDealDataByMonthAndBaseLiveAnchorIdAsync(DateTime startDate, DateTime endDate, bool isOldCustomer, List<int> assistantIds);
+        /// <summary>
+        /// 根据助理派单成交数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="isEffectiveCustomerData"></param>
+        /// <param name="assistantIds"></param>
+        /// <returns></returns>
+        Task<OrderSendAndDealNumDto> GetOrderSendAndDealDataByAssistantIdListAsync(DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, List<int> assistantIds);
         #endregion
         #region 医院看板
 

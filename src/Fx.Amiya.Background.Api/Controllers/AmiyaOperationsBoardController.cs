@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Input;
+﻿using Fx.Amiya.Background.Api.Vo;
+using Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Input;
 using Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result;
 using Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result;
 using Fx.Amiya.Dto.AmiyaOperationsBoardService;
@@ -687,7 +688,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("assistantTargetCompleteData")]
-        public async Task<ResultData<List<AssistantTargetCompleteVo>>> GetAssistantTargetCompleteDataAsync([FromQuery]QueryAssistantTargetCompleteDataVo query)
+        public async Task<ResultData<List<AssistantTargetCompleteVo>>> GetAssistantTargetCompleteDataAsync([FromQuery] QueryAssistantTargetCompleteDataVo query)
         {
             QueryAssistantTargetCompleteDataDto queryDto = new QueryAssistantTargetCompleteDataDto();
             queryDto.ShowPrivateDomain = query.ShowPrivateDomain;
@@ -698,9 +699,9 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.EndDate = query.EndDate;
             queryDto.BaseLiveAnchorId = query.BaseLiveAnchorId;
             var dataList = await amiyaOperationsBoardService.GetAssitantTargetCompleteAsync(queryDto);
-            var res= dataList.Select(e => new AssistantTargetCompleteVo
+            var res = dataList.Select(e => new AssistantTargetCompleteVo
             {
-                Sort=e.Sort,
+                Sort = e.Sort,
                 Name = e.Name,
                 NewCustomerPerformanceTarget = e.NewCustomerPerformanceTarget,
                 CurrentMonthNewCustomerPerformance = e.CurrentMonthNewCustomerPerformance,
@@ -718,9 +719,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 TotalCustomerTargetComplete = e.TotalCustomerTargetComplete,
                 TotalCustomerChainRatio = e.TotalCustomerChainRatio,
                 NewAndOldCustomerRate = e.NewAndOldCustomerRate,
-                PerformanceRate=e.PerformanceRate
+                PerformanceRate = e.PerformanceRate
             }).ToList();
-            return ResultData<List<AssistantTargetCompleteVo>>.Success().AddData("data",res);
+            return ResultData<List<AssistantTargetCompleteVo>>.Success().AddData("data", res);
         }
 
         /// <summary>
@@ -846,6 +847,283 @@ namespace Fx.Amiya.Background.Api.Controllers
             }).ToList();
             return ResultData<List<HospitalTransformDataVo>>.Success().AddData("data", res);
         }
+        #endregion
+
+        #region 助理医美数据运营看板
+        /// <summary>
+        /// 助理业绩
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("assistantPerformance")]
+        public async Task<ResultData<AssistantPerformanceVo>> GetAssitantPerformanceAsync([FromQuery]QueryAssistantPerformanceVo query)
+        {
+            QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            var res = await amiyaOperationsBoardService.GetAssitantPerformanceAsync(queryDto);
+            AssistantPerformanceVo performanceVo = new AssistantPerformanceVo();
+            performanceVo.NewCustomerPerformance = res.NewCustomerPerformance;
+            performanceVo.OldCustomerPerformance = res.OldCustomerPerformance;
+            performanceVo.TotalPerformance = res.TotalPerformance;
+            performanceVo.TodayNewCustomerPerformance = res.TodayNewCustomerPerformance;
+            performanceVo.TodayOldCustomerPerformance = res.TodayOldCustomerPerformance;
+            performanceVo.TodayTotalPerformance = res.TodayTotalPerformance;
+            performanceVo.LastMonthNewCustomerPerformance = res.LastMonthNewCustomerPerformance;
+            performanceVo.LastMonthOldCustomerPerformance = res.LastMonthOldCustomerPerformance;
+            performanceVo.LastMonthTotalPerformance = res.LastMonthTotalPerformance;
+            performanceVo.LastYearNewCustomerPerformance = res.LastYearNewCustomerPerformance;
+            performanceVo.LastYearOldCustomerPerformance = res.LastYearOldCustomerPerformance;
+            performanceVo.LastYearTotalPerformance = res.LastYearTotalPerformance;
+            performanceVo.NewCustomerPerformanceChain = res.NewCustomerPerformanceChain;
+            performanceVo.OldCustomerPerformanceChain = res.OldCustomerPerformanceChain;
+            performanceVo.TotalPerformanceChain = res.TotalPerformanceChain;
+            performanceVo.NewCustomerPerformanceYearOnYear = res.NewCustomerPerformanceYearOnYear;
+            performanceVo.OldCustomerPerformanceYearOnYear = res.OldCustomerPerformanceYearOnYear;
+            performanceVo.TotalPerformanceYearOnYear = res.TotalPerformanceYearOnYear;
+            performanceVo.NewCustomerPerformanceTarget = res.NewCustomerPerformanceTarget;
+            performanceVo.OldCustomerPerformanceTarget = res.OldCustomerPerformanceTarget;
+            performanceVo.TotalPerformanceTarget = res.TotalPerformanceTarget;
+            performanceVo.NewCustomerPerformanceTargetCompleteRate = res.NewCustomerPerformanceTargetCompleteRate;
+            performanceVo.OldCustomerPerformanceTargetCompleteRate = res.OldCustomerPerformanceTargetCompleteRate;
+            performanceVo.TotalPerformanceTargetCompleteRate = res.TotalPerformanceTargetCompleteRate;
+            performanceVo.NewCustomerPerformanceTargetSchedule = res.NewCustomerPerformanceTargetSchedule;
+            performanceVo.OldCustomerPerformanceTargetSchedule = res.OldCustomerPerformanceTargetSchedule;
+            performanceVo.TotalPerformanceTargetSchedule = res.TotalPerformanceTargetSchedule;
+            return ResultData<AssistantPerformanceVo>.Success().AddData("data", performanceVo);
+        }
+        /// <summary>
+        /// 助理业绩折线图
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("brokenLineData")]
+        public async Task<ResultData<AssistantPerformanceBrokenLineVo>> GetAssistantPerformanceBrokenLineAsync([FromQuery] QueryAssistantPerformanceVo query)
+        {
+            AssistantPerformanceBrokenLineVo performanceBroken = new AssistantPerformanceBrokenLineVo();
+            QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            var res = await amiyaOperationsBoardService.GetAssistantPerformanceBrokenLineDto(queryDto);
+            performanceBroken.NewCustomerPerformance = res.NewCustomerPerformance.Select(e => new PerformanceBrokenLineListInfoVo
+            {
+                date = e.date,
+                Performance = e.Performance
+            }).ToList();
+            performanceBroken.OldCustomerPerformance = res.OldCustomerPerformance.Select(e => new PerformanceBrokenLineListInfoVo
+            {
+                date = e.date,
+                Performance = e.Performance
+            }).ToList();
+            return ResultData<AssistantPerformanceBrokenLineVo>.Success().AddData("data", performanceBroken);
+        }
+        /// <summary>
+        /// 助理新老客业绩漏斗图
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("assistantPerformanceFilterData")]
+        public async Task<ResultData<AssistantOperationDataVo>> GetAssistantPerformanceFilterDataAsync([FromQuery]QueryAssistantPerformanceFilterDataVo query) {
+            AssistantOperationDataVo result = new AssistantOperationDataVo();
+            QueryAssistantPerformanceFilterDataDto queryDto = new QueryAssistantPerformanceFilterDataDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            queryDto.IsEffectiveCustomerData = query.IsEffectiveCustomerData;
+            var performance = await amiyaOperationsBoardService.GetAssistantPerformanceFilterDataAsync(queryDto);
+
+            AssistantNewCustomerOperationDataVo newCustomerOperationDataVo = new AssistantNewCustomerOperationDataVo();
+            newCustomerOperationDataVo.RefundCardRate = performance.NewCustomerData.RefundCardRate.HasValue ? performance.NewCustomerData.RefundCardRate.Value : 0.00M;
+            newCustomerOperationDataVo.RefundCardRateHealthValueSum = performance.NewCustomerData.RefundCardRateHealthValueSum;
+            newCustomerOperationDataVo.RefundCardRateHealthValueThisMonth = performance.NewCustomerData.RefundCardRateHealthValueThisMonth;
+            newCustomerOperationDataVo.ClueEffictiveRate = performance.NewCustomerData.ClueEffictiveRate.HasValue ? performance.NewCustomerData.ClueEffictiveRate.Value : 0.00M;
+            newCustomerOperationDataVo.ClueEffictiveRateHealthValueThisMonth = performance.NewCustomerData.ClueEffictiveRateHealthValueThisMonth;
+            newCustomerOperationDataVo.AddWeChatRate = performance.NewCustomerData.AddWeChatRate.HasValue ? performance.NewCustomerData.AddWeChatRate.Value : 0.00M;
+            newCustomerOperationDataVo.AddWeChatRateHealthValueSum = performance.NewCustomerData.AddWeChatRateHealthValueSum;
+            newCustomerOperationDataVo.AddWeChatRateHealthValueThisMonth = performance.NewCustomerData.AddWeChatRateHealthValueThisMonth;
+            newCustomerOperationDataVo.SendOrderRate = performance.NewCustomerData.SendOrderRate.HasValue ? performance.NewCustomerData.SendOrderRate.Value : 0.00M;
+            newCustomerOperationDataVo.SendOrderRateHealthValueSum = performance.NewCustomerData.SendOrderRateHealthValueSum;
+            newCustomerOperationDataVo.SendOrderRateHealthValueThisMonth = performance.NewCustomerData.SendOrderRateHealthValueThisMonth;
+            newCustomerOperationDataVo.ToHospitalRate = performance.NewCustomerData.ToHospitalRate.HasValue ? performance.NewCustomerData.ToHospitalRate.Value : 0.00M;
+            newCustomerOperationDataVo.ToHospitalRateHealthValueSum = performance.NewCustomerData.ToHospitalRateHealthValueSum;
+            newCustomerOperationDataVo.ToHospitalRateHealthValueThisMonth = performance.NewCustomerData.ToHospitalRateHealthValueThisMonth;
+            newCustomerOperationDataVo.DealRate = performance.NewCustomerData.DealRate.HasValue ? performance.NewCustomerData.DealRate.Value : 0.00M;
+            newCustomerOperationDataVo.DealRateHealthValueSum = performance.NewCustomerData.DealRateHealthValueSum;
+            newCustomerOperationDataVo.DealRateHealthValueThisMonth = performance.NewCustomerData.DealRateHealthValueThisMonth;
+            //能效转化
+            newCustomerOperationDataVo.FlowClueToDealPrice = performance.NewCustomerData.FlowClueToDealPrice.HasValue ? performance.NewCustomerData.FlowClueToDealPrice.Value : 0.00M;
+            newCustomerOperationDataVo.AllocationConsulationToDealRate = performance.NewCustomerData.AllocationConsulationToDealRate.HasValue ? performance.NewCustomerData.AllocationConsulationToDealRate.Value : 0.00M;
+            newCustomerOperationDataVo.AllocationConsulationToDealPrice = performance.NewCustomerData.AllocationConsulationToDealPrice.HasValue ? performance.NewCustomerData.AllocationConsulationToDealPrice.Value : 0.00M;
+            newCustomerOperationDataVo.AddWeChatToDealPrice = performance.NewCustomerData.AddWeChatToDealPrice.HasValue ? performance.NewCustomerData.AddWeChatToDealPrice.Value : 0.00M;
+            newCustomerOperationDataVo.SendOrderToDealRate = performance.NewCustomerData.SendOrderToDealRate.HasValue ? performance.NewCustomerData.SendOrderToDealRate.Value : 0.00M;
+            newCustomerOperationDataVo.SendOrderToDealPrice = performance.NewCustomerData.SendOrderToDealPrice.HasValue ? performance.NewCustomerData.SendOrderToDealPrice.Value : 0.00M;
+            newCustomerOperationDataVo.VisitToDealPrice = performance.NewCustomerData.VisitToDealPrice.HasValue ? performance.NewCustomerData.VisitToDealPrice.Value : 0.00M;
+            newCustomerOperationDataVo.DealToPrice = performance.NewCustomerData.DealToPrice.HasValue ? performance.NewCustomerData.DealToPrice.Value : 0.00M;
+            newCustomerOperationDataVo.newCustomerOperationDataDetails = new List<AssistantNewCustomerOperationDataDetailsVo>();
+            foreach (var x in performance.NewCustomerData.newCustomerOperationDataDetails)
+            {
+                AssistantNewCustomerOperationDataDetailsVo newCustomerOperationDataDetails = new AssistantNewCustomerOperationDataDetailsVo();
+                newCustomerOperationDataDetails.Key = x.Key;
+                newCustomerOperationDataDetails.Name = x.Name;
+                newCustomerOperationDataDetails.Value = x.Value;
+                newCustomerOperationDataDetails.YearToYearValue = x.YearToYearValue.HasValue ? x.YearToYearValue.Value : 0.00M;
+                newCustomerOperationDataDetails.ChainRatioValue = x.ChainRatioValue.HasValue ? x.ChainRatioValue.Value : 0.00M;
+                newCustomerOperationDataDetails.TargetCompleteRate = x.TargetCompleteRate.HasValue ? x.TargetCompleteRate.Value : 0.00M;
+                newCustomerOperationDataVo.newCustomerOperationDataDetails.Add(newCustomerOperationDataDetails);
+            }
+
+            AssistantOldCustomerOperationDataVo oldCustomerOperationDataVo = new AssistantOldCustomerOperationDataVo();
+            oldCustomerOperationDataVo.TotalDealPeople = performance.OldCustomerData.TotalDealPeople;
+            oldCustomerOperationDataVo.SecondDealPeople = performance.OldCustomerData.SecondDealPeople;
+            oldCustomerOperationDataVo.ThirdDealPeople = performance.OldCustomerData.ThirdDealPeople;
+            oldCustomerOperationDataVo.FourthDealCustomer = performance.OldCustomerData.FourthDealCustomer;
+            oldCustomerOperationDataVo.FifThOrMoreOrMoreDealCustomer = performance.OldCustomerData.FifThOrMoreOrMoreDealCustomer;
+            oldCustomerOperationDataVo.SecondTimeBuyRate = performance.OldCustomerData.SecondTimeBuyRate;
+            oldCustomerOperationDataVo.SecondTimeBuyRateProportion = performance.OldCustomerData.SecondTimeBuyRateProportion;
+            oldCustomerOperationDataVo.ThirdTimeBuyRate = performance.OldCustomerData.ThirdTimeBuyRate;
+            oldCustomerOperationDataVo.ThirdTimeBuyRateProportion = performance.OldCustomerData.ThirdTimeBuyRateProportion;
+            oldCustomerOperationDataVo.FourthTimeBuyRate = performance.OldCustomerData.FourthTimeBuyRate;
+            oldCustomerOperationDataVo.FourthTimeBuyRateProportion = performance.OldCustomerData.FourthTimeBuyRateProportion;
+            oldCustomerOperationDataVo.FifthTimeOrMoreBuyRate = performance.OldCustomerData.FifthTimeOrMoreBuyRate;
+            oldCustomerOperationDataVo.FifthTimeOrMoreBuyRateProportion = performance.OldCustomerData.FifthTimeOrMoreBuyRateProportion;
+            oldCustomerOperationDataVo.BuyRate = performance.OldCustomerData.BuyRate;
+
+            result.NewCustomerData = newCustomerOperationDataVo;
+            result.OldCustomerData = oldCustomerOperationDataVo;
+
+            return ResultData<AssistantOperationDataVo>.Success().AddData("data",result);
+
+
+        }
+        /// <summary>
+        /// 助理业绩分析数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("analysisData")]
+        public async Task<ResultData<AssiatantPerformanceAnalysisDataVo>> GetPerformanceAnalysisDataAsync([FromQuery] QueryAssistantPerformanceVo query)
+        {
+            AssiatantPerformanceAnalysisDataVo analysisData = new AssiatantPerformanceAnalysisDataVo();
+            QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            var res = await amiyaOperationsBoardService.GetAssistantPerformanceAnalysisDataAsync(queryDto);
+            analysisData.DistributeConsulationData.EffictiveRate = res.DistributeConsulationData.EffictiveRate;
+            analysisData.DistributeConsulationData.NotEffictiveRate = res.DistributeConsulationData.NotEffictiveRate;
+            analysisData.DistributeConsulationData.EffictiveNumber = res.DistributeConsulationData.EffictiveNumber;
+            analysisData.DistributeConsulationData.NotEffictiveNumber = res.DistributeConsulationData.NotEffictiveNumber;
+            analysisData.DistributeConsulationData.TotalFlowRateNumber = res.DistributeConsulationData.TotalFlowRateNumber;
+
+            analysisData.PerformanceEffictiveOrNoData.EffictivePerformanceNumber = res.PerformanceEffictiveOrNoData.EffictivePerformanceNumber;
+            analysisData.PerformanceEffictiveOrNoData.EffictivePerformanceRate = res.PerformanceEffictiveOrNoData.EffictivePerformanceRate;
+            analysisData.PerformanceEffictiveOrNoData.NotEffictivePerformanceNumber = res.PerformanceEffictiveOrNoData.NotEffictivePerformanceNumber;
+            analysisData.PerformanceEffictiveOrNoData.NotEffictivePerformanceRate = res.PerformanceEffictiveOrNoData.NotEffictivePerformanceRate;
+            analysisData.PerformanceEffictiveOrNoData.TotalPerformanceNumber = res.PerformanceEffictiveOrNoData.TotalPerformanceNumber;
+
+            analysisData.SendOrderData.ThisMonthPerformanceNumber = res.SendOrderData.ThisMonthPerformanceNumber;
+            analysisData.SendOrderData.ThisMonthPerformanceRate = res.SendOrderData.ThisMonthPerformanceRate;
+            analysisData.SendOrderData.HistoryPerformanceNumber = res.SendOrderData.HistoryPerformanceNumber;
+            analysisData.SendOrderData.HistoryPerformanceRate = res.SendOrderData.HistoryPerformanceRate;
+            analysisData.SendOrderData.TotalPerformanceNumber = res.SendOrderData.TotalPerformanceNumber;
+
+            analysisData.PerformanceHistoryOrNoData.ThisMonthPerformanceNumber = res.PerformanceHistoryOrNoData.ThisMonthPerformanceNumber;
+            analysisData.PerformanceHistoryOrNoData.ThisMonthPerformanceRate = res.PerformanceHistoryOrNoData.ThisMonthPerformanceRate;
+            analysisData.PerformanceHistoryOrNoData.HistoryPerformanceNumber = res.PerformanceHistoryOrNoData.HistoryPerformanceNumber;
+            analysisData.PerformanceHistoryOrNoData.HistoryPerformanceRate = res.PerformanceHistoryOrNoData.HistoryPerformanceRate;
+            analysisData.PerformanceHistoryOrNoData.TotalPerformanceNumber = res.PerformanceHistoryOrNoData.TotalPerformanceNumber;
+
+            analysisData.CustomerDealData.TotalPerformanceNewCustomerRate = res.CustomerDealData.TotalPerformanceNewCustomerRate;
+            analysisData.CustomerDealData.TotalPerformanceOldCustomerRate = res.CustomerDealData.TotalPerformanceOldCustomerRate;
+            analysisData.CustomerDealData.TotalPerformanceNewCustomerNumber = res.CustomerDealData.TotalPerformanceNewCustomerNumber;
+            analysisData.CustomerDealData.TotalPerformanceOldCustomerNumber = res.CustomerDealData.TotalPerformanceOldCustomerNumber;
+            analysisData.CustomerDealData.TotalPerformanceNumber = res.CustomerDealData.TotalPerformanceNumber;
+
+            analysisData.PerformanceNewCustonerOrNoData.TotalPerformanceNewCustomerRate = res.PerformanceNewCustonerOrNoData.TotalPerformanceNewCustomerRate;
+            analysisData.PerformanceNewCustonerOrNoData.TotalPerformanceOldCustomerRate = res.PerformanceNewCustonerOrNoData.TotalPerformanceOldCustomerRate;
+            analysisData.PerformanceNewCustonerOrNoData.TotalPerformanceNewCustomerNumber = res.PerformanceNewCustonerOrNoData.TotalPerformanceNewCustomerNumber;
+            analysisData.PerformanceNewCustonerOrNoData.TotalPerformanceOldCustomerNumber = res.PerformanceNewCustonerOrNoData.TotalPerformanceOldCustomerNumber;
+            analysisData.PerformanceNewCustonerOrNoData.TotalPerformanceNumber = res.PerformanceNewCustonerOrNoData.TotalPerformanceNumber;
+
+            return ResultData<AssiatantPerformanceAnalysisDataVo>.Success().AddData("data", analysisData);
+        }
+        /// <summary>
+        /// 助理机构业绩数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("assistantHospitalPerformanceData")]
+        public async Task<ResultData<List<AssistantHospitalPerformanceVo>>> GetAssistantHospitalPerformanceDataAsync([FromQuery] QueryAssistantPerformanceVo query)
+        {
+            QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            var res = await amiyaOperationsBoardService.GetAssistantHospitalPerformanceDataAsync(queryDto);
+            var result = res.Select(e => new AssistantHospitalPerformanceVo
+            {
+                Name = e.Name,
+                NewCustomerPerformance = e.NewCustomerPerformance,
+                OldCustomerPerformance = e.OldCustomerPerformance,
+                TotalPerformance = e.TotalPerformance
+            }).ToList();
+            return ResultData<List<AssistantHospitalPerformanceVo>>.Success().AddData("data", result);
+        }
+        /// <summary>
+        /// 助理机构线索数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("assistantHospitalCluesData")]
+        public async Task<ResultData<AssistantHospitalCluesDataVo>> GetAssistantHospitalCluesDataAsync([FromQuery] QueryAssistantPerformanceVo query)
+        {
+            AssistantHospitalCluesDataVo dataVo = new AssistantHospitalCluesDataVo();
+            QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            var res = await amiyaOperationsBoardService.GetAssistantHospitalCluesDataAsync(queryDto);
+            dataVo.TotalSendOrderCount = res.TotalSendOrderCount;
+            dataVo.TotalVisitCount = res.TotalVisitCount;
+            dataVo.TotalDealCount = res.TotalDealCount;
+            dataVo.Items = res.Items.Select(e => new AssistantCluesDataItemVo
+            {
+                Name = e.Name,
+                SendOrderCount = e.SendOrderCount,
+                VisitCount = e.VisitCount,
+                DealCount = e.DealCount
+            }).ToList();
+            return ResultData<AssistantHospitalCluesDataVo>.Success().AddData("data", dataVo);
+        }
+        /// <summary>
+        /// 助理目标完成率和助理业绩占比柱状图
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("assiatantTargetCompleteAndPerformanceRateData")]
+        public async Task<ResultData<AssiatantTargetCompleteAndPerformanceRateVo>> GetAssiatantTargetCompleteAndPerformanceRateDataAsync([FromQuery] QueryAssistantPerformanceVo query)
+        {
+            AssiatantTargetCompleteAndPerformanceRateVo result = new AssiatantTargetCompleteAndPerformanceRateVo();
+            QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            var res = await amiyaOperationsBoardService.GetAssiatantTargetCompleteAndPerformanceRateDataAsync(queryDto);
+            result.PerformanceRateData = res.PerformanceRateData.OrderByDescending(e => e.Value).Select(e => new BaseIdAndNameVo<string, decimal>
+            {
+                Id = e.Key,
+                Name = e.Value,
+            }).ToList();
+            result.TargetCompleteData = res.PerformanceRateData.OrderByDescending(e => e.Value).Select(e => new BaseIdAndNameVo<string, decimal>
+            {
+                Id = e.Key,
+                Name = e.Value,
+            }).ToList();
+            return ResultData<AssiatantTargetCompleteAndPerformanceRateVo>.Success().AddData("data", result);
+        }
+
 
         #endregion
 

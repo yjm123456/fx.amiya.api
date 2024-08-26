@@ -9,6 +9,7 @@ using Fx.Amiya.Dto.AmiyaOperationsBoardService.Result;
 using Fx.Amiya.Dto.AmiyaOperationsBoardService.Input;
 using Fx.Amiya.Dto.HospitalPerformance;
 using Fx.Amiya.Dto.ReconciliationDocuments;
+using Fx.Amiya.Dto.Performance;
 
 namespace Fx.Amiya.IService
 {
@@ -47,6 +48,16 @@ namespace Fx.Amiya.IService
 
         Task<GetFlowRateDetailsByContentPlatformDataDto> GetFlowRateDetailsByContentPlatformAsync(QueryOperationDataDto query);
         Task<List<AssitantTargetCompleteDto>> GetAssitantTargetCompleteAsync(QueryAssistantTargetCompleteDataDto query);
+        #endregion
+
+        #region 助理运营看板
+        Task<AssistantPerformanceDto> GetAssitantPerformanceAsync(QueryAssistantPerformanceDto query);
+        Task<AssistantPerformanceBrokenLineDto> GetAssistantPerformanceBrokenLineDto(QueryAssistantPerformanceDto query);
+        Task<AssistantOperationDataDto> GetAssistantPerformanceFilterDataAsync(QueryAssistantPerformanceFilterDataDto query);
+        Task<AssistantPerformanceAnalysisDataDto> GetAssistantPerformanceAnalysisDataAsync(QueryAssistantPerformanceDto query);
+        Task<AssiatantTargetCompleteAndPerformanceRateDto> GetAssiatantTargetCompleteAndPerformanceRateDataAsync(QueryAssistantPerformanceDto query);
+        Task<List<AssistantHospitalPerformanceDto>> GetAssistantHospitalPerformanceDataAsync(QueryAssistantPerformanceDto query);
+        Task<AssistantHospitalCluesDataDto> GetAssistantHospitalCluesDataAsync(QueryAssistantPerformanceDto query);
         #endregion
 
         #endregion

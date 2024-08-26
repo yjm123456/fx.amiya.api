@@ -182,6 +182,15 @@ namespace Fx.Amiya.IService
         /// <param name="contentPlatFormId"></param>
         /// <returns></returns>
         Task<List<ShoppingCartRegistrationDto>> GetPerformanceByAssistantIdListAsync(DateTime startDate, DateTime endDate, List<int> assistantIdList);
+        /// <summary>
+        /// 根据条件获取助理小黄车业绩
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="isEffectiveCustomerData"></param>
+        /// <param name="assistantIdList"></param>
+        /// <returns></returns>
+        Task<List<ShoppingCartRegistrationDto>> GetShopCartRegisterPerformanceByAssistantIdListAsync(DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, List<int> assistantIdList);
 
         /// <summary>
         /// 根据条件获取小黄车照片/视频面诊业绩折线图

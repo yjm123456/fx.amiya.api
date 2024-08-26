@@ -268,7 +268,7 @@ namespace Fx.Amiya.Service
                     CooperateLiveanchorOldCustomerCommission = addDto.CooperateLiveanchorOldCustomerCommission,
                     TmallOrderCommission = addDto.TmallOrderCommission,
                     PotentialNewCustomerCommission = addDto.PotentialNewCustomerCommission,
-                    AdministrativeInspection=addDto.AdministrativeInspection
+                    AdministrativeInspection = addDto.AdministrativeInspection
                 };
 
                 await dalAmiyaEmployee.AddAsync(employee, true);
@@ -316,8 +316,8 @@ namespace Fx.Amiya.Service
                     CooperateLiveanchorOldCustomerCommission = employee.CooperateLiveanchorOldCustomerCommission,
                     TmallOrderCommission = employee.TmallOrderCommission,
                     LiveAnchorBaseName = dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == employee.LiveAnchorBaseId).FirstOrDefault()?.LiveAnchorName,
-                    PotentialNewCustomerCommission=employee.PotentialNewCustomerCommission,
-                    AdministrativeInspection=employee.AdministrativeInspection,
+                    PotentialNewCustomerCommission = employee.PotentialNewCustomerCommission,
+                    AdministrativeInspection = employee.AdministrativeInspection,
                 };
                 if (employeeDto.IsCustomerService == true || employeeDto.PositionId == 19)
                 {
@@ -821,7 +821,7 @@ namespace Fx.Amiya.Service
                 List<AmiyaEmployeeDto> amiyaEmployeeDtos = new List<AmiyaEmployeeDto>();
                 var employeeInfo = dalAmiyaEmployee.GetAll()
                     .Include(e => e.AmiyaPositionInfo).ThenInclude(e => e.AmiyaDepartment)
-                    .Where(e => ((liveAnchorBaseId == null || liveAnchorBaseId.Count() == 0) || liveAnchorBaseId.Contains(e.LiveAnchorBaseId)) && e.IsCustomerService == true&&e.Valid==true);
+                    .Where(e => ((liveAnchorBaseId == null || liveAnchorBaseId.Count() == 0) || liveAnchorBaseId.Contains(e.LiveAnchorBaseId)) && e.IsCustomerService == true && e.Valid == true);
                 var employee = await employeeInfo.Select(e => new AmiyaEmployeeDto
                 {
                     Id = e.Id,
@@ -834,6 +834,38 @@ namespace Fx.Amiya.Service
 
                 throw new Exception(ex.Message.ToString());
             }
+        }
+        /// <summary>
+        /// 获取助理(包含行政客服)
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<AmiyaEmployeeNameDto>> GetAllAssistantAsync()
+        {
+            var employee = from d in dalAmiyaEmployee.GetAll()
+                           where d.IsCustomerService == true && (d.AmiyaPositionId == 4 || d.AmiyaPositionId == 30)
+                           && d.Valid == true
+                           select new AmiyaEmployeeNameDto
+                           {
+                               Id = d.Id,
+                               Name = d.Name,
+                           };
+            return await employee.ToListAsync();
+        }
+        /// <summary>
+        /// 获取助理(不包含行政客服)
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<AmiyaEmployeeNameDto>> GetAssistantAsync()
+        {
+            var employee = from d in dalAmiyaEmployee.GetAll()
+                           where d.IsCustomerService == true && d.AmiyaPositionId == 4
+                           && d.Valid == true
+                           select new AmiyaEmployeeNameDto
+                           {
+                               Id = d.Id,
+                               Name = d.Name,
+                           };
+            return await employee.ToListAsync();
         }
     }
 }
