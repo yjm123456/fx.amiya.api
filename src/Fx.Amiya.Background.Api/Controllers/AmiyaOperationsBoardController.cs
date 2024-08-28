@@ -825,6 +825,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.EndDate = query.EndDate;
             queryDto.ShowDaoDao = query.ShowDaoDao;
             queryDto.ShowJiNa = query.ShowJiNa;
+            queryDto.ShowLuLu = query.ShowLuLu;
             queryDto.ShowCooperate = query.ShowCooperate;
             var result = await amiyaOperationsBoardService.GetHospitalPerformanceByDateAsync(queryDto);
             var res = result.Select(e => new HospitalTransformDataVo
@@ -917,6 +918,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                 date = e.date,
                 Performance = e.Performance
             }).ToList();
+            performanceBroken.TotalPerformance = res.OldCustomerPerformance.Select(e => new PerformanceBrokenLineListInfoVo
+            {
+                date = e.date,
+                Performance = e.Performance
+            }).ToList();
             return ResultData<AssistantPerformanceBrokenLineVo>.Success().AddData("data", performanceBroken);
         }
         /// <summary>
@@ -933,66 +939,17 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.AssistantId = query.AssistantId;
             queryDto.IsEffectiveCustomerData = query.IsEffectiveCustomerData;
             var performance = await amiyaOperationsBoardService.GetAssistantPerformanceFilterDataAsync(queryDto);
-
-            AssistantNewCustomerOperationDataVo newCustomerOperationDataVo = new AssistantNewCustomerOperationDataVo();
-            newCustomerOperationDataVo.RefundCardRate = performance.NewCustomerData.RefundCardRate.HasValue ? performance.NewCustomerData.RefundCardRate.Value : 0.00M;
-            newCustomerOperationDataVo.RefundCardRateHealthValueSum = performance.NewCustomerData.RefundCardRateHealthValueSum;
-            newCustomerOperationDataVo.RefundCardRateHealthValueThisMonth = performance.NewCustomerData.RefundCardRateHealthValueThisMonth;
-            newCustomerOperationDataVo.ClueEffictiveRate = performance.NewCustomerData.ClueEffictiveRate.HasValue ? performance.NewCustomerData.ClueEffictiveRate.Value : 0.00M;
-            newCustomerOperationDataVo.ClueEffictiveRateHealthValueThisMonth = performance.NewCustomerData.ClueEffictiveRateHealthValueThisMonth;
-            newCustomerOperationDataVo.AddWeChatRate = performance.NewCustomerData.AddWeChatRate.HasValue ? performance.NewCustomerData.AddWeChatRate.Value : 0.00M;
-            newCustomerOperationDataVo.AddWeChatRateHealthValueSum = performance.NewCustomerData.AddWeChatRateHealthValueSum;
-            newCustomerOperationDataVo.AddWeChatRateHealthValueThisMonth = performance.NewCustomerData.AddWeChatRateHealthValueThisMonth;
-            newCustomerOperationDataVo.SendOrderRate = performance.NewCustomerData.SendOrderRate.HasValue ? performance.NewCustomerData.SendOrderRate.Value : 0.00M;
-            newCustomerOperationDataVo.SendOrderRateHealthValueSum = performance.NewCustomerData.SendOrderRateHealthValueSum;
-            newCustomerOperationDataVo.SendOrderRateHealthValueThisMonth = performance.NewCustomerData.SendOrderRateHealthValueThisMonth;
-            newCustomerOperationDataVo.ToHospitalRate = performance.NewCustomerData.ToHospitalRate.HasValue ? performance.NewCustomerData.ToHospitalRate.Value : 0.00M;
-            newCustomerOperationDataVo.ToHospitalRateHealthValueSum = performance.NewCustomerData.ToHospitalRateHealthValueSum;
-            newCustomerOperationDataVo.ToHospitalRateHealthValueThisMonth = performance.NewCustomerData.ToHospitalRateHealthValueThisMonth;
-            newCustomerOperationDataVo.DealRate = performance.NewCustomerData.DealRate.HasValue ? performance.NewCustomerData.DealRate.Value : 0.00M;
-            newCustomerOperationDataVo.DealRateHealthValueSum = performance.NewCustomerData.DealRateHealthValueSum;
-            newCustomerOperationDataVo.DealRateHealthValueThisMonth = performance.NewCustomerData.DealRateHealthValueThisMonth;
-            //能效转化
-            newCustomerOperationDataVo.FlowClueToDealPrice = performance.NewCustomerData.FlowClueToDealPrice.HasValue ? performance.NewCustomerData.FlowClueToDealPrice.Value : 0.00M;
-            newCustomerOperationDataVo.AllocationConsulationToDealRate = performance.NewCustomerData.AllocationConsulationToDealRate.HasValue ? performance.NewCustomerData.AllocationConsulationToDealRate.Value : 0.00M;
-            newCustomerOperationDataVo.AllocationConsulationToDealPrice = performance.NewCustomerData.AllocationConsulationToDealPrice.HasValue ? performance.NewCustomerData.AllocationConsulationToDealPrice.Value : 0.00M;
-            newCustomerOperationDataVo.AddWeChatToDealPrice = performance.NewCustomerData.AddWeChatToDealPrice.HasValue ? performance.NewCustomerData.AddWeChatToDealPrice.Value : 0.00M;
-            newCustomerOperationDataVo.SendOrderToDealRate = performance.NewCustomerData.SendOrderToDealRate.HasValue ? performance.NewCustomerData.SendOrderToDealRate.Value : 0.00M;
-            newCustomerOperationDataVo.SendOrderToDealPrice = performance.NewCustomerData.SendOrderToDealPrice.HasValue ? performance.NewCustomerData.SendOrderToDealPrice.Value : 0.00M;
-            newCustomerOperationDataVo.VisitToDealPrice = performance.NewCustomerData.VisitToDealPrice.HasValue ? performance.NewCustomerData.VisitToDealPrice.Value : 0.00M;
-            newCustomerOperationDataVo.DealToPrice = performance.NewCustomerData.DealToPrice.HasValue ? performance.NewCustomerData.DealToPrice.Value : 0.00M;
-            newCustomerOperationDataVo.newCustomerOperationDataDetails = new List<AssistantNewCustomerOperationDataDetailsVo>();
-            foreach (var x in performance.NewCustomerData.newCustomerOperationDataDetails)
+            result.NewCustomerData = performance.NewCustomerData.Select(e=>new DataItemVo { 
+                Key=e.Key,
+                Name=e.Name,
+                Value=e.Value
+            }).ToList();
+            result.OldCustomerData = performance.OldCustomerData.Select(e => new DataItemVo
             {
-                AssistantNewCustomerOperationDataDetailsVo newCustomerOperationDataDetails = new AssistantNewCustomerOperationDataDetailsVo();
-                newCustomerOperationDataDetails.Key = x.Key;
-                newCustomerOperationDataDetails.Name = x.Name;
-                newCustomerOperationDataDetails.Value = x.Value;
-                newCustomerOperationDataDetails.YearToYearValue = x.YearToYearValue.HasValue ? x.YearToYearValue.Value : 0.00M;
-                newCustomerOperationDataDetails.ChainRatioValue = x.ChainRatioValue.HasValue ? x.ChainRatioValue.Value : 0.00M;
-                newCustomerOperationDataDetails.TargetCompleteRate = x.TargetCompleteRate.HasValue ? x.TargetCompleteRate.Value : 0.00M;
-                newCustomerOperationDataVo.newCustomerOperationDataDetails.Add(newCustomerOperationDataDetails);
-            }
-
-            AssistantOldCustomerOperationDataVo oldCustomerOperationDataVo = new AssistantOldCustomerOperationDataVo();
-            oldCustomerOperationDataVo.TotalDealPeople = performance.OldCustomerData.TotalDealPeople;
-            oldCustomerOperationDataVo.SecondDealPeople = performance.OldCustomerData.SecondDealPeople;
-            oldCustomerOperationDataVo.ThirdDealPeople = performance.OldCustomerData.ThirdDealPeople;
-            oldCustomerOperationDataVo.FourthDealCustomer = performance.OldCustomerData.FourthDealCustomer;
-            oldCustomerOperationDataVo.FifThOrMoreOrMoreDealCustomer = performance.OldCustomerData.FifThOrMoreOrMoreDealCustomer;
-            oldCustomerOperationDataVo.SecondTimeBuyRate = performance.OldCustomerData.SecondTimeBuyRate;
-            oldCustomerOperationDataVo.SecondTimeBuyRateProportion = performance.OldCustomerData.SecondTimeBuyRateProportion;
-            oldCustomerOperationDataVo.ThirdTimeBuyRate = performance.OldCustomerData.ThirdTimeBuyRate;
-            oldCustomerOperationDataVo.ThirdTimeBuyRateProportion = performance.OldCustomerData.ThirdTimeBuyRateProportion;
-            oldCustomerOperationDataVo.FourthTimeBuyRate = performance.OldCustomerData.FourthTimeBuyRate;
-            oldCustomerOperationDataVo.FourthTimeBuyRateProportion = performance.OldCustomerData.FourthTimeBuyRateProportion;
-            oldCustomerOperationDataVo.FifthTimeOrMoreBuyRate = performance.OldCustomerData.FifthTimeOrMoreBuyRate;
-            oldCustomerOperationDataVo.FifthTimeOrMoreBuyRateProportion = performance.OldCustomerData.FifthTimeOrMoreBuyRateProportion;
-            oldCustomerOperationDataVo.BuyRate = performance.OldCustomerData.BuyRate;
-
-            result.NewCustomerData = newCustomerOperationDataVo;
-            result.OldCustomerData = oldCustomerOperationDataVo;
-
+                Key = e.Key,
+                Name = e.Name,
+                Value = e.Value
+            }).ToList(); ;
             return ResultData<AssistantOperationDataVo>.Success().AddData("data",result);
 
 

@@ -2142,7 +2142,7 @@ namespace Fx.Amiya.Service
         public async Task<ShoppingCartRegistrationIndicatorBaseDataDto> GetFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate, string baseLiveAnchorId, List<string> contentPlatformIds)
         {
             ShoppingCartRegistrationIndicatorBaseDataDto data = new ShoppingCartRegistrationIndicatorBaseDataDto();
-            var liveanchorIds = (await _liveAnchorService.GetLiveAnchorListByBaseInfoId(baseLiveAnchorId)).Select(e => e.Id);
+            var liveanchorIds = (await _liveAnchorService.GetAllLiveAnchorListByBaseInfoId(baseLiveAnchorId)).Select(e => e.Id);
             var assistantNameList = (await _amiyaEmployeeService.GetByLiveAnchorBaseIdListAsync(new List<string> { baseLiveAnchorId })).Select(e => e.Id).ToList();
             var baseData = dalShoppingCartRegistration.GetAll()
                 .Where(e => contentPlatformIds == null || contentPlatformIds.Contains(e.ContentPlatFormId))
@@ -2211,7 +2211,7 @@ namespace Fx.Amiya.Service
             var liveanchorIds = new List<string>();
             if (string.IsNullOrEmpty(baseLiveAnchorId))
             {
-                liveanchorIds = nameList.Where(e => e.LiveAnchorName.Contains("刀刀") || e.LiveAnchorName.Contains("吉娜")).Select(e => e.Id).ToList();
+                liveanchorIds = nameList.Where(e => e.LiveAnchorName.Contains("刀刀") || e.LiveAnchorName.Contains("吉娜")|| e.LiveAnchorName.Contains("璐璐")).Select(e => e.Id).ToList();
             }
             else
             {

@@ -17,6 +17,10 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Input
         /// </summary>
         public bool ShowJiNa { get; set; }
         /// <summary>
+        /// 璐璐
+        /// </summary>
+        public bool ShowLuLu { get; set; }
+        /// <summary>
         /// 合作达人
         /// </summary>
         public bool ShowCooperate { get; set; }

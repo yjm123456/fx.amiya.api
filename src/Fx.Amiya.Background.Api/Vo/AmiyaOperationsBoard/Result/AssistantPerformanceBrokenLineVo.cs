@@ -16,5 +16,9 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
         /// 老客业绩折线图
         /// </summary>
         public List<PerformanceBrokenLineListInfoVo> OldCustomerPerformance { get; set; }
+        /// <summary>
+        /// 总业绩折线图
+        /// </summary>
+        public List<PerformanceBrokenLineListInfoVo> TotalPerformance { get; set; }
     }
 }

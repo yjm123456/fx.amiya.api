@@ -377,6 +377,18 @@ namespace Fx.Amiya.Service
             }).ToListAsync();
         }
         /// <summary>
+        /// 根据基础主播id获取主播ip(不区分有效无效)
+        /// </summary>
+        /// <param name="baseInfoId"></param>
+        /// <returns></returns>
+        public async Task<List<LiveAnchorDto>> GetAllLiveAnchorListByBaseInfoId(string baseInfoId)
+        {
+            return await dalLiveAnchor.GetAll().Where(l => l.LiveAnchorBaseId == baseInfoId).Select(l => new LiveAnchorDto
+            {
+                Id = l.Id
+            }).ToListAsync();
+        }
+        /// <summary>
         /// 获取需要同步视频号订单的主播信息
         /// </summary>
         /// <returns></returns>

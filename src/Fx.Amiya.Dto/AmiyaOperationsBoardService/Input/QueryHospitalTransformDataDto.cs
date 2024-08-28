@@ -24,6 +24,10 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Input
         /// 合作达人
         /// </summary>
         public bool ShowCooperate { get; set; }
+        /// <summary>
+        /// 璐璐
+        /// </summary>
+        public bool ShowLuLu { get; set; }
 
         /// <summary>
         /// 开始时间

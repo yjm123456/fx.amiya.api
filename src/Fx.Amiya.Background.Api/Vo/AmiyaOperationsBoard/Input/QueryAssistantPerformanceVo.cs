@@ -18,6 +18,6 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Input
         /// <summary>
         /// 助理id
         /// </summary>
-        public int? AssistantId { get; set; }
+        public int AssistantId { get; set; }
     }
 }
