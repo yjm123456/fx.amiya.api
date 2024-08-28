@@ -2391,7 +2391,7 @@ namespace Fx.Amiya.Service
         public async Task<AssistantPerformanceBrokenLineDto> GetAssistantPerformanceBrokenLineDto(QueryAssistantPerformanceDto query)
         {
             AssistantPerformanceBrokenLineDto brokenLineDto = new AssistantPerformanceBrokenLineDto();
-            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
+            var selectDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.EndDate.Year, query.EndDate.Month);
             var assistantIdList = new List<int>();
             if (query.AssistantId.HasValue)
             {
@@ -2437,9 +2437,9 @@ namespace Fx.Amiya.Service
                    Performance = DecimalExtension.ChangePriceToTenThousand(e.Sum(e => e.DealPrice))
                })
                .ToList();
-            brokenLineDto.NewCustomerPerformance = this.FillDate(query.StartDate.Year, query.StartDate.Month, newCustomerData);
-            brokenLineDto.OldCustomerPerformance = this.FillDate(query.StartDate.Year, query.StartDate.Month, oldCustomerData);
-            brokenLineDto.TotalPerformance = this.FillDate(query.StartDate.Year, query.StartDate.Month, totalData);
+            brokenLineDto.NewCustomerPerformance = this.FillDate(query.EndDate.Year, query.EndDate.Month, newCustomerData);
+            brokenLineDto.OldCustomerPerformance = this.FillDate(query.EndDate.Year, query.EndDate.Month, oldCustomerData);
+            brokenLineDto.TotalPerformance = this.FillDate(query.EndDate.Year, query.EndDate.Month, totalData);
             return brokenLineDto;
         }
 
@@ -2732,11 +2732,11 @@ namespace Fx.Amiya.Service
         public async Task<AssiatantTargetCompleteAndPerformanceRateDto> GetAssiatantTargetCompleteAndPerformanceRateDataAsync(QueryAssistantPerformanceDto query)
         {
             AssiatantTargetCompleteAndPerformanceRateDto result = new AssiatantTargetCompleteAndPerformanceRateDto();
-            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
+            var selectDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.EndDate.Year, query.EndDate.Month);
             var assistantIdAndNameList = (await amiyaEmployeeService.GetAllAssistantAsync()).ToList(); ;
             var assistantTarget = await dalEmployeePerformanceTarget.GetAll()
                 .Where(e => e.Valid == true)
-                .Where(e => e.BelongYear == selectDate.StartDate.Year && e.BelongMonth == selectDate.StartDate.Month)
+                .Where(e => e.BelongYear == selectDate.EndDate.Year && e.BelongMonth == selectDate.EndDate.Month)
                 .Where(e => assistantIdAndNameList.Select(e => e.Id).Contains(e.EmployeeId))
                 .Select(e => new
                 {

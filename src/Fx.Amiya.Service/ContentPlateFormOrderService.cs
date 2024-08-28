@@ -4160,9 +4160,9 @@ namespace Fx.Amiya.Service
         {
             OrderSendAndDealNumDto orderData = new OrderSendAndDealNumDto();
             orderData.SendOrderNum = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList)
-                .Where(e => e.ContentPlatformOrderSendList.Count == 1)
-                .Where(e => assistantIds.Count == 0 || assistantIds.Contains(e.IsSupportOrder == true ? e.SupportEmpId : e.BelongEmpId.Value))
-                .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
+                .Where(e => e.ContentPlatformOrderSendList.Where(o=>o.IsMainHospital==true&&o.SendDate>=startDate&&o.SendDate<endDate).Count() == 1)
+                .Where(e => assistantIds.Count == 0 || assistantIds.Contains(e.IsSupportOrder==true ? e.SupportEmpId : e.BelongEmpId.Value))
+                //.Where(o => o.SendDate >= startDate && o.SendDate < endDate)
                 .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsOldCustomer == false)
                 .Where(o => (!isEffectiveCustomerData.HasValue || (isEffectiveCustomerData.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0)))
                 .Select(e => e.Phone)
