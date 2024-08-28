@@ -4071,9 +4071,7 @@ namespace Fx.Amiya.Service
             orderData.DealNum = visitCount.Where(x => x.DealDate >= startDate && x.DealDate < endDate && x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete).Select(e => e.Phone)
                 .Distinct()
                 .Count();
-            orderData.OldTakeNewDealNum = visitCount.Where(x => x.DealDate >= startDate && x.DealDate < endDate && x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete && x.CustomerSource == (int)TiktokCustomerSource.OldTakeNewCustomer).Select(e => e.Phone)
-              .Distinct()
-              .Count();
+
 
             orderData.DealPrice = visitCount.Where(x => x.DealDate >= startDate && x.DealDate < endDate && x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
                 .Sum(x => x.DealAmount);

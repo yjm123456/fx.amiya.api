@@ -12,6 +12,7 @@ using Fx.Amiya.Dto.CustomerHospitalDealDetails.Input;
 using Fx.Amiya.Dto.CustomerHospitalDealInfo.Input;
 using Fx.Amiya.Dto.CustomerInfo;
 using Fx.Amiya.Dto.OperationLog;
+using Fx.Amiya.Dto.ReconciliationDocuments;
 using Fx.Amiya.Dto.TmallOrder;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -56,6 +57,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IHttpContextAccessor _httpContextAccessor;
         private IOperationLogService operationLogService;
         private ILiveAnchorService liveAnchorService;
+        private IAmiyaOperationsBoardService amiyaOperationsBoardService;
 
         /// <summary>
         /// 构造函数
@@ -79,6 +81,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             IOrderService tmallOrderService,
             IAmiyaEmployeeService amiyaEmployeeService,
             IBindCustomerServiceService bindCustomerServiceService,
+            IAmiyaOperationsBoardService amiyaOperationsBoardService,
             ICustomerHospitalDealInfoService customerHospitalDealInfoService,
             IAmiyaPositionInfoService amiyaPositionInfoService,
             IHospitalInfoService hospitalInfoService,
@@ -96,6 +99,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             this.customerHospitalDealInfoService = customerHospitalDealInfoService;
             this.bindCustomerServiceService = bindCustomerServiceService;
             this.amiyaPositionInfoService = amiyaPositionInfoService;
+            this.amiyaOperationsBoardService = amiyaOperationsBoardService;
             this.amiyaEmployeeService = amiyaEmployeeService;
             _departmentService = departmentService;
             _contentPlatformOrderSend = contentPlatformOrderSend;
@@ -310,7 +314,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     resultVo.CheckPrice = x.CheckPrice;
                     resultVo.Sender = x.Sender;
                     resultVo.SendDate = x.SendDate;
-                    resultVo.BelongChannel= x.BelongChannel;
+                    resultVo.BelongChannel = x.BelongChannel;
                     resultVo.BelongChannelText = x.BelongChannelText;
                     resultVo.CheckRemark = x.CheckRemark;
                     resultVo.SettlePrice = x.SettlePrice;
@@ -441,7 +445,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   LateProjectStage = d.LateProjectStage,
                                   UnSendReason = d.UnSendReason,
                                   OrderSourceText = d.OrderSourceText,
-                                  ConsultingContent2=d.ConsultingContent2
+                                  ConsultingContent2 = d.ConsultingContent2
                               };
             FxPageInfo<UnContentPlateFormSendOrderInfoVo> pageInfo = new FxPageInfo<UnContentPlateFormSendOrderInfoVo>();
             pageInfo.TotalCount = q.TotalCount;
@@ -682,7 +686,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
                                 SendHospital = d.SendHospital,
                                 IsRepeatProfundityOrder = d.IsRepeatProfundityOrder == true ? "是" : "否",
-                                ConsultingContent2=d.ConsultingContent2
+                                ConsultingContent2 = d.ConsultingContent2
                             };
                 exportSendOrder = order.ToList();
                 foreach (var x in exportSendOrder)
@@ -806,7 +810,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 CommissionRatio = d.CommissionRatio,
                                 IsOldCustomer = d.IsOldCustomer == false ? "新客业绩" : "老客业绩",
                                 CustomerServiceSettlePrice = d.CustomerServiceSettlePrice,
-                                ConsultingContent2=d.ConsultingContent2
+                                ConsultingContent2 = d.ConsultingContent2
                             };
                 FxPageInfo<ContentPlatFormCompleteOrderInfoVo> orderPageInfo = new FxPageInfo<ContentPlatFormCompleteOrderInfoVo>();
                 orderPageInfo.TotalCount = q.TotalCount;
@@ -945,7 +949,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderUpdateInfo.CustomerTypeText = order.CustomerTypeText;
             orderUpdateInfo.CustomerSource = order.CustomerSource;
             orderUpdateInfo.CustomerSourceText = order.CustomerSourceText;
-            orderUpdateInfo.BelongChannel=order.BelongChannel;
+            orderUpdateInfo.BelongChannel = order.BelongChannel;
             orderUpdateInfo.BelongChannelText = order.BelongChannelText;
             orderUpdateInfo.ConsultingContent2 = order.ConsultingContent2;
             return ResultData<ContentPlateFormOrderVo>.Success().AddData("orderInfo", orderUpdateInfo);
@@ -1009,7 +1013,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 LiveAnchorName = d.LiveAnchorName,
                                 GoodsName = d.GoodsName,
                                 ConsultingContent = d.ConsultingContent,
-                                ConsultingContent2= d.ConsultingContent2,
+                                ConsultingContent2 = d.ConsultingContent2,
                                 DealAmount = d.DealAmount,
                                 DepositAmount = d.DepositAmount.HasValue ? d.DepositAmount : 0,
                                 OrderTypeText = d.OrderTypeText,
@@ -1019,7 +1023,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 UnDealReason = d.UnDealReason,
                                 LateProjectStage = d.LateProjectStage,
                                 Remark = d.Remark,
-                                
+
                             };
 
                 FxPageInfo<ContentPlatFormOrderInfoSimpleVo> orderPageInfo = new FxPageInfo<ContentPlatFormOrderInfoSimpleVo>();
@@ -1083,8 +1087,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.WechatNumber = updateVo.WechatNumber;
             updateDto.CustomerType = updateVo.CustomerType;
             updateDto.CustomerSource = updateVo.CustomerSource;
-            updateDto.BelongChannel=updateVo.BelongChannel;
-            updateDto.ConsultingContent2=updateVo.ConsultingContent2;
+            updateDto.BelongChannel = updateVo.BelongChannel;
+            updateDto.ConsultingContent2 = updateVo.ConsultingContent2;
             await _orderService.UpdateContentPlateFormOrderAsync(updateDto);
 
 
@@ -1243,7 +1247,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
             int hospitalempId = Convert.ToInt32(employee.Id);
             int hospitalId = Convert.ToInt32(employee.HospitalId);
-            await _orderService.HospitalConfirmOrderAsync(sendOrderId,orderId, hospitalempId, hospitalId, netWorkConsulationName, sceneConsulationName);
+            await _orderService.HospitalConfirmOrderAsync(sendOrderId, orderId, hospitalempId, hospitalId, netWorkConsulationName, sceneConsulationName);
             return ResultData.Success();
         }
         /// <summary>
@@ -1521,7 +1525,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.NextAppointmentDate = updateVo.NextAppointmentDate;
                 updateDto.IsNeedHospitalHelp = updateVo.IsNeedHospitalHelp;
                 updateDto.EmpId = employeeId;
-                
+
                 List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
                 if (updateDto.IsFinish == true)
                 {
@@ -1665,7 +1669,12 @@ namespace Fx.Amiya.Background.Api.Controllers
             GetCooperationLiveAnchorSendAndVisitNumVo result = new GetCooperationLiveAnchorSendAndVisitNumVo();
             result.SendOrderNum = orders.SendOrderNum;
             result.VisitNum = orders.VisitNum;
-            result.OldTakeNewDealNum = orders.OldTakeNewDealNum;
+            QueryNewCustomerToHospiatlAndTargetCompleteDto queryNewCustomerToHospiatlAndTargetCompleteDto = new QueryNewCustomerToHospiatlAndTargetCompleteDto();
+            queryNewCustomerToHospiatlAndTargetCompleteDto.StartDate = query.SendStartDate;
+            queryNewCustomerToHospiatlAndTargetCompleteDto.EndDate = query.SendEndDate;
+            queryNewCustomerToHospiatlAndTargetCompleteDto.EmpId = query.EmployeeId;
+            var operationBoardInfo = await amiyaOperationsBoardService.GetNewCustomerToHospiatlAndTargetCompleteAsync(queryNewCustomerToHospiatlAndTargetCompleteDto);
+            result.OldTakeNewDealNum = operationBoardInfo.OldTakeNewCustomerNum;
             return ResultData<GetCooperationLiveAnchorSendAndVisitNumVo>.Success().AddData("CooperationLiveAnchorSendAndVisitNum", result);
         }
         /// <summary>
@@ -1675,7 +1684,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("getOnlyMainHospitalOrder")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<SendContentPlatformOrderVo>>> GetOnlyMainHospitalOrderAsync([FromQuery]QueryOnlyMainHospitalOrderByPageVo query) {
+        public async Task<ResultData<FxPageInfo<SendContentPlatformOrderVo>>> GetOnlyMainHospitalOrderAsync([FromQuery] QueryOnlyMainHospitalOrderByPageVo query)
+        {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int loginEmployeeId = Convert.ToInt32(employee.Id);
             QueryOnlyMainHospitalOrderByPageDto queryDto = new QueryOnlyMainHospitalOrderByPageDto();
@@ -1685,10 +1695,11 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.EndDate = query.EndDate;
             queryDto.employeeId = loginEmployeeId;
             queryDto.KeyWord = query.KeyWord;
-            var res =await _orderService.GetOnlyMainHospitalOrderAsync(queryDto);
+            var res = await _orderService.GetOnlyMainHospitalOrderAsync(queryDto);
             FxPageInfo<SendContentPlatformOrderVo> pageInfo = new FxPageInfo<SendContentPlatformOrderVo>();
             pageInfo.TotalCount = res.TotalCount;
-            pageInfo.List = res.List.Select(d => new SendContentPlatformOrderVo {
+            pageInfo.List = res.List.Select(d => new SendContentPlatformOrderVo
+            {
                 Id = d.Id,
                 OrderId = d.OrderId,
                 ContentPlatFormName = d.ContentPlatFormName,
@@ -1709,13 +1720,13 @@ namespace Fx.Amiya.Background.Api.Controllers
                 SendOrderRemark = d.SendOrderRemark,
                 OrderRemark = d.OrderRemark,
                 HospitalRemark = d.HospitalRemark,
-                OrderSourceText =d.OrderSourceText,
+                OrderSourceText = d.OrderSourceText,
                 IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
                 IsMainHospital = d.IsMainHospital,
                 ConsultingContent2 = d.ConsultingContent2,
-                BelongEmpName=d.BelongEmpName,
-                SendHospital=d.SendHospital,
-                IsHospitalCheckPhone=d.IsHospitalCheckPhone
+                BelongEmpName = d.BelongEmpName,
+                SendHospital = d.SendHospital,
+                IsHospitalCheckPhone = d.IsHospitalCheckPhone
             }).ToList();
             return ResultData<FxPageInfo<SendContentPlatformOrderVo>>.Success().AddData("data", pageInfo);
         }

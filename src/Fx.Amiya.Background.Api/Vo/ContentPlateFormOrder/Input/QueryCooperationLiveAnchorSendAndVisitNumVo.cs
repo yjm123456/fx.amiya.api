@@ -9,5 +9,6 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.Input
     {
         public DateTime SendStartDate { get; set; }
         public DateTime SendEndDate { get; set; }
+        public int EmployeeId { get; set; }
     }
 }

@@ -79,7 +79,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       CustomerServicePerformance = d.CustomerServicePerformance,
                                                       ToHospitalRate = d.ToHospitalRate,
                                                       ToHospitalRateReword = d.ToHospitalRateReword,
-                                                      OldTakeNewCustomerPrice = d.OldCustomerToHospitalReword,
+                                                      OldTakeNewCustomerPrice = d.OldTakeNewCustomerPrice,
                                                       RepeatPurchasesRate = d.RepeatPurchasesRate,
                                                       RepeatPurchasesRateReword = d.RepeatPurchasesRateReword,
                                                       NewCustomerToHospitalReword = d.NewCustomerToHospitalReword,

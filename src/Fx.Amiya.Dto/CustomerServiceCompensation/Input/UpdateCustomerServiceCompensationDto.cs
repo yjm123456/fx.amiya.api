@@ -78,7 +78,7 @@ namespace Fx.Amiya.Dto.CustomerServiceCompensation.Input
         /// <summary>
         /// 老带新奖励金额
         /// </summary>
-        public Decimal OldTakeNewCustomerPrice { get; set; }
+        public decimal OldTakeNewCustomerPrice { get; set; }
         #region 行政客服
         /// <summary>
         /// 当前组加v率达成情况（若低于健康值则扣款300）
