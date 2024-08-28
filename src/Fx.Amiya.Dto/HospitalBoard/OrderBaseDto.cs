@@ -82,6 +82,7 @@ namespace Fx.Amiya.Dto.HospitalBoard
 
         public int VisitNum { get; set; }
         public int DealNum { get; set; }
+        public int OldTakeNewDealNum { get; set; }
         public decimal? DealPrice { get; set; }
     }
 

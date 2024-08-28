@@ -1665,6 +1665,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             GetCooperationLiveAnchorSendAndVisitNumVo result = new GetCooperationLiveAnchorSendAndVisitNumVo();
             result.SendOrderNum = orders.SendOrderNum;
             result.VisitNum = orders.VisitNum;
+            result.OldTakeNewDealNum = orders.OldTakeNewDealNum;
             return ResultData<GetCooperationLiveAnchorSendAndVisitNumVo>.Success().AddData("CooperationLiveAnchorSendAndVisitNum", result);
         }
         /// <summary>

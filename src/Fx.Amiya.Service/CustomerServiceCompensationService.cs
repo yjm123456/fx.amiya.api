@@ -65,6 +65,7 @@ namespace Fx.Amiya.Service
                                                    Salary = d.Salary,
                                                    CustomerServicePerformance = d.CustomerServicePerformance,
                                                    ToHospitalRate = d.ToHospitalRate,
+                                                   OldTakeNewCustomerPrice = d.OldTakeNewCustomerPrice,
                                                    ToHospitalRateReword = d.ToHospitalRateReword,
                                                    RepeatPurchasesRate = d.RepeatPurchasesRate,
                                                    RepeatPurchasesRateReword = d.RepeatPurchasesRateReword,
@@ -119,6 +120,7 @@ namespace Fx.Amiya.Service
                 customerServiceCompensation.OldCustomerToHospitalReword = addDto.OldCustomerToHospitalReword;
                 customerServiceCompensation.TargetFinishReword = addDto.TargetFinishReword;
                 customerServiceCompensation.OtherChargebacks = addDto.OtherChargebacks;
+                customerServiceCompensation.OldTakeNewCustomerPrice = addDto.OldTakeNewCustomerPrice;
 
                 customerServiceCompensation.AddClueCompletePrice = addDto.AddClueCompletePrice;
                 customerServiceCompensation.AddWechatCompletePrice = addDto.AddWechatCompletePrice;
@@ -167,6 +169,7 @@ namespace Fx.Amiya.Service
             returnResult.OtherPrice = result.OtherPrice;
             returnResult.Remark = result.Remark;
             returnResult.Salary = result.Salary;
+            returnResult.OldTakeNewCustomerPrice = result.OldTakeNewCustomerPrice;
             //returnResult.PerformancePercent = result.PerformancePercent;
             returnResult.CustomerServicePerformance = result.CustomerServicePerformance;
             returnResult.ToHospitalRate = result.ToHospitalRate;
@@ -220,6 +223,7 @@ namespace Fx.Amiya.Service
             result.OldCustomerToHospitalReword = updateDto.OldCustomerToHospitalReword;
             result.TargetFinishReword = updateDto.TargetFinishReword;
             result.OtherChargebacks = updateDto.OtherChargebacks;
+            result.OldTakeNewCustomerPrice = updateDto.OldTakeNewCustomerPrice;
 
 
             result.AddClueCompletePrice = updateDto.AddClueCompletePrice;

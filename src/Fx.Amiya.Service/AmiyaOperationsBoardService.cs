@@ -2183,7 +2183,7 @@ namespace Fx.Amiya.Service
             if (target == null)
                 throw new Exception($"请先填写{query.StartDate.Year}-{query.StartDate.Month}月份的目标");
             var totalTarget = target.PerformanceTarget;
-            var data = await dalContentPlatFormOrderDealInfo.GetAll()
+            var data = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder)
                 .Where(e => e.CreateDate >= selectDate.StartDate && e.CreateDate < selectDate.EndDate)
                 .Where(e => e.ContentPlatFormOrder.IsSupportOrder ? e.ContentPlatFormOrder.SupportEmpId == query.EmpId : e.ContentPlatFormOrder.BelongEmpId == query.EmpId)
                 .Select(e => new
@@ -2192,10 +2192,12 @@ namespace Fx.Amiya.Service
                     IsToHospital = e.IsToHospital,
                     IsDeal = e.IsDeal,
                     DealPrice = e.Price,
-                    Phone = e.ContentPlatFormOrder.Phone
+                    Phone = e.ContentPlatFormOrder.Phone,
+                    CustomerSource = e.ContentPlatFormOrder.CustomerSource
                 }).ToListAsync();
             NewCustomerToHospiatlAndTargetCompleteDto dataDto = new NewCustomerToHospiatlAndTargetCompleteDto();
             dataDto.NewCustomerToHospitalCount = data.Where(e => e.IsOldCustomer == false && e.IsToHospital == true).Select(e => e.Phone).Distinct().Count();
+            dataDto.OldTakeNewCustomerNum = data.Where(x => x.IsDeal == true && x.IsOldCustomer == false && x.CustomerSource == (int)TiktokCustomerSource.OldTakeNewCustomer).Count();
             dataDto.TargetComplete = DecimalExtension.CalculateTargetComplete(data.Where(e => e.IsDeal == true).Sum(e => e.DealPrice), totalTarget).Value;
             return dataDto;
         }
@@ -2461,7 +2463,7 @@ namespace Fx.Amiya.Service
             AssistantOperationDataDto amiyaOperationDataDto = new AssistantOperationDataDto();
             List<DataItemDto> newCustomerDataList = new List<DataItemDto>();
             List<DataItemDto> oldCustomerDataList = new List<DataItemDto>();
-            
+
             var healthValueList = await _healthValueService.GetValidListAsync();
             #region【小黄车数据】
             //小黄车数据
@@ -2531,7 +2533,7 @@ namespace Fx.Amiya.Service
             DataItemDto totalDealPeople = new DataItemDto();
             totalDealPeople.Key = "TotalDealPeople";
             totalDealPeople.Name = "总成交";
-            totalDealPeople.Value= oldCustomerData.TotalDealCustomer;
+            totalDealPeople.Value = oldCustomerData.TotalDealCustomer;
             DataItemDto SecondDealPeople = new DataItemDto();
             SecondDealPeople.Key = "SecondDealPeople";
             SecondDealPeople.Name = "2次复购";

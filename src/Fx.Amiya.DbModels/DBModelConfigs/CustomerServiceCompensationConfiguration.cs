@@ -32,6 +32,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.OldCustomerToHospitalReword).HasColumnName("old_customer_to_hospital_reword").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.TargetFinishReword).HasColumnName("target_finish_reword").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.OtherChargebacks).HasColumnName("other_chargebacks").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.OldTakeNewCustomerPrice).HasColumnName("old_take_newcustomer_price").HasColumnType("decimal(12,2)").IsRequired();
 
 
             builder.Property(e => e.AddClueCompletePrice).HasColumnName("addclue_complete_price").HasColumnType("decimal(12,2)").IsRequired();

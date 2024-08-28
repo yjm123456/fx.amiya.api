@@ -35,3 +35,28 @@ CREATE TABLE `tbl_appointment_activity` (
 );
 
 ------------------------------------王健 2024/8/14 END--------------------------------------
+
+
+------------------------------------余建明 2024/8/14 BEGIN--------------------------------------
+--三方平台基础信息
+CREATE TABLE `amiyadb`.`tbl_third_part_contentplatform_info` (
+  `id` VARCHAR(50) NOT NULL,
+  `name` VARCHAR(45) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  PRIMARY KEY (`id`));
+
+--医院平台编码
+CREATE TABLE `amiyadb`.`tbl_hospital_contentplatform_code` (
+  `id` VARCHAR(50) NOT NULL,
+  `hospital_id` INT UNSIGNED NOT NULL,
+  `third_part_contentplatform` VARCHAR(50) NOT NULL,
+  `code` VARCHAR(45) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  PRIMARY KEY (`id`));
+------------------------------------余建明 2024/8/14 END--------------------------------------

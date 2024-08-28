@@ -61,6 +61,10 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<CustomerIntegralOrderRefund> CustomerIntegralOrderRefund { get; set; }
         public virtual DbSet<MpUserSubscribeDetail> MpUserSubscribeDetail { get; set; }
         public virtual DbSet<HospitalInfo> HospitalInfo { get; set; }
+
+        public virtual DbSet<ThirdPartContentplatformInfo> ThirdPartContentplatformInfo { get; set; }
+
+        public virtual DbSet<HospitalContentplatformCode> HospitalContentplatformCode { get; set; }
         public virtual DbSet<HospitalProject> HospitalProject { get; set; }
         public virtual DbSet<TrackReported> TrackReported { get; set; }
         public virtual DbSet<HospitalAppointmentNumer> HospitalAppointmentNumer { get; set; }
@@ -262,6 +266,8 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new BindCustomerRFMLevelUpdateLogConfiguration());
             modelBuilder.ApplyConfiguration(new GoodsInfoConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalInfoConfiguration());
+            modelBuilder.ApplyConfiguration(new HospitalContentplatformCodeConfiguration());
+            modelBuilder.ApplyConfiguration(new ThirdPartContentplatformInfoConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalProjectConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalEnvironmentConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalEnvironmentPictureConfiguration());

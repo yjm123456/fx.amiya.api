@@ -174,5 +174,6 @@ namespace Fx.Amiya.DbModels.Model
 
         public List<HospitalProject> HospitalProjectList { get; set; }
         public List<FansMeeting> FansMeetingList { get; set; }
+        public List<HospitalContentplatformCode> HospitalContentplatformCodeList { get; set; }
     }
 }

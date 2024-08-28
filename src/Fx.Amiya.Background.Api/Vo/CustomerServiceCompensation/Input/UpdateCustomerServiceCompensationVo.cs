@@ -80,6 +80,10 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerServiceCompensation.Input
         /// 其他扣款
         /// </summary>
         public decimal OtherChargebacks { get; set; }
+        /// <summary>
+        /// 老带新奖励金额
+        /// </summary>
+        public Decimal OldTakeNewCustomerPrice { get; set; }
         #region 行政客服
         /// <summary>
         /// 当前组加v率达成情况（若低于健康值则扣款300）

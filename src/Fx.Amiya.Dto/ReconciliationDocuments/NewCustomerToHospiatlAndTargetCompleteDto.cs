@@ -16,5 +16,9 @@ namespace Fx.Amiya.Dto.ReconciliationDocuments
         /// 目标完成率
         /// </summary>
         public decimal TargetComplete { get; set; }
+        /// <summary>
+        /// 老带新人数
+        /// </summary>
+        public int OldTakeNewCustomerNum { get; set; }
     }
 }

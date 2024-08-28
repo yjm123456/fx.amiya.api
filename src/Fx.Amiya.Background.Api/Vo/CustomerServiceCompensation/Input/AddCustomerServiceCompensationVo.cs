@@ -73,6 +73,10 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerServiceCompensation.Input
         /// 目标达成奖励
         /// </summary>
         public decimal TargetFinishReword { get; set; }
+        /// <summary>
+        /// 老带新奖励金额
+        /// </summary>
+        public Decimal OldTakeNewCustomerPrice { get; set; }
 
 
         #region 行政客服

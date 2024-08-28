@@ -48,6 +48,11 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public decimal CustomerServicePerformance { get; set; }
 
+        /// <summary>
+        /// 老带新奖励金额
+        /// </summary>
+        public Decimal OldTakeNewCustomerPrice { get; set; }
+
         #region 助理
 
         /// <summary>

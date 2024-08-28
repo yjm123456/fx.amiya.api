@@ -481,15 +481,17 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [FxInternalAuthorize]
         [HttpGet("getNewCustomerToHospiatlAndTargetComplete")]
-        public async Task<ResultData<NewCustomerToHospiatlAndTargetCompleteVo>> GetNewCustomerToHospiatlAndTargetCompleteAsync([FromQuery]QueryNewCustomerToHospiatlAndTargetCompleteVo query) {
+        public async Task<ResultData<NewCustomerToHospiatlAndTargetCompleteVo>> GetNewCustomerToHospiatlAndTargetCompleteAsync([FromQuery] QueryNewCustomerToHospiatlAndTargetCompleteVo query)
+        {
             QueryNewCustomerToHospiatlAndTargetCompleteDto queryDto = new QueryNewCustomerToHospiatlAndTargetCompleteDto();
             queryDto.StartDate = query.StartDate;
-            queryDto.EndDate=query.EndDate;
+            queryDto.EndDate = query.EndDate;
             queryDto.EmpId = query.EmpId;
-            var data=await amiyaOperationsBoardService.GetNewCustomerToHospiatlAndTargetCompleteAsync(queryDto);
+            var data = await amiyaOperationsBoardService.GetNewCustomerToHospiatlAndTargetCompleteAsync(queryDto);
             NewCustomerToHospiatlAndTargetCompleteVo res = new NewCustomerToHospiatlAndTargetCompleteVo();
             res.TargetComplete = data.TargetComplete;
             res.NewCustomerToHospitalCount = data.NewCustomerToHospitalCount;
+            res.OldTakeNewCustomerNum = data.OldTakeNewCustomerNum;
             return ResultData<NewCustomerToHospiatlAndTargetCompleteVo>.Success().AddData("data", res);
         }
         #region【批量审核薪资数据】
@@ -568,7 +570,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpPut("batchCheckConsumptionRracking")]
         [FxInternalAuthorize]
-        public async Task<ResultData> BatchCheckConsumptionRrackingAsync([FromBody] BatchCheckReconciliationDocumentSettleVo query) {
+        public async Task<ResultData> BatchCheckConsumptionRrackingAsync([FromBody] BatchCheckReconciliationDocumentSettleVo query)
+        {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
             BatchCheckReconciliationDocumentSettleDto checkReconciliationDocumentSettleDto = new BatchCheckReconciliationDocumentSettleDto();

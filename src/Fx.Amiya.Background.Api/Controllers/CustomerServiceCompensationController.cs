@@ -79,6 +79,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       CustomerServicePerformance = d.CustomerServicePerformance,
                                                       ToHospitalRate = d.ToHospitalRate,
                                                       ToHospitalRateReword = d.ToHospitalRateReword,
+                                                      OldTakeNewCustomerPrice = d.OldCustomerToHospitalReword,
                                                       RepeatPurchasesRate = d.RepeatPurchasesRate,
                                                       RepeatPurchasesRateReword = d.RepeatPurchasesRateReword,
                                                       NewCustomerToHospitalReword = d.NewCustomerToHospitalReword,
@@ -142,6 +143,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.OldCustomerToHospitalReword = addVo.OldCustomerToHospitalReword;
                 addDto.TargetFinishReword = addVo.TargetFinishReword;
                 addDto.OtherChargebacks = addVo.OtherChargebacks;
+                addDto.OldTakeNewCustomerPrice = addVo.OldTakeNewCustomerPrice;
 
                 addDto.AddClueCompletePrice = addVo.AddClueCompletePrice;
                 addDto.AddWechatCompletePrice = addVo.AddWechatCompletePrice;
@@ -189,6 +191,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 customerServiceCompensationVo.OtherPrice = customerServiceCompensation.OtherPrice;
                 customerServiceCompensationVo.Remark = customerServiceCompensation.Remark;
                 customerServiceCompensationVo.Salary = customerServiceCompensation.Salary;
+                customerServiceCompensationVo.OldTakeNewCustomerPrice = customerServiceCompensation.OldTakeNewCustomerPrice;
                 //customerServiceCompensationVo.PerformancePercent = customerServiceCompensation.PerformancePercent;
                 customerServiceCompensationVo.CustomerServicePerformance = customerServiceCompensation.CustomerServicePerformance;
                 customerServiceCompensationVo.ToHospitalRate = customerServiceCompensation.ToHospitalRate;
@@ -248,6 +251,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.OldCustomerToHospitalReword = updateVo.OldCustomerToHospitalReword;
                 updateDto.TargetFinishReword = updateVo.TargetFinishReword;
                 updateDto.OtherChargebacks = updateVo.OtherChargebacks;
+                updateDto.OldTakeNewCustomerPrice = updateVo.OldTakeNewCustomerPrice;
 
                 updateDto.AddClueCompletePrice = updateVo.AddClueCompletePrice;
                 updateDto.AddWechatCompletePrice = updateVo.AddWechatCompletePrice;
@@ -276,7 +280,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
-            await customerServiceCompensationService.CopyAsync(copy.Id,employeeId);
+            await customerServiceCompensationService.CopyAsync(copy.Id, employeeId);
             return ResultData.Success();
         }
         /// <summary>

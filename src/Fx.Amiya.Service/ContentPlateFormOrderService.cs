@@ -4071,7 +4071,9 @@ namespace Fx.Amiya.Service
             orderData.DealNum = visitCount.Where(x => x.DealDate >= startDate && x.DealDate < endDate && x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete).Select(e => e.Phone)
                 .Distinct()
                 .Count();
-
+            orderData.OldTakeNewDealNum = visitCount.Where(x => x.DealDate >= startDate && x.DealDate < endDate && x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete && x.CustomerSource == (int)TiktokCustomerSource.OldTakeNewCustomer).Select(e => e.Phone)
+              .Distinct()
+              .Count();
 
             orderData.DealPrice = visitCount.Where(x => x.DealDate >= startDate && x.DealDate < endDate && x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
                 .Sum(x => x.DealAmount);
@@ -4161,7 +4163,7 @@ namespace Fx.Amiya.Service
             OrderSendAndDealNumDto orderData = new OrderSendAndDealNumDto();
             orderData.SendOrderNum = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList)
                 .Where(e => e.ContentPlatformOrderSendList.Count == 1)
-                .Where(e => assistantIds.Count == 0 || assistantIds.Contains(e.IsSupportOrder==true ? e.SupportEmpId : e.BelongEmpId.Value))
+                .Where(e => assistantIds.Count == 0 || assistantIds.Contains(e.IsSupportOrder == true ? e.SupportEmpId : e.BelongEmpId.Value))
                 .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
                 .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsOldCustomer == false)
                 .Where(o => (!isEffectiveCustomerData.HasValue || (isEffectiveCustomerData.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0)))
@@ -4291,8 +4293,8 @@ namespace Fx.Amiya.Service
         public async Task<OldCustomerDealNumDto> GetAssistantOldCustomerBuyAgainByMonthAsync(DateTime date, bool? isEffectiveCustomerData, List<int> assistantIdList)
         {
             DateTime startDate = Convert.ToDateTime("2000-01-01");
-            var dealDate =  _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderDealInfoList)
-                .Where(e => assistantIdList.Count == 0 || assistantIdList.Contains(e.IsSupportOrder==true ? e.SupportEmpId : e.BelongEmpId.Value))
+            var dealDate = _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderDealInfoList)
+                .Where(e => assistantIdList.Count == 0 || assistantIdList.Contains(e.IsSupportOrder == true ? e.SupportEmpId : e.BelongEmpId.Value))
                 .Where(o => (!isEffectiveCustomerData.HasValue || (isEffectiveCustomerData.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0)))
                 .Where(e => e.IsToHospital == true && e.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete && e.DealDate.Value >= startDate && e.DealDate.Value < date);
             OldCustomerDealNumDto orderData = new OldCustomerDealNumDto();
