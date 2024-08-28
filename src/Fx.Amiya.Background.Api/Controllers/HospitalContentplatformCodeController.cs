@@ -225,7 +225,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 var hospitalContentPlatformCode = await hospitalContentplatformCodeService.GetByHospitalIdAndThirdPartContentPlatformIdAsync(query.HospitalId, query.ThirdPartContentplatformInfoId);
                 queryData.JGBM = hospitalContentPlatformCode.Code;
                 var data = JsonConvert.SerializeObject(queryData);
-                var getResult = await HttpUtil.HTTPJsonGetHasBodyAsync(url, data);
+                //var getResult = await HttpUtil.HTTPJsonGetHasBodyAsync(url, data);
+                var getResult = "";
                 var result = JsonConvert.DeserializeObject<ThirdPartContentPlatformInfoToLangZiResultVo>(getResult);
                 return ResultData<ThirdPartContentPlatformInfoToLangZiResultVo>.Success().AddData("hospitalContentplatformCode", result);
             }
