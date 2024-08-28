@@ -2297,7 +2297,7 @@ namespace Fx.Amiya.Service
         public async Task<AssistantPerformanceDto> GetAssitantPerformanceAsync(QueryAssistantPerformanceDto query)
         {
             List<AssitantTargetCompleteDto> assitantTargetCompletes = new List<AssitantTargetCompleteDto>();
-            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
+
             var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.EndDate.Year, query.EndDate.Month == 0 ? 1 : query.EndDate.Month);
             var assistantIdList = new List<int>();
             if (query.AssistantId.HasValue)
@@ -2310,7 +2310,7 @@ namespace Fx.Amiya.Service
             }
             var assistantTarget = await dalEmployeePerformanceTarget.GetAll()
                 .Where(e => e.Valid == true)
-                .Where(e => e.BelongYear == selectDate.StartDate.Year && e.BelongMonth == selectDate.StartDate.Month)
+                .Where(e => e.BelongYear == query.EndDate.Year && e.BelongMonth == query.EndDate.Month)
                 .Where(e => assistantIdList.Contains(e.EmployeeId))
                 .Select(e => new
                 {
@@ -2328,7 +2328,7 @@ namespace Fx.Amiya.Service
                }).ToList();
             var currentContentOrderList = dalContentPlatFormOrderDealInfo.GetAll()
                .Where(e => e.IsDeal == true)
-               .Where(e => e.CreateDate >= selectDate.StartDate && e.CreateDate < selectDate.EndDate)
+               .Where(e => e.CreateDate >= sequentialDate.StartDate && e.CreateDate < sequentialDate.EndDate)
                .Where(e => assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value) || assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value))
                .Select(e => new
                {
