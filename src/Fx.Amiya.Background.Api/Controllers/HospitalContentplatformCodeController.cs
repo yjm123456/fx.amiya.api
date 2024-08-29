@@ -13,6 +13,7 @@ using Fx.Common;
 using Fx.Common.Utils;
 using Fx.Open.Infrastructure.Web;
 using Jd.Api.Util;
+using jos_sdk_net.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -224,10 +225,31 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryData.USERID = "INTAMY";
                 var hospitalContentPlatformCode = await hospitalContentplatformCodeService.GetByHospitalIdAndThirdPartContentPlatformIdAsync(query.HospitalId, query.ThirdPartContentplatformInfoId);
                 queryData.JGBM = hospitalContentPlatformCode.Code;
+
+                queryData.PDBH = CreateOrderIdHelper.GetNextNumber(); ;
+                var order = await contentPlateFormOrderService.GetByOrderIdAsync(query.OrderId);
+                queryData.KUNAM = order.CustomerName;
+                queryData.REGION = order.City;
+                queryData.TEL1 = order.Phone;
+                queryData.PDRQ = DateTime.Now;
                 var data = JsonConvert.SerializeObject(queryData);
-                //var getResult = await HttpUtil.HTTPJsonGetHasBodyAsync(url, data);
-                var getResult = "";
+                var getResult = await HttpUtil.HTTPJsonGetHasBodyAsync(url, data);
+                //var getResult = "";
                 var result = JsonConvert.DeserializeObject<ThirdPartContentPlatformInfoToLangZiResultVo>(getResult);
+                switch (result.RESULT)
+                {
+                    case "0":
+                        result.REMSG += "；无重复";
+                        break;
+                    case "1":
+                        result.REMSG += "；已被其他通路建档";
+                        break;
+                    case "2":
+                        result.REMSG += "；已被所在通路建档";
+                        break;
+                }
+
+
                 return ResultData<ThirdPartContentPlatformInfoToLangZiResultVo>.Success().AddData("hospitalContentplatformCode", result);
             }
             catch (Exception ex)

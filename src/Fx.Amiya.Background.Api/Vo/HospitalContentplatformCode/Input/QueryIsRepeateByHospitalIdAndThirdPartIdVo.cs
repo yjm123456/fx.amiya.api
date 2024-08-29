@@ -9,5 +9,6 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalContentplatformCode.Input
     {
         public string ThirdPartContentplatformInfoId { get; set; }
         public int HospitalId { get; set; }
+        public string OrderId { get; set; }
     }
 }
