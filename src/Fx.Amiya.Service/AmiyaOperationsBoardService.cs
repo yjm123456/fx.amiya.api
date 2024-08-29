@@ -2684,8 +2684,8 @@ namespace Fx.Amiya.Service
             return orderDealInfo.GroupBy(x => x.LastDealHospitalId).Select(e => new AssistantHospitalPerformanceDto
             {
                 Name = hospitalInfo.Where(h => h.Id == e.Key).Select(e => e.Name).FirstOrDefault(),
-                NewCustomerPerformance = ChangePriceToTenThousand(orderDealInfo.Where(e => e.IsOldCustomer == false).Select(e => e.Price).Sum()),
-                OldCustomerPerformance = ChangePriceToTenThousand(orderDealInfo.Where(e => e.IsOldCustomer == true).Select(e => e.Price).Sum()),
+                NewCustomerPerformance = ChangePriceToTenThousand(orderDealInfo.Where(h => h.LastDealHospitalId == e.Key).Where(e => e.IsOldCustomer == false).Select(e => e.Price).Sum()),
+                OldCustomerPerformance = ChangePriceToTenThousand(orderDealInfo.Where(h => h.LastDealHospitalId == e.Key).Where(e => e.IsOldCustomer == true).Select(e => e.Price).Sum()),
             }).ToList();
             #endregion
         }

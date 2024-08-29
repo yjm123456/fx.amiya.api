@@ -1045,7 +1045,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             dataVo.TotalSendOrderCount = res.TotalSendOrderCount;
             dataVo.TotalVisitCount = res.TotalVisitCount;
             dataVo.TotalDealCount = res.TotalDealCount;
-            dataVo.Items = res.Items.Select(e => new AssistantCluesDataItemVo
+            dataVo.Items = res.Items.OrderByDescending(e=>e.SendOrderCount).Select(e => new AssistantCluesDataItemVo
             {
                 Name = e.Name,
                 SendOrderCount = e.SendOrderCount,
@@ -1073,11 +1073,13 @@ namespace Fx.Amiya.Background.Api.Controllers
                 Id = e.Key,
                 Name = e.Value,
             }).ToList();
-            result.TargetCompleteData = res.PerformanceRateData.OrderByDescending(e => e.Value).Select(e => new BaseIdAndNameVo<string, decimal>
+            result.TargetCompleteData = res.TargetCompleteData.OrderByDescending(e => e.Value).Select(e => new BaseIdAndNameVo<string, decimal>
             {
                 Id = e.Key,
                 Name = e.Value,
             }).ToList();
+            result.PerformanceRateData.RemoveAll(e => e.Name == 0m);
+            result.TargetCompleteData.RemoveAll(e => e.Name == 0m);
             return ResultData<AssiatantTargetCompleteAndPerformanceRateVo>.Success().AddData("data", result);
         }
 
