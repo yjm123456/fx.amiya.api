@@ -2357,8 +2357,8 @@ namespace Fx.Amiya.Service
             assistantPerformance.NewCustomerPerformance = currentContentOrderList.Where(e => e.IsOldCustomer == false).Sum(e => e.DealPrice);
             assistantPerformance.OldCustomerPerformance = currentContentOrderList.Where(e => e.IsOldCustomer == true).Sum(e => e.DealPrice);
             assistantPerformance.TotalPerformance = assistantPerformance.NewCustomerPerformance + assistantPerformance.OldCustomerPerformance;
-            assistantPerformance.TodayNewCustomerPerformance = currentContentOrderList.Where(e => e.IsOldCustomer == false).Sum(e => e.DealPrice);
-            assistantPerformance.TodayOldCustomerPerformance = currentContentOrderList.Where(e => e.IsOldCustomer == true).Sum(e => e.DealPrice);
+            assistantPerformance.TodayNewCustomerPerformance = todayPerformance.Where(e => e.IsOldCustomer == false).Sum(e => e.DealPrice);
+            assistantPerformance.TodayOldCustomerPerformance = todayPerformance.Where(e => e.IsOldCustomer == true).Sum(e => e.DealPrice);
             assistantPerformance.TodayTotalPerformance = assistantPerformance.TodayNewCustomerPerformance + assistantPerformance.TodayOldCustomerPerformance;
             assistantPerformance.LastMonthNewCustomerPerformance = lastMonthContentOrderList.Where(e => e.IsOldCustomer == false).Sum(e => e.DealPrice);
             assistantPerformance.LastMonthOldCustomerPerformance = lastMonthContentOrderList.Where(e => e.IsOldCustomer == true).Sum(e => e.DealPrice);
