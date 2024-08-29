@@ -2317,54 +2317,59 @@ namespace Fx.Amiya.Service
                     NewCustomerTarget = e.NewCustomerPerformanceTarget,
                     OldCustomerTarget = e.OldCustomerPerformanceTarget
                 }).ToListAsync();
-            var todayPerformance = dalContentPlatFormOrderDealInfo.GetAll()
-               .Where(e => e.IsDeal == true && e.ContentPlatFormOrderId != null)
-               .Where(e => e.CreateDate >= DateTime.Now.Date && e.CreateDate < DateTime.Now.AddDays(1).Date)
-               .Where(e => assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value) || assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value))
-               .Select(e => new
-               {
-                   DealPrice = e.Price,
-                   IsOldCustomer = e.IsOldCustomer
-               }).ToList();
-            var currentContentOrderList = dalContentPlatFormOrderDealInfo.GetAll()
-               .Where(e => e.IsDeal == true&& e.ContentPlatFormOrderId != null)
-               .Where(e => e.CreateDate >= sequentialDate.StartDate && e.CreateDate < sequentialDate.EndDate)
-               .Where(e => assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value) || assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value))
-               .Select(e => new
-               {
-                   DealPrice = e.Price,
-                   IsOldCustomer = e.IsOldCustomer
-               }).ToList();
-            var lastMonthContentOrderList = dalContentPlatFormOrderDealInfo.GetAll()
-               .Where(e => e.IsDeal == true && e.ContentPlatFormOrderId != null)
-               .Where(e => e.CreateDate >= sequentialDate.LastMonthStartDate && e.CreateDate < sequentialDate.LastMonthEndDate)
-               .Where(e => assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value) || assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value))
-               .Select(e => new
-               {
-                   DealPrice = e.Price,
-                   IsOldCustomer = e.IsOldCustomer
-               }).ToList();
-            var lastYearContentOrderList = dalContentPlatFormOrderDealInfo.GetAll()
-               .Where(e => e.IsDeal == true && e.ContentPlatFormOrderId != null)
-               .Where(e => e.CreateDate >= sequentialDate.LastYearThisMonthStartDate && e.CreateDate < sequentialDate.LastYearThisMonthEndDate)
-               .Where(e => assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value) || assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value))
-               .Select(e => new
-               {
-                   DealPrice = e.Price,
-                   IsOldCustomer = e.IsOldCustomer
-               }).ToList();
+            
+            //var todayPerformance = dalContentPlatFormOrderDealInfo.GetAll()
+            //   .Where(e => e.IsDeal == true && e.ContentPlatFormOrderId != null)
+            //   .Where(e => e.CreateDate >= DateTime.Now.Date && e.CreateDate < DateTime.Now.AddDays(1).Date)
+            //   .Where(e => assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value) || assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value))
+            //   .Select(e => new
+            //   {
+            //       DealPrice = e.Price,
+            //       IsOldCustomer = e.IsOldCustomer
+            //   }).ToList();
+            var todayPerformance= await contentPlatFormOrderDealInfoService.GetPerformanceDetailByDateAndAssistantIdListAsync(DateTime.Now.Date, DateTime.Now.AddDays(1).Date, assistantIdList);
+            //var currentContentOrderList = dalContentPlatFormOrderDealInfo.GetAll()
+            //   .Where(e => e.IsDeal == true&& e.ContentPlatFormOrderId != null)
+            //   .Where(e => e.CreateDate >= sequentialDate.StartDate && e.CreateDate < sequentialDate.EndDate)
+            //   .Where(e => assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value) || assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value))
+            //   .Select(e => new
+            //   {
+            //       DealPrice = e.Price,
+            //       IsOldCustomer = e.IsOldCustomer
+            //   }).ToList();
+            var currentContentOrderList = await contentPlatFormOrderDealInfoService.GetPerformanceDetailByDateAndAssistantIdListAsync(sequentialDate.StartDate, sequentialDate.EndDate, assistantIdList);
+            //var lastMonthContentOrderList = dalContentPlatFormOrderDealInfo.GetAll()
+            //   .Where(e => e.IsDeal == true && e.ContentPlatFormOrderId != null)
+            //   .Where(e => e.CreateDate >= sequentialDate.LastMonthStartDate && e.CreateDate < sequentialDate.LastMonthEndDate)
+            //   .Where(e => assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value) || assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value))
+            //   .Select(e => new
+            //   {
+            //       DealPrice = e.Price,
+            //       IsOldCustomer = e.IsOldCustomer
+            //   }).ToList();
+            var lastMonthContentOrderList= await contentPlatFormOrderDealInfoService.GetPerformanceDetailByDateAndAssistantIdListAsync(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate, assistantIdList);
+            //var lastYearContentOrderList = dalContentPlatFormOrderDealInfo.GetAll()
+            //   .Where(e => e.IsDeal == true && e.ContentPlatFormOrderId != null)
+            //   .Where(e => e.CreateDate >= sequentialDate.LastYearThisMonthStartDate && e.CreateDate < sequentialDate.LastYearThisMonthEndDate)
+            //   .Where(e => assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value) || assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value))
+            //   .Select(e => new
+            //   {
+            //       DealPrice = e.Price,
+            //       IsOldCustomer = e.IsOldCustomer
+            //   }).ToList();
+            var lastYearContentOrderList = await contentPlatFormOrderDealInfoService.GetPerformanceDetailByDateAndAssistantIdListAsync(sequentialDate.LastYearThisMonthStartDate, sequentialDate.LastYearThisMonthEndDate, assistantIdList);
             AssistantPerformanceDto assistantPerformance = new AssistantPerformanceDto();
-            assistantPerformance.NewCustomerPerformance = currentContentOrderList.Where(e => e.IsOldCustomer == false).Sum(e => e.DealPrice);
-            assistantPerformance.OldCustomerPerformance = currentContentOrderList.Where(e => e.IsOldCustomer == true).Sum(e => e.DealPrice);
+            assistantPerformance.NewCustomerPerformance = currentContentOrderList.Where(e => e.IsOldCustomer == false).Sum(e => e.Price);
+            assistantPerformance.OldCustomerPerformance = currentContentOrderList.Where(e => e.IsOldCustomer == true).Sum(e => e.Price);
             assistantPerformance.TotalPerformance = assistantPerformance.NewCustomerPerformance + assistantPerformance.OldCustomerPerformance;
-            assistantPerformance.TodayNewCustomerPerformance = todayPerformance.Where(e => e.IsOldCustomer == false).Sum(e => e.DealPrice);
-            assistantPerformance.TodayOldCustomerPerformance = todayPerformance.Where(e => e.IsOldCustomer == true).Sum(e => e.DealPrice);
+            assistantPerformance.TodayNewCustomerPerformance = todayPerformance.Where(e => e.IsOldCustomer == false).Sum(e => e.Price);
+            assistantPerformance.TodayOldCustomerPerformance = todayPerformance.Where(e => e.IsOldCustomer == true).Sum(e => e.Price);
             assistantPerformance.TodayTotalPerformance = assistantPerformance.TodayNewCustomerPerformance + assistantPerformance.TodayOldCustomerPerformance;
-            assistantPerformance.LastMonthNewCustomerPerformance = lastMonthContentOrderList.Where(e => e.IsOldCustomer == false).Sum(e => e.DealPrice);
-            assistantPerformance.LastMonthOldCustomerPerformance = lastMonthContentOrderList.Where(e => e.IsOldCustomer == true).Sum(e => e.DealPrice);
+            assistantPerformance.LastMonthNewCustomerPerformance = lastMonthContentOrderList.Where(e => e.IsOldCustomer == false).Sum(e => e.Price);
+            assistantPerformance.LastMonthOldCustomerPerformance = lastMonthContentOrderList.Where(e => e.IsOldCustomer == true).Sum(e => e.Price);
             assistantPerformance.LastMonthTotalPerformance = assistantPerformance.LastMonthNewCustomerPerformance + assistantPerformance.LastMonthOldCustomerPerformance;
-            assistantPerformance.LastYearNewCustomerPerformance = lastYearContentOrderList.Where(e => e.IsOldCustomer == false).Sum(e => e.DealPrice);
-            assistantPerformance.LastYearOldCustomerPerformance = lastYearContentOrderList.Where(e => e.IsOldCustomer == true).Sum(e => e.DealPrice);
+            assistantPerformance.LastYearNewCustomerPerformance = lastYearContentOrderList.Where(e => e.IsOldCustomer == false).Sum(e => e.Price);
+            assistantPerformance.LastYearOldCustomerPerformance = lastYearContentOrderList.Where(e => e.IsOldCustomer == true).Sum(e => e.Price);
             assistantPerformance.LastYearTotalPerformance = assistantPerformance.LastYearNewCustomerPerformance + assistantPerformance.LastYearOldCustomerPerformance;
             assistantPerformance.NewCustomerPerformanceChain = DecimalExtension.CalculateChain(assistantPerformance.NewCustomerPerformance, assistantPerformance.LastMonthNewCustomerPerformance).Value;
             assistantPerformance.OldCustomerPerformanceChain = DecimalExtension.CalculateChain(assistantPerformance.OldCustomerPerformance, assistantPerformance.LastMonthOldCustomerPerformance).Value;
@@ -2743,20 +2748,21 @@ namespace Fx.Amiya.Service
                     EmployeeId = e.EmployeeId,
                     Target = e.NewCustomerPerformanceTarget + e.OldCustomerPerformanceTarget,
                 }).ToListAsync();
-            var currentContentOrderList = dalContentPlatFormOrderDealInfo.GetAll()
-               .Where(e => e.IsDeal == true)
-               .Where(e => e.CreateDate >= selectDate.StartDate && e.CreateDate < selectDate.EndDate)
-               .Where(e => assistantIdAndNameList.Select(e => e.Id).Contains(e.ContentPlatFormOrder.BelongEmpId.Value) || assistantIdAndNameList.Select(e => e.Id).Contains(e.ContentPlatFormOrder.BelongEmpId.Value))
-               .Select(e => new
-               {
-                   EmpId = e.ContentPlatFormOrder.IsSupportOrder ? e.ContentPlatFormOrder.SupportEmpId : e.ContentPlatFormOrder.BelongEmpId,
-                   DealPrice = e.Price,
-                   IsOldCustomer = e.IsOldCustomer
-               }).ToList();
-            var totalPerformance = currentContentOrderList.Sum(e => e.DealPrice);
+            //var currentContentOrderList = dalContentPlatFormOrderDealInfo.GetAll()
+            //   .Where(e => e.IsDeal == true)
+            //   .Where(e => e.CreateDate >= selectDate.StartDate && e.CreateDate < selectDate.EndDate)
+            //   .Where(e => assistantIdAndNameList.Select(e => e.Id).Contains(e.ContentPlatFormOrder.BelongEmpId.Value) || assistantIdAndNameList.Select(e => e.Id).Contains(e.ContentPlatFormOrder.BelongEmpId.Value))
+            //   .Select(e => new
+            //   {
+            //       EmpId = e.ContentPlatFormOrder.IsSupportOrder ? e.ContentPlatFormOrder.SupportEmpId : e.ContentPlatFormOrder.BelongEmpId,
+            //       DealPrice = e.Price,
+            //       IsOldCustomer = e.IsOldCustomer
+            //   }).ToList();
+            var currentContentOrderList =await contentPlatFormOrderDealInfoService.GetPerformanceDetailByDateAndAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, assistantIdAndNameList.Select(e=>e.Id).ToList());
+            var totalPerformance = currentContentOrderList.Sum(e => e.Price);
             foreach (var assistant in assistantIdAndNameList)
             {
-                var sumPerformance = currentContentOrderList.Where(e => e.EmpId == assistant.Id).Sum(e => e.DealPrice);
+                var sumPerformance = currentContentOrderList.Where(e => e.BelongEmployeeId == assistant.Id).Sum(e => e.Price);
                 BaseKeyValueDto<string, decimal> targetItem = new BaseKeyValueDto<string, decimal>();
                 var target = assistantTarget.Where(e => e.EmployeeId == assistant.Id).FirstOrDefault()?.Target ?? 0;
                 targetItem.Key = assistant.Name;
