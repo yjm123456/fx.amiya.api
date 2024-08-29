@@ -126,7 +126,6 @@ ALTER TABLE `amiyadb`.`tbl_customer_service_compensation`
 ADD COLUMN `addclue_complete_price` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cooperation_live_anchor_to_hospital_price`,
 ADD COLUMN `addwechat_complete_price` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `addclue_complete_price`;
 ------------------------------------余建明 2024/8/21 END--------------------------------------
---------------------------------------------------------------------------------------------------------以上部分已更新到线上--------------------------------------
 
 ------------------------------------余建明 2024/8/28 BEGIN--------------------------------------
 --助理薪资模块新增老带新奖励金额
@@ -158,3 +157,5 @@ INSERT INTO `amiyadb`.`tbl_third_part_contentplatform_info` (`id`, `name`, `crea
 --手动添加朗姿code
 INSERT INTO `amiyadb`.`tbl_hospital_contentplatform_code` (`id`, `hospital_id`, `third_part_contentplatform`, `code`, `create_date`, `valid`) VALUES ('0fca2b4b-c023-4f7d-9675-b6acf8fd8b39', '45', '0fca2b4b-c023-4f7d-9675-b6acf8fd8b31', '6406', '2024-08-28', true);
 ------------------------------------余建明 2024/8/28 END--------------------------------------
+
+--------------------------------------------------------------------------------------------------------以上部分已更新到线上--------------------------------------

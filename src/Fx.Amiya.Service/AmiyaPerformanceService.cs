@@ -3014,9 +3014,10 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         private decimal? CalculateTargetComplete(decimal completePerformance, decimal monthTarget)
         {
-            if (monthTarget == 0m)
-                return null;
+            if (monthTarget == 0m || completePerformance == 0M)
+                return 0;
             var result = Math.Round(completePerformance / monthTarget * 100, 2, MidpointRounding.AwayFromZero);
+
             if (result > 99.99M)
             {
                 result = Math.Round(result, 1, MidpointRounding.AwayFromZero);
