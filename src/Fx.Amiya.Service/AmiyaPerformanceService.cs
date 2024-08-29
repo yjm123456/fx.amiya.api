@@ -1409,6 +1409,11 @@ namespace Fx.Amiya.Service
                 {
                     LiveAnchorInfo.Add(x.Id);
                 }
+                var liveAnchorZhenLu = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync("fed06778-06f2-4c92-afee-f098b77ac81c");
+                foreach (var x in liveAnchorZhenLu)
+                {
+                    LiveAnchorInfo.Add(x.Id);
+                }
             }
             var baseOrderPerformance = await contentPlateFormOrderService.GetOrderSendAndDealDataByMonthAsync(sequentialDate.StartDate, sequentialDate.EndDate, isEffectiveCustomerData, contentPlatFormId, LiveAnchorInfo);
 
