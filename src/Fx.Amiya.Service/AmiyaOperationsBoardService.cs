@@ -2404,7 +2404,7 @@ namespace Fx.Amiya.Service
             var currentContentOrderList = await dalContentPlatFormOrderDealInfo.GetAll()
                .Where(e => e.IsDeal == true)
                .Where(e => e.CreateDate >= selectDate.StartDate && e.CreateDate < selectDate.EndDate)
-               .Where(e => assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value) || assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value))
+               .Where(e => assistantIdList.Contains(e.ContentPlatFormOrder.IsSupportOrder ? e.ContentPlatFormOrder.SupportEmpId : e.ContentPlatFormOrder.BelongEmpId.Value))
                .Select(e => new
                {
                    DealPrice = e.Price,
@@ -2417,7 +2417,7 @@ namespace Fx.Amiya.Service
                 .Select(e => new PerformanceBrokenLineListInfoDto
                 {
                     date = e.Key.Day.ToString(),
-                    Performance = DecimalExtension.ChangePriceToTenThousand(e.Sum(e => e.DealPrice))
+                    Performance = ChangePriceToTenThousand(e.Sum(e => e.DealPrice))
                 })
                 .ToList();
             var oldCustomerData = currentContentOrderList
@@ -2426,7 +2426,7 @@ namespace Fx.Amiya.Service
                 .Select(e => new PerformanceBrokenLineListInfoDto
                 {
                     date = e.Key.Day.ToString(),
-                    Performance = DecimalExtension.ChangePriceToTenThousand(e.Sum(e => e.DealPrice))
+                    Performance = ChangePriceToTenThousand(e.Sum(e => e.DealPrice))
                 })
                 .ToList();
             var totalData = currentContentOrderList
@@ -2434,7 +2434,7 @@ namespace Fx.Amiya.Service
                .Select(e => new PerformanceBrokenLineListInfoDto
                {
                    date = e.Key.Day.ToString(),
-                   Performance = DecimalExtension.ChangePriceToTenThousand(e.Sum(e => e.DealPrice))
+                   Performance = ChangePriceToTenThousand(e.Sum(e => e.DealPrice))
                })
                .ToList();
             brokenLineDto.NewCustomerPerformance = this.FillDate(query.EndDate.Year, query.EndDate.Month, newCustomerData);
@@ -2588,10 +2588,10 @@ namespace Fx.Amiya.Service
             var OldCustomerPerformance = order.Where(o => o.IsOldCustomer == true).Sum(e => e.Price);
 
             AssistantOperationBoardGetNewOrOldCustomerCompareDataDetailsDto totalPerformanceNewOrOldCustomerData = new AssistantOperationBoardGetNewOrOldCustomerCompareDataDetailsDto();
-            totalPerformanceNewOrOldCustomerData.TotalPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curTotalAchievementPrice);
-            totalPerformanceNewOrOldCustomerData.TotalPerformanceNewCustomerNumber = DecimalExtension.ChangePriceToTenThousand(NewCustomerPerformance);
+            totalPerformanceNewOrOldCustomerData.TotalPerformanceNumber = ChangePriceToTenThousand(curTotalAchievementPrice);
+            totalPerformanceNewOrOldCustomerData.TotalPerformanceNewCustomerNumber = ChangePriceToTenThousand(NewCustomerPerformance);
             totalPerformanceNewOrOldCustomerData.TotalPerformanceNewCustomerRate = DecimalExtension.CalculateTargetComplete(NewCustomerPerformance, curTotalAchievementPrice);
-            totalPerformanceNewOrOldCustomerData.TotalPerformanceOldCustomerNumber = DecimalExtension.ChangePriceToTenThousand(OldCustomerPerformance);
+            totalPerformanceNewOrOldCustomerData.TotalPerformanceOldCustomerNumber =ChangePriceToTenThousand(OldCustomerPerformance);
             totalPerformanceNewOrOldCustomerData.TotalPerformanceOldCustomerRate = DecimalExtension.CalculateTargetComplete(OldCustomerPerformance, curTotalAchievementPrice);
             result.PerformanceNewCustonerOrNoData = totalPerformanceNewOrOldCustomerData;
 
@@ -2612,10 +2612,10 @@ namespace Fx.Amiya.Service
             AssistantOperationBoardGetIsEffictivePerformanceDto totalPerformanceIsEffictiveGroupData = new AssistantOperationBoardGetIsEffictivePerformanceDto();
             var curEffictive = order.Where(x => x.AddOrderPrice > 0).Sum(x => x.Price);
             var curNotEffictive = order.Where(x => x.AddOrderPrice == 0).Sum(x => x.Price);
-            totalPerformanceIsEffictiveGroupData.TotalPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curTotalAchievementPrice);
-            totalPerformanceIsEffictiveGroupData.EffictivePerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curEffictive);
+            totalPerformanceIsEffictiveGroupData.TotalPerformanceNumber = ChangePriceToTenThousand(curTotalAchievementPrice);
+            totalPerformanceIsEffictiveGroupData.EffictivePerformanceNumber = ChangePriceToTenThousand(curEffictive);
             totalPerformanceIsEffictiveGroupData.EffictivePerformanceRate = DecimalExtension.CalculateTargetComplete(curEffictive, curTotalAchievementPrice);
-            totalPerformanceIsEffictiveGroupData.NotEffictivePerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curNotEffictive);
+            totalPerformanceIsEffictiveGroupData.NotEffictivePerformanceNumber = ChangePriceToTenThousand(curNotEffictive);
             totalPerformanceIsEffictiveGroupData.NotEffictivePerformanceRate = DecimalExtension.CalculateTargetComplete(curNotEffictive, curTotalAchievementPrice);
             result.PerformanceEffictiveOrNoData = totalPerformanceIsEffictiveGroupData;
 
@@ -2637,10 +2637,10 @@ namespace Fx.Amiya.Service
             var curHistory = HistoryCount.Sum(x => x.Price);
             var ThisMonthCount = order.Where(x => x.SendDate >= selectDate.StartDate).ToList();
             var curThisMonth = ThisMonthCount.Sum(x => x.Price);
-            totalPerformanceIsHistoryGroupData.TotalPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curTotalAchievementPrice);
-            totalPerformanceIsHistoryGroupData.HistoryPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curHistory);
+            totalPerformanceIsHistoryGroupData.TotalPerformanceNumber = ChangePriceToTenThousand(curTotalAchievementPrice);
+            totalPerformanceIsHistoryGroupData.HistoryPerformanceNumber = ChangePriceToTenThousand(curHistory);
             totalPerformanceIsHistoryGroupData.HistoryPerformanceRate = DecimalExtension.CalculateTargetComplete(curHistory, curTotalAchievementPrice);
-            totalPerformanceIsHistoryGroupData.ThisMonthPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curThisMonth);
+            totalPerformanceIsHistoryGroupData.ThisMonthPerformanceNumber = ChangePriceToTenThousand(curThisMonth);
             totalPerformanceIsHistoryGroupData.ThisMonthPerformanceRate = DecimalExtension.CalculateTargetComplete(curThisMonth, curTotalAchievementPrice);
             result.PerformanceHistoryOrNoData = totalPerformanceIsHistoryGroupData;
 
@@ -2649,8 +2649,8 @@ namespace Fx.Amiya.Service
             totalPerformanceIsHistoryNumData.ThisMonthPerformanceNumber = ThisMonthCount.Select(e => e.Phone).Distinct().Count();
             totalPerformanceIsHistoryNumData.HistoryPerformanceNumber = HistoryCount.Select(e => e.Phone).Distinct().Count();
             totalPerformanceIsHistoryNumData.TotalPerformanceNumber = totalPerformanceIsHistoryNumData.ThisMonthPerformanceNumber + totalPerformanceIsHistoryNumData.HistoryPerformanceNumber;
-            totalPerformanceIsHistoryNumData.ThisMonthPerformanceRate = DecimalExtension.CalculateTargetComplete(ThisMonthCount.Count(), totalPerformanceIsHistoryNumData.TotalPerformanceNumber.Value);
-            totalPerformanceIsHistoryNumData.HistoryPerformanceRate = DecimalExtension.CalculateTargetComplete(HistoryCount.Count(), totalPerformanceIsHistoryNumData.TotalPerformanceNumber.Value);
+            totalPerformanceIsHistoryNumData.ThisMonthPerformanceRate = DecimalExtension.CalculateTargetComplete(totalPerformanceIsHistoryNumData.ThisMonthPerformanceNumber.Value, totalPerformanceIsHistoryNumData.TotalPerformanceNumber.Value);
+            totalPerformanceIsHistoryNumData.HistoryPerformanceRate = DecimalExtension.CalculateTargetComplete(totalPerformanceIsHistoryNumData.HistoryPerformanceNumber.Value, totalPerformanceIsHistoryNumData.TotalPerformanceNumber.Value);
             result.SendOrderData = totalPerformanceIsHistoryNumData;
 
             #endregion
@@ -2684,8 +2684,8 @@ namespace Fx.Amiya.Service
             return orderDealInfo.GroupBy(x => x.LastDealHospitalId).Select(e => new AssistantHospitalPerformanceDto
             {
                 Name = hospitalInfo.Where(h => h.Id == e.Key).Select(e => e.Name).FirstOrDefault(),
-                NewCustomerPerformance = DecimalExtension.ChangePriceToTenThousand(orderDealInfo.Where(e => e.IsOldCustomer == false).Select(e => e.Price).Sum()),
-                OldCustomerPerformance = DecimalExtension.ChangePriceToTenThousand(orderDealInfo.Where(e => e.IsOldCustomer == true).Select(e => e.Price).Sum()),
+                NewCustomerPerformance = ChangePriceToTenThousand(orderDealInfo.Where(e => e.IsOldCustomer == false).Select(e => e.Price).Sum()),
+                OldCustomerPerformance = ChangePriceToTenThousand(orderDealInfo.Where(e => e.IsOldCustomer == true).Select(e => e.Price).Sum()),
             }).ToList();
             #endregion
         }
@@ -2772,6 +2772,12 @@ namespace Fx.Amiya.Service
 
         #endregion
         #region 公共类
+        private decimal ChangePriceToTenThousand(decimal performance,int unit=1) {
+            if (performance == 0m)
+                return 0;
+            var result = Math.Round((performance / 10000), unit, MidpointRounding.AwayFromZero);
+            return result;
+        }
         /// <summary>
         /// 计算对比进度,业绩偏差和后期需完成业绩
         /// </summary>
