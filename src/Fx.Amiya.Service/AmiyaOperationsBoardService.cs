@@ -2318,7 +2318,7 @@ namespace Fx.Amiya.Service
                     OldCustomerTarget = e.OldCustomerPerformanceTarget
                 }).ToListAsync();
             var todayPerformance = dalContentPlatFormOrderDealInfo.GetAll()
-               .Where(e => e.IsDeal == true)
+               .Where(e => e.IsDeal == true && e.ContentPlatFormOrderId != null)
                .Where(e => e.CreateDate >= DateTime.Now.Date && e.CreateDate < DateTime.Now.AddDays(1).Date)
                .Where(e => assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value) || assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value))
                .Select(e => new
@@ -2327,7 +2327,7 @@ namespace Fx.Amiya.Service
                    IsOldCustomer = e.IsOldCustomer
                }).ToList();
             var currentContentOrderList = dalContentPlatFormOrderDealInfo.GetAll()
-               .Where(e => e.IsDeal == true)
+               .Where(e => e.IsDeal == true&& e.ContentPlatFormOrderId != null)
                .Where(e => e.CreateDate >= sequentialDate.StartDate && e.CreateDate < sequentialDate.EndDate)
                .Where(e => assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value) || assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value))
                .Select(e => new
@@ -2336,7 +2336,7 @@ namespace Fx.Amiya.Service
                    IsOldCustomer = e.IsOldCustomer
                }).ToList();
             var lastMonthContentOrderList = dalContentPlatFormOrderDealInfo.GetAll()
-               .Where(e => e.IsDeal == true)
+               .Where(e => e.IsDeal == true && e.ContentPlatFormOrderId != null)
                .Where(e => e.CreateDate >= sequentialDate.LastMonthStartDate && e.CreateDate < sequentialDate.LastMonthEndDate)
                .Where(e => assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value) || assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value))
                .Select(e => new
@@ -2345,7 +2345,7 @@ namespace Fx.Amiya.Service
                    IsOldCustomer = e.IsOldCustomer
                }).ToList();
             var lastYearContentOrderList = dalContentPlatFormOrderDealInfo.GetAll()
-               .Where(e => e.IsDeal == true)
+               .Where(e => e.IsDeal == true && e.ContentPlatFormOrderId != null)
                .Where(e => e.CreateDate >= sequentialDate.LastYearThisMonthStartDate && e.CreateDate < sequentialDate.LastYearThisMonthEndDate)
                .Where(e => assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value) || assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value))
                .Select(e => new
@@ -2363,8 +2363,8 @@ namespace Fx.Amiya.Service
             assistantPerformance.LastMonthNewCustomerPerformance = lastMonthContentOrderList.Where(e => e.IsOldCustomer == false).Sum(e => e.DealPrice);
             assistantPerformance.LastMonthOldCustomerPerformance = lastMonthContentOrderList.Where(e => e.IsOldCustomer == true).Sum(e => e.DealPrice);
             assistantPerformance.LastMonthTotalPerformance = assistantPerformance.LastMonthNewCustomerPerformance + assistantPerformance.LastMonthOldCustomerPerformance;
-            assistantPerformance.LastYearNewCustomerPerformance = lastMonthContentOrderList.Where(e => e.IsOldCustomer == false).Sum(e => e.DealPrice);
-            assistantPerformance.LastYearOldCustomerPerformance = lastMonthContentOrderList.Where(e => e.IsOldCustomer == true).Sum(e => e.DealPrice);
+            assistantPerformance.LastYearNewCustomerPerformance = lastYearContentOrderList.Where(e => e.IsOldCustomer == false).Sum(e => e.DealPrice);
+            assistantPerformance.LastYearOldCustomerPerformance = lastYearContentOrderList.Where(e => e.IsOldCustomer == true).Sum(e => e.DealPrice);
             assistantPerformance.LastYearTotalPerformance = assistantPerformance.LastYearNewCustomerPerformance + assistantPerformance.LastYearOldCustomerPerformance;
             assistantPerformance.NewCustomerPerformanceChain = DecimalExtension.CalculateChain(assistantPerformance.NewCustomerPerformance, assistantPerformance.LastMonthNewCustomerPerformance).Value;
             assistantPerformance.OldCustomerPerformanceChain = DecimalExtension.CalculateChain(assistantPerformance.OldCustomerPerformance, assistantPerformance.LastMonthOldCustomerPerformance).Value;

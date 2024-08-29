@@ -1025,7 +1025,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 NewCustomerPerformance = e.NewCustomerPerformance,
                 OldCustomerPerformance = e.OldCustomerPerformance,
                 TotalPerformance = e.TotalPerformance
-            }).ToList();
+            }).OrderByDescending(e=>e.TotalPerformance).ToList();
             return ResultData<List<AssistantHospitalPerformanceVo>>.Success().AddData("data", result);
         }
         /// <summary>

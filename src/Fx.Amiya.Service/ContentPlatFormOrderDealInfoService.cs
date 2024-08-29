@@ -2331,6 +2331,7 @@ namespace Fx.Amiya.Service
             .Where(o => assistantId.Count == 0 || (o.ContentPlatFormOrder.IsSupportOrder == true && assistantId.Contains(o.ContentPlatFormOrder.SupportEmpId)))
             .Select(ContentPlatFOrmOrderDealInfo => new ContentPlatFormOrderDealInfoDto
             {
+                Phone = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.Phone,
                 BelongEmployeeId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.SupportEmpId,
                 Price = ContentPlatFOrmOrderDealInfo.Price,
                 IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer,
