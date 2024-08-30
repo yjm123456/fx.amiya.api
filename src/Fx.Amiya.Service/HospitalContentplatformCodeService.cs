@@ -34,7 +34,9 @@ namespace Fx.Amiya.Service
         public async Task<FxPageInfo<HospitalContentplatformCodeDto>> GetListAsync(QueryHospitalContentplatformCodeDto query)
         {
             var hospitalContentplatformCodes = from d in dalHospitalContentplatformCode.GetAll().Include(x => x.HospitalInfo).Include(x => x.ThirdPartContentplatformInfo)
-                                               where (d.Valid == true && d.HospitalId == query.HospitalId && d.ThirdPartContentplatformInfoId == query.ThirdPartContentplatformInfoId)
+                                               where (d.Valid == true)
+                                               && (query.HospitalId == 0 || d.HospitalId == query.HospitalId)
+                                               && (string.IsNullOrEmpty(query.ThirdPartContentplatformInfoId) || d.ThirdPartContentplatformInfoId == query.ThirdPartContentplatformInfoId)
                                                && (string.IsNullOrEmpty(query.KeyWord) || d.Code.Contains(query.KeyWord))
                                                select new HospitalContentplatformCodeDto
                                                {
@@ -46,6 +48,7 @@ namespace Fx.Amiya.Service
                                                    ThirdPartContentplatformInfoId = d.ThirdPartContentplatformInfoId,
                                                    ThirdPartContentplatformInfoName = d.ThirdPartContentplatformInfo.Name,
                                                    HospitalId = d.HospitalId,
+                                                   Code=d.Code,
                                                    HospitalName = d.HospitalInfo.Name,
                                                };
             FxPageInfo<HospitalContentplatformCodeDto> hospitalContentplatformCodePageInfo = new FxPageInfo<HospitalContentplatformCodeDto>();
@@ -141,7 +144,7 @@ namespace Fx.Amiya.Service
             if (result == null)
                 throw new Exception("未找到三方平台医院编码信息");
             var isExist = await dalHospitalContentplatformCode.GetAll()
-                           .Where(d => d.Valid == true && d.HospitalId == updateDto.HospitalId && d.ThirdPartContentplatformInfoId == updateDto.ThirdPartContentplatformInfoId).ToListAsync();
+                           .Where(d => d.Valid == true && d.Id != updateDto.Id && d.HospitalId == updateDto.HospitalId && d.ThirdPartContentplatformInfoId == updateDto.ThirdPartContentplatformInfoId).ToListAsync();
             if (isExist.Count() > 0)
             {
                 throw new Exception("该平台已存在相同医院数据，请重新确认后添加！");

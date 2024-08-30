@@ -87,6 +87,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       ThirdPartContentplatformInfoName = d.ThirdPartContentplatformInfoName,
                                                       HospitalId = d.HospitalId,
                                                       HospitalName = d.HospitalName,
+                                                      Code = d.Code
                                                   };
 
                 FxPageInfo<HospitalContentplatformCodeVo> pageInfo = new FxPageInfo<HospitalContentplatformCodeVo>();

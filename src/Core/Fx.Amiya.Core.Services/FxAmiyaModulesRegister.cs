@@ -54,8 +54,11 @@ namespace Fx.Amiya.Core.Services
             {
                 try
                 {
-                    var r = a.DefinedTypes;
-                    targentAssembly.Add(a);
+                    if (a != null)
+                    {
+                        var r = a.DefinedTypes;
+                        targentAssembly.Add(a);
+                    }
                 }
                 catch (Exception)
                 {

@@ -267,6 +267,11 @@ namespace Fx.Amiya.Service
                 {
                     shoppingCartRegistration.BaseLiveAnchorId = baseLiveAnchorId.LiveAnchorBaseId;
                 }
+                var isExistPhone = await this.GetByPhoneAsync(addDto.Phone);
+                if (!string.IsNullOrEmpty(isExistPhone.Id) && isExistPhone.BaseLiveAnchorId == baseLiveAnchorId.LiveAnchorBaseId)
+                {
+                    throw new Exception("已存在该客户手机号" + addDto.Phone + "，无法录入，请重新填写！");
+                }
                 await dalShoppingCartRegistration.AddAsync(shoppingCartRegistration, true);
 
                 //unitOfWork.Commit();
@@ -332,6 +337,11 @@ namespace Fx.Amiya.Service
                     if (!string.IsNullOrEmpty(baseLiveAnchorId.LiveAnchorBaseId))
                     {
                         shoppingCartRegistration.BaseLiveAnchorId = baseLiveAnchorId.LiveAnchorBaseId;
+                    }
+                    var isExistPhone = await this.GetByPhoneAsync(addDto.Phone);
+                    if (!string.IsNullOrEmpty(isExistPhone.Id) && isExistPhone.BaseLiveAnchorId == baseLiveAnchorId.LiveAnchorBaseId)
+                    {
+                        throw new Exception("已存在该客户手机号" + addDto.Phone + "，无法录入，请重新填写！");
                     }
                     await dalShoppingCartRegistration.AddAsync(shoppingCartRegistration, true);
                     Thread.Sleep(1000);
@@ -648,6 +658,12 @@ namespace Fx.Amiya.Service
                 if (!string.IsNullOrEmpty(baseLiveAnchorId.LiveAnchorBaseId))
                 {
                     shoppingCartRegistration.BaseLiveAnchorId = baseLiveAnchorId.LiveAnchorBaseId;
+                }
+
+                var isExistPhone = await this.GetByPhoneAsync(updateDto.Phone);
+                if (!string.IsNullOrEmpty(isExistPhone.Id) && isExistPhone.BaseLiveAnchorId == baseLiveAnchorId.LiveAnchorBaseId)
+                {
+                    throw new Exception("已存在该客户手机号" + updateDto.Phone + "，无法录入，请重新填写！");
                 }
                 await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
             }
@@ -1445,7 +1461,7 @@ namespace Fx.Amiya.Service
                         IsReturnBackPrice = d.IsReturnBackPrice,
                         AssignEmpId = d.AssignEmpId,
                         IsAddWeChat = d.IsAddWeChat,
-                        IsSendOrder=d.IsSendOrder
+                        IsSendOrder = d.IsSendOrder
                     };
             return await x.ToListAsync();
         }
@@ -1457,7 +1473,7 @@ namespace Fx.Amiya.Service
         /// <param name="isEffectiveCustomerData"></param>
         /// <param name="assistantIdList"></param>
         /// <returns></returns>
-        public async Task<List<ShoppingCartRegistrationDto>> GetShopCartRegisterPerformanceByAssistantIdListAsync(DateTime startDate, DateTime endDate,bool? isEffectiveCustomerData, List<int> assistantIdList)
+        public async Task<List<ShoppingCartRegistrationDto>> GetShopCartRegisterPerformanceByAssistantIdListAsync(DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, List<int> assistantIdList)
         {
 
             var result = from d in dalShoppingCartRegistration.GetAll()
@@ -2205,13 +2221,13 @@ namespace Fx.Amiya.Service
         /// <param name="endDate"></param>
         /// <param name="baseLiveAnchorId"></param>
         /// <returns></returns>
-        public async Task<List<ShoppingCartRegistrationIndicatorBaseDataDto>> GetAssitantFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate, bool? isCurrentMonth,string baseLiveAnchorId, List<string> contentPlatformIds)
+        public async Task<List<ShoppingCartRegistrationIndicatorBaseDataDto>> GetAssitantFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate, bool? isCurrentMonth, string baseLiveAnchorId, List<string> contentPlatformIds)
         {
             var nameList = await liveAnchorBaseInfoService.GetValidAsync(true);
             var liveanchorIds = new List<string>();
             if (string.IsNullOrEmpty(baseLiveAnchorId))
             {
-                liveanchorIds = nameList.Where(e => e.LiveAnchorName.Contains("刀刀") || e.LiveAnchorName.Contains("吉娜")|| e.LiveAnchorName.Contains("璐璐")).Select(e => e.Id).ToList();
+                liveanchorIds = nameList.Where(e => e.LiveAnchorName.Contains("刀刀") || e.LiveAnchorName.Contains("吉娜") || e.LiveAnchorName.Contains("璐璐")).Select(e => e.Id).ToList();
             }
             else
             {
