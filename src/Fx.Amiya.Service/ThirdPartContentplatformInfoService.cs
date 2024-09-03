@@ -35,17 +35,19 @@ namespace Fx.Amiya.Service
         {
             AmiyaEmployeeDto employeeInfo = new AmiyaEmployeeDto();
             var thirdPartContentplatformInfos = from d in dalThirdPartContentplatformInfo.GetAll()
-                               where  (string.IsNullOrEmpty(query.KeyWord) || d.Name.Contains(query.KeyWord))
-                               && (d.Valid == query.Valid)
-                               select new ThirdPartContentplatformInfoDto
-                               {
-                                   Id = d.Id,
-                                   CreateDate = d.CreateDate,
-                                   UpdateDate = d.UpdateDate,
-                                   Valid = d.Valid,
-                                   DeleteDate = d.DeleteDate,
-                                   Name = d.Name,
-                               };
+                                                where (string.IsNullOrEmpty(query.KeyWord) || d.Name.Contains(query.KeyWord))
+                                                && (d.Valid == query.Valid)
+                                                select new ThirdPartContentplatformInfoDto
+                                                {
+                                                    Id = d.Id,
+                                                    CreateDate = d.CreateDate,
+                                                    UpdateDate = d.UpdateDate,
+                                                    Valid = d.Valid,
+                                                    DeleteDate = d.DeleteDate,
+                                                    Name = d.Name,
+                                                    ApiUrl = d.ApiUrl,
+                                                    Sign = d.Sign,
+                                                };
             FxPageInfo<ThirdPartContentplatformInfoDto> thirdPartContentplatformInfoPageInfo = new FxPageInfo<ThirdPartContentplatformInfoDto>();
             thirdPartContentplatformInfoPageInfo.TotalCount = await thirdPartContentplatformInfos.CountAsync();
             thirdPartContentplatformInfoPageInfo.List = await thirdPartContentplatformInfos.OrderByDescending(x => x.CreateDate).Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToListAsync();
@@ -67,6 +69,8 @@ namespace Fx.Amiya.Service
                 thirdPartContentplatformInfo.CreateDate = DateTime.Now;
                 thirdPartContentplatformInfo.Valid = true;
                 thirdPartContentplatformInfo.Name = addDto.Name;
+                thirdPartContentplatformInfo.ApiUrl = addDto.ApiUrl;
+                thirdPartContentplatformInfo.Sign = addDto.Sign;
                 await dalThirdPartContentplatformInfo.AddAsync(thirdPartContentplatformInfo, true);
 
             }
@@ -91,7 +95,26 @@ namespace Fx.Amiya.Service
             returnResult.CreateDate = result.CreateDate;
             returnResult.Valid = result.Valid;
             returnResult.Name = result.Name;
+            returnResult.ApiUrl = result.ApiUrl;
+            returnResult.Sign = result.Sign;
+            return returnResult;
+        }
 
+        public async Task<ThirdPartContentplatformInfoDto> GetByNameAsync(string name)
+        {
+            var result = await dalThirdPartContentplatformInfo.GetAll().Where(x => x.Name == name && x.Valid == true).FirstOrDefaultAsync();
+            if (result == null)
+            {
+                return new ThirdPartContentplatformInfoDto();
+            }
+
+            ThirdPartContentplatformInfoDto returnResult = new ThirdPartContentplatformInfoDto();
+            returnResult.Id = result.Id;
+            returnResult.CreateDate = result.CreateDate;
+            returnResult.Valid = result.Valid;
+            returnResult.Name = result.Name;
+            returnResult.ApiUrl = result.ApiUrl;
+            returnResult.Sign = result.Sign;
             return returnResult;
         }
 
@@ -108,6 +131,8 @@ namespace Fx.Amiya.Service
             if (result == null)
                 throw new Exception("未找到三方平台信息信息");
 
+            result.ApiUrl = updateDto.ApiUrl;
+            result.Sign = updateDto.Sign;
             result.Name = updateDto.Name;
             result.UpdateDate = DateTime.Now;
             await dalThirdPartContentplatformInfo.UpdateAsync(result, true);
@@ -145,12 +170,12 @@ namespace Fx.Amiya.Service
         public async Task<List<BaseKeyValueDto>> GetValidListAsync()
         {
             var thirdPartContentplatformInfos = from d in dalThirdPartContentplatformInfo.GetAll()
-                               where (d.Valid == true)
-                               select new BaseKeyValueDto
-                               {
-                                   Key = d.Id,
-                                   Value = d.Name
-                               };
+                                                where (d.Valid == true)
+                                                select new BaseKeyValueDto
+                                                {
+                                                    Key = d.Id,
+                                                    Value = d.Name
+                                                };
             List<BaseKeyValueDto> thirdPartContentplatformInfoPageInfo = new List<BaseKeyValueDto>();
             thirdPartContentplatformInfoPageInfo = await thirdPartContentplatformInfos.ToListAsync();
             return thirdPartContentplatformInfoPageInfo;

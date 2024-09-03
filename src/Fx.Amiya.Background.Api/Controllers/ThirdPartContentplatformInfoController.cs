@@ -57,15 +57,17 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryDto.KeyWord = query.KeyWord;
                 var q = await thirdPartContentplatformInfoService.GetListAsync(queryDto);
                 var thirdPartContentplatformInfo = from d in q.List
-                                  select new ThirdPartContentplatformInfoVo
-                                  {
-                                      Id = d.Id,
-                                      CreateDate = d.CreateDate,
-                                      UpdateDate = d.UpdateDate,
-                                      Valid = d.Valid,
-                                      DeleteDate = d.DeleteDate,
-                                      Name = d.Name,
-                                  };
+                                                   select new ThirdPartContentplatformInfoVo
+                                                   {
+                                                       Id = d.Id,
+                                                       CreateDate = d.CreateDate,
+                                                       UpdateDate = d.UpdateDate,
+                                                       Valid = d.Valid,
+                                                       DeleteDate = d.DeleteDate,
+                                                       Name = d.Name,
+                                                       ApiUrl = d.ApiUrl,
+                                                       Sign = d.Sign,
+                                                   };
 
                 FxPageInfo<ThirdPartContentplatformInfoVo> pageInfo = new FxPageInfo<ThirdPartContentplatformInfoVo>();
                 pageInfo.TotalCount = q.TotalCount;
@@ -95,6 +97,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 AddThirdPartContentplatformInfoDto addDto = new AddThirdPartContentplatformInfoDto();
                 addDto.Name = addVo.Name;
+                addDto.ApiUrl = addVo.ApiUrl;
+                addDto.Sign = addVo.Sign;
                 await thirdPartContentplatformInfoService.AddAsync(addDto);
 
                 return ResultData.Success();
@@ -123,6 +127,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 thirdPartContentplatformInfoVo.CreateDate = thirdPartContentplatformInfo.CreateDate;
                 thirdPartContentplatformInfoVo.Valid = thirdPartContentplatformInfo.Valid;
                 thirdPartContentplatformInfoVo.Name = thirdPartContentplatformInfo.Name;
+                thirdPartContentplatformInfoVo.ApiUrl = thirdPartContentplatformInfo.ApiUrl;
+                thirdPartContentplatformInfoVo.Sign = thirdPartContentplatformInfo.Sign;
                 return ResultData<ThirdPartContentplatformInfoVo>.Success().AddData("thirdPartContentplatformInfo", thirdPartContentplatformInfoVo);
             }
             catch (Exception ex)
@@ -147,6 +153,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 UpdateThirdPartContentplatformInfoDto updateDto = new UpdateThirdPartContentplatformInfoDto();
                 updateDto.Id = updateVo.Id;
                 updateDto.Name = updateVo.Name;
+                updateDto.ApiUrl = updateVo.ApiUrl;
+                updateDto.Sign = updateVo.Sign;
                 await thirdPartContentplatformInfoService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -190,11 +198,11 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 var q = await thirdPartContentplatformInfoService.GetValidListAsync();
                 var thirdPartContentplatformInfo = from d in q
-                                  select new BaseIdAndNameVo
-                                  {
-                                      Id = d.Key,
-                                      Name = d.Value,
-                                  };
+                                                   select new BaseIdAndNameVo
+                                                   {
+                                                       Id = d.Key,
+                                                       Name = d.Value,
+                                                   };
 
                 return ResultData<List<BaseIdAndNameVo>>.Success().AddData("thirdPartContentplatformInfo", thirdPartContentplatformInfo.ToList());
             }

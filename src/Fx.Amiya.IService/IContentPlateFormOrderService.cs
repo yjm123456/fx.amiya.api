@@ -189,6 +189,12 @@ namespace Fx.Amiya.IService
         /// <param name="input"></param>
         /// <returns></returns>
         Task UpdateContentPlateFormOrderAsync(ContentPlateFormOrderUpdateDto input);
+        /// <summary>
+        /// 更新订单（朗姿专用接口）
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task UpdateOrderByLangZiAsync(UpdateOrderByLangZiDto input);
 
         /// <summary>
         /// 审核订单

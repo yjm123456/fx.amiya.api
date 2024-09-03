@@ -10,5 +10,15 @@ namespace Fx.Amiya.Dto.ThirdPartContentplatformInfo.Input
     {
         public string Id { get; set; }
         public string Name { get; set; }
+
+        /// <summary>
+        /// api地址
+        /// </summary>
+        public string ApiUrl { get; set; }
+
+        /// <summary>
+        /// 签名
+        /// </summary>
+        public string Sign { get; set; }
     }
 }

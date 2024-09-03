@@ -11,6 +11,16 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// api地址
+        /// </summary>
+        public string ApiUrl { get; set; }
+
+        /// <summary>
+        /// 签名
+        /// </summary>
+        public string Sign { get; set; }
+
         public List<HospitalContentplatformCode> HospitalContentplatformCodeList { get; set; }
     }
 }

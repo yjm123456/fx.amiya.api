@@ -71,6 +71,12 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task UpdateOrderSend(UpdateContentPlatFormSendOrderInfoDto updateDto, int employeeId);
         /// <summary>
+        /// 朗姿修改派单专用接口
+        /// </summary>
+        /// <param name="updateDto"></param>
+        /// <returns></returns>
+        Task UpdateByLangZiAsync(UpdateContentPlatFormOrderSendByLangZiDto updateDto);
+        /// <summary>
         /// 新的修改派单
         /// </summary>
         /// <param name="updateDto"></param>

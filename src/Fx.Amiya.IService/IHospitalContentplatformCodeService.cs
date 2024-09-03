@@ -24,6 +24,8 @@ namespace Fx.Amiya.IService
 
         Task<HospitalContentplatformCodeDto> GetByHospitalIdAndThirdPartContentPlatformIdAsync(int hospitalId, string ThirdPartContentPlatFormId);
 
+        Task<HospitalContentplatformCodeDto> GetByHospitalCodeAndThirdPartContentPlatformIdAsync(string HospitalCode, string ThirdPartContentPlatFormId);
+
         Task UpdateAsync(UpdateHospitalContentplatformCodeDto updateDto);
         Task DeleteAsync(string id, int empId);
     }

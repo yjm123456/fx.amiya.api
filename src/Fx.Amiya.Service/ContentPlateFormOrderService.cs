@@ -2196,6 +2196,28 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
+        /// 更新订单（朗姿专用接口）
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task UpdateOrderByLangZiAsync(UpdateOrderByLangZiDto input)
+        {
+
+            var order = await _dalContentPlatformOrder.GetAll().Where(x => x.Id == input.OrderId).SingleOrDefaultAsync();
+            if (order == null)
+            {
+                throw new Exception("未找到该订单的相关信息！");
+            }
+            order.OrderStatus = input.OrderStatus;
+            order.IsRepeatProfundityOrder = input.IsRepeateOrder;
+            order.UpdateDate = input.UpdateDate;
+            order.AcceptConsulting = input.HospitalConsulationEmployeeName;
+            order.RepeatOrderPictureUrl = input.RepeateOrderPicture;
+            await _dalContentPlatformOrder.UpdateAsync(order, true);
+
+        }
+
+        /// <summary>
         /// 审核订单
         /// </summary>
         /// <param name="input"></param>
@@ -3274,7 +3296,7 @@ namespace Fx.Amiya.Service
 
         #region 【报表相关】
         public async Task<List<SendContentPlatformOrderDto>> GetSendOrderReportList(int? liveAnchorId, int employeeId, int belongEmpId, int? orderStatus
-     , string contentPlatFormId, DateTime? startDate, DateTime? endDate, bool isHidePhone)
+        , string contentPlatFormId, DateTime? startDate, DateTime? endDate, bool isHidePhone)
         {
             var orders = _dalContentPlatformOrder.GetAll()
                        .Where(e => belongEmpId == -1 || e.BelongEmpId == belongEmpId)
@@ -4160,8 +4182,8 @@ namespace Fx.Amiya.Service
         {
             OrderSendAndDealNumDto orderData = new OrderSendAndDealNumDto();
             orderData.SendOrderNum = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList)
-                .Where(e => e.ContentPlatformOrderSendList.Where(o=>o.IsMainHospital==true&&o.SendDate>=startDate&&o.SendDate<endDate).Count() == 1)
-                .Where(e => assistantIds.Count == 0 || assistantIds.Contains(e.IsSupportOrder==true ? e.SupportEmpId : e.BelongEmpId.Value))
+                .Where(e => e.ContentPlatformOrderSendList.Where(o => o.IsMainHospital == true && o.SendDate >= startDate && o.SendDate < endDate).Count() == 1)
+                .Where(e => assistantIds.Count == 0 || assistantIds.Contains(e.IsSupportOrder == true ? e.SupportEmpId : e.BelongEmpId.Value))
                 //.Where(o => o.SendDate >= startDate && o.SendDate < endDate)
                 .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsOldCustomer == false)
                 .Where(o => (!isEffectiveCustomerData.HasValue || (isEffectiveCustomerData.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0)))

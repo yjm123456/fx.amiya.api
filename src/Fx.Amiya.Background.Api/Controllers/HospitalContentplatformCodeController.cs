@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Fx.Amiya.Background.Api.Vo.HospitalContentplatformCode.Input;
 using Fx.Amiya.Background.Api.Vo.HospitalContentplatformCode.Result;
 using Fx.Amiya.Background.Api.Vo.ThirdPartContentplatformInfo.Input;
+using Fx.Amiya.Dto.ContentPlateFormOrder;
+using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.Dto.HospitalContentplatformCode.Input;
 using Fx.Amiya.Dto.OperationLog;
 using Fx.Amiya.IService;
@@ -29,28 +31,25 @@ namespace Fx.Amiya.Background.Api.Controllers
     {
         private IHospitalContentplatformCodeService hospitalContentplatformCodeService;
         private readonly IContentPlateFormOrderService contentPlateFormOrderService;
-        private readonly ICustomerService customerService;
-        private readonly IWxAppConfigService _wxAppConfigService;
         private IHttpContextAccessor _httpContextAccessor;
-        private IPermissionService permissionService;
         private IOperationLogService operationLogService;
+        private IContentPlatformOrderSendService contentPlatformOrderSendService;
+        private IThirdPartContentplatformInfoService thirdPartContentplatformInfoService;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="hospitalContentplatformCodeService"></param>
         /// <param name="contentPlateFormOrderService"></param>
-        /// <param name="customerService"></param>
         /// <param name="wxAppConfigService"></param>
-        public HospitalContentplatformCodeController(IHospitalContentplatformCodeService hospitalContentplatformCodeService, IContentPlateFormOrderService contentPlateFormOrderService, ICustomerService customerService, IHttpContextAccessor httpContextAccessor, IPermissionService permissionService, IWxAppConfigService wxAppConfigService, IOperationLogService operationLogService)
+        public HospitalContentplatformCodeController(IHospitalContentplatformCodeService hospitalContentplatformCodeService, IContentPlateFormOrderService contentPlateFormOrderService, IHttpContextAccessor httpContextAccessor, IContentPlatformOrderSendService contentPlatformOrderSendService, IOperationLogService operationLogService, IThirdPartContentplatformInfoService thirdPartContentplatformInfoService)
         {
             this.hospitalContentplatformCodeService = hospitalContentplatformCodeService;
             this.contentPlateFormOrderService = contentPlateFormOrderService;
-            this.customerService = customerService;
-            this._wxAppConfigService = wxAppConfigService;
             this._httpContextAccessor = httpContextAccessor;
-            this.permissionService = permissionService;
             this.operationLogService = operationLogService;
+            this.contentPlatformOrderSendService = contentPlatformOrderSendService;
+            this.thirdPartContentplatformInfoService = thirdPartContentplatformInfoService;
         }
 
         /// <summary>
@@ -220,7 +219,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var url = "https://ymp9.lancygroup.com/out/PIC_1019/210";
+                var thirdcontentPlatformInfo = await thirdPartContentplatformInfoService.GetByNameAsync("朗姿");
+                var url = thirdcontentPlatformInfo.ApiUrl;
                 QuerySendOrderDataByLangZiVo queryData = new QuerySendOrderDataByLangZiVo();
                 queryData.FWSID = "E-31-31446";
                 queryData.USERID = "INTAMY";
@@ -259,7 +259,89 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// 管理端根据医院id和派单编号进行改单-朗姿
+        /// </summary>
+        /// <param name="updateVo"></param>
+        /// <returns></returns>
+        [HttpPut("updateOrderStatusByLangZi")]
+        public async Task<ResultData<UpdateOrderStatusResultVo>> UpdateOrderStatusByLangZiAsync([FromBody] UpdateOrderStatusVo updateVo)
+        {
+            try
+            {
+                UpdateOrderStatusResultVo result = new UpdateOrderStatusResultVo();
+                int orderStatus = 0;
+                var thirdcontentPlatformInfo = await thirdPartContentplatformInfoService.GetByNameAsync("朗姿");
+                string SignMsg = thirdcontentPlatformInfo.Sign;
+                //todo（验证签名）
+                UpdateOrderStatusBaseVo updateOrderStatusBaseVo = new UpdateOrderStatusBaseVo();
+                updateOrderStatusBaseVo.JGBM = updateVo.JGBM;
+                updateOrderStatusBaseVo.PDBH = updateVo.PDBH;
+                updateOrderStatusBaseVo.SFJD = updateVo.SFJD;
+                updateOrderStatusBaseVo.SFCD = updateVo.SFCD;
+                updateOrderStatusBaseVo.RepeateOrderPicture = updateVo.RepeateOrderPicture;
+                updateOrderStatusBaseVo.JGWZID = updateVo.JGWZID;
+                updateOrderStatusBaseVo.JGWZNM = updateVo.JGWZNM;
+                updateOrderStatusBaseVo.JDRQ = updateVo.JDRQ;
+                updateOrderStatusBaseVo.YL1 = updateVo.YL1;
+                updateOrderStatusBaseVo.YL2 = updateVo.YL2;
+                var jsonData = JsonConvert.SerializeObject(updateOrderStatusBaseVo);
+                var signData = MD5Helper.Get32MD5One(jsonData + SignMsg);
+                if (signData != updateVo.Sign)
+                {
+                    throw new Exception("签名验证失败，返回签名:'" + updateVo.Sign + "'验证有误，请重新确认上传参数进行验证！");
+                }
 
+                if (updateVo.SFJD == true)
+                {
+                    if (updateVo.SFCD == true)
+                    {
+                        orderStatus = (int)ContentPlateFormOrderStatus.RepeatOrderProfundity;
+                    }
+                    else
+                    {
+                        orderStatus = (int)ContentPlateFormOrderStatus.ConfirmOrder;
+                    }
+                }
+                else
+                {
+                    orderStatus = (int)ContentPlateFormOrderStatus.RepeatOrder;
+                }
+                var hospitalContentPlatformCode = await hospitalContentplatformCodeService.GetByHospitalCodeAndThirdPartContentPlatformIdAsync(updateVo.JGBM, "0fca2b4b-c023-4f7d-9675-b6acf8fd8b31");
+                var hospitalId = hospitalContentPlatformCode.HospitalId;
+                var contentPlatformOrderSendInfo = await contentPlatformOrderSendService.GetByIdAsync(Convert.ToInt32(updateVo.PDBH));
+                if (contentPlatformOrderSendInfo == null)
+                {
+                    throw new Exception("派单编号错误，请重新请求接口！");
+                }
+                //改派单状态
+                UpdateContentPlatFormOrderSendByLangZiDto updateContentPlatFormOrderSendByLangZiDto = new UpdateContentPlatFormOrderSendByLangZiDto();
+                updateContentPlatFormOrderSendByLangZiDto.Id = Convert.ToInt32(updateVo.PDBH);
+                updateContentPlatFormOrderSendByLangZiDto.HospitalRemark = updateVo.YL1 + ";" + updateVo.YL2 + ";";
+                updateContentPlatFormOrderSendByLangZiDto.OrderStatus = orderStatus;
+                updateContentPlatFormOrderSendByLangZiDto.IsRepeatProfundityOrder = updateVo.SFCD;
+                await contentPlatformOrderSendService.UpdateByLangZiAsync(updateContentPlatFormOrderSendByLangZiDto);
+
+                //改订单状态
+                var orderId = contentPlatformOrderSendInfo.ContentPlatFormOrderId;
+                var orderInfo = await contentPlateFormOrderService.GetByOrderIdAsync(orderId);
+                UpdateOrderByLangZiDto updateOrderByLangZiDto = new UpdateOrderByLangZiDto();
+                updateOrderByLangZiDto.OrderId = orderId;
+                updateOrderByLangZiDto.HospitalConsulationEmployeeName = updateVo.JGWZNM;
+                updateOrderByLangZiDto.OrderStatus = orderStatus;
+                updateOrderByLangZiDto.IsRepeateOrder = updateVo.SFCD;
+                updateOrderByLangZiDto.UpdateDate = updateVo.JDRQ;
+                updateOrderByLangZiDto.RepeateOrderPicture = updateVo.RepeateOrderPicture;
+                await contentPlateFormOrderService.UpdateOrderByLangZiAsync(updateOrderByLangZiDto);
+                result.JGBM = updateVo.JGBM;
+                result.PDBH = updateVo.PDBH;
+                return ResultData<UpdateOrderStatusResultVo>.Success().AddData("updateOrderStatusResult", result);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<UpdateOrderStatusResultVo>.Fail(ex.Message);
+            }
+        }
 
     }
 }

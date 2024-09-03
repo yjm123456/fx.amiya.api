@@ -21,6 +21,7 @@ namespace Fx.Amiya.IService
         Task<FxPageInfo<ThirdPartContentplatformInfoDto>> GetListAsync(QueryThirdPartContentplatformInfoDto query);
         Task AddAsync(AddThirdPartContentplatformInfoDto addDto);
         Task<ThirdPartContentplatformInfoDto> GetByIdAsync(string id);
+        Task<ThirdPartContentplatformInfoDto> GetByNameAsync(string name);
         Task UpdateAsync(UpdateThirdPartContentplatformInfoDto updateDto);
         Task DeleteAsync(string id);
         Task<List<BaseKeyValueDto>> GetValidListAsync();

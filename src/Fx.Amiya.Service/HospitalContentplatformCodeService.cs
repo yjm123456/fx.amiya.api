@@ -131,7 +131,23 @@ namespace Fx.Amiya.Service
             return returnResult;
         }
 
+        public async Task<HospitalContentplatformCodeDto> GetByHospitalCodeAndThirdPartContentPlatformIdAsync(string HospitalCode, string ThirdPartContentPlatFormId)
+        {
+            var result = await dalHospitalContentplatformCode.GetAll().Include(x => x.HospitalInfo).Include(x => x.ThirdPartContentplatformInfo).Where(x => x.Code == HospitalCode && x.ThirdPartContentplatformInfoId == ThirdPartContentPlatFormId && x.Valid == true).FirstOrDefaultAsync();
+            if (result == null)
+            {
+                throw new Exception("未找到'" + result.ThirdPartContentplatformInfo.Name + "'平台的'" + result.HospitalInfo.Name + "'配置信息!");
+            }
 
+            HospitalContentplatformCodeDto returnResult = new HospitalContentplatformCodeDto();
+            returnResult.Id = result.Id;
+            returnResult.CreateDate = result.CreateDate;
+            returnResult.Valid = result.Valid;
+            returnResult.HospitalId = result.HospitalId;
+            returnResult.ThirdPartContentplatformInfoId = result.ThirdPartContentplatformInfoId;
+            returnResult.Code = result.Code;
+            return returnResult;
+        }
 
         /// <summary>
         /// 修改三方平台医院编码
