@@ -56,7 +56,7 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalContentplatformCode.Input
         /// <summary>
         /// 接单日期
         /// </summary>
-        public DateTime JDRQ { get; set; }
+        public string JDRQ { get; set; }
 
         /// <summary>
         /// 预留字段1

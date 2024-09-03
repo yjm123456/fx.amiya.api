@@ -1260,6 +1260,8 @@ namespace Fx.Amiya.Service
                           HospitalId = e.HospitalId,
                           AppointmentDate = e.ContentPlatformOrder.AppointmentDate,
                           Remark = e.Remark,
+                          HospitalRemark=e.HospitalRemark,
+                          OrderStatus=ServiceClass.GetContentPlateFormOrderStatusText(Convert.ToByte(e.OrderStatus)),
                           SendBy = e.Sender,
                           IsMainHospital = e.IsMainHospital,
                           SendDate = e.SendDate,

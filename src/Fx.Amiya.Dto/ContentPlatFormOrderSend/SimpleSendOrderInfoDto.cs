@@ -29,6 +29,11 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 备注
         /// </summary>
         public string Remark { get; set; }
+        public string HospitalRemark { get; set; }
+        /// <summary>
+        /// 订单状态
+        /// </summary>
+        public string OrderStatus { get; set; }
 
         /// <summary>
         /// 派单人

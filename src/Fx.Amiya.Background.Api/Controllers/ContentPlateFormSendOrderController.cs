@@ -211,7 +211,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 ToHospitalTypeText = d.ToHospitalTypeText,
                                 CheckState = d.CheckState,
                                 IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
-                                
+
                             };
 
             FxPageInfo<ContentPlatFormOrderSendInfoVo> sendOrderPageInfo = new FxPageInfo<ContentPlatFormOrderSendInfoVo>();
@@ -375,7 +375,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<SendContentPlatformOrderVo>>> GetSendOrderList(string keyword, string baseLiveAnchorId, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? liveAnchorId, int? consultationEmpId, int? employeeId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int pageNum, int pageSize,bool? isMainHospital)
+        public async Task<ResultData<FxPageInfo<SendContentPlatformOrderVo>>> GetSendOrderList(string keyword, string baseLiveAnchorId, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? liveAnchorId, int? consultationEmpId, int? employeeId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int pageNum, int pageSize, bool? isMainHospital)
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             var loginEmployeeId = Convert.ToInt32(employee.Id);
@@ -413,7 +413,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 employeeId = -1;
             }
-            var orders = await _sendOrderInfoService.GetSendOrderList(liveAnchorIds, consultationEmpId, sendBy, isAcompanying, isOldCustomer, commissionRatio, keyword, belongMonth, minAddOrderPrice, maxAddOrderPrice, loginEmployeeId, (int)employeeId, orderStatus, contentPlatFormId, startDate, endDate, hospitalId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, orderSource, pageNum, pageSize,isMainHospital);
+            var orders = await _sendOrderInfoService.GetSendOrderList(liveAnchorIds, consultationEmpId, sendBy, isAcompanying, isOldCustomer, commissionRatio, keyword, belongMonth, minAddOrderPrice, maxAddOrderPrice, loginEmployeeId, (int)employeeId, orderStatus, contentPlatFormId, startDate, endDate, hospitalId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, orderSource, pageNum, pageSize, isMainHospital);
 
             var contentPlatformOrders = from d in orders.List
                                         select new SendContentPlatformOrderVo
@@ -465,7 +465,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
                                             IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
                                             IsMainHospital = d.IsMainHospital,
-                                            ConsultingContent2=d.ConsultingContent2
+                                            ConsultingContent2 = d.ConsultingContent2
                                         };
             FxPageInfo<SendContentPlatformOrderVo> pageInfo = new FxPageInfo<SendContentPlatformOrderVo>();
             pageInfo.TotalCount = orders.TotalCount;
@@ -590,7 +590,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 SendBy = e.SendBy,
                 IsMainHospital = e.IsMainHospital,
                 SendDate = e.SendDate,
-                SenderName = e.SenderName
+                SenderName = e.SenderName,
+                HospitalRemark = e.HospitalRemark,
+                OrderStatus = e.OrderStatus,
             });
             return ResultData<FxPageInfo<SimpleSendOrderInfoVo>>.Success().AddData("sendOrderInfoList", pageInfo);
         }

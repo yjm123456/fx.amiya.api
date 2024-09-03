@@ -273,20 +273,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 int orderStatus = 0;
                 var thirdcontentPlatformInfo = await thirdPartContentplatformInfoService.GetByNameAsync("朗姿");
                 string SignMsg = thirdcontentPlatformInfo.Sign;
-                //todo（验证签名）
-                UpdateOrderStatusBaseVo updateOrderStatusBaseVo = new UpdateOrderStatusBaseVo();
-                updateOrderStatusBaseVo.JGBM = updateVo.JGBM;
-                updateOrderStatusBaseVo.PDBH = updateVo.PDBH;
-                updateOrderStatusBaseVo.SFJD = updateVo.SFJD;
-                updateOrderStatusBaseVo.SFCD = updateVo.SFCD;
-                updateOrderStatusBaseVo.RepeateOrderPicture = updateVo.RepeateOrderPicture;
-                updateOrderStatusBaseVo.JGWZID = updateVo.JGWZID;
-                updateOrderStatusBaseVo.JGWZNM = updateVo.JGWZNM;
-                updateOrderStatusBaseVo.JDRQ = updateVo.JDRQ;
-                updateOrderStatusBaseVo.YL1 = updateVo.YL1;
-                updateOrderStatusBaseVo.YL2 = updateVo.YL2;
-                var jsonData = JsonConvert.SerializeObject(updateOrderStatusBaseVo);
-                var signData = MD5Helper.Get32MD5One(jsonData + SignMsg);
+                string SignKey = "JDRQ=" + updateVo.JDRQ + "&JGMB=" + updateVo.JGBM + "&JGWZID=" + updateVo.JGWZID + "&JGWZNM=" + updateVo.JGWZNM + "&PDBH=" + updateVo.PDBH + "&RepeateOrderPicture=" + updateVo.RepeateOrderPicture + "&SFCD=" + updateVo.SFCD + "&SFJD=" + updateVo.SFJD + "&YL1=" + updateVo.YL1 + "&YL2=" + updateVo.YL2;
+                var signData = MD5Helper.Get32MD5One(SignKey + SignMsg);
                 if (signData != updateVo.Sign)
                 {
                     throw new Exception("签名验证失败，返回签名:'" + updateVo.Sign + "'验证有误，请重新确认上传参数进行验证！");
@@ -324,13 +312,14 @@ namespace Fx.Amiya.Background.Api.Controllers
 
                 //改订单状态
                 var orderId = contentPlatformOrderSendInfo.ContentPlatFormOrderId;
-                var orderInfo = await contentPlateFormOrderService.GetByOrderIdAsync(orderId);
                 UpdateOrderByLangZiDto updateOrderByLangZiDto = new UpdateOrderByLangZiDto();
                 updateOrderByLangZiDto.OrderId = orderId;
                 updateOrderByLangZiDto.HospitalConsulationEmployeeName = updateVo.JGWZNM;
                 updateOrderByLangZiDto.OrderStatus = orderStatus;
                 updateOrderByLangZiDto.IsRepeateOrder = updateVo.SFCD;
-                updateOrderByLangZiDto.UpdateDate = updateVo.JDRQ;
+
+                DateTime updateDate = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(updateVo.JDRQ)).LocalDateTime;
+                updateOrderByLangZiDto.UpdateDate = updateDate;
                 updateOrderByLangZiDto.RepeateOrderPicture = updateVo.RepeateOrderPicture;
                 await contentPlateFormOrderService.UpdateOrderByLangZiAsync(updateOrderByLangZiDto);
                 result.JGBM = updateVo.JGBM;
