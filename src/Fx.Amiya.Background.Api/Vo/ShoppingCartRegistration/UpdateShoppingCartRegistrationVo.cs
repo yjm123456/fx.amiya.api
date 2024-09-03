@@ -137,7 +137,14 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// 归属渠道
         /// </summary>
         public int BelongChannel { get; set; }
-
+        /// <summary>
+        /// 线索截图
+        /// </summary>
+        public string CluePicture { get; set; }
+        /// <summary>
+        /// 加v截图
+        /// </summary>
+        public string AddWechatPicture { get; set; }
 
     }
 }

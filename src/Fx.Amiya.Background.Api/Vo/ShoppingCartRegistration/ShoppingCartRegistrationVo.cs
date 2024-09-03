@@ -220,6 +220,18 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// 归属渠道名称
         /// </summary>
         public string BelongChannelName { get; set; }
+        /// <summary>
+        /// 线索截图
+        /// </summary>
+        public string CluePicture { get; set; }
+        /// <summary>
+        /// 加v截图
+        /// </summary>
+        public string AddWechatPicture { get; set; }
+        /// <summary>
+        /// 加v人
+        /// </summary>
+        public string AddWechatEmpName { get; set; }
 
     }
 }

@@ -73,7 +73,18 @@ namespace Fx.Amiya.DbModels.Model
         /// 归属渠道(1,直播前,2直播中,3直播后)
         /// </summary>
         public  int BelongChannel { get; set; }
-
+        /// <summary>
+        /// 线索截图
+        /// </summary>
+        public string CluePicture { get; set; }
+        /// <summary>
+        /// 加v截图
+        /// </summary>
+        public string AddWechatPicture { get; set; }
+        /// <summary>
+        /// 加v人员
+        /// </summary>
+        public int? AddWechatEmpId { get; set; }
         public Contentplatform Contentplatform { get; set; }
         public LiveAnchor LiveAnchor { get; set; }
         public AmiyaEmployee AmiyaEmployee { get; set; }

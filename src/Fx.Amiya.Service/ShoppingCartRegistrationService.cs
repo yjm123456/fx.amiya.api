@@ -152,7 +152,10 @@ namespace Fx.Amiya.Service
                                                    GetCustomerType = d.GetCustomerType,
                                                    GetCustomerTypeText = ServiceClass.GetShoppingCartGetCustomerTypeText(d.GetCustomerType),
                                                    BelongChannel = d.BelongChannel,
-                                                   BelongChannelName = ServiceClass.BelongChannelText(d.BelongChannel)
+                                                   BelongChannelName = ServiceClass.BelongChannelText(d.BelongChannel),
+                                                   CluePicture = d.CluePicture,
+                                                   AddWechatPicture = d.AddWechatPicture,
+                                                   AddWechatEmpId = d.AddWechatEmpId
                                                };
                 var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
                 if (!employee.AmiyaPositionInfo.IsDirector)
@@ -178,7 +181,11 @@ namespace Fx.Amiya.Service
                         x.AssignEmpName = assignEmpInfo.Name;
                     }
                     x.BaseLiveAnchorName = dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == x.BaseLiveAnchorId).SingleOrDefault()?.LiveAnchorName ?? "";
-
+                    if (x.AddWechatEmpId != null)
+                    {
+                        var empInfo2 = await _amiyaEmployeeService.GetByIdAsync(x.AddWechatEmpId.Value);
+                        x.AddWechatEmpName = empInfo2.Name;
+                    }
                 }
                 return shoppingCartRegistrationPageInfo;
             }
@@ -262,6 +269,8 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.Source = addDto.Source;
                 shoppingCartRegistration.ProductType = addDto.ProductType;
                 shoppingCartRegistration.BelongChannel = addDto.BelongChannel;
+                shoppingCartRegistration.CluePicture = addDto.CluePicture;
+                shoppingCartRegistration.AddWechatPicture = addDto.AddWechatPicture;
                 var baseLiveAnchorId = await _liveAnchorService.GetByIdAsync(addDto.LiveAnchorId);
                 if (!string.IsNullOrEmpty(baseLiveAnchorId.LiveAnchorBaseId))
                 {
@@ -271,6 +280,11 @@ namespace Fx.Amiya.Service
                 if (!string.IsNullOrEmpty(isExistPhone.Id) && isExistPhone.BaseLiveAnchorId == baseLiveAnchorId.LiveAnchorBaseId)
                 {
                     throw new Exception("已存在该客户手机号" + addDto.Phone + "，无法录入，请重新填写！");
+                }
+                //添加加v人员
+                if (shoppingCartRegistration.IsAddWeChat == true)
+                {
+                    shoppingCartRegistration.AddWechatEmpId = addDto.CreateBy;
                 }
                 await dalShoppingCartRegistration.AddAsync(shoppingCartRegistration, true);
 
@@ -414,6 +428,8 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.BaseLiveAnchorId = shoppingCartRegistration.BaseLiveAnchorId;
                 shoppingCartRegistrationDto.BelongChannel = shoppingCartRegistration.BelongChannel;
                 shoppingCartRegistrationDto.BelongChannelName = ServiceClass.BelongChannelText(shoppingCartRegistrationDto.BelongChannel);
+                shoppingCartRegistrationDto.AddWechatPicture = shoppingCartRegistration.AddWechatPicture;
+                shoppingCartRegistrationDto.CluePicture = shoppingCartRegistration.CluePicture;
                 return shoppingCartRegistrationDto;
             }
             catch (Exception ex)
@@ -585,6 +601,15 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.Phone = updateDto.Phone;
                 shoppingCartRegistration.IsAddWeChat = updateDto.IsAddWeChat;
                 shoppingCartRegistration.Remark = updateDto.Remark;
+                shoppingCartRegistration.CluePicture = updateDto.CluePicture;
+                shoppingCartRegistration.AddWechatPicture = updateDto.AddWechatPicture;
+                if (!shoppingCartRegistration.IsAddWeChat)
+                {
+                    if (shoppingCartRegistration.IsAddWeChat)
+                    {
+                        shoppingCartRegistration.AddWechatEmpId = updateDto.OperationBy;
+                    }
+                }
                 await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
                 //throw new Exception("数据已编辑成功，因当前登录账号和创建人不一致,该部分数据只有加V与备注修改生效！");
             }
@@ -654,6 +679,8 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.CreateBy = updateDto.CreateBy;
                 shoppingCartRegistration.ProductType = updateDto.ProductType;
                 shoppingCartRegistration.BelongChannel = updateDto.BelongChannel;
+                shoppingCartRegistration.CluePicture = updateDto.CluePicture;
+                shoppingCartRegistration.AddWechatPicture = updateDto.AddWechatPicture;
                 var baseLiveAnchorId = await _liveAnchorService.GetByIdAsync(updateDto.LiveAnchorId);
                 if (!string.IsNullOrEmpty(baseLiveAnchorId.LiveAnchorBaseId))
                 {
@@ -664,6 +691,13 @@ namespace Fx.Amiya.Service
                 if (!string.IsNullOrEmpty(isExistPhone.Id) && isExistPhone.BaseLiveAnchorId == baseLiveAnchorId.LiveAnchorBaseId)
                 {
                     throw new Exception("已存在该客户手机号" + updateDto.Phone + "，无法录入，请重新填写！");
+                }
+                if (!shoppingCartRegistration.IsAddWeChat)
+                {
+                    if (shoppingCartRegistration.IsAddWeChat)
+                    {
+                        shoppingCartRegistration.AddWechatEmpId = updateDto.OperationBy;
+                    }
                 }
                 await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
             }
@@ -1487,10 +1521,11 @@ namespace Fx.Amiya.Service
                         IsReturnBackPrice = d.IsReturnBackPrice,
                         AssignEmpId = d.AssignEmpId,
                         IsAddWeChat = d.IsAddWeChat,
+                        Price = d.Price
                     };
             if (isEffectiveCustomerData.HasValue)
             {
-                result = result.Where(o => isEffectiveCustomerData == true ? o.Price > 0 : o.Price == 0);
+                x = x.Where(o => isEffectiveCustomerData == true ? o.Price > 0 : o.Price == 0);
             }
             return await x.ToListAsync();
         }

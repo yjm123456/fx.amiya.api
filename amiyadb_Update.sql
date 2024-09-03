@@ -159,3 +159,16 @@ INSERT INTO `amiyadb`.`tbl_hospital_contentplatform_code` (`id`, `hospital_id`, 
 ------------------------------------余建明 2024/8/28 END--------------------------------------
 
 --------------------------------------------------------------------------------------------------------以上部分已更新到线上--------------------------------------
+
+------------------------------------王健 2024/9/2 BEGIN--------------------------------------
+
+----小黄车登记添加加v截图和线索截图
+ALTER TABLE `tbl_shopping_cart_registration`
+	ADD COLUMN `add_wechat_picture` VARCHAR(100) NULL DEFAULT NULL AFTER `belong_channel`,
+	ADD COLUMN `clue_picture` VARCHAR(100) NULL DEFAULT NULL AFTER `add_wechat_picture`;
+---添加加v人
+ALTER TABLE `tbl_shopping_cart_registration`
+	ADD COLUMN `add_wechat_empid` INT NULL DEFAULT NULL AFTER `clue_picture`;
+
+
+------------------------------------王健 2024/9/2 END--------------------------------------
