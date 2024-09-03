@@ -594,6 +594,13 @@ namespace Fx.Amiya.Service
             var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
             if (shoppingCartRegistration == null)
                 throw new Exception("小黄车登记编号错误！");
+            if (!shoppingCartRegistration.IsAddWeChat)
+            {
+                if (updateDto.IsAddWeChat)
+                {
+                    shoppingCartRegistration.AddWechatEmpId = updateDto.OperationBy;
+                }
+            }
             if (updateDto.OperationBy != shoppingCartRegistration.CreateBy)
             {
                 shoppingCartRegistration.LiveAnchorWechatNo = updateDto.LiveAnchorWechatNo;
@@ -603,13 +610,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.Remark = updateDto.Remark;
                 shoppingCartRegistration.CluePicture = updateDto.CluePicture;
                 shoppingCartRegistration.AddWechatPicture = updateDto.AddWechatPicture;
-                if (!shoppingCartRegistration.IsAddWeChat)
-                {
-                    if (shoppingCartRegistration.IsAddWeChat)
-                    {
-                        shoppingCartRegistration.AddWechatEmpId = updateDto.OperationBy;
-                    }
-                }
+                
                 await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
                 //throw new Exception("数据已编辑成功，因当前登录账号和创建人不一致,该部分数据只有加V与备注修改生效！");
             }
@@ -692,13 +693,7 @@ namespace Fx.Amiya.Service
                 {
                     throw new Exception("已存在该客户手机号" + updateDto.Phone + "，无法录入，请重新填写！");
                 }
-                if (!shoppingCartRegistration.IsAddWeChat)
-                {
-                    if (shoppingCartRegistration.IsAddWeChat)
-                    {
-                        shoppingCartRegistration.AddWechatEmpId = updateDto.OperationBy;
-                    }
-                }
+               
                 await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
             }
         }
