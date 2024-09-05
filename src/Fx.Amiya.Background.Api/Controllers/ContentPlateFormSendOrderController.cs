@@ -75,6 +75,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             sendOrderInfoSimpleVo.SendBy = sendOrderInfo.SendBy;
             sendOrderInfoSimpleVo.IsThenTime = sendOrderInfo.IsThenTime;
             sendOrderInfoSimpleVo.HasDealInfo = sendOrderInfo.HasDealInfo;
+            sendOrderInfoSimpleVo.IsSpecifyHospitalEmployee = sendOrderInfo.IsSpecifyHospitalEmployee;
+            sendOrderInfoSimpleVo.HospitalEmployeeId = sendOrderInfo.HospitalEmployeeId;
             return ResultData<ContentPlatFormSendOrderInfoSimpleVo>.Success().AddData("sendOrderInfo", sendOrderInfoSimpleVo);
         }
 
@@ -99,7 +101,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
             int hospitalId = employee.HospitalId;
-            var q = await _sendOrderInfoService.GetListByHospitalIdAsync(hospitalId, keyword, OrderStatus, startDate, endDate, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, pageNum, pageSize);
+            int employeeId = Convert.ToInt32(employee.Id);
+            var hospitalPositionId = Convert.ToInt32(employee.PositionId);
+            bool isSpecifyHospitalEmployee = false;
+            if (hospitalPositionId == 4 || hospitalPositionId == 5)
+            {
+                isSpecifyHospitalEmployee = true;
+            }
+            var q = await _sendOrderInfoService.GetListByHospitalIdAsync(hospitalId, keyword, OrderStatus, startDate, endDate, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, isSpecifyHospitalEmployee, employeeId, pageNum, pageSize);
             var sendOrder = from d in q.List
                             select new ContentPlatFormOrderSendInfoVo
                             {
@@ -171,7 +180,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
             int hospitalId = employee.HospitalId;
-            var q = await _sendOrderInfoService.GetFollowingListByHospitalIdAsync(hospitalId, keyword, startDate, endDate, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, pageNum, pageSize);
+            int employeeId = Convert.ToInt32(employee.Id);
+            var hospitalPositionId = Convert.ToInt32(employee.PositionId);
+            bool isSpecifyHospitalEmployee = false;
+            if (hospitalPositionId == 4 || hospitalPositionId == 5)
+            {
+                isSpecifyHospitalEmployee = true;
+            }
+            var q = await _sendOrderInfoService.GetFollowingListByHospitalIdAsync(hospitalId, keyword, startDate, endDate, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, isSpecifyHospitalEmployee, employeeId, pageNum, pageSize);
             var sendOrder = from d in q.List
                             select new ContentPlatFormOrderSendInfoVo
                             {
@@ -240,7 +256,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
             int hospitalId = employee.HospitalId;
-            var q = await _sendOrderInfoService.GetListByHospitalIdAsync(hospitalId, keyword, orderStatus, startDate, endDate, null, toHospitalStartDate, toHospitalEndDate, toHospitalType, pageNum, pageSize);
+            int employeeId = Convert.ToInt32(employee.Id);
+            var hospitalPositionId = Convert.ToInt32(employee.PositionId);
+            bool isSpecifyHospitalEmployee = false;
+            if (hospitalPositionId == 4 || hospitalPositionId == 5)
+            {
+                isSpecifyHospitalEmployee = true;
+            }
+            var q = await _sendOrderInfoService.GetListByHospitalIdAsync(hospitalId, keyword, orderStatus, startDate, endDate, null, toHospitalStartDate, toHospitalEndDate, toHospitalType, isSpecifyHospitalEmployee, employeeId, pageNum, pageSize);
             var sendOrder = from d in q.List
                             select new HospitalCustomerVo
                             {
@@ -282,7 +305,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
             int hospitalId = employee.HospitalId;
-            var q = await _sendOrderInfoService.GetContentPlatFormHospitalOrderReportAsync(startDate, endDate, orderStatus, hospitalId, true);
+            int employeeId = Convert.ToInt32(employee.Id);
+            var hospitalPositionId = Convert.ToInt32(employee.PositionId);
+            bool isSpecifyHospitalEmployee = false;
+            if (hospitalPositionId == 4 || hospitalPositionId == 5)
+            {
+                isSpecifyHospitalEmployee = true;
+            }
+            var q = await _sendOrderInfoService.GetContentPlatFormHospitalOrderReportAsync(startDate, endDate, orderStatus, hospitalId, true, isSpecifyHospitalEmployee, employeeId);
             var sendOrder = from d in q
                             select new ExportContentPlatFormSendOrderInfoVo
                             {
@@ -321,7 +351,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
             int hospitalId = employee.HospitalId;
-            var q = await _sendOrderInfoService.GetCountByHospitalIdAsync(hospitalId);
+            int employeeId = Convert.ToInt32(employee.Id);
+            var hospitalPositionId = Convert.ToInt32(employee.PositionId);
+            bool isSpecifyHospitalEmployee = false;
+            if (hospitalPositionId == 4 || hospitalPositionId == 5)
+            {
+                isSpecifyHospitalEmployee = true;
+            }
+            var q = await _sendOrderInfoService.GetCountByHospitalIdAsync(hospitalId, isSpecifyHospitalEmployee, employeeId);
             return ResultData<int>.Success().AddData("NotRepeatedSendOrder", q);
         }
         /// <summary>
@@ -369,13 +406,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="toHospitalEndDate">到院时间止</param>           
         /// <param name="toHospitalType">到院类型</param>        
         /// <param name="orderSource">订单来源， -1查询全部</param>
+        /// <param name="hospitalEmpId">医院账户id（选择派单医院后根据医院id进行获取,可空）</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <param name="isMainHospital">是否是主派(null:查所有,true:主派,false:次派)</param>
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<SendContentPlatformOrderVo>>> GetSendOrderList(string keyword, string baseLiveAnchorId, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? liveAnchorId, int? consultationEmpId, int? employeeId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int pageNum, int pageSize, bool? isMainHospital)
+        public async Task<ResultData<FxPageInfo<SendContentPlatformOrderVo>>> GetSendOrderList(string keyword, string baseLiveAnchorId, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? liveAnchorId, int? consultationEmpId, int? employeeId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int? hospitalEmpId, int pageNum, int pageSize, bool? isMainHospital)
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             var loginEmployeeId = Convert.ToInt32(employee.Id);
@@ -413,7 +451,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 employeeId = -1;
             }
-            var orders = await _sendOrderInfoService.GetSendOrderList(liveAnchorIds, consultationEmpId, sendBy, isAcompanying, isOldCustomer, commissionRatio, keyword, belongMonth, minAddOrderPrice, maxAddOrderPrice, loginEmployeeId, (int)employeeId, orderStatus, contentPlatFormId, startDate, endDate, hospitalId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, orderSource, pageNum, pageSize, isMainHospital);
+            var orders = await _sendOrderInfoService.GetSendOrderList(liveAnchorIds, consultationEmpId, sendBy, isAcompanying, isOldCustomer, commissionRatio, keyword, belongMonth, minAddOrderPrice, maxAddOrderPrice, loginEmployeeId, (int)employeeId, orderStatus, contentPlatFormId, startDate, endDate, hospitalId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, orderSource, hospitalEmpId, pageNum, pageSize, isMainHospital);
 
             var contentPlatformOrders = from d in orders.List
                                         select new SendContentPlatformOrderVo
@@ -465,7 +503,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
                                             IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
                                             IsMainHospital = d.IsMainHospital,
-                                            ConsultingContent2 = d.ConsultingContent2
+                                            ConsultingContent2 = d.ConsultingContent2,
+                                            IsSpecifyHospitalEmployee = d.IsSpecifyHospitalEmployee,
+                                            HospitalEmployeeId = d.HospitalEmployeeId,
+                                            HospitalEmployeeName = d.HospitalEmployeeName
                                         };
             FxPageInfo<SendContentPlatformOrderVo> pageInfo = new FxPageInfo<SendContentPlatformOrderVo>();
             pageInfo.TotalCount = orders.TotalCount;
@@ -593,6 +634,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 SenderName = e.SenderName,
                 HospitalRemark = e.HospitalRemark,
                 OrderStatus = e.OrderStatus,
+                IsSpecifyHospitalEmployee = e.IsSpecifyHospitalEmployee,
+                HospitalEmployeeId = e.HospitalEmployeeId,
+                HospitalEmployeeName = e.HospitalEmployeeName
             });
             return ResultData<FxPageInfo<SimpleSendOrderInfoVo>>.Success().AddData("sendOrderInfoList", pageInfo);
         }

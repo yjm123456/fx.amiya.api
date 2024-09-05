@@ -27,6 +27,15 @@ namespace Fx.Amiya.Background.Api.Vo.ThirdPartContentplatformInfo.Input
         /// 派单编号
         /// </summary>
         public string PDBH { get; set; }
+
+        /// <summary>
+        /// 派单医生id
+        /// </summary>
+        public string PDYSID { get; set; }
+        /// <summary>
+        /// 派单医生姓名
+        /// </summary>
+        public string PDYSNM { get; set; }
         /// <summary>
         /// 客户姓名
         /// </summary>

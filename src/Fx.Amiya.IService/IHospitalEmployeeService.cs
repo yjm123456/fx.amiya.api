@@ -113,5 +113,11 @@ namespace Fx.Amiya.IService
         /// <param name="employeeIds"></param>
         /// <returns></returns>
        Task<List<HospitalEmployeeBaseInfoDto>> GetBaseInfoListAsync(int[] employeeIds);
+        /// <summary>
+        /// 根据医院id获取医院账户（下拉框使用）
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        Task<List<HospitalEmployeeDto>> GetByHospitalIdAsync(int hospitalId);
     }
 }

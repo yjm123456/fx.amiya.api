@@ -36,6 +36,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IOperationLogService operationLogService;
         private IContentPlatformOrderSendService contentPlatformOrderSendService;
         private IThirdPartContentplatformInfoService thirdPartContentplatformInfoService;
+        private IHospitalEmployeeService hospitalEmployeeService;
 
         /// <summary>
         /// 构造函数
@@ -43,7 +44,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="hospitalContentplatformCodeService"></param>
         /// <param name="contentPlateFormOrderService"></param>
         /// <param name="wxAppConfigService"></param>
-        public HospitalContentplatformCodeController(IHospitalContentplatformCodeService hospitalContentplatformCodeService, IContentPlateFormOrderService contentPlateFormOrderService, IHttpContextAccessor httpContextAccessor, IContentPlatformOrderSendService contentPlatformOrderSendService, IOperationLogService operationLogService, IThirdPartContentplatformInfoService thirdPartContentplatformInfoService)
+        public HospitalContentplatformCodeController(IHospitalContentplatformCodeService hospitalContentplatformCodeService, IContentPlateFormOrderService contentPlateFormOrderService, IHttpContextAccessor httpContextAccessor, IContentPlatformOrderSendService contentPlatformOrderSendService, IOperationLogService operationLogService, IThirdPartContentplatformInfoService thirdPartContentplatformInfoService, IHospitalEmployeeService hospitalEmployeeService)
         {
             this.hospitalContentplatformCodeService = hospitalContentplatformCodeService;
             this.contentPlateFormOrderService = contentPlateFormOrderService;
@@ -51,6 +52,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             this.operationLogService = operationLogService;
             this.contentPlatformOrderSendService = contentPlatformOrderSendService;
             this.thirdPartContentplatformInfoService = thirdPartContentplatformInfoService;
+            this.hospitalEmployeeService = hospitalEmployeeService;
         }
 
         /// <summary>
@@ -230,6 +232,13 @@ namespace Fx.Amiya.Background.Api.Controllers
 
                 queryData.PDBH = query.SendOrderId.ToString();
                 var order = await contentPlateFormOrderService.GetByOrderIdAsync(query.OrderId);
+                var sendInfo = await contentPlatformOrderSendService.GetByIdAsync(Convert.ToInt32(query.SendOrderId.ToString()));
+                if (sendInfo.IsSpecifyHospitalEmployee == true)
+                {
+                    queryData.PDYSID = sendInfo.HospitalEmployeeId.ToString();
+                    var hospitalEmpInfo = await hospitalEmployeeService.GetByIdAsync(sendInfo.HospitalEmployeeId);
+                    queryData.PDYSNM = hospitalEmpInfo.Name;
+                }
                 queryData.KUNAM = order.CustomerName;
                 queryData.REGION = order.City;
                 queryData.TEL1 = order.Phone;
@@ -305,6 +314,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                 if (contentPlatformOrderSendInfo == null)
                 {
                     throw new Exception("派单编号错误，请重新请求接口！");
+                }
+                if (contentPlatformOrderSendInfo.HospitalId != hospitalId)
+                {
+                    throw new Exception("当前操作医院账户非指定派单医院，请重新请求接口！");
                 }
                 //改派单状态
                 UpdateContentPlatFormOrderSendByLangZiDto updateContentPlatFormOrderSendByLangZiDto = new UpdateContentPlatFormOrderSendByLangZiDto();

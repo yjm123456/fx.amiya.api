@@ -42,5 +42,14 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend
         /// </summary>
 
         public int SendBy { get; set; }
+        /// <summary>
+        /// 是否指定医院账户
+        /// </summary>
+        public bool IsSpecifyHospitalEmployee { get; set; }
+
+        /// <summary>
+        /// 医院账户id
+        /// </summary>
+        public int HospitalEmployeeId { get; set; }
     }
 }

@@ -226,5 +226,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 是否是主推医院
         /// </summary>
         public bool IsMainHospital { get; set; }
+        /// <summary>
+        /// 是否指定医院账户
+        /// </summary>
+        public bool IsSpecifyHospitalEmployee { get; set; }
+
+        /// <summary>
+        /// 医院账户id
+        /// </summary>
+        public int HospitalEmployeeId { get; set; }
+        /// <summary>
+        /// 医院账户名称
+        /// </summary>
+        public string HospitalEmployeeName { get; set; }
     }
 }

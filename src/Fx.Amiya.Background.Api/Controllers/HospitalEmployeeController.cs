@@ -18,6 +18,7 @@ using System.ComponentModel.DataAnnotations;
 using Fx.Authorization.Attributes;
 using Fx.Common.Extensions;
 using Fx.Common;
+using Fx.Amiya.Background.Api.Vo.AmiyaEmployee;
 
 namespace Fx.Amiya.Background.Api.Controllers
 {
@@ -26,7 +27,7 @@ namespace Fx.Amiya.Background.Api.Controllers
     /// </summary>
     [Route("[controller]")]
     [ApiController]
-   
+
     public class HospitalEmployeeController : ControllerBase
     {
         private IHospitalEmployeeService hospitalEmployeeService;
@@ -44,7 +45,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             _fxAppGlobal = fxAppGlobal;
         }
 
-     
+
 
         /// <summary>
         /// 添加医院员工信息
@@ -57,7 +58,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                string employeeType ="";
+                string employeeType = "";
                 AddHospitalEmployeeDto addDto = new AddHospitalEmployeeDto();
                 addDto.Name = addVo.Name;
                 addDto.UserName = addVo.UserName;
@@ -70,7 +71,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.HospitalId = tenant.HospitalId;
                     employeeType = EmployeeTypeConstant.HOSPITAL_EMPLOYEE_TYPE;
                 }
-               
+
 
                 if (httpContextAccessor.HttpContext.User is FxAmiyaEmployeeIdentity employee)
                 {
@@ -124,14 +125,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("listWithPage")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData<FxPageInfo<HospitalEmployeeVo>>> GetListWithPageAsync(int? hospitalId, string keyword,  int pageNum, int pageSize,bool? valid)
+        public async Task<ResultData<FxPageInfo<HospitalEmployeeVo>>> GetListWithPageAsync(int? hospitalId, string keyword, int pageNum, int pageSize, bool? valid)
         {
             try
             {
                 if (httpContextAccessor.HttpContext.User is FxAmiyaHospitalEmployeeIdentity tenant)
                     hospitalId = tenant.HospitalId;
 
-                var q = await hospitalEmployeeService.GetListWithPageAsync(hospitalId, keyword, pageNum, pageSize,valid);
+                var q = await hospitalEmployeeService.GetListWithPageAsync(hospitalId, keyword, pageNum, pageSize, valid);
 
                 var employeeInfos = from d in q.List
                                     select new HospitalEmployeeVo
@@ -207,7 +208,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-               
+
                 UpdateHospitalEmployeeDto updateDto = new UpdateHospitalEmployeeDto();
                 updateDto.Id = updateVo.Id;
                 updateDto.Name = updateVo.Name;
@@ -251,7 +252,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxTenantAuthorize]
         public async Task<ResultData> UpdatePasswordByIdAsync(UpdatePasswordHospitalVo updateVo)
         {
-            try 
+            try
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
@@ -277,7 +278,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpPut("passwordById")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData> UpdateEmployeePasswordByIdAsync(UpdateEmployeePasswordVo updateVo)
+        public async Task<ResultData> UpdateEmployeePasswordByIdAsync(Vo.HospitalEmployee.UpdateEmployeePasswordVo updateVo)
         {
             UpdateEmployeePasswordDto updateDto = new UpdateEmployeePasswordDto();
             updateDto.Id = updateVo.Id;
@@ -332,5 +333,21 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
 
 
+        /// <summary>
+        /// 根据医院获取医院账户姓名列表
+        /// </summary>
+        /// <param name="hospitalId">医院id</param>
+        /// <returns></returns>
+        [HttpGet("getByHospitalIdList")]
+        public async Task<ResultData<List<EmployeeBaseInfoVo>>> GetByHospitalIdListAsync(int hospitalId)
+        {
+            var employee = from d in await hospitalEmployeeService.GetByHospitalIdAsync(hospitalId)
+                           select new EmployeeBaseInfoVo
+                           {
+                               Id = d.Id,
+                               Name = d.Name
+                           };
+            return ResultData<List<EmployeeBaseInfoVo>>.Success().AddData("employee", employee.ToList());
+        }
     }
 }

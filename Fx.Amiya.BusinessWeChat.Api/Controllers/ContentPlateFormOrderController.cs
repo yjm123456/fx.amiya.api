@@ -611,6 +611,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 addDto.SendBy = addVo.SendBy;
                 addDto.EmployeeId = employeeId;
                 addDto.OtherHospitalId = addVo.OtherHospitalId;
+                addDto.IsSpecifyHospitalEmployee = addVo.IsSpecifyHospitalEmployee;
+                addDto.HospitalEmployeeId = addVo.HospitalEmployeeId;
                 await _orderService.AddAsync(addDto);
                 return ResultData.Success();
             }

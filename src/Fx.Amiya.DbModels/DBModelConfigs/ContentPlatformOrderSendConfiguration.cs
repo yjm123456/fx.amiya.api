@@ -27,6 +27,8 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.IsMainHospital).HasColumnName("is_main_hospital").HasColumnType("bit").IsRequired();
             builder.Property(e => e.OrderStatus).HasColumnName("order_status").HasColumnType("int").IsRequired();
             builder.Property(e => e.IsRepeatProfundityOrder).HasColumnName("is_repeat_profundity_order").HasColumnType("bit").IsRequired();
+            builder.Property(e => e.HospitalEmployeeId).HasColumnName("hospital_emp_id").HasColumnType("int").IsRequired();
+            builder.Property(e => e.IsSpecifyHospitalEmployee).HasColumnName("is_specify_hospital_employee").HasColumnType("bit").IsRequired();
             builder.HasOne(e => e.ContentPlatformOrder).WithMany(e => e.ContentPlatformOrderSendList).HasForeignKey(e => e.ContentPlatformOrderId);
             builder.HasOne(e => e.AmiyaEmployee).WithMany(e => e.ContentPlatformOrderSendList).HasForeignKey(e => e.Sender);
 

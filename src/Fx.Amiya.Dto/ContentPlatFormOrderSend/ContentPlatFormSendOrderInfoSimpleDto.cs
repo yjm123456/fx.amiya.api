@@ -49,5 +49,14 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 是否有成交信息
         /// </summary>
         public bool HasDealInfo { get; set; }
+        /// <summary>
+        /// 是否指定医院账户
+        /// </summary>
+        public bool IsSpecifyHospitalEmployee { get; set; }
+
+        /// <summary>
+        /// 医院账户id
+        /// </summary>
+        public int HospitalEmployeeId { get; set; }
     }
 }

@@ -13,7 +13,7 @@ using Fx.Common;
 
 namespace Fx.Amiya.Service
 {
-   public class HospitalEmployeeService: IHospitalEmployeeService
+    public class HospitalEmployeeService : IHospitalEmployeeService
     {
         private IDalHospitalEmployee dalHospitalEmployee;
         public HospitalEmployeeService(IDalHospitalEmployee dalHospitalEmployee)
@@ -22,7 +22,7 @@ namespace Fx.Amiya.Service
         }
 
 
-        public async Task AddAsync(AddHospitalEmployeeDto addDto,string employeeType)
+        public async Task AddAsync(AddHospitalEmployeeDto addDto, string employeeType)
         {
             try
             {
@@ -59,8 +59,8 @@ namespace Fx.Amiya.Service
             try
             {
                 var employee = await dalHospitalEmployee.GetAll()
-                    .Include(e=>e.HospitalInfo)
-                    .Include(e=>e.HospitalPositionInfo)
+                    .Include(e => e.HospitalInfo)
+                    .Include(e => e.HospitalPositionInfo)
                     .SingleOrDefaultAsync(e => e.Id == id);
 
                 if (employee == null)
@@ -94,7 +94,7 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<HospitalEmployeeDto>> GetListWithPageAsync(int? hospitalId,string keyword, int pageNum, int pageSize,bool? valid)
+        public async Task<FxPageInfo<HospitalEmployeeDto>> GetListWithPageAsync(int? hospitalId, string keyword, int pageNum, int pageSize, bool? valid)
         {
             try
             {
@@ -103,9 +103,9 @@ namespace Fx.Amiya.Service
 
                 var employees = from d in dalHospitalEmployee.GetAll()
                                 where d.HospitalInfo.Valid
-                                &&(hospitalId==null||d.HospitalId==hospitalId)
-                                && (keyword == null || d.Name.Contains(keyword)||d.UserName.Contains(keyword))
-                                &&(valid==null||d.Valid==valid)
+                                && (hospitalId == null || d.HospitalId == hospitalId)
+                                && (keyword == null || d.Name.Contains(keyword) || d.UserName.Contains(keyword))
+                                && (valid == null || d.Valid == valid)
                                 select new HospitalEmployeeDto
                                 {
                                     Id = d.Id,
@@ -113,12 +113,12 @@ namespace Fx.Amiya.Service
                                     UserName = d.UserName,
                                     Password = d.Password,
                                     Valid = d.Valid,
-                                    HospitalId=d.HospitalId,
-                                    HospitalName=d.HospitalInfo.Name,
-                                    IsCreateSubAccount=d.IsCreateSubAccount,
-                                    HospitalPositionId=d.HospitalPositionId,
-                                    HospitalPositionName=d.HospitalPositionInfo.Name,
-                                    IsCustomerService=d.IsCustomerService,
+                                    HospitalId = d.HospitalId,
+                                    HospitalName = d.HospitalInfo.Name,
+                                    IsCreateSubAccount = d.IsCreateSubAccount,
+                                    HospitalPositionId = d.HospitalPositionId,
+                                    HospitalPositionName = d.HospitalPositionInfo.Name,
+                                    IsCustomerService = d.IsCustomerService,
                                 };
                 FxPageInfo<HospitalEmployeeDto> employeePageInfo = new FxPageInfo<HospitalEmployeeDto>();
                 employeePageInfo.TotalCount = await employees.CountAsync();
@@ -172,7 +172,7 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task UpdateAsync(UpdateHospitalEmployeeDto updateDto,string employeeType)
+        public async Task UpdateAsync(UpdateHospitalEmployeeDto updateDto, string employeeType)
         {
             try
             {
@@ -195,7 +195,7 @@ namespace Fx.Amiya.Service
                     employee.IsCreateSubAccount = updateDto.IsCreateSubAccount;
                 }
 
-               
+
                 await dalHospitalEmployee.UpdateAsync(employee, true);
             }
             catch (Exception ex)
@@ -212,8 +212,8 @@ namespace Fx.Amiya.Service
             try
             {
                 var employee = await dalHospitalEmployee.GetAll()
-                    .Include(e=>e.HospitalInfo)
-                    .Include(e=>e.HospitalPositionInfo)
+                    .Include(e => e.HospitalInfo)
+                    .Include(e => e.HospitalPositionInfo)
                     .SingleOrDefaultAsync(e => e.UserName == userName);
 
                 if (employee == null)
@@ -286,7 +286,7 @@ namespace Fx.Amiya.Service
             if (employee == null)
                 throw new Exception("医院员工编号错误");
             employee.Password = updateDto.Password;
-            await dalHospitalEmployee.UpdateAsync(employee,true);
+            await dalHospitalEmployee.UpdateAsync(employee, true);
         }
 
 
@@ -300,7 +300,7 @@ namespace Fx.Amiya.Service
                 if (hospitalEmployee == null)
                     throw new Exception("医院员工编号错误");
 
-                await dalHospitalEmployee.DeleteAsync(hospitalEmployee,true);
+                await dalHospitalEmployee.DeleteAsync(hospitalEmployee, true);
             }
             catch (Exception ex)
             {
@@ -319,7 +319,7 @@ namespace Fx.Amiya.Service
         {
             try
             {
-                List<HospitalEmployeeBaseInfoDto>hospitalEmployeeList = new List<HospitalEmployeeBaseInfoDto>();
+                List<HospitalEmployeeBaseInfoDto> hospitalEmployeeList = new List<HospitalEmployeeBaseInfoDto>();
                 foreach (var item in employeeIds)
                 {
                     var employee = await dalHospitalEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == item);
@@ -344,12 +344,42 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task UpdateAvatarAsync(int id,string url)
+        public async Task UpdateAvatarAsync(int id, string url)
         {
-            var account =await dalHospitalEmployee.GetAll().Where(e => e.Id == id).SingleOrDefaultAsync();
+            var account = await dalHospitalEmployee.GetAll().Where(e => e.Id == id).SingleOrDefaultAsync();
             if (account == null) throw new Exception("用户编号错误");
             account.Avatar = url;
-            await dalHospitalEmployee.UpdateAsync(account,true);
+            await dalHospitalEmployee.UpdateAsync(account, true);
+        }
+
+        public async Task<List<HospitalEmployeeDto>> GetByHospitalIdAsync(int hospitalId)
+        {
+            try
+            {
+                var employeeList = await dalHospitalEmployee.GetAll()
+                    .Where(e => e.HospitalId == hospitalId && e.Valid == true).ToListAsync();
+
+                List<HospitalEmployeeDto> result = new List<HospitalEmployeeDto>();
+                foreach (var employee in employeeList)
+                {
+                    HospitalEmployeeDto employeeDto = new HospitalEmployeeDto();
+                    employeeDto.Id = employee.Id;
+                    employeeDto.Name = employee.Name;
+                    employeeDto.UserName = employee.UserName;
+                    employeeDto.Password = employee.Password;
+                    employeeDto.Valid = employee.Valid;
+                    employeeDto.HospitalId = employee.HospitalId;
+                    employeeDto.HospitalPositionId = employee.HospitalPositionId;
+                    employeeDto.IsCustomerService = employee.IsCustomerService;
+                    employeeDto.Avatar = employee.Avatar;
+                    result.Add(employeeDto);
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message.ToString());
+            }
         }
     }
 }
