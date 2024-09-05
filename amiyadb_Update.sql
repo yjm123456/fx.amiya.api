@@ -167,7 +167,13 @@ ALTER TABLE `amiyadb`.`tbl_third_part_contentplatform_info`
 ADD COLUMN `api_url` VARCHAR(300) NULL AFTER `delete_date`,
 ADD COLUMN `sign` VARCHAR(100) NULL AFTER `api_url`;
 
-------------------------------------余建明 2024/9/3 END--------------------------------------
+--派单列表新增是否指定医院账户和医院账户id
+ALTER TABLE `amiyadb`.`tbl_content_platform_order_send` 
+ADD COLUMN `is_specify_hospital_employee` BIT(1) NOT NULL DEFAULT 0 AFTER `is_repeat_profundity_order`,
+ADD COLUMN `hospital_emp_id` INT NOT NULL DEFAULT 0 AFTER `is_specify_hospital_employee`;
+
+
+------------------------------------余建明 2024/9/5 END--------------------------------------
 ------------------------------------王健 2024/9/2 BEGIN--------------------------------------
 
 ----小黄车登记添加加v截图和线索截图

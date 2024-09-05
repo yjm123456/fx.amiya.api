@@ -16,6 +16,15 @@ namespace Fx.Amiya.DbModels.Model
         public bool IsUncertainDate { get; set; }
         public DateTime? AppointmentDate { get; set; }
         public string Remark { get; set; }
+        /// <summary>
+        /// 是否指定医院账户
+        /// </summary>
+        public bool IsSpecifyHospitalEmployee { get; set; }
+
+        /// <summary>
+        /// 医院账户id
+        /// </summary>
+        public int HospitalEmployeeId { get; set; }
         public string HospitalRemark { get; set; }
         /// <summary>
         /// 是否是主派医院

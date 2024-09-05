@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Fx.Amiya.Background.Api.Vo.HospitalContentplatformCode.Input;
@@ -227,12 +228,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                 var hospitalContentPlatformCode = await hospitalContentplatformCodeService.GetByHospitalIdAndThirdPartContentPlatformIdAsync(query.HospitalId, query.ThirdPartContentplatformInfoId);
                 queryData.JGBM = hospitalContentPlatformCode.Code;
 
-                queryData.PDBH = CreateOrderIdHelper.GetNextNumber(); ;
+                queryData.PDBH = query.SendOrderId.ToString();
                 var order = await contentPlateFormOrderService.GetByOrderIdAsync(query.OrderId);
                 queryData.KUNAM = order.CustomerName;
                 queryData.REGION = order.City;
                 queryData.TEL1 = order.Phone;
-                queryData.PDRQ = DateTime.Now;
+                queryData.PDRQ = order.SendDate.Value;
                 var data = JsonConvert.SerializeObject(queryData);
                 var getResult = await HttpUtil.HTTPJsonGetHasBodyAsync(url, data);
                 //var getResult = "";
@@ -267,13 +268,16 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpPut("updateOrderStatusByLangZi")]
         public async Task<ResultData<UpdateOrderStatusResultVo>> UpdateOrderStatusByLangZiAsync([FromBody] UpdateOrderStatusVo updateVo)
         {
+            OperationAddDto operationLog = new OperationAddDto();
+            operationLog.Parameters = JsonConvert.SerializeObject(updateVo);
+
             try
             {
                 UpdateOrderStatusResultVo result = new UpdateOrderStatusResultVo();
                 int orderStatus = 0;
                 var thirdcontentPlatformInfo = await thirdPartContentplatformInfoService.GetByNameAsync("朗姿");
                 string SignMsg = thirdcontentPlatformInfo.Sign;
-                string SignKey = "JDRQ=" + updateVo.JDRQ + "&JGMB=" + updateVo.JGBM + "&JGWZID=" + updateVo.JGWZID + "&JGWZNM=" + updateVo.JGWZNM + "&PDBH=" + updateVo.PDBH + "&RepeateOrderPicture=" + updateVo.RepeateOrderPicture + "&SFCD=" + updateVo.SFCD + "&SFJD=" + updateVo.SFJD + "&YL1=" + updateVo.YL1 + "&YL2=" + updateVo.YL2;
+                string SignKey = "JDRQ=" + updateVo.JDRQ + "&JGBM=" + updateVo.JGBM + "&JGWZID=" + updateVo.JGWZID + "&JGWZNM=" + updateVo.JGWZNM + "&PDBH=" + updateVo.PDBH + "&RepeateOrderPicture=" + updateVo.RepeateOrderPicture + "&SFCD=" + updateVo.SFCD.ToString().ToLower() + "&SFJD=" + updateVo.SFJD.ToString().ToLower() + "&YL1=" + updateVo.YL1 + "&YL2=" + updateVo.YL2;
                 var signData = MD5Helper.Get32MD5One(SignKey + SignMsg);
                 if (signData != updateVo.Sign)
                 {
@@ -318,7 +322,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateOrderByLangZiDto.OrderStatus = orderStatus;
                 updateOrderByLangZiDto.IsRepeateOrder = updateVo.SFCD;
 
-                DateTime updateDate = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(updateVo.JDRQ)).LocalDateTime;
+                DateTime updateDate = DateTime.ParseExact(updateVo.JDRQ, "yyyyMMdd", CultureInfo.InvariantCulture);
                 updateOrderByLangZiDto.UpdateDate = updateDate;
                 updateOrderByLangZiDto.RepeateOrderPicture = updateVo.RepeateOrderPicture;
                 await contentPlateFormOrderService.UpdateOrderByLangZiAsync(updateOrderByLangZiDto);
@@ -328,7 +332,16 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             catch (Exception ex)
             {
+                operationLog.Message = ex.Message;
+                operationLog.Code = -1;
                 return ResultData<UpdateOrderStatusResultVo>.Fail(ex.Message);
+            }
+            finally
+            {
+                operationLog.Source = (int)RequestSource.AmiyaBackground;
+                operationLog.RequestType = (int)RequestType.Update;
+                operationLog.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationLog);
             }
         }
 

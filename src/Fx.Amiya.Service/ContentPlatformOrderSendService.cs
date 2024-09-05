@@ -240,6 +240,8 @@ namespace Fx.Amiya.Service
             if (isMain)
             {
                 sendOrderInfo.IsMainHospital = true;
+                sendOrderInfo.IsSpecifyHospitalEmployee = addDto.IsSpecifyHospitalEmployee;
+                sendOrderInfo.HospitalEmployeeId = addDto.HospitalEmployeeId;
             }
             else
             {
@@ -1260,8 +1262,8 @@ namespace Fx.Amiya.Service
                           HospitalId = e.HospitalId,
                           AppointmentDate = e.ContentPlatformOrder.AppointmentDate,
                           Remark = e.Remark,
-                          HospitalRemark=e.HospitalRemark,
-                          OrderStatus=ServiceClass.GetContentPlateFormOrderStatusText(Convert.ToByte(e.OrderStatus)),
+                          HospitalRemark = e.HospitalRemark,
+                          OrderStatus = ServiceClass.GetContentPlateFormOrderStatusText(Convert.ToByte(e.OrderStatus)),
                           SendBy = e.Sender,
                           IsMainHospital = e.IsMainHospital,
                           SendDate = e.SendDate,

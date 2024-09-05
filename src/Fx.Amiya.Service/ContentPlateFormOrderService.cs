@@ -1099,6 +1099,8 @@ namespace Fx.Amiya.Service
                     var updateSendInfo = otherHospitalList.Where(e => e.HospitalId == updateDto.HospitalId);
                     foreach (var item in updateSendInfo)
                     {
+                        item.IsSpecifyHospitalEmployee = updateDto.IsSpecifyHospitalEmployee;
+                        item.HospitalEmployeeId = updateDto.HospitalEmployeeId;
                         item.IsMainHospital = true;
                         dalContentPlatformOrderSend.Update(item, true);
                         await UpdateOrderStatusAsync(updateDto.OrderId, item.OrderStatus);
@@ -1113,6 +1115,8 @@ namespace Fx.Amiya.Service
                     originMainSend.HospitalId = updateDto.HospitalId;
                     originMainSend.IsUncertainDate = updateDto.IsUncertainDate;
                     originMainSend.AppointmentDate = updateDto.AppointmentDate;
+                    originMainSend.IsSpecifyHospitalEmployee = updateDto.IsSpecifyHospitalEmployee;
+                    originMainSend.HospitalEmployeeId = updateDto.HospitalEmployeeId;
                     originMainSend.Remark = updateDto.Remark;
                     originMainSend.Sender = employeeId;
                     originMainSend.OrderStatus = (int)ContentPlateFormOrderStatus.SendOrder;
@@ -1205,6 +1209,8 @@ namespace Fx.Amiya.Service
             addSendInfo.AppointmentDate = updateDto.AppointmentDate;
             addSendInfo.Remark = updateDto.Remark;
             addSendInfo.SendBy = employeeId;
+            addSendInfo.IsSpecifyHospitalEmployee = updateDto.IsSpecifyHospitalEmployee;
+            addSendInfo.HospitalEmployeeId = updateDto.HospitalEmployeeId;
             await NewSendOrderAsync(addSendInfo, sendDic);
         }
         /// <summary>

@@ -1201,6 +1201,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.Remark = addVo.Remark;
                 addDto.SendBy = addVo.SendBy;
                 addDto.EmployeeId = employeeId;
+                addDto.IsSpecifyHospitalEmployee = addVo.IsSpecifyHospitalEmployee;
+                addDto.HospitalEmployeeId = addVo.HospitalEmployeeId;
                 //await _orderService.SendOrderAsync(addDto);
                 await _orderService.AddAsync(addDto);
                 return ResultData.Success();

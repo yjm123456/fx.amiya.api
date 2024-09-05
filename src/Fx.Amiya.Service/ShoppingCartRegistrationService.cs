@@ -894,6 +894,8 @@ namespace Fx.Amiya.Service
                         contentPlatFormIds.Add("b0e992ad-1b7b-4397-a5fe-1bfbc1f0130e");
                         //合作达人
                         contentPlatFormIds.Add("d2e71501-7327-4883-9294-371a77c4cabd");
+                        //小程序
+                        contentPlatFormIds.Add("6725f235-35da-42a6-acdd-46f721dde53a");
                         channels.Add((int)BelongChannel.LiveAfter);
                         res.Add(contentPlatFormIds, channels);
                         break;
