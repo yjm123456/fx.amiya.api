@@ -1301,6 +1301,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.Remark = updateVo.Remark;
                 updateDto.OtherHospitalId = updateVo.OtherHospitalId;
                 updateDto.SendBy = updateVo.SendBy;
+                updateDto.IsSpecifyHospitalEmployee = updateVo.IsSpecifyHospitalEmployee;
+                updateDto.HospitalEmployeeId=updateVo.HospitalEmployeeId;
                 await _orderService.UpdateAsync(updateDto, employeeId);
                 return ResultData.Success();
             }

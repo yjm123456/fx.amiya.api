@@ -46,5 +46,14 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend
         /// 派单人
         /// </summary>
         public int SendBy { get; set; }
+        /// <summary>
+        /// 是否指定医院账户
+        /// </summary>
+        public bool IsSpecifyHospitalEmployee { get; set; }
+
+        /// <summary>
+        /// 医院账户id
+        /// </summary>
+        public int HospitalEmployeeId { get; set; }
     }
 }
