@@ -289,5 +289,20 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<List<ShoppingCartRegistrationIndicatorBaseDataDto>> GetAssitantFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate, bool? isCurrentMonth, string baseLiveAnchorId,List<string> contentPlatformIds);
         #endregion
+        #region 助理看板
+        /// <summary>
+        /// 根据助理获取客资人数
+        /// </summary>
+        /// <returns></returns>
+        Task<AssistantDistributeConsulationTypeDataDto> GetDistributeConsulationTypeDataAsync(DateTime startDate,DateTime endDate,List<int> assistantIdList);
+        /// <summary>
+        /// 根据助理获取助理分诊折线图基础数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="assistantIdList"></param>
+        /// <returns></returns>
+        Task<List<BaseKeyValueDto<string, int>>> GetDistributeConsulationTypeBrokenLineDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIdList);
+        #endregion
     }
 }

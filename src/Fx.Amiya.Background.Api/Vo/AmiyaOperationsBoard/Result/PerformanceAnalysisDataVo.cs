@@ -8,6 +8,14 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
     public class AssiatantPerformanceAnalysisDataVo
     {
         /// <summary>
+        /// 客资分诊
+        /// </summary>
+        public CustomerTypePerformanceDataVo TypeCount { get; set; }
+        /// <summary>
+        /// 客资业绩
+        /// </summary>
+        public CustomerTypePerformanceDataVo TypePerformance { get; set; }
+        /// <summary>
         /// 有效/潜在分诊数据
         /// </summary>
         public AssistantOperationBoardIsEffictiveDataVo DistributeConsulationData { get; set; } = new();
@@ -32,6 +40,34 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
         /// </summary>
         public AssistantOperationBoardGetNewOrOldCustomerCompareDataDetailsVo PerformanceNewCustonerOrNoData { get; set; } = new();
     }
+
+    public class CustomerTypePerformanceDataVo
+    {
+        /// <summary>
+        /// 总计
+        /// </summary>
+        public decimal Total { get; set; }
+        /// <summary>
+        /// 数据
+        /// </summary>
+        public List<CustomerTypePerformanceDataItemVo> Data { get; set; }
+    }
+    public class CustomerTypePerformanceDataItemVo
+    {
+        /// <summary>
+        /// 名称
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// 人数/业绩
+        /// </summary>
+        public decimal Value { get; set; }
+        /// <summary>
+        /// 占比
+        /// </summary>
+        public decimal Rate { get; set; }
+    }
+
     /// <summary>
     /// 有效/潜在分诊数据
     /// </summary>

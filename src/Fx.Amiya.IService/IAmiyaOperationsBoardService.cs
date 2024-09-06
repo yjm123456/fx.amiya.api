@@ -58,6 +58,19 @@ namespace Fx.Amiya.IService
         Task<AssiatantTargetCompleteAndPerformanceRateDto> GetAssiatantTargetCompleteAndPerformanceRateDataAsync(QueryAssistantPerformanceDto query);
         Task<List<AssistantHospitalPerformanceDto>> GetAssistantHospitalPerformanceDataAsync(QueryAssistantPerformanceDto query);
         Task<AssistantHospitalCluesDataDto> GetAssistantHospitalCluesDataAsync(QueryAssistantPerformanceDto query);
+        /// <summary>
+        /// 获取助理分诊数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<AssistantDistributeConsulationDto> GetAssistantDistributeConsulationDataAsync(QueryAssistantPerformanceDto query);
+        /// <summary>
+        /// 获取助理分诊折线图
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<AssistantDistributeConsulationBrokenLineDto> GetAssistantDistributeConsulationBrokenLineDataAsync(QueryAssistantPerformanceDto query);
+        
         #endregion
 
         #endregion
@@ -68,24 +81,24 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<List<CompanyPerformanceDataDto>> GetCompanyPerformanceDataAsync(QueryAmiyaCompanyOperationsDataDto query);
-        
+
         /// <summary>
         /// 获取公司看板获客情况数据
         /// </summary>
         /// <returns></returns>
-         Task<List<CompanyCustomerAcquisitionDataDto>> GetCompanyCustomerAcquisitionDataAsync(QueryAmiyaCompanyOperationsDataDto query);
-        
+        Task<List<CompanyCustomerAcquisitionDataDto>> GetCompanyCustomerAcquisitionDataAsync(QueryAmiyaCompanyOperationsDataDto query);
+
         /// <summary>
         /// 获取公司看板运营情况数据
         /// </summary>
         /// <returns></returns>
-         Task<List<CompanyOperationsDataDto>> GetCompanyOperationsDataAsync(QueryAmiyaCompanyOperationsDataDto query);
-       
+        Task<List<CompanyOperationsDataDto>> GetCompanyOperationsDataAsync(QueryAmiyaCompanyOperationsDataDto query);
+
         /// <summary>
         /// 获取公司看板指标转化情况数据
         /// </summary>
         /// <returns></returns>
-         Task<List<CompanyIndicatorConversionDataDto>> GetCompanyIndicatorConversionDataAsync(QueryAmiyaCompanyOperationsDataDto query);
+        Task<List<CompanyIndicatorConversionDataDto>> GetCompanyIndicatorConversionDataAsync(QueryAmiyaCompanyOperationsDataDto query);
         /// <summary>
         /// 获取公司当月新客分诊转化情况
         /// </summary>
@@ -124,24 +137,25 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<List<AssistantPerformanceDataDto>> GetAssistantPerformanceDataAsync(QueryAmiyaAssistantOperationsDataDto query);
-       
+
         /// <summary>
         /// 获取助理看板获客情况数据
         /// </summary>
         /// <returns></returns>
-         Task<List<AssistantCustomerAcquisitionDataDto>> GetAssistantCustomerAcquisitionDataAsync(QueryAmiyaAssistantOperationsDataDto query);
-        
+        Task<List<AssistantCustomerAcquisitionDataDto>> GetAssistantCustomerAcquisitionDataAsync(QueryAmiyaAssistantOperationsDataDto query);
+
         /// <summary>
         /// 获取助理看板运营情况数据
         /// </summary>
         /// <returns></returns>
-         Task<List<AssistantOperationsDataDto>> GetAssistantOperationsDataAsync(QueryAmiyaAssistantOperationsDataDto query);
-        
+        Task<List<AssistantOperationsDataDto>> GetAssistantOperationsDataAsync(QueryAmiyaAssistantOperationsDataDto query);
+
         /// <summary>
         /// 获取助理看板指标转化情况数据
         /// </summary>
         /// <returns></returns>
-         Task<List<AssistantIndicatorConversionDataDto>> GetAssistantIndicatorConversionDataAsync(QueryAmiyaAssistantOperationsDataDto query);
+        Task<List<AssistantIndicatorConversionDataDto>> GetAssistantIndicatorConversionDataAsync(QueryAmiyaAssistantOperationsDataDto query);
+        
 
         #endregion
         /// <summary>

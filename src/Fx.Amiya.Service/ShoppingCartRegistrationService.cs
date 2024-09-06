@@ -610,7 +610,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.Remark = updateDto.Remark;
                 shoppingCartRegistration.CluePicture = updateDto.CluePicture;
                 shoppingCartRegistration.AddWechatPicture = updateDto.AddWechatPicture;
-                
+
                 await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
                 //throw new Exception("数据已编辑成功，因当前登录账号和创建人不一致,该部分数据只有加V与备注修改生效！");
             }
@@ -693,7 +693,7 @@ namespace Fx.Amiya.Service
                 {
                     throw new Exception("已存在该客户手机号" + updateDto.Phone + "，无法录入，请重新填写！");
                 }
-               
+
                 await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
             }
         }
@@ -1492,7 +1492,8 @@ namespace Fx.Amiya.Service
                         IsReturnBackPrice = d.IsReturnBackPrice,
                         AssignEmpId = d.AssignEmpId,
                         IsAddWeChat = d.IsAddWeChat,
-                        IsSendOrder = d.IsSendOrder
+                        IsSendOrder = d.IsSendOrder,
+                        EmergencyLevel=d.EmergencyLevel
                     };
             return await x.ToListAsync();
         }
@@ -2368,7 +2369,41 @@ namespace Fx.Amiya.Service
             var config = await dalConfig.GetAll().SingleOrDefaultAsync();
             return JsonConvert.DeserializeObject<WxAppConfigDto>(config.ConfigJson).CallCenterConfig;
         }
-
-
+        /// <summary>
+        /// 根据助理获取客资人数
+        /// </summary>
+        /// <returns></returns>
+        public async Task<AssistantDistributeConsulationTypeDataDto> GetDistributeConsulationTypeDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIdList)
+        {
+            AssistantDistributeConsulationTypeDataDto data = new AssistantDistributeConsulationTypeDataDto();
+            var data2 = await dalShoppingCartRegistration.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && assistantIdList.Contains(e.AssignEmpId.Value)).GroupBy(e => e.EmergencyLevel).Select(e => new
+            {
+                CustomerType = e.Key,
+                Count = e.Count()
+            }).ToListAsync();
+            data.FirstType = data2.Where(e => e.CustomerType == (int)EmergencyLevel.Important).FirstOrDefault()?.Count ?? 0;
+            data.SecondType = data2.Where(e => e.CustomerType == (int)EmergencyLevel.Generally).FirstOrDefault()?.Count ?? 0;
+            data.ThirdType = data2.Where(e => e.CustomerType == (int)EmergencyLevel.Ignorable).FirstOrDefault()?.Count ?? 0;
+            data.TotalCount = data.FirstType + data.SecondType + data.ThirdType;
+            return data;
+        }
+        /// <summary>
+        /// 根据助理获取助理分诊折线图基础数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="assistantIdList"></param>
+        /// <returns></returns>
+        public async Task<List<BaseKeyValueDto<string,int>>> GetDistributeConsulationTypeBrokenLineDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIdList)
+        {
+            
+            return await dalShoppingCartRegistration.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && assistantIdList.Contains(e.AssignEmpId.Value)).Select(e => new BaseKeyValueDto<string,int>
+            {
+               Key=e.RecordDate.Date.Date.ToString(),
+               Value=e.EmergencyLevel,
+            }).ToListAsync();
+           
+            
+        }
     }
 }

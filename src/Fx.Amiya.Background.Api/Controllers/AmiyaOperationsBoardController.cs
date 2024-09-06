@@ -857,7 +857,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("assistantPerformance")]
-        public async Task<ResultData<AssistantPerformanceVo>> GetAssitantPerformanceAsync([FromQuery]QueryAssistantPerformanceVo query)
+        public async Task<ResultData<AssistantPerformanceVo>> GetAssitantPerformanceAsync([FromQuery] QueryAssistantPerformanceVo query)
         {
             QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
             queryDto.StartDate = query.StartDate;
@@ -918,7 +918,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 date = e.date,
                 Performance = e.Performance
             }).ToList();
-            performanceBroken.TotalPerformance = res.OldCustomerPerformance.Select(e => new PerformanceBrokenLineListInfoVo
+            performanceBroken.TotalPerformance = res.TotalPerformance.Select(e => new PerformanceBrokenLineListInfoVo
             {
                 date = e.date,
                 Performance = e.Performance
@@ -931,7 +931,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("assistantPerformanceFilterData")]
-        public async Task<ResultData<AssistantOperationDataVo>> GetAssistantPerformanceFilterDataAsync([FromQuery]QueryAssistantPerformanceFilterDataVo query) {
+        public async Task<ResultData<AssistantOperationDataVo>> GetAssistantPerformanceFilterDataAsync([FromQuery] QueryAssistantPerformanceFilterDataVo query)
+        {
             AssistantOperationDataVo result = new AssistantOperationDataVo();
             QueryAssistantPerformanceFilterDataDto queryDto = new QueryAssistantPerformanceFilterDataDto();
             queryDto.StartDate = query.StartDate;
@@ -939,18 +940,67 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.AssistantId = query.AssistantId;
             queryDto.IsEffectiveCustomerData = query.IsEffectiveCustomerData;
             var performance = await amiyaOperationsBoardService.GetAssistantPerformanceFilterDataAsync(queryDto);
-            result.NewCustomerData = performance.NewCustomerData.Select(e=>new DataItemVo { 
-                Key=e.Key,
-                Name=e.Name,
-                Value=e.Value
-            }).ToList();
-            result.OldCustomerData = performance.OldCustomerData.Select(e => new DataItemVo
+
+            AssistantNewCustomerOperationDataVo newCustomerOperationDataVo = new AssistantNewCustomerOperationDataVo();
+            newCustomerOperationDataVo.RefundCardRate = performance.NewCustomerData.RefundCardRate.HasValue ? performance.NewCustomerData.RefundCardRate.Value : 0.00M;
+            newCustomerOperationDataVo.RefundCardRateHealthValueSum = performance.NewCustomerData.RefundCardRateHealthValueSum;
+            newCustomerOperationDataVo.RefundCardRateHealthValueThisMonth = performance.NewCustomerData.RefundCardRateHealthValueThisMonth;
+            //newCustomerOperationDataVo.ClueEffictiveRate = performance.NewCustomerData.ClueEffictiveRate.HasValue ? performance.NewCustomerData.ClueEffictiveRate.Value : 0.00M;
+            //newCustomerOperationDataVo.ClueEffictiveRateHealthValueThisMonth = performance.NewCustomerData.ClueEffictiveRateHealthValueThisMonth;
+            newCustomerOperationDataVo.AddWeChatRate = performance.NewCustomerData.AddWeChatRate.HasValue ? performance.NewCustomerData.AddWeChatRate.Value : 0.00M;
+            newCustomerOperationDataVo.AddWeChatRateHealthValueSum = performance.NewCustomerData.AddWeChatRateHealthValueSum;
+            newCustomerOperationDataVo.AddWeChatRateHealthValueThisMonth = performance.NewCustomerData.AddWeChatRateHealthValueThisMonth;
+            newCustomerOperationDataVo.SendOrderRate = performance.NewCustomerData.SendOrderRate.HasValue ? performance.NewCustomerData.SendOrderRate.Value : 0.00M;
+            newCustomerOperationDataVo.SendOrderRateHealthValueSum = performance.NewCustomerData.SendOrderRateHealthValueSum;
+            newCustomerOperationDataVo.SendOrderRateHealthValueThisMonth = performance.NewCustomerData.SendOrderRateHealthValueThisMonth;
+            newCustomerOperationDataVo.ToHospitalRate = performance.NewCustomerData.ToHospitalRate.HasValue ? performance.NewCustomerData.ToHospitalRate.Value : 0.00M;
+            newCustomerOperationDataVo.ToHospitalRateHealthValueSum = performance.NewCustomerData.ToHospitalRateHealthValueSum;
+            newCustomerOperationDataVo.ToHospitalRateHealthValueThisMonth = performance.NewCustomerData.ToHospitalRateHealthValueThisMonth;
+            newCustomerOperationDataVo.DealRate = performance.NewCustomerData.DealRate.HasValue ? performance.NewCustomerData.DealRate.Value : 0.00M;
+            newCustomerOperationDataVo.DealRateHealthValueSum = performance.NewCustomerData.DealRateHealthValueSum;
+            newCustomerOperationDataVo.DealRateHealthValueThisMonth = performance.NewCustomerData.DealRateHealthValueThisMonth;
+            //能效转化
+            //newCustomerOperationDataVo.FlowClueToDealPrice = performance.NewCustomerData.FlowClueToDealPrice.HasValue ? performance.NewCustomerData.FlowClueToDealPrice.Value : 0.00M;
+            newCustomerOperationDataVo.AllocationConsulationToDealRate = performance.NewCustomerData.AllocationConsulationToDealRate.HasValue ? performance.NewCustomerData.AllocationConsulationToDealRate.Value : 0.00M;
+            newCustomerOperationDataVo.AllocationConsulationToDealPrice = performance.NewCustomerData.AllocationConsulationToDealPrice.HasValue ? performance.NewCustomerData.AllocationConsulationToDealPrice.Value : 0.00M;
+            newCustomerOperationDataVo.AddWeChatToDealPrice = performance.NewCustomerData.AddWeChatToDealPrice.HasValue ? performance.NewCustomerData.AddWeChatToDealPrice.Value : 0.00M;
+            newCustomerOperationDataVo.SendOrderToDealRate = performance.NewCustomerData.SendOrderToDealRate.HasValue ? performance.NewCustomerData.SendOrderToDealRate.Value : 0.00M;
+            newCustomerOperationDataVo.SendOrderToDealPrice = performance.NewCustomerData.SendOrderToDealPrice.HasValue ? performance.NewCustomerData.SendOrderToDealPrice.Value : 0.00M;
+            newCustomerOperationDataVo.VisitToDealPrice = performance.NewCustomerData.VisitToDealPrice.HasValue ? performance.NewCustomerData.VisitToDealPrice.Value : 0.00M;
+            newCustomerOperationDataVo.DealToPrice = performance.NewCustomerData.DealToPrice.HasValue ? performance.NewCustomerData.DealToPrice.Value : 0.00M;
+            newCustomerOperationDataVo.newCustomerOperationDataDetails = new List<AssistantNewCustomerOperationDataDetailsVo>();
+            foreach (var x in performance.NewCustomerData.newCustomerOperationDataDetails)
             {
-                Key = e.Key,
-                Name = e.Name,
-                Value = e.Value
-            }).ToList(); ;
-            return ResultData<AssistantOperationDataVo>.Success().AddData("data",result);
+                AssistantNewCustomerOperationDataDetailsVo newCustomerOperationDataDetails = new AssistantNewCustomerOperationDataDetailsVo();
+                newCustomerOperationDataDetails.Key = x.Key;
+                newCustomerOperationDataDetails.Name = x.Name;
+                newCustomerOperationDataDetails.Value = x.Value;
+                newCustomerOperationDataDetails.YearToYearValue = x.YearToYearValue.HasValue ? x.YearToYearValue.Value : 0.00M;
+                newCustomerOperationDataDetails.ChainRatioValue = x.ChainRatioValue.HasValue ? x.ChainRatioValue.Value : 0.00M;
+                newCustomerOperationDataDetails.TargetCompleteRate = x.TargetCompleteRate.HasValue ? x.TargetCompleteRate.Value : 0.00M;
+                newCustomerOperationDataVo.newCustomerOperationDataDetails.Add(newCustomerOperationDataDetails);
+            }
+
+            AssistantOldCustomerOperationDataVo oldCustomerOperationDataVo = new AssistantOldCustomerOperationDataVo();
+            oldCustomerOperationDataVo.TotalDealPeople = performance.OldCustomerData.TotalDealPeople;
+            oldCustomerOperationDataVo.SecondDealPeople = performance.OldCustomerData.SecondDealPeople;
+            oldCustomerOperationDataVo.ThirdDealPeople = performance.OldCustomerData.ThirdDealPeople;
+            oldCustomerOperationDataVo.FourthDealCustomer = performance.OldCustomerData.FourthDealCustomer;
+            oldCustomerOperationDataVo.FifThOrMoreOrMoreDealCustomer = performance.OldCustomerData.FifThOrMoreOrMoreDealCustomer;
+            oldCustomerOperationDataVo.SecondTimeBuyRate = performance.OldCustomerData.SecondTimeBuyRate;
+            oldCustomerOperationDataVo.SecondTimeBuyRateProportion = performance.OldCustomerData.SecondTimeBuyRateProportion;
+            oldCustomerOperationDataVo.ThirdTimeBuyRate = performance.OldCustomerData.ThirdTimeBuyRate;
+            oldCustomerOperationDataVo.ThirdTimeBuyRateProportion = performance.OldCustomerData.ThirdTimeBuyRateProportion;
+            oldCustomerOperationDataVo.FourthTimeBuyRate = performance.OldCustomerData.FourthTimeBuyRate;
+            oldCustomerOperationDataVo.FourthTimeBuyRateProportion = performance.OldCustomerData.FourthTimeBuyRateProportion;
+            oldCustomerOperationDataVo.FifthTimeOrMoreBuyRate = performance.OldCustomerData.FifthTimeOrMoreBuyRate;
+            oldCustomerOperationDataVo.FifthTimeOrMoreBuyRateProportion = performance.OldCustomerData.FifthTimeOrMoreBuyRateProportion;
+            oldCustomerOperationDataVo.BuyRate = performance.OldCustomerData.BuyRate;
+
+            result.NewCustomerData = newCustomerOperationDataVo;
+            result.OldCustomerData = oldCustomerOperationDataVo;
+
+            return ResultData<AssistantOperationDataVo>.Success().AddData("data", result);
 
 
         }
@@ -968,6 +1018,22 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.EndDate = query.EndDate;
             queryDto.AssistantId = query.AssistantId;
             var res = await amiyaOperationsBoardService.GetAssistantPerformanceAnalysisDataAsync(queryDto);
+            analysisData.TypeCount = new CustomerTypePerformanceDataVo();
+            analysisData.TypeCount.Total = res.TypeCount.TotalCount;
+            analysisData.TypeCount.Data = res.TypeCount.Data.Select(e=> new CustomerTypePerformanceDataItemVo {
+                Name = e.Key, 
+                Value = e.Value,
+                Rate=e.Rate
+            }).ToList();
+            analysisData.TypePerformance = new CustomerTypePerformanceDataVo();
+            analysisData.TypePerformance.Total = res.TypeCount.TotalCount;
+            analysisData.TypePerformance.Data = res.TypePerformance.Data.Select(e => new CustomerTypePerformanceDataItemVo
+            {
+                Name = e.Key,
+                Value = e.Value,
+                Rate = e.Rate
+            }).ToList();
+
             analysisData.DistributeConsulationData.EffictiveRate = res.DistributeConsulationData.EffictiveRate;
             analysisData.DistributeConsulationData.NotEffictiveRate = res.DistributeConsulationData.NotEffictiveRate;
             analysisData.DistributeConsulationData.EffictiveNumber = res.DistributeConsulationData.EffictiveNumber;
@@ -1025,7 +1091,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 NewCustomerPerformance = e.NewCustomerPerformance,
                 OldCustomerPerformance = e.OldCustomerPerformance,
                 TotalPerformance = e.TotalPerformance
-            }).OrderByDescending(e=>e.TotalPerformance).ToList();
+            }).OrderByDescending(e => e.TotalPerformance).ToList();
             return ResultData<List<AssistantHospitalPerformanceVo>>.Success().AddData("data", result);
         }
         /// <summary>
@@ -1045,7 +1111,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             dataVo.TotalSendOrderCount = res.TotalSendOrderCount;
             dataVo.TotalVisitCount = res.TotalVisitCount;
             dataVo.TotalDealCount = res.TotalDealCount;
-            dataVo.Items = res.Items.OrderByDescending(e=>e.SendOrderCount).Select(e => new AssistantCluesDataItemVo
+            dataVo.Items = res.Items.OrderByDescending(e => e.SendOrderCount).Select(e => new AssistantCluesDataItemVo
             {
                 Name = e.Name,
                 SendOrderCount = e.SendOrderCount,
@@ -1081,6 +1147,78 @@ namespace Fx.Amiya.Background.Api.Controllers
             result.PerformanceRateData.RemoveAll(e => e.Name == 0m);
             result.TargetCompleteData.RemoveAll(e => e.Name == 0m);
             return ResultData<AssiatantTargetCompleteAndPerformanceRateVo>.Success().AddData("data", result);
+        }
+        /// <summary>
+        /// 助理分诊数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("distributeConsulationData")]
+        public async Task<ResultData<AssistantDistributeConsulationVo>> GetDistributeConsulationDataAsync([FromQuery] QueryAssistantPerformanceVo query)
+        {
+            AssistantDistributeConsulationVo data = new AssistantDistributeConsulationVo();
+            QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            var res = await amiyaOperationsBoardService.GetAssistantDistributeConsulationDataAsync(queryDto);
+            data.FirstTypeCurrentDay = res.FirstType.CurrentDay;
+            data.FirstTypeTotal=res.FirstType.Total;
+            data.FirstTypeChainRate=res.FirstType.ChainRate;
+            data.FirstTypeYearOnYear=res.FirstType.YearOnYear;
+
+            data.SecondTypeCurrentDay = res.SecondType.CurrentDay;
+            data.SecondTypeTotal = res.SecondType.Total;
+            data.SecondTypeChainRate = res.SecondType.ChainRate;
+            data.SecondTypeYearOnYear = res.SecondType.YearOnYear;
+
+            data.ThirdTypeCurrentDay = res.ThirdType.CurrentDay;
+            data.ThirdTypeTotal = res.ThirdType.Total;
+            data.ThirdTypeChainRate = res.ThirdType.ChainRate;
+            data.ThirdTypeYearOnYear = res.ThirdType.YearOnYear;
+
+            data.TotalTypeCurrentDay = res.TotalType.CurrentDay;
+            data.TotalTypeTotal = res.TotalType.Total;
+            data.TotalTypeChainRate = res.TotalType.ChainRate;
+            data.TotalTypeYearOnYear = res.TotalType.YearOnYear;
+
+            return ResultData<AssistantDistributeConsulationVo>.Success().AddData("data",data);
+
+        }
+        /// <summary>
+        /// 助理分诊折线图
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("assistantDistributeConsulationBrokenLineData")]
+        public async Task<ResultData<AssistantDistributeConsulationBrokenLineVo>> GetAssistantDistributeConsulationBrokenLineDataAsync([FromQuery] QueryAssistantPerformanceVo query) {
+            AssistantDistributeConsulationBrokenLineVo data = new AssistantDistributeConsulationBrokenLineVo();
+            QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            var res = await amiyaOperationsBoardService.GetAssistantDistributeConsulationBrokenLineDataAsync(queryDto);
+            data.FirstType = res.FirstType.Select(e => new PerformanceBrokenLineListInfoVo
+            {
+                date = e.date,
+                Performance = e.Performance
+            }).ToList();
+            data.SencondType = res.SencondType.Select(e => new PerformanceBrokenLineListInfoVo
+            {
+                date = e.date,
+                Performance = e.Performance
+            }).ToList();
+            data.ThirdType = res.ThirdType.Select(e => new PerformanceBrokenLineListInfoVo
+            {
+                date = e.date,
+                Performance = e.Performance
+            }).ToList();
+            data.TotalType = res.TotalType.Select(e => new PerformanceBrokenLineListInfoVo
+            {
+                date = e.date,
+                Performance = e.Performance
+            }).ToList();
+            return ResultData<AssistantDistributeConsulationBrokenLineVo>.Success().AddData("data", data);
         }
 
 

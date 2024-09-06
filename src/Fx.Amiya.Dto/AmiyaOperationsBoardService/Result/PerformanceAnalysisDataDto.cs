@@ -9,6 +9,14 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
     public class AssistantPerformanceAnalysisDataDto
     {
         /// <summary>
+        /// 客资分类线索
+        /// </summary>
+        public CustomerTypePerformanceDataDto TypeCount { get; set; }
+        /// <summary>
+        /// 客资分类业绩
+        /// </summary>
+        public CustomerTypePerformanceDataDto TypePerformance { get; set; }
+        /// <summary>
         /// 有效/潜在分诊数据
         /// </summary>
         public AssistantOperationBoardIsEffictiveDataDto DistributeConsulationData { get; set; }
@@ -32,6 +40,23 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
         /// 新老客业绩数据
         /// </summary>
         public AssistantOperationBoardGetNewOrOldCustomerCompareDataDetailsDto PerformanceNewCustonerOrNoData { get; set; }
+    }
+    public class CustomerTypePerformanceDataDto
+    {
+        /// <summary>
+        /// 总计
+        /// </summary>
+        public decimal TotalCount { get; set; }
+        /// <summary>
+        /// 数据
+        /// </summary>
+        public List<CustomerTypePerformanceDataItemDto> Data { get; set; }
+    }
+    public class CustomerTypePerformanceDataItemDto
+    {
+        public string Key { get; set; }
+        public decimal Value { get; set; }
+        public decimal Rate { get; set; }
     }
     /// <summary>
     /// 有效/潜在分诊数据
