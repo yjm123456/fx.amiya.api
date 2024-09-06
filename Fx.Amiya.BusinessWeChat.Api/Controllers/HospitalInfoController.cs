@@ -29,15 +29,16 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
     [FxInternalAuthorize]
     public class HospitalInfoController : ControllerBase
     {
-
+        private IHospitalEmployeeService hospitalEmployeeService;
         private IHospitalInfoService hospitalInfoService;
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="hospitalInfoService"></param>
-        public HospitalInfoController(IHospitalInfoService hospitalInfoService)
+        public HospitalInfoController(IHospitalInfoService hospitalInfoService,IHospitalEmployeeService hospitalEmployeeService)
         {
             this.hospitalInfoService = hospitalInfoService;
+            this.hospitalEmployeeService = hospitalEmployeeService;
         }
 
 
@@ -116,6 +117,24 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             {
                 return ResultData<List<BaseKeyAndValueVo>>.Fail(ex.Message);
             }
+        }
+
+
+        /// <summary>
+        /// 根据医院获取医院账户姓名列表
+        /// </summary>
+        /// <param name="hospitalId">医院id</param>
+        /// <returns></returns>
+        [HttpGet("getByHospitalIdList")]
+        public async Task<ResultData<List<BaseKeyAndValueVo<int>>>> GetByHospitalIdListAsync(int hospitalId)
+        {
+            var employee = from d in await hospitalEmployeeService.GetByHospitalIdAsync(hospitalId)
+                           select new BaseKeyAndValueVo<int>
+                           {
+                               Id = d.Id,
+                               Name = d.Name
+                           };
+            return ResultData<List<BaseKeyAndValueVo<int>>>.Success().AddData("employee", employee.ToList());
         }
     }
 }

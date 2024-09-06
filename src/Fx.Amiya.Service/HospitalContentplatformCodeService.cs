@@ -118,7 +118,7 @@ namespace Fx.Amiya.Service
             var result = await dalHospitalContentplatformCode.GetAll().Include(x => x.HospitalInfo).Include(x => x.ThirdPartContentplatformInfo).Where(x => x.HospitalId == hospitalId && x.ThirdPartContentplatformInfoId == ThirdPartContentPlatFormId && x.Valid == true).FirstOrDefaultAsync();
             if (result == null)
             {
-                throw new Exception("未找到'" + result.ThirdPartContentplatformInfo.Name + "'平台的'" + result.HospitalInfo.Name + "'配置信息!");
+                throw new Exception("未找到该医院的平台配置信息，无法验单!");
             }
 
             HospitalContentplatformCodeDto returnResult = new HospitalContentplatformCodeDto();
@@ -136,7 +136,7 @@ namespace Fx.Amiya.Service
             var result = await dalHospitalContentplatformCode.GetAll().Include(x => x.HospitalInfo).Include(x => x.ThirdPartContentplatformInfo).Where(x => x.Code == HospitalCode && x.ThirdPartContentplatformInfoId == ThirdPartContentPlatFormId && x.Valid == true).FirstOrDefaultAsync();
             if (result == null)
             {
-                throw new Exception("未找到'" + result.ThirdPartContentplatformInfo.Name + "'平台的'" + result.HospitalInfo.Name + "'配置信息!");
+                throw new Exception("未找到该医院的平台配置信息，无法改单!");
             }
 
             HospitalContentplatformCodeDto returnResult = new HospitalContentplatformCodeDto();
