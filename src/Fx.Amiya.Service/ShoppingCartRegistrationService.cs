@@ -2399,7 +2399,7 @@ namespace Fx.Amiya.Service
             
             return await dalShoppingCartRegistration.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && assistantIdList.Contains(e.AssignEmpId.Value)).Select(e => new BaseKeyValueDto<string,int>
             {
-               Key=e.RecordDate.Date.Date.ToString(),
+               Key=e.RecordDate.Date.Date.Day.ToString(),
                Value=e.EmergencyLevel,
             }).ToListAsync();
            
