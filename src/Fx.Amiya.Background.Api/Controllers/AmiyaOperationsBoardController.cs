@@ -1026,7 +1026,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 Rate=e.Rate
             }).ToList();
             analysisData.TypePerformance = new CustomerTypePerformanceDataVo();
-            analysisData.TypePerformance.Total = res.TypeCount.TotalCount;
+            analysisData.TypePerformance.Total = DecimalExtension.ChangePriceToTenThousand(res.TypeCount.TotalCount);
             analysisData.TypePerformance.Data = res.TypePerformance.Data.Select(e => new CustomerTypePerformanceDataItemVo
             {
                 Name = e.Key,
