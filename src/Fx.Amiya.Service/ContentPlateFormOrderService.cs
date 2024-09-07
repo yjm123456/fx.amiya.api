@@ -1148,6 +1148,13 @@ namespace Fx.Amiya.Service
                     await hospitalCustomerInfoService.AddAsync(addSendHospitalCustomerInfoDto);
                 }
             }
+            else
+            {
+                var originMainOrder = dalContentPlatformOrderSend.GetAll().Where(e => e.Id == sendInfo.Id).FirstOrDefault();
+                originMainOrder.IsSpecifyHospitalEmployee = updateDto.IsSpecifyHospitalEmployee;
+                originMainOrder.HospitalEmployeeId = updateDto.HospitalEmployeeId;
+                dalContentPlatformOrderSend.Update(originMainOrder, true);
+            }
             Dictionary<int, bool> sendDic = new Dictionary<int, bool>();
             if (!contentPlatFormOrder.HasDealInfo)
             {
