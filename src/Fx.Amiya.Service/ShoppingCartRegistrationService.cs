@@ -276,10 +276,14 @@ namespace Fx.Amiya.Service
                 {
                     shoppingCartRegistration.BaseLiveAnchorId = baseLiveAnchorId.LiveAnchorBaseId;
                 }
-                var isExistPhone = await this.GetByPhoneAsync(addDto.Phone);
-                if (!string.IsNullOrEmpty(isExistPhone.Id) && isExistPhone.BaseLiveAnchorId == baseLiveAnchorId.LiveAnchorBaseId)
+                if (addDto.Phone != "00000000000")
                 {
-                    throw new Exception("已存在该客户手机号" + addDto.Phone + "，无法录入，请重新填写！");
+
+                    var isExistPhone = await this.GetByPhoneAsync(addDto.Phone);
+                    if (!string.IsNullOrEmpty(isExistPhone.Id) && isExistPhone.BaseLiveAnchorId == baseLiveAnchorId.LiveAnchorBaseId)
+                    {
+                        throw new Exception("已存在该客户手机号" + addDto.Phone + "，无法录入，请重新填写！");
+                    }
                 }
                 //添加加v人员
                 if (shoppingCartRegistration.IsAddWeChat == true)
@@ -352,10 +356,13 @@ namespace Fx.Amiya.Service
                     {
                         shoppingCartRegistration.BaseLiveAnchorId = baseLiveAnchorId.LiveAnchorBaseId;
                     }
-                    var isExistPhone = await this.GetByPhoneAsync(addDto.Phone);
-                    if (!string.IsNullOrEmpty(isExistPhone.Id) && isExistPhone.BaseLiveAnchorId == baseLiveAnchorId.LiveAnchorBaseId)
+                    if (addDto.Phone != "00000000000")
                     {
-                        throw new Exception("已存在该客户手机号" + addDto.Phone + "，无法录入，请重新填写！");
+                        var isExistPhone = await this.GetByPhoneAsync(addDto.Phone);
+                        if (!string.IsNullOrEmpty(isExistPhone.Id) && isExistPhone.BaseLiveAnchorId == baseLiveAnchorId.LiveAnchorBaseId)
+                        {
+                            throw new Exception("已存在该客户手机号" + addDto.Phone + "，无法录入，请重新填写！");
+                        }
                     }
                     await dalShoppingCartRegistration.AddAsync(shoppingCartRegistration, true);
                     Thread.Sleep(1000);
@@ -688,11 +695,14 @@ namespace Fx.Amiya.Service
                 {
                     shoppingCartRegistration.BaseLiveAnchorId = baseLiveAnchorId.LiveAnchorBaseId;
                 }
-
-                var isExistPhone = await this.GetByPhoneAsync(updateDto.Phone);
-                if (!string.IsNullOrEmpty(isExistPhone.Id) && isExistPhone.BaseLiveAnchorId == baseLiveAnchorId.LiveAnchorBaseId)
+                if (updateDto.Phone != "00000000000")
                 {
-                    throw new Exception("已存在该客户手机号" + updateDto.Phone + "，无法录入，请重新填写！");
+
+                    var isExistPhone = await this.GetByPhoneAsync(updateDto.Phone);
+                    if (!string.IsNullOrEmpty(isExistPhone.Id) && isExistPhone.BaseLiveAnchorId == baseLiveAnchorId.LiveAnchorBaseId)
+                    {
+                        throw new Exception("已存在该客户手机号" + updateDto.Phone + "，无法录入，请重新填写！");
+                    }
                 }
 
                 await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
@@ -1494,7 +1504,7 @@ namespace Fx.Amiya.Service
                         AssignEmpId = d.AssignEmpId,
                         IsAddWeChat = d.IsAddWeChat,
                         IsSendOrder = d.IsSendOrder,
-                        EmergencyLevel=d.EmergencyLevel
+                        EmergencyLevel = d.EmergencyLevel
                     };
             return await x.ToListAsync();
         }
@@ -2395,16 +2405,16 @@ namespace Fx.Amiya.Service
         /// <param name="endDate"></param>
         /// <param name="assistantIdList"></param>
         /// <returns></returns>
-        public async Task<List<BaseKeyValueDto<string,int>>> GetDistributeConsulationTypeBrokenLineDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIdList)
+        public async Task<List<BaseKeyValueDto<string, int>>> GetDistributeConsulationTypeBrokenLineDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIdList)
         {
-            
-            return await dalShoppingCartRegistration.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && assistantIdList.Contains(e.AssignEmpId.Value)).Select(e => new BaseKeyValueDto<string,int>
+
+            return await dalShoppingCartRegistration.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && assistantIdList.Contains(e.AssignEmpId.Value)).Select(e => new BaseKeyValueDto<string, int>
             {
-               Key=e.RecordDate.Date.Date.Day.ToString(),
-               Value=e.EmergencyLevel,
+                Key = e.RecordDate.Date.Date.Day.ToString(),
+                Value = e.EmergencyLevel,
             }).ToListAsync();
-           
-            
+
+
         }
     }
 }
