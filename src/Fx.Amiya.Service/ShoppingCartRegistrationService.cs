@@ -699,7 +699,7 @@ namespace Fx.Amiya.Service
                 {
 
                     var isExistPhone = await this.GetByPhoneAsync(updateDto.Phone);
-                    if (!string.IsNullOrEmpty(isExistPhone.Id) && isExistPhone.BaseLiveAnchorId == baseLiveAnchorId.LiveAnchorBaseId)
+                    if (!string.IsNullOrEmpty(isExistPhone.Id) && isExistPhone.BaseLiveAnchorId == baseLiveAnchorId.LiveAnchorBaseId && isExistPhone.Id != updateDto.Id)
                     {
                         throw new Exception("已存在该客户手机号" + updateDto.Phone + "，无法录入，请重新填写！");
                     }

@@ -12,5 +12,10 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalContentplatformCode.Input
         public string OrderId { get; set; }
 
         public int SendOrderId { get; set; }
+
+        /// <summary>
+        /// 业务类型（C:查重；P：派单）
+        /// </summary>
+        public string YWLX { get; set; }
     }
 }

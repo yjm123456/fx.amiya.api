@@ -230,7 +230,16 @@ namespace Fx.Amiya.Background.Api.Controllers
                 var hospitalContentPlatformCode = await hospitalContentplatformCodeService.GetByHospitalIdAndThirdPartContentPlatformIdAsync(query.HospitalId, query.ThirdPartContentplatformInfoId);
                 queryData.JGBM = hospitalContentPlatformCode.Code;
 
-                queryData.PDBH = query.SendOrderId.ToString();
+                queryData.YWLX = query.YWLX;
+
+                if (query.YWLX == "P")
+                {
+                    queryData.PDBH = query.SendOrderId.ToString();
+                }
+                else
+                {
+                    queryData.PDBH = CreateOrderIdHelper.GetNextNumber();
+                }
                 var order = await contentPlateFormOrderService.GetByOrderIdAsync(query.OrderId);
                 var sendInfo = await contentPlatformOrderSendService.GetByIdAsync(Convert.ToInt32(query.SendOrderId.ToString()));
                 if (sendInfo.IsSpecifyHospitalEmployee == true)

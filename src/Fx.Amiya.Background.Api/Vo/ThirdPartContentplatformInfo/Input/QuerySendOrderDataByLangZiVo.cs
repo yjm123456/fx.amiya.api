@@ -24,6 +24,10 @@ namespace Fx.Amiya.Background.Api.Vo.ThirdPartContentplatformInfo.Input
         /// </summary>
         public string HOSPITALCOD { get; set; }
         /// <summary>
+        /// 业务类型（C：号码查重；P：正式派单）
+        /// </summary>
+        public string YWLX { get; set; }
+        /// <summary>
         /// 派单编号
         /// </summary>
         public string PDBH { get; set; }
