@@ -254,6 +254,7 @@ namespace Fx.Amiya.Service
                 order.BelongEmpId = input.EmployeeId;
                 order.IsRepeatProfundityOrder = false;
                 order.BelongChannel = input.BelongChannel;
+                order.IsRiBuLuoLiving = input.IsRiBuLuoLiving;
                 await _dalContentPlatformOrder.AddAsync(order, true);
 
                 foreach (var z in input.CustomerPictures)
