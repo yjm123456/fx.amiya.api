@@ -81,7 +81,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             try
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-                operationLog.OperationBy=Convert.ToInt32(employee.Id);
+                operationLog.OperationBy = Convert.ToInt32(employee.Id);
                 //if (employee.PositionName == "客服" || employee.PositionName == "客服管理员")
                 //{
                 //    var IsExistOrder = _tmallOrderService.IsExistPhoneAsync(addVo.Phone);
@@ -130,6 +130,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 addDto.CustomerType = addVo.CustomerType;
                 addDto.BelongChannel = addVo.BelongChannel;
                 addDto.ConsultingContent2 = addVo.ConsultingContent2;
+                addDto.IsRiBuLuoLiving = addVo.IsRiBuLuoLiving;
                 await _orderService.AddContentPlateFormOrderAsync(addDto);
 
 
@@ -161,7 +162,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 operationLog.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
                 await operationLogService.AddOperationLogAsync(operationLog);
             }
-            
+
         }
 
 
@@ -215,6 +216,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                     resultVo.ConsultationType = x.ConsultationTypeText;
                     resultVo.BelongMonth = x.BelongMonth;
                     resultVo.AddOrderPrice = x.AddOrderPrice;
+                    resultVo.IsRiBuLuoLiving = x.IsRiBuLuoLiving;
                     resultVo.CreateDate = x.CreateDate;
                     resultVo.CustomerName = x.CustomerName;
                     resultVo.Phone = x.Phone;
@@ -255,8 +257,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                     resultVo.ReturnBackPrice = x.ReturnBackPrice;
                     resultVo.OtherContentPlatFormOrderId = x.OtherContentPlatFormOrderId;
                     resultVo.IsRepeatProfundityOrder = x.IsRepeatProfundityOrder;
-                    resultVo.BelongChannel=x.BelongChannel;
-                    resultVo.BelongChannelText=x.BelongChannelText;
+                    resultVo.BelongChannel = x.BelongChannel;
+                    resultVo.BelongChannelText = x.BelongChannelText;
                     //    if (x.BelongEmpId != 0)
                     //    {
                     //        var empInfo = await amiyaEmployeeService.GetByIdAsync(x.BelongEmpId.Value);
@@ -484,9 +486,10 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             orderUpdateInfo.CustomerTypeText = order.CustomerTypeText;
             orderUpdateInfo.CustomerSource = order.CustomerSource;
             orderUpdateInfo.CustomerSourceText = order.CustomerSourceText;
-            orderUpdateInfo.BelongChannel=order.BelongChannel;
+            orderUpdateInfo.BelongChannel = order.BelongChannel;
             orderUpdateInfo.BelongChannelText = order.BelongChannelText;
             orderUpdateInfo.ConsultingContent2 = order.ConsultingContent2;
+            orderUpdateInfo.IsRiBuLuoLiving = order.IsRiBuLuoLiving;
             return ResultData<ContentPlateFormOrderVo>.Success().AddData("orderInfo", orderUpdateInfo);
         }
 
@@ -551,8 +554,9 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             updateDto.WechatNumber = updateVo.WechatNumber;
             updateDto.CustomerSource = updateVo.CustomerSource;
             updateDto.CustomerType = updateVo.CustomerType;
-            updateDto.BelongChannel=updateVo.BelongChannel;
-            updateDto.ConsultingContent2=updateVo.ConsultingContent2;
+            updateDto.BelongChannel = updateVo.BelongChannel;
+            updateDto.ConsultingContent2 = updateVo.ConsultingContent2;
+            updateDto.IsRiBuLuoLiving = updateVo.IsRiBuLuoLiving;
             await _orderService.UpdateContentPlateFormOrderAsync(updateDto);
 
 
@@ -683,7 +687,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData> FinishOrderByEmployeeAsync(ContentPlateFormOrderFinishVo updateVo)
         {
-            OperationAddDto operationLog = new OperationAddDto(); 
+            OperationAddDto operationLog = new OperationAddDto();
             try
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
@@ -730,7 +734,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 //updateDto.ConsumptionType = (int)ConsumptionType.Deal;
                 updateDto.InvitationDocuments = updateVo.InvitationDocuments;
                 List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
-                updateDto.SendOrderId= updateVo.SendOrderId;
+                updateDto.SendOrderId = updateVo.SendOrderId;
                 if (updateDto.IsFinish == true && updateVo.AddContentPlatFormOrderDealDetailsVoList != null)
                 {
                     foreach (var x in updateVo.AddContentPlatFormOrderDealDetailsVoList)
@@ -755,7 +759,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 operationLog.Message = ex.Message;
                 throw ex;
             }
-            finally {
+            finally
+            {
                 operationLog.Source = (int)RequestSource.AmiyaBusinessWechat;
                 operationLog.Parameters = JsonConvert.SerializeObject(updateVo);
                 operationLog.RequestType = (int)RequestType.Add;
@@ -799,9 +804,9 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 updateDto.OtherContentPlatFormOrderId = updateVo.OtherContentPlatFormOrderId;
                 updateDto.InvitationDocuments = updateVo.InvitationDocuments;
                 updateDto.ConsumptionType = updateVo.ConsumptionType;
-                updateDto.FansMeetingId=updateVo.FansMeetingId;
+                updateDto.FansMeetingId = updateVo.FansMeetingId;
                 updateDto.EmpId = employeeId;
-                updateDto.SendOrderId=updateVo.SendOrderId;
+                updateDto.SendOrderId = updateVo.SendOrderId;
                 List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
                 if (updateDto.IsFinish == true)
                 {
@@ -821,12 +826,14 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 await _orderService.UpdateFinishContentPlateFormOrderAsync(updateDto);
                 return ResultData.Success();
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 operationLog.Code = -1;
                 operationLog.Message = ex.Message;
                 throw ex;
             }
-            finally {
+            finally
+            {
                 operationLog.Parameters = JsonConvert.SerializeObject(updateVo);
                 operationLog.RequestType = (int)RequestType.Add;
                 operationLog.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
@@ -861,9 +868,9 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// <returns></returns>
         [HttpGet("bindCustomerServieOrders")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<BindCustomerServiceContentPlatformOrderVo>>> GetBindCustomerServieContentPlatformOrdersAsync(int? customerServiceId, int? orderStatus ,int? liveAnchorId, DateTime? startDate, DateTime? endDate, string keyword, string liveAnchorWechatNoId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<BindCustomerServiceContentPlatformOrderVo>>> GetBindCustomerServieContentPlatformOrdersAsync(int? customerServiceId, int? orderStatus, int? liveAnchorId, DateTime? startDate, DateTime? endDate, string keyword, string liveAnchorWechatNoId, int pageNum, int pageSize)
         {
-            var orders = await _orderService.GetBindCustomerServieContentPlatformOrdersAsync(customerServiceId,orderStatus, liveAnchorId, startDate, endDate, keyword, liveAnchorWechatNoId, pageNum, pageSize);
+            var orders = await _orderService.GetBindCustomerServieContentPlatformOrdersAsync(customerServiceId, orderStatus, liveAnchorId, startDate, endDate, keyword, liveAnchorWechatNoId, pageNum, pageSize);
             var contentPlatformOrders = from d in orders.List
                                         select new BindCustomerServiceContentPlatformOrderVo
                                         {

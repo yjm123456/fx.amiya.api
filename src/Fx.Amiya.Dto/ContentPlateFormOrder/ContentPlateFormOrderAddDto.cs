@@ -183,5 +183,10 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 归属部门
         /// </summary>
         public int BelongChannel { get; set; }
+
+        /// <summary>
+        /// 是否为日不落直播顾客
+        /// </summary>
+        public bool IsRiBuLuoLiving { get; set; }
     }
 }

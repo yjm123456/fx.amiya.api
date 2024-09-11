@@ -174,6 +174,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.CustomerSource = addVo.CustomerSource;
                 addDto.BelongChannel = addVo.BelongChannel;
                 addDto.ConsultingContent2 = addVo.ConsultingContent2;
+                addDto.IsRiBuLuoLiving = addVo.IsRiBuLuoLiving;
                 await _orderService.AddContentPlateFormOrderAsync(addDto);
 
 
@@ -278,6 +279,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     resultVo.LiveAnchorName = x.LiveAnchorName;
                     resultVo.LiveAnchorWeChatNo = x.LiveAnchorWeChatNo;
                     resultVo.ConsultationType = x.ConsultationTypeText;
+                    resultVo.IsRiBuLuoLiving = x.IsRiBuLuoLiving;
                     resultVo.BelongMonth = x.BelongMonth;
                     resultVo.AddOrderPrice = x.AddOrderPrice;
                     resultVo.CreateDate = x.CreateDate;
@@ -953,6 +955,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderUpdateInfo.BelongChannel = order.BelongChannel;
             orderUpdateInfo.BelongChannelText = order.BelongChannelText;
             orderUpdateInfo.ConsultingContent2 = order.ConsultingContent2;
+            orderUpdateInfo.IsRiBuLuoLiving = order.IsRiBuLuoLiving;
             return ResultData<ContentPlateFormOrderVo>.Success().AddData("orderInfo", orderUpdateInfo);
         }
 
@@ -1090,6 +1093,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.CustomerSource = updateVo.CustomerSource;
             updateDto.BelongChannel = updateVo.BelongChannel;
             updateDto.ConsultingContent2 = updateVo.ConsultingContent2;
+            updateDto.IsRiBuLuoLiving = updateVo.IsRiBuLuoLiving;
             await _orderService.UpdateContentPlateFormOrderAsync(updateDto);
 
 

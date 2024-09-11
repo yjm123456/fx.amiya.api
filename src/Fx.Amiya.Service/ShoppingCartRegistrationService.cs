@@ -155,7 +155,8 @@ namespace Fx.Amiya.Service
                                                    BelongChannelName = ServiceClass.BelongChannelText(d.BelongChannel),
                                                    CluePicture = d.CluePicture,
                                                    AddWechatPicture = d.AddWechatPicture,
-                                                   AddWechatEmpId = d.AddWechatEmpId
+                                                   AddWechatEmpId = d.AddWechatEmpId,
+                                                   IsRiBuLuoLiving=d.IsRiBuLuoLiving,
                                                };
                 var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
                 if (!employee.AmiyaPositionInfo.IsDirector)
@@ -271,6 +272,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.BelongChannel = addDto.BelongChannel;
                 shoppingCartRegistration.CluePicture = addDto.CluePicture;
                 shoppingCartRegistration.AddWechatPicture = addDto.AddWechatPicture;
+                shoppingCartRegistration.IsRiBuLuoLiving = addDto.IsRiBuLuoLiving;
                 var baseLiveAnchorId = await _liveAnchorService.GetByIdAsync(addDto.LiveAnchorId);
                 if (!string.IsNullOrEmpty(baseLiveAnchorId.LiveAnchorBaseId))
                 {
@@ -351,6 +353,7 @@ namespace Fx.Amiya.Service
                     shoppingCartRegistration.GetCustomerType = (int)ShoppingCartGetCustomerType.Ohter;
                     shoppingCartRegistration.Source = addDto.Source;
                     shoppingCartRegistration.BelongChannel = addDto.BelongChannel;
+                    shoppingCartRegistration.IsRiBuLuoLiving = addDto.IsRiBuLuoLiving;
                     var baseLiveAnchorId = await _liveAnchorService.GetByIdAsync(addDto.LiveAnchorId);
                     if (!string.IsNullOrEmpty(baseLiveAnchorId.LiveAnchorBaseId))
                     {
@@ -437,6 +440,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.BelongChannelName = ServiceClass.BelongChannelText(shoppingCartRegistrationDto.BelongChannel);
                 shoppingCartRegistrationDto.AddWechatPicture = shoppingCartRegistration.AddWechatPicture;
                 shoppingCartRegistrationDto.CluePicture = shoppingCartRegistration.CluePicture;
+                shoppingCartRegistrationDto.IsRiBuLuoLiving = shoppingCartRegistration.IsRiBuLuoLiving;
                 return shoppingCartRegistrationDto;
             }
             catch (Exception ex)
@@ -506,6 +510,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.SourceText = ServiceClass.GetTiktokCustomerSourceText(shoppingCartRegistration.Source);
                 shoppingCartRegistrationDto.BelongChannel = shoppingCartRegistration.BelongChannel;
                 shoppingCartRegistrationDto.BelongChannelName = ServiceClass.BelongChannelText(shoppingCartRegistrationDto.BelongChannel);
+                shoppingCartRegistrationDto.IsRiBuLuoLiving = shoppingCartRegistration.IsRiBuLuoLiving;
                 return shoppingCartRegistrationDto;
             }
             catch (Exception ex)
@@ -588,6 +593,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.Source = shoppingCartRegistration.Source;
                 shoppingCartRegistrationDto.ProductType = shoppingCartRegistrationDto.ProductType;
                 shoppingCartRegistrationDto.BelongChannel = shoppingCartRegistrationDto.BelongChannel;
+                shoppingCartRegistrationDto.IsRiBuLuoLiving = shoppingCartRegistration.IsRiBuLuoLiving;
                 return shoppingCartRegistrationDto;
             }
             catch (Exception ex)
@@ -690,6 +696,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.BelongChannel = updateDto.BelongChannel;
                 shoppingCartRegistration.CluePicture = updateDto.CluePicture;
                 shoppingCartRegistration.AddWechatPicture = updateDto.AddWechatPicture;
+                shoppingCartRegistration.IsRiBuLuoLiving = updateDto.IsRiBuLuoLiving;
                 var baseLiveAnchorId = await _liveAnchorService.GetByIdAsync(updateDto.LiveAnchorId);
                 if (!string.IsNullOrEmpty(baseLiveAnchorId.LiveAnchorBaseId))
                 {
@@ -954,15 +961,15 @@ namespace Fx.Amiya.Service
                         channels.Add((int)BelongChannel.LiveAfter);
                         res.Add(contentPlatFormIds, channels);
                         break;
-                    case 11:
-                        //抖音
-                        contentPlatFormIds.Add("4e4e9564-f6c3-47b6-a7da-e4518bab66a1");
-                        //视频号
-                        contentPlatFormIds.Add("9196b247-1ab9-4d0c-a11e-a1ef09019878");
-                        channels.Add((int)BelongChannel.Living);
-                        channels.Add((int)BelongChannel.LiveAfter);
-                        res.Add(contentPlatFormIds, channels);
-                        break;
+                    //case 11:
+                    //    //抖音
+                    //    contentPlatFormIds.Add("4e4e9564-f6c3-47b6-a7da-e4518bab66a1");
+                    //    //视频号
+                    //    contentPlatFormIds.Add("9196b247-1ab9-4d0c-a11e-a1ef09019878");
+                    //    channels.Add((int)BelongChannel.Living);
+                    //    channels.Add((int)BelongChannel.LiveAfter);
+                    //    res.Add(contentPlatFormIds, channels);
+                    //    break;
                 }
                 addRes.BaseIdAndName = res;
                 resultList.Add(addRes);

@@ -241,17 +241,20 @@ namespace Fx.Amiya.Background.Api.Controllers
                     queryData.PDBH = CreateOrderIdHelper.GetNextNumber();
                 }
                 var order = await contentPlateFormOrderService.GetByOrderIdAsync(query.OrderId);
-                var sendInfo = await contentPlatformOrderSendService.GetByIdAsync(Convert.ToInt32(query.SendOrderId.ToString()));
-                if (sendInfo.IsSpecifyHospitalEmployee == true)
+                if (query.SendOrderId != 0)
                 {
-                    queryData.PDYSID = sendInfo.HospitalEmployeeId.ToString();
-                    var hospitalEmpInfo = await hospitalEmployeeService.GetByIdAsync(sendInfo.HospitalEmployeeId);
-                    queryData.PDYSNM = hospitalEmpInfo.Name;
+                    var sendInfo = await contentPlatformOrderSendService.GetByIdAsync(Convert.ToInt32(query.SendOrderId.ToString()));
+                    if (sendInfo.IsSpecifyHospitalEmployee == true)
+                    {
+                        queryData.PDYSID = sendInfo.HospitalEmployeeId.ToString();
+                        var hospitalEmpInfo = await hospitalEmployeeService.GetByIdAsync(sendInfo.HospitalEmployeeId);
+                        queryData.PDYSNM = hospitalEmpInfo.Name;
+                        queryData.PDRQ = order.SendDate.Value;
+                    }
                 }
                 queryData.KUNAM = order.CustomerName;
                 queryData.REGION = order.City;
                 queryData.TEL1 = order.Phone;
-                queryData.PDRQ = order.SendDate.Value;
                 var data = JsonConvert.SerializeObject(queryData);
                 var getResult = await HttpUtil.HTTPJsonGetHasBodyAsync(url, data);
                 //var getResult = "";

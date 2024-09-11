@@ -186,3 +186,18 @@ ALTER TABLE `tbl_shopping_cart_registration`
 
 ------------------------------------王健 2024/9/2 END--------------------------------------
 --------------------------------------------------------------------------------------------------------以上部分已更新到线上--------------------------------------
+
+------------------------------------余建明 2024/9/11 BEGIN--------------------------------------
+--小黄车登记列表新增“是否为日不落直播”
+ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration` 
+ADD COLUMN `is_ribuluo_living` BIT(1) NOT NULL DEFAULT 0 AFTER `add_wechat_empid`;
+
+update amiyadb.tbl_shopping_cart_registration set is_ribuluo_living=true where source=11;
+
+--订单列表新增“是否为日不落直播”
+ALTER TABLE `amiyadb`.`tbl_content_platform_order` 
+ADD COLUMN `is_ribuluo_living` BIT(1) NOT NULL DEFAULT 0 AFTER `consulting_content2`;
+
+update amiyadb.tbl_shopping_cart_registration set is_ribuluo_living=true where customer_source=11;
+------------------------------------余建明 2024/9/11 END--------------------------------------
+

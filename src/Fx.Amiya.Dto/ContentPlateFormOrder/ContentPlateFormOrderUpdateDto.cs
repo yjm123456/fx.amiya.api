@@ -376,5 +376,10 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 是否有成交信息
         /// </summary>
         public bool HasDealInfo { get; set; }
+
+        /// <summary>
+        /// 是否为日不落直播顾客
+        /// </summary>
+        public bool IsRiBuLuoLiving { get; set; }
     }
 }

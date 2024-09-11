@@ -81,5 +81,10 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         /// 加v截图
         /// </summary>
         public string AddWechatPicture { get; set; }
+
+        /// <summary>
+        /// 是否为日不落直播顾客
+        /// </summary>
+        public bool IsRiBuLuoLiving { get; set; }
     }
 }

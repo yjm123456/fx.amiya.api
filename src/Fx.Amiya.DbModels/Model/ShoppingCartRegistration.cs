@@ -85,6 +85,11 @@ namespace Fx.Amiya.DbModels.Model
         /// 加v人员
         /// </summary>
         public int? AddWechatEmpId { get; set; }
+
+        /// <summary>
+        /// 是否为日不落直播顾客
+        /// </summary>
+        public bool IsRiBuLuoLiving { get; set; }
         public Contentplatform Contentplatform { get; set; }
         public LiveAnchor LiveAnchor { get; set; }
         public AmiyaEmployee AmiyaEmployee { get; set; }

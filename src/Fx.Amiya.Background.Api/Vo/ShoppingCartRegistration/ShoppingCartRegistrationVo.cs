@@ -233,5 +233,10 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// </summary>
         public string AddWechatEmpName { get; set; }
 
+        /// <summary>
+        /// 是否为日不落直播顾客
+        /// </summary>
+        public bool IsRiBuLuoLiving { get; set; }
+
     }
 }

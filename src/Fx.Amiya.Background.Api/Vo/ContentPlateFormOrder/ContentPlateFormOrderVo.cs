@@ -441,5 +441,9 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 归属部门名称
         /// </summary>
         public string BelongChannelText { get; set; }
+        /// <summary>
+        /// 是否为日不落直播顾客
+        /// </summary>
+        public bool IsRiBuLuoLiving { get; set; }
     }
 }

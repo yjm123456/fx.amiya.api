@@ -426,7 +426,8 @@ namespace Fx.Amiya.Service
                                 IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
                                 BelongChannel = d.BelongChannel,
                                 BelongChannelText = ServiceClass.BelongChannelText(d.BelongChannel),
-                                ConsultingContent2 = d.ConsultingContent2
+                                ConsultingContent2 = d.ConsultingContent2,
+                                IsRiBuLuoLiving = d.IsRiBuLuoLiving
                             };
 
 
@@ -1934,6 +1935,7 @@ namespace Fx.Amiya.Service
             var pictures = await _contentPlatFormCustomerPictureService.GetListAsync(order.Id, null);
             result.CustomerPictures = pictures.Select(x => x.CustomerPicture).ToList();
             result.HasDealInfo = order.ContentPlatformOrderDealInfoList.Count() > 0;
+            result.IsRiBuLuoLiving = order.IsRiBuLuoLiving;
             return result;
         }
 
@@ -2177,6 +2179,7 @@ namespace Fx.Amiya.Service
                 order.CustomerSource = input.CustomerSource;
                 order.CustomerType = input.CustomerType;
                 order.BelongChannel = input.BelongChannel;
+                order.IsRiBuLuoLiving = input.IsRiBuLuoLiving;
                 await _contentPlatFormCustomerPictureService.DeleteByContentPlatFormOrderIdAsync(order.Id);
                 foreach (var z in input.CustomerPictures)
                 {

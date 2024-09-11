@@ -143,7 +143,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                    BelongChannelName = d.BelongChannelName,
                                                    CluePicture = d.CluePicture,
                                                    AddWechatPicture = d.AddWechatPicture,
-                                                   AddWechatEmpName = d.AddWechatEmpName
+                                                   AddWechatEmpName = d.AddWechatEmpName,
+                                                   IsRiBuLuoLiving = d.IsRiBuLuoLiving
                                                };
 
                 FxPageInfo<ShoppingCartRegistrationVo> shoppingCartRegistrationPageInfo = new FxPageInfo<ShoppingCartRegistrationVo>();
@@ -213,6 +214,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.BelongChannel = addVo.BelongChannel;
                 addDto.AddWechatPicture = addVo.AddWechatPicture;
                 addDto.CluePicture = addVo.CluePicture;
+                addDto.IsRiBuLuoLiving = addVo.IsRiBuLuoLiving;
                 var contentPlatFormOrder = await contentPlateFormOrderService.GetOrderListByPhoneAsync(addVo.Phone);
                 var isSendOrder = contentPlatFormOrder.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder).Count();
                 if (contentPlatFormOrder.Count > 0)
@@ -289,6 +291,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shoppingCartRegistrationVo.BelongChannelName = shoppingCartRegistration.BelongChannelName;
                 shoppingCartRegistrationVo.CluePicture = shoppingCartRegistration.CluePicture;
                 shoppingCartRegistrationVo.AddWechatPicture = shoppingCartRegistration.AddWechatPicture;
+                shoppingCartRegistrationVo.IsRiBuLuoLiving = shoppingCartRegistration.IsRiBuLuoLiving;
                 return ResultData<ShoppingCartRegistrationVo>.Success().AddData("shoppingCartRegistrationInfo", shoppingCartRegistrationVo);
             }
             catch (Exception ex)
@@ -357,6 +360,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shoppingCartRegistrationVo.ProductType = shoppingCartRegistration.ProductType;
                 shoppingCartRegistrationVo.BelongChannel = shoppingCartRegistration.BelongChannel;
                 shoppingCartRegistrationVo.BelongChannelName = shoppingCartRegistration.BelongChannelName;
+                shoppingCartRegistrationVo.IsRiBuLuoLiving = shoppingCartRegistration.IsRiBuLuoLiving;
 
                 return ResultData<ShoppingCartRegistrationVo>.Success().AddData("shoppingCartRegistrationInfo", shoppingCartRegistrationVo);
             }
@@ -450,6 +454,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.BelongChannel = updateVo.BelongChannel;
                 updateDto.CluePicture = updateVo.CluePicture;
                 updateDto.AddWechatPicture = updateVo.AddWechatPicture;
+                updateDto.IsRiBuLuoLiving = updateVo.IsRiBuLuoLiving;
                 var contentPlatFormOrder = await contentPlateFormOrderService.GetOrderListByPhoneAsync(updateVo.Phone);
                 var isSendOrder = contentPlatFormOrder.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder).Count();
                 if (contentPlatFormOrder.Count > 0)
