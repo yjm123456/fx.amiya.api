@@ -30,6 +30,7 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         public decimal? DealAmount { get; set; }
         public string OrderTypeText{ get; set; }
         public string OrderStatusText { get; set; }
+        public int AppointmentHospitalId { get; set; }
         public string AppointmentHospital { get; set; }
         public string AppointmentDate { get; set; }
         public string Phone { get; set; }

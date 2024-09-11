@@ -439,6 +439,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   DepositAmount = d.DepositAmount.HasValue ? d.DepositAmount : 0,
                                   OrderTypeText = d.OrderTypeText,
                                   OrderStatusText = d.OrderStatusText,
+                                  AppointmentHospitalId = d.AppointmentHospitalId,
                                   AppointmentHospital = d.AppointmentHospital,
                                   AppointmentDate = d.AppointmentDate,
                                   Remark = d.Remark,
@@ -1302,7 +1303,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.OtherHospitalId = updateVo.OtherHospitalId;
                 updateDto.SendBy = updateVo.SendBy;
                 updateDto.IsSpecifyHospitalEmployee = updateVo.IsSpecifyHospitalEmployee;
-                updateDto.HospitalEmployeeId=updateVo.HospitalEmployeeId;
+                updateDto.HospitalEmployeeId = updateVo.HospitalEmployeeId;
                 await _orderService.UpdateAsync(updateDto, employeeId);
                 return ResultData.Success();
             }

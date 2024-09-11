@@ -80,6 +80,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend
         /// </summary>
         public string AppointmentHospital { get; set; }
         /// <summary>
+        /// 预约门店ID
+        /// </summary>
+        public int AppointmentHospitalId { get; set; }
+        /// <summary>
         /// 预约时间
         /// </summary>
         public string AppointmentDate { get; set; }

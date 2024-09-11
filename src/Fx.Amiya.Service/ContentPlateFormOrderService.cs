@@ -570,6 +570,7 @@ namespace Fx.Amiya.Service
                                   DepositAmount = o.DepositAmount.HasValue ? o.DepositAmount : 0,
                                   OrderTypeText = ServiceClass.GetContentPlateFormOrderTypeText(Convert.ToByte(o.OrderType)),
                                   OrderStatusText = ServiceClass.GetContentPlateFormOrderStatusText(Convert.ToByte(o.OrderStatus)),
+                                  AppointmentHospitalId = o.AppointmentHospitalId.Value,
                                   AppointmentHospital = o.HospitalInfo.Name,
                                   AppointmentDate = o.AppointmentDate.HasValue ? o.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "未确认时间",
                                   Remark = o.Remark,
