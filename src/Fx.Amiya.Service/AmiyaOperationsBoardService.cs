@@ -2978,6 +2978,330 @@ namespace Fx.Amiya.Service
 
 
         #endregion
+
+
+        #region 行政客服运营看板
+
+        /// <summary>
+        /// 组客资数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<AdminCustomerServiceCustomerTypeDto> GetAdminCustomerServiceCustomerTypeDataAsync(QueryAssistantPerformanceDto query)
+        {
+
+            AdminCustomerServiceCustomerTypeDto data = new AdminCustomerServiceCustomerTypeDto();
+            var seqDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.EndDate.Year, query.EndDate.Month);
+            var currentData = await shoppingCartRegistrationService.GetAdminCustomerDistributeConsulationTypeDataAsync(seqDate.StartDate, seqDate.EndDate, query.AssistantId.Value);
+            var lastMonthData = await shoppingCartRegistrationService.GetAdminCustomerDistributeConsulationTypeDataAsync(seqDate.LastMonthStartDate, seqDate.LastMonthEndDate, query.AssistantId.Value);
+            var latYearData = await shoppingCartRegistrationService.GetAdminCustomerDistributeConsulationTypeDataAsync(seqDate.LastYearThisMonthStartDate, seqDate.LastYearThisMonthEndDate, query.AssistantId.Value);
+            data.FirstTypeTotal = currentData.FirstType;
+            data.FirstTypeChainRate = DecimalExtension.CalculateChain(data.FirstTypeTotal, lastMonthData.FirstType).Value;
+            data.FirstTypeYearOnYear = DecimalExtension.CalculateChain(data.FirstTypeTotal, latYearData.FirstType).Value;
+
+            data.SecondTypeTotal = currentData.SecondType;
+            data.SecondTypeChainRate = DecimalExtension.CalculateChain(data.SecondTypeTotal, lastMonthData.SecondType).Value;
+            data.SecondTypeYearOnYear = DecimalExtension.CalculateChain(data.SecondTypeTotal, latYearData.SecondType).Value;
+
+            data.ThirdTypeTotal = currentData.ThirdType;
+            data.ThirdTypeChainRate = DecimalExtension.CalculateChain(data.ThirdTypeTotal, lastMonthData.ThirdType).Value;
+            data.ThirdTypeYearOnYear = DecimalExtension.CalculateChain(data.ThirdTypeTotal, latYearData.ThirdType).Value;
+
+            data.TotalTypeTotal = data.FirstTypeTotal + data.SecondTypeTotal + data.ThirdTypeTotal;
+            data.TotalTypeChainRate = DecimalExtension.CalculateChain(data.TotalTypeTotal, lastMonthData.FirstType + lastMonthData.SecondType + lastMonthData.ThirdType).Value;
+            data.TotalTypeYearOnYear = DecimalExtension.CalculateChain(data.TotalTypeTotal, latYearData.FirstType + latYearData.SecondType + latYearData.ThirdType).Value;
+            return data;
+        }
+
+        /// <summary>
+        /// 个人加v后数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<AdminCustomerServiceCustomerTypeDto> GetAdminCustomerServiceCustomerTypeAddWechatDataAsync(QueryAssistantPerformanceDto query)
+        {
+            AdminCustomerServiceCustomerTypeDto data = new AdminCustomerServiceCustomerTypeDto();
+            var seqDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.EndDate.Year, query.EndDate.Month);
+            var currentData = await shoppingCartRegistrationService.GetAdminCustomerDistributeConsulationTypeDataAsync(seqDate.StartDate, seqDate.EndDate, query.AssistantId.Value, true);
+            var lastMonthData = await shoppingCartRegistrationService.GetAdminCustomerDistributeConsulationTypeDataAsync(seqDate.LastMonthStartDate, seqDate.LastMonthEndDate, query.AssistantId.Value, true);
+            var latYearData = await shoppingCartRegistrationService.GetAdminCustomerDistributeConsulationTypeDataAsync(seqDate.LastYearThisMonthStartDate, seqDate.LastYearThisMonthEndDate, query.AssistantId.Value, true);
+            data.FirstTypeTotal = currentData.FirstType;
+            data.FirstTypeChainRate = DecimalExtension.CalculateChain(data.FirstTypeTotal, lastMonthData.FirstType).Value;
+            data.FirstTypeYearOnYear = DecimalExtension.CalculateChain(data.FirstTypeTotal, latYearData.FirstType).Value;
+
+            data.SecondTypeTotal = currentData.SecondType;
+            data.SecondTypeChainRate = DecimalExtension.CalculateChain(data.SecondTypeTotal, lastMonthData.SecondType).Value;
+            data.SecondTypeYearOnYear = DecimalExtension.CalculateChain(data.SecondTypeTotal, latYearData.SecondType).Value;
+
+            data.ThirdTypeTotal = currentData.ThirdType;
+            data.ThirdTypeChainRate = DecimalExtension.CalculateChain(data.ThirdTypeTotal, lastMonthData.ThirdType).Value;
+            data.ThirdTypeYearOnYear = DecimalExtension.CalculateChain(data.ThirdTypeTotal, latYearData.ThirdType).Value;
+
+            data.TotalTypeTotal = data.FirstTypeTotal + data.SecondTypeTotal + data.ThirdTypeTotal;
+            data.TotalTypeChainRate = DecimalExtension.CalculateChain(data.TotalTypeTotal, lastMonthData.FirstType + lastMonthData.SecondType + lastMonthData.ThirdType).Value;
+            data.TotalTypeYearOnYear = DecimalExtension.CalculateChain(data.TotalTypeTotal, latYearData.FirstType + latYearData.SecondType + latYearData.ThirdType).Value;
+
+            return data;
+        }
+
+        /// <summary>
+        /// 客资折线图
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<AdminCustomerServiceCustomerTypeBrokenLineDataDto> GetAdminCustomerServiceCustomerTypeBrokenLineDataAsync(QueryAssistantPerformanceDto query)
+        {
+            AdminCustomerServiceCustomerTypeBrokenLineDataDto data = new AdminCustomerServiceCustomerTypeBrokenLineDataDto();
+            var selectDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.EndDate.Year, query.EndDate.Month);
+            var baseData = await shoppingCartRegistrationService.GetAdminCustomerDistributeConsulationTypeBrokenLineDataAsync(selectDate.StartDate, selectDate.EndDate, query.AssistantId.Value);
+            var firstTypeData = baseData.Where(e => e.Value == (int)EmergencyLevel.Important)
+                .GroupBy(e => e.Key)
+                .Select(e => new PerformanceBrokenLineListInfoDto
+                {
+                    date = e.Key,
+                    Performance = e.Count()
+                }).ToList();
+            var secondTypeData = baseData.Where(e => e.Value == (int)EmergencyLevel.Generally)
+                .GroupBy(e => e.Key)
+                .Select(e => new PerformanceBrokenLineListInfoDto
+                {
+                    date = e.Key,
+                    Performance = e.Count()
+                }).ToList();
+            var thirdTypeData = baseData.Where(e => e.Value == (int)EmergencyLevel.Ignorable)
+               .GroupBy(e => e.Key)
+               .Select(e => new PerformanceBrokenLineListInfoDto
+               {
+                   date = e.Key,
+                   Performance = e.Count()
+               }).ToList();
+            var totalTypeData = baseData
+               .GroupBy(e => e.Key)
+               .Select(e => new PerformanceBrokenLineListInfoDto
+               {
+                   date = e.Key,
+                   Performance = e.Count()
+               }).ToList();
+            data.FirstType = this.FillDate(query.EndDate.Year, query.EndDate.Month, firstTypeData);
+            data.SencondType = this.FillDate(query.EndDate.Year, query.EndDate.Month, secondTypeData);
+            data.ThirdType = this.FillDate(query.EndDate.Year, query.EndDate.Month, thirdTypeData);
+            data.TotalType = this.FillDate(query.EndDate.Year, query.EndDate.Month, totalTypeData);
+            return data;
+        }
+
+        /// <summary>
+        /// 获取行政客服漏斗图数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<AdminCustomerFilterDataDto> GetAdminCustomerFilterDataAsync(QueryAssistantPerformanceDto query)
+        {
+            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
+            AdminCustomerFilterDataDto filterData = new AdminCustomerFilterDataDto();
+            AdminCustomerFilterDataItemDto groupDataDto = new AdminCustomerFilterDataItemDto();
+            groupDataDto.DataList = new List<AdminCustomerFilterDetailDataDto>();
+            AdminCustomerFilterDataItemDto addWechatDataDto = new AdminCustomerFilterDataItemDto();
+            addWechatDataDto.DataList = new List<AdminCustomerFilterDetailDataDto>();
+            var healthValueList = await _healthValueService.GetValidListAsync();
+            #region【小黄车数据】
+            //小黄车数据
+            var baseBusinessPerformance = await shoppingCartRegistrationService.GetAdminCustomerShopCartRegisterPerformanceByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, query.AssistantId.Value);
+            #endregion
+
+
+            #region 组数据
+            #region 【分诊】
+
+            var allOrderPerformance = await contentPlateFormOrderService.GetAdminCustomerOrderSendAndDealDataByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, baseBusinessPerformance.Select(e => e.Phone).ToList());
+            //分诊
+            AdminCustomerFilterDetailDataDto consulationdetails = new AdminCustomerFilterDetailDataDto();
+            consulationdetails.Key = "Consulation";
+            consulationdetails.Name = "分诊量";
+            consulationdetails.Value = baseBusinessPerformance.Where(x => x.AssignEmpId != 0 && x.AssignEmpId.HasValue && x.IsReturnBackPrice == false).Count();
+            groupDataDto.DataList.Add(consulationdetails);
+            #endregion
+
+            #region 【加v】
+            AdminCustomerFilterDetailDataDto addWechatdetails = new AdminCustomerFilterDetailDataDto();
+            //加v
+            addWechatdetails.Key = "AddWeChat";
+            addWechatdetails.Name = "加v量";
+            addWechatdetails.Value = baseBusinessPerformance.Where(x => x.IsAddWeChat == true && x.AssignEmpId != 0 && x.AssignEmpId.HasValue && x.IsReturnBackPrice == false).Count();
+            groupDataDto.DataList.Add(addWechatdetails);
+
+            //加v率
+            groupDataDto.AddWeChatRate = DecimalExtension.CalculateTargetComplete(addWechatdetails.Value, consulationdetails.Value);
+            groupDataDto.AddWeChatRateHealthValueThisMonth = healthValueList.Where(e => e.Key == "AddWeChatHealthValueThisMonth").Select(e => e.Rate).FirstOrDefault();
+            #endregion
+
+            #region 【派单】
+            AdminCustomerFilterDetailDataDto sendOrderdetails = new AdminCustomerFilterDetailDataDto();
+            //派单
+            sendOrderdetails.Key = "SendOrder";
+            sendOrderdetails.Name = "派单量";
+            sendOrderdetails.Value = allOrderPerformance.SendOrderNum;
+            groupDataDto.DataList.Add(sendOrderdetails);
+
+            //派单率
+            groupDataDto.SendOrderRate = DecimalExtension.CalculateTargetComplete(sendOrderdetails.Value, addWechatdetails.Value);
+            groupDataDto.SendOrderRateHealthValueThisMonth = healthValueList.Where(e => e.Key == "SendOrderRateHealthValueThisMonth").Select(e => e.Rate).FirstOrDefault();
+            #endregion
+
+            #region 【上门】
+            AdminCustomerFilterDetailDataDto visitdetails = new AdminCustomerFilterDetailDataDto();
+            //上门
+            visitdetails.Key = "ToHospital";
+            visitdetails.Name = "上门量";
+            visitdetails.Value = allOrderPerformance.VisitNum;
+            groupDataDto.DataList.Add(visitdetails);
+
+            //上门率
+            groupDataDto.ToHospitalRate = DecimalExtension.CalculateTargetComplete(visitdetails.Value, sendOrderdetails.Value);
+            groupDataDto.ToHospitalRateHealthValueThisMonth = healthValueList.Where(e => e.Key == "ToHospitalRateHealthValueThisMonth").Select(e => e.Rate).FirstOrDefault();
+            #endregion
+            filterData.GroupData = groupDataDto;
+            #endregion
+
+            #region 个人加v后数据
+
+            #region 【分诊】
+
+            var addWechatOrderPerformance = await contentPlateFormOrderService.GetAdminCustomerOrderSendAndDealDataByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, baseBusinessPerformance.Select(e => e.Phone).ToList());
+            //分诊
+            AdminCustomerFilterDetailDataDto consulationdetails2 = new AdminCustomerFilterDetailDataDto();
+            consulationdetails2.Key = "Consulation";
+            consulationdetails2.Name = "分诊量";
+            consulationdetails2.Value = baseBusinessPerformance.Where(x => x.AssignEmpId != 0 && x.AssignEmpId.HasValue && x.IsReturnBackPrice == false).Count();
+            addWechatDataDto.DataList.Add(consulationdetails2);
+            #endregion
+
+            #region 【加v】
+            AdminCustomerFilterDetailDataDto addWechatdetails2 = new AdminCustomerFilterDetailDataDto();
+            //加v
+            addWechatdetails2.Key = "AddWeChat";
+            addWechatdetails2.Name = "加v量";
+            addWechatdetails2.Value = baseBusinessPerformance.Where(x => x.IsAddWeChat == true && x.AssignEmpId != 0 && x.AssignEmpId.HasValue && x.IsReturnBackPrice == false).Count();
+            addWechatDataDto.DataList.Add(addWechatdetails2);
+
+            //加v率
+            addWechatDataDto.AddWeChatRate = DecimalExtension.CalculateTargetComplete(addWechatdetails2.Value, consulationdetails2.Value);
+            addWechatDataDto.AddWeChatRateHealthValueThisMonth = healthValueList.Where(e => e.Key == "AddWeChatHealthValueThisMonth").Select(e => e.Rate).FirstOrDefault();
+            #endregion
+
+            #region 【派单】
+            AdminCustomerFilterDetailDataDto sendOrderdetails2 = new AdminCustomerFilterDetailDataDto();
+            //派单
+            sendOrderdetails2.Key = "SendOrder";
+            sendOrderdetails2.Name = "派单量";
+            sendOrderdetails2.Value = addWechatOrderPerformance.SendOrderNum;
+            addWechatDataDto.DataList.Add(sendOrderdetails2);
+
+            //派单率
+            addWechatDataDto.SendOrderRate = DecimalExtension.CalculateTargetComplete(sendOrderdetails2.Value, addWechatdetails2.Value);
+            addWechatDataDto.SendOrderRateHealthValueThisMonth = healthValueList.Where(e => e.Key == "SendOrderRateHealthValueThisMonth").Select(e => e.Rate).FirstOrDefault();
+            #endregion
+
+            #region 【上门】
+            AdminCustomerFilterDetailDataDto visitdetails2 = new AdminCustomerFilterDetailDataDto();
+            //上门
+            visitdetails2.Key = "ToHospital";
+            visitdetails2.Name = "上门量";
+            visitdetails2.Value = addWechatOrderPerformance.VisitNum;
+            addWechatDataDto.DataList.Add(visitdetails2);
+
+            //上门率
+            addWechatDataDto.ToHospitalRate = DecimalExtension.CalculateTargetComplete(visitdetails2.Value, sendOrderdetails2.Value);
+            addWechatDataDto.ToHospitalRateHealthValueThisMonth = healthValueList.Where(e => e.Key == "ToHospitalRateHealthValueThisMonth").Select(e => e.Rate).FirstOrDefault();
+            #endregion
+            filterData.AddwechatData = addWechatDataDto;
+
+            #endregion
+
+            return filterData;
+        }
+
+        /// <summary>
+        /// 获取行政客服饼状图数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<AdminCustomerAnalysisDataDto> GetAdminCustomerAnalysisDataAsync(QueryAssistantPerformanceDto query)
+        {
+            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
+            var baseData = await shoppingCartRegistrationService.GetAdminCustomerShopCartRegisterPerformanceByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, query.AssistantId.Value);
+
+            AdminCustomerAnalysisDataDto data = new AdminCustomerAnalysisDataDto();
+            data.DistributeConsulationDataList = new List<Item>();
+            data.DistributeConsulationAddWechatDataList = new List<Item>();
+            data.EffAndPotDataList = new List<Item>();
+            data.EffAndPotAddWechatDataList = new List<Item>();
+            var beforeLiveCount = baseData.Where(e => e.BelongChannel == (int)BelongChannel.LiveBefore).Count();
+            var livingCount = baseData.Where(e => e.BelongChannel == (int)BelongChannel.Living).Count();
+            var afterLiveCount = baseData.Where(e => e.BelongChannel == (int)BelongChannel.LiveAfter).Count();
+            var totalLiveCount = beforeLiveCount + livingCount + afterLiveCount;
+            var beforeLiveAddWechatCount = baseData.Where(e => e.BelongChannel == (int)BelongChannel.LiveBefore && e.IsAddWeChat == true).Count();
+            var livingAddWechatCount = baseData.Where(e => e.BelongChannel == (int)BelongChannel.Living && e.IsAddWeChat == true).Count();
+            var afterLiveAddWechatCount = baseData.Where(e => e.BelongChannel == (int)BelongChannel.LiveAfter && e.IsAddWeChat == true).Count();
+            var potenialCount = baseData.Where(e => e.Price == 0).Count();
+            var effictiveCount = baseData.Where(e => e.Price > 0).Count();
+            var totalCount = potenialCount + effictiveCount;
+            var potenialAddWechatCount = baseData.Where(e => e.Price == 0 && e.IsAddWeChat == true).Count();
+            var effictiveAddWechatCount = baseData.Where(e => e.Price > 0 && e.IsAddWeChat == true).Count();
+
+            data.DistributeConsulationDataList.Add(new Item {Name="直播前",Value= beforeLiveCount ,Rate=DecimalExtension.CalculateTargetComplete(beforeLiveCount,totalLiveCount).Value});
+            data.DistributeConsulationDataList.Add(new Item { Name = "直播中", Value = livingCount, Rate = DecimalExtension.CalculateTargetComplete(livingCount, totalLiveCount).Value });
+            data.DistributeConsulationDataList.Add(new Item { Name = "直播后", Value = afterLiveCount, Rate = DecimalExtension.CalculateTargetComplete(afterLiveCount, totalLiveCount).Value });
+
+            data.DistributeConsulationAddWechatDataList.Add(new Item { Name = "直播前", Value = beforeLiveAddWechatCount, Rate = DecimalExtension.CalculateTargetComplete(beforeLiveAddWechatCount,beforeLiveCount).Value });
+            data.DistributeConsulationAddWechatDataList.Add(new Item { Name = "直播中", Value = livingAddWechatCount, Rate = DecimalExtension.CalculateTargetComplete(livingAddWechatCount, livingCount).Value });
+            data.DistributeConsulationAddWechatDataList.Add(new Item { Name = "直播后", Value = afterLiveAddWechatCount, Rate = DecimalExtension.CalculateTargetComplete(afterLiveAddWechatCount, afterLiveCount).Value });
+
+            data.EffAndPotDataList.Add(new Item { Name = "有效客资", Value = effictiveCount, Rate = DecimalExtension.CalculateTargetComplete(effictiveCount, totalCount).Value });
+            data.EffAndPotDataList.Add(new Item { Name = "潜在客资", Value = potenialCount, Rate = DecimalExtension.CalculateTargetComplete(potenialCount, totalCount).Value });
+
+            data.EffAndPotAddWechatDataList.Add(new Item { Name = "有效客资", Value = effictiveAddWechatCount, Rate = DecimalExtension.CalculateTargetComplete(effictiveAddWechatCount, effictiveCount).Value });
+            data.EffAndPotAddWechatDataList.Add(new Item { Name = "潜在客资", Value = potenialAddWechatCount, Rate = DecimalExtension.CalculateTargetComplete(potenialAddWechatCount, potenialCount).Value });
+
+            return data;
+
+        }
+
+        /// <summary>
+        /// 获取当前行政客服分诊加v柱状图数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<AdminCustomerAssistantDisAndAddVDataDto> GetAdminCustomerAssistantDisAndAddVDataAsync(QueryAssistantPerformanceDto query)
+        {
+            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
+            var baseData = await shoppingCartRegistrationService.GetAdminCustomerShopCartRegisterPerformanceByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, query.AssistantId.Value);
+            var employeeList =await amiyaEmployeeService.GetAllAssistantAsync();
+
+            AdminCustomerAssistantDisAndAddVDataDto data = new AdminCustomerAssistantDisAndAddVDataDto();
+            var dataList= baseData.GroupBy(e => e.AssignEmpId).Select(e => new
+            {
+                Name = employeeList.Where(c => c.Id == e.Key).FirstOrDefault()?.Name ?? "其它",
+                BeforeLiveCount = e.Where(e => e.BelongChannel == (int)BelongChannel.LiveBefore).Count(),
+                LivingCount = e.Where(e => e.BelongChannel == (int)BelongChannel.Living).Count(),
+                AfterLiveCount = e.Where(e => e.BelongChannel == (int)BelongChannel.LiveAfter).Count(),
+                BeforeLiveAddWechatCount = e.Where(e => e.BelongChannel == (int)BelongChannel.LiveBefore && e.IsAddWeChat == true).Count(),
+                LivingAddWechatCount = e.Where(e => e.BelongChannel == (int)BelongChannel.Living && e.IsAddWeChat == true).Count(),
+                AfterLiveAddWechatCount = e.Where(e => e.BelongChannel == (int)BelongChannel.LiveAfter && e.IsAddWeChat == true).Count(),
+            }).ToList();
+            data.AssistantDistributeData = dataList.Select(e => new DataItemDto { Name = e.Name, Value = e.BeforeLiveCount + e.LivingCount + e.AfterLiveCount }).OrderByDescending(e => e.Value).ToList();
+            data.AssistantDistributeDataDetail = dataList.Select(e => new DataDetailItemDto { Name = e.Name, BeforeLiveValue = e.BeforeLiveCount, LivingValue = e.LivingCount, AfterLiveValue = e.AfterLiveCount }).ToList();
+            data.AssistantAddWechatData = dataList.Select(e => new DataItemDto { Name = e.Name, Value = DecimalExtension.CalculateTargetComplete(e.BeforeLiveAddWechatCount + e.LivingAddWechatCount + e.AfterLiveAddWechatCount, e.BeforeLiveCount + e.LivingCount + e.AfterLiveCount).Value }).ToList();
+            data.AssistantAddWechatDataDetail = dataList.Select(e=>new DataDetailItemDto { 
+                Name=e.Name,
+                BeforeLiveValue=DecimalExtension.CalculateTargetComplete(e.BeforeLiveAddWechatCount,e.BeforeLiveCount).Value,
+                LivingValue = DecimalExtension.CalculateTargetComplete(e.LivingAddWechatCount, e.LivingCount).Value,
+                AfterLiveValue = DecimalExtension.CalculateTargetComplete(e.AfterLiveAddWechatCount, e.AfterLiveCount).Value,
+            }).ToList();
+            return data;
+        }
+
+        #endregion
+
         #region 公共类
         private decimal ChangePriceToTenThousand(decimal performance, int unit = 1)
         {
@@ -3038,12 +3362,6 @@ namespace Fx.Amiya.Service
             }
             return list;
         }
-
-
-
-
-
-
 
         #endregion
         #region 【历史版本】

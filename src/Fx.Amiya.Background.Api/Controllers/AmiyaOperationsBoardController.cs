@@ -1020,10 +1020,11 @@ namespace Fx.Amiya.Background.Api.Controllers
             var res = await amiyaOperationsBoardService.GetAssistantPerformanceAnalysisDataAsync(queryDto);
             analysisData.TypeCount = new CustomerTypePerformanceDataVo();
             analysisData.TypeCount.Total = res.TypeCount.TotalCount;
-            analysisData.TypeCount.Data = res.TypeCount.Data.Select(e=> new CustomerTypePerformanceDataItemVo {
-                Name = e.Key, 
+            analysisData.TypeCount.Data = res.TypeCount.Data.Select(e => new CustomerTypePerformanceDataItemVo
+            {
+                Name = e.Key,
                 Value = e.Value,
-                Rate=e.Rate
+                Rate = e.Rate
             }).ToList();
             analysisData.TypePerformance = new CustomerTypePerformanceDataVo();
             analysisData.TypePerformance.Total = DecimalExtension.ChangePriceToTenThousand(res.TypeCount.TotalCount);
@@ -1163,9 +1164,9 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.AssistantId = query.AssistantId;
             var res = await amiyaOperationsBoardService.GetAssistantDistributeConsulationDataAsync(queryDto);
             data.FirstTypeCurrentDay = res.FirstType.CurrentDay;
-            data.FirstTypeTotal=res.FirstType.Total;
-            data.FirstTypeChainRate=res.FirstType.ChainRate;
-            data.FirstTypeYearOnYear=res.FirstType.YearOnYear;
+            data.FirstTypeTotal = res.FirstType.Total;
+            data.FirstTypeChainRate = res.FirstType.ChainRate;
+            data.FirstTypeYearOnYear = res.FirstType.YearOnYear;
 
             data.SecondTypeCurrentDay = res.SecondType.CurrentDay;
             data.SecondTypeTotal = res.SecondType.Total;
@@ -1182,7 +1183,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             data.TotalTypeChainRate = res.TotalType.ChainRate;
             data.TotalTypeYearOnYear = res.TotalType.YearOnYear;
 
-            return ResultData<AssistantDistributeConsulationVo>.Success().AddData("data",data);
+            return ResultData<AssistantDistributeConsulationVo>.Success().AddData("data", data);
 
         }
         /// <summary>
@@ -1191,7 +1192,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("assistantDistributeConsulationBrokenLineData")]
-        public async Task<ResultData<AssistantDistributeConsulationBrokenLineVo>> GetAssistantDistributeConsulationBrokenLineDataAsync([FromQuery] QueryAssistantPerformanceVo query) {
+        public async Task<ResultData<AssistantDistributeConsulationBrokenLineVo>> GetAssistantDistributeConsulationBrokenLineDataAsync([FromQuery] QueryAssistantPerformanceVo query)
+        {
             AssistantDistributeConsulationBrokenLineVo data = new AssistantDistributeConsulationBrokenLineVo();
             QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
             queryDto.StartDate = query.StartDate;
@@ -1221,6 +1223,224 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<AssistantDistributeConsulationBrokenLineVo>.Success().AddData("data", data);
         }
 
+
+        #endregion
+
+        #region 行政客服运营看板
+
+        /// <summary>
+        /// 行政客服客资数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("adminCustomerServiceCustomerTypeData")]
+        public async Task<ResultData<AdminCustomerServiceCustomerTypeVo>> GetAdminCustomerServiceCustomerTypeDataAsync([FromQuery] QueryAssistantPerformanceVo query)
+        {
+            QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            var res = await amiyaOperationsBoardService.GetAdminCustomerServiceCustomerTypeDataAsync(queryDto);
+
+            AdminCustomerServiceCustomerTypeVo data = new AdminCustomerServiceCustomerTypeVo();
+            data.FirstTypeTotal = res.FirstTypeTotal;
+            data.FirstTypeChainRate = res.FirstTypeChainRate;
+            data.FirstTypeYearOnYear = res.FirstTypeYearOnYear;
+            data.SecondTypeTotal = res.SecondTypeTotal;
+            data.SecondTypeChainRate = res.SecondTypeChainRate;
+            data.SecondTypeYearOnYear = res.SecondTypeYearOnYear;
+            data.ThirdTypeTotal = res.ThirdTypeTotal;
+            data.ThirdTypeChainRate = res.ThirdTypeChainRate;
+            data.ThirdTypeYearOnYear = res.ThirdTypeYearOnYear;
+            data.TotalTypeTotal = res.TotalTypeTotal;
+            data.TotalTypeChainRate = res.TotalTypeChainRate;
+            data.TotalTypeYearOnYear = res.TotalTypeYearOnYear;
+
+            return ResultData<AdminCustomerServiceCustomerTypeVo>.Success().AddData("data", data);
+        }
+
+        /// <summary>
+        /// 行政客服个人加v后客资数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("adminCustomerServiceCustomerTypeAddWechatData")]
+        public async Task<ResultData<AdminCustomerServiceCustomerTypeVo>> GetAdminCustomerServiceCustomerTypeAddWechatDataAsync([FromQuery] QueryAssistantPerformanceVo query)
+        {
+            QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            var res = await amiyaOperationsBoardService.GetAdminCustomerServiceCustomerTypeAddWechatDataAsync(queryDto);
+            AdminCustomerServiceCustomerTypeVo data = new AdminCustomerServiceCustomerTypeVo();
+            data.FirstTypeTotal = res.FirstTypeTotal;
+            data.FirstTypeChainRate = res.FirstTypeChainRate;
+            data.FirstTypeYearOnYear = res.FirstTypeYearOnYear;
+            data.SecondTypeTotal = res.SecondTypeTotal;
+            data.SecondTypeChainRate = res.SecondTypeChainRate;
+            data.SecondTypeYearOnYear = res.SecondTypeYearOnYear;
+            data.ThirdTypeTotal = res.ThirdTypeTotal;
+            data.ThirdTypeChainRate = res.ThirdTypeChainRate;
+            data.ThirdTypeYearOnYear = res.ThirdTypeYearOnYear;
+            data.TotalTypeTotal = res.TotalTypeTotal;
+            data.TotalTypeChainRate = res.TotalTypeChainRate;
+            data.TotalTypeYearOnYear = res.TotalTypeYearOnYear;
+
+            return ResultData<AdminCustomerServiceCustomerTypeVo>.Success().AddData("data", data);
+        }
+
+        /// <summary>
+        /// 行政客服客资折线图
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("adminCustomerServiceCustomerTypeBrokenLineData")]
+        public async Task<ResultData<AdminCustomerServiceCustomerTypeBrokenLineDataVo>> GetAdminCustomerServiceCustomerTypeBrokenLineDataAsync([FromQuery] QueryAssistantPerformanceVo query)
+        {
+            QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            var res = await amiyaOperationsBoardService.GetAdminCustomerServiceCustomerTypeBrokenLineDataAsync(queryDto);
+
+            AdminCustomerServiceCustomerTypeBrokenLineDataVo data = new AdminCustomerServiceCustomerTypeBrokenLineDataVo();
+            data.FirstType = res.FirstType.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
+            data.SencondType = res.SencondType.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
+            data.ThirdType = res.ThirdType.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
+            data.TotalType = res.TotalType.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
+            return ResultData<AdminCustomerServiceCustomerTypeBrokenLineDataVo>.Success().AddData("data", data);
+
+        }
+
+        /// <summary>
+        /// 行政客服漏斗图数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("adminCustomerFilterData")]
+        public async Task<ResultData<AdminCustomerFilterDataVo>> GetAdminCustomerFilterDataAsync([FromQuery] QueryAssistantPerformanceVo query)
+        {
+            QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            var res = await amiyaOperationsBoardService.GetAdminCustomerFilterDataAsync(queryDto);
+            AdminCustomerFilterDataVo data = new AdminCustomerFilterDataVo();
+            data.GroupData = new AdminCustomerFilterDataItemVo();
+            data.GroupData.AddWeChatRate = res.GroupData.AddWeChatRate;
+            data.GroupData.AddWeChatRateHealthValueThisMonth = res.GroupData.AddWeChatRateHealthValueThisMonth;
+            data.GroupData.SendOrderRate = res.GroupData.SendOrderRate;
+            data.GroupData.SendOrderRateHealthValueThisMonth = res.GroupData.SendOrderRateHealthValueThisMonth;
+            data.GroupData.ToHospitalRate = res.GroupData.ToHospitalRate;
+            data.GroupData.ToHospitalRateHealthValueThisMonth = res.GroupData.ToHospitalRateHealthValueThisMonth;
+            data.GroupData.DataList = res.GroupData.DataList.Select(e => new AdminCustomerFilterDetailDataVo
+            {
+                Key = e.Key,
+                Name=e.Name,
+                Value = e.Value
+            }).ToList();
+
+            data.AddwechatData = new AdminCustomerFilterDataItemVo();
+            data.AddwechatData.AddWeChatRate = res.AddwechatData.AddWeChatRate;
+            data.AddwechatData.AddWeChatRateHealthValueThisMonth = res.AddwechatData.AddWeChatRateHealthValueThisMonth;
+            data.AddwechatData.SendOrderRate = res.AddwechatData.SendOrderRate;
+            data.AddwechatData.SendOrderRateHealthValueThisMonth = res.AddwechatData.SendOrderRateHealthValueThisMonth;
+            data.AddwechatData.ToHospitalRate = res.AddwechatData.ToHospitalRate;
+            data.AddwechatData.ToHospitalRateHealthValueThisMonth = res.AddwechatData.ToHospitalRateHealthValueThisMonth;
+            data.AddwechatData.DataList = res.AddwechatData.DataList.Select(e => new AdminCustomerFilterDetailDataVo
+            {
+                Key = e.Key,
+                Name = e.Name,
+                Value = e.Value
+            }).ToList();
+
+            return ResultData<AdminCustomerFilterDataVo>.Success().AddData("data", data);
+        }
+
+        /// <summary>
+        /// 行政客服饼状图数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("adminCustomerAnalysisData")]
+        public async Task<ResultData<AdminCustomerAnalysisDataVo>> GetAdminCustomerAnalysisDataAsync([FromQuery] QueryAssistantPerformanceVo query)
+        {
+            QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            var res = await amiyaOperationsBoardService.GetAdminCustomerAnalysisDataAsync(queryDto);
+
+            AdminCustomerAnalysisDataVo data = new AdminCustomerAnalysisDataVo();
+            data.DistributeConsulationDataList = res.DistributeConsulationDataList.Select(e => new ItemVo
+            {
+                Name = e.Name,
+                Value = e.Value,
+                Rate = e.Rate
+            }).ToList();
+            data.DistributeConsulationAddWechatDataList = res.DistributeConsulationAddWechatDataList.Select(e => new ItemVo
+            {
+                Name = e.Name,
+                Value = e.Value,
+                Rate = e.Rate
+            }).ToList();
+            data.EffAndPotDataList = res.EffAndPotDataList.Select(e => new ItemVo
+            {
+                Name = e.Name,
+                Value = e.Value,
+                Rate = e.Rate
+            }).ToList();
+            data.EffAndPotAddWechatDataList = res.EffAndPotAddWechatDataList.Select(e => new ItemVo
+            {
+                Name = e.Name,
+                Value = e.Value,
+                Rate = e.Rate
+            }).ToList();
+
+            return ResultData<AdminCustomerAnalysisDataVo>.Success().AddData("data", data);
+        }
+
+        /// <summary>
+        /// 行政客服分诊加v率柱状图数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("adminCustomerAssistantDisAndAddVData")]
+        public async Task<ResultData<AdminCustomerAssistantDisAndAddVDataVo>> GetAdminCustomerAssistantDisAndAddVDataAsync([FromQuery] QueryAssistantPerformanceVo query)
+        {
+            QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            var res = await amiyaOperationsBoardService.GetAdminCustomerAssistantDisAndAddVDataAsync(queryDto);
+
+            AdminCustomerAssistantDisAndAddVDataVo data = new AdminCustomerAssistantDisAndAddVDataVo();
+            data.AssistantDistributeData = res.AssistantDistributeData.Select(e => new DataItemVo
+            {
+                Name = e.Name,
+                Value = e.Value,
+            }).ToList();
+            data.AssistantDistributeDataDetail = res.AssistantDistributeDataDetail.Select(e => new DataDetailItemVo
+            {
+                Name = e.Name,
+                BeforeLiveValue = e.BeforeLiveValue,
+                LivingValue = e.LivingValue,
+                AfterLiveValue = e.AfterLiveValue
+            }).ToList();
+            data.AssistantAddWechatData = res.AssistantAddWechatData.Select(e => new DataItemVo
+            {
+                Name = e.Name,
+                Value = e.Value,
+            }).ToList();
+            data.AssistantAddWechatDataDetail = res.AssistantAddWechatDataDetail.Select(e => new DataDetailItemVo
+            {
+                Name = e.Name,
+                BeforeLiveValue = e.BeforeLiveValue,
+                LivingValue = e.LivingValue,
+                AfterLiveValue = e.AfterLiveValue
+            }).ToList();
+            return ResultData<AdminCustomerAssistantDisAndAddVDataVo>.Success().AddData("data", data);
+        }
 
         #endregion
 

@@ -2391,14 +2391,17 @@ namespace Fx.Amiya.Service
         /// 根据助理获取客资人数
         /// </summary>
         /// <returns></returns>
-        public async Task<AssistantDistributeConsulationTypeDataDto> GetDistributeConsulationTypeDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIdList)
+        public async Task<AssistantDistributeConsulationTypeDataDto> GetDistributeConsulationTypeDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIdList, bool? isAddWechat = null)
         {
             AssistantDistributeConsulationTypeDataDto data = new AssistantDistributeConsulationTypeDataDto();
-            var data2 = await dalShoppingCartRegistration.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && assistantIdList.Contains(e.AssignEmpId.Value)).GroupBy(e => e.EmergencyLevel).Select(e => new
-            {
-                CustomerType = e.Key,
-                Count = e.Count()
-            }).ToListAsync();
+            var data2 = await dalShoppingCartRegistration.GetAll()
+                .Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && assistantIdList.Contains(e.AssignEmpId.Value))
+                .Where(e => isAddWechat == null || e.IsAddWeChat == isAddWechat)
+                .GroupBy(e => e.EmergencyLevel).Select(e => new
+                {
+                    CustomerType = e.Key,
+                    Count = e.Count()
+                }).ToListAsync();
             data.FirstType = data2.Where(e => e.CustomerType == (int)EmergencyLevel.Important).FirstOrDefault()?.Count ?? 0;
             data.SecondType = data2.Where(e => e.CustomerType == (int)EmergencyLevel.Generally).FirstOrDefault()?.Count ?? 0;
             data.ThirdType = data2.Where(e => e.CustomerType == (int)EmergencyLevel.Ignorable).FirstOrDefault()?.Count ?? 0;
@@ -2423,5 +2426,81 @@ namespace Fx.Amiya.Service
 
 
         }
+
+        #region 行政客服看板
+
+        /// <summary>
+        /// 获取行政客服客资数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="assistantId"></param>
+        /// <param name="isAddWechat"></param>
+        /// <returns></returns>
+        public async Task<AssistantDistributeConsulationTypeDataDto> GetAdminCustomerDistributeConsulationTypeDataAsync(DateTime startDate, DateTime endDate, int assistantId, bool? isAddWechat = null)
+        {
+            AssistantDistributeConsulationTypeDataDto data = new AssistantDistributeConsulationTypeDataDto();
+            var data2 = await dalShoppingCartRegistration.GetAll()
+                .Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.CreateBy == assistantId)
+                .Where(e => e.AssignEmpId != null)
+                .Where(e => isAddWechat == null || e.IsAddWeChat == isAddWechat)
+                .GroupBy(e => e.EmergencyLevel).Select(e => new
+                {
+                    CustomerType = e.Key,
+                    Count = e.Count()
+                }).ToListAsync();
+            data.FirstType = data2.Where(e => e.CustomerType == (int)EmergencyLevel.Important).FirstOrDefault()?.Count ?? 0;
+            data.SecondType = data2.Where(e => e.CustomerType == (int)EmergencyLevel.Generally).FirstOrDefault()?.Count ?? 0;
+            data.ThirdType = data2.Where(e => e.CustomerType == (int)EmergencyLevel.Ignorable).FirstOrDefault()?.Count ?? 0;
+            data.TotalCount = data.FirstType + data.SecondType + data.ThirdType;
+            return data;
+        }
+
+        /// <summary>
+        /// 获取行政客服分诊折线图基础数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="assistantIdList"></param>
+        /// <returns></returns>
+        public async Task<List<BaseKeyValueDto<string, int>>> GetAdminCustomerDistributeConsulationTypeBrokenLineDataAsync(DateTime startDate, DateTime endDate, int assistantId)
+        {
+            return await dalShoppingCartRegistration.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.CreateBy == assistantId && e.AssignEmpId != null).Select(e => new BaseKeyValueDto<string, int>
+            {
+                Key = e.RecordDate.Date.Date.Day.ToString(),
+                Value = e.EmergencyLevel,
+            }).ToListAsync();
+        }
+
+        /// <summary>
+        /// 根据条件获取行政客服小黄车业绩
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="isEffectiveCustomerData"></param>
+        /// <param name="assistantIdList"></param>
+        /// <returns></returns>
+        public async Task<List<ShoppingCartRegistrationDto>> GetAdminCustomerShopCartRegisterPerformanceByAssistantIdListAsync(DateTime startDate, DateTime endDate, int assistantId)
+        {
+            var result = from d in dalShoppingCartRegistration.GetAll()
+            .Where(o => o.RecordDate >= startDate && o.RecordDate < endDate)
+            .Where(o => o.AssignEmpId != null)
+            .Where(o => o.CreateBy == assistantId)
+                         select d;
+            var x = from d in result
+                    select new ShoppingCartRegistrationDto
+                    {
+                        IsReturnBackPrice = d.IsReturnBackPrice,
+                        AssignEmpId = d.AssignEmpId,
+                        IsAddWeChat = d.IsAddWeChat,
+                        Price = d.Price,
+                        Phone = d.Phone,
+                        BelongChannel = d.BelongChannel
+                    };
+
+            return await x.ToListAsync();
+        }
+
+        #endregion
     }
 }

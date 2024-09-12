@@ -517,6 +517,15 @@ namespace Fx.Amiya.IService
         /// <param name="assistantIds"></param>
         /// <returns></returns>
         Task<OrderSendAndDealNumDto> GetOrderSendAndDealDataByAssistantIdListAsync(DateTime startDate, DateTime endDate, bool? isEffectiveCustomerData, List<int> assistantIds);
+        /// <summary>
+        /// 根据手机号获取派单成交数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="phoneList"></param>
+        /// <param name="assistantId"></param>
+        /// <returns></returns>
+        Task<OrderSendAndDealNumDto> GetAdminCustomerOrderSendAndDealDataByAssistantIdListAsync(DateTime startDate, DateTime endDate, List<string> phoneList);
         #endregion
         #region 医院看板
 
