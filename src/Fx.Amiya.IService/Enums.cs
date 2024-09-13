@@ -470,6 +470,10 @@ namespace Fx.Amiya.IService
         /// </summary>
         Voice = 3,
         /// <summary>
+        /// 未面诊
+        /// </summary>
+        UnConsulation = 4,
+        /// <summary>
         /// 其他=0
         /// </summary>
         OTHER = 0,

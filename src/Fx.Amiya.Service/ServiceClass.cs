@@ -343,6 +343,9 @@ namespace Fx.Amiya.Service
                 case 3:
                     typeText = "(主播)语音面诊";
                     break;
+                case 4:
+                    typeText = "未面诊";
+                    break;
                 case 0:
                     typeText = "其他";
                     break;
