@@ -174,5 +174,12 @@ namespace Fx.Amiya.IService
         /// <param name="dealTrack"></param>
         /// <returns></returns>
         Task AddWaitTrackAfterDealAsync(DealAfterAddTrackDto dealTrack);
+
+        /// <summary>
+        /// 派单后录入待回访记录
+        /// </summary>
+        /// <param name="dealTrack"></param>
+        /// <returns></returns>
+        Task AddWaitTrackUnToHospitalAsync(DealAfterAddTrackDto dealTrack);
     }
 }

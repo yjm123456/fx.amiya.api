@@ -20,5 +20,7 @@ namespace Fx.Amiya.Dto.Track
         /// 成交客户手机号
         /// </summary>
         public string Phone { get; set; }
+
+        public int Days { get; set; }
     }
 }

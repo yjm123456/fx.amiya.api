@@ -167,7 +167,7 @@ namespace Fx.Amiya.Service
                 order.LiveAnchorWeChatNo = input.LiveAnchorWeChatNo;
                 order.CreateDate = input.CreateDate;
                 order.GoodsId = input.GoodsId;
-                order.ConsultationType = input.ConsultationType;
+                order.ConsulationType = input.ConsultationType;
                 order.CustomerName = input.CustomerName;
                 order.AddOrderPrice = input.AddOrderPrice;
                 order.BelongMonth = input.BelongMonth;

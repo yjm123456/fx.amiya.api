@@ -62,7 +62,7 @@ namespace Fx.Amiya.DbModels.Model
         /// <summary>
         /// 面诊状态
         /// </summary>
-        public int ConsultationType { get; set; }
+        public int ConsulationType { get; set; }
 
         /// <summary>
         /// 院方接诊人员

@@ -637,6 +637,37 @@ namespace Fx.Amiya.Service
 
 
         #endregion
+        /// <summary>
+        /// 派单后录入待回访记录
+        /// </summary>
+        /// <param name="dealTrack"></param>
+        /// <returns></returns>
+        public async Task AddWaitTrackUnToHospitalAsync(DealAfterAddTrackDto dealTrack)
+        {
+            try
+            {
+                List<WaitTrackCustomer> waitTrackList = new List<WaitTrackCustomer>();
+                WaitTrackCustomer waitTrackCustomer = new WaitTrackCustomer();
+                waitTrackCustomer.Phone = dealTrack.Phone;
+                waitTrackCustomer.PlanTrackDate = DateTime.Now;
+                waitTrackCustomer.TrackTypeId = 18;
+                waitTrackCustomer.TrackThemeId = 69;
+                waitTrackCustomer.CreateDate = DateTime.Now;
+                waitTrackCustomer.TrackPlan = "派单后" + dealTrack.Days + "日回访";
+                waitTrackCustomer.CreateBy = dealTrack.EmployeeId;
+                waitTrackCustomer.Status = false;
+                waitTrackCustomer.PlanTrackEmployeeId = dealTrack.EmployeeId;
+                waitTrackList.Add(waitTrackCustomer);
+
+                await dalWaitTrackCustomer.AddCollectionAsync(waitTrackList, true);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
 
         /// <summary>
         /// 成交后录入待回访记录

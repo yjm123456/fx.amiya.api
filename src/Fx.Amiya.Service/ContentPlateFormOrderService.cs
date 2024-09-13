@@ -220,7 +220,7 @@ namespace Fx.Amiya.Service
                 order.LiveAnchorWeChatNo = input.LiveAnchorWeChatNo;
                 order.CreateDate = input.CreateDate;
                 order.GoodsId = input.GoodsId;
-                order.ConsultationType = input.ConsultationType;
+                order.ConsulationType = input.ConsultationType;
                 order.CustomerName = input.CustomerName;
                 order.AddOrderPrice = input.AddOrderPrice;
                 order.BelongMonth = input.BelongMonth;
@@ -338,7 +338,7 @@ namespace Fx.Amiya.Service
                              && (!belongMonth.HasValue || d.BelongMonth == belongMonth)
                              && (!minAddOrderPrice.HasValue || d.AddOrderPrice >= minAddOrderPrice)
                              && (!maxAddOrderPrice.HasValue || d.AddOrderPrice <= maxAddOrderPrice)
-                             && (!consultationType.HasValue || d.ConsultationType == consultationType)
+                             && (!consultationType.HasValue || d.ConsulationType == consultationType)
                              && (!getCustomerType.HasValue || d.GetCustomerType == getCustomerType)
                              && (!belongEmpId.HasValue || d.BelongEmpId == belongEmpId)
                              && (orderSource == -1 || d.OrderSource == orderSource)
@@ -378,7 +378,7 @@ namespace Fx.Amiya.Service
                                 LiveAnchorId = d.LiveAnchorId,
                                 LiveAnchorName = d.LiveAnchor.HostAccountName,
                                 GetCustomerTypeText = ServiceClass.GetShoppingCartGetCustomerTypeText(d.GetCustomerType),
-                                ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(d.ConsultationType),
+                                ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(d.ConsulationType),
                                 LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
                                 CreateDate = d.CreateDate,
                                 BelongMonth = d.BelongMonth,
@@ -392,7 +392,7 @@ namespace Fx.Amiya.Service
                                 GoodsId = d.GoodsId,
                                 IsSupportOrder = d.IsSupportOrder,
                                 SupportEmpId = d.SupportEmpId,
-                                ConsultationType = d.ConsultationType,
+                                ConsultationType = d.ConsulationType,
                                 GoodsName = d.AmiyaGoodsDemand.ProjectNname,
                                 GoodsDepartmentId = d.HospitalDepartmentId,
                                 ThumbPictureUrl = d.AmiyaGoodsDemand.ThumbPictureUrl,
@@ -576,8 +576,8 @@ namespace Fx.Amiya.Service
                                   AppointmentHospital = o.HospitalInfo.Name,
                                   AppointmentDate = o.AppointmentDate.HasValue ? o.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "未确认时间",
                                   Remark = o.Remark,
-                                  ConsultationType = o.ConsultationType,
-                                  ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(o.ConsultationType),
+                                  ConsultationType = o.ConsulationType,
+                                  ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(o.ConsulationType),
                                   LateProjectStage = o.LateProjectStage,
                                   UnSendReason = o.UnSendReason,
                                   OrderSourceText = ServiceClass.GerContentPlatFormOrderSourceText(o.OrderSource.Value)
@@ -599,7 +599,7 @@ namespace Fx.Amiya.Service
 
 
         /// <summary>
-        /// 获取内容平台订单已派单七/十五/三十日信息列表
+        /// 获取内容平台订单已派单七/十五/三十日/九十信息列表
         /// </summary>
         /// <param name="days"></param>
         /// <returns></returns>
@@ -620,6 +620,7 @@ namespace Fx.Amiya.Service
                                             IsSupportOrder = d.IsSupportOrder,
                                             BelongEmpId = d.BelongEmpId,
                                             SupportEmpId = d.SupportEmpId,
+                                            Phone = d.Phone
 
                                         };
             result = contentPlatformOrders.ToList();
@@ -1418,8 +1419,8 @@ namespace Fx.Amiya.Service
                                 GoodsName = d.AmiyaGoodsDemand.ProjectNname,
                                 ThumbPictureUrl = d.AmiyaGoodsDemand.ThumbPictureUrl,
                                 ConsultingContent = d.ConsultingContent,
-                                ConsultationType = d.ConsultationType,
-                                ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(d.ConsultationType),
+                                ConsultationType = d.ConsulationType,
+                                ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(d.ConsulationType),
                                 OrderStatus = d.OrderStatus,
                                 OrderStatusText = d.OrderStatus != 0 ? ServiceClass.GetContentPlateFormOrderStatusText((byte)d.OrderStatus) : "",
                                 DepositAmount = d.DepositAmount,
@@ -1527,7 +1528,7 @@ namespace Fx.Amiya.Service
                                 GoodsId = d.GoodsId,
                                 GoodsName = d.AmiyaGoodsDemand.ProjectNname,
                                 ConsultingContent = d.ConsultingContent,
-                                ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(d.ConsultationType),
+                                ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(d.ConsulationType),
                                 OrderStatus = d.OrderStatus,
                                 OrderStatusText = d.OrderStatus != 0 ? ServiceClass.GetContentPlateFormOrderStatusText((byte)d.OrderStatus) : "",
                                 DepositAmount = d.DepositAmount,
@@ -1684,7 +1685,7 @@ namespace Fx.Amiya.Service
                                 AppointmentHospitalName = d.HospitalInfo.Name,
                                 IsToHospital = d.IsToHospital,
                                 ToHospitalDate = d.ToHospitalDate,
-                                ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(d.ConsultationType),
+                                ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(d.ConsulationType),
                                 LastDealHospitalId = d.LastDealHospitalId,
                                 GoodsId = d.GoodsId,
                                 GoodsDepartmentId = d.HospitalDepartmentId,
@@ -1816,8 +1817,8 @@ namespace Fx.Amiya.Service
             result.IsAcompanying = order.IsAcompanying;
             result.GetCustomerType = order.GetCustomerType;
             result.GetCustomerTypeText = ServiceClass.GetShoppingCartGetCustomerTypeText(order.GetCustomerType);
-            result.ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(order.ConsultationType);
-            result.ConsultationType = order.ConsultationType;
+            result.ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(order.ConsulationType);
+            result.ConsultationType = order.ConsulationType;
             result.CommissionRatio = order.CommissionRatio;
             result.BelongMonth = order.BelongMonth;
             result.AddOrderPrice = order.AddOrderPrice;
@@ -2156,7 +2157,7 @@ namespace Fx.Amiya.Service
                 order.ContentPlateformId = input.ContentPlateFormId;
                 order.LiveAnchorWeChatNo = input.LiveAnchorWeChatNo;
                 order.LiveAnchorId = input.LiveAnchorId;
-                order.ConsultationType = input.ConsultationType;
+                order.ConsulationType = input.ConsultationType;
                 order.GoodsId = input.GoodsId;
                 order.CustomerName = input.CustomerName;
                 order.Phone = input.Phone;
@@ -2669,7 +2670,7 @@ namespace Fx.Amiya.Service
                 if (dealCount != null)
                 {
                     var dealinfo = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
-                    var realDealCount = dealinfo.Where(x => x.IsDeal == true && x.Price > 0 && x.ToHospitalType != (int)ContentPlateFormOrderToHospitalType.REFUND && x.ConsumptionType != (int)ConsumptionType.Deposit && x.ConsultationType != (int)ConsumptionType.Refund).Count();
+                    var realDealCount = dealinfo.Where(x => x.IsDeal == true && x.Price > 0 && x.ToHospitalType != (int)ContentPlateFormOrderToHospitalType.REFUND && x.ConsumptionType != (int)ConsumptionType.Deposit && x.ConsumptionType != (int)ConsumptionType.Refund).Count();
                     if (realDealCount > 1)
                     {
                         orderIsOldCustomer = true;
@@ -2928,7 +2929,7 @@ namespace Fx.Amiya.Service
                 var dealInfo = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.Id == input.DealId).FirstOrDefault();
                 var orderDealInfoList = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
                 //最近一次非定金成交且id和当前要修改的id不同
-                var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true && x.Price > 0 && x.Id != input.DealId && x.ToHospitalType != (int)ContentPlateFormOrderToHospitalType.REFUND && x.ConsumptionType != (int)ConsumptionType.Deposit && x.ConsultationType != (int)ConsumptionType.Refund).FirstOrDefault();
+                var dealCount = orderDealInfoList.OrderBy(x => x.DealDate).Where(x => x.IsDeal == true && x.Price > 0 && x.Id != input.DealId && x.ToHospitalType != (int)ContentPlateFormOrderToHospitalType.REFUND && x.ConsumptionType != (int)ConsumptionType.Deposit && x.ConsumptionType != (int)ConsumptionType.Refund).FirstOrDefault();
 
                 //如果有
                 if (dealCount != null)
@@ -3809,8 +3810,8 @@ namespace Fx.Amiya.Service
                     .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.IsDeal == true)
                     .ToList();
 
-                z.VideoPerformance = dealInfo.Where(x => x.ContentPlatFormOrder.ConsultationType == (int)ContentPlateFormOrderConsultationType.Collaboration).Sum(k => k.Price);
-                z.PicturePerformance = dealInfo.Where(x => x.ContentPlatFormOrder.ConsultationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).Sum(k => k.Price);
+                z.VideoPerformance = dealInfo.Where(x => x.ContentPlatFormOrder.ConsulationType == (int)ContentPlateFormOrderConsultationType.Collaboration).Sum(k => k.Price);
+                z.PicturePerformance = dealInfo.Where(x => x.ContentPlatFormOrder.ConsulationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).Sum(k => k.Price);
 
                 z.ZeroPerformance = dealInfo.Where(x => x.ContentPlatFormOrder.AddOrderPrice == 0).Sum(k => k.Price);
                 z.HavingPricePerformance = dealInfo.Where(x => x.ContentPlatFormOrder.AddOrderPrice > 0).Sum(k => k.Price);
@@ -3999,7 +4000,7 @@ namespace Fx.Amiya.Service
                     consolationType = (int)ContentPlateFormOrderConsultationType.IndependentFollowUp;
                 }
                 var order = from d in _dalContentPlatformOrder.GetAll()
-                            where (liveAnchorIds.Contains(d.LiveAnchorId.Value) && d.ConsultationType == consolationType && d.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
+                            where (liveAnchorIds.Contains(d.LiveAnchorId.Value) && d.ConsulationType == consolationType && d.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
                             where (d.DealDate.HasValue == true && d.DealAmount.HasValue && d.DealDate.Value >= currentDate && d.DealDate.Value < endDate)
                             select new ContentPlatFormOrderInfoSimpleDto
                             {
@@ -4440,7 +4441,7 @@ namespace Fx.Amiya.Service
                 }
                 var orderinfo = await _dalContentPlatformOrder.GetAll()
                    .Where(d => d.DealDate.HasValue == true && d.DealAmount.HasValue && d.DealDate.Value >= startTime && d.DealDate.Value < endDate)
-                    .Where(d => liveAnchorIds.Contains(d.LiveAnchorId.Value) && d.ConsultationType == consolationType && d.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
+                    .Where(d => liveAnchorIds.Contains(d.LiveAnchorId.Value) && d.ConsulationType == consolationType && d.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
                     .ToListAsync();
 
 

@@ -33,7 +33,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.Phone).HasColumnName("phone").HasColumnType("VARCHAR(20)").IsRequired();
             builder.Property(e => e.AppointmentDate).HasColumnName("appointment_date").HasColumnType("DATETIME").IsRequired(false);
             builder.Property(e => e.ConsultationEmpId).HasColumnName("consultation_emp_id").HasColumnType("int").IsRequired(false);
-            builder.Property(e => e.ConsultationType).HasColumnName("consultation_type").HasColumnType("int").IsRequired();
+            builder.Property(e => e.ConsulationType).HasColumnName("consultation_type").HasColumnType("int").IsRequired();
             builder.Property(e => e.AppointmentHospitalId).HasColumnName("appointment_hospital_id").HasColumnType("int").IsRequired(false);
             builder.Property(e => e.OrderStatus).HasColumnName("order_status").HasColumnType("int").IsRequired();
             builder.Property(e => e.DepositAmount).HasColumnName("deposit_amount").HasColumnType("DECIMAL").IsRequired(false);

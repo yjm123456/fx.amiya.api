@@ -28,6 +28,7 @@ using Fx.Amiya.SyncFeishuMultidimensionalTable;
 using Fx.Amiya.Dto.TikTokShortVideoData;
 using Fx.Amiya.SyncFeishuMultidimensionalTable.FeishuAppConfig;
 using Fx.Amiya.Dto.TikTokShortVideoData.Input;
+using Fx.Amiya.Dto.Track;
 
 namespace Fx.Amiya.Background.Api
 {
@@ -56,6 +57,7 @@ namespace Fx.Amiya.Background.Api
         private IOrderAppInfoService orderAppInfoService;
         private ISyncFeishuMultidimensionalTable syncFeishuMultidimensionalTable;
         private ITikTokShortVideoDataService tikTokShortVideoDataService;
+        private ITrackService trackService;
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -83,12 +85,14 @@ namespace Fx.Amiya.Background.Api
              IMemberCard memberCardService,
              IUnitOfWork unitOfWork,
              ISyncTikTokOrder syncTikTokOrder,
+             ITrackService trackService,
              ICustomerAppointmentScheduleService customerAppointmentScheduleService,
              IMessageNoticeService messageNoticeService,
              IMemberRankInfo memberRankInfoService, ITikTokOrderInfoService tokOrderInfoService, IServiceProvider serviceProvider, ISyncWeChatVideoOrder syncWeChatVideoOrder = null, IWeChatVideoOrderService weChatVideoOrderService = null, IOrderAppInfoService orderAppInfoService = null, ISyncFeishuMultidimensionalTable syncFeishuMultidimensionalTable = null, ITikTokShortVideoDataService tikTokShortVideoDataService = null)
         {
             this.orderService = orderService;
             this.syncOrder = syncOrder;
+            this.trackService = trackService;
             _fxAppGlobal = fxAppGlobal;
             this.messageNoticeService = messageNoticeService;
             this.customerAppointmentScheduleService = customerAppointmentScheduleService;
@@ -350,7 +354,7 @@ namespace Fx.Amiya.Background.Api
         /// </summary>
         /// <returns></returns>
         /// <returns></returns>
-        //[Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 1, SkipWhileExecuting = true)]//1分钟运行一次
+        //[Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 3, SkipWhileExecuting = true)]//3分钟运行一次
         [Invoke(Begin = "00:00:00", Interval = 1000 * 60 * 60 * 24 + 60 * 1000, SkipWhileExecuting = true)]
         public async Task OrderMessageNotice()
         {
@@ -374,7 +378,16 @@ namespace Fx.Amiya.Background.Api
                     }
                     addMessageNoticeDto.NoticeType = (int)MessageNoticeMessageTextEnum.OrderNotice;
                     addMessageNoticeDto.NoticeContent = "您的订单：" + sevendaysendDateOrder.Id + " 已派单超过" + sevenDay + "日，请及时跟进~";
+                    //消息通知
                     await messageNoticeService.AddAsync(addMessageNoticeDto);
+
+                    DealAfterAddTrackDto dealAfterAddTrackDto = new DealAfterAddTrackDto();
+                    dealAfterAddTrackDto.Phone = sevendaysendDateOrder.Phone;
+                    dealAfterAddTrackDto.EmployeeId = addMessageNoticeDto.AcceptBy;
+                    dealAfterAddTrackDto.Days = sevenDay;
+                    //添加派单回访
+                    await trackService.AddWaitTrackUnToHospitalAsync(dealAfterAddTrackDto);
+
                 }
                 #endregion
                 #region【十五日派单通知】
@@ -394,6 +407,13 @@ namespace Fx.Amiya.Background.Api
                     addMessageNoticeDto.NoticeType = (int)MessageNoticeMessageTextEnum.OrderNotice;
                     addMessageNoticeDto.NoticeContent = "您的订单：" + fifTeendaysendDateOrder.Id + " 已派单超过" + fifteenDays + "日，请及时跟进~";
                     await messageNoticeService.AddAsync(addMessageNoticeDto);
+
+                    DealAfterAddTrackDto dealAfterAddTrackDto = new DealAfterAddTrackDto();
+                    dealAfterAddTrackDto.Phone = fifTeendaysendDateOrder.Phone;
+                    dealAfterAddTrackDto.EmployeeId = addMessageNoticeDto.AcceptBy;
+                    dealAfterAddTrackDto.Days = fifteenDays;
+                    //添加派单回访
+                    await trackService.AddWaitTrackUnToHospitalAsync(dealAfterAddTrackDto);
                 }
                 #endregion
                 #region【三十日派单通知】
@@ -413,6 +433,63 @@ namespace Fx.Amiya.Background.Api
                     addMessageNoticeDto.NoticeType = (int)MessageNoticeMessageTextEnum.OrderNotice;
                     addMessageNoticeDto.NoticeContent = "您的订单：" + ThirtydaysendDateOrder.Id + " 已派单超过" + thirtyDays + "日，请及时跟进~";
                     await messageNoticeService.AddAsync(addMessageNoticeDto);
+
+                    DealAfterAddTrackDto dealAfterAddTrackDto = new DealAfterAddTrackDto();
+                    dealAfterAddTrackDto.Phone = ThirtydaysendDateOrder.Phone;
+                    dealAfterAddTrackDto.EmployeeId = addMessageNoticeDto.AcceptBy;
+                    dealAfterAddTrackDto.Days = thirtyDays;
+                    //添加派单回访
+                    await trackService.AddWaitTrackUnToHospitalAsync(dealAfterAddTrackDto);
+                }
+                #endregion
+                #region【九十日派单通知】
+                int nintyDays = 90;
+                var sendOrderNintyDay = await contentPlateFormOrderService.GetSendOrderByDateList(nintyDays);
+                foreach (var NintydaysendDateOrder in sendOrderNintyDay)
+                {
+                    AddMessageNoticeDto addMessageNoticeDto = new AddMessageNoticeDto();
+                    if (NintydaysendDateOrder.IsSupportOrder == true)
+                    {
+                        addMessageNoticeDto.AcceptBy = NintydaysendDateOrder.SupportEmpId;
+                    }
+                    else
+                    {
+                        addMessageNoticeDto.AcceptBy = NintydaysendDateOrder.BelongEmpId.Value;
+                    }
+                    addMessageNoticeDto.NoticeType = (int)MessageNoticeMessageTextEnum.OrderNotice;
+                    addMessageNoticeDto.NoticeContent = "您的订单：" + NintydaysendDateOrder.Id + " 已派单超过" + nintyDays + "日，请及时跟进~";
+                    await messageNoticeService.AddAsync(addMessageNoticeDto);
+                    DealAfterAddTrackDto dealAfterAddTrackDto = new DealAfterAddTrackDto();
+                    dealAfterAddTrackDto.Phone = NintydaysendDateOrder.Phone;
+                    dealAfterAddTrackDto.EmployeeId = addMessageNoticeDto.AcceptBy;
+                    dealAfterAddTrackDto.Days = nintyDays;
+                    //添加派单回访
+                    await trackService.AddWaitTrackUnToHospitalAsync(dealAfterAddTrackDto);
+                }
+                #endregion
+                #region【一百八十日派单通知】
+                int oneHundredAndEightDays = 180;
+                var sendOrderoneHundredAndEightDay = await contentPlateFormOrderService.GetSendOrderByDateList(oneHundredAndEightDays);
+                foreach (var oneHundredAndEightdaysendDateOrder in sendOrderoneHundredAndEightDay)
+                {
+                    AddMessageNoticeDto addMessageNoticeDto = new AddMessageNoticeDto();
+                    if (oneHundredAndEightdaysendDateOrder.IsSupportOrder == true)
+                    {
+                        addMessageNoticeDto.AcceptBy = oneHundredAndEightdaysendDateOrder.SupportEmpId;
+                    }
+                    else
+                    {
+                        addMessageNoticeDto.AcceptBy = oneHundredAndEightdaysendDateOrder.BelongEmpId.Value;
+                    }
+                    addMessageNoticeDto.NoticeType = (int)MessageNoticeMessageTextEnum.OrderNotice;
+                    addMessageNoticeDto.NoticeContent = "您的订单：" + oneHundredAndEightdaysendDateOrder.Id + " 已派单超过" + oneHundredAndEightDays + "日，请及时跟进~";
+                    await messageNoticeService.AddAsync(addMessageNoticeDto);
+                    DealAfterAddTrackDto dealAfterAddTrackDto = new DealAfterAddTrackDto();
+                    dealAfterAddTrackDto.Phone = oneHundredAndEightdaysendDateOrder.Phone;
+                    dealAfterAddTrackDto.EmployeeId = addMessageNoticeDto.AcceptBy;
+                    dealAfterAddTrackDto.Days = oneHundredAndEightDays;
+                    //添加派单回访
+                    await trackService.AddWaitTrackUnToHospitalAsync(dealAfterAddTrackDto);
                 }
                 #endregion
                 #endregion

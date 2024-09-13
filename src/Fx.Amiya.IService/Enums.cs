@@ -457,7 +457,7 @@ namespace Fx.Amiya.IService
     {
 
         /// <summary>
-        /// 照片面诊=1
+        /// 照片(独立)面诊=1
         /// </summary>
         IndependentFollowUp = 1,
 
@@ -465,6 +465,10 @@ namespace Fx.Amiya.IService
         /// 视频面诊=2
         /// </summary>
         Collaboration = 2,
+        /// <summary>
+        /// 语音面诊=3
+        /// </summary>
+        Voice = 3,
         /// <summary>
         /// 其他=0
         /// </summary>
@@ -903,7 +907,7 @@ namespace Fx.Amiya.IService
     {
         //三级客资
         Ignorable = 0,
-       
+
         //二级客资
         Generally = 2,
         //一级客资

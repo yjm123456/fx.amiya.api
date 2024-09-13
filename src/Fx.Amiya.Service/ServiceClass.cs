@@ -335,10 +335,13 @@ namespace Fx.Amiya.Service
             {
 
                 case 1:
-                    typeText = "照片面诊";
+                    typeText = "(助理)照片面诊";
                     break;
                 case 2:
-                    typeText = "视频面诊";
+                    typeText = "(主播)视频面诊";
+                    break;
+                case 3:
+                    typeText = "(主播)语音面诊";
                     break;
                 case 0:
                     typeText = "其他";
@@ -2516,9 +2519,11 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
-        public static string LivingTakeGoodsOrderStatusText(int status) {
+        public static string LivingTakeGoodsOrderStatusText(int status)
+        {
             string text = "";
-            switch (status) {
+            switch (status)
+            {
                 case 3:
                     text = "已付款";
                     break;
