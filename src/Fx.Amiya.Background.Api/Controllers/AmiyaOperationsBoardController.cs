@@ -1381,7 +1381,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             data.DistributeConsulationAddWechatDataList = res.DistributeConsulationAddWechatDataList.Select(e => new ItemVo
             {
                 Name = e.Name,
-                Value = e.Value,
+                Value = 1,
                 Rate = e.Rate
             }).ToList();
             data.EffAndPotDataList = res.EffAndPotDataList.Select(e => new ItemVo
@@ -1393,7 +1393,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             data.EffAndPotAddWechatDataList = res.EffAndPotAddWechatDataList.Select(e => new ItemVo
             {
                 Name = e.Name,
-                Value = e.Value,
+                Value = 1,
                 Rate = e.Rate
             }).ToList();
 

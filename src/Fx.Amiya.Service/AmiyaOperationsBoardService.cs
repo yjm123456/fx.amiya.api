@@ -3248,11 +3248,11 @@ namespace Fx.Amiya.Service
             var potenialAddWechatCount = baseData.Where(e => e.Price == 0 && e.IsAddWeChat == true).Count();
             var effictiveAddWechatCount = baseData.Where(e => e.Price > 0 && e.IsAddWeChat == true).Count();
 
-            data.DistributeConsulationDataList.Add(new Item {Name="直播前",Value= beforeLiveCount ,Rate=DecimalExtension.CalculateTargetComplete(beforeLiveCount,totalLiveCount).Value});
+            data.DistributeConsulationDataList.Add(new Item { Name = "直播前", Value = beforeLiveCount, Rate = DecimalExtension.CalculateTargetComplete(beforeLiveCount, totalLiveCount).Value });
             data.DistributeConsulationDataList.Add(new Item { Name = "直播中", Value = livingCount, Rate = DecimalExtension.CalculateTargetComplete(livingCount, totalLiveCount).Value });
             data.DistributeConsulationDataList.Add(new Item { Name = "直播后", Value = afterLiveCount, Rate = DecimalExtension.CalculateTargetComplete(afterLiveCount, totalLiveCount).Value });
 
-            data.DistributeConsulationAddWechatDataList.Add(new Item { Name = "直播前", Value = beforeLiveAddWechatCount, Rate = DecimalExtension.CalculateTargetComplete(beforeLiveAddWechatCount,beforeLiveCount).Value });
+            data.DistributeConsulationAddWechatDataList.Add(new Item { Name = "直播前", Value = beforeLiveAddWechatCount, Rate = DecimalExtension.CalculateTargetComplete(beforeLiveAddWechatCount, beforeLiveCount).Value });
             data.DistributeConsulationAddWechatDataList.Add(new Item { Name = "直播中", Value = livingAddWechatCount, Rate = DecimalExtension.CalculateTargetComplete(livingAddWechatCount, livingCount).Value });
             data.DistributeConsulationAddWechatDataList.Add(new Item { Name = "直播后", Value = afterLiveAddWechatCount, Rate = DecimalExtension.CalculateTargetComplete(afterLiveAddWechatCount, afterLiveCount).Value });
 
@@ -3275,10 +3275,10 @@ namespace Fx.Amiya.Service
         {
             var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
             var baseData = await shoppingCartRegistrationService.GetAdminCustomerShopCartRegisterPerformanceByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, query.AssistantId.Value);
-            var employeeList =await amiyaEmployeeService.GetAllAssistantAsync();
+            var employeeList = await amiyaEmployeeService.GetAllAssistantAsync();
 
             AdminCustomerAssistantDisAndAddVDataDto data = new AdminCustomerAssistantDisAndAddVDataDto();
-            var dataList= baseData.GroupBy(e => e.AssignEmpId).Select(e => new
+            var dataList = baseData.GroupBy(e => e.AssignEmpId).Select(e => new
             {
                 Name = employeeList.Where(c => c.Id == e.Key).FirstOrDefault()?.Name ?? "其它",
                 BeforeLiveCount = e.Where(e => e.BelongChannel == (int)BelongChannel.LiveBefore).Count(),
@@ -3289,14 +3289,15 @@ namespace Fx.Amiya.Service
                 AfterLiveAddWechatCount = e.Where(e => e.BelongChannel == (int)BelongChannel.LiveAfter && e.IsAddWeChat == true).Count(),
             }).ToList();
             data.AssistantDistributeData = dataList.Select(e => new DataItemDto { Name = e.Name, Value = e.BeforeLiveCount + e.LivingCount + e.AfterLiveCount }).OrderByDescending(e => e.Value).ToList();
-            data.AssistantDistributeDataDetail = dataList.Select(e => new DataDetailItemDto { Name = e.Name, BeforeLiveValue = e.BeforeLiveCount, LivingValue = e.LivingCount, AfterLiveValue = e.AfterLiveCount }).ToList();
-            data.AssistantAddWechatData = dataList.Select(e => new DataItemDto { Name = e.Name, Value = DecimalExtension.CalculateTargetComplete(e.BeforeLiveAddWechatCount + e.LivingAddWechatCount + e.AfterLiveAddWechatCount, e.BeforeLiveCount + e.LivingCount + e.AfterLiveCount).Value }).ToList();
-            data.AssistantAddWechatDataDetail = dataList.Select(e=>new DataDetailItemDto { 
-                Name=e.Name,
-                BeforeLiveValue=DecimalExtension.CalculateTargetComplete(e.BeforeLiveAddWechatCount,e.BeforeLiveCount).Value,
+            data.AssistantDistributeDataDetail = dataList.Select(e => new DataDetailItemDto { Name = e.Name, BeforeLiveValue = e.BeforeLiveCount, LivingValue = e.LivingCount, AfterLiveValue = e.AfterLiveCount }).OrderByDescending(e => e.BeforeLiveValue + e.LivingValue + e.AfterLiveValue).ToList();
+            data.AssistantAddWechatData = dataList.Select(e => new DataItemDto { Name = e.Name, Value = DecimalExtension.CalculateTargetComplete(e.BeforeLiveAddWechatCount + e.LivingAddWechatCount + e.AfterLiveAddWechatCount, e.BeforeLiveCount + e.LivingCount + e.AfterLiveCount).Value }).OrderByDescending(e => e.Value).ToList();
+            data.AssistantAddWechatDataDetail = dataList.Select(e => new DataDetailItemDto
+            {
+                Name = e.Name,
+                BeforeLiveValue = DecimalExtension.CalculateTargetComplete(e.BeforeLiveAddWechatCount, e.BeforeLiveCount).Value,
                 LivingValue = DecimalExtension.CalculateTargetComplete(e.LivingAddWechatCount, e.LivingCount).Value,
                 AfterLiveValue = DecimalExtension.CalculateTargetComplete(e.AfterLiveAddWechatCount, e.AfterLiveCount).Value,
-            }).ToList();
+            }).OrderByDescending(e => e.BeforeLiveValue + e.LivingValue + e.AfterLiveValue).ToList();
             return data;
         }
 
