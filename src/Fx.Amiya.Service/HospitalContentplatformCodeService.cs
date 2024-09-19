@@ -48,7 +48,7 @@ namespace Fx.Amiya.Service
                                                    ThirdPartContentplatformInfoId = d.ThirdPartContentplatformInfoId,
                                                    ThirdPartContentplatformInfoName = d.ThirdPartContentplatformInfo.Name,
                                                    HospitalId = d.HospitalId,
-                                                   Code=d.Code,
+                                                   Code = d.Code,
                                                    HospitalName = d.HospitalInfo.Name,
                                                };
             FxPageInfo<HospitalContentplatformCodeDto> hospitalContentplatformCodePageInfo = new FxPageInfo<HospitalContentplatformCodeDto>();
@@ -195,7 +195,23 @@ namespace Fx.Amiya.Service
             }
         }
 
-
+        /// <summary>
+        /// 根据医院编号获取有效的三方平台信息
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<BaseKeyValueDto>> GetValidListAsync(int hospitalId)
+        {
+            var thirdPartContentplatformInfos = from d in dalHospitalContentplatformCode.GetAll().Include(x => x.ThirdPartContentplatformInfo)
+                                                where (d.Valid == true && d.HospitalId == hospitalId)
+                                                select new BaseKeyValueDto
+                                                {
+                                                    Key = d.ThirdPartContentplatformInfoId,
+                                                    Value = d.ThirdPartContentplatformInfo.Name
+                                                };
+            List<BaseKeyValueDto> thirdPartContentplatformInfoPageInfo = new List<BaseKeyValueDto>();
+            thirdPartContentplatformInfoPageInfo = await thirdPartContentplatformInfos.ToListAsync();
+            return thirdPartContentplatformInfoPageInfo;
+        }
 
     }
 }

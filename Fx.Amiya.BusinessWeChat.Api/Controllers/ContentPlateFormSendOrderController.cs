@@ -1,13 +1,19 @@
 ﻿
 
+using Fx.Amiya.BusinessWeChat.Api.Vo;
 using Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder;
 using Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend;
+using Fx.Amiya.BusinessWeChat.Api.Vo.ThirdPartContentPlatformInfo;
+using Fx.Amiya.Dto.ContentPlatFormOrderSend;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
+using Fx.Common.Utils;
 using Fx.Open.Infrastructure.Web;
+using jos_sdk_net.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,10 +31,18 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
 
 
         private IHttpContextAccessor _httpContextAccessor;
+        private IHospitalEmployeeService hospitalEmployeeService;
+        private IHospitalContentplatformCodeService hospitalContentplatformCodeService;
         private IContentPlatformOrderSendService _sendOrderInfoService;
+        private IContentPlatformOrderSendService contentPlatformOrderSendService;
+        private ICustomerBaseInfoService customerBaseInfoService;
         private IWxAppConfigService _wxAppConfigService;
+        private IThirdPartContentplatformInfoService thirdPartContentplatformInfoService;
         private IContentPlatFormOrderDealInfoService orderDealInfoService;
+        private readonly IContentPlateFormOrderService contentPlateFormOrderService;
         private IHospitalCustomerInfoService hospitalCustomerInfoService;
+        private IAmiyaHospitalDepartmentService amiyaHospitalDepartmentService;
+        private IAmiyaGoodsDemandService amiyaGoodsDemandService;
         /// <summary>
         /// 派单API
         /// </summary>
@@ -39,13 +53,29 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// <param name="wxAppConfigService"></param>
         public ContentPlateFormSendOrderController(IContentPlatformOrderSendService sendOrderInfoService,
             IContentPlatFormOrderDealInfoService orderDealInfoService,
+            ICustomerBaseInfoService customerBaseInfoService,
+            IThirdPartContentplatformInfoService thirdPartContentplatformInfoService,
+             IContentPlateFormOrderService contentPlateFormOrderService,
+             IAmiyaHospitalDepartmentService amiyaHospitalDepartmentService,
             IHospitalCustomerInfoService hospitalCustomerInfoService,
+            IHospitalContentplatformCodeService hospitalContentplatformCodeService,
+            IHospitalEmployeeService hospitalEmployeeService,
+            IAmiyaGoodsDemandService amiyaGoodsDemandService,
+            IContentPlatformOrderSendService contentPlatformOrderSendService,
             IHttpContextAccessor httpContextAccessor,
              IWxAppConfigService wxAppConfigService)
         {
             _sendOrderInfoService = sendOrderInfoService;
+            this.hospitalEmployeeService = hospitalEmployeeService;
             this.orderDealInfoService = orderDealInfoService;
+            this.customerBaseInfoService = customerBaseInfoService;
+            this.amiyaGoodsDemandService = amiyaGoodsDemandService;
+            this.contentPlateFormOrderService = contentPlateFormOrderService;
             _wxAppConfigService = wxAppConfigService;
+            this.amiyaHospitalDepartmentService = amiyaHospitalDepartmentService;
+            this.hospitalContentplatformCodeService = hospitalContentplatformCodeService;
+            this.thirdPartContentplatformInfoService = thirdPartContentplatformInfoService;
+            this.contentPlatformOrderSendService = contentPlatformOrderSendService;
             this.hospitalCustomerInfoService = hospitalCustomerInfoService;
             _httpContextAccessor = httpContextAccessor;
         }
@@ -221,5 +251,149 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             pageInfo.List = contentPlatformOrders;
             return ResultData<FxPageInfo<ContentPlatFormOrderDealInfoVo>>.Success().AddData("contentPlatFormOrderDealInfo", pageInfo);
         }
+        /// <summary>
+        /// 根据内容派单id获取
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("sendOrderInfoList")]
+        public async Task<ResultData<FxPageInfo<SimpleSendOrderInfoVo>>> GetSendOrderInfiListAsync([FromQuery] QuerySendOrderInfoListVo query)
+        {
+            FxPageInfo<SimpleSendOrderInfoVo> pageInfo = new FxPageInfo<SimpleSendOrderInfoVo>();
+            QuerySendOrderInfoListDto queryDto = new QuerySendOrderInfoListDto();
+            queryDto.ContentPlatformId = query.ContentPlatformId;
+            queryDto.PageNum = query.PageNum;
+            queryDto.PageSize = query.PageSize;
+            var res = await _sendOrderInfoService.GetSendOrderInfoListByContentplateformIdAsync(queryDto);
+            pageInfo.TotalCount = res.TotalCount;
+            pageInfo.List = res.List.Select(e => new SimpleSendOrderInfoVo
+            {
+                Id = e.Id,
+                HospitalName = e.HospitalName,
+                HospitalId = e.HospitalId,
+                AppointmentDate = e.AppointmentDate,
+                Remark = e.Remark,
+                SendBy = e.SendBy,
+                IsMainHospital = e.IsMainHospital,
+                SendDate = e.SendDate,
+                SenderName = e.SenderName,
+                HospitalRemark = e.HospitalRemark,
+                OrderStatus = e.OrderStatus,
+                IsSpecifyHospitalEmployee = e.IsSpecifyHospitalEmployee,
+                HospitalEmployeeId = e.HospitalEmployeeId,
+                HospitalEmployeeName = e.HospitalEmployeeName
+            });
+            return ResultData<FxPageInfo<SimpleSendOrderInfoVo>>.Success().AddData("sendOrderInfoList", pageInfo);
+        }
+
+
+
+        /// <summary>
+        /// 获取有效的三方平台信息信息（下拉框使用）
+        /// </summary>
+        /// <param name="hospitalId">医院编号</param>
+        /// <returns></returns>
+        [HttpGet("ValidKeyAndValue")]
+        [FxInternalOrTenantAuthroize]
+        public async Task<ResultData<List<BaseIdAndNameVo>>> GetValidByKeyAndValueAsync(int hospitalId)
+        {
+            try
+            {
+                var q = await hospitalContentplatformCodeService.GetValidListAsync(hospitalId);
+                var thirdPartContentplatformInfo = from d in q
+                                                   select new BaseIdAndNameVo
+                                                   {
+                                                       Id = d.Key,
+                                                       Name = d.Value,
+                                                   };
+
+                return ResultData<List<BaseIdAndNameVo>>.Success().AddData("thirdPartContentplatformInfo", thirdPartContentplatformInfo.ToList());
+            }
+            catch (Exception ex)
+            {
+                return ResultData<List<BaseIdAndNameVo>>.Fail(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 管理端根据医院id和三方平台id进行查重-朗姿
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("getIsRepeateByHospitalIdAndThirdPartIdToLangZi")]
+        [FxInternalOrTenantAuthroize]
+        public async Task<ResultData<ThirdPartContentPlatformInfoToLangZiResultVo>> GetIsRepeateByHospitalIdAndThirdPartIdToLangZiAsync([FromQuery] QueryIsRepeateByHospitalIdAndThirdPartIdVo query)
+        {
+            try
+            {
+                var thirdcontentPlatformInfo = await thirdPartContentplatformInfoService.GetByNameAsync("朗姿");
+                var url = thirdcontentPlatformInfo.ApiUrl;
+                QuerySendOrderDataByLangZiVo queryData = new QuerySendOrderDataByLangZiVo();
+                queryData.FWSID = "E-31-31446";
+                queryData.USERID = "INTAMY";
+                var hospitalContentPlatformCode = await hospitalContentplatformCodeService.GetByHospitalIdAndThirdPartContentPlatformIdAsync(query.HospitalId, query.ThirdPartContentplatformInfoId);
+                queryData.JGBM = hospitalContentPlatformCode.Code;
+
+                queryData.YWLX = query.YWLX;
+
+                if (query.YWLX == "P")
+                {
+                    queryData.PDBH = query.SendOrderId.ToString();
+                }
+                else
+                {
+                    queryData.PDBH = CreateOrderIdHelper.GetNextNumber();
+                }
+                var order = await contentPlateFormOrderService.GetByOrderIdAsync(query.OrderId);
+                if (query.SendOrderId != 0)
+                {
+                    var sendInfo = await contentPlatformOrderSendService.GetByIdAsync(Convert.ToInt32(query.SendOrderId.ToString()));
+                    if (sendInfo.IsSpecifyHospitalEmployee == true)
+                    {
+                        queryData.PDYSID = sendInfo.HospitalEmployeeId.ToString();
+                        var hospitalEmpInfo = await hospitalEmployeeService.GetByIdAsync(sendInfo.HospitalEmployeeId);
+                        queryData.PDYSNM = hospitalEmpInfo.Name;
+                        queryData.PDRQ = order.SendDate.Value;
+                    }
+                }
+                var customerBaseInfo = await customerBaseInfoService.GetByPhoneAsync(order.Phone);
+                queryData.KUNAM = order.CustomerName;
+                //queryData.KUSEX = customerBaseInfo.Sex;
+                //queryData.AGE = customerBaseInfo.Age.HasValue ? customerBaseInfo.Age.Value : 0;
+                //queryData.KUPRO = customerBaseInfo.Occupation;
+                //queryData.KHWX = customerBaseInfo.WechatNumber;
+                var goodsDemandInfo = await amiyaGoodsDemandService.GetByIdAsync(order.GoodsId);
+                var amiyaHospitalDemandInfo = await amiyaHospitalDepartmentService.GetByIdAsync(order.HospitalDepartmentId);
+                queryData.PTXMLB1 = order.HospitalDepartmentName;
+                queryData.PTXMLB2 = order.GoodsName;
+                queryData.PTXMMC = order.GoodsDescription;
+                queryData.REGION = customerBaseInfo.City;
+                queryData.TEL1 = order.Phone;
+                queryData.PDTZ = order.ConsultingContent;
+                var data = JsonConvert.SerializeObject(queryData);
+                var getResult = await HttpUtil.HTTPJsonGetHasBodyAsync(url, data);
+                //var getResult = "";
+                var result = JsonConvert.DeserializeObject<ThirdPartContentPlatformInfoToLangZiResultVo>(getResult);
+                switch (result.RESULT)
+                {
+                    case "0":
+                        result.REMSG += "；无重复";
+                        break;
+                    case "1":
+                        result.REMSG += "；已被其他通路建档";
+                        break;
+                    case "2":
+                        result.REMSG += "；已被所在通路建档";
+                        break;
+                }
+
+
+                return ResultData<ThirdPartContentPlatformInfoToLangZiResultVo>.Success().AddData("hospitalContentplatformCode", result);
+            }
+            catch (Exception ex)
+            {
+                return ResultData<ThirdPartContentPlatformInfoToLangZiResultVo>.Fail(ex.Message);
+            }
+        }
+
     }
 }

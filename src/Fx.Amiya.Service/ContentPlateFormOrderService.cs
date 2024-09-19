@@ -1917,6 +1917,7 @@ namespace Fx.Amiya.Service
             result.CustomerTypeText = ServiceClass.GetShoppingCartCustomerTypeText(order.CustomerType);
             var goodsInfo = await amiyaGoodsDemandService.GetByIdAsync(order.GoodsId);
             result.GoodsName = goodsInfo.ProjectNname;
+            result.GoodsDescription = goodsInfo.Description;
             result.ThumbPicture = goodsInfo.ThumbPictureUrl;
             result.HospitalDepartmentName = goodsInfo.HospitalDepartmentName;
             result.UnSendReason = order.UnSendReason;

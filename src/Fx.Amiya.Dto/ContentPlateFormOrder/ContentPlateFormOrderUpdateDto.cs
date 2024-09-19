@@ -163,6 +163,10 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 商品
         /// </summary>
         public string GoodsName { get; set; }
+        /// <summary>
+        /// 商品描述
+        /// </summary>
+        public string GoodsDescription { get; set; }
 
         /// <summary>
         /// 商品图片

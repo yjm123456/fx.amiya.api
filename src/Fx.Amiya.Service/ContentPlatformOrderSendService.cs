@@ -1304,7 +1304,7 @@ namespace Fx.Amiya.Service
                           HospitalEmployeeId=e.HospitalEmployeeId,
                       });
             pageInfo.TotalCount = await res.CountAsync();
-            pageInfo.List = res.Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToList();
+            pageInfo.List = res.OrderByDescending(x=>x.SendDate).Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToList();
             foreach (var x in pageInfo.List)
             {
                 if (x.HospitalEmployeeId != 0)

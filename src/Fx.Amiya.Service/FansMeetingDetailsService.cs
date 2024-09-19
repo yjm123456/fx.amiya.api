@@ -42,7 +42,6 @@ namespace Fx.Amiya.Service
                                       && (string.IsNullOrEmpty(query.KeyWord) || d.Phone.Contains(query.KeyWord))
                                       && (!query.StartDate.HasValue || d.AppointmentDate.Value >= query.StartDate.Value)
                                       && (!query.EndDate.HasValue || d.AppointmentDate.Value < query.EndDate.Value.AddDays(1).AddMilliseconds(-1))
-
                                       && (!query.IsToHospital.HasValue || d.IsToHospital == query.IsToHospital.Value)
                                       && (!query.IsDeal.HasValue || d.IsDeal == query.IsDeal.Value)
                                       && (!query.AmiyaEmployeeId.HasValue || d.AmiyaConsulationId == query.AmiyaEmployeeId.Value)

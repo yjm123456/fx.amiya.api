@@ -513,14 +513,17 @@ namespace Fx.Amiya.Service
             {
                 var dealInfo = from d in dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder) select d;
 
-                var employee = await _dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
-                //普通客服角色过滤其他订单信息只展示自己录单信息
-                if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
+                if (customerServiceId.HasValue)
                 {
-                    dealInfo = from d in dealInfo
-                               where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.ContentPlatFormOrder.Phone) > 0 || d.ContentPlatFormOrder.SupportEmpId == employeeId || d.ContentPlatFormOrder.BelongEmpId == employeeId
-                               where (d.ContentPlatFormOrder.IsSupportOrder == false || d.ContentPlatFormOrder.SupportEmpId == employeeId)
-                               select d;
+                    var employee = await _dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == customerServiceId.Value);
+                    //普通客服角色过滤其他订单信息只展示自己录单信息
+                    if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
+                    {
+                        dealInfo = from d in dealInfo
+                                   where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == customerServiceId.Value && e.BuyerPhone == d.ContentPlatFormOrder.Phone) > 0 || d.ContentPlatFormOrder.SupportEmpId == customerServiceId.Value || d.ContentPlatFormOrder.BelongEmpId == customerServiceId.Value
+                                   where (d.ContentPlatFormOrder.IsSupportOrder == false || d.ContentPlatFormOrder.SupportEmpId == customerServiceId.Value)
+                                   select d;
+                    }
                 }
 
 

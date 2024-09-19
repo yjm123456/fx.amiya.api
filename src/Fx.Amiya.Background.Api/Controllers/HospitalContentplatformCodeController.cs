@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.HospitalContentplatformCode.Input;
 using Fx.Amiya.Background.Api.Vo.HospitalContentplatformCode.Result;
 using Fx.Amiya.Background.Api.Vo.ThirdPartContentplatformInfo.Input;
@@ -37,6 +39,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IContentPlatformOrderSendService contentPlatformOrderSendService;
         private IThirdPartContentplatformInfoService thirdPartContentplatformInfoService;
         private IHospitalEmployeeService hospitalEmployeeService;
+        private ICustomerBaseInfoService customerBaseInfoService;
+        private IAmiyaHospitalDepartmentService amiyaHospitalDepartmentService;
+        private IAmiyaGoodsDemandService amiyaGoodsDemandService;
 
         /// <summary>
         /// 构造函数
@@ -44,7 +49,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="hospitalContentplatformCodeService"></param>
         /// <param name="contentPlateFormOrderService"></param>
         /// <param name="wxAppConfigService"></param>
-        public HospitalContentplatformCodeController(IHospitalContentplatformCodeService hospitalContentplatformCodeService, IContentPlateFormOrderService contentPlateFormOrderService, IHttpContextAccessor httpContextAccessor, IContentPlatformOrderSendService contentPlatformOrderSendService, IOperationLogService operationLogService, IThirdPartContentplatformInfoService thirdPartContentplatformInfoService, IHospitalEmployeeService hospitalEmployeeService)
+        public HospitalContentplatformCodeController(IHospitalContentplatformCodeService hospitalContentplatformCodeService, IContentPlateFormOrderService contentPlateFormOrderService, IHttpContextAccessor httpContextAccessor, IContentPlatformOrderSendService contentPlatformOrderSendService, IOperationLogService operationLogService, IThirdPartContentplatformInfoService thirdPartContentplatformInfoService, IHospitalEmployeeService hospitalEmployeeService, ICustomerBaseInfoService customerBaseInfoService, IAmiyaHospitalDepartmentService amiyaHospitalDepartmentService, IAmiyaGoodsDemandService amiyaGoodsDemandService)
         {
             this.hospitalContentplatformCodeService = hospitalContentplatformCodeService;
             this.contentPlateFormOrderService = contentPlateFormOrderService;
@@ -53,6 +58,9 @@ namespace Fx.Amiya.Background.Api.Controllers
             this.contentPlatformOrderSendService = contentPlatformOrderSendService;
             this.thirdPartContentplatformInfoService = thirdPartContentplatformInfoService;
             this.hospitalEmployeeService = hospitalEmployeeService;
+            this.amiyaGoodsDemandService = amiyaGoodsDemandService;
+            this.amiyaHospitalDepartmentService = amiyaHospitalDepartmentService;
+            this.customerBaseInfoService = customerBaseInfoService;
         }
 
         /// <summary>
@@ -211,6 +219,33 @@ namespace Fx.Amiya.Background.Api.Controllers
         }
 
 
+
+        /// <summary>
+        /// 获取有效的三方平台信息信息（下拉框使用）
+        /// </summary>
+        /// <param name="hospitalId">医院编号</param>
+        /// <returns></returns>
+        [HttpGet("ValidKeyAndValue")]
+        [FxInternalOrTenantAuthroize]
+        public async Task<ResultData<List<BaseIdAndNameVo>>> GetValidByKeyAndValueAsync(int hospitalId)
+        {
+            try
+            {
+                var q = await hospitalContentplatformCodeService.GetValidListAsync(hospitalId);
+                var thirdPartContentplatformInfo = from d in q
+                                                   select new BaseIdAndNameVo
+                                                   {
+                                                       Id = d.Key,
+                                                       Name = d.Value,
+                                                   };
+
+                return ResultData<List<BaseIdAndNameVo>>.Success().AddData("thirdPartContentplatformInfo", thirdPartContentplatformInfo.ToList());
+            }
+            catch (Exception ex)
+            {
+                return ResultData<List<BaseIdAndNameVo>>.Fail(ex.Message);
+            }
+        }
         /// <summary>
         /// 管理端根据医院id和三方平台id进行查重-朗姿
         /// </summary>
@@ -252,9 +287,20 @@ namespace Fx.Amiya.Background.Api.Controllers
                         queryData.PDRQ = order.SendDate.Value;
                     }
                 }
+                var customerBaseInfo = await customerBaseInfoService.GetByPhoneAsync(order.Phone);
                 queryData.KUNAM = order.CustomerName;
-                queryData.REGION = order.City;
+                //queryData.KUSEX = customerBaseInfo.Sex;
+                //queryData.AGE = customerBaseInfo.Age.HasValue ? customerBaseInfo.Age.Value : 0;
+                //queryData.KUPRO = customerBaseInfo.Occupation;
+                //queryData.KHWX = customerBaseInfo.WechatNumber;
+                var goodsDemandInfo = await amiyaGoodsDemandService.GetByIdAsync(order.GoodsId);
+                var amiyaHospitalDemandInfo = await amiyaHospitalDepartmentService.GetByIdAsync(order.HospitalDepartmentId);
+                queryData.PTXMLB1 = order.HospitalDepartmentName;
+                queryData.PTXMLB2 = order.GoodsName;
+                queryData.PTXMMC = order.GoodsDescription;
+                queryData.REGION = customerBaseInfo.City;
                 queryData.TEL1 = order.Phone;
+                queryData.PDTZ = order.ConsultingContent;
                 var data = JsonConvert.SerializeObject(queryData);
                 var getResult = await HttpUtil.HTTPJsonGetHasBodyAsync(url, data);
                 //var getResult = "";

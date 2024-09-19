@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Fx.Amiya.Dto;
 
 namespace Fx.Amiya.IService
 {
@@ -28,5 +29,11 @@ namespace Fx.Amiya.IService
 
         Task UpdateAsync(UpdateHospitalContentplatformCodeDto updateDto);
         Task DeleteAsync(string id, int empId);
+        /// <summary>
+        /// 根据医院编号获取有效的三方平台信息
+        /// </summary>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        Task<List<BaseKeyValueDto>> GetValidListAsync(int hospitalId);
     }
 }
