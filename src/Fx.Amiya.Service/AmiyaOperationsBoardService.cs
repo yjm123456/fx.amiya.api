@@ -35,6 +35,7 @@ namespace Fx.Amiya.Service
         private readonly IDalEmployeePerformanceTarget dalEmployeePerformanceTarget;
         private readonly IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo;
         private readonly IHealthValueService _healthValueService;
+        private readonly IDalContentPlatformOrderSend _dalContentPlatformOrderSend;
         public AmiyaOperationsBoardServiceService(
             ILiveAnchorMonthlyTargetBeforeLivingService liveAnchorMonthlyTargetBeforeLivingService,
             ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService,
@@ -47,7 +48,7 @@ namespace Fx.Amiya.Service
             IAmiyaEmployeeService amiyaEmployeeService,
             IEmployeePerformanceTargetService employeePerformanceTargetService,
             IContentPlatformOrderSendService contentPlatformOrderSendService,
-            ILiveAnchorMonthlyTargetAfterLivingService liveAnchorMonthlyTargetAfterLivingService, IDalEmployeePerformanceTarget dalEmployeePerformanceTarget, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo, IHealthValueService healthValueService)
+            ILiveAnchorMonthlyTargetAfterLivingService liveAnchorMonthlyTargetAfterLivingService, IDalEmployeePerformanceTarget dalEmployeePerformanceTarget, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo, IHealthValueService healthValueService, IDalContentPlatformOrderSend dalContentPlatformOrderSend)
         {
             this.liveAnchorMonthlyTargetLivingService = liveAnchorMonthlyTargetLivingService;
             this.liveAnchorBaseInfoService = liveAnchorBaseInfoService;
@@ -64,6 +65,7 @@ namespace Fx.Amiya.Service
             this.dalEmployeePerformanceTarget = dalEmployeePerformanceTarget;
             this.dalContentPlatFormOrderDealInfo = dalContentPlatFormOrderDealInfo;
             this._healthValueService = healthValueService;
+            _dalContentPlatformOrderSend = dalContentPlatformOrderSend;
         }
 
         #region  运营主看板
@@ -1050,11 +1052,44 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        public async Task<CustomerFlowRateDataListDto> GetCustomerFlowRateByEmployeeAndHospitalAsync(QueryOperationDataDto query)
+        public async Task<CustomerFlowRateDataListDto> GetCustomerFlowRateByEmployeeAndHospitalAsync(QueryCustomerFlowRateWithEmployeeAndHospitalDto query)
         {
             var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.endDate.Value.Year, query.endDate.Value.Month == 0 ? 1 : query.endDate.Value.Month);
             var shoppingCartRegistionData = await shoppingCartRegistrationService.GetShoppingCartRegistionDataByRecordDate(sequentialDate.StartDate, sequentialDate.EndDate, query.keyWord);
             var sendInfo = shoppingCartRegistionData.Where(x => x.IsSendOrder == true).ToList();
+            //所有派单手机号
+            var totalSendPhoneList = await _dalContentPlatformOrderSend.GetAll()
+                .Where(e => e.IsMainHospital==true&& e.SendDate >= sequentialDate.StartDate && e.SendDate < sequentialDate.EndDate)
+                .Select(e => new KeyValuePair<int?, string>
+                (
+                    e.ContentPlatformOrder.IsSupportOrder ? e.ContentPlatformOrder.SupportEmpId : e.ContentPlatformOrder.BelongEmpId,
+                    e.ContentPlatformOrder.Phone
+                )).ToListAsync();
+            //当月派单手机号
+            var currentSendPhoneList = sendInfo.Select(e => new KeyValuePair<int?, string>
+            (
+                e.AssignEmpId,
+                e.Phone
+            )).ToList();
+            var emp = currentSendPhoneList.Where(e => !totalSendPhoneList.Contains(e)).ToList();
+            //历史派单手机号
+            var historySendPhoneList = totalSendPhoneList.Where(e => !currentSendPhoneList.Select(e => e.Value).Contains(e.Value)).ToList();
+            List<KeyValuePair<int?, string>> queryPhoneList = null;
+            if (query.CurrentMonth && query.History)
+            {
+                queryPhoneList = currentSendPhoneList.Concat(historySendPhoneList).ToList();
+            }
+            else
+            {
+                if (query.CurrentMonth)
+                {
+                    queryPhoneList = currentSendPhoneList;
+                }
+                if (query.History)
+                {
+                    queryPhoneList = historySendPhoneList;
+                }
+            }
 
             List<int> LiveAnchorInfo = new List<int>();
             CustomerFlowRateDataListDto result = new CustomerFlowRateDataListDto();
@@ -1072,9 +1107,9 @@ namespace Fx.Amiya.Service
                 CustomerFlowRateDataDto customerPerformanceDataDto = new CustomerFlowRateDataDto();
                 customerPerformanceDataDto.Name = empInfo.Name;
                 customerPerformanceDataDto.DistributeConsulationNum = shoppingCartRegistionData.Where(x => x.AssignEmpId == empInfo.Id).Count();
-                var sendList = sendInfo.Where(x => x.AssignEmpId == empInfo.Id).ToList();
-                customerPerformanceDataDto.SendOrderNum = sendList.Count();
-                var visitList = await contentPlateFormOrderService.GetToHospitalCountDataAsync(sequentialDate.StartDate, sequentialDate.EndDate, sendList.Select(x => x.Phone).ToList());
+                var sendList = queryPhoneList.Where(x => x.Key == empInfo.Id).ToList();
+                customerPerformanceDataDto.SendOrderNum = sendList.Distinct().Count();
+                var visitList = await contentPlateFormOrderService.GetToHospitalCountDataAsync(sequentialDate.StartDate, sequentialDate.EndDate, sendList.Select(x => x.Value).ToList());
                 customerPerformanceDataDto.VisitNum = visitList;
 
                 result.EmployeeFlowRate.Add(customerPerformanceDataDto);
@@ -1083,7 +1118,7 @@ namespace Fx.Amiya.Service
 
 
             #region 机构业绩
-            var sendOrderHospitalList = await contentPlateFormOrderService.GetDealCountDataByPhoneListAsync(sequentialDate.StartDate, sequentialDate.EndDate, sendInfo.Select(x => x.Phone).ToList());
+            var sendOrderHospitalList = await contentPlateFormOrderService.GetDealCountDataByPhoneListAsync(sequentialDate.StartDate, sequentialDate.EndDate, queryPhoneList.Select(x => x.Value).ToList());
             var hospitalIdList = sendOrderHospitalList.Distinct();
             foreach (var hospitalInfo in hospitalIdList)
             {
@@ -1095,7 +1130,7 @@ namespace Fx.Amiya.Service
                 hospitalFlowRateDto.SendOrderNum = sendOrderHospitalList.Where(x => x == lastHospitalId).Count();
                 List<int> hospitalIds = new List<int>();
                 hospitalIds.Add(lastHospitalId);
-                var toHospitalData = await contentPlatFormOrderDealInfoService.GeVisitAndDealNumByHospitalIdAndPhoneListAsync(hospitalIds, sequentialDate.StartDate, sequentialDate.EndDate, sendInfo.Select(x => x.Phone).ToList());
+                var toHospitalData = await contentPlatFormOrderDealInfoService.GeVisitAndDealNumByHospitalIdAndPhoneListAsync(hospitalIds, sequentialDate.StartDate, sequentialDate.EndDate, queryPhoneList.Select(x => x.Value).ToList());
                 hospitalFlowRateDto.VisitNum = toHospitalData.Where(x => x.IsToHospital == true).Count();
                 hospitalFlowRateDto.NewCustomerDealNum = toHospitalData.Where(x => x.IsDeal == true).Count();
                 result.HospitalFlowRate.Add(hospitalFlowRateDto);
@@ -2792,7 +2827,7 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        public async Task<AssistantHospitalCluesDataDto> GetAssistantHospitalCluesDataAsync(QueryAssistantPerformanceDto query)
+        public async Task<AssistantHospitalCluesDataDto> GetAssistantHospitalCluesDataAsync(QueryAssistantHospitalCluesDataDto query)
         {
             AssistantHospitalCluesDataDto result = new AssistantHospitalCluesDataDto();
             var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
@@ -2806,7 +2841,25 @@ namespace Fx.Amiya.Service
                 assistantIdList = (await amiyaEmployeeService.GetAllAssistantAsync()).Select(e => e.Id).ToList();
             }
             var shoppingCartRegistionData = await shoppingCartRegistrationService.GetPerformanceByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, assistantIdList);
-            var sendPhoneList = shoppingCartRegistionData.Where(x => x.IsSendOrder == true).Select(e => e.Phone).ToList();
+            var currentSendPhoneList = shoppingCartRegistionData.Where(x => x.IsSendOrder == true).Select(e => e.Phone).ToList();
+            var totalSendPhoneList = await _dalContentPlatformOrderSend.GetAll().Where(e => e.IsMainHospital == true && e.SendDate >= selectDate.StartDate && e.SendDate < selectDate.EndDate).Select(e => e.ContentPlatformOrder.Phone).ToListAsync();
+            var historySendPhoneList = totalSendPhoneList.Where(e => !currentSendPhoneList.Contains(e)).ToList();
+            var sendPhoneList = new List<string>();
+            if (query.CurrentMonth && query.History)
+            {
+                sendPhoneList = totalSendPhoneList;
+            }
+            else
+            {
+                if (query.CurrentMonth)
+                {
+                    sendPhoneList = currentSendPhoneList;
+                }
+                if (query.History)
+                {
+                    sendPhoneList = historySendPhoneList;
+                }
+            }
             #region 机构业绩
             var hospitalInfo = await hospitalInfoService.GetHospitalNameListAsync(null, null);
             var sendOrderHospitalList = await contentPlateFormOrderService.GetDealCountDataByPhoneListAsync(selectDate.StartDate, selectDate.EndDate, sendPhoneList);

@@ -579,12 +579,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getCustomerFlowRateByEmployeeAndHospital")]
-        public async Task<ResultData<CustomerFlowRateDataListVo>> GetCustomerFlowRateByEmployeeAndHospitalAsync([FromQuery] QueryOperationDataVo query)
+        public async Task<ResultData<CustomerFlowRateDataListVo>> GetCustomerFlowRateByEmployeeAndHospitalAsync([FromQuery] QueryCustomerFlowRateWithEmployeeAndHospitalVo query)
         {
-            QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
-            queryOperationDataVo.startDate = query.startDate;
-            queryOperationDataVo.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
-            var data = await amiyaOperationsBoardService.GetCustomerFlowRateByEmployeeAndHospitalAsync(queryOperationDataVo);
+            QueryCustomerFlowRateWithEmployeeAndHospitalDto queryDto = new QueryCustomerFlowRateWithEmployeeAndHospitalDto();
+            queryDto.startDate = query.startDate;
+            queryDto.endDate = query.endDate.Value.AddDays(1).AddMilliseconds(-1);
+            queryDto.CurrentMonth = query.CurrentMonth;
+            queryDto.History = query.History;
+            var data = await amiyaOperationsBoardService.GetCustomerFlowRateByEmployeeAndHospitalAsync(queryDto);
 
             CustomerFlowRateDataListVo result = new CustomerFlowRateDataListVo();
             result.HospitalFlowRate = new List<CustomerFlowRateDataVo>();
@@ -1101,13 +1103,15 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("assistantHospitalCluesData")]
-        public async Task<ResultData<AssistantHospitalCluesDataVo>> GetAssistantHospitalCluesDataAsync([FromQuery] QueryAssistantPerformanceVo query)
+        public async Task<ResultData<AssistantHospitalCluesDataVo>> GetAssistantHospitalCluesDataAsync([FromQuery] QueryAssistantHospitalCluesDataVo query)
         {
             AssistantHospitalCluesDataVo dataVo = new AssistantHospitalCluesDataVo();
-            QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
+            QueryAssistantHospitalCluesDataDto queryDto = new QueryAssistantHospitalCluesDataDto();
             queryDto.StartDate = query.StartDate;
             queryDto.EndDate = query.EndDate;
             queryDto.AssistantId = query.AssistantId;
+            queryDto.CurrentMonth=query.CurrentMonth;
+            queryDto.History = query.History;
             var res = await amiyaOperationsBoardService.GetAssistantHospitalCluesDataAsync(queryDto);
             dataVo.TotalSendOrderCount = res.TotalSendOrderCount;
             dataVo.TotalVisitCount = res.TotalVisitCount;
