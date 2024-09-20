@@ -5460,7 +5460,7 @@ namespace Fx.Amiya.Service
             OrderSendAndDealNumDto orderData = new OrderSendAndDealNumDto();
             orderData.SendOrderNum = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList)
                 .Where(e => e.ContentPlatformOrderSendList.Where(o => o.IsMainHospital == true && o.SendDate >= startDate && o.SendDate < endDate).Count() == 1)
-                .Where(e => phoneList.Count == 0 || phoneList.Contains(e.Phone))
+                .Where(e =>  phoneList.Contains(e.Phone))
                 //.Where(o => o.SendDate >= startDate && o.SendDate < endDate)
                 .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsOldCustomer == false)
                 .Select(e => e.Phone)
@@ -5469,7 +5469,7 @@ namespace Fx.Amiya.Service
             var visitCount = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderDealInfoList)
                 .Where(o => o.ContentPlatformOrderDealInfoList.Where(x => x.CreateDate >= startDate && x.CreateDate < endDate).Count() > 0)
                 .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsToHospital == true)
-                .Where(e => phoneList.Count == 0 || phoneList.Contains(e.Phone))
+                .Where(e =>  phoneList.Contains(e.Phone))
                 .ToListAsync();
             string ids = "";
             foreach (var x in visitCount)
