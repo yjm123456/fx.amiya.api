@@ -2848,7 +2848,10 @@ namespace Fx.Amiya.Service
             }
             var shoppingCartRegistionData = await shoppingCartRegistrationService.GetPerformanceByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, assistantIdList);
             var currentSendPhoneList = shoppingCartRegistionData.Where(x => x.IsSendOrder == true).Select(e => e.Phone).ToList();
-            var totalSendPhoneList = await _dalContentPlatformOrderSend.GetAll().Where(e => e.IsMainHospital == true && e.SendDate >= selectDate.StartDate && e.SendDate < selectDate.EndDate).Select(e => e.ContentPlatformOrder.Phone).ToListAsync();
+            var totalSendPhoneList = await _dalContentPlatformOrderSend.GetAll()
+                .Where(e => e.IsMainHospital == true && e.SendDate >= selectDate.StartDate && e.SendDate < selectDate.EndDate)
+                .Where(e => e.ContentPlatformOrder.IsSupportOrder ? e.ContentPlatformOrder.SupportEmpId == query.AssistantId : e.ContentPlatformOrder.BelongEmpId == query.AssistantId)
+                .Select(e => e.ContentPlatformOrder.Phone).ToListAsync();
             var historySendPhoneList = totalSendPhoneList.Where(e => !currentSendPhoneList.Contains(e)).ToList();
             var sendPhoneList = new List<string>();
             if (!query.CurrentMonth && !query.History)
@@ -3242,7 +3245,7 @@ namespace Fx.Amiya.Service
             AdminCustomerFilterDetailDataDto consulationdetails2 = new AdminCustomerFilterDetailDataDto();
             consulationdetails2.Key = "Consulation";
             consulationdetails2.Name = "分诊量";
-            consulationdetails2.Value = assisatntBusinessPerformance.Where(x => x.AssignEmpId !=null && x.IsReturnBackPrice == false).Count();
+            consulationdetails2.Value = assisatntBusinessPerformance.Where(x => x.AssignEmpId != null && x.IsReturnBackPrice == false).Count();
             addWechatDataDto.DataList.Add(consulationdetails2);
             #endregion
 
@@ -3251,7 +3254,7 @@ namespace Fx.Amiya.Service
             //加v
             addWechatdetails2.Key = "AddWeChat";
             addWechatdetails2.Name = "加v量";
-            addWechatdetails2.Value = assisatntBusinessPerformance.Where(x => x.IsAddWeChat == true && x.AssignEmpId !=null && x.IsReturnBackPrice == false).Count();
+            addWechatdetails2.Value = assisatntBusinessPerformance.Where(x => x.IsAddWeChat == true && x.AssignEmpId != null && x.IsReturnBackPrice == false).Count();
             addWechatDataDto.DataList.Add(addWechatdetails2);
 
             //加v率
@@ -3301,7 +3304,7 @@ namespace Fx.Amiya.Service
             var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
             var info = await amiyaEmployeeService.GetByIdAsync(query.AssistantId.Value);
             var assistantList = await amiyaEmployeeService.GetByLiveAnchorBaseIdNameListAsync(new List<string> { info.LiveAnchorBaseId });
-            var baseData = await shoppingCartRegistrationService.GetAdminCustomerShopCartRegisterPerformanceByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, assistantList.Select(e=>e.Id).ToList());
+            var baseData = await shoppingCartRegistrationService.GetAdminCustomerShopCartRegisterPerformanceByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, assistantList.Select(e => e.Id).ToList());
 
             AdminCustomerAnalysisDataDto data = new AdminCustomerAnalysisDataDto();
             data.DistributeConsulationDataList = new List<Item>();
@@ -3349,7 +3352,7 @@ namespace Fx.Amiya.Service
             var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
             var info = await amiyaEmployeeService.GetByIdAsync(query.AssistantId.Value);
             var assistantList = await amiyaEmployeeService.GetByLiveAnchorBaseIdNameListAsync(new List<string> { info.LiveAnchorBaseId });
-            var baseData = await shoppingCartRegistrationService.GetAdminCustomerShopCartRegisterPerformanceByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, assistantList.Select(e=>e.Id).ToList());
+            var baseData = await shoppingCartRegistrationService.GetAdminCustomerShopCartRegisterPerformanceByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, assistantList.Select(e => e.Id).ToList());
             var employeeList = await amiyaEmployeeService.GetAllAssistantAsync();
 
             AdminCustomerAssistantDisAndAddVDataDto data = new AdminCustomerAssistantDisAndAddVDataDto();
