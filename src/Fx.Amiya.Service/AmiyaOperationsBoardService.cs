@@ -1059,12 +1059,12 @@ namespace Fx.Amiya.Service
             var sendInfo = shoppingCartRegistionData.Where(x => x.IsSendOrder == true).ToList();
             //所有派单手机号
             var totalSendPhoneList = await _dalContentPlatformOrderSend.GetAll()
-                .Where(e => e.IsMainHospital==true&& e.SendDate >= sequentialDate.StartDate && e.SendDate < sequentialDate.EndDate)
+                .Where(e => e.IsMainHospital == true && e.SendDate >= sequentialDate.StartDate && e.SendDate < sequentialDate.EndDate)
                 .Select(e => new KeyValuePair<int?, string>
                 (
                     e.ContentPlatformOrder.IsSupportOrder ? e.ContentPlatformOrder.SupportEmpId : e.ContentPlatformOrder.BelongEmpId,
                     e.ContentPlatformOrder.Phone
-                )).ToListAsync();
+                )).Distinct().ToListAsync();
             //当月派单手机号
             var currentSendPhoneList = sendInfo.Select(e => new KeyValuePair<int?, string>
             (
@@ -1075,6 +1075,11 @@ namespace Fx.Amiya.Service
             //历史派单手机号
             var historySendPhoneList = totalSendPhoneList.Where(e => !currentSendPhoneList.Select(e => e.Value).Contains(e.Value)).ToList();
             List<KeyValuePair<int?, string>> queryPhoneList = null;
+            if (!query.CurrentMonth && !query.History)
+            {
+                query.CurrentMonth = true;
+                query.History = true;
+            }
             if (query.CurrentMonth && query.History)
             {
                 queryPhoneList = currentSendPhoneList.Concat(historySendPhoneList).ToList();
@@ -1090,6 +1095,7 @@ namespace Fx.Amiya.Service
                     queryPhoneList = historySendPhoneList;
                 }
             }
+
 
             List<int> LiveAnchorInfo = new List<int>();
             CustomerFlowRateDataListDto result = new CustomerFlowRateDataListDto();
@@ -1108,7 +1114,7 @@ namespace Fx.Amiya.Service
                 customerPerformanceDataDto.Name = empInfo.Name;
                 customerPerformanceDataDto.DistributeConsulationNum = shoppingCartRegistionData.Where(x => x.AssignEmpId == empInfo.Id).Count();
                 var sendList = queryPhoneList.Where(x => x.Key == empInfo.Id).ToList();
-                customerPerformanceDataDto.SendOrderNum = sendList.Distinct().Count();
+                customerPerformanceDataDto.SendOrderNum = sendList.Count();
                 var visitList = await contentPlateFormOrderService.GetToHospitalCountDataAsync(sequentialDate.StartDate, sequentialDate.EndDate, sendList.Select(x => x.Value).ToList());
                 customerPerformanceDataDto.VisitNum = visitList;
 
@@ -2845,14 +2851,18 @@ namespace Fx.Amiya.Service
             var totalSendPhoneList = await _dalContentPlatformOrderSend.GetAll().Where(e => e.IsMainHospital == true && e.SendDate >= selectDate.StartDate && e.SendDate < selectDate.EndDate).Select(e => e.ContentPlatformOrder.Phone).ToListAsync();
             var historySendPhoneList = totalSendPhoneList.Where(e => !currentSendPhoneList.Contains(e)).ToList();
             var sendPhoneList = new List<string>();
+            if (!query.CurrentMonth && !query.History)
+            {
+                query.CurrentMonth = true;
+                query.History = true;
+            }
             if (query.CurrentMonth && query.History)
             {
-                sendPhoneList = totalSendPhoneList;
+                sendPhoneList = currentSendPhoneList.Concat(historySendPhoneList).ToList();
             }
             else
             {
-                if (query.CurrentMonth)
-                {
+                if (query.CurrentMonth) {
                     sendPhoneList = currentSendPhoneList;
                 }
                 if (query.History)
@@ -3164,7 +3174,6 @@ namespace Fx.Amiya.Service
 
             #region 组数据
             #region 【分诊】
-
             var allOrderPerformance = await contentPlateFormOrderService.GetAdminCustomerOrderSendAndDealDataByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, baseBusinessPerformance.Select(e => e.Phone).ToList());
             //分诊
             AdminCustomerFilterDetailDataDto consulationdetails = new AdminCustomerFilterDetailDataDto();
@@ -3218,13 +3227,15 @@ namespace Fx.Amiya.Service
             #region 个人加v后数据
 
             #region 【分诊】
-
-            var addWechatOrderPerformance = await contentPlateFormOrderService.GetAdminCustomerOrderSendAndDealDataByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, baseBusinessPerformance.Select(e => e.Phone).ToList());
+            var phoneList = baseBusinessPerformance.Where(e => e.AssignEmpId == query.AssistantId).Select(e => e.Phone).ToList();
+            //var addWechatOrderPerformance = await contentPlateFormOrderService.GetAdminCustomerOrderSendAndDealDataByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, baseBusinessPerformance.Select(e => e.Phone).ToList());
+            var addWechatOrderPerformance = await contentPlateFormOrderService.GetAdminCustomerOrderSendAndDealDataByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, phoneList);
             //分诊
             AdminCustomerFilterDetailDataDto consulationdetails2 = new AdminCustomerFilterDetailDataDto();
             consulationdetails2.Key = "Consulation";
             consulationdetails2.Name = "分诊量";
-            consulationdetails2.Value = baseBusinessPerformance.Where(x => x.AssignEmpId != 0 && x.AssignEmpId.HasValue && x.IsReturnBackPrice == false).Count();
+            //consulationdetails2.Value = baseBusinessPerformance.Where(x => x.AssignEmpId != 0 && x.AssignEmpId.HasValue && x.IsReturnBackPrice == false).Count();
+            consulationdetails2.Value = baseBusinessPerformance.Where(x => x.AssignEmpId==query.AssistantId && x.IsReturnBackPrice == false).Count();
             addWechatDataDto.DataList.Add(consulationdetails2);
             #endregion
 
@@ -3233,7 +3244,8 @@ namespace Fx.Amiya.Service
             //加v
             addWechatdetails2.Key = "AddWeChat";
             addWechatdetails2.Name = "加v量";
-            addWechatdetails2.Value = baseBusinessPerformance.Where(x => x.IsAddWeChat == true && x.AssignEmpId != 0 && x.AssignEmpId.HasValue && x.IsReturnBackPrice == false).Count();
+            //addWechatdetails2.Value = baseBusinessPerformance.Where(x => x.IsAddWeChat == true && x.AssignEmpId != 0 && x.AssignEmpId.HasValue && x.IsReturnBackPrice == false).Count();
+            addWechatdetails2.Value = baseBusinessPerformance.Where(x => x.IsAddWeChat == true && x.AssignEmpId ==query.AssistantId && x.IsReturnBackPrice == false).Count();
             addWechatDataDto.DataList.Add(addWechatdetails2);
 
             //加v率
