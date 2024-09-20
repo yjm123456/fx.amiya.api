@@ -2705,17 +2705,17 @@ namespace Fx.Amiya.Service
             result.TypeCount = new CustomerTypePerformanceDataDto();
             result.TypeCount.TotalCount = totalTypeCount;
             result.TypeCount.Data = new List<CustomerTypePerformanceDataItemDto>();
-            result.TypeCount.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "一级客资", Value = firstTypeCount, Rate = DecimalExtension.CalculateTargetComplete(firstTypeCount, totalTypeCount).Value });
-            result.TypeCount.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "二级客资", Value = secondTypeCount, Rate = DecimalExtension.CalculateTargetComplete(secondTypeCount, totalTypeCount).Value });
-            result.TypeCount.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "三级客资", Value = thirdTypeCount, Rate = DecimalExtension.CalculateTargetComplete(thirdTypeCount, totalTypeCount).Value });
+            result.TypeCount.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "一级线索", Value = firstTypeCount, Rate = DecimalExtension.CalculateTargetComplete(firstTypeCount, totalTypeCount).Value });
+            result.TypeCount.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "二级线索", Value = secondTypeCount, Rate = DecimalExtension.CalculateTargetComplete(secondTypeCount, totalTypeCount).Value });
+            result.TypeCount.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "三级线索", Value = thirdTypeCount, Rate = DecimalExtension.CalculateTargetComplete(thirdTypeCount, totalTypeCount).Value });
 
             //业绩
             result.TypePerformance = new CustomerTypePerformanceDataDto();
             result.TypePerformance.TotalCount = totalPerformance;
             result.TypePerformance.Data = new List<CustomerTypePerformanceDataItemDto>();
-            result.TypePerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "一级客资", Value = DecimalExtension.ChangePriceToTenThousand(firstTypePerformance), Rate = DecimalExtension.CalculateTargetComplete(firstTypePerformance, totalPerformance).Value });
-            result.TypePerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "二级客资", Value = DecimalExtension.ChangePriceToTenThousand(secondTypePerformance), Rate = DecimalExtension.CalculateTargetComplete(secondTypePerformance, totalPerformance).Value });
-            result.TypePerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "三级客资", Value = DecimalExtension.ChangePriceToTenThousand(thirdTypePerformance), Rate = DecimalExtension.CalculateTargetComplete(thirdTypePerformance, totalPerformance).Value });
+            result.TypePerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "一级线索", Value = DecimalExtension.ChangePriceToTenThousand(firstTypePerformance), Rate = DecimalExtension.CalculateTargetComplete(firstTypePerformance, totalPerformance).Value });
+            result.TypePerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "二级线索", Value = DecimalExtension.ChangePriceToTenThousand(secondTypePerformance), Rate = DecimalExtension.CalculateTargetComplete(secondTypePerformance, totalPerformance).Value });
+            result.TypePerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "三级线索", Value = DecimalExtension.ChangePriceToTenThousand(thirdTypePerformance), Rate = DecimalExtension.CalculateTargetComplete(thirdTypePerformance, totalPerformance).Value });
 
 
             #endregion
