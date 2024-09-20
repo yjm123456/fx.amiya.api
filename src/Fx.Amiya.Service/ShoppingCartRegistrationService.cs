@@ -2437,14 +2437,12 @@ namespace Fx.Amiya.Service
         /// <param name="assistantId"></param>
         /// <param name="isAddWechat"></param>
         /// <returns></returns>
-        public async Task<AssistantDistributeConsulationTypeDataDto> GetAdminCustomerDistributeConsulationTypeDataAsync(DateTime startDate, DateTime endDate, int assistantId, bool? isAddWechat = null)
+        public async Task<AssistantDistributeConsulationTypeDataDto> GetAdminCustomerDistributeConsulationTypeDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIds, bool? isAddWechat = null)
         {
             AssistantDistributeConsulationTypeDataDto data = new AssistantDistributeConsulationTypeDataDto();
             var data2 = await dalShoppingCartRegistration.GetAll()
-                .Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.CreateBy == assistantId)
+                .Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && assistantIds.Contains(e.CreateBy))
                 .Where(e => e.AssignEmpId != null)
-                //.Where(e => isAddWechat == null || e.IsAddWeChat == isAddWechat)
-                .Where(e => isAddWechat == null || e.AssignEmpId==assistantId)
                 .GroupBy(e => e.EmergencyLevel).Select(e => new
                 {
                     CustomerType = e.Key,
@@ -2464,9 +2462,9 @@ namespace Fx.Amiya.Service
         /// <param name="endDate"></param>
         /// <param name="assistantIdList"></param>
         /// <returns></returns>
-        public async Task<List<BaseKeyValueDto<string, int>>> GetAdminCustomerDistributeConsulationTypeBrokenLineDataAsync(DateTime startDate, DateTime endDate, int assistantId)
+        public async Task<List<BaseKeyValueDto<string, int>>> GetAdminCustomerDistributeConsulationTypeBrokenLineDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIds)
         {
-            return await dalShoppingCartRegistration.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && e.CreateBy == assistantId && e.AssignEmpId != null).Select(e => new BaseKeyValueDto<string, int>
+            return await dalShoppingCartRegistration.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && assistantIds.Contains(e.CreateBy) && e.AssignEmpId != null).Select(e => new BaseKeyValueDto<string, int>
             {
                 Key = e.RecordDate.Date.Date.Day.ToString(),
                 Value = e.EmergencyLevel,
@@ -2481,12 +2479,12 @@ namespace Fx.Amiya.Service
         /// <param name="isEffectiveCustomerData"></param>
         /// <param name="assistantIdList"></param>
         /// <returns></returns>
-        public async Task<List<ShoppingCartRegistrationDto>> GetAdminCustomerShopCartRegisterPerformanceByAssistantIdListAsync(DateTime startDate, DateTime endDate, int assistantId)
+        public async Task<List<ShoppingCartRegistrationDto>> GetAdminCustomerShopCartRegisterPerformanceByAssistantIdListAsync(DateTime startDate, DateTime endDate, List<int> assistantIds)
         {
             var result = from d in dalShoppingCartRegistration.GetAll()
             .Where(o => o.RecordDate >= startDate && o.RecordDate < endDate)
-            .Where(o => o.AssignEmpId != null)
-            .Where(o => o.CreateBy == assistantId)
+            .Where(o => o.AssignEmpId != null&& o.IsReturnBackPrice == false)
+            .Where(o => assistantIds.Contains(o.CreateBy))
                          select d;
             var x = from d in result
                     select new ShoppingCartRegistrationDto

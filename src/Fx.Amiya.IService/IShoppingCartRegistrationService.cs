@@ -313,7 +313,7 @@ namespace Fx.Amiya.IService
         /// <param name="assistantId"></param>
         /// <param name="isAddWechat"></param>
         /// <returns></returns>
-        Task<AssistantDistributeConsulationTypeDataDto> GetAdminCustomerDistributeConsulationTypeDataAsync(DateTime startDate, DateTime endDate, int assistantId, bool? isAddWechat = null);
+        Task<AssistantDistributeConsulationTypeDataDto> GetAdminCustomerDistributeConsulationTypeDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIds, bool? isAddWechat = null);
         /// <summary>
         /// 获取行政客服分诊折线图基础数据
         /// </summary>
@@ -321,7 +321,7 @@ namespace Fx.Amiya.IService
         /// <param name="endDate"></param>
         /// <param name="assistantIdList"></param>
         /// <returns></returns>
-        Task<List<BaseKeyValueDto<string, int>>> GetAdminCustomerDistributeConsulationTypeBrokenLineDataAsync(DateTime startDate, DateTime endDate, int assistantId);
+        Task<List<BaseKeyValueDto<string, int>>> GetAdminCustomerDistributeConsulationTypeBrokenLineDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIds);
 
         /// <summary>
         /// 根据条件获取行政客服小黄车业绩
@@ -331,7 +331,7 @@ namespace Fx.Amiya.IService
         /// <param name="isEffectiveCustomerData"></param>
         /// <param name="assistantIdList"></param>
         /// <returns></returns>
-        Task<List<ShoppingCartRegistrationDto>> GetAdminCustomerShopCartRegisterPerformanceByAssistantIdListAsync(DateTime startDate, DateTime endDate, int assistantId);
+        Task<List<ShoppingCartRegistrationDto>> GetAdminCustomerShopCartRegisterPerformanceByAssistantIdListAsync(DateTime startDate, DateTime endDate, List<int> assistantIds);
         #endregion
     }
 }

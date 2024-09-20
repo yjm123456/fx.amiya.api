@@ -835,6 +835,27 @@ namespace Fx.Amiya.Service
                 throw new Exception(ex.Message.ToString());
             }
         }
+        public async Task<List<AmiyaEmployeeDto>> GetByLiveAnchorBaseIdNameListAsync(List<string> liveAnchorBaseId)
+        {
+            try
+            {
+                List<AmiyaEmployeeDto> amiyaEmployeeDtos = new List<AmiyaEmployeeDto>();
+                var employeeInfo = dalAmiyaEmployee.GetAll()
+                    .Include(e => e.AmiyaPositionInfo).ThenInclude(e => e.AmiyaDepartment)
+                    .Where(e => ((liveAnchorBaseId == null || liveAnchorBaseId.Count() == 0) || liveAnchorBaseId.Contains(e.LiveAnchorBaseId)) && e.Valid == true);
+                var employee = await employeeInfo.Select(e => new AmiyaEmployeeDto
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                }).ToListAsync();
+                return employee;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message.ToString());
+            }
+        }
         /// <summary>
         /// 获取助理(包含行政客服)
         /// </summary>
