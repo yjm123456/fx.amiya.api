@@ -4782,7 +4782,14 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<int>> GetDealCountDataByPhoneListAsync(DateTime startDate, DateTime endDate, List<string> phoneList)
         {
-            var performanceList = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList).Where(e => phoneList.Contains(e.Phone) && e.SendDate >= startDate && e.SendDate < endDate).SelectMany(x => x.ContentPlatformOrderSendList).Select(x => x.HospitalId).ToListAsync();
+            var performanceList = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList)
+                .Where(e => phoneList.Contains(e.Phone))
+                .SelectMany(x => x.ContentPlatformOrderSendList)
+                .Where(e=>e.IsMainHospital==true)
+                .Where(e=> e.SendDate >= startDate && e.SendDate < endDate)
+                .Select(e=>new { HospitalId=e.HospitalId,Phone=e.ContentPlatformOrder.Phone })
+                .Distinct()
+                .Select(x => x.HospitalId).ToListAsync();
             return performanceList;
         }
         /// <summary>

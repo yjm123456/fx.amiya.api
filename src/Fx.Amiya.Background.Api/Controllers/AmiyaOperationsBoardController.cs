@@ -1114,6 +1114,24 @@ namespace Fx.Amiya.Background.Api.Controllers
             analysisData.PerformanceNewCustonerOrNoData.TotalPerformanceOldCustomerNumber = res.PerformanceNewCustonerOrNoData.TotalPerformanceOldCustomerNumber;
             analysisData.PerformanceNewCustonerOrNoData.TotalPerformanceNumber = res.PerformanceNewCustonerOrNoData.TotalPerformanceNumber;
 
+            analysisData.Consulation = new CustomerTypePerformanceDataVo();
+            analysisData.Consulation.Total = res.Consulation.TotalCount;
+            analysisData.Consulation.Data = res.Consulation.Data.Select(e => new CustomerTypePerformanceDataItemVo
+            {
+                Name = e.Key,
+                Value = e.Value,
+                Rate = e.Rate
+            }).ToList();
+
+            analysisData.ConsulationPerformance = new CustomerTypePerformanceDataVo();
+            analysisData.ConsulationPerformance.Total = res.ConsulationPerformance.TotalCount;
+            analysisData.ConsulationPerformance.Data = res.ConsulationPerformance.Data.Select(e => new CustomerTypePerformanceDataItemVo
+            {
+                Name = e.Key,
+                Value = e.Value,
+                Rate = e.Rate
+            }).ToList();
+
             return ResultData<AssiatantPerformanceAnalysisDataVo>.Success().AddData("data", analysisData);
         }
         /// <summary>

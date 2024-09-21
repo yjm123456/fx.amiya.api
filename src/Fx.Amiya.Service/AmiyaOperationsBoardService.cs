@@ -1150,7 +1150,7 @@ namespace Fx.Amiya.Service
         {
             var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.endDate.Value.Year, query.endDate.Value.Month == 0 ? 1 : query.endDate.Value.Month);
             var shoppingCartRegistionData = await shoppingCartRegistrationService.GetShoppingCartRegistionDataByRecordDate(sequentialDate.StartDate, sequentialDate.EndDate, query.keyWord);
-            var sendInfo = shoppingCartRegistionData.Where(x => x.IsSendOrder == true).ToList();
+            var sendInfo = shoppingCartRegistionData.ToList();
             //所有派单手机号
             var totalSendPhoneList = await _dalContentPlatformOrderSend.GetAll()
                 .Where(e => e.IsMainHospital == true && e.SendDate >= sequentialDate.StartDate && e.SendDate < sequentialDate.EndDate)
@@ -1176,7 +1176,7 @@ namespace Fx.Amiya.Service
             }
             if (query.CurrentMonth && query.History)
             {
-                queryPhoneList = currentSendPhoneList.Concat(historySendPhoneList).ToList();
+                queryPhoneList = totalSendPhoneList;
             }
             else
             {
@@ -2780,6 +2780,17 @@ namespace Fx.Amiya.Service
             //总业绩
             var curTotalAchievementPrice = order.Sum(e => e.Price);
 
+            var totalSendPhoneList = await _dalContentPlatformOrderSend.GetAll()
+                .Where(e => e.IsMainHospital == true && e.SendDate >= selectDate.StartDate && e.SendDate < selectDate.EndDate)
+                .Where(e => e.ContentPlatformOrder.IsSupportOrder ? e.ContentPlatformOrder.SupportEmpId == query.AssistantId : e.ContentPlatformOrder.BelongEmpId == query.AssistantId)
+                .Select(e =>new {OrderId=e.ContentPlatformOrderId,Phone = e.ContentPlatformOrder.Phone,ConsulationType=e.ContentPlatformOrder.ConsulationType }).ToListAsync();
+            //当月订单
+            var currentPhone = totalSendPhoneList.Where(e => shoppingCartRegistionData.Select(e => e.Phone).Contains(e.Phone)).ToList();
+            var currentOrder = totalSendPhoneList.Where(e => shoppingCartRegistionData.Select(e => e.Phone).Contains(e.Phone)).Select(e => e.OrderId).ToList();
+            //历史订单
+            var historyPhone= totalSendPhoneList.Where(e => !shoppingCartRegistionData.Select(e => e.Phone).Contains(e.Phone)).Select(e=>e.Phone).Distinct().ToList();
+            var historyOrder = order.Select(e => e.ContentPlatFormOrderId).Where(e => !currentOrder.Contains(e)).Distinct().ToList();
+
             #region 客资分类
             var firstTypeCount = shoppingCartRegistionData.Where(e => e.EmergencyLevel == (int)EmergencyLevel.Important).Count();
             var secondTypeCount = shoppingCartRegistionData.Where(e => e.EmergencyLevel == (int)EmergencyLevel.Generally).Count();
@@ -2866,9 +2877,9 @@ namespace Fx.Amiya.Service
             #region 【当月/历史】
 
             AssistantOperationBoardGetIsHistoryPerformanceDto totalPerformanceIsHistoryGroupData = new AssistantOperationBoardGetIsHistoryPerformanceDto();
-            var HistoryCount = order.Where(x => x.SendDate < selectDate.StartDate).ToList();
+            var HistoryCount = order.Where(x => historyOrder.Contains(x.ContentPlatFormOrderId)).ToList();
             var curHistory = HistoryCount.Sum(x => x.Price);
-            var ThisMonthCount = order.Where(x => x.SendDate >= selectDate.StartDate).ToList();
+            var ThisMonthCount = order.Where(x => currentOrder.Contains(x.ContentPlatFormOrderId)).ToList();
             var curThisMonth = ThisMonthCount.Sum(x => x.Price);
             totalPerformanceIsHistoryGroupData.TotalPerformanceNumber = ChangePriceToTenThousand(curTotalAchievementPrice);
             totalPerformanceIsHistoryGroupData.HistoryPerformanceNumber = ChangePriceToTenThousand(curHistory);
@@ -2879,8 +2890,10 @@ namespace Fx.Amiya.Service
 
             //人数
             AssistantOperationBoardGetIsHistoryPerformanceDto totalPerformanceIsHistoryNumData = new AssistantOperationBoardGetIsHistoryPerformanceDto();
-            totalPerformanceIsHistoryNumData.ThisMonthPerformanceNumber = ThisMonthCount.Select(e => e.Phone).Distinct().Count();
-            totalPerformanceIsHistoryNumData.HistoryPerformanceNumber = HistoryCount.Select(e => e.Phone).Distinct().Count();
+            //totalPerformanceIsHistoryNumData.ThisMonthPerformanceNumber = ThisMonthCount.Select(e => e.Phone).Distinct().Count();
+            //totalPerformanceIsHistoryNumData.HistoryPerformanceNumber = HistoryCount.Select(e => e.Phone).Distinct().Count();
+            totalPerformanceIsHistoryNumData.ThisMonthPerformanceNumber = currentPhone.Count();
+            totalPerformanceIsHistoryNumData.HistoryPerformanceNumber = historyPhone.Count();
             totalPerformanceIsHistoryNumData.TotalPerformanceNumber = totalPerformanceIsHistoryNumData.ThisMonthPerformanceNumber + totalPerformanceIsHistoryNumData.HistoryPerformanceNumber;
             totalPerformanceIsHistoryNumData.ThisMonthPerformanceRate = DecimalExtension.CalculateTargetComplete(totalPerformanceIsHistoryNumData.ThisMonthPerformanceNumber.Value, totalPerformanceIsHistoryNumData.TotalPerformanceNumber.Value);
             totalPerformanceIsHistoryNumData.HistoryPerformanceRate = DecimalExtension.CalculateTargetComplete(totalPerformanceIsHistoryNumData.HistoryPerformanceNumber.Value, totalPerformanceIsHistoryNumData.TotalPerformanceNumber.Value);
@@ -2888,6 +2901,38 @@ namespace Fx.Amiya.Service
 
             #endregion
 
+            #region 面诊
+
+            //派单
+            var otherCount = totalSendPhoneList.Where(e => e.ConsulationType == (int)ContentPlateFormOrderConsultationType.OTHER).Select(e=>e.Phone).Distinct().Count();
+            var unConsulationCount = totalSendPhoneList.Where(e => e.ConsulationType == (int)ContentPlateFormOrderConsultationType.UnConsulation).Select(e => e.Phone).Distinct().Count();
+            var independentFollowUpCount = totalSendPhoneList.Where(e => e.ConsulationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).Select(e => e.Phone).Distinct().Count();
+            var collaborationCount = totalSendPhoneList.Where(e => e.ConsulationType == (int)ContentPlateFormOrderConsultationType.Collaboration).Select(e => e.Phone).Distinct().Count();
+            var voiceCount = totalSendPhoneList.Where(e => e.ConsulationType == (int)ContentPlateFormOrderConsultationType.Voice).Select(e => e.Phone).Distinct().Count();
+            result.Consulation = new CustomerTypePerformanceDataDto();
+            result.Consulation.TotalCount = totalSendPhoneList.Select(e=>e.Phone).Distinct().Count();
+            result.Consulation.Data = new List<CustomerTypePerformanceDataItemDto>();
+            result.Consulation.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "其它", Value = otherCount, Rate = DecimalExtension.CalculateTargetComplete(otherCount, result.Consulation.TotalCount).Value });
+            result.Consulation.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "未面诊", Value = unConsulationCount, Rate = DecimalExtension.CalculateTargetComplete(unConsulationCount, result.Consulation.TotalCount).Value });
+            result.Consulation.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "（助理）照片面诊", Value = independentFollowUpCount, Rate = DecimalExtension.CalculateTargetComplete(independentFollowUpCount, result.Consulation.TotalCount).Value });
+            result.Consulation.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "（主播）视频面诊", Value = collaborationCount, Rate = DecimalExtension.CalculateTargetComplete(collaborationCount, result.Consulation.TotalCount).Value });
+            result.Consulation.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "（主播）语音面诊", Value = voiceCount, Rate = DecimalExtension.CalculateTargetComplete(voiceCount, result.Consulation.TotalCount).Value });
+
+            //业绩
+            var otherPerformance = order.Where(e => e.ConsultationType == (int)ContentPlateFormOrderConsultationType.OTHER).Sum(x=>x.Price);
+            var unConsulationPerformance = order.Where(e => e.ConsultationType == (int)ContentPlateFormOrderConsultationType.UnConsulation).Sum(x => x.Price);
+            var independentFollowUpPerformance = order.Where(e => e.ConsultationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).Sum(x => x.Price);
+            var collaborationPerformance = order.Where(e => e.ConsultationType == (int)ContentPlateFormOrderConsultationType.Collaboration).Sum(x => x.Price);
+            var voicePerformance = order.Where(e => e.ConsultationType == (int)ContentPlateFormOrderConsultationType.Voice).Sum(x => x.Price);
+            result.ConsulationPerformance = new CustomerTypePerformanceDataDto();
+            result.ConsulationPerformance.TotalCount = order.Sum(x=>x.Price);
+            result.ConsulationPerformance.Data = new List<CustomerTypePerformanceDataItemDto>();
+            result.ConsulationPerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "其它", Value = otherPerformance, Rate = DecimalExtension.CalculateTargetComplete(otherPerformance, result.ConsulationPerformance.TotalCount).Value });
+            result.ConsulationPerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "未面诊", Value = unConsulationPerformance, Rate = DecimalExtension.CalculateTargetComplete(unConsulationPerformance, result.ConsulationPerformance.TotalCount).Value });
+            result.ConsulationPerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "（助理）照片面诊", Value = independentFollowUpPerformance, Rate = DecimalExtension.CalculateTargetComplete(independentFollowUpPerformance, result.ConsulationPerformance.TotalCount).Value });
+            result.ConsulationPerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "（主播）视频面诊", Value = collaborationPerformance, Rate = DecimalExtension.CalculateTargetComplete(collaborationPerformance, result.ConsulationPerformance.TotalCount).Value });
+            result.ConsulationPerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "（主播）语音面诊", Value = voicePerformance, Rate = DecimalExtension.CalculateTargetComplete(voicePerformance, result.ConsulationPerformance.TotalCount).Value });
+            #endregion
 
             return result;
         }
@@ -2941,7 +2986,7 @@ namespace Fx.Amiya.Service
                 assistantIdList = (await amiyaEmployeeService.GetAllAssistantAsync()).Select(e => e.Id).ToList();
             }
             var shoppingCartRegistionData = await shoppingCartRegistrationService.GetPerformanceByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, assistantIdList);
-            var currentSendPhoneList = shoppingCartRegistionData.Where(x => x.IsSendOrder == true).Select(e => e.Phone).ToList();
+            var currentSendPhoneList = shoppingCartRegistionData.Select(e => e.Phone).ToList();
             var totalSendPhoneList = await _dalContentPlatformOrderSend.GetAll()
                 .Where(e => e.IsMainHospital == true && e.SendDate >= selectDate.StartDate && e.SendDate < selectDate.EndDate)
                 .Where(e => e.ContentPlatformOrder.IsSupportOrder ? e.ContentPlatformOrder.SupportEmpId == query.AssistantId : e.ContentPlatformOrder.BelongEmpId == query.AssistantId)

@@ -40,6 +40,16 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
         /// 新老客业绩数据
         /// </summary>
         public AssistantOperationBoardGetNewOrOldCustomerCompareDataDetailsDto PerformanceNewCustonerOrNoData { get; set; }
+        /// <summary>
+        /// 面诊派单数据
+        /// </summary>
+        public CustomerTypePerformanceDataDto Consulation { get; set; }
+        /// <summary>
+        /// 面诊业绩数据
+        /// </summary>
+        public CustomerTypePerformanceDataDto ConsulationPerformance { get; set; }
+
+
     }
     public class CustomerTypePerformanceDataDto
     {

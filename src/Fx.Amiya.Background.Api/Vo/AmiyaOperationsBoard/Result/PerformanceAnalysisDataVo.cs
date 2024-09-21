@@ -39,6 +39,14 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
         /// 新/老客业绩数据
         /// </summary>
         public AssistantOperationBoardGetNewOrOldCustomerCompareDataDetailsVo PerformanceNewCustonerOrNoData { get; set; } = new();
+        /// <summary>
+        /// 面诊派单数据
+        /// </summary>
+        public CustomerTypePerformanceDataVo Consulation { get; set; }
+        /// <summary>
+        /// 面诊业绩数据
+        /// </summary>
+        public CustomerTypePerformanceDataVo ConsulationPerformance { get; set; }
     }
 
     public class CustomerTypePerformanceDataVo
