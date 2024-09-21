@@ -115,6 +115,47 @@ namespace Fx.Amiya.Background.Api.Controllers
             var data = await amiyaOperationsBoardService.GetNewOrOldCustomerCompareDataAsync(queryOperationDataDto);
 
 
+            #region【面诊类型】
+            #region{业绩}
+
+            result.TotalConsulationType = new OperationBoardConsulationTypeVo();
+            result.GroupDaoDaoConsulationType = new OperationBoardConsulationTypeVo();
+            result.GroupJiNaConsulationType = new OperationBoardConsulationTypeVo();
+
+            result.TotalConsulationType.OtherRate = data.TotalConsulationType.OtherRate;
+            result.TotalConsulationType.UnConsulationRate = data.TotalConsulationType.UnConsulationRate;
+            result.TotalConsulationType.PictureConsulationRate = data.TotalConsulationType.PictureConsulationRate;
+            result.TotalConsulationType.VideoConsulationRate = data.TotalConsulationType.VideoConsulationRate;
+            result.TotalConsulationType.AudioConsulationRate = data.TotalConsulationType.AudioConsulationRate;
+            result.TotalConsulationType.OtherNumber = data.TotalConsulationType.OtherNumber;
+            result.TotalConsulationType.UnConsulationNumber = data.TotalConsulationType.UnConsulationNumber;
+            result.TotalConsulationType.PictureConsulationNumber = data.TotalConsulationType.PictureConsulationNumber;
+            result.TotalConsulationType.VideoConsulationNumber = data.TotalConsulationType.VideoConsulationNumber;
+            result.TotalConsulationType.AudioConsulationNumber = data.TotalConsulationType.AudioConsulationNumber;
+
+
+            #endregion
+            #region{人数}
+
+            result.TotalConsulationTypeNumber = new OperationBoardConsulationTypeVo();
+            result.GroupDaoDaoConsulationTypeNumber = new OperationBoardConsulationTypeVo();
+            result.GroupJiNaConsulationTypeNumber = new OperationBoardConsulationTypeVo();
+
+            result.TotalConsulationTypeNumber.OtherRate = data.TotalConsulationType.OtherRate;
+            result.TotalConsulationTypeNumber.UnConsulationRate = data.TotalConsulationTypeNumber.UnConsulationRate;
+            result.TotalConsulationTypeNumber.PictureConsulationRate = data.TotalConsulationTypeNumber.PictureConsulationRate;
+            result.TotalConsulationTypeNumber.VideoConsulationRate = data.TotalConsulationTypeNumber.VideoConsulationRate;
+            result.TotalConsulationTypeNumber.AudioConsulationRate = data.TotalConsulationTypeNumber.AudioConsulationRate;
+            result.TotalConsulationTypeNumber.OtherNumber = data.TotalConsulationTypeNumber.OtherNumber;
+            result.TotalConsulationTypeNumber.UnConsulationNumber = data.TotalConsulationTypeNumber.UnConsulationNumber;
+            result.TotalConsulationTypeNumber.PictureConsulationNumber = data.TotalConsulationTypeNumber.PictureConsulationNumber;
+            result.TotalConsulationTypeNumber.VideoConsulationNumber = data.TotalConsulationTypeNumber.VideoConsulationNumber;
+            result.TotalConsulationTypeNumber.AudioConsulationNumber = data.TotalConsulationTypeNumber.AudioConsulationNumber;
+
+            #endregion
+
+            #endregion
+
             #region【平台】
 
             result.TotalFlowRateByContentPlatForm = new OperationBoardContentPlatFormDataVo();

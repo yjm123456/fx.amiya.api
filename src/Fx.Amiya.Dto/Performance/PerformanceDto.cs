@@ -20,5 +20,6 @@ namespace Fx.Amiya.Dto.Performance
         public decimal AddOrderPrice { get; set; }
 
         public string ContentPlatFormId { get; set; }
+        public int ConsulationType { get; set; }
     }
 }

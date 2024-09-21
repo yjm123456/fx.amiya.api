@@ -10,6 +10,7 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
     /// </summary>
     public class GetGroupFlowRateCompareDataVo
     {
+
         /// <summary>
         /// 整体流量分析
         /// </summary>
@@ -68,6 +69,7 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
 
 
     }
+
     public class OperationBoardContentPlatFormDataVo
     {
         /// <summary>

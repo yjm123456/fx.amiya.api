@@ -234,7 +234,101 @@ namespace Fx.Amiya.Service
             var curTotalAchievementPrice = curTotalAchievement.Sum(x => x.Price);
             var curTotalCount = curTotalAchievement.Count();
 
+            #region 【面诊类型】
+            var unConsulationCount = curTotalAchievement.Where(x => x.ConsulationType == (int)ContentPlateFormOrderConsultationType.UnConsulation).ToList();
+            var curUnConsulation = unConsulationCount.Sum(x => x.Price);
+            var videoCount = curTotalAchievement.Where(x => x.ConsulationType == (int)ContentPlateFormOrderConsultationType.Collaboration).ToList();
+            var curVideo = videoCount.Sum(x => x.Price);
+            var pictureCount = curTotalAchievement.Where(x => x.ConsulationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).ToList();
+            var curPicture = pictureCount.Sum(x => x.Price);
+            var audioCount = curTotalAchievement.Where(x => x.ConsulationType == (int)ContentPlateFormOrderConsultationType.Voice).ToList();
+            var curAudio = audioCount.Sum(x => x.Price);
+            var otherConsulationCount = curTotalAchievement.Where(x => x.ConsulationType == (int)ContentPlateFormOrderConsultationType.OTHER).ToList();
+            var curConsulationOther = otherConsulationCount.Sum(x => x.Price);
 
+            OperationBoardConsulationTypeDto totalPerformanceConsulationTypeData = new OperationBoardConsulationTypeDto();
+
+            totalPerformanceConsulationTypeData.TotalPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curTotalAchievementPrice);
+            totalPerformanceConsulationTypeData.UnConsulationNumber = DecimalExtension.ChangePriceToTenThousand(curUnConsulation);
+            totalPerformanceConsulationTypeData.UnConsulationRate = DecimalExtension.CalculateTargetComplete(curUnConsulation, curTotalAchievementPrice);
+            totalPerformanceConsulationTypeData.VideoConsulationNumber = DecimalExtension.ChangePriceToTenThousand(curVideo);
+            totalPerformanceConsulationTypeData.VideoConsulationRate = DecimalExtension.CalculateTargetComplete(curVideo, curTotalAchievementPrice);
+            totalPerformanceConsulationTypeData.PictureConsulationNumber = DecimalExtension.ChangePriceToTenThousand(curPicture);
+            totalPerformanceConsulationTypeData.PictureConsulationRate = DecimalExtension.CalculateTargetComplete(curPicture, curTotalAchievementPrice);
+            totalPerformanceConsulationTypeData.AudioConsulationNumber = DecimalExtension.ChangePriceToTenThousand(curAudio);
+            totalPerformanceConsulationTypeData.AudioConsulationRate = DecimalExtension.CalculateTargetComplete(curAudio, curTotalAchievementPrice);
+            totalPerformanceConsulationTypeData.OtherNumber = DecimalExtension.ChangePriceToTenThousand(curConsulationOther);
+            totalPerformanceConsulationTypeData.OtherRate = DecimalExtension.CalculateTargetComplete(curConsulationOther, curTotalAchievementPrice);
+            result.TotalConsulationType = totalPerformanceConsulationTypeData;
+
+            //人数
+            OperationBoardConsulationTypeDto totalPerformanceConsulationTypeDataNumber = new OperationBoardConsulationTypeDto();
+            totalPerformanceConsulationTypeDataNumber.TotalPerformanceNumber = curTotalCount;
+            totalPerformanceConsulationTypeDataNumber.UnConsulationNumber = unConsulationCount.Count();
+            totalPerformanceConsulationTypeDataNumber.UnConsulationRate = DecimalExtension.CalculateTargetComplete(unConsulationCount.Count(), curTotalCount);
+            totalPerformanceConsulationTypeDataNumber.VideoConsulationNumber = videoCount.Count();
+            totalPerformanceConsulationTypeDataNumber.VideoConsulationRate = DecimalExtension.CalculateTargetComplete(videoCount.Count(), curTotalCount);
+            totalPerformanceConsulationTypeDataNumber.PictureConsulationNumber = pictureCount.Count();
+            totalPerformanceConsulationTypeDataNumber.PictureConsulationRate = DecimalExtension.CalculateTargetComplete(pictureCount.Count(), curTotalCount);
+            totalPerformanceConsulationTypeDataNumber.AudioConsulationNumber = audioCount.Count();
+            totalPerformanceConsulationTypeDataNumber.AudioConsulationRate = DecimalExtension.CalculateTargetComplete(audioCount.Count(), curTotalCount);
+            totalPerformanceConsulationTypeDataNumber.OtherNumber = otherConsulationCount.Count();
+            totalPerformanceConsulationTypeDataNumber.OtherRate = DecimalExtension.CalculateTargetComplete(otherConsulationCount.Count(), curTotalCount);
+            result.TotalConsulationTypeNumber = totalPerformanceConsulationTypeDataNumber;
+
+            #region 刀刀组业绩-平台
+            //totalPerformanceContentPlatFormGroupDaoDaoData.TotalFlowRateNumber = DecimalExtension.ChangePriceToTenThousand(curDaoDaoTotalAchievementPrice);
+            //totalPerformanceContentPlatFormGroupDaoDaoData.DouYinNumber = DecimalExtension.ChangePriceToTenThousand(curDaoDaoDouYin); ;
+            //totalPerformanceContentPlatFormGroupDaoDaoData.DouYinRate = DecimalExtension.CalculateTargetComplete(curDaoDaoDouYin, curDaoDaoTotalAchievementPrice);
+            //totalPerformanceContentPlatFormGroupDaoDaoData.VideoNumberNumber = DecimalExtension.ChangePriceToTenThousand(curDaoDaoVideoNumber); 
+            //totalPerformanceContentPlatFormGroupDaoDaoData.VideoNumberRate = DecimalExtension.CalculateTargetComplete(curDaoDaoVideoNumber, curDaoDaoTotalAchievementPrice);
+            //totalPerformanceContentPlatFormGroupDaoDaoData.XiaoHongShuNumber = DecimalExtension.ChangePriceToTenThousand(curDaoDaoXiaoHongShu);
+            //totalPerformanceContentPlatFormGroupDaoDaoData.XiaoHongShuRate = DecimalExtension.CalculateTargetComplete(curDaoDaoXiaoHongShu, curDaoDaoTotalAchievementPrice);
+            //totalPerformanceContentPlatFormGroupDaoDaoData.PrivateDataNumber = DecimalExtension.ChangePriceToTenThousand(curDaoDaoPrivateDomain);
+            //totalPerformanceContentPlatFormGroupDaoDaoData.PrivateDataRate = DecimalExtension.CalculateTargetComplete(curDaoDaoPrivateDomain, curDaoDaoTotalAchievementPrice);
+
+            //result.GroupDaoDaoFlowRateByContentPlatForm = totalPerformanceContentPlatFormGroupDaoDaoData;
+            #endregion
+
+            #region 吉娜组业绩-平台
+            //OperationBoardContentPlatFormDataDetailsDto totalPerformanceContentPlatFormGroupJiNaData = new OperationBoardContentPlatFormDataDetailsDto();
+            //var curJiNaDouYin = curJiNaTotalAchievement.Where(x => x.ContentPlatFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Sum(x=>x.Price);
+            //var curJiNaVideoNumber = curJiNaTotalAchievement.Where(x => x.ContentPlatFormId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Sum(x => x.Price);
+            //var curJiNaXiaoHongShu = curJiNaTotalAchievement.Where(x => x.ContentPlatFormId == "317c03b8-aff9-4961-8392-fc44d04b1725").Sum(x => x.Price);
+            //var curJiNaPrivateDomain = curJiNaTotalAchievement.Where(x => x.ContentPlatFormId == "22a0b287-232d-4373-a9dd-c372aaae57dc").Sum(x => x.Price);
+
+            //totalPerformanceContentPlatFormGroupJiNaData.TotalFlowRateNumber = DecimalExtension.ChangePriceToTenThousand(curJiNaTotalAchievementPrice);
+            //totalPerformanceContentPlatFormGroupJiNaData.DouYinNumber = DecimalExtension.ChangePriceToTenThousand(curJiNaDouYin); ;
+            //totalPerformanceContentPlatFormGroupJiNaData.DouYinRate = DecimalExtension.CalculateTargetComplete(curJiNaDouYin, curJiNaTotalAchievementPrice);
+            //totalPerformanceContentPlatFormGroupJiNaData.VideoNumberNumber = DecimalExtension.ChangePriceToTenThousand(curJiNaVideoNumber);
+            //totalPerformanceContentPlatFormGroupJiNaData.VideoNumberRate = DecimalExtension.CalculateTargetComplete(curJiNaVideoNumber, curJiNaTotalAchievementPrice);
+            //totalPerformanceContentPlatFormGroupJiNaData.XiaoHongShuNumber = DecimalExtension.ChangePriceToTenThousand(curJiNaXiaoHongShu);
+            //totalPerformanceContentPlatFormGroupJiNaData.XiaoHongShuRate = DecimalExtension.CalculateTargetComplete(curJiNaXiaoHongShu, curJiNaTotalAchievementPrice);
+            //totalPerformanceContentPlatFormGroupJiNaData.PrivateDataNumber = DecimalExtension.ChangePriceToTenThousand(curJiNaPrivateDomain);
+            //totalPerformanceContentPlatFormGroupJiNaData.PrivateDataRate = DecimalExtension.CalculateTargetComplete(curJiNaPrivateDomain, curJiNaTotalAchievementPrice);
+
+            //result.GroupJiNaFlowRateByContentPlatForm = totalPerformanceContentPlatFormGroupJiNaData;
+            #endregion
+
+            #region 总业绩（优化：根据刀刀和吉娜组业绩累加）-平台
+            //OperationBoardContentPlatFormDataDetailsDto totalPerformanceContentPlatFormData = new OperationBoardContentPlatFormDataDetailsDto();
+            //var curDouYin = curJiNaDouYin + curDaoDaoDouYin;
+            //var curVideoNumber = curJiNaVideoNumber + curDaoDaoVideoNumber;
+            //var curXiaoHongShu = curJiNaXiaoHongShu + curDaoDaoXiaoHongShu;
+            //var curPrivateDomain = curJiNaPrivateDomain + curDaoDaoPrivateDomain;
+
+            //totalPerformanceContentPlatFormData.TotalFlowRateNumber = DecimalExtension.ChangePriceToTenThousand(curTotalAchievement);
+            //totalPerformanceContentPlatFormData.DouYinNumber = DecimalExtension.ChangePriceToTenThousand(curDouYin);
+            //totalPerformanceContentPlatFormData.DouYinRate = DecimalExtension.CalculateTargetComplete(curDouYin, curTotalAchievement);
+            //totalPerformanceContentPlatFormData.XiaoHongShuNumber = DecimalExtension.ChangePriceToTenThousand(curXiaoHongShu);
+            //totalPerformanceContentPlatFormData.XiaoHongShuRate = DecimalExtension.CalculateTargetComplete(curXiaoHongShu, curTotalAchievement);
+            //totalPerformanceContentPlatFormData.VideoNumberNumber = DecimalExtension.ChangePriceToTenThousand(curVideoNumber);
+            //totalPerformanceContentPlatFormData.VideoNumberRate = DecimalExtension.CalculateTargetComplete(curVideoNumber, curTotalAchievement);
+            //totalPerformanceContentPlatFormData.PrivateDataNumber = DecimalExtension.ChangePriceToTenThousand(curPrivateDomain);
+            //totalPerformanceContentPlatFormData.PrivateDataRate = DecimalExtension.CalculateTargetComplete(curPrivateDomain, curTotalAchievement);
+            //result.TotalFlowRateByContentPlatForm = totalPerformanceContentPlatFormData;
+            #endregion
+            #endregion
 
             #region 【平台】
             var curDouYin = curTotalAchievement.Where(x => x.ContentPlatFormId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Sum(x => x.Price);

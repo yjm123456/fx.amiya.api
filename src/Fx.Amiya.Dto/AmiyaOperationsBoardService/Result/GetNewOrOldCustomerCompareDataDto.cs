@@ -12,6 +12,33 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
 
 
         /// <summary>
+        /// 整体面诊类型分析
+        /// </summary>
+        public OperationBoardConsulationTypeDto TotalConsulationType { get; set; }
+        /// <summary>
+        /// 刀刀组面诊类型分析
+        /// </summary>
+        public OperationBoardConsulationTypeDto GroupDaoDaoConsulationType { get; set; }
+        /// <summary>
+        /// 吉娜组面诊类型分析
+        /// </summary>
+        public OperationBoardConsulationTypeDto GroupJiNaConsulationType { get; set; }
+
+
+
+        /// <summary>
+        /// 整体分析-面诊类型人数
+        /// </summary>
+        public OperationBoardConsulationTypeDto TotalConsulationTypeNumber { get; set; }
+        /// <summary>
+        /// 刀刀组分析-面诊类型人数
+        /// </summary>
+        public OperationBoardConsulationTypeDto GroupDaoDaoConsulationTypeNumber { get; set; }
+        /// <summary>
+        /// 吉娜组分析-面诊类型人数
+        /// </summary>
+        public OperationBoardConsulationTypeDto GroupJiNaConsulationTypeNumber { get; set; }
+        /// <summary>
         /// 整体流量分析-平台
         /// </summary>
         public OperationBoardContentPlatFormDataDetailsDto TotalFlowRateByContentPlatForm { get; set; }
@@ -104,6 +131,66 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
         /// 吉娜组流量分析-当月/历史-人数
         /// </summary>
         public OperationBoardGetIsHistoryPerformanceDto GroupJiNaIsHistoryPerformanceNum { get; set; }
+    }
+
+    /// <summary>
+    /// 面诊类型（饼状图）
+    /// </summary>
+    public class OperationBoardConsulationTypeDto
+    {
+        /// <summary>
+        /// 其他（占比）
+        /// </summary>
+        public decimal? OtherRate { get; set; }
+
+        /// <summary>
+        /// 未面诊（占比）
+        /// </summary>
+        public decimal? UnConsulationRate { get; set; }
+
+        /// <summary>
+        /// （助理）照片面诊（占比）
+        /// </summary>
+        public decimal? PictureConsulationRate { get; set; }
+
+        /// <summary>
+        /// （主播）视频面诊（占比）
+        /// </summary>
+        public decimal? VideoConsulationRate { get; set; }
+
+        /// <summary>
+        /// （主播）语音面诊（占比）
+        /// </summary>
+        public decimal? AudioConsulationRate { get; set; }
+
+        /// <summary>
+        /// 其他（数值）
+        /// </summary>
+        public decimal? OtherNumber { get; set; }
+
+        /// <summary>
+        /// 未面诊（数值）
+        /// </summary>
+        public decimal? UnConsulationNumber { get; set; }
+
+        /// <summary>
+        /// （助理）照片面诊（数值）
+        /// </summary>
+        public decimal? PictureConsulationNumber { get; set; }
+
+        /// <summary>
+        /// （主播）视频面诊（数值）
+        /// </summary>
+        public decimal? VideoConsulationNumber { get; set; }
+
+        /// <summary>
+        /// （主播）语音面诊（数值）
+        /// </summary>
+        public decimal? AudioConsulationNumber { get; set; }
+        /// <summary>
+        /// 总业绩数值
+        /// </summary>
+        public decimal? TotalPerformanceNumber { get; set; }
     }
     /// <summary>
     /// 新老客占比
