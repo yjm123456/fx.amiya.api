@@ -132,6 +132,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             result.TotalConsulationType.PictureConsulationNumber = data.TotalConsulationType.PictureConsulationNumber;
             result.TotalConsulationType.VideoConsulationNumber = data.TotalConsulationType.VideoConsulationNumber;
             result.TotalConsulationType.AudioConsulationNumber = data.TotalConsulationType.AudioConsulationNumber;
+            result.TotalConsulationType.TotalPerformanceNumber = data.TotalConsulationType.TotalPerformanceNumber;
 
 
             #endregion
@@ -151,6 +152,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             result.TotalConsulationTypeNumber.PictureConsulationNumber = data.TotalConsulationTypeNumber.PictureConsulationNumber;
             result.TotalConsulationTypeNumber.VideoConsulationNumber = data.TotalConsulationTypeNumber.VideoConsulationNumber;
             result.TotalConsulationTypeNumber.AudioConsulationNumber = data.TotalConsulationTypeNumber.AudioConsulationNumber;
+            result.TotalConsulationTypeNumber.TotalPerformanceNumber = data.TotalConsulationTypeNumber.TotalPerformanceNumber;
 
             #endregion
 

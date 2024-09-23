@@ -184,6 +184,12 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
         /// （主播）语音面诊（数值）
         /// </summary>
         public decimal? AudioConsulationNumber { get; set; }
+        /// <summary>
+        /// 总业绩数值
+        /// </summary>
+        public decimal? TotalPerformanceNumber { get; set; }
+
+
     }
     /// <summary>
     /// 新老客占比

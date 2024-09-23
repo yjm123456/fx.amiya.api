@@ -1582,48 +1582,49 @@ namespace Fx.Amiya.Service
             //newCustomerOperationDataDto.SendOrderToDealRate = CalculateTargetComplete(dealdetails.Value, sendOrderdetails.Value);
             ////分诊成交转化率
             //newCustomerOperationDataDto.AllocationConsulationToDealRate = CalculateTargetComplete(dealdetails.Value, consulationdetails.Value);
-            if (baseOrderPerformance.DealPrice.HasValue)
-            {
-                if (addCarddetails.Value != 0)
-                {
-                    //线索成交能效
-                    newCustomerOperationDataDto.FlowClueToDealPrice = Math.Round(baseOrderPerformance.DealPrice.Value / addCarddetails.Value, 2, MidpointRounding.AwayFromZero);
-                }
-                if (consulationdetails.Value != 0)
-                    //分诊成交能效
-                    newCustomerOperationDataDto.AllocationConsulationToDealPrice = Math.Round(baseOrderPerformance.DealPrice.Value / consulationdetails.Value, 2, MidpointRounding.AwayFromZero);
-                if (addWechatdetails.Value != 0)
-                    //加v成交能效
-                    newCustomerOperationDataDto.AddWeChatToDealPrice = Math.Round(baseOrderPerformance.DealPrice.Value / addWechatdetails.Value, 2, MidpointRounding.AwayFromZero);
+            #region 【成交能效（删）】
+            //if (baseOrderPerformance.DealPrice.HasValue)
+            //{
+            //    if (addCarddetails.Value != 0)
+            //    {
+            //        //线索成交能效
+            //        newCustomerOperationDataDto.FlowClueToDealPrice = Math.Round(baseOrderPerformance.DealPrice.Value / addCarddetails.Value, 2, MidpointRounding.AwayFromZero);
+            //    }
+            //    if (consulationdetails.Value != 0)
+            //        //分诊成交能效
+            //        newCustomerOperationDataDto.AllocationConsulationToDealPrice = Math.Round(baseOrderPerformance.DealPrice.Value / consulationdetails.Value, 2, MidpointRounding.AwayFromZero);
+            //    if (addWechatdetails.Value != 0)
+            //        //加v成交能效
+            //        newCustomerOperationDataDto.AddWeChatToDealPrice = Math.Round(baseOrderPerformance.DealPrice.Value / addWechatdetails.Value, 2, MidpointRounding.AwayFromZero);
 
-                if (sendOrderdetails.Value != 0)
-                    //派单成交能效
-                    newCustomerOperationDataDto.SendOrderToDealPrice = Math.Round(baseOrderPerformance.DealPrice.Value / sendOrderdetails.Value, 2, MidpointRounding.AwayFromZero);
-                if (visitdetails.Value != 0)
-                    //上门成交能效
-                    newCustomerOperationDataDto.VisitToDealPrice = Math.Round(baseOrderPerformance.DealPrice.Value / visitdetails.Value, 2, MidpointRounding.AwayFromZero);
-                //成交能效
-                if (dealdetails.Value != 0)
-                {
-                    newCustomerOperationDataDto.DealToPrice = Math.Round(baseOrderPerformance.DealPrice.Value / dealdetails.Value, 2, MidpointRounding.AwayFromZero);
-                }
-            }
-            else
-            {
-                //线索成交能效
-                newCustomerOperationDataDto.FlowClueToDealPrice = 0.00M;
-                //分诊成交能效
-                newCustomerOperationDataDto.AllocationConsulationToDealPrice = 0.00M;
-                //加v成交能效
-                newCustomerOperationDataDto.AddWeChatToDealPrice = 0.00M;
-                //派单成交能效
-                newCustomerOperationDataDto.SendOrderToDealPrice = 0.00M;
-                //上门成交能效
-                newCustomerOperationDataDto.VisitToDealPrice = 0.00M;
-                //成交能效
-                newCustomerOperationDataDto.DealToPrice = 0.00M;
-            }
-
+            //    if (sendOrderdetails.Value != 0)
+            //        //派单成交能效
+            //        newCustomerOperationDataDto.SendOrderToDealPrice = Math.Round(baseOrderPerformance.DealPrice.Value / sendOrderdetails.Value, 2, MidpointRounding.AwayFromZero);
+            //    if (visitdetails.Value != 0)
+            //        //上门成交能效
+            //        newCustomerOperationDataDto.VisitToDealPrice = Math.Round(baseOrderPerformance.DealPrice.Value / visitdetails.Value, 2, MidpointRounding.AwayFromZero);
+            //    //成交能效
+            //    if (dealdetails.Value != 0)
+            //    {
+            //        newCustomerOperationDataDto.DealToPrice = Math.Round(baseOrderPerformance.DealPrice.Value / dealdetails.Value, 2, MidpointRounding.AwayFromZero);
+            //    }
+            //}
+            //else
+            //{
+            //    //线索成交能效
+            //    newCustomerOperationDataDto.FlowClueToDealPrice = 0.00M;
+            //    //分诊成交能效
+            //    newCustomerOperationDataDto.AllocationConsulationToDealPrice = 0.00M;
+            //    //加v成交能效
+            //    newCustomerOperationDataDto.AddWeChatToDealPrice = 0.00M;
+            //    //派单成交能效
+            //    newCustomerOperationDataDto.SendOrderToDealPrice = 0.00M;
+            //    //上门成交能效
+            //    newCustomerOperationDataDto.VisitToDealPrice = 0.00M;
+            //    //成交能效
+            //    newCustomerOperationDataDto.DealToPrice = 0.00M;
+            //}
+            #endregion
             amiyaOperationDataDto.NewCustomerData = newCustomerOperationDataDto;
             //老客数据
             var oldCustomerData = await contentPlateFormOrderService.GetOldCustomerBuyAgainByMonthAsync(sequentialDate.StartDate, isEffectiveCustomerData, contentPlatFormId, LiveAnchorInfo);
@@ -1633,16 +1634,16 @@ namespace Fx.Amiya.Service
             oldCustomerOperationDataDto.FourthDealCustomer = oldCustomerData.FourthDealCustomer;
             oldCustomerOperationDataDto.FifThOrMoreOrMoreDealCustomer = oldCustomerData.FifThOrMoreOrMoreDealCustomer;
 
-            oldCustomerOperationDataDto.SecondTimeBuyRate = CalculateTargetComplete(Convert.ToDecimal(oldCustomerOperationDataDto.SecondDealPeople), Convert.ToDecimal(oldCustomerOperationDataDto.TotalDealPeople)).Value;
+            //oldCustomerOperationDataDto.SecondTimeBuyRate = CalculateTargetComplete(Convert.ToDecimal(oldCustomerOperationDataDto.SecondDealPeople), Convert.ToDecimal(oldCustomerOperationDataDto.TotalDealPeople)).Value;
             oldCustomerOperationDataDto.SecondTimeBuyRateProportion = oldCustomerOperationDataDto.SecondTimeBuyRate;
 
-            oldCustomerOperationDataDto.ThirdTimeBuyRate = CalculateTargetComplete(Convert.ToDecimal(oldCustomerOperationDataDto.ThirdDealPeople), Convert.ToDecimal(oldCustomerOperationDataDto.SecondDealPeople)).Value;
+            //oldCustomerOperationDataDto.ThirdTimeBuyRate = CalculateTargetComplete(Convert.ToDecimal(oldCustomerOperationDataDto.ThirdDealPeople), Convert.ToDecimal(oldCustomerOperationDataDto.SecondDealPeople)).Value;
             oldCustomerOperationDataDto.ThirdTimeBuyRateProportion = CalculateTargetComplete(Convert.ToDecimal(oldCustomerOperationDataDto.ThirdDealPeople), Convert.ToDecimal(oldCustomerOperationDataDto.TotalDealPeople)).Value;
 
-            oldCustomerOperationDataDto.FourthTimeBuyRate = CalculateTargetComplete(Convert.ToDecimal(oldCustomerOperationDataDto.FourthDealCustomer), Convert.ToDecimal(oldCustomerOperationDataDto.ThirdDealPeople)).Value;
+           // oldCustomerOperationDataDto.FourthTimeBuyRate = CalculateTargetComplete(Convert.ToDecimal(oldCustomerOperationDataDto.FourthDealCustomer), Convert.ToDecimal(oldCustomerOperationDataDto.ThirdDealPeople)).Value;
             oldCustomerOperationDataDto.FourthTimeBuyRateProportion = CalculateTargetComplete(Convert.ToDecimal(oldCustomerOperationDataDto.FourthDealCustomer), Convert.ToDecimal(oldCustomerOperationDataDto.TotalDealPeople)).Value;
 
-            oldCustomerOperationDataDto.FifthTimeOrMoreBuyRate = CalculateTargetComplete(Convert.ToDecimal(oldCustomerOperationDataDto.FifThOrMoreOrMoreDealCustomer), Convert.ToDecimal(oldCustomerOperationDataDto.FourthDealCustomer)).Value;
+            //oldCustomerOperationDataDto.FifthTimeOrMoreBuyRate = CalculateTargetComplete(Convert.ToDecimal(oldCustomerOperationDataDto.FifThOrMoreOrMoreDealCustomer), Convert.ToDecimal(oldCustomerOperationDataDto.FourthDealCustomer)).Value;
             oldCustomerOperationDataDto.FifthTimeOrMoreBuyRateProportion = CalculateTargetComplete(Convert.ToDecimal(oldCustomerOperationDataDto.FifThOrMoreOrMoreDealCustomer), Convert.ToDecimal(oldCustomerOperationDataDto.TotalDealPeople)).Value;
 
             oldCustomerOperationDataDto.BuyRate = CalculateTargetComplete(Convert.ToDecimal(oldCustomerOperationDataDto.FifThOrMoreOrMoreDealCustomer + oldCustomerOperationDataDto.FourthDealCustomer + oldCustomerOperationDataDto.ThirdDealPeople + oldCustomerOperationDataDto.SecondDealPeople), Convert.ToDecimal(oldCustomerOperationDataDto.TotalDealPeople)).Value;
