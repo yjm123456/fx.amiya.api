@@ -1164,7 +1164,7 @@ namespace Fx.Amiya.Service
             (
                 e.AssignEmpId,
                 e.Phone
-            )).ToList();
+            )).Where(e=>totalSendPhoneList.Select(e=>e.Value).Contains(e.Value)).ToList();
             var emp = currentSendPhoneList.Where(e => !totalSendPhoneList.Contains(e)).ToList();
             //历史派单手机号
             var historySendPhoneList = totalSendPhoneList.Where(e => !currentSendPhoneList.Select(e => e.Value).Contains(e.Value)).ToList();
@@ -2790,8 +2790,8 @@ namespace Fx.Amiya.Service
             //历史订单
             var historyPhone= totalSendPhoneList.Where(e => !shoppingCartRegistionData.Select(e => e.Phone).Contains(e.Phone)).Select(e=>e.Phone).Distinct().ToList();
             var historyOrder = order.Select(e => e.ContentPlatFormOrderId).Where(e => !currentOrder.Contains(e)).Distinct().ToList();
-
             #region 客资分类
+
             var firstTypeCount = shoppingCartRegistionData.Where(e => e.EmergencyLevel == (int)EmergencyLevel.Important).Count();
             var secondTypeCount = shoppingCartRegistionData.Where(e => e.EmergencyLevel == (int)EmergencyLevel.Generally).Count();
             var thirdTypeCount = shoppingCartRegistionData.Where(e => e.EmergencyLevel == (int)EmergencyLevel.Ignorable).Count();
@@ -2927,11 +2927,11 @@ namespace Fx.Amiya.Service
             result.ConsulationPerformance = new CustomerTypePerformanceDataDto();
             result.ConsulationPerformance.TotalCount = order.Sum(x=>x.Price);
             result.ConsulationPerformance.Data = new List<CustomerTypePerformanceDataItemDto>();
-            result.ConsulationPerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "其它", Value = otherPerformance, Rate = DecimalExtension.CalculateTargetComplete(otherPerformance, result.ConsulationPerformance.TotalCount).Value });
-            result.ConsulationPerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "未面诊", Value = unConsulationPerformance, Rate = DecimalExtension.CalculateTargetComplete(unConsulationPerformance, result.ConsulationPerformance.TotalCount).Value });
-            result.ConsulationPerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "（助理）照片面诊", Value = independentFollowUpPerformance, Rate = DecimalExtension.CalculateTargetComplete(independentFollowUpPerformance, result.ConsulationPerformance.TotalCount).Value });
-            result.ConsulationPerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "（主播）视频面诊", Value = collaborationPerformance, Rate = DecimalExtension.CalculateTargetComplete(collaborationPerformance, result.ConsulationPerformance.TotalCount).Value });
-            result.ConsulationPerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "（主播）语音面诊", Value = voicePerformance, Rate = DecimalExtension.CalculateTargetComplete(voicePerformance, result.ConsulationPerformance.TotalCount).Value });
+            result.ConsulationPerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "其它", Value = DecimalExtension.ChangePriceToTenThousand(otherPerformance) , Rate = DecimalExtension.CalculateTargetComplete(otherPerformance, result.ConsulationPerformance.TotalCount).Value });
+            result.ConsulationPerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "未面诊", Value = DecimalExtension.ChangePriceToTenThousand(unConsulationPerformance), Rate = DecimalExtension.CalculateTargetComplete(unConsulationPerformance, result.ConsulationPerformance.TotalCount).Value });
+            result.ConsulationPerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "（助理）照片面诊", Value = DecimalExtension.ChangePriceToTenThousand(independentFollowUpPerformance), Rate = DecimalExtension.CalculateTargetComplete(independentFollowUpPerformance, result.ConsulationPerformance.TotalCount).Value });
+            result.ConsulationPerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "（主播）视频面诊", Value = DecimalExtension.ChangePriceToTenThousand(collaborationPerformance), Rate = DecimalExtension.CalculateTargetComplete(collaborationPerformance, result.ConsulationPerformance.TotalCount).Value });
+            result.ConsulationPerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "（主播）语音面诊", Value = DecimalExtension.ChangePriceToTenThousand(voicePerformance), Rate = DecimalExtension.CalculateTargetComplete(voicePerformance, result.ConsulationPerformance.TotalCount).Value });
             #endregion
 
             return result;
