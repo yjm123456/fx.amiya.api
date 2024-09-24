@@ -3194,7 +3194,7 @@ namespace Fx.Amiya.Service
             #region 分诊派单
             var sendInfoList = await _dalContentPlatformOrderSend.GetAll().Where(e => e.IsMainHospital == true && e.SendDate >= seqDate.StartDate && e.SendDate < seqDate.EndDate)
                 .Where(e => assistantIdList.Contains(e.Sender))
-                .Select(e => new { Phone = e.ContentPlatformOrder.Phone, EmpId = (e.ContentPlatformOrder.IsSupportOrder ? e.ContentPlatformOrder.SupportEmpId : e.ContentPlatformOrder.BelongEmpId), SendDate = e.SendDate }).ToListAsync();
+                .Select(e => new { Phone = e.ContentPlatformOrder.Phone, EmpId = e.Sender, SendDate = e.SendDate }).ToListAsync();
             var sendPhoneList = sendInfoList.Distinct().Select(e => e.Phone).ToList();
             var cartInfoList = _dalShoppingCartRegistration.GetAll().Where(e => e.IsReturnBackPrice == false && sendPhoneList.Contains(e.Phone))
                 .Select(e => new
@@ -3216,25 +3216,25 @@ namespace Fx.Amiya.Service
             //转化周期数据
             var res1 = dataList.GroupBy(e => e.EmpId).Select(e =>
             {
-                var endIndex= CalTakeCount(e.Count());
+                var endIndex = DecimalExtension.CalTakeCount(e.Count());
                 var resData = e.OrderBy(e => e.IntervalDays).Skip(0).Take(endIndex);
                 return new KeyValuePair<string, int>(
                 assistantList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其它",
-                resData.Count() == 0 ? 0 : resData.Sum(e => e.IntervalDays) / (resData.Count())
+                DecimalExtension.CalAvg(resData.Sum(e => e.IntervalDays), resData.Count())
              );
             }).OrderBy(e => e.Value).ToList();
 
             //当前助理转化周期
             var currentAssistanListCount = dataList.Where(e => e.EmpId == query.AssistantId.Value).Count();
-            var endIndex = CalTakeCount(currentAssistanListCount);
+            var endIndex = DecimalExtension.CalTakeCount(currentAssistanListCount);
             var currentAssistanList = dataList.Where(e => e.EmpId == query.AssistantId.Value).OrderBy(e => e.IntervalDays).Skip(0).Take(endIndex);
             var currentEffectiveDays = currentAssistanList.Where(e => e.AddPrice > 0).Sum(e => e.IntervalDays);
             var currentEffectiveCount = currentAssistanList.Where(e => e.AddPrice > 0).Count();
             var currentPotionelDays = currentAssistanList.Where(e => e.AddPrice == 0).Sum(e => e.IntervalDays);
             var currentPotionelCount = currentAssistanList.Where(e => e.AddPrice == 0).Count();
-            data.TotalSendCycle = CalAvg(currentEffectiveDays + currentPotionelDays, currentEffectiveCount + currentPotionelCount);
-            data.EffectiveSendCycle = CalAvg(currentEffectiveDays, currentEffectiveCount);
-            data.PotionelSendCycle = CalAvg(currentPotionelDays, currentPotionelCount);
+            data.TotalSendCycle = DecimalExtension.CalAvg(currentEffectiveDays + currentPotionelDays, currentEffectiveCount + currentPotionelCount);
+            data.EffectiveSendCycle = DecimalExtension.CalAvg(currentEffectiveDays, currentEffectiveCount);
+            data.PotionelSendCycle = DecimalExtension.CalAvg(currentPotionelDays, currentPotionelCount);
             data.SendCycleData = res1;
 
             #endregion
@@ -3270,24 +3270,24 @@ namespace Fx.Amiya.Service
             //转化周期数据
             var res2 = dataList2.GroupBy(e => e.EmpId).Select(e =>
             {
-                var endIndex= CalTakeCount(e.Count(),0.6m);
+                var endIndex = DecimalExtension.CalTakeCount(e.Count(), 0.6m);
                 var resData = e.OrderBy(e => e.IntervalDays).Skip(0).Take(endIndex);
                 return new KeyValuePair<string, int>(
                 assistantList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其它",
-                resData.Count() == 0 ? 0 : resData.Sum(e => e.IntervalDays) / resData.Count());
+                DecimalExtension.CalAvg(resData.Sum(e => e.IntervalDays), resData.Count()));
             }).OrderBy(e => e.Value).ToList();
 
             //当前助理转化周期
             var currentAssistanListCount2 = dataList2.Where(e => e.EmpId == query.AssistantId.Value).Count();
-            var endIndex2 = CalTakeCount(currentAssistanListCount2);
+            var endIndex2 = DecimalExtension.CalTakeCount(currentAssistanListCount2);
             var currentAssistanList2 = dataList2.Where(e => e.EmpId == query.AssistantId.Value).OrderBy(e => e.IntervalDays).Skip(0).Take(endIndex2);
             var currentEffectiveDays2 = currentAssistanList2.Where(e => e.AddPrice > 0).Sum(e => e.IntervalDays);
             var currentEffectiveCount2 = currentAssistanList2.Where(e => e.AddPrice > 0).Count();
             var currentPotionelDays2 = currentAssistanList2.Where(e => e.AddPrice == 0).Sum(e => e.IntervalDays);
             var currentPotionelCount2 = currentAssistanList2.Where(e => e.AddPrice == 0).Count();
-            data.TotalToHospitalCycle = CalAvg(currentEffectiveDays2 + currentPotionelDays2, currentEffectiveCount2 + currentPotionelCount2);
-            data.EffectiveToHospitalCycle = CalAvg(currentEffectiveDays2, currentEffectiveCount2);
-            data.PotionelToHospitalCycle = CalAvg(currentPotionelDays2, currentPotionelCount2);
+            data.TotalToHospitalCycle = DecimalExtension.CalAvg(currentEffectiveDays2 + currentPotionelDays2, currentEffectiveCount2 + currentPotionelCount2);
+            data.EffectiveToHospitalCycle = DecimalExtension.CalAvg(currentEffectiveDays2, currentEffectiveCount2);
+            data.PotionelToHospitalCycle = DecimalExtension.CalAvg(currentPotionelDays2, currentPotionelCount2);
             data.ToHospitalCycleData = res2;
 
 
@@ -3674,26 +3674,7 @@ namespace Fx.Amiya.Service
         #endregion
 
         #region 公共类
-        ///
-        private int CalTakeCount(int totalCount,decimal rate=0.8m)
-        {
-            var takeCount = (int)(totalCount * rate);
-            if (takeCount == 0)
-                takeCount = 1;
-            return takeCount;
-        }
-        /// <summary>
-        /// 计算平均数
-        /// </summary>
-        /// <param name="data1"></param>
-        /// <param name="data2"></param>
-        /// <returns></returns>
-        private int CalAvg(int data1, int data2)
-        {
-            if (data2 == 0 || data1 == 0)
-                return 0;
-            return data1 / data2;
-        }
+
         private decimal ChangePriceToTenThousand(decimal performance, int unit = 1)
         {
             if (performance == 0m)

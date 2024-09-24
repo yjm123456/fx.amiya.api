@@ -4349,15 +4349,13 @@ namespace Fx.Amiya.Service
 
             var top80Data = daysCountList.GroupBy(e => e.Count).Select(e =>
              {
-                 var endIndex = (int)(e.Count() * 0.8);
-                 if (endIndex == 0)
-                     endIndex = 1;
-                 var tempdata = e.Skip(0).Take(endIndex - 1);
+                 var endIndex = DecimalExtension.CalTakeCount(e.Count());
+                 var tempdata = e.Skip(0).Take(endIndex);
                  var count = tempdata.Count();
                  return new
                  {
                      Count = e.Key,
-                     Cycle = count == 0 ? 0 : (tempdata.Sum(e => e.Days.Days) / count)
+                     Cycle= DecimalExtension.CalAvg(tempdata.Sum(e => e.Days.Days),count)
                  };
              }).ToList();
 
@@ -4374,15 +4372,15 @@ namespace Fx.Amiya.Service
             orderData.ThirdDealCustomer = dealDate.Where(x => x.ContentPlatformOrderDealInfoList.Where(x => x.IsDeal == true && x.Price > 0).Count() == 3).Select(e => e.Phone)
                 .Distinct()
                 .Count();
-            orderData.SecondDealCycle = top80Data.Where(e => e.Count == 3).FirstOrDefault()?.Cycle ?? 0;
+            orderData.ThirdDealCycle = top80Data.Where(e => e.Count == 3).FirstOrDefault()?.Cycle ?? 0;
             orderData.FourthDealCustomer = dealDate.Where(x => x.ContentPlatformOrderDealInfoList.Where(x => x.IsDeal == true && x.Price > 0).Count() == 4).Select(e => e.Phone)
                 .Distinct()
                 .Count();
-            orderData.SecondDealCycle = top80Data.Where(e => e.Count == 4).FirstOrDefault()?.Cycle ?? 0;
+            orderData.FourthDealCycle = top80Data.Where(e => e.Count == 4).FirstOrDefault()?.Cycle ?? 0;
             orderData.FifThOrMoreOrMoreDealCustomer = dealDate.Where(x => x.ContentPlatformOrderDealInfoList.Where(x => x.IsDeal == true && x.Price > 0).Count() == 5).Select(e => e.Phone)
                 .Distinct()
                 .Count();
-            orderData.SecondDealCycle = top80Data.Where(e => e.Count == 5).FirstOrDefault()?.Cycle ?? 0;
+            orderData.FifthDealCycle = top80Data.Where(e => e.Count == 5).FirstOrDefault()?.Cycle ?? 0;
             return orderData;
         }
 
