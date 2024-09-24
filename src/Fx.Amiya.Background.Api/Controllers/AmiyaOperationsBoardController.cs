@@ -1007,12 +1007,12 @@ namespace Fx.Amiya.Background.Api.Controllers
             //能效转化
             //newCustomerOperationDataVo.FlowClueToDealPrice = performance.NewCustomerData.FlowClueToDealPrice.HasValue ? performance.NewCustomerData.FlowClueToDealPrice.Value : 0.00M;
             newCustomerOperationDataVo.AllocationConsulationToDealRate = performance.NewCustomerData.AllocationConsulationToDealRate.HasValue ? performance.NewCustomerData.AllocationConsulationToDealRate.Value : 0.00M;
-            newCustomerOperationDataVo.AllocationConsulationToDealPrice = performance.NewCustomerData.AllocationConsulationToDealPrice.HasValue ? performance.NewCustomerData.AllocationConsulationToDealPrice.Value : 0.00M;
-            newCustomerOperationDataVo.AddWeChatToDealPrice = performance.NewCustomerData.AddWeChatToDealPrice.HasValue ? performance.NewCustomerData.AddWeChatToDealPrice.Value : 0.00M;
+            //newCustomerOperationDataVo.AllocationConsulationToDealPrice = performance.NewCustomerData.AllocationConsulationToDealPrice.HasValue ? performance.NewCustomerData.AllocationConsulationToDealPrice.Value : 0.00M;
+            //newCustomerOperationDataVo.AddWeChatToDealPrice = performance.NewCustomerData.AddWeChatToDealPrice.HasValue ? performance.NewCustomerData.AddWeChatToDealPrice.Value : 0.00M;
             newCustomerOperationDataVo.SendOrderToDealRate = performance.NewCustomerData.SendOrderToDealRate.HasValue ? performance.NewCustomerData.SendOrderToDealRate.Value : 0.00M;
-            newCustomerOperationDataVo.SendOrderToDealPrice = performance.NewCustomerData.SendOrderToDealPrice.HasValue ? performance.NewCustomerData.SendOrderToDealPrice.Value : 0.00M;
-            newCustomerOperationDataVo.VisitToDealPrice = performance.NewCustomerData.VisitToDealPrice.HasValue ? performance.NewCustomerData.VisitToDealPrice.Value : 0.00M;
-            newCustomerOperationDataVo.DealToPrice = performance.NewCustomerData.DealToPrice.HasValue ? performance.NewCustomerData.DealToPrice.Value : 0.00M;
+            //newCustomerOperationDataVo.SendOrderToDealPrice = performance.NewCustomerData.SendOrderToDealPrice.HasValue ? performance.NewCustomerData.SendOrderToDealPrice.Value : 0.00M;
+            //newCustomerOperationDataVo.VisitToDealPrice = performance.NewCustomerData.VisitToDealPrice.HasValue ? performance.NewCustomerData.VisitToDealPrice.Value : 0.00M;
+            //newCustomerOperationDataVo.DealToPrice = performance.NewCustomerData.DealToPrice.HasValue ? performance.NewCustomerData.DealToPrice.Value : 0.00M;
             newCustomerOperationDataVo.newCustomerOperationDataDetails = new List<AssistantNewCustomerOperationDataDetailsVo>();
             foreach (var x in performance.NewCustomerData.newCustomerOperationDataDetails)
             {
@@ -1041,7 +1041,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             oldCustomerOperationDataVo.FifthTimeOrMoreBuyRate = performance.OldCustomerData.FifthTimeOrMoreBuyRate;
             oldCustomerOperationDataVo.FifthTimeOrMoreBuyRateProportion = performance.OldCustomerData.FifthTimeOrMoreBuyRateProportion;
             oldCustomerOperationDataVo.BuyRate = performance.OldCustomerData.BuyRate;
-
+            oldCustomerOperationDataVo.SecondDealCycle = performance.OldCustomerData.SecondDealCycle;
+            oldCustomerOperationDataVo.ThirdDealCycle = performance.OldCustomerData.ThirdDealCycle;
+            oldCustomerOperationDataVo.FourthDealCycle = performance.OldCustomerData.FourthDealCycle;
+            oldCustomerOperationDataVo.FifthDealCycle = performance.OldCustomerData.FifthDealCycle;
             result.NewCustomerData = newCustomerOperationDataVo;
             result.OldCustomerData = oldCustomerOperationDataVo;
 
@@ -1171,7 +1174,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.StartDate = query.StartDate;
             queryDto.EndDate = query.EndDate;
             queryDto.AssistantId = query.AssistantId;
-            queryDto.CurrentMonth=query.CurrentMonth;
+            queryDto.CurrentMonth = query.CurrentMonth;
             queryDto.History = query.History;
             var res = await amiyaOperationsBoardService.GetAssistantHospitalCluesDataAsync(queryDto);
             dataVo.TotalSendOrderCount = res.TotalSendOrderCount;
@@ -1287,6 +1290,31 @@ namespace Fx.Amiya.Background.Api.Controllers
             }).ToList();
             return ResultData<AssistantDistributeConsulationBrokenLineVo>.Success().AddData("data", data);
         }
+        /// <summary>
+        /// 周期转化
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("getAssistantTransformCycleData")]
+        public async Task<ResultData<AssistantTransformCycleDataVo>> GetAssistantTransformCycleDataAsync([FromQuery] QueryAssistantPerformanceVo query)
+        {
+            AssistantTransformCycleDataVo data = new AssistantTransformCycleDataVo();
+            QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            var res = await amiyaOperationsBoardService.GetAssistantTransformCycleDataAsync(queryDto);
+            data.EffectiveSendCycle = res.EffectiveSendCycle;
+            data.EffectiveToHospitalCycle = res.EffectiveToHospitalCycle;
+            data.PotionelSendCycle = res.PotionelSendCycle;
+            data.PotionelToHospitalCycle = res.PotionelToHospitalCycle;
+            data.TotalSendCycle = res.TotalSendCycle;
+            data.TotalToHospitalCycle = res.TotalToHospitalCycle;
+            data.SendCycleData = res.SendCycleData;
+            data.ToHospitalCycleData = res.ToHospitalCycleData;
+            data.OldCustomerRePurcheData = res.OldCustomerRePurcheData;
+            return ResultData<AssistantTransformCycleDataVo>.Success().AddData(data);
+        }
 
 
         #endregion
@@ -1401,7 +1429,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             data.GroupData.DataList = res.GroupData.DataList.Select(e => new AdminCustomerFilterDetailDataVo
             {
                 Key = e.Key,
-                Name=e.Name,
+                Name = e.Name,
                 Value = e.Value
             }).ToList();
 

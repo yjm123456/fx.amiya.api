@@ -94,24 +94,24 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
         /// 成交率健康值(当月)
         /// </summary>
         public decimal DealRateHealthValueThisMonth { get; set; }
-        /// <summary>
-        /// 下卡成交能效（元）
-        /// </summary>
-        //public decimal? FlowClueToDealPrice { get; set; }
-        /// <summary>
-        /// 分诊成交能效（元）
-        /// </summary>
-        public decimal? AllocationConsulationToDealPrice { get; set; }
+        ///// <summary>
+        ///// 下卡成交能效（元）
+        ///// </summary>
+        ////public decimal? FlowClueToDealPrice { get; set; }
+        ///// <summary>
+        ///// 分诊成交能效（元）
+        ///// </summary>
+        //public decimal? AllocationConsulationToDealPrice { get; set; }
 
         /// <summary>
         /// 分诊成交转化率
         /// </summary>
         public decimal? AllocationConsulationToDealRate { get; set; }
 
-        /// <summary>
-        /// 加v成交能效（元）
-        /// </summary>
-        public decimal? AddWeChatToDealPrice { get; set; }
+        ///// <summary>
+        ///// 加v成交能效（元）
+        ///// </summary>
+        //public decimal? AddWeChatToDealPrice { get; set; }
         /// <summary>
         /// 派单成交转化率
         /// </summary>
@@ -120,14 +120,14 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
         /// 派单成交能效（元）
         /// </summary>
         public decimal? SendOrderToDealPrice { get; set; }
-        /// <summary>
-        /// 上门成交能效（元）
-        /// </summary>
-        public decimal? VisitToDealPrice { get; set; }
-        /// <summary>
-        /// 成交能效（元）
-        /// </summary>
-        public decimal? DealToPrice { get; set; }
+        ///// <summary>
+        ///// 上门成交能效（元）
+        ///// </summary>
+        //public decimal? VisitToDealPrice { get; set; }
+        ///// <summary>
+        ///// 成交能效（元）
+        ///// </summary>
+        //public decimal? DealToPrice { get; set; }
 
         /// <summary>
         /// 漏斗图详情数据
@@ -202,6 +202,22 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
         /// 复购率
         /// </summary>
         public decimal BuyRate { get; set; }
+        /// <summary>
+        /// 二次复购周期
+        /// </summary>
+        public decimal SecondDealCycle { get; set; }
+        /// <summary>
+        /// 三次复购周期
+        /// </summary>
+        public decimal ThirdDealCycle { get; set; }
+        /// <summary>
+        /// 四次复购周期
+        /// </summary>
+        public decimal FourthDealCycle { get; set; }
+        /// <summary>
+        /// 五次复购周期
+        /// </summary>
+        public decimal FifthDealCycle { get; set; }
 
     }
     /// <summary>

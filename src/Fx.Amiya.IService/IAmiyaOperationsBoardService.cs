@@ -70,6 +70,12 @@ namespace Fx.Amiya.IService
         /// <param name="query"></param>
         /// <returns></returns>
         Task<AssistantDistributeConsulationBrokenLineDto> GetAssistantDistributeConsulationBrokenLineDataAsync(QueryAssistantPerformanceDto query);
+        /// <summary>
+        /// 获取助理转化周期柱状图
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<AssistantTransformCycleDataDto> GetAssistantTransformCycleDataAsync(QueryAssistantPerformanceDto query);
 
         #endregion
 
