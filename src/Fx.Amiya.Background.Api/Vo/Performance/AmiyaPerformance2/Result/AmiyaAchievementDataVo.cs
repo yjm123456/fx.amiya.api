@@ -741,6 +741,22 @@ namespace Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result
         /// </summary>
         public decimal FifthTimeOrMoreBuyRateProportion { get; set; }
         /// <summary>
+        /// 二次复购周期
+        /// </summary>
+        public decimal SecondDealCycle { get; set; }
+        /// <summary>
+        /// 三次复购周期
+        /// </summary>
+        public decimal ThirdDealCycle { get; set; }
+        /// <summary>
+        /// 四次复购周期
+        /// </summary>
+        public decimal FourthDealCycle { get; set; }
+        /// <summary>
+        /// 五次复购周期
+        /// </summary>
+        public decimal FifthDealCycle { get; set; }
+        /// <summary>
         /// 复购率
         /// </summary>
         public decimal BuyRate { get; set; }

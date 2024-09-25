@@ -1316,6 +1316,31 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<AssistantTransformCycleDataVo>.Success().AddData(data);
         }
 
+        /// <summary>
+        /// 运营看板周期转化
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("getTransformCycleData")]
+        public async Task<ResultData<AssistantTransformCycleDataVo>> GetLiveAnchorTransformCycleDataAsync([FromQuery] QueryLiveAnchorPerformanceVo query)
+        {
+            AssistantTransformCycleDataVo data = new AssistantTransformCycleDataVo();
+            QueryLiveAnchorPerformanceDto queryDto = new QueryLiveAnchorPerformanceDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.LiveAnchorBaseId = query.LiveAnchorBaseId;
+            var res = await amiyaOperationsBoardService.GetLiveAnchorTransformCycleDataAsync(queryDto);
+            data.EffectiveSendCycle = res.EffectiveSendCycle;
+            data.EffectiveToHospitalCycle = res.EffectiveToHospitalCycle;
+            data.PotionelSendCycle = res.PotionelSendCycle;
+            data.PotionelToHospitalCycle = res.PotionelToHospitalCycle;
+            data.TotalSendCycle = res.TotalSendCycle;
+            data.TotalToHospitalCycle = res.TotalToHospitalCycle;
+            data.SendCycleData = res.SendCycleData;
+            data.ToHospitalCycleData = res.ToHospitalCycleData;
+            data.OldCustomerRePurcheData = res.OldCustomerRePurcheData;
+            return ResultData<AssistantTransformCycleDataVo>.Success().AddData(data);
+        }
 
         #endregion
 

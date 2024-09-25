@@ -3336,6 +3336,212 @@ namespace Fx.Amiya.Service
             return data;
         }
 
+
+        /// <summary>
+        /// 获取主播转化周期柱状图
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+
+        public async Task<AssistantTransformCycleDataDto> GetLiveAnchorTransformCycleDataAsync(QueryLiveAnchorPerformanceDto query)
+        {
+            AssistantTransformCycleDataDto data = new AssistantTransformCycleDataDto();
+            var seqDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.EndDate.Year, query.EndDate.Month);
+            var liveanchorIds = new List<string>();
+            var nameList = await liveAnchorBaseInfoService.GetAllLiveAnchorAsync(true);
+            if (string.IsNullOrEmpty(query.LiveAnchorBaseId))
+            {
+                liveanchorIds = nameList.Where(e => e.LiveAnchorName.Contains("刀刀") || e.LiveAnchorName.Contains("吉娜") || e.LiveAnchorName.Contains("璐璐")).Select(e => e.Id).ToList();
+            }
+            else
+            {
+                liveanchorIds = new List<string> { query.LiveAnchorBaseId };
+            }
+            #region 分诊派单
+            var sendInfoList = await _dalContentPlatformOrderSend.GetAll().Include(x => x.ContentPlatformOrder).ThenInclude(x => x.LiveAnchor)
+                .Where(e => e.IsMainHospital == true && e.SendDate >= seqDate.StartDate && e.SendDate < seqDate.EndDate)
+                .Where(x => liveanchorIds.Count() == 0 || liveanchorIds.Contains(x.ContentPlatformOrder.LiveAnchor.LiveAnchorBaseId))
+                .Select(e => new { Id = e.ContentPlatformOrder.Id, Phone = e.ContentPlatformOrder.Phone, LiveAnchorBaseId = (e.ContentPlatformOrder.LiveAnchor.LiveAnchorBaseId), SendDate = e.SendDate }).ToListAsync();
+            var sendPhoneList = sendInfoList.Select(e => e.Phone).Distinct().ToList();
+            var cartInfoList = _dalShoppingCartRegistration.GetAll().Where(e => e.IsReturnBackPrice == false && sendPhoneList.Contains(e.Phone))
+                .Select(e => new
+                {
+                    Phone = e.Phone,
+                    AddPrice = e.Price,
+                    RecordDate = e.RecordDate
+                }).ToList();
+            var dataList = (from send in sendInfoList
+                            join cart in cartInfoList
+                            on send.Phone equals cart.Phone
+                            select new
+                            {
+                                Id = send.Id,
+                                LiveAnchorBaseId = send.LiveAnchorBaseId,
+                                AddPrice = cart.AddPrice,
+                                IntervalDays = (send.SendDate - cart.RecordDate).Days
+                            }).ToList();
+            dataList.RemoveAll(e => e.IntervalDays < 0);
+            //转化周期数据
+            var res1 = dataList.GroupBy(e => e.LiveAnchorBaseId).Select(e =>
+            {
+                var endIndex = DecimalExtension.CalTakeCount(e.Count());
+                var resData = e.OrderBy(e => e.IntervalDays).Skip(0).Take(endIndex);
+                return new KeyValuePair<string, int>(
+                nameList.Where(a => a.Id == e.Key).FirstOrDefault()?.LiveAnchorName ?? "其它",
+                resData.Count() == 0 ? 0 : resData.Sum(e => e.IntervalDays) / (resData.Count())
+             );
+            }).OrderBy(e => e.Value).ToList();
+            //当前主播转化周期
+            var currentLiveAnchorListCount = dataList.Where(e => e.LiveAnchorBaseId == query.LiveAnchorBaseId).Count();
+            var currentLiveAnchorList = dataList.Where(e => e.LiveAnchorBaseId == query.LiveAnchorBaseId).OrderBy(e => e.IntervalDays).Skip(0).Take((int)(currentLiveAnchorListCount * 0.8));
+
+            var currentLiveAnchorListCountAllData = dataList.Count();
+            var currentLiveAnchorListAllData = dataList.OrderBy(e => e.IntervalDays).Skip(0).Take((int)(currentLiveAnchorListCountAllData * 0.8));
+
+            int currentEffectiveDays = 0;
+            int currentEffectiveCount = 0;
+            int currentPotionelDays = 0;
+            int currentPotionelCount = 0;
+
+            if (!string.IsNullOrEmpty(query.LiveAnchorBaseId))
+            {
+                currentEffectiveDays = currentLiveAnchorList.Where(e => e.AddPrice > 0).Sum(e => e.IntervalDays);
+                currentEffectiveCount = currentLiveAnchorList.Where(e => e.AddPrice > 0).Count();
+                currentPotionelDays = currentLiveAnchorList.Where(e => e.AddPrice == 0).Sum(e => e.IntervalDays);
+                currentPotionelCount = currentLiveAnchorList.Where(e => e.AddPrice == 0).Count();
+            }
+            else
+            {
+                currentEffectiveDays = currentLiveAnchorListAllData.Where(e => e.AddPrice > 0).Sum(e => e.IntervalDays);
+                currentEffectiveCount = currentLiveAnchorListAllData.Where(e => e.AddPrice > 0).Count();
+                currentPotionelDays = currentLiveAnchorListAllData.Where(e => e.AddPrice == 0).Sum(e => e.IntervalDays);
+                currentPotionelCount = currentLiveAnchorListAllData.Where(e => e.AddPrice == 0).Count();
+            }
+            data.TotalSendCycle = DecimalExtension.CalAvg(currentEffectiveDays + currentPotionelDays, currentEffectiveCount + currentPotionelCount);
+            data.EffectiveSendCycle = DecimalExtension.CalAvg(currentEffectiveDays, currentEffectiveCount);
+            data.PotionelSendCycle = DecimalExtension.CalAvg(currentPotionelDays, currentPotionelCount);
+            data.SendCycleData = res1;
+
+            #endregion
+
+            #region 分诊上门
+
+            var dealInfoList = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor).Where(e => e.CreateDate >= seqDate.StartDate && e.CreateDate < seqDate.EndDate && e.IsOldCustomer == false && e.IsToHospital == true && e.ToHospitalDate.HasValue)
+                    .Where(x => liveanchorIds.Count() == 0 || liveanchorIds.Contains(x.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId))
+                    .Select(e => new
+                    {
+                        LiveanchorBaseId = e.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId,
+                        Phone = e.ContentPlatFormOrder.Phone,
+                        ToHospitalDate = e.ToHospitalDate
+                    }).ToListAsync();
+            var dealPhoneList = dealInfoList.Select(e => e.Phone).Distinct().ToList();
+            var cartInfoList2 = _dalShoppingCartRegistration.GetAll().Where(e => e.IsReturnBackPrice == false && dealPhoneList.Contains(e.Phone))
+           .Select(e => new
+           {
+               Phone = e.Phone,
+               AddPrice = e.Price,
+               RecordDate = e.RecordDate
+           }).ToList();
+            var dataList2 = (from deal in dealInfoList
+                             join cart in cartInfoList2
+                             on deal.Phone equals cart.Phone
+                             select new
+                             {
+                                 LiveAnchorBaseId = deal.LiveanchorBaseId,
+                                 AddPrice = cart.AddPrice,
+                                 IntervalDays = (deal.ToHospitalDate.Value - cart.RecordDate).Days
+                             }).ToList();
+            dataList2.RemoveAll(e => e.IntervalDays < 0);
+            //转化周期数据
+            var res2 = dataList2.GroupBy(e => e.LiveAnchorBaseId).Select(e =>
+            {
+                var endIndex = DecimalExtension.CalTakeCount(e.Count(), 0.6m);
+                var resData = e.OrderBy(e => e.IntervalDays).Skip(0).Take(endIndex);
+                return new KeyValuePair<string, int>(
+                nameList.Where(a => a.Id == e.Key).FirstOrDefault()?.LiveAnchorName ?? "其它",
+                resData.Count() == 0 ? 0 : resData.Sum(e => e.IntervalDays) / resData.Count());
+            }).OrderBy(e => e.Value).ToList();
+           
+            //当前主播转化周期
+            var currentLiveAnchorListCount2 = dataList2.Where(e => e.LiveAnchorBaseId == query.LiveAnchorBaseId).Count();
+            var currentLiveAnchorList2 = dataList2.Where(e => e.LiveAnchorBaseId == query.LiveAnchorBaseId).OrderBy(e => e.IntervalDays).Skip(0).Take((int)(currentLiveAnchorListCount2 * 0.6));
+
+            var currentLiveAnchorListCount2AllData = dataList2.Count();
+            var currentLiveAnchorList2AllData = dataList2.OrderBy(e => e.IntervalDays).Skip(0).Take((int)(currentLiveAnchorListCount2AllData * 0.6));
+
+            int currentEffectiveDays2 = 0;
+            int currentEffectiveCount2 = 0;
+            int currentPotionelDays2 = 0;
+            int currentPotionelCount2 = 0;
+
+            if (!string.IsNullOrEmpty(query.LiveAnchorBaseId))
+            {
+
+                currentEffectiveDays2 = currentLiveAnchorList2.Where(e => e.AddPrice > 0).Sum(e => e.IntervalDays);
+                currentEffectiveCount2 = currentLiveAnchorList2.Where(e => e.AddPrice > 0).Count();
+                currentPotionelDays2 = currentLiveAnchorList2.Where(e => e.AddPrice == 0).Sum(e => e.IntervalDays);
+                currentPotionelCount2 = currentLiveAnchorList2.Where(e => e.AddPrice == 0).Count();
+            }
+            else
+            {
+                currentEffectiveDays2 = currentLiveAnchorList2AllData.Where(e => e.AddPrice > 0).Sum(e => e.IntervalDays);
+                currentEffectiveCount2 = currentLiveAnchorList2AllData.Where(e => e.AddPrice > 0).Count();
+                currentPotionelDays2 = currentLiveAnchorList2AllData.Where(e => e.AddPrice == 0).Sum(e => e.IntervalDays);
+                currentPotionelCount2 = currentLiveAnchorList2AllData.Where(e => e.AddPrice == 0).Count();
+            }
+            data.TotalToHospitalCycle = DecimalExtension.CalAvg(currentEffectiveDays2 + currentPotionelDays2, currentEffectiveCount2 + currentPotionelCount2);
+            data.EffectiveToHospitalCycle = DecimalExtension.CalAvg(currentEffectiveDays2, currentEffectiveCount2);
+            data.PotionelToHospitalCycle = DecimalExtension.CalAvg(currentPotionelDays2, currentPotionelCount2);
+
+            data.ToHospitalCycleData = res2;
+
+
+            #endregion
+
+            #region 复购率
+
+            var totalDealList = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor).Where(e => e.IsDeal == true && e.Price > 0 && e.ContentPlatFormOrder.DealAmount > 0 && liveanchorIds.Contains(e.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId))
+                .Select(e => new
+                {
+                    Phone = e.ContentPlatFormOrder.Phone,
+                    LiveAnchorBaseId = e.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId,
+                }).ToListAsync();
+
+            var liveAnchorTotalDealList = totalDealList.GroupBy(e => e.LiveAnchorBaseId).Select(e => new
+            {
+                LiveAnchorBaseId = e.Key,
+                TotalDealCount = e.Select(e => e.Phone).Distinct().Count()
+            }).ToList();
+            var currentMonthDeal = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor).Where(e => e.IsToHospital == true && e.IsOldCustomer == true && e.CreateDate >= seqDate.StartDate && e.CreateDate < seqDate.EndDate && liveanchorIds.Contains(e.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId))
+                .Select(e => new
+                {
+                    Phone = e.ContentPlatFormOrder.Phone,
+                    LiveAnchorBaseId = e.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId,
+                }).ToListAsync();
+            var liveAnchorCurrentMonthDeal = currentMonthDeal.GroupBy(e => e.LiveAnchorBaseId).Select(e => new
+            {
+                LiveAnchorBaseId = e.Key,
+                TotalDealCount = e.Select(e => e.Phone).Distinct().Count()
+            }).ToList();
+            var list = liveAnchorCurrentMonthDeal.Select(e => e.LiveAnchorBaseId).ToList();
+            //当月复购率数据
+            var res3 = (from total in liveAnchorTotalDealList
+                        join current in liveAnchorCurrentMonthDeal
+                        on total.LiveAnchorBaseId equals current.LiveAnchorBaseId
+                        into tc
+                        from r in tc.DefaultIfEmpty()
+                        select new KeyValuePair<string, decimal>(
+                            nameList.Where(a => a.Id == total.LiveAnchorBaseId).FirstOrDefault()?.LiveAnchorName ?? "其它",
+                            r != null ? (total.TotalDealCount == 0 ? 0 : DecimalExtension.CalculateTargetComplete(r.TotalDealCount, total.TotalDealCount).Value) : 0)
+                      ).OrderByDescending(e => e.Value).ToList();
+            List<KeyValuePair<string, decimal>> resultData3 = new List<KeyValuePair<string, decimal>>();
+            data.OldCustomerRePurcheData = res3;
+
+            #endregion
+
+            return data;
+        }
+
         #endregion
 
 

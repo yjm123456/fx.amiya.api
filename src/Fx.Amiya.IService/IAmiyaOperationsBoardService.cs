@@ -76,6 +76,12 @@ namespace Fx.Amiya.IService
         /// <param name="query"></param>
         /// <returns></returns>
         Task<AssistantTransformCycleDataDto> GetAssistantTransformCycleDataAsync(QueryAssistantPerformanceDto query);
+        /// <summary>
+        /// 获取运营看板转化周期柱状图
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<AssistantTransformCycleDataDto> GetLiveAnchorTransformCycleDataAsync(QueryLiveAnchorPerformanceDto query);
 
         #endregion
 

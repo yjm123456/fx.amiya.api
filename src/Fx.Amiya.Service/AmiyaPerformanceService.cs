@@ -1633,6 +1633,11 @@ namespace Fx.Amiya.Service
             oldCustomerOperationDataDto.ThirdDealPeople = oldCustomerData.ThirdDealCustomer;
             oldCustomerOperationDataDto.FourthDealCustomer = oldCustomerData.FourthDealCustomer;
             oldCustomerOperationDataDto.FifThOrMoreOrMoreDealCustomer = oldCustomerData.FifThOrMoreOrMoreDealCustomer;
+            oldCustomerOperationDataDto.SecondDealCycle = oldCustomerData.SecondDealCycle;
+            oldCustomerOperationDataDto.ThirdDealCycle = oldCustomerData.ThirdDealCycle;
+            oldCustomerOperationDataDto.FourthDealCycle = oldCustomerData.FourthDealCycle;
+            oldCustomerOperationDataDto.FifthDealCycle = oldCustomerData.FifthDealCycle;
+
 
             //oldCustomerOperationDataDto.SecondTimeBuyRate = CalculateTargetComplete(Convert.ToDecimal(oldCustomerOperationDataDto.SecondDealPeople), Convert.ToDecimal(oldCustomerOperationDataDto.TotalDealPeople)).Value;
             oldCustomerOperationDataDto.SecondTimeBuyRateProportion = oldCustomerOperationDataDto.SecondTimeBuyRate;

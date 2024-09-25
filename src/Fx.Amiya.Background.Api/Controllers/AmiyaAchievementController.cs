@@ -1604,6 +1604,11 @@ namespace Fx.Amiya.Background.Api.Controllers
             oldCustomerOperationDataVo.FifthTimeOrMoreBuyRateProportion = performance.OldCustomerData.FifthTimeOrMoreBuyRateProportion;
             oldCustomerOperationDataVo.BuyRate = performance.OldCustomerData.BuyRate;
 
+            oldCustomerOperationDataVo.SecondDealCycle = performance.OldCustomerData.SecondDealCycle;
+            oldCustomerOperationDataVo.ThirdDealCycle = performance.OldCustomerData.ThirdDealCycle;
+            oldCustomerOperationDataVo.FourthDealCycle = performance.OldCustomerData.FourthDealCycle;
+            oldCustomerOperationDataVo.FifthDealCycle = performance.OldCustomerData.FifthDealCycle;
+
             performanceVo.NewCustomerData = newCustomerOperationDataVo;
             performanceVo.OldCustomerData = oldCustomerOperationDataVo;
             return ResultData<AmiyaOperationDataVo>.Success().AddData("performance", performanceVo);

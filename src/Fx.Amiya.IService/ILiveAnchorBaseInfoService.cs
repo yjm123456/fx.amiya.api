@@ -16,6 +16,12 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<List<LiveAnchorBaseInfoDto>> GetValidAsync(bool? isSelfLiveAnchor);
+        /// <summary>
+        /// 获取全部主播列表
+        /// </summary>
+        /// <param name="isSelfLiveAnchor"></param>
+        /// <returns></returns>
+        Task<List<LiveAnchorBaseInfoDto>> GetAllLiveAnchorAsync(bool? isSelfLiveAnchor);
 
         /// <summary>
         /// 获取主播基础信息列表

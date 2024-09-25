@@ -29,7 +29,7 @@ namespace Fx.Amiya.Service
         public async Task<List<LiveAnchorBaseInfoDto>> GetValidAsync(bool? isSelfLiveAnchor)
         {
             var liveAnchorBaseInfos = from d in dalLiveAnchorBaseInfo.GetAll()
-                                      where (d.Valid == true)&&(!isSelfLiveAnchor.HasValue || d.IsSelfLivevAnchor == isSelfLiveAnchor.Value)
+                                      where (d.Valid == true) && (!isSelfLiveAnchor.HasValue || d.IsSelfLivevAnchor == isSelfLiveAnchor.Value)
                                       select new LiveAnchorBaseInfoDto
                                       {
                                           Id = d.Id,
@@ -41,6 +41,25 @@ namespace Fx.Amiya.Service
             return resultList;
         }
 
+        /// <summary>
+        /// 获取全部主播列表
+        /// </summary>
+        /// <param name="isSelfLiveAnchor">是否为自播达人主播</param>
+        /// <returns></returns>
+        public async Task<List<LiveAnchorBaseInfoDto>> GetAllLiveAnchorAsync(bool? isSelfLiveAnchor)
+        {
+            var liveAnchorBaseInfos = from d in dalLiveAnchorBaseInfo.GetAll()
+                                      where (!isSelfLiveAnchor.HasValue || d.IsSelfLivevAnchor == isSelfLiveAnchor.Value)
+                                      select new LiveAnchorBaseInfoDto
+                                      {
+                                          Id = d.Id,
+                                          LiveAnchorName = d.LiveAnchorName,
+                                          Valid = d.Valid,
+                                          IsSelfLivevAnchor = d.IsSelfLivevAnchor,
+                                      };
+            var resultList = await liveAnchorBaseInfos.ToListAsync();
+            return resultList;
+        }
 
 
         public async Task<FxPageInfo<LiveAnchorBaseInfoDto>> GetListAsync(string name, bool valid, int pageNum, int pageSize)
@@ -176,7 +195,7 @@ namespace Fx.Amiya.Service
                 return new List<LiveAnchorBaseInfoDto>();
             }
             List<LiveAnchorBaseInfoDto> liveAnchorBaseInfoDtos = new List<LiveAnchorBaseInfoDto>();
-            
+
             foreach (var k in x)
             {
                 LiveAnchorBaseInfoDto liveAnchorBaseInfoDto = new LiveAnchorBaseInfoDto();
@@ -209,7 +228,7 @@ namespace Fx.Amiya.Service
             var result = resultCount.FirstOrDefault(e => e.Id != updateDto.Id && e.NickName == updateDto.NickName && e.LiveAnchorName == updateDto.LiveAnchorName);
             if (result != null)
                 throw new Exception("已存在该主播基础信息");
-            var liveAchor = dalLiveAnchorBaseInfo.GetAll().Where(x=>x.Id==updateDto.Id).SingleOrDefault();
+            var liveAchor = dalLiveAnchorBaseInfo.GetAll().Where(x => x.Id == updateDto.Id).SingleOrDefault();
             liveAchor.LiveAnchorName = updateDto.LiveAnchorName;
             liveAchor.ThumbPicture = updateDto.ThumbPicture;
             liveAchor.NickName = updateDto.NickName;
@@ -271,9 +290,10 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<LiveAnchorBaseInfoDto>> GetCooperateLiveAnchorAsync(bool? isValid)
         {
-            return await dalLiveAnchorBaseInfo.GetAll().Where(e=>e.IsSelfLivevAnchor==false&&(!isValid.HasValue||e.Valid==isValid)).Select(e=>new LiveAnchorBaseInfoDto { 
-                LiveAnchorName=e.LiveAnchorName,
-                Id=e.Id
+            return await dalLiveAnchorBaseInfo.GetAll().Where(e => e.IsSelfLivevAnchor == false && (!isValid.HasValue || e.Valid == isValid)).Select(e => new LiveAnchorBaseInfoDto
+            {
+                LiveAnchorName = e.LiveAnchorName,
+                Id = e.Id
             }).ToListAsync();
         }
     }

@@ -4288,36 +4288,63 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
-        /// 获取老客复购数据
+        /// 获取老客复购数据（运营看板使用）
         /// </summary>
         /// <param name="date">时间</param>
         /// <returns></returns>
         public async Task<OldCustomerDealNumDto> GetOldCustomerBuyAgainByMonthAsync(DateTime date, bool? isEffectiveCustomerData, string contentPlatFormId, List<int> liveAnchorIds)
         {
             DateTime startDate = Convert.ToDateTime("2000-01-01");
-            var dealDate = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderDealInfoList)
+            var dealDate =  _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderDealInfoList)
                 .Where(x => x.DealAmount > 0)
               .Where(e => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(e.LiveAnchorId.HasValue ? e.LiveAnchorId.Value : 0))
              .Where(o => string.IsNullOrEmpty(contentPlatFormId) || o.ContentPlateformId == contentPlatFormId)
              .Where(o => (!isEffectiveCustomerData.HasValue || (isEffectiveCustomerData.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0)))
-                .Where(e => e.IsToHospital == true && e.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete && e.DealDate.Value >= startDate && e.DealDate.Value < date).ToListAsync();
+                .Where(e => e.IsToHospital == true && e.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete && e.DealDate.Value >= startDate && e.DealDate.Value < date);
+            var daysCountList = await dealDate.Where(x => x.ContentPlatformOrderDealInfoList.Where(x => x.IsDeal == true && x.Price > 0).Count() >= 2 && x.ContentPlatformOrderDealInfoList.Where(x => x.IsDeal == true && x.Price > 0).Count() <= 5)
+              .SelectMany(e => e.ContentPlatformOrderDealInfoList)
+              .Where(e => e.IsDeal == true && e.Price > 0)
+              .GroupBy(e => e.ContentPlatFormOrder.Id).Select(e => new
+              {
+                  Count = e.Count(),
+                  Days = e.Max(e => e.CreateDate) - e.Min(e => e.CreateDate)
+              }).ToListAsync();
+
+            var top80Data = daysCountList.GroupBy(e => e.Count).Select(e =>
+            {
+                var endIndex = (int)(e.Count() * 0.8);
+                if (endIndex == 0)
+                    endIndex = 1;
+                var tempdata = e.Skip(0).Take(endIndex - 1);
+                var count = tempdata.Count();
+                return new
+                {
+                    Count = e.Key,
+                    Cycle = count == 0 ? 0 : (tempdata.Sum(e => e.Days.Days) / count)
+                };
+            }).ToList();
+
             OldCustomerDealNumDto orderData = new OldCustomerDealNumDto();
             orderData.TotalDealCustomer = dealDate
                 .Select(e => e.Phone)
                 .Distinct()
                 .Count();
 
+            orderData.SecondDealCycle = top80Data.Where(e => e.Count == 2).FirstOrDefault()?.Cycle ?? 0;
             orderData.SecondDealCustomer = dealDate.Where(x => x.ContentPlatformOrderDealInfoList.Where(x => x.IsDeal == true && x.Price > 0).Count() == 2).Select(e => e.Phone)
                 .Distinct()
                 .Count();
 
+            orderData.ThirdDealCycle = top80Data.Where(e => e.Count == 3).FirstOrDefault()?.Cycle ?? 0;
             orderData.ThirdDealCustomer = dealDate.Where(x => x.ContentPlatformOrderDealInfoList.Where(x => x.IsDeal == true && x.Price > 0).Count() == 3).Select(e => e.Phone)
                 .Distinct()
                 .Count();
+            orderData.FourthDealCycle = top80Data.Where(e => e.Count == 4).FirstOrDefault()?.Cycle ?? 0;
             orderData.FourthDealCustomer = dealDate.Where(x => x.ContentPlatformOrderDealInfoList.Where(x => x.IsDeal == true && x.Price > 0).Count() == 4).Select(e => e.Phone)
                 .Distinct()
                 .Count();
 
+            orderData.FifthDealCycle = top80Data.Where(e => e.Count == 5).FirstOrDefault()?.Cycle ?? 0;
             orderData.FifThOrMoreOrMoreDealCustomer = dealDate.Where(x => x.ContentPlatformOrderDealInfoList.Where(x => x.IsDeal == true && x.Price > 0).Count() == 5).Select(e => e.Phone)
                 .Distinct()
                 .Count();
