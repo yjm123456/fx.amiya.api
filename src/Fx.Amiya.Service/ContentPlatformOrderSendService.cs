@@ -787,7 +787,7 @@ namespace Fx.Amiya.Service
                                             LiveAnchorName = d.ContentPlatformOrder.LiveAnchor.HostAccountName,
                                             LiveAnchorWeChatNo = d.ContentPlatformOrder.LiveAnchorWeChatNo,
                                             //IsOldCustomer = d.ContentPlatformOrder.IsOldCustomer == true ? "老客业绩" : "新客业绩",
-                                           //IsAcompanying = d.ContentPlatformOrder.IsAcompanying,
+                                            //IsAcompanying = d.ContentPlatformOrder.IsAcompanying,
                                             //CommissionRatio = d.ContentPlatformOrder.CommissionRatio,
                                             //BelongMonth = d.ContentPlatformOrder.BelongMonth,
                                             //AddOrderPrice = d.ContentPlatformOrder.AddOrderPrice,
@@ -1285,6 +1285,7 @@ namespace Fx.Amiya.Service
             FxPageInfo<SimpleSendOrderInfoDto> pageInfo = new FxPageInfo<SimpleSendOrderInfoDto>();
             var res = _dalContentPlatformOrderSend.GetAll()
                       .Where(e => e.ContentPlatformOrderId == query.ContentPlatformId)
+                      .Where(e => !query.IsMainHospital.HasValue || e.IsMainHospital == query.IsMainHospital)
                       .Include(e => e.ContentPlatformOrder)
                       .Include(e => e.HospitalInfo)
                       .Select(e => new SimpleSendOrderInfoDto
@@ -1300,11 +1301,11 @@ namespace Fx.Amiya.Service
                           IsMainHospital = e.IsMainHospital,
                           SendDate = e.SendDate,
                           SenderName = e.AmiyaEmployee.Name,
-                          IsSpecifyHospitalEmployee=e.IsSpecifyHospitalEmployee,
-                          HospitalEmployeeId=e.HospitalEmployeeId,
+                          IsSpecifyHospitalEmployee = e.IsSpecifyHospitalEmployee,
+                          HospitalEmployeeId = e.HospitalEmployeeId,
                       });
             pageInfo.TotalCount = await res.CountAsync();
-            pageInfo.List = res.OrderByDescending(x=>x.SendDate).Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToList();
+            pageInfo.List = res.OrderByDescending(x => x.SendDate).Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToList();
             foreach (var x in pageInfo.List)
             {
                 if (x.HospitalEmployeeId != 0)

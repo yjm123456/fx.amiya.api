@@ -3,65 +3,39 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Fx.Amiya.BusinessWeChat.Api.Vo.ShoppingCartRegistration
+namespace Fx.Amiya.BusinessWechat.Api.Vo.ShoppingCartRegistration
 {
-    public class ShoppingCartRegistrationVo
+    public class AddShoppingCartRegistrationVo
     {
         /// <summary>
-        /// 编号
-        /// </summary>
-        public string Id { get; set; }
-        /// <summary>
-        /// 登记日期
+        /// 登记时间
         /// </summary>
         public DateTime RecordDate { get; set; }
+        /// <summary>
+        /// 来源渠道id
+        /// </summary>
         public string ContentPlatFormId { get; set; }
         /// <summary>
-        /// 来源渠道
+        /// 主播ID
         /// </summary>
-        public string ContentPlatFormName { get; set; }
         public int LiveAnchorId { get; set; }
-        /// <summary>
-        /// 主播IP
-        /// </summary>
-        public string LiveAnchorName { get; set; }
         /// <summary>
         /// 主播微信号
         /// </summary>
         public string LiveAnchorWechatNo { get; set; }
-
         /// <summary>
-        /// 主播微信号id
-        /// </summary>
-        public string LiveAnchorWeChatId { get; set; }
-        /// <summary>
-        /// 抖音昵称
+        /// 客户抖音昵称
         /// </summary>
         public string CustomerNickName { get; set; }
         /// <summary>
-        /// 手机号
+        /// 客户手机号
         /// </summary>
         public string Phone { get; set; }
-        /// <summary>
-        /// 隐藏手机号
-        /// </summary>
-        public string HiddenPhone { get; set; }
-        /// <summary>
-        /// 加密手机号
-        /// </summary>
-        public string EncryptPhone { get; set; }
+
         /// <summary>
         /// 辅助号码
         /// </summary>
         public string SubPhone { get; set; }
-        /// <summary>
-        /// 隐藏辅助号码
-        /// </summary>
-        public string HiddenSubPhone { get; set; }
-        /// <summary>
-        /// 加密辅助号码
-        /// </summary>
-        public string EncryptSubPhone { get; set; }
         /// <summary>
         /// 下单金额
         /// </summary>
@@ -70,24 +44,11 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ShoppingCartRegistration
         /// 面诊方式
         /// </summary>
         public int ConsultationType { get; set; }
-
-        /// <summary>
-        /// 面诊方式文本
-        /// </summary>
-        public string ConsultationTypeText { get; set; }
-
-        /// <summary>
-        /// 录单触达
-        /// </summary>
-        public bool IsCreateOrder { get; set; }
-        /// <summary>
-        /// 派单触达
-        /// </summary>
-        public bool IsSendOrder { get; set; }
         /// <summary>
         /// 是否加V
         /// </summary>
         public bool IsAddWeChat { get; set; }
+
         /// <summary>
         /// 是否核销
         /// </summary>
@@ -96,6 +57,10 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ShoppingCartRegistration
         /// 是否面诊
         /// </summary>
         public bool IsConsultation { get; set; }
+        /// <summary>
+        /// 是否派单
+        /// </summary>
+        public bool SendOrder { get; set; }
         /// <summary>
         /// 面诊时间
         /// </summary>
@@ -108,26 +73,6 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ShoppingCartRegistration
         /// 备注
         /// </summary>
         public string Remark { get; set; }
-        /// <summary>
-        /// 创建人员id
-        /// </summary>
-        public int CreateByEmpId { get; set; }
-        /// <summary>
-        /// 创建人员
-        /// </summary>
-        public string CreateBy { get; set; }
-        /// <summary>
-        /// 指派接诊人员id
-        /// </summary>
-        public int? AssignEmpId { get; set; }
-        /// <summary>
-        /// 指派接诊人员
-        /// </summary>
-        public string AssignEmpName { get; set; }
-        /// <summary>
-        /// 创建日期
-        /// </summary>
-        public DateTime CreateDate { get; set; }
         /// <summary>
         /// 退款时间
         /// </summary>
@@ -157,66 +102,38 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ShoppingCartRegistration
         /// </summary>
         public string ReContent { get; set; }
         /// <summary>
+        /// 指派人员
+        /// </summary>
+        public int? AssignEmpId { get; set; }
+        /// <summary>
         /// 是否差评
         /// </summary>
         public bool IsBadReview { get; set; }
         /// <summary>
-        /// 重要程度
+        /// 紧急程度
         /// </summary>
         public int EmergencyLevel { get; set; }
         /// <summary>
-        /// 重要程度名称
+        /// 抖音客户来源
         /// </summary>
-        public string EmergencyLevelText { get; set; }
-        /// <summary>
-        /// 抖音新增客户来源
-        /// </summary>
-        public int? Source { get; set; }
-        /// <summary>
-        /// 抖音新增客户来源文本
-        /// </summary>
-        public string SourceText { get; set; }
+        public int Source { get; set; }
         /// <summary>
         /// 带货产品类型
         /// </summary>
         public int ProductType { get; set; }
         /// <summary>
-        /// 带货产品类型文本
-        /// </summary>
-        public string ProductTypeText { get; set; }
-        /// <summary>
-        /// 基础主播信息id
-        /// </summary>
-        public string BaseLiveAnchorId { get; set; }
-        /// <summary>
-        /// 基础主播名称
-        /// </summary>
-        public string BaseLiveAnchorName { get; set; }
-        /// <summary>
         /// 获客方式
         /// </summary>
         public int GetCustomerType { get; set; }
-        /// <summary>
-        /// 获客方式(文本)
-        /// </summary>
-        public string GetCustomerTypeText { get; set; }
+
         /// <summary>
         /// 小黄车登记顾客类型
         /// </summary>
         public int ShoppingCartRegistrationCustomerType { get; set; }
-
-        /// <summary>
-        /// 小黄车登记顾客类型文本
-        /// </summary>
-        public string ShoppingCartRegistrationCustomerTypeText { get; set; }
         /// <summary>
         /// 归属渠道
         /// </summary>
         public int BelongChannel { get; set; }
-        /// <summary>
-        /// 归属渠道名称
-        /// </summary>
-        public string BelongChannelName { get; set; }
         /// <summary>
         /// 线索截图
         /// </summary>
@@ -225,10 +142,6 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ShoppingCartRegistration
         /// 加v截图
         /// </summary>
         public string AddWechatPicture { get; set; }
-        /// <summary>
-        /// 加v人
-        /// </summary>
-        public string AddWechatEmpName { get; set; }
 
         /// <summary>
         /// 是否为日不落直播顾客

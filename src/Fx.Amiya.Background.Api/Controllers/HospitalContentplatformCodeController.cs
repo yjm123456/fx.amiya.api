@@ -42,18 +42,21 @@ namespace Fx.Amiya.Background.Api.Controllers
         private ICustomerBaseInfoService customerBaseInfoService;
         private IAmiyaHospitalDepartmentService amiyaHospitalDepartmentService;
         private IAmiyaGoodsDemandService amiyaGoodsDemandService;
-
+        private ILiveAnchorService liveAnchorService;
+        private ILiveAnchorBaseInfoService liveAnchorBaseInfoService;
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="hospitalContentplatformCodeService"></param>
         /// <param name="contentPlateFormOrderService"></param>
         /// <param name="wxAppConfigService"></param>
-        public HospitalContentplatformCodeController(IHospitalContentplatformCodeService hospitalContentplatformCodeService, IContentPlateFormOrderService contentPlateFormOrderService, IHttpContextAccessor httpContextAccessor, IContentPlatformOrderSendService contentPlatformOrderSendService, IOperationLogService operationLogService, IThirdPartContentplatformInfoService thirdPartContentplatformInfoService, IHospitalEmployeeService hospitalEmployeeService, ICustomerBaseInfoService customerBaseInfoService, IAmiyaHospitalDepartmentService amiyaHospitalDepartmentService, IAmiyaGoodsDemandService amiyaGoodsDemandService)
+        public HospitalContentplatformCodeController(IHospitalContentplatformCodeService hospitalContentplatformCodeService, IContentPlateFormOrderService contentPlateFormOrderService, IHttpContextAccessor httpContextAccessor, IContentPlatformOrderSendService contentPlatformOrderSendService, IOperationLogService operationLogService, IThirdPartContentplatformInfoService thirdPartContentplatformInfoService, IHospitalEmployeeService hospitalEmployeeService, ICustomerBaseInfoService customerBaseInfoService, IAmiyaHospitalDepartmentService amiyaHospitalDepartmentService, ILiveAnchorService liveAnchorService, ILiveAnchorBaseInfoService liveAnchorBaseInfoService, IAmiyaGoodsDemandService amiyaGoodsDemandService)
         {
             this.hospitalContentplatformCodeService = hospitalContentplatformCodeService;
+            this.liveAnchorBaseInfoService = liveAnchorBaseInfoService;
             this.contentPlateFormOrderService = contentPlateFormOrderService;
             this._httpContextAccessor = httpContextAccessor;
+            this.liveAnchorService = liveAnchorService;
             this.operationLogService = operationLogService;
             this.contentPlatformOrderSendService = contentPlatformOrderSendService;
             this.thirdPartContentplatformInfoService = thirdPartContentplatformInfoService;
@@ -267,15 +270,21 @@ namespace Fx.Amiya.Background.Api.Controllers
 
                 queryData.YWLX = query.YWLX;
 
+                var order = await contentPlateFormOrderService.GetByOrderIdAsync(query.OrderId);
+
                 if (query.YWLX == "P")
                 {
                     queryData.PDBH = query.SendOrderId.ToString();
+                    var liveAnchorId = order.LiveAnchorId;
+                    var liveAnchor = await liveAnchorService.GetByIdAsync(liveAnchorId);
+                    queryData.ZBID = liveAnchor.LiveAnchorBaseId;
+                    var liveanchorBaseInfo = await liveAnchorBaseInfoService.GetByIdAsync(queryData.ZBID);
+                    queryData.ZBNM = liveanchorBaseInfo.LiveAnchorName;
                 }
                 else
                 {
                     queryData.PDBH = CreateOrderIdHelper.GetNextNumber();
                 }
-                var order = await contentPlateFormOrderService.GetByOrderIdAsync(query.OrderId);
                 if (query.SendOrderId != 0)
                 {
                     var sendInfo = await contentPlatformOrderSendService.GetByIdAsync(Convert.ToInt32(query.SendOrderId.ToString()));
@@ -333,6 +342,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="updateVo"></param>
         /// <returns></returns>
         [HttpPut("updateOrderStatusByLangZi")]
+        [FxInternalAuthorize]
         public async Task<ResultData<UpdateOrderStatusResultVo>> UpdateOrderStatusByLangZiAsync([FromBody] UpdateOrderStatusVo updateVo)
         {
             OperationAddDto operationLog = new OperationAddDto();

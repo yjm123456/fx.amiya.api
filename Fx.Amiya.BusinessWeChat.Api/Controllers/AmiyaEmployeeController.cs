@@ -20,6 +20,7 @@ using Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo;
 using Fx.Amiya.BusinessWeChat.Api.Vo.Base;
 using Fx.Amiya.BusinessWeChat.Api.Vo.AmiyaEmployee;
 using Fx.Amiya.Dto.AmiyaEmployee;
+using Fx.Amiya.BusinessWeChat.Api.Vo;
 
 namespace Fx.Amiya.BusinessWechat.Api.Controllers
 {
@@ -196,6 +197,25 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             {
                 throw new Exception("修改头像失败,请稍后重试！");
             }
+        }
+
+
+
+        /// <summary>
+        /// 根据主播基础id获取客服姓名列表
+        /// </summary>
+        /// <param name="baseLiveAnchorId">主播基础信息id</param>
+        /// <returns></returns>
+        [HttpGet("customerServiceNameListByBaseLiveAnchorId")]
+        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetCustomerServiceNameListAsync(string baseLiveAnchorId)
+        {
+            var employee = from d in await employeeService.GetCustomerServiceNameListAsync(baseLiveAnchorId)
+                           select new BaseIdAndNameVo<int>
+                           {
+                               Id = d.Id,
+                               Name = d.Name
+                           };
+            return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("employee", employee.ToList());
         }
     }
 }

@@ -43,6 +43,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         private IHospitalCustomerInfoService hospitalCustomerInfoService;
         private IAmiyaHospitalDepartmentService amiyaHospitalDepartmentService;
         private IAmiyaGoodsDemandService amiyaGoodsDemandService;
+        private ILiveAnchorBaseInfoService liveAnchorBaseInfoService;
+        private ILiveAnchorService liveAnchorService;
         /// <summary>
         /// 派单API
         /// </summary>
@@ -53,6 +55,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// <param name="wxAppConfigService"></param>
         public ContentPlateFormSendOrderController(IContentPlatformOrderSendService sendOrderInfoService,
             IContentPlatFormOrderDealInfoService orderDealInfoService,
+            ILiveAnchorService liveAnchorService,
+            ILiveAnchorBaseInfoService liveAnchorBaseInfoService,
             ICustomerBaseInfoService customerBaseInfoService,
             IThirdPartContentplatformInfoService thirdPartContentplatformInfoService,
              IContentPlateFormOrderService contentPlateFormOrderService,
@@ -69,6 +73,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             this.hospitalEmployeeService = hospitalEmployeeService;
             this.orderDealInfoService = orderDealInfoService;
             this.customerBaseInfoService = customerBaseInfoService;
+            this.liveAnchorService = liveAnchorService;
+            this.liveAnchorBaseInfoService = liveAnchorBaseInfoService;
             this.amiyaGoodsDemandService = amiyaGoodsDemandService;
             this.contentPlateFormOrderService = contentPlateFormOrderService;
             _wxAppConfigService = wxAppConfigService;
@@ -335,15 +341,21 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
 
                 queryData.YWLX = query.YWLX;
 
+                var order = await contentPlateFormOrderService.GetByOrderIdAsync(query.OrderId);
+
                 if (query.YWLX == "P")
                 {
                     queryData.PDBH = query.SendOrderId.ToString();
+                    var liveAnchorId = order.LiveAnchorId;
+                    var liveAnchor = await liveAnchorService.GetByIdAsync(liveAnchorId);
+                    queryData.ZBID = liveAnchor.LiveAnchorBaseId;
+                    var liveanchorBaseInfo = await liveAnchorBaseInfoService.GetByIdAsync(queryData.ZBID);
+                    queryData.ZBNM = liveanchorBaseInfo.LiveAnchorName;
                 }
                 else
                 {
                     queryData.PDBH = CreateOrderIdHelper.GetNextNumber();
                 }
-                var order = await contentPlateFormOrderService.GetByOrderIdAsync(query.OrderId);
                 if (query.SendOrderId != 0)
                 {
                     var sendInfo = await contentPlatformOrderSendService.GetByIdAsync(Convert.ToInt32(query.SendOrderId.ToString()));

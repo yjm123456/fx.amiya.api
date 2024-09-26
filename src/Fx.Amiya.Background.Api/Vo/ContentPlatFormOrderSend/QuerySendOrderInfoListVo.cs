@@ -11,5 +11,9 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend
         /// 内容平台订单id
         /// </summary>
         public string ContentPlatformId { get; set; }
+        /// <summary>
+        /// 是否为主派医院
+        /// </summary>
+        public bool? IsMainHospital { get; set; }
     }
 }

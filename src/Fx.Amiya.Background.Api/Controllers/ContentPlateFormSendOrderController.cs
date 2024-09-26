@@ -619,6 +619,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.ContentPlatformId = query.ContentPlatformId;
             queryDto.PageNum = query.PageNum;
             queryDto.PageSize = query.PageSize;
+            queryDto.IsMainHospital = query.IsMainHospital;
             var res = await _sendOrderInfoService.GetSendOrderInfoListByContentplateformIdAsync(queryDto);
             pageInfo.TotalCount = res.TotalCount;
             pageInfo.List = res.List.Select(e => new SimpleSendOrderInfoVo

@@ -33,6 +33,16 @@ namespace Fx.Amiya.Background.Api.Vo.ThirdPartContentplatformInfo.Input
         public string PDBH { get; set; }
 
         /// <summary>
+        /// 主播ID
+        /// </summary>
+        public string ZBID { get; set; }
+
+        /// <summary>
+        /// 主播姓名
+        /// </summary>
+        public string ZBNM { get; set; }
+
+        /// <summary>
         /// 派单医生id
         /// </summary>
         public string PDYSID { get; set; }

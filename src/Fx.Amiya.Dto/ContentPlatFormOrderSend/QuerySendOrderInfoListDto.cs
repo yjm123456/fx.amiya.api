@@ -11,5 +11,6 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 内容平台订单id
         /// </summary>
         public string ContentPlatformId { get; set; }
+        public bool? IsMainHospital { get; set; }
     }
 }

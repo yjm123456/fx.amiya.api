@@ -27,6 +27,16 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ThirdPartContentPlatformInfo
         /// 业务类型（C：号码查重；P：正式派单）
         /// </summary>
         public string YWLX { get; set; }
+
+        /// <summary>
+        /// 主播ID
+        /// </summary>
+        public string ZBID { get; set; }
+
+        /// <summary>
+        /// 主播姓名
+        /// </summary>
+        public string ZBNM { get; set; }
         /// <summary>
         /// 派单编号
         /// </summary>
