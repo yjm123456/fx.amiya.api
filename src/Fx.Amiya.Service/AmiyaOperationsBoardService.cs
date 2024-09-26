@@ -2950,7 +2950,7 @@ namespace Fx.Amiya.Service
             var collaborationPerformance = order.Where(e => e.ConsultationType == (int)ContentPlateFormOrderConsultationType.Collaboration).Sum(x => x.Price);
             var voicePerformance = order.Where(e => e.ConsultationType == (int)ContentPlateFormOrderConsultationType.Voice).Sum(x => x.Price);
             result.ConsulationPerformance = new CustomerTypePerformanceDataDto();
-            result.ConsulationPerformance.TotalCount = order.Sum(x => x.Price);
+            result.ConsulationPerformance.TotalCount =DecimalExtension.ChangePriceToTenThousand(order.Sum(x => x.Price));
             result.ConsulationPerformance.Data = new List<CustomerTypePerformanceDataItemDto>();
             result.ConsulationPerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "其它", Value = DecimalExtension.ChangePriceToTenThousand(otherPerformance), Rate = DecimalExtension.CalculateTargetComplete(otherPerformance, result.ConsulationPerformance.TotalCount).Value });
             result.ConsulationPerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "未面诊", Value = DecimalExtension.ChangePriceToTenThousand(unConsulationPerformance), Rate = DecimalExtension.CalculateTargetComplete(unConsulationPerformance, result.ConsulationPerformance.TotalCount).Value });
@@ -3250,7 +3250,7 @@ namespace Fx.Amiya.Service
             var currentEffectiveCount = currentAssistanList.Where(e => e.AddPrice > 0).Count();
             var currentPotionelDays = currentAssistanList.Where(e => e.AddPrice == 0).Sum(e => e.IntervalDays);
             var currentPotionelCount = currentAssistanList.Where(e => e.AddPrice == 0).Count();
-            data.TotalSendCycle = DecimalExtension.CalAvg(currentEffectiveDays + currentPotionelDays, currentEffectiveCount + currentPotionelCount);
+            data.TotalSendCycle = DecimalExtension.CalAvg(currentAssistanList.Sum(e=>e.IntervalDays), currentAssistanList.Count());
             data.EffectiveSendCycle = DecimalExtension.CalAvg(currentEffectiveDays, currentEffectiveCount);
             data.PotionelSendCycle = DecimalExtension.CalAvg(currentPotionelDays, currentPotionelCount);
             data.SendCycleData = res1;
@@ -3297,13 +3297,13 @@ namespace Fx.Amiya.Service
             res2.RemoveAll(e => e.Key == "其它" || e.Value == 0);
             //当前助理转化周期
             var currentAssistanListCount2 = dataList2.Where(e => e.EmpId == query.AssistantId.Value).Count();
-            var endIndex2 = DecimalExtension.CalTakeCount(currentAssistanListCount2);
+            var endIndex2 = DecimalExtension.CalTakeCount(currentAssistanListCount2,0.6m);
             var currentAssistanList2 = dataList2.Where(e => e.EmpId == query.AssistantId.Value).OrderBy(e => e.IntervalDays).Skip(0).Take(endIndex2);
             var currentEffectiveDays2 = currentAssistanList2.Where(e => e.AddPrice > 0).Sum(e => e.IntervalDays);
             var currentEffectiveCount2 = currentAssistanList2.Where(e => e.AddPrice > 0).Count();
             var currentPotionelDays2 = currentAssistanList2.Where(e => e.AddPrice == 0).Sum(e => e.IntervalDays);
             var currentPotionelCount2 = currentAssistanList2.Where(e => e.AddPrice == 0).Count();
-            data.TotalToHospitalCycle = DecimalExtension.CalAvg(currentEffectiveDays2 + currentPotionelDays2, currentEffectiveCount2 + currentPotionelCount2);
+            data.TotalToHospitalCycle = DecimalExtension.CalAvg(currentAssistanList2.Sum(e=>e.IntervalDays), currentAssistanList2.Count());
             data.EffectiveToHospitalCycle = DecimalExtension.CalAvg(currentEffectiveDays2, currentEffectiveCount2);
             data.PotionelToHospitalCycle = DecimalExtension.CalAvg(currentPotionelDays2, currentPotionelCount2);
             data.ToHospitalCycleData = res2;
