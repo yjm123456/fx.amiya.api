@@ -81,6 +81,7 @@ namespace Fx.Amiya.Service
                                                    ConsulationCardAddWechatPrice = d.ConsulationCardAddWechatPrice,
                                                    CooperationLiveAnchorToHospitalPrice = d.CooperationLiveAnchorToHospitalPrice,
                                                    CooperationLiveAnchorSendOrderPrice = d.CooperationLiveAnchorSendOrderPrice,
+                                                   SpecialHospitalVisitPrice=d.SpecialHospitalVisitPrice
                                                };
             FxPageInfo<CustomerServiceCompensationDto> customerServiceCompensationPageInfo = new FxPageInfo<CustomerServiceCompensationDto>();
             customerServiceCompensationPageInfo.TotalCount = await customerServiceCompensations.CountAsync();
@@ -130,6 +131,9 @@ namespace Fx.Amiya.Service
                 customerServiceCompensation.ConsulationCardAddWechatPrice = addDto.ConsulationCardAddWechatPrice;
                 customerServiceCompensation.CooperationLiveAnchorToHospitalPrice = addDto.CooperationLiveAnchorToHospitalPrice;
                 customerServiceCompensation.CooperationLiveAnchorSendOrderPrice = addDto.CooperationLiveAnchorSendOrderPrice;
+
+                customerServiceCompensation.SpecialHospitalVisitPrice = addDto.SpecialHospitalVisitPrice;
+
                 await dalCustomerServiceCompensation.AddAsync(customerServiceCompensation, true);
 
                 //对账单审核记录加入id
@@ -190,7 +194,7 @@ namespace Fx.Amiya.Service
             returnResult.ConsulationCardAddWechatPrice = result.ConsulationCardAddWechatPrice;
             returnResult.CooperationLiveAnchorToHospitalPrice = result.CooperationLiveAnchorToHospitalPrice;
             returnResult.CooperationLiveAnchorSendOrderPrice = result.CooperationLiveAnchorSendOrderPrice;
-
+            returnResult.SpecialHospitalVisitPrice = result.SpecialHospitalVisitPrice;
             return returnResult;
         }
 
@@ -234,6 +238,7 @@ namespace Fx.Amiya.Service
             result.ConsulationCardAddWechatPrice = updateDto.ConsulationCardAddWechatPrice;
             result.CooperationLiveAnchorToHospitalPrice = updateDto.CooperationLiveAnchorToHospitalPrice;
             result.CooperationLiveAnchorSendOrderPrice = updateDto.CooperationLiveAnchorSendOrderPrice;
+            result.SpecialHospitalVisitPrice = updateDto.SpecialHospitalVisitPrice;
             await dalCustomerServiceCompensation.UpdateAsync(result, true);
         }
 

@@ -126,6 +126,10 @@ namespace Fx.Amiya.DbModels.Model
 
         #endregion
         /// <summary>
+        /// 特定医院上门奖励金额
+        /// </summary>
+        public decimal SpecialHospitalVisitPrice { get; set; }
+        /// <summary>
         /// 其他扣款
         /// </summary>
         public decimal OtherChargebacks { get; set; }

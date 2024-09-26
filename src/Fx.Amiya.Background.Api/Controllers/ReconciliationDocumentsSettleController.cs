@@ -1,7 +1,10 @@
 ﻿
 using Fx.Amiya.Background.Api.Vo;
+using Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Input;
+using Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result;
 using Fx.Amiya.Background.Api.Vo.ReconciliationDocuments;
 using Fx.Amiya.Background.Api.Vo.ReconciliationDocuments.Input;
+using Fx.Amiya.Dto.AmiyaOperationsBoardService.Input;
 using Fx.Amiya.Dto.OperationLog;
 using Fx.Amiya.Dto.ReconciliationDocuments;
 using Fx.Amiya.IService;
@@ -494,6 +497,27 @@ namespace Fx.Amiya.Background.Api.Controllers
             res.OldTakeNewCustomerNum = data.OldTakeNewCustomerNum;
             return ResultData<NewCustomerToHospiatlAndTargetCompleteVo>.Success().AddData("data", res);
         }
+
+        /// <summary>
+        /// 获取到院人数
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [FxInternalAuthorize]
+        [HttpGet("getToHospitalCount")]
+        public async Task<ResultData<ToHospitalVo>> GetToHospiatlByAssistantAndHospitalIdListAsync([FromQuery] QueryToHospiatlByAssistantAndHospitalIdListVo query)
+        {
+            QueryToHospiatlByAssistantAndHospitalIdListDto queryDto = new QueryToHospiatlByAssistantAndHospitalIdListDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            queryDto.HospitalIdList = query.HospitalIdList.Split(',').Select(e => Convert.ToInt32(e)).ToList();
+            var res = await amiyaOperationsBoardService.GetToHospiatlByAssistantAndHospitalIdListAsync(queryDto);
+            ToHospitalVo toHospital = new ToHospitalVo();
+            toHospital.ToHospitalCount = res.ToHospitalCount;
+            return ResultData<ToHospitalVo>.Success().AddData("data", toHospital);
+        }
+
         #region【批量审核薪资数据】
 
         /// <summary>

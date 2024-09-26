@@ -2339,6 +2339,24 @@ namespace Fx.Amiya.Service
             return dataDto;
         }
         /// <summary>
+        /// 根据助理医院获取上门人数
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<ToHospitalDto> GetToHospiatlByAssistantAndHospitalIdListAsync(QueryToHospiatlByAssistantAndHospitalIdListDto query)
+        {
+            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
+            var data =  dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder)
+                .Where(e => e.CreateDate >= selectDate.StartDate && e.CreateDate < selectDate.EndDate)
+                .Where(e => e.ContentPlatFormOrder.IsSupportOrder ? e.ContentPlatFormOrder.SupportEmpId == query.AssistantId : e.ContentPlatFormOrder.BelongEmpId == query.AssistantId)
+                .Where(e => query.HospitalIdList.Contains(e.LastDealHospitalId.Value))
+                .Where(e => e.IsToHospital == true && e.IsOldCustomer == false)
+                .Select(e => e.ContentPlatFormOrder.Phone).Distinct();
+            ToHospitalDto dataDto = new ToHospitalDto();
+            dataDto.ToHospitalCount =await data.CountAsync();
+            return dataDto;
+        }
+        /// <summary>
         /// 助理业绩目标达成情况
         /// </summary>
         /// <param name="query"></param>
@@ -3223,7 +3241,7 @@ namespace Fx.Amiya.Service
                 DecimalExtension.CalAvg(resData.Sum(e => e.IntervalDays), resData.Count())
              );
             }).OrderBy(e => e.Value).ToList();
-
+            res1.RemoveAll(e => e.Key == "其它" || e.Value == 0);
             //当前助理转化周期
             var currentAssistanListCount = dataList.Where(e => e.EmpId == query.AssistantId.Value).Count();
             var endIndex = DecimalExtension.CalTakeCount(currentAssistanListCount);
@@ -3276,7 +3294,7 @@ namespace Fx.Amiya.Service
                 assistantList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其它",
                 DecimalExtension.CalAvg(resData.Sum(e => e.IntervalDays), resData.Count()));
             }).OrderBy(e => e.Value).ToList();
-
+            res2.RemoveAll(e => e.Key == "其它" || e.Value == 0);
             //当前助理转化周期
             var currentAssistanListCount2 = dataList2.Where(e => e.EmpId == query.AssistantId.Value).Count();
             var endIndex2 = DecimalExtension.CalTakeCount(currentAssistanListCount2);
@@ -3328,7 +3346,7 @@ namespace Fx.Amiya.Service
                             assistantList.Where(a => a.Id == total.EmpId).FirstOrDefault()?.Name ?? "其它",
                             r != null ? (total.TotalDealCount == 0 ? 0 : DecimalExtension.CalculateTargetComplete(r.TotalDealCount, total.TotalDealCount).Value) : 0)
                       ).OrderByDescending(e => e.Value).ToList();
-
+            res3.RemoveAll(e => e.Key == "其它" || e.Value == 0);
             data.OldCustomerRePurcheData = res3;
 
             #endregion
@@ -3461,7 +3479,7 @@ namespace Fx.Amiya.Service
                 nameList.Where(a => a.Id == e.Key).FirstOrDefault()?.LiveAnchorName ?? "其它",
                 resData.Count() == 0 ? 0 : resData.Sum(e => e.IntervalDays) / resData.Count());
             }).OrderBy(e => e.Value).ToList();
-           
+
             //当前主播转化周期
             var currentLiveAnchorListCount2 = dataList2.Where(e => e.LiveAnchorBaseId == query.LiveAnchorBaseId).Count();
             var currentLiveAnchorList2 = dataList2.Where(e => e.LiveAnchorBaseId == query.LiveAnchorBaseId).OrderBy(e => e.IntervalDays).Skip(0).Take((int)(currentLiveAnchorListCount2 * 0.6));

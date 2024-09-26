@@ -186,6 +186,12 @@ namespace Fx.Amiya.IService
         /// <param name="query"></param>
         /// <returns></returns>
         Task<NewCustomerToHospiatlAndTargetCompleteDto> GetNewCustomerToHospiatlAndTargetCompleteAsync(QueryNewCustomerToHospiatlAndTargetCompleteDto query);
+        /// <summary>
+        /// 根据助理医院获取上门人数
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<ToHospitalDto> GetToHospiatlByAssistantAndHospitalIdListAsync(QueryToHospiatlByAssistantAndHospitalIdListDto query);
         #region 【历史版本】
 
         ///// <summary>

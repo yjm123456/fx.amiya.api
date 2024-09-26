@@ -88,6 +88,10 @@ namespace Fx.Amiya.Dto.CustomerServiceCompensation.Input
         /// 老带新奖励金额
         /// </summary>
         public Decimal OldTakeNewCustomerPrice { get; set; }
+        /// <summary>
+        /// 奖励金额
+        /// </summary>
+        public decimal SpecialHospitalVisitPrice { get; set; }
 
         #region 行政客服
         /// <summary>

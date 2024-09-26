@@ -94,6 +94,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       ConsulationCardAddWechatPrice = d.ConsulationCardAddWechatPrice,
                                                       CooperationLiveAnchorToHospitalPrice = d.CooperationLiveAnchorToHospitalPrice,
                                                       CooperationLiveAnchorSendOrderPrice = d.CooperationLiveAnchorSendOrderPrice,
+                                                      SpecialHospitalVisitPrice=d.SpecialHospitalVisitPrice
                                                   };
 
                 FxPageInfo<CustomerServiceCompensationVo> pageInfo = new FxPageInfo<CustomerServiceCompensationVo>();
@@ -153,6 +154,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.ConsulationCardAddWechatPrice = addVo.ConsulationCardAddWechatPrice;
                 addDto.CooperationLiveAnchorToHospitalPrice = addVo.CooperationLiveAnchorToHospitalPrice;
                 addDto.CooperationLiveAnchorSendOrderPrice = addVo.CooperationLiveAnchorSendOrderPrice;
+                addDto.SpecialHospitalVisitPrice = addVo.SpecialHospitalVisitPrice;
                 await customerServiceCompensationService.AddAsync(addDto);
 
                 return ResultData.Success();
@@ -212,6 +214,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 customerServiceCompensationVo.ConsulationCardAddWechatPrice = customerServiceCompensation.ConsulationCardAddWechatPrice;
                 customerServiceCompensationVo.CooperationLiveAnchorToHospitalPrice = customerServiceCompensation.CooperationLiveAnchorToHospitalPrice;
                 customerServiceCompensationVo.CooperationLiveAnchorSendOrderPrice = customerServiceCompensation.CooperationLiveAnchorSendOrderPrice;
+                customerServiceCompensationVo.SpecialHospitalVisitPrice = customerServiceCompensation.SpecialHospitalVisitPrice;
                 return ResultData<CustomerServiceCompensationVo>.Success().AddData("customerServiceCompensation", customerServiceCompensationVo);
             }
             catch (Exception ex)
@@ -261,6 +264,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.ConsulationCardAddWechatPrice = updateVo.ConsulationCardAddWechatPrice;
                 updateDto.CooperationLiveAnchorToHospitalPrice = updateVo.CooperationLiveAnchorToHospitalPrice;
                 updateDto.CooperationLiveAnchorSendOrderPrice = updateVo.CooperationLiveAnchorSendOrderPrice;
+                updateDto.SpecialHospitalVisitPrice = updateVo.SpecialHospitalVisitPrice;
                 await customerServiceCompensationService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

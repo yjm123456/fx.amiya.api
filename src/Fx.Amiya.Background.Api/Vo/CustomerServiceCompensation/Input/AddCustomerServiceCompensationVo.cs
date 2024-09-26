@@ -125,6 +125,11 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerServiceCompensation.Input
         /// </summary>
         public decimal OtherChargebacks { get; set; }
         /// <summary>
+        /// 奖励金额
+        /// </summary>
+        public decimal SpecialHospitalVisitPrice { get; set; }
+
+        /// <summary>
         /// 对账单审核记录id集合
         /// </summary>
         public List<string> RecommandDocumentSettleIdList { get; set; }

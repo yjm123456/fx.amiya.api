@@ -44,6 +44,8 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.CooperationLiveAnchorSendOrderPrice).HasColumnName("cooperation_live_anchor_send_order_price").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(e => e.CooperationLiveAnchorToHospitalPrice).HasColumnName("cooperation_live_anchor_to_hospital_price").HasColumnType("decimal(12,2)").IsRequired();
 
+            builder.Property(e => e.SpecialHospitalVisitPrice).HasColumnName("special_hospital_visit_price").HasColumnType("decimal(12,2)").IsRequired();
+
             builder.Property(e => e.CreateDate).HasColumnName("create_date").HasColumnType("DATETIME").IsRequired();
             builder.Property(e => e.CreateBy).HasColumnName("create_by").HasColumnType("INT").IsRequired();
             builder.Property(e => e.UpdateDate).HasColumnName("update_date").HasColumnType("DATETIME").IsRequired(false);
