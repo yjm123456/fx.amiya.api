@@ -693,7 +693,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
                 operationLog.OperationBy = employeeId;
-                if (updateVo.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND)
+                if (updateVo.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND || updateVo.ConsumptionType == (int)ConsumptionType.Refund)
                 {
                     if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
                     {
@@ -739,6 +739,17 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 {
                     foreach (var x in updateVo.AddContentPlatFormOrderDealDetailsVoList)
                     {
+                        if (updateVo.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND || updateVo.ConsumptionType == (int)ConsumptionType.Refund)
+                        {
+                            if (employee.DepartmentId == "1" || employee.DepartmentId == "7")
+                            {
+                                x.Price = -x.Price;
+                            }
+                            else
+                            {
+                                throw new Exception("只有管理员与财务方可录入退款订单，请联系对应人员操作！");
+                            }
+                        }
                         AddContentPlatFormOrderDealDetailsDto addContentPlatFormOrderDealDetailsDto = new AddContentPlatFormOrderDealDetailsDto();
                         addContentPlatFormOrderDealDetailsDto.GoodsName = x.GoodsName;
                         addContentPlatFormOrderDealDetailsDto.GoodsSpec = x.GoodsSpec;

@@ -282,7 +282,7 @@ namespace Fx.Amiya.Service
                 {
 
                     var isExistPhone = await this.GetByPhoneAsync(addDto.Phone);
-                    if (!string.IsNullOrEmpty(isExistPhone.Id) && isExistPhone.BaseLiveAnchorId == baseLiveAnchorId.LiveAnchorBaseId)
+                    if (isExistPhone.Count() > 0 && isExistPhone.Where(z => z.BaseLiveAnchorId == baseLiveAnchorId.LiveAnchorBaseId).Count() > 0)
                     {
                         throw new Exception("已存在该客户手机号" + addDto.Phone + "，无法录入，请重新填写！");
                     }
@@ -362,7 +362,7 @@ namespace Fx.Amiya.Service
                     if (addDto.Phone != "00000000000")
                     {
                         var isExistPhone = await this.GetByPhoneAsync(addDto.Phone);
-                        if (!string.IsNullOrEmpty(isExistPhone.Id) && isExistPhone.BaseLiveAnchorId == baseLiveAnchorId.LiveAnchorBaseId)
+                        if (isExistPhone.Count() > 0 && isExistPhone.Where(z => z.BaseLiveAnchorId == baseLiveAnchorId.LiveAnchorBaseId).Count() > 0)
                         {
                             throw new Exception("已存在该客户手机号" + addDto.Phone + "，无法录入，请重新填写！");
                         }
@@ -547,54 +547,59 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<ShoppingCartRegistrationDto> GetByPhoneAsync(string phone)
+        public async Task<List<ShoppingCartRegistrationDto>> GetByPhoneAsync(string phone)
         {
             try
             {
-                var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().FirstOrDefaultAsync(e => e.Phone == phone || e.SubPhone == phone);
-                if (shoppingCartRegistration == null)
+                List<ShoppingCartRegistrationDto> result = new List<ShoppingCartRegistrationDto>();
+                var shoppingCartRegistrationResult = await dalShoppingCartRegistration.GetAll().Where(e => e.Phone == phone || e.SubPhone == phone).OrderByDescending(x => x.CreateDate).ToListAsync();
+                if (shoppingCartRegistrationResult == null)
                 {
-                    return new ShoppingCartRegistrationDto();
+                    return new List<ShoppingCartRegistrationDto>();
                 }
+                foreach (var shoppingCartRegistration in shoppingCartRegistrationResult)
+                {
 
-                ShoppingCartRegistrationDto shoppingCartRegistrationDto = new ShoppingCartRegistrationDto();
-                shoppingCartRegistrationDto.Id = shoppingCartRegistration.Id;
-                shoppingCartRegistrationDto.RecordDate = shoppingCartRegistration.RecordDate;
-                shoppingCartRegistrationDto.ContentPlatFormId = shoppingCartRegistration.ContentPlatFormId;
-                shoppingCartRegistrationDto.LiveAnchorId = shoppingCartRegistration.LiveAnchorId;
-                shoppingCartRegistrationDto.LiveAnchorWechatNo = shoppingCartRegistration.LiveAnchorWechatNo;
-                shoppingCartRegistrationDto.BaseLiveAnchorId = shoppingCartRegistration.BaseLiveAnchorId;
-                shoppingCartRegistrationDto.CustomerNickName = shoppingCartRegistration.CustomerNickName;
-                shoppingCartRegistrationDto.ShoppingCartRegistrationCustomerType = shoppingCartRegistrationDto.ShoppingCartRegistrationCustomerType;
-                shoppingCartRegistrationDto.GetCustomerType = shoppingCartRegistration.GetCustomerType;
-                shoppingCartRegistrationDto.Phone = shoppingCartRegistration.Phone;
-                shoppingCartRegistrationDto.SubPhone = shoppingCartRegistration.SubPhone;
-                shoppingCartRegistrationDto.Price = shoppingCartRegistration.Price;
-                shoppingCartRegistrationDto.IsCreateOrder = shoppingCartRegistration.IsCreateOrder;
-                shoppingCartRegistrationDto.IsSendOrder = shoppingCartRegistration.IsSendOrder;
-                shoppingCartRegistrationDto.IsAddWeChat = shoppingCartRegistration.IsAddWeChat;
-                shoppingCartRegistrationDto.ConsultationType = shoppingCartRegistration.ConsultationType;
-                shoppingCartRegistrationDto.IsWriteOff = shoppingCartRegistration.IsWriteOff;
-                shoppingCartRegistrationDto.IsConsultation = shoppingCartRegistration.IsConsultation;
-                shoppingCartRegistrationDto.ConsultationDate = shoppingCartRegistration.ConsultationDate;
-                shoppingCartRegistrationDto.IsReturnBackPrice = shoppingCartRegistration.IsReturnBackPrice;
-                shoppingCartRegistrationDto.Remark = shoppingCartRegistration.Remark;
-                shoppingCartRegistrationDto.CreateBy = shoppingCartRegistration.CreateBy;
-                shoppingCartRegistrationDto.AssignEmpId = shoppingCartRegistration.AssignEmpId;
-                shoppingCartRegistrationDto.CreateDate = shoppingCartRegistration.CreateDate;
-                shoppingCartRegistrationDto.IsReContent = shoppingCartRegistration.IsReContent;
-                shoppingCartRegistrationDto.ReContent = shoppingCartRegistration.ReContent;
-                shoppingCartRegistrationDto.RefundDate = shoppingCartRegistration.RefundDate;
-                shoppingCartRegistrationDto.RefundReason = shoppingCartRegistration.RefundReason;
-                shoppingCartRegistrationDto.BadReviewDate = shoppingCartRegistration.BadReviewDate;
-                shoppingCartRegistrationDto.BadReviewContent = shoppingCartRegistration.BadReviewContent;
-                shoppingCartRegistrationDto.BadReviewReason = shoppingCartRegistration.BadReviewReason;
-                shoppingCartRegistrationDto.IsBadReview = shoppingCartRegistration.IsBadReview;
-                shoppingCartRegistrationDto.Source = shoppingCartRegistration.Source;
-                shoppingCartRegistrationDto.ProductType = shoppingCartRegistrationDto.ProductType;
-                shoppingCartRegistrationDto.BelongChannel = shoppingCartRegistrationDto.BelongChannel;
-                shoppingCartRegistrationDto.IsRiBuLuoLiving = shoppingCartRegistration.IsRiBuLuoLiving;
-                return shoppingCartRegistrationDto;
+                    ShoppingCartRegistrationDto shoppingCartRegistrationDto = new ShoppingCartRegistrationDto();
+                    shoppingCartRegistrationDto.Id = shoppingCartRegistration.Id;
+                    shoppingCartRegistrationDto.RecordDate = shoppingCartRegistration.RecordDate;
+                    shoppingCartRegistrationDto.ContentPlatFormId = shoppingCartRegistration.ContentPlatFormId;
+                    shoppingCartRegistrationDto.LiveAnchorId = shoppingCartRegistration.LiveAnchorId;
+                    shoppingCartRegistrationDto.LiveAnchorWechatNo = shoppingCartRegistration.LiveAnchorWechatNo;
+                    shoppingCartRegistrationDto.BaseLiveAnchorId = shoppingCartRegistration.BaseLiveAnchorId;
+                    shoppingCartRegistrationDto.CustomerNickName = shoppingCartRegistration.CustomerNickName;
+                    shoppingCartRegistrationDto.ShoppingCartRegistrationCustomerType = shoppingCartRegistrationDto.ShoppingCartRegistrationCustomerType;
+                    shoppingCartRegistrationDto.GetCustomerType = shoppingCartRegistration.GetCustomerType;
+                    shoppingCartRegistrationDto.Phone = shoppingCartRegistration.Phone;
+                    shoppingCartRegistrationDto.SubPhone = shoppingCartRegistration.SubPhone;
+                    shoppingCartRegistrationDto.Price = shoppingCartRegistration.Price;
+                    shoppingCartRegistrationDto.IsCreateOrder = shoppingCartRegistration.IsCreateOrder;
+                    shoppingCartRegistrationDto.IsSendOrder = shoppingCartRegistration.IsSendOrder;
+                    shoppingCartRegistrationDto.IsAddWeChat = shoppingCartRegistration.IsAddWeChat;
+                    shoppingCartRegistrationDto.ConsultationType = shoppingCartRegistration.ConsultationType;
+                    shoppingCartRegistrationDto.IsWriteOff = shoppingCartRegistration.IsWriteOff;
+                    shoppingCartRegistrationDto.IsConsultation = shoppingCartRegistration.IsConsultation;
+                    shoppingCartRegistrationDto.ConsultationDate = shoppingCartRegistration.ConsultationDate;
+                    shoppingCartRegistrationDto.IsReturnBackPrice = shoppingCartRegistration.IsReturnBackPrice;
+                    shoppingCartRegistrationDto.Remark = shoppingCartRegistration.Remark;
+                    shoppingCartRegistrationDto.CreateBy = shoppingCartRegistration.CreateBy;
+                    shoppingCartRegistrationDto.AssignEmpId = shoppingCartRegistration.AssignEmpId;
+                    shoppingCartRegistrationDto.CreateDate = shoppingCartRegistration.CreateDate;
+                    shoppingCartRegistrationDto.IsReContent = shoppingCartRegistration.IsReContent;
+                    shoppingCartRegistrationDto.ReContent = shoppingCartRegistration.ReContent;
+                    shoppingCartRegistrationDto.RefundDate = shoppingCartRegistration.RefundDate;
+                    shoppingCartRegistrationDto.RefundReason = shoppingCartRegistration.RefundReason;
+                    shoppingCartRegistrationDto.BadReviewDate = shoppingCartRegistration.BadReviewDate;
+                    shoppingCartRegistrationDto.BadReviewContent = shoppingCartRegistration.BadReviewContent;
+                    shoppingCartRegistrationDto.BadReviewReason = shoppingCartRegistration.BadReviewReason;
+                    shoppingCartRegistrationDto.IsBadReview = shoppingCartRegistration.IsBadReview;
+                    shoppingCartRegistrationDto.Source = shoppingCartRegistration.Source;
+                    shoppingCartRegistrationDto.ProductType = shoppingCartRegistrationDto.ProductType;
+                    shoppingCartRegistrationDto.BelongChannel = shoppingCartRegistrationDto.BelongChannel;
+                    shoppingCartRegistrationDto.IsRiBuLuoLiving = shoppingCartRegistration.IsRiBuLuoLiving;
+                    result.Add(shoppingCartRegistrationDto);
+                }
+                return result;
             }
             catch (Exception ex)
             {
@@ -704,9 +709,8 @@ namespace Fx.Amiya.Service
                 }
                 if (updateDto.Phone != "00000000000")
                 {
-
                     var isExistPhone = await this.GetByPhoneAsync(updateDto.Phone);
-                    if (!string.IsNullOrEmpty(isExistPhone.Id) && isExistPhone.BaseLiveAnchorId == baseLiveAnchorId.LiveAnchorBaseId && isExistPhone.Id != updateDto.Id)
+                    if (isExistPhone.Count() > 0 && isExistPhone.Where(z => z.BaseLiveAnchorId == baseLiveAnchorId.LiveAnchorBaseId).Count() > 0 && isExistPhone.Where(x => x.Id == updateDto.Id).Count() > 0)
                     {
                         throw new Exception("已存在该客户手机号" + updateDto.Phone + "，无法录入，请重新填写！");
                     }
@@ -2483,7 +2487,7 @@ namespace Fx.Amiya.Service
         {
             var result = from d in dalShoppingCartRegistration.GetAll()
             .Where(o => o.RecordDate >= startDate && o.RecordDate < endDate)
-            .Where(o => o.AssignEmpId != null&& o.IsReturnBackPrice == false)
+            .Where(o => o.AssignEmpId != null && o.IsReturnBackPrice == false)
             .Where(o => assistantIds.Contains(o.CreateBy))
                          select d;
             var x = from d in result

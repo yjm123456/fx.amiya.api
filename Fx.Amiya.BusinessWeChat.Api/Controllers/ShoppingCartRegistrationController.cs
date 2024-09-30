@@ -385,6 +385,22 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("typeList", result);
         }
 
+        /// <summary>
+        /// 获取带货产品类型列表(彩妆、护肤、饰品、其他)---选择“客户来源”为“产品转化”时使用
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("shoppingCartTakeGoodsProductTypeList")]
+        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetShoppingCartTakeGoodsProductTypeListAsync()
+        {
+            var nameList = shoppingCartRegistrationService.GetShoppingCartTakeGoodsProductTypeList();
+            var result = nameList.Select(e => new BaseIdAndNameVo<int>
+            {
+                Id = e.Key,
+                Name = e.Value
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("sourceList", result);
+
+        }
         #endregion
     }
 }

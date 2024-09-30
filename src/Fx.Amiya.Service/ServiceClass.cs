@@ -343,8 +343,8 @@ namespace Fx.Amiya.Service
                 case 3:
                     typeText = "(主播)语音面诊";
                     break;
-                case 4:
-                    typeText = "未面诊";
+                //case 4:
+                //    typeText = "未面诊";
                     break;
                 case 0:
                     typeText = "其他";
@@ -545,7 +545,7 @@ namespace Fx.Amiya.Service
                     emergencyLevelText = "轻微";
                     break;*/
                 case 2:
-                    emergencyLevelText = "二线索";
+                    emergencyLevelText = "二级线索";
                     break;
                 case 3:
                     emergencyLevelText = "一级线索";

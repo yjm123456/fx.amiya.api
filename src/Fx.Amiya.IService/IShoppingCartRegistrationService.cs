@@ -22,7 +22,7 @@ namespace Fx.Amiya.IService
         Task<ShoppingCartRegistrationDto> GetByIdAsync(string id);
         Task<ShoppingCartRegistrationDto> GetByPhoneAsync(string phone, int createBy);
         Task<ShoppingCartRegistrationDto> GetAddOrderPriceByPhoneAndLiveAnchorIdAsync(string phone, int liveAnchorId);
-        Task<ShoppingCartRegistrationDto> GetByPhoneAsync(string phone);
+        Task<List<ShoppingCartRegistrationDto>> GetByPhoneAsync(string phone);
         Task UpdateAsync(UpdateShoppingCartRegistrationDto updateDto);
 
         Task AssignAsync(string id, int assignBy);

@@ -577,7 +577,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
 
         /// <summary>
-        /// 获取带货产品类型列表
+        /// 获取带货产品类型列表(彩妆、护肤、饰品、其他)---选择“客户来源”为“产品转化”时使用
         /// </summary>
         /// <returns></returns>
         [HttpGet("shoppingCartTakeGoodsProductTypeList")]

@@ -469,10 +469,10 @@ namespace Fx.Amiya.IService
         /// 语音面诊=3
         /// </summary>
         Voice = 3,
-        /// <summary>
-        /// 未面诊
-        /// </summary>
-        UnConsulation = 4,
+        ///// <summary>
+        ///// 未面诊
+        ///// </summary>
+        //UnConsulation = 4,
         /// <summary>
         /// 其他=0
         /// </summary>

@@ -237,8 +237,8 @@ namespace Fx.Amiya.Service
             var curTotalCount = curTotalAchievement.Count();
 
             #region 【面诊类型】
-            var unConsulationCount = curTotalAchievement.Where(x => x.ConsulationType == (int)ContentPlateFormOrderConsultationType.UnConsulation).ToList();
-            var curUnConsulation = unConsulationCount.Sum(x => x.Price);
+            //var unConsulationCount = curTotalAchievement.Where(x => x.ConsulationType == (int)ContentPlateFormOrderConsultationType.UnConsulation).ToList();
+            //var curUnConsulation = unConsulationCount.Sum(x => x.Price);
             var videoCount = curTotalAchievement.Where(x => x.ConsulationType == (int)ContentPlateFormOrderConsultationType.Collaboration).ToList();
             var curVideo = videoCount.Sum(x => x.Price);
             var pictureCount = curTotalAchievement.Where(x => x.ConsulationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).ToList();
@@ -251,8 +251,8 @@ namespace Fx.Amiya.Service
             OperationBoardConsulationTypeDto totalPerformanceConsulationTypeData = new OperationBoardConsulationTypeDto();
 
             totalPerformanceConsulationTypeData.TotalPerformanceNumber = DecimalExtension.ChangePriceToTenThousand(curTotalAchievementPrice);
-            totalPerformanceConsulationTypeData.UnConsulationNumber = DecimalExtension.ChangePriceToTenThousand(curUnConsulation);
-            totalPerformanceConsulationTypeData.UnConsulationRate = DecimalExtension.CalculateTargetComplete(curUnConsulation, curTotalAchievementPrice);
+            //totalPerformanceConsulationTypeData.UnConsulationNumber = DecimalExtension.ChangePriceToTenThousand(curUnConsulation);
+            //totalPerformanceConsulationTypeData.UnConsulationRate = DecimalExtension.CalculateTargetComplete(curUnConsulation, curTotalAchievementPrice);
             totalPerformanceConsulationTypeData.VideoConsulationNumber = DecimalExtension.ChangePriceToTenThousand(curVideo);
             totalPerformanceConsulationTypeData.VideoConsulationRate = DecimalExtension.CalculateTargetComplete(curVideo, curTotalAchievementPrice);
             totalPerformanceConsulationTypeData.PictureConsulationNumber = DecimalExtension.ChangePriceToTenThousand(curPicture);
@@ -266,8 +266,8 @@ namespace Fx.Amiya.Service
             //人数
             OperationBoardConsulationTypeDto totalPerformanceConsulationTypeDataNumber = new OperationBoardConsulationTypeDto();
             totalPerformanceConsulationTypeDataNumber.TotalPerformanceNumber = curTotalCount;
-            totalPerformanceConsulationTypeDataNumber.UnConsulationNumber = unConsulationCount.Count();
-            totalPerformanceConsulationTypeDataNumber.UnConsulationRate = DecimalExtension.CalculateTargetComplete(unConsulationCount.Count(), curTotalCount);
+            //totalPerformanceConsulationTypeDataNumber.UnConsulationNumber = unConsulationCount.Count();
+            //totalPerformanceConsulationTypeDataNumber.UnConsulationRate = DecimalExtension.CalculateTargetComplete(unConsulationCount.Count(), curTotalCount);
             totalPerformanceConsulationTypeDataNumber.VideoConsulationNumber = videoCount.Count();
             totalPerformanceConsulationTypeDataNumber.VideoConsulationRate = DecimalExtension.CalculateTargetComplete(videoCount.Count(), curTotalCount);
             totalPerformanceConsulationTypeDataNumber.PictureConsulationNumber = pictureCount.Count();
@@ -2930,7 +2930,7 @@ namespace Fx.Amiya.Service
 
             //派单
             var otherCount = totalSendPhoneList.Where(e => e.ConsulationType == (int)ContentPlateFormOrderConsultationType.OTHER).Select(e => e.Phone).Distinct().Count();
-            var unConsulationCount = totalSendPhoneList.Where(e => e.ConsulationType == (int)ContentPlateFormOrderConsultationType.UnConsulation).Select(e => e.Phone).Distinct().Count();
+            //var unConsulationCount = totalSendPhoneList.Where(e => e.ConsulationType == (int)ContentPlateFormOrderConsultationType.UnConsulation).Select(e => e.Phone).Distinct().Count();
             var independentFollowUpCount = totalSendPhoneList.Where(e => e.ConsulationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).Select(e => e.Phone).Distinct().Count();
             var collaborationCount = totalSendPhoneList.Where(e => e.ConsulationType == (int)ContentPlateFormOrderConsultationType.Collaboration).Select(e => e.Phone).Distinct().Count();
             var voiceCount = totalSendPhoneList.Where(e => e.ConsulationType == (int)ContentPlateFormOrderConsultationType.Voice).Select(e => e.Phone).Distinct().Count();
@@ -2938,14 +2938,14 @@ namespace Fx.Amiya.Service
             result.Consulation.TotalCount = totalSendPhoneList.Select(e => e.Phone).Distinct().Count();
             result.Consulation.Data = new List<CustomerTypePerformanceDataItemDto>();
             result.Consulation.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "其它", Value = otherCount, Rate = DecimalExtension.CalculateTargetComplete(otherCount, result.Consulation.TotalCount).Value });
-            result.Consulation.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "未面诊", Value = unConsulationCount, Rate = DecimalExtension.CalculateTargetComplete(unConsulationCount, result.Consulation.TotalCount).Value });
+            //result.Consulation.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "未面诊", Value = unConsulationCount, Rate = DecimalExtension.CalculateTargetComplete(unConsulationCount, result.Consulation.TotalCount).Value });
             result.Consulation.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "（助理）照片面诊", Value = independentFollowUpCount, Rate = DecimalExtension.CalculateTargetComplete(independentFollowUpCount, result.Consulation.TotalCount).Value });
             result.Consulation.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "（主播）视频面诊", Value = collaborationCount, Rate = DecimalExtension.CalculateTargetComplete(collaborationCount, result.Consulation.TotalCount).Value });
             result.Consulation.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "（主播）语音面诊", Value = voiceCount, Rate = DecimalExtension.CalculateTargetComplete(voiceCount, result.Consulation.TotalCount).Value });
 
             //业绩
             var otherPerformance = order.Where(e => e.ConsultationType == (int)ContentPlateFormOrderConsultationType.OTHER).Sum(x => x.Price);
-            var unConsulationPerformance = order.Where(e => e.ConsultationType == (int)ContentPlateFormOrderConsultationType.UnConsulation).Sum(x => x.Price);
+            //var unConsulationPerformance = order.Where(e => e.ConsultationType == (int)ContentPlateFormOrderConsultationType.UnConsulation).Sum(x => x.Price);
             var independentFollowUpPerformance = order.Where(e => e.ConsultationType == (int)ContentPlateFormOrderConsultationType.IndependentFollowUp).Sum(x => x.Price);
             var collaborationPerformance = order.Where(e => e.ConsultationType == (int)ContentPlateFormOrderConsultationType.Collaboration).Sum(x => x.Price);
             var voicePerformance = order.Where(e => e.ConsultationType == (int)ContentPlateFormOrderConsultationType.Voice).Sum(x => x.Price);
@@ -2953,7 +2953,7 @@ namespace Fx.Amiya.Service
             result.ConsulationPerformance.TotalCount =DecimalExtension.ChangePriceToTenThousand(order.Sum(x => x.Price));
             result.ConsulationPerformance.Data = new List<CustomerTypePerformanceDataItemDto>();
             result.ConsulationPerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "其它", Value = DecimalExtension.ChangePriceToTenThousand(otherPerformance), Rate = DecimalExtension.CalculateTargetComplete(otherPerformance, result.ConsulationPerformance.TotalCount).Value });
-            result.ConsulationPerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "未面诊", Value = DecimalExtension.ChangePriceToTenThousand(unConsulationPerformance), Rate = DecimalExtension.CalculateTargetComplete(unConsulationPerformance, result.ConsulationPerformance.TotalCount).Value });
+            //result.ConsulationPerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "未面诊", Value = DecimalExtension.ChangePriceToTenThousand(unConsulationPerformance), Rate = DecimalExtension.CalculateTargetComplete(unConsulationPerformance, result.ConsulationPerformance.TotalCount).Value });
             result.ConsulationPerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "（助理）照片面诊", Value = DecimalExtension.ChangePriceToTenThousand(independentFollowUpPerformance), Rate = DecimalExtension.CalculateTargetComplete(independentFollowUpPerformance, result.ConsulationPerformance.TotalCount).Value });
             result.ConsulationPerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "（主播）视频面诊", Value = DecimalExtension.ChangePriceToTenThousand(collaborationPerformance), Rate = DecimalExtension.CalculateTargetComplete(collaborationPerformance, result.ConsulationPerformance.TotalCount).Value });
             result.ConsulationPerformance.Data.Add(new CustomerTypePerformanceDataItemDto { Key = "（主播）语音面诊", Value = DecimalExtension.ChangePriceToTenThousand(voicePerformance), Rate = DecimalExtension.CalculateTargetComplete(voicePerformance, result.ConsulationPerformance.TotalCount).Value });

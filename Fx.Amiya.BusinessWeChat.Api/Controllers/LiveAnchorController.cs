@@ -18,6 +18,7 @@ using Fx.Amiya.Core.Interfaces.Integration;
 using Fx.Authorization.Attributes;
 using Fx.Amiya.BusinessWeChat.Api.Vo.CustomerInfo;
 using Fx.Amiya.BusinessWeChat.Api.Vo.Base;
+using Fx.Amiya.BusinessWeChat.Api.Vo.LiveAnchor;
 
 namespace Fx.Amiya.BusinessWechat.Api.Controllers
 {
@@ -76,6 +77,30 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                                   Name = d.Name
                               };
             return ResultData<List<BaseKeyAndValueVo>>.Success().AddData("liveAnchors", liveAnchors.ToList());
+        }
+
+        /// <summary>
+        ///  根据内容平台获取有效的主播账号列表
+        /// </summary>
+        /// <param name="contentPlatFormId">内容平台id</param>
+        /// <returns></returns>
+        [HttpGet("validList")]
+        public async Task<ResultData<List<LiveAnchorVo>>> GetValidListAsync(string contentPlatFormId)
+        {
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeId = Convert.ToInt32(employee.Id);
+            var liveAnchors = from d in await liveAnchorService.GetValidListByContentPlatFormIdAsync(contentPlatFormId, employeeId)
+                              select new LiveAnchorVo
+                              {
+                                  Id = d.Id,
+                                  Name = d.Name,
+                                  HostAccountName = d.HostAccountName,
+                                  ContentPlateFormId = d.ContentPlateFormId,
+                                  ContentPlateFormName = d.ContentPlateFormName,
+                                  LiveAnchorBaseId = d.LiveAnchorBaseId,
+                                  Valid = d.Valid
+                              };
+            return ResultData<List<LiveAnchorVo>>.Success().AddData("liveAnchors", liveAnchors.ToList());
         }
     }
 }

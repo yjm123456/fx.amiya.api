@@ -1434,7 +1434,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.IsNeedHospitalHelp = updateVo.IsNeedHospitalHelp;
                 updateDto.SendOrderId = updateVo.SendOrderId;
                 List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
-                if (updateDto.IsFinish == true)
+                if (updateDto.IsFinish == true && updateVo.AddContentPlatFormOrderDealDetailsVoList != null)
                 {
                     foreach (var x in updateVo.AddContentPlatFormOrderDealDetailsVoList)
                     {
