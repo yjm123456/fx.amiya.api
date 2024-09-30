@@ -343,6 +343,11 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<FxPageInfo<SendContentPlatformOrderDto>> GetOnlyMainHospitalOrderAsync(QueryOnlyMainHospitalOrderByPageDto queryDto);
+        /// <summary>
+        /// 批量改派
+        /// </summary>
+        /// <returns></returns>
+        Task BatchEditSendInfoAsync(BatchEditSendInfoDto batchEditSendInfo);
         #region 财务看板
 
         Task<List<CustomerServiceDetailsPerformanceDto>> GetCustomerServiceBelongBoardDataByCustomerServiceIdAsync(DateTime? startDate, DateTime? endDate, List<int> belongCustomerServiceIds);

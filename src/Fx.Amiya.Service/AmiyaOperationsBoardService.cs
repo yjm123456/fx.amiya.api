@@ -2330,11 +2330,12 @@ namespace Fx.Amiya.Service
                     IsDeal = e.IsDeal,
                     DealPrice = e.Price,
                     Phone = e.ContentPlatFormOrder.Phone,
-                    CustomerSource = e.ContentPlatFormOrder.CustomerSource
+                    CustomerSource = e.ContentPlatFormOrder.CustomerSource,
+                    ConsumptionType = e.ConsumptionType,
                 }).ToListAsync();
             NewCustomerToHospiatlAndTargetCompleteDto dataDto = new NewCustomerToHospiatlAndTargetCompleteDto();
-            dataDto.NewCustomerToHospitalCount = data.Where(e => e.IsOldCustomer == false && e.IsToHospital == true).Select(e => e.Phone).Distinct().Count();
-            dataDto.OldTakeNewCustomerNum = data.Where(x => x.IsDeal == true && x.IsOldCustomer == false && x.CustomerSource == (int)TiktokCustomerSource.OldTakeNewCustomer).Count();
+            dataDto.NewCustomerToHospitalCount = data.Where(e=>e.ConsumptionType!= (int)ConsumptionType.Refund).Where(e => e.IsOldCustomer == false && e.IsToHospital == true).Select(e => e.Phone).Distinct().Count();
+            dataDto.OldTakeNewCustomerNum = data.Where(e =>  e.ConsumptionType != (int)ConsumptionType.Refund).Where(x => x.IsDeal == true && x.IsOldCustomer == false && x.CustomerSource == (int)TiktokCustomerSource.OldTakeNewCustomer).Select(e => e.Phone).Distinct().Count();
             dataDto.TargetComplete = DecimalExtension.CalculateTargetComplete(data.Where(e => e.IsDeal == true).Sum(e => e.DealPrice), totalTarget).Value;
             return dataDto;
         }
@@ -2347,6 +2348,7 @@ namespace Fx.Amiya.Service
         {
             var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
             var data =  dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder)
+                .Where(e => e.ConsumptionType != (int)ConsumptionType.Refund)
                 .Where(e => e.CreateDate >= selectDate.StartDate && e.CreateDate < selectDate.EndDate)
                 .Where(e => e.ContentPlatFormOrder.IsSupportOrder ? e.ContentPlatFormOrder.SupportEmpId == query.AssistantId : e.ContentPlatFormOrder.BelongEmpId == query.AssistantId)
                 .Where(e => query.HospitalIdList.Contains(e.LastDealHospitalId.Value))
@@ -3494,7 +3496,6 @@ namespace Fx.Amiya.Service
 
             if (!string.IsNullOrEmpty(query.LiveAnchorBaseId))
             {
-
                 currentEffectiveDays2 = currentLiveAnchorList2.Where(e => e.AddPrice > 0).Sum(e => e.IntervalDays);
                 currentEffectiveCount2 = currentLiveAnchorList2.Where(e => e.AddPrice > 0).Count();
                 currentPotionelDays2 = currentLiveAnchorList2.Where(e => e.AddPrice == 0).Sum(e => e.IntervalDays);

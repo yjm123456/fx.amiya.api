@@ -4295,7 +4295,7 @@ namespace Fx.Amiya.Service
         public async Task<OldCustomerDealNumDto> GetOldCustomerBuyAgainByMonthAsync(DateTime date, bool? isEffectiveCustomerData, string contentPlatFormId, List<int> liveAnchorIds)
         {
             DateTime startDate = Convert.ToDateTime("2000-01-01");
-            var dealDate =  _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderDealInfoList)
+            var dealDate = _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderDealInfoList)
                 .Where(x => x.DealAmount > 0)
               .Where(e => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(e.LiveAnchorId.HasValue ? e.LiveAnchorId.Value : 0))
              .Where(o => string.IsNullOrEmpty(contentPlatFormId) || o.ContentPlateformId == contentPlatFormId)
@@ -4382,7 +4382,7 @@ namespace Fx.Amiya.Service
                  return new
                  {
                      Count = e.Key,
-                     Cycle= DecimalExtension.CalAvg(tempdata.Sum(e => e.Days.Days),count)
+                     Cycle = DecimalExtension.CalAvg(tempdata.Sum(e => e.Days.Days), count)
                  };
              }).ToList();
 
@@ -4391,7 +4391,7 @@ namespace Fx.Amiya.Service
                 .Select(e => e.Phone)
                 .Distinct()
                 .Count();
-            
+
             orderData.SecondDealCustomer = dealDate.Where(x => x.ContentPlatformOrderDealInfoList.Where(x => x.IsDeal == true && x.Price > 0).Count() == 2).Select(e => e.Phone)
                 .Distinct()
                 .Count();
@@ -5451,6 +5451,14 @@ namespace Fx.Amiya.Service
                          where (d.SendDate >= startrq && d.SendDate < endrq)
                          select d;
             }
+            if (queryDto.HospitalId.HasValue)
+            {
+                orders = orders.Where(e => e.ContentPlatformOrderSendList.Where(e => e.HospitalId == queryDto.HospitalId).Count() > 0);
+            }
+            if (queryDto.OrderStatus.HasValue)
+            {
+                orders = orders.Where(e => e.OrderStatus == queryDto.OrderStatus);
+            }
             //普通客服角色过滤其他订单信息只展示自己录单信息
             if (employee.IsCustomerService && !employee.IsDirector)
             {
@@ -5547,6 +5555,25 @@ namespace Fx.Amiya.Service
             orderData.DealPrice = visitCount.Where(x => x.DealDate >= startDate && x.DealDate < endDate && x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
                 .Sum(x => x.DealAmount);
             return orderData;
+        }
+
+        public async Task BatchEditSendInfoAsync(BatchEditSendInfoDto batchEditSendInfo)
+        {
+            var sendInfo = dalContentPlatformOrderSend.GetAll().Where(e => batchEditSendInfo.SendInfoId.Contains(e.Id)).Select(e => new { Id = e.Id, OrderId = e.ContentPlatformOrderId, OrderStatus = e.OrderStatus }).ToList();
+            foreach (var item in sendInfo)
+            {
+                UpdateContentPlatFormSendOrderInfoDto updateDto = new UpdateContentPlatFormSendOrderInfoDto();
+                updateDto.AppointmentDate = null;
+                updateDto.Id = item.Id;
+                updateDto.OrderId = item.OrderId;
+                updateDto.IsUncertainDate = false;
+                updateDto.Remark = string.Empty;
+                updateDto.OtherHospitalId = new();
+                updateDto.SendBy = batchEditSendInfo.EmployeeId;
+                updateDto.IsSpecifyHospitalEmployee = batchEditSendInfo.IsSpecifyHospitalEmployee;
+                updateDto.HospitalEmployeeId = batchEditSendInfo.HospitalEmployeeId;
+                await this.UpdateAsync(updateDto, batchEditSendInfo.EmployeeId);
+            }
         }
     }
 }

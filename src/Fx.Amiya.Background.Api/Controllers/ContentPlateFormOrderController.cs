@@ -1704,6 +1704,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.EndDate = query.EndDate;
             queryDto.employeeId = loginEmployeeId;
             queryDto.KeyWord = query.KeyWord;
+            queryDto.OrderStatus = query.OrderStatus;
+            queryDto.HospitalId = query.HospitalId;
             var res = await _orderService.GetOnlyMainHospitalOrderAsync(queryDto);
             FxPageInfo<SendContentPlatformOrderVo> pageInfo = new FxPageInfo<SendContentPlatformOrderVo>();
             pageInfo.TotalCount = res.TotalCount;
@@ -1739,6 +1741,25 @@ namespace Fx.Amiya.Background.Api.Controllers
             }).ToList();
             return ResultData<FxPageInfo<SendContentPlatformOrderVo>>.Success().AddData("data", pageInfo);
         }
+        /// <summary>
+        /// 未辅派订单批量改派
+        /// </summary>
+        /// <param name="batchEditSend"></param>
+        /// <returns></returns>
+        [HttpPost("batchEditSendInfo")]
+        public async Task<ResultData> BatchEditSendInfoAsync(BatchEditSendInfoVo batchEditSend) {
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeId = Convert.ToInt32(employee.Id);
+            BatchEditSendInfoDto editDto = new BatchEditSendInfoDto();
+            editDto.EmployeeId = employeeId;
+            editDto.HospitalId = batchEditSend.HospitalId;
+            editDto.SendInfoId = batchEditSend.SendInfoId;
+            editDto.IsSpecifyHospitalEmployee = batchEditSend.IsSpecifyHospitalEmployee;
+            editDto.HospitalEmployeeId = batchEditSend.HospitalEmployeeId;
+            await _orderService.BatchEditSendInfoAsync(editDto);
+            return ResultData.Success();
+        } 
+
 
         #region {医院对接同步}
         ///// <summary>
