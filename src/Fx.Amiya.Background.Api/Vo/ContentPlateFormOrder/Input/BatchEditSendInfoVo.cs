@@ -13,9 +13,9 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder.Input
         /// </summary>
         public int HospitalId { get; set; }
         /// <summary>
-        /// 派单id
+        /// 派单id集合
         /// </summary>
-        public List<int> SendInfoId { get; set; }
+        public List<int> SendInfoIdList { get; set; }
         /// <summary>
         /// 是否指定医院账户
         /// </summary>

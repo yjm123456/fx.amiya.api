@@ -2413,6 +2413,23 @@ namespace Fx.Amiya.Service
             return data;
         }
         /// <summary>
+        /// 根据助理获取有效/潜在客资人数
+        /// </summary>
+        /// <returns></returns>
+        public async Task<EffOrPotAssistantDistributeConsulationDataDto> GetEffOrPotDistributeConsulationTypeDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIdList)
+        {
+            EffOrPotAssistantDistributeConsulationDataDto data = new EffOrPotAssistantDistributeConsulationDataDto();
+            var data2 = await dalShoppingCartRegistration.GetAll()
+                .Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && assistantIdList.Contains(e.AssignEmpId.Value))
+                .Select(e => e.Price)
+                .ToListAsync();
+            data.Effective = data2.Where(e => e>0).Count();
+            data.Potential = data2.Where(e => e  ==0).Count();
+            data.TotalCount = data.Effective + data.Potential;
+            return data;
+        }
+
+        /// <summary>
         /// 根据助理获取助理分诊折线图基础数据
         /// </summary>
         /// <param name="startDate"></param>
@@ -2503,6 +2520,8 @@ namespace Fx.Amiya.Service
 
             return await x.ToListAsync();
         }
+
+       
 
         #endregion
     }

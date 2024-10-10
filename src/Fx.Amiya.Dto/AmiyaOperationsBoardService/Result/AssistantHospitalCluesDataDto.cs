@@ -20,6 +20,14 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
         /// 总成交数
         /// </summary>
         public int TotalDealCount => Items.Sum(e => e.DealCount);
+        /// <summary>
+        /// 总上门率
+        /// </summary>
+        public decimal ToHospitalRate { get; set; }
+        /// <summary>
+        /// 总成交率
+        /// </summary>
+        public decimal DealRate { get; set; }
         public List<AssistantCluesDataItemDto> Items { get; set; }
     }
     public class AssistantCluesDataItemDto
@@ -40,5 +48,13 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
         /// 成交数
         /// </summary>
         public int DealCount { get; set; }
+        /// <summary>
+        /// 上门率
+        /// </summary>
+        public decimal ToHospitalRate { get; set; }
+        /// <summary>
+        /// 成交率
+        /// </summary>
+        public decimal DealRate { get; set; }
     }
 }

@@ -1180,12 +1180,16 @@ namespace Fx.Amiya.Background.Api.Controllers
             dataVo.TotalSendOrderCount = res.TotalSendOrderCount;
             dataVo.TotalVisitCount = res.TotalVisitCount;
             dataVo.TotalDealCount = res.TotalDealCount;
+            dataVo.ToHospitalRate = res.ToHospitalRate;
+            dataVo.DealRate = res.DealRate;
             dataVo.Items = res.Items.OrderByDescending(e => e.SendOrderCount).Select(e => new AssistantCluesDataItemVo
             {
                 Name = e.Name,
                 SendOrderCount = e.SendOrderCount,
                 VisitCount = e.VisitCount,
-                DealCount = e.DealCount
+                DealCount = e.DealCount,
+                ToHospitalRate=e.ToHospitalRate,
+                DealRate=e.DealRate
             }).ToList();
             return ResultData<AssistantHospitalCluesDataVo>.Success().AddData("data", dataVo);
         }
@@ -1255,6 +1259,38 @@ namespace Fx.Amiya.Background.Api.Controllers
 
         }
         /// <summary>
+        /// 助理有效/潜在分诊数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("effOrPotDistributeConsulationData")]
+        public async Task<ResultData<AssistantEffOrPotDistributeConsulationVo>> GetEffOrPotDistributeConsulationDataAsync([FromQuery] QueryAssistantPerformanceVo query)
+        {
+            AssistantEffOrPotDistributeConsulationVo data = new AssistantEffOrPotDistributeConsulationVo();
+            QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            var res = await amiyaOperationsBoardService.GetAssistantEffOrPotDistributeConsulationDataAsync(queryDto);
+            data.EffctiveCurrentDayData = res.EffctiveData.CurrentDay;
+            data.EffctiveTotalData = res.EffctiveData.Total;
+            data.EffctiveChainRateData = res.EffctiveData.ChainRate;
+            data.EffctiveYearOnYearData = res.EffctiveData.YearOnYear;
+
+            data.PotentialCurrentDayData = res.PotentialData.CurrentDay;
+            data.PotentialTotalData = res.PotentialData.Total;
+            data.PotentialChainRateData = res.PotentialData.ChainRate;
+            data.PotentialYearOnYearData = res.PotentialData.YearOnYear;
+
+            data.TotalCurrentDayData = res.TotalData.CurrentDay;
+            data.TotalTotalData = res.TotalData.Total;
+            data.TotalChainRateData = res.TotalData.ChainRate;
+            data.TotalYearOnYearData = res.TotalData.YearOnYear;
+
+            return ResultData<AssistantEffOrPotDistributeConsulationVo>.Success().AddData("data", data);
+
+        }
+        /// <summary>
         /// 助理分诊折线图
         /// </summary>
         /// <param name="query"></param>
@@ -1289,6 +1325,28 @@ namespace Fx.Amiya.Background.Api.Controllers
                 Performance = e.Performance
             }).ToList();
             return ResultData<AssistantDistributeConsulationBrokenLineVo>.Success().AddData("data", data);
+        }
+        /// <summary>
+        /// 助理有效/潜在客资折线图
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("assistantEffOrPotBrokenLineData")]
+        public async Task<ResultData<AdminCustomerServiceEffOrPotBrokenLineDataVo>> GetAdminCustomerServiceEffOrPotBrokenLineDataAsync([FromQuery] QueryAssistantPerformanceVo query)
+        {
+            QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            var res = await amiyaOperationsBoardService.GetAssistantEffOrPotBrokenLineDataAsync(queryDto);
+
+            AdminCustomerServiceEffOrPotBrokenLineDataVo data = new AdminCustomerServiceEffOrPotBrokenLineDataVo();
+            data.Effective = res.Effective.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
+            data.Potential = res.Potential.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
+            data.Total = res.Total.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
+
+            return ResultData<AdminCustomerServiceEffOrPotBrokenLineDataVo>.Success().AddData("data", data);
+
         }
         /// <summary>
         /// 周期转化
@@ -1429,6 +1487,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<AdminCustomerServiceCustomerTypeBrokenLineDataVo>.Success().AddData("data", data);
 
         }
+       
 
         /// <summary>
         /// 行政客服漏斗图数据
@@ -1451,6 +1510,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             data.GroupData.SendOrderRateHealthValueThisMonth = res.GroupData.SendOrderRateHealthValueThisMonth;
             data.GroupData.ToHospitalRate = res.GroupData.ToHospitalRate;
             data.GroupData.ToHospitalRateHealthValueThisMonth = res.GroupData.ToHospitalRateHealthValueThisMonth;
+            data.GroupData.SendCycle = res.GroupData.SendCycle;
+            data.GroupData.HospitalCycle = res.GroupData.HospitalCycle;
             data.GroupData.DataList = res.GroupData.DataList.Select(e => new AdminCustomerFilterDetailDataVo
             {
                 Key = e.Key,
@@ -1465,6 +1526,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             data.AddwechatData.SendOrderRateHealthValueThisMonth = res.AddwechatData.SendOrderRateHealthValueThisMonth;
             data.AddwechatData.ToHospitalRate = res.AddwechatData.ToHospitalRate;
             data.AddwechatData.ToHospitalRateHealthValueThisMonth = res.AddwechatData.ToHospitalRateHealthValueThisMonth;
+            data.AddwechatData.SendCycle = res.AddwechatData.SendCycle;
+            data.AddwechatData.HospitalCycle = res.AddwechatData.HospitalCycle;
             data.AddwechatData.DataList = res.AddwechatData.DataList.Select(e => new AdminCustomerFilterDetailDataVo
             {
                 Key = e.Key,

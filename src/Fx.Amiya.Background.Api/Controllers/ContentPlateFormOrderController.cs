@@ -1753,7 +1753,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             BatchEditSendInfoDto editDto = new BatchEditSendInfoDto();
             editDto.EmployeeId = employeeId;
             editDto.HospitalId = batchEditSend.HospitalId;
-            editDto.SendInfoId = batchEditSend.SendInfoId;
+            editDto.SendInfoIdList = batchEditSend.SendInfoIdList;
             editDto.IsSpecifyHospitalEmployee = batchEditSend.IsSpecifyHospitalEmployee;
             editDto.HospitalEmployeeId = batchEditSend.HospitalEmployeeId;
             await _orderService.BatchEditSendInfoAsync(editDto);

@@ -13,4 +13,10 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         public int ThirdType { get; set; }
         public int TotalCount { get; set; }
     }
+    public class EffOrPotAssistantDistributeConsulationDataDto
+    {
+        public int Effective { get; set; }
+        public int Potential { get; set; }
+        public int TotalCount { get; set; }
+    }
 }

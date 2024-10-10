@@ -20,6 +20,14 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
         /// </summary>
         public int TotalDealCount { get; set; }
         /// <summary>
+        /// 总上门率
+        /// </summary>
+        public decimal ToHospitalRate { get; set; }
+        /// <summary>
+        /// 总成交率
+        /// </summary>
+        public decimal DealRate { get; set; }
+        /// <summary>
         /// 折线图数据
         /// </summary>
         public List<AssistantCluesDataItemVo> Items { get; set; }
@@ -42,5 +50,13 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
         /// 成交数
         /// </summary>
         public int DealCount { get; set; }
+        /// <summary>
+        /// 上门率
+        /// </summary>
+        public decimal ToHospitalRate { get; set; }
+        /// <summary>
+        /// 成交率
+        /// </summary>
+        public decimal DealRate { get; set; }
     }
 }

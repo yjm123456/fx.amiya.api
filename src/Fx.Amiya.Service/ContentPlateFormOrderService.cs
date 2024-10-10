@@ -5559,20 +5559,43 @@ namespace Fx.Amiya.Service
 
         public async Task BatchEditSendInfoAsync(BatchEditSendInfoDto batchEditSendInfo)
         {
-            var sendInfo = dalContentPlatformOrderSend.GetAll().Where(e => batchEditSendInfo.SendInfoId.Contains(e.Id)).Select(e => new { Id = e.Id, OrderId = e.ContentPlatformOrderId, OrderStatus = e.OrderStatus }).ToList();
-            foreach (var item in sendInfo)
+            var sendInfo = dalContentPlatformOrderSend.GetAll().Where(e => batchEditSendInfo.SendInfoIdList.Contains(e.Id)).Select(e => new { Id = e.Id, OrderId = e.ContentPlatformOrderId, OrderStatus = e.OrderStatus }).ToList();
+            try
             {
-                UpdateContentPlatFormSendOrderInfoDto updateDto = new UpdateContentPlatFormSendOrderInfoDto();
-                updateDto.AppointmentDate = null;
-                updateDto.Id = item.Id;
-                updateDto.OrderId = item.OrderId;
-                updateDto.IsUncertainDate = false;
-                updateDto.Remark = string.Empty;
-                updateDto.OtherHospitalId = new();
-                updateDto.SendBy = batchEditSendInfo.EmployeeId;
-                updateDto.IsSpecifyHospitalEmployee = batchEditSendInfo.IsSpecifyHospitalEmployee;
-                updateDto.HospitalEmployeeId = batchEditSendInfo.HospitalEmployeeId;
-                await this.UpdateAsync(updateDto, batchEditSendInfo.EmployeeId);
+                unitOfWork.BeginTransaction();
+                foreach (var item in sendInfo)
+                {
+                    UpdateContentPlatFormSendOrderInfoDto updateDto = new UpdateContentPlatFormSendOrderInfoDto();
+                    updateDto.AppointmentDate = null;
+                    updateDto.Id = item.Id;
+                    updateDto.OrderId = item.OrderId;
+                    updateDto.IsUncertainDate = false;
+                    updateDto.Remark = string.Empty;
+                    updateDto.OtherHospitalId = new();
+                    updateDto.SendBy = batchEditSendInfo.EmployeeId;
+                    updateDto.IsSpecifyHospitalEmployee = batchEditSendInfo.IsSpecifyHospitalEmployee;
+                    updateDto.HospitalEmployeeId = batchEditSendInfo.HospitalEmployeeId;
+                    updateDto.OtherHospitalId = new List<int>();
+                    updateDto.HospitalId = batchEditSendInfo.HospitalId;
+                    var sendInfo2 = dalContentPlatformOrderSend.GetAll().Where(e => e.Id == updateDto.Id).SingleOrDefault();
+                    if (sendInfo2 == null)
+                        throw new Exception("派单编号错误");
+                    if (!sendInfo2.IsMainHospital)
+                    {
+                        throw new Exception("该数据为辅派订单，请通过订单号找到主派订单进行改派！");
+                    }
+                    else
+                    {
+                        //主派订单修改
+                        await UpdateMainSendInfoAsync(updateDto, sendInfo2, batchEditSendInfo.EmployeeId);
+                    }
+                }
+                unitOfWork.Commit();
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollBack();
+                throw ex; 
             }
         }
     }

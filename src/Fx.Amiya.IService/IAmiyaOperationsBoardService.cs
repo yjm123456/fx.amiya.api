@@ -65,11 +65,23 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<AssistantDistributeConsulationDto> GetAssistantDistributeConsulationDataAsync(QueryAssistantPerformanceDto query);
         /// <summary>
+        /// 获取助理有效潜在分诊数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<AssistantEffOrPotDistributeConsulationDto> GetAssistantEffOrPotDistributeConsulationDataAsync(QueryAssistantPerformanceDto query);
+        /// <summary>
         /// 获取助理分诊折线图
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
         Task<AssistantDistributeConsulationBrokenLineDto> GetAssistantDistributeConsulationBrokenLineDataAsync(QueryAssistantPerformanceDto query);
+        /// <summary>
+        /// 助理有效/潜在分诊数据折线图
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<AdminCustomerServiceEffOrPotBrokenLineDataDto> GetAssistantEffOrPotBrokenLineDataAsync(QueryAssistantPerformanceDto query);
         /// <summary>
         /// 获取助理转化周期柱状图
         /// </summary>
@@ -90,6 +102,7 @@ namespace Fx.Amiya.IService
         Task<AdminCustomerServiceCustomerTypeDto> GetAdminCustomerServiceCustomerTypeDataAsync(QueryAssistantPerformanceDto query);
         Task<AdminCustomerServiceCustomerTypeDto> GetAdminCustomerServiceCustomerTypeAddWechatDataAsync(QueryAssistantPerformanceDto query);
         Task<AdminCustomerServiceCustomerTypeBrokenLineDataDto> GetAdminCustomerServiceCustomerTypeBrokenLineDataAsync(QueryAssistantPerformanceDto query);
+        
         Task<AdminCustomerFilterDataDto> GetAdminCustomerFilterDataAsync(QueryAssistantPerformanceDto query);
         Task<AdminCustomerAnalysisDataDto> GetAdminCustomerAnalysisDataAsync(QueryAssistantPerformanceDto query);
         Task<AdminCustomerAssistantDisAndAddVDataDto> GetAdminCustomerAssistantDisAndAddVDataAsync(QueryAssistantPerformanceDto query);

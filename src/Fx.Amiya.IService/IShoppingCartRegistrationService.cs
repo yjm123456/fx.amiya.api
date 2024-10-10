@@ -296,6 +296,11 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<AssistantDistributeConsulationTypeDataDto> GetDistributeConsulationTypeDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIdList, bool? isAddWechat = null);
         /// <summary>
+        /// 根据助理获取有效/潜在客资人数
+        /// </summary>
+        /// <returns></returns>
+        Task<EffOrPotAssistantDistributeConsulationDataDto> GetEffOrPotDistributeConsulationTypeDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIdList);
+        /// <summary>
         /// 根据助理获取助理分诊折线图基础数据
         /// </summary>
         /// <param name="startDate"></param>
