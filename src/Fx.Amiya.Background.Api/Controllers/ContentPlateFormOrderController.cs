@@ -1737,7 +1737,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                 ConsultingContent2 = d.ConsultingContent2,
                 BelongEmpName = d.BelongEmpName,
                 SendHospital = d.SendHospital,
-                IsHospitalCheckPhone = d.IsHospitalCheckPhone
+                IsHospitalCheckPhone = d.IsHospitalCheckPhone,
+                IsSpecifyHospitalEmployee=d.IsSpecifyHospitalEmployee,
+                HospitalEmployeeId=d.HospitalEmployeeId,
+                HospitalEmployeeName=d.HospitalEmployeeName,
+                BelongChannelText=d.BelongChannelText
             }).ToList();
             return ResultData<FxPageInfo<SendContentPlatformOrderVo>>.Success().AddData("data", pageInfo);
         }

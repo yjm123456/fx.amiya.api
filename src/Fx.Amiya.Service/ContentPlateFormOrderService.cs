@@ -78,6 +78,7 @@ namespace Fx.Amiya.Service
         private IDalFansMeeting dalFansMeeting;
         private IDalFansMeetingDetails dalFansMeetingDetails;
         private IDalHospitalCheckPhoneRecord _dalHospitalCheckPhoneRecord;
+        private IHospitalEmployeeService hospitalEmployeeService;
         public ContentPlateFormOrderService(
            IDalContentPlatformOrder dalContentPlatformOrder,
            IDalAmiyaEmployee dalAmiyaEmployee,
@@ -104,7 +105,7 @@ namespace Fx.Amiya.Service
             IContentPlatFormOrderDealInfoService contentPlatFormOrderDalService,
              IDalBindCustomerService dalBindCustomerService,
              IDalConfig dalConfig,
-             IWxAppConfigService wxAppConfigService, IDalLiveAnchor dalLiveAnchor, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalAmiyaHospitalDepartment dalAmiyaHospitalDepartment, IDalHospitalInfo dalHospitalInfo, ICustomerAppointmentScheduleService customerAppointmentScheduleService, IDalContentPlatformOrderSend dalContentPlatformOrderSend, ITrackService trackService, IFansMeetingDetailsService fansMeetingDetailsService, IFansMeetingService fansMeetingService, IDalFansMeetingDetails dalFansMeetingDetails, IDalHospitalCheckPhoneRecord dalHospitalCheckPhoneRecord)
+             IWxAppConfigService wxAppConfigService, IDalLiveAnchor dalLiveAnchor, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalAmiyaHospitalDepartment dalAmiyaHospitalDepartment, IDalHospitalInfo dalHospitalInfo, ICustomerAppointmentScheduleService customerAppointmentScheduleService, IDalContentPlatformOrderSend dalContentPlatformOrderSend, ITrackService trackService, IFansMeetingDetailsService fansMeetingDetailsService, IFansMeetingService fansMeetingService, IDalFansMeetingDetails dalFansMeetingDetails, IDalHospitalCheckPhoneRecord dalHospitalCheckPhoneRecord, IHospitalEmployeeService hospitalEmployeeService)
         {
             _dalContentPlatformOrder = dalContentPlatformOrder;
             this.unitOfWork = unitOfWork;
@@ -144,6 +145,7 @@ namespace Fx.Amiya.Service
             this.fansMeetingService = fansMeetingService;
             this.dalFansMeetingDetails = dalFansMeetingDetails;
             _dalHospitalCheckPhoneRecord = dalHospitalCheckPhoneRecord;
+            this.hospitalEmployeeService = hospitalEmployeeService;
         }
 
         /// <summary>
@@ -5501,7 +5503,10 @@ namespace Fx.Amiya.Service
                     OrderSourceText = ServiceClass.GerContentPlatFormOrderSourceText(d.OrderSource.Value),
                     IsRepeatProfundityOrder = d.ContentPlatformOrderSendList.First().IsRepeatProfundityOrder,
                     IsMainHospital = d.ContentPlatformOrderSendList.First().IsMainHospital,
-                    ConsultingContent2 = d.ConsultingContent2
+                    ConsultingContent2 = d.ConsultingContent2,
+                    BelongChannelText=ServiceClass.BelongChannelText(d.BelongChannel),
+                    IsSpecifyHospitalEmployee = d.ContentPlatformOrderSendList.First().IsSpecifyHospitalEmployee,
+                    HospitalEmployeeId= d.ContentPlatformOrderSendList.First().HospitalEmployeeId,
                 })
                 .ToListAsync();
             foreach (var x in pageInfo.List)
@@ -5512,6 +5517,10 @@ namespace Fx.Amiya.Service
                 {
                     var empInfo = await _amiyaEmployeeService.GetByIdAsync(x.BelongEmpId);
                     x.BelongEmpName = empInfo.Name.ToString();
+                }
+                if (x.HospitalEmployeeId!=0) {
+                    var hospitalEmpInfo = await hospitalEmployeeService.GetByIdAsync(x.HospitalEmployeeId);
+                    x.HospitalEmployeeName = hospitalEmpInfo.Name;
                 }
             }
             return pageInfo;
