@@ -710,7 +710,7 @@ namespace Fx.Amiya.Service
                 if (updateDto.Phone != "00000000000")
                 {
                     var isExistPhone = await this.GetByPhoneAsync(updateDto.Phone);
-                    if (isExistPhone.Count() > 0 && isExistPhone.Where(z => z.BaseLiveAnchorId == baseLiveAnchorId.LiveAnchorBaseId).Count() > 0 && isExistPhone.Where(x => x.Id == updateDto.Id).Count() > 0)
+                    if (isExistPhone.Count() > 0 && isExistPhone.Where(z => z.BaseLiveAnchorId == baseLiveAnchorId.LiveAnchorBaseId).Count() > 0 && isExistPhone.Where(x => x.Id != updateDto.Id).Count() > 0)
                     {
                         throw new Exception("已存在该客户手机号" + updateDto.Phone + "，无法录入，请重新填写！");
                     }

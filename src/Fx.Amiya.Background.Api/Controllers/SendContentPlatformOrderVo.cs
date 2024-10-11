@@ -32,6 +32,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         public string LiveAnchorWeChatNo { get; set; }
 
         /// <summary>
+        /// 归属部门
+        /// </summary>
+        public string BelongChannelText { get; set; }
+
+        /// <summary>
         /// 客户姓名
         /// </summary>
         public string CustomerName { get; set; }

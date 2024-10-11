@@ -506,7 +506,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             ConsultingContent2 = d.ConsultingContent2,
                                             IsSpecifyHospitalEmployee = d.IsSpecifyHospitalEmployee,
                                             HospitalEmployeeId = d.HospitalEmployeeId,
-                                            HospitalEmployeeName = d.HospitalEmployeeName
+                                            HospitalEmployeeName = d.HospitalEmployeeName,
+                                            BelongChannelText = d.BelongChannelText
                                         };
             FxPageInfo<SendContentPlatformOrderVo> pageInfo = new FxPageInfo<SendContentPlatformOrderVo>();
             pageInfo.TotalCount = orders.TotalCount;

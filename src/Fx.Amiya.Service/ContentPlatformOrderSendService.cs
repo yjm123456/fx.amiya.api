@@ -786,6 +786,7 @@ namespace Fx.Amiya.Service
                                             ContentPlatFormName = d.ContentPlatformOrder.Contentplatform.ContentPlatformName,
                                             LiveAnchorName = d.ContentPlatformOrder.LiveAnchor.HostAccountName,
                                             LiveAnchorWeChatNo = d.ContentPlatformOrder.LiveAnchorWeChatNo,
+                                            BelongChannelText=ServiceClass.BelongChannelText(d.ContentPlatformOrder.BelongChannel),
                                             //IsOldCustomer = d.ContentPlatformOrder.IsOldCustomer == true ? "老客业绩" : "新客业绩",
                                             //IsAcompanying = d.ContentPlatformOrder.IsAcompanying,
                                             //CommissionRatio = d.ContentPlatformOrder.CommissionRatio,
