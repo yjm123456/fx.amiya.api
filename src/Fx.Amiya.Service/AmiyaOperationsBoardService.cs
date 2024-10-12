@@ -3261,8 +3261,17 @@ namespace Fx.Amiya.Service
             AdminCustomerServiceEffOrPotBrokenLineDataDto data = new AdminCustomerServiceEffOrPotBrokenLineDataDto();
             var selectDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.EndDate.Year, query.EndDate.Month);
             var info = await amiyaEmployeeService.GetByIdAsync(query.AssistantId.Value);
-            var assistantList = await amiyaEmployeeService.GetByLiveAnchorBaseIdNameListAsync(new List<string> { info.LiveAnchorBaseId });
-            var baseData = await _dalShoppingCartRegistration.GetAll().Where(e => e.RecordDate >= selectDate.StartDate && e.RecordDate < selectDate.EndDate && assistantList.Select(e => e.Id).ToList().Contains(e.CreateBy) && e.AssignEmpId != null).Select(e => new BaseKeyValueDto<string, decimal>
+            var assistantIdList = new List<int>();
+            if (query.AssistantId.HasValue)
+            {
+                assistantIdList.Add(query.AssistantId.Value);
+            }
+            else
+            {
+                assistantIdList = (await amiyaEmployeeService.GetAllAssistantAsync()).Select(e => e.Id).ToList();
+            }
+            //var assistantList = await amiyaEmployeeService.GetByLiveAnchorBaseIdNameListAsync(new List<string> { info.LiveAnchorBaseId });
+            var baseData = await _dalShoppingCartRegistration.GetAll().Where(e => e.RecordDate >= selectDate.StartDate && e.RecordDate < selectDate.EndDate && assistantIdList.Contains(e.AssignEmpId.Value) && e.AssignEmpId != null).Select(e => new BaseKeyValueDto<string, decimal>
             {
                 Key = e.RecordDate.Date.Date.Day.ToString(),
                 Value = e.Price,
