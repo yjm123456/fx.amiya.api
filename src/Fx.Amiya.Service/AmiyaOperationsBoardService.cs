@@ -3917,6 +3917,7 @@ namespace Fx.Amiya.Service
             var cartInfoList = _dalShoppingCartRegistration.GetAll().Where(e => e.IsReturnBackPrice == false && sendPhoneList.Contains(e.Phone))
                 .Select(e => new
                 {
+                    CreateBy=e.CreateBy,
                     Phone = e.Phone,
                     RecordDate = e.RecordDate
                 }).ToList();
@@ -3925,6 +3926,7 @@ namespace Fx.Amiya.Service
                             on send.Phone equals cart.Phone
                             select new
                             {
+                                CreateBy = cart.CreateBy,
                                 EmpId = send.EmpId,
                                 IntervalDays = (send.SendDate - cart.RecordDate).Days
                             }).ToList();
@@ -3938,9 +3940,9 @@ namespace Fx.Amiya.Service
             groupDataDto.SendCycle = DecimalExtension.CalAvg(assistanList.Sum(e => e.IntervalDays), assistanList.Count());
 
             //当前助理转化周期
-            var currentAssistanListCount = dataList.Where(e => e.EmpId == query.AssistantId.Value).Count();
+            var currentAssistanListCount = dataList.Where(e => e.CreateBy == query.AssistantId.Value).Count();
             var endIndex2 = DecimalExtension.CalTakeCount(currentAssistanListCount);
-            var currentAssistanList = dataList.Where(e => e.EmpId == query.AssistantId.Value).OrderBy(e => e.IntervalDays).Skip(0).Take(endIndex2);
+            var currentAssistanList = dataList.Where(e => e.CreateBy == query.AssistantId.Value).OrderBy(e => e.IntervalDays).Skip(0).Take(endIndex2);
             addWechatDataDto.SendCycle = DecimalExtension.CalAvg(currentAssistanList.Sum(e => e.IntervalDays), currentAssistanList.Count());
 
             #endregion
@@ -3959,6 +3961,7 @@ namespace Fx.Amiya.Service
             var cartInfoList2 = _dalShoppingCartRegistration.GetAll().Where(e => e.IsReturnBackPrice == false && dealPhoneList.Contains(e.Phone))
            .Select(e => new
            {
+               CreateBy = e.CreateBy,
                Phone = e.Phone,
                RecordDate = e.RecordDate
            }).ToList();
@@ -3967,20 +3970,21 @@ namespace Fx.Amiya.Service
                              on deal.Phone equals cart.Phone
                              select new
                              {
+                                 CreateBy = cart.CreateBy,
                                  EmpId = deal.EmpId,
                                  IntervalDays = (deal.ToHospitalDate.Value - cart.RecordDate).Days
                              }).ToList();
             dataList2.RemoveAll(e => e.IntervalDays < 0);
             //当前组
-            var assistanListCount2 = dataList.Count();
+            var assistanListCount2 = dataList2.Count();
             var endIndex3 = DecimalExtension.CalTakeCount(assistanListCount2);
-            var assistanList2 = dataList2.OrderBy(e => e.IntervalDays).Skip(0).Take(endIndex3);
+            var assistanList2 = dataList2.OrderBy(e => e.IntervalDays).Skip(0).Take(endIndex3).ToList();
             groupDataDto.HospitalCycle = DecimalExtension.CalAvg(assistanList2.Sum(e => e.IntervalDays), assistanList2.Count());
 
             //当前助理转化周期
-            var currentAssistanListCount2 = dataList2.Where(e => e.EmpId == query.AssistantId.Value).Count();
+            var currentAssistanListCount2 = dataList2.Where(e => e.CreateBy == query.AssistantId.Value).Count();
             var endIndex4 = DecimalExtension.CalTakeCount(currentAssistanListCount2, 0.6m);
-            var currentAssistanList2 = dataList2.Where(e => e.EmpId == query.AssistantId.Value).OrderBy(e => e.IntervalDays).Skip(0).Take(endIndex2);
+            var currentAssistanList2 = dataList2.Where(e => e.CreateBy == query.AssistantId.Value).OrderBy(e => e.IntervalDays).Skip(0).Take(endIndex4);
             addWechatDataDto.HospitalCycle = DecimalExtension.CalAvg(currentAssistanList2.Sum(e => e.IntervalDays), currentAssistanList2.Count());
 
 
