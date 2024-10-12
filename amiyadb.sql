@@ -62,3 +62,23 @@ CREATE TABLE `amiyadb`.`tbl_hospital_contentplatform_code` (
 ------------------------------------余建明 2024/8/14 END--------------------------------------
 
 --------------------------------------------------------------------------------------------------------以上部分已更新到线上--------------------------------------
+
+------------------------------------余建明 2024/10/11 BEGIN--------------------------------------
+--助理阶梯薪资基础配置表
+CREATE TABLE `amiyadb`.`tbl_employee_performance_ladder` (
+  `id` VARCHAR(50) NOT NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL,
+  `delete_date` DATETIME NULL,
+  `customer_service_id` INT NULL,
+  `is_personal_config` BIT(1) NOT NULL,
+  `performance_lower_limit` DECIMAL(12,2) NOT NULL,
+  `performance_upper_limit` DECIMAL(12,2) NOT NULL,
+  `base_performance` DECIMAL(12,2) NOT NULL,
+  `year` INT NOT NULL,
+  `month` INT NOT NULL,
+  `remark` VARCHAR(500) NULL
+  `point` DECIMAL(12,2) NOT NULL,
+  PRIMARY KEY (`id`));
+------------------------------------余建明 2024/10/11 END--------------------------------------
