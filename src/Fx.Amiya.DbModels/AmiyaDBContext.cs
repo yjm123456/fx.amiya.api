@@ -38,6 +38,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<LiveAnchorWeChatInfo> LiveAnchorWeChatInfo { get; set; }
         public virtual DbSet<SupplierBrand> SupplierBrand { get; set; }
         public virtual DbSet<SupplierCategory> SupplierCategory { get; set; }
+        public virtual DbSet<EmployeePerformanceLadder> EmployeePerformanceLadder { get; set; }
         public virtual DbSet<SupplierItemDetails> SupplierItemDetails { get; set; }
         public virtual DbSet<AmiyaWareHouseNameManage> AmiyaWareHouseNameManage { get; set; }
         public virtual DbSet<AmiyaWareHouseStorageRacks> AmiyaWareHouseStorageRacks { get; set; }
@@ -243,6 +244,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new AmiyaInWarehouseConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaOutWarehouseConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaWareHouseNameManageConfiguration());
+            modelBuilder.ApplyConfiguration(new EmployeePerformanceLadderConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalNetWorkConsulationOperationDataConfiguration());
             modelBuilder.ApplyConfiguration(new EmployeeBindLiveAnchorConfiguration());
             modelBuilder.ApplyConfiguration(new InventoryListConfiguration());

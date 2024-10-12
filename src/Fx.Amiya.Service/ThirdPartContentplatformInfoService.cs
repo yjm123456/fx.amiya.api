@@ -129,7 +129,7 @@ namespace Fx.Amiya.Service
         {
             var result = await dalThirdPartContentplatformInfo.GetAll().Where(x => x.Id == updateDto.Id && x.Valid == true).FirstOrDefaultAsync();
             if (result == null)
-                throw new Exception("未找到三方平台信息信息");
+                throw new Exception("未找到三方平台信息");
 
             result.ApiUrl = updateDto.ApiUrl;
             result.Sign = updateDto.Sign;
@@ -149,7 +149,7 @@ namespace Fx.Amiya.Service
             {
                 var result = await dalThirdPartContentplatformInfo.GetAll().SingleOrDefaultAsync(e => e.Id == id && e.Valid == true);
                 if (result == null)
-                    throw new Exception("未找到三方平台信息信息");
+                    throw new Exception("未找到三方平台信息");
                 result.Valid = false;
                 result.DeleteDate = DateTime.Now;
                 await dalThirdPartContentplatformInfo.UpdateAsync(result, true);
