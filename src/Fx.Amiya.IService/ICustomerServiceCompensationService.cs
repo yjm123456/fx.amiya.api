@@ -23,5 +23,6 @@ namespace Fx.Amiya.IService
         Task UpdateAsync(UpdateCustomerServiceCompensationDto updateDto);
         Task DeleteAsync(string id);
         Task CopyAsync(string id, int createEmpId);
+        Task<FxPageInfo<DealInfoListDto>> GetDealInfoListAsync(QueryDealInfoDto query);
     }
 }

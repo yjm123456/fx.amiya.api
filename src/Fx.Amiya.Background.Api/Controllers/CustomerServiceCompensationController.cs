@@ -307,6 +307,39 @@ namespace Fx.Amiya.Background.Api.Controllers
                 return ResultData.Fail(ex.Message);
             }
         }
+        /// <summary>
+        /// 助理业绩查询
+        /// </summary>
+        /// <param name="queryVo"></param>
+        /// <returns></returns>
+        [HttpGet("getAssistantDealInfoList")]
+        public async Task<ResultData<FxPageInfo<DealInfoListVo>>> GetAssistantDealInfoListAsync([FromQuery]QueryDealInfoVo queryVo) {
+            FxPageInfo<DealInfoListVo> page = new FxPageInfo<DealInfoListVo>();
+            QueryDealInfoDto queryDto = new QueryDealInfoDto();
+            queryDto.StartDate = queryVo.StartDate;
+            queryDto.EndDate = queryVo.EndDate;
+            queryDto.CreateBy=queryVo.CreateBy;
+            queryDto.BelongEmpId=queryVo.BelongEmpId;
+            var res=await customerServiceCompensationService.GetDealInfoListAsync(queryDto);
+            page.TotalCount= res.TotalCount;
+            page.List=res.List.Select(e=>new DealInfoListVo {
+                DealId=e.DealId,
+                ContentPaltformOrderId = e.ContentPaltformOrderId,
+                DealPrice = e.DealPrice,
+                PerformanceType = e.PerformanceType,
+                PerformanceTypeText = e.PerformanceTypeText,
+                CreateById = e.CreateById,
+                CreateByName = e.CreateByName,
+                CreateDate = e.CreateDate,
+                IsDeal = e.IsDeal,
+                IsSupportOrder = e.IsSupportOrder,
+                BelongEmpId = e.BelongEmpId,
+                BelongEmpName = e.BelongEmpName,
+                SupportEmpId = e.SupportEmpId,
+                SupportEmpName = e.SupportEmpName,
+            }).ToList();
+            return ResultData<FxPageInfo<DealInfoListVo>>.Success().AddData("data", page);
+        }
 
     }
 }
