@@ -641,6 +641,19 @@ namespace Fx.Amiya.Service
             var shoppingCartRegistration = await dalShoppingCartRegistration.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
             if (shoppingCartRegistration == null)
                 throw new Exception("小黄车登记编号错误！");
+            var baseLiveAnchorId = await _liveAnchorService.GetByIdAsync(updateDto.LiveAnchorId);
+            if (!string.IsNullOrEmpty(baseLiveAnchorId.LiveAnchorBaseId))
+            {
+                shoppingCartRegistration.BaseLiveAnchorId = baseLiveAnchorId.LiveAnchorBaseId;
+            }
+            if (updateDto.Phone != "00000000000")
+            {
+                var isExistPhone = await this.GetByPhoneAsync(updateDto.Phone);
+                if (isExistPhone.Count() > 0 && isExistPhone.Where(z => z.BaseLiveAnchorId == baseLiveAnchorId.LiveAnchorBaseId).Where(x => x.Id != updateDto.Id).Count() > 0)
+                {
+                    throw new Exception("已存在该客户手机号" + updateDto.Phone + "，无法录入，请重新填写！");
+                }
+            }
             if (!shoppingCartRegistration.IsAddWeChat)
             {
                 if (updateDto.IsAddWeChat)
@@ -738,19 +751,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.ActiveEmployeeId = updateDto.ActiveEmployeeId;
                 shoppingCartRegistration.CustomerWechatNo = updateDto.CustomerWechatNo;
                 shoppingCartRegistration.FromTitle = updateDto.FromTitle;
-                var baseLiveAnchorId = await _liveAnchorService.GetByIdAsync(updateDto.LiveAnchorId);
-                if (!string.IsNullOrEmpty(baseLiveAnchorId.LiveAnchorBaseId))
-                {
-                    shoppingCartRegistration.BaseLiveAnchorId = baseLiveAnchorId.LiveAnchorBaseId;
-                }
-                if (updateDto.Phone != "00000000000")
-                {
-                    var isExistPhone = await this.GetByPhoneAsync(updateDto.Phone);
-                    if (isExistPhone.Count() > 0 && isExistPhone.Where(z => z.BaseLiveAnchorId == baseLiveAnchorId.LiveAnchorBaseId).Where(x => x.Id != updateDto.Id).Count()> 0 )
-                    {
-                        throw new Exception("已存在该客户手机号" + updateDto.Phone + "，无法录入，请重新填写！");
-                    }
-                }
+                
 
                 await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
             }
