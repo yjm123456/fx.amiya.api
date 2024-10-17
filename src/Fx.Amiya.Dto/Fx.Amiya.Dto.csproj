@@ -5,12 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <Compile Remove="CustomerServiceCheckPerformance\Inputs\**" />
+    <EmbeddedResource Remove="CustomerServiceCheckPerformance\Inputs\**" />
+    <None Remove="CustomerServiceCheckPerformance\Inputs\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CustomerServiceCheckPerformance\Input\" />
-    <Folder Include="CustomerServiceCheckPerformance\Result\" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
 </Project>
