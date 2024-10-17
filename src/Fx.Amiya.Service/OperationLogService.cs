@@ -55,7 +55,7 @@ namespace Fx.Amiya.Service
             string context = configuration.GetConnectionString("MySqlConnectionString");
             MySqlConnection addOrderInfo = new MySqlConnection(context);
             addOrderInfo.Open();
-            string addSql = $"INSERT INTO `tbl_system_operation_log` (`id`, `route_address`, `request_type`, `code`, `parameters`, `message`, `create_date`, `valid`) VALUES('{operationLog.Id}', '{operationLog.RouteAddress}', '{operationLog.RequestType}', '{operationLog.Code}', '{operationLog.Parameters}', '{operationLog.Message}', '{operationLog.CreateDate}', 1);";
+            string addSql = $"INSERT INTO `tbl_system_operation_log` (`id`, `route_address`, `request_type`, `code`, `parameters`, `message`, `create_date`,`operation_by`, `valid`) VALUES('{operationLog.Id}', '{operationLog.RouteAddress}', '{operationLog.RequestType}', '{operationLog.Code}', '{operationLog.Parameters}', '{operationLog.Message}', '{operationLog.CreateDate}',{operationLog.OperationBy} ,1);";
             MySqlCommand addCmd = new MySqlCommand(addSql, addOrderInfo);
             addCmd.ExecuteNonQuery();
             addOrderInfo.Close();

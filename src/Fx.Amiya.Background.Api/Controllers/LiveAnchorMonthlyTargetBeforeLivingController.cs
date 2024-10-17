@@ -382,7 +382,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorMonthlyTargetBeforeLivingVo.CumulativeFlowInvestment = liveAnchorMonthlyTargetBeforeLiving.CumulativeFlowInvestment;
                 liveAnchorMonthlyTargetBeforeLivingVo.FlowInvestmentCompleteRate = liveAnchorMonthlyTargetBeforeLiving.FlowInvestmentCompleteRate;
                 liveAnchorMonthlyTargetBeforeLivingVo.CreateDate = liveAnchorMonthlyTargetBeforeLiving.CreateDate;
-
+                liveAnchorMonthlyTargetBeforeLivingVo.OwnerName = liveAnchorMonthlyTargetBeforeLiving.OwnerName;
+                liveAnchorMonthlyTargetBeforeLivingVo.OwnerId = liveAnchorMonthlyTargetBeforeLiving.OwnerId;
                 return ResultData<LiveAnchorMonthlyTargetBeforeLivingVo>.Success().AddData("liveAnchorMonthlyTargetBeforeLivingInfo", liveAnchorMonthlyTargetBeforeLivingVo);
             }
             catch (Exception ex)
