@@ -4,6 +4,8 @@ using Fx.Amiya.Dto.OperationLog;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Common;
+using Microsoft.Extensions.Configuration;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +18,13 @@ namespace Fx.Amiya.Service
     {
         private readonly IDalOpertionLog dalOpertionLog;
         private readonly IDalAmiyaEmployee dalAmiyaEmployee;
+        private readonly IConfiguration configuration;
 
-        public OperationLogService(IDalOpertionLog dalOpertionLog, IDalAmiyaEmployee dalAmiyaEmployee)
+        public OperationLogService(IDalOpertionLog dalOpertionLog, IDalAmiyaEmployee dalAmiyaEmployee, IConfiguration configuration)
         {
             this.dalOpertionLog = dalOpertionLog;
             this.dalAmiyaEmployee = dalAmiyaEmployee;
+            this.configuration = configuration;
         }
 
         public async Task AddOperationLogAsync(OperationAddDto operationAdd)
@@ -48,7 +52,16 @@ namespace Fx.Amiya.Service
             operationLog.CreateDate = DateTime.Now;
             operationLog.Valid = true;
             operationLog.Sounrce = operationAdd.Source;
-            await dalOpertionLog.AddAsync(operationLog, true);
+            string context = configuration.GetConnectionString("MySqlConnectionString");
+            MySqlConnection addOrderInfo = new MySqlConnection(context);
+            addOrderInfo.Open();
+            string addSql = $"INSERT INTO `tbl_system_operation_log` (`id`, `route_address`, `request_type`, `code`, `parameters`, `message`, `create_date`, `valid`) VALUES('{operationLog.Id}', '{operationLog.RouteAddress}', '{operationLog.RequestType}', '{operationLog.Code}', '{operationLog.Parameters}', '{operationLog.Message}', '{operationLog.CreateDate}', 1);";
+            MySqlCommand addCmd = new MySqlCommand(addSql, addOrderInfo);
+            addCmd.ExecuteNonQuery();
+            addOrderInfo.Close();
+            
+
+            //await dalOpertionLog.AddAsync(operationLog, true);
 
         }
 
