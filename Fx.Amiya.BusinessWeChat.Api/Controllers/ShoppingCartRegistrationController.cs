@@ -100,6 +100,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                                                    ShoppingCartRegistrationCustomerTypeText = d.ShoppingCartRegistrationCustomerTypeText,
                                                    GetCustomerTypeText = d.GetCustomerTypeText,
                                                    BelongChannelName = d.BelongChannelName,
+                                                   CustomerWechatNo=d.CustomerWechatNo,
                                                    //LiveAnchorWechatNo = d.LiveAnchorWechatNo,
                                                    //Phone = d.Phone,
                                                    //EncryptPhone = d.EncryptPhone,
@@ -203,6 +204,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 addDto.AddWechatPicture = addVo.AddWechatPicture;
                 addDto.CluePicture = addVo.CluePicture;
                 addDto.IsRiBuLuoLiving = addVo.IsRiBuLuoLiving;
+                addDto.CustomerWechatNo = addVo.CustomerWechatNo;
+                addDto.FromTitle = addVo.FromTitle;
                 var contentPlatFormOrder = await contentPlateFormOrderService.GetOrderListByPhoneAsync(addVo.Phone);
                 var isSendOrder = contentPlatFormOrder.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder).Count();
                 if (contentPlatFormOrder.Count > 0)

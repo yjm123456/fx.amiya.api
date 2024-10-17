@@ -219,6 +219,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="liveAnchorWechatId">主播微信号id</param>
         /// <param name="startDate">开始时间</param>
         /// <param name="endDate">结束时间</param>
+        /// <param name="appointmentStartDate">预约开始时间</param>
+        /// <param name="appointmentEndDate">预约结束时间</param>
         /// <param name="keyword">关键词</param>
         /// <param name="belongMonth">归属月份</param>
         /// <param name="minAddOrderPrice">最小下单金额</param>
@@ -235,7 +237,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("contentPlateFormOrderLlistWithPage")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderInfoVo>>> GetOrderListWithPageAsync(string baseLiveAnchorId, int? getCustomerType, int? liveAnchorId, string liveAnchorWechatId, DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int orderSource, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderInfoVo>>> GetOrderListWithPageAsync(string baseLiveAnchorId, int? getCustomerType, int? liveAnchorId, string liveAnchorWechatId, DateTime? startDate, DateTime? endDate, DateTime? appointmentStartDate, DateTime? appointmentEndDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int orderSource, int pageNum, int pageSize)
         {
             try
             {
@@ -267,7 +269,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                         liveAnchorIds.Add(liveAnchorId.Value);
                     }
                 }
-                var q = await _orderService.GetOrderListWithPageAsync(liveAnchorIds, getCustomerType, liveAnchorWechatId, startDate, endDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, appointmentHospital, consultationType, hospitalDepartmentId, keyword, orderStatus, contentPlateFormId, belongEmpId, employeeId, orderSource, pageNum, pageSize);
+                var q = await _orderService.GetOrderListWithPageAsync(liveAnchorIds, getCustomerType, liveAnchorWechatId, startDate, endDate, appointmentStartDate, appointmentEndDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, appointmentHospital, consultationType, hospitalDepartmentId, keyword, orderStatus, contentPlateFormId, belongEmpId, employeeId, orderSource, pageNum, pageSize);
                 List<ContentPlatFormOrderInfoVo> contentPlatFormOrderInfoVoList = new List<ContentPlatFormOrderInfoVo>();
                 var resutList = q.List.ToList();
                 foreach (var x in resutList)
@@ -1738,10 +1740,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                 BelongEmpName = d.BelongEmpName,
                 SendHospital = d.SendHospital,
                 IsHospitalCheckPhone = d.IsHospitalCheckPhone,
-                IsSpecifyHospitalEmployee=d.IsSpecifyHospitalEmployee,
-                HospitalEmployeeId=d.HospitalEmployeeId,
-                HospitalEmployeeName=d.HospitalEmployeeName,
-                BelongChannelText=d.BelongChannelText
+                IsSpecifyHospitalEmployee = d.IsSpecifyHospitalEmployee,
+                HospitalEmployeeId = d.HospitalEmployeeId,
+                HospitalEmployeeName = d.HospitalEmployeeName,
+                BelongChannelText = d.BelongChannelText
             }).ToList();
             return ResultData<FxPageInfo<SendContentPlatformOrderVo>>.Success().AddData("data", pageInfo);
         }
@@ -1751,7 +1753,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="batchEditSend"></param>
         /// <returns></returns>
         [HttpPost("batchEditSendInfo")]
-        public async Task<ResultData> BatchEditSendInfoAsync(BatchEditSendInfoVo batchEditSend) {
+        public async Task<ResultData> BatchEditSendInfoAsync(BatchEditSendInfoVo batchEditSend)
+        {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
             BatchEditSendInfoDto editDto = new BatchEditSendInfoDto();
@@ -1762,7 +1765,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             editDto.HospitalEmployeeId = batchEditSend.HospitalEmployeeId;
             await _orderService.BatchEditSendInfoAsync(editDto);
             return ResultData.Success();
-        } 
+        }
 
 
         #region {医院对接同步}

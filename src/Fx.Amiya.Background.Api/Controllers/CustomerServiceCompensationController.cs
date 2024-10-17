@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.CustomerServiceCompensation.Input;
 using Fx.Amiya.Background.Api.Vo.CustomerServiceCompensation.Result;
 using Fx.Amiya.Dto.CustomerServiceCompensation;
@@ -320,6 +321,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.EndDate = queryVo.EndDate;
             queryDto.CreateBy=queryVo.CreateBy;
             queryDto.BelongEmpId=queryVo.BelongEmpId;
+            queryDto.PerformanceType = queryVo.PerformanceType;
+            queryDto.Keyword = queryVo.KeyWord;
+            queryDto.PageSize = queryVo.PageSize;
+            queryDto.PageNum = queryVo.PageNum;
             var res=await customerServiceCompensationService.GetDealInfoListAsync(queryDto);
             page.TotalCount= res.TotalCount;
             page.List=res.List.Select(e=>new DealInfoListVo {
@@ -341,5 +346,24 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<FxPageInfo<DealInfoListVo>>.Success().AddData("data", page);
         }
 
+        #region【枚举下拉框】
+
+        /// <summary>
+        /// 薪资业绩类型
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("PerformanceType")]
+        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetCustomerSourceListAsync()
+        {
+            var nameList = customerServiceCompensationService.GetPerformanceTypeText();
+            var result = nameList.Select(e => new BaseIdAndNameVo<int>
+            {
+                Id = e.Key,
+                Name = e.Value
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("PerformanceTypeList", result);
+
+        }
+        #endregion
     }
 }

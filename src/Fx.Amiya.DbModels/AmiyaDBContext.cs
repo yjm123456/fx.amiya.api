@@ -44,6 +44,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<AmiyaWareHouseStorageRacks> AmiyaWareHouseStorageRacks { get; set; }
         public virtual DbSet<DockingHospitalCustomerInfo> DockingHospitalCustomerInfo { get; set; }
         public virtual DbSet<BindCustomerRFMLevelUpdateLog> BindCustomerRFMLevelUpdateLog { get; set; }
+        public virtual DbSet<CustomerServiceCheckPerformance> CustomerServiceCheckPerformance { get; set; }
         public virtual DbSet<GreatHospitalOperationHealth> GreatHospitalOperationHealth { get; set; }
         public virtual DbSet<ReconciliationDocuments> ReconciliationDocuments { get; set; }
         public virtual DbSet<HospitalOperationData> HospitalOperationData { get; set; }
@@ -233,6 +234,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new CustomerTagInfoConfiguration());
             modelBuilder.ApplyConfiguration(new ContentPlatFormCustomerPictureConfiguration());
             modelBuilder.ApplyConfiguration(new DockingHospitalCustomerInfoConfiguration());
+            modelBuilder.ApplyConfiguration(new CustomerServiceCheckPerformanceConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalFeedBackConfiguration());
             modelBuilder.ApplyConfiguration(new GreatHospitalDataWriteConfiguration());
             modelBuilder.ApplyConfiguration(new LiveAnchorBaseInfoConfiguration());

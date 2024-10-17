@@ -25,7 +25,7 @@ namespace Fx.Amiya.Service
         private readonly IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo;
         private readonly IDalAmiyaEmployee dalAmiyaEmployee;
         private IRecommandDocumentSettleService recommandDocumentSettleService;
-        
+
         private readonly IUnitOfWork unitOfWork;
         public CustomerServiceCompensationService(IDalCustomerServiceCompensation dalCustomerServiceCompensation,
             IRecommandDocumentSettleService recommandDocumentSettleService,
@@ -302,9 +302,7 @@ namespace Fx.Amiya.Service
             var selectDate = DateTimeExtension.GetStartDateEndDate(queryDto.StartDate.Value, queryDto.EndDate.Value);
             var query = dalContentPlatFormOrderDealInfo.GetAll()
                 .Include(e => e.ContentPlatFormOrder)
-                .Where(e => e.DealPerformanceType != (int)ContentPlateFormOrderDealPerformanceType.AssistantCheck && e.DealPerformanceType != (int)ContentPlateFormOrderDealPerformanceType.FinanceCheck)
-                .Where(e => e.CreateDate >= selectDate.StartDate && e.CreateDate < selectDate.EndDate)
-                .Where(e => e.Price > 0);
+                .Where(e => e.CreateDate >= selectDate.StartDate && e.CreateDate < selectDate.EndDate);
             if (queryDto.CreateBy.HasValue)
             {
                 query = query.Where(e => e.CreateBy == queryDto.CreateBy);
@@ -313,27 +311,62 @@ namespace Fx.Amiya.Service
             {
                 query = query.Where(e => e.ContentPlatFormOrder.IsSupportOrder ? e.ContentPlatFormOrder.SupportEmpId == queryDto.BelongEmpId : e.ContentPlatFormOrder.BelongEmpId == queryDto.BelongEmpId);
             }
-            pageData.TotalCount =await query.CountAsync();
-            pageData.List = await query.Select(e => new DealInfoListDto {
-                DealId=e.Id,
-                ContentPaltformOrderId=e.ContentPlatFormOrderId,
-                DealPrice=e.Price,
-                PerformanceType=e.DealPerformanceType,
-                PerformanceTypeText=ServiceClass.GetContentPlateFormOrderDealPerformanceType(e.DealPerformanceType),
-                CreateById=e.CreateBy,
-                CreateDate=e.CreateDate,
-                IsDeal=e.IsDeal,
-                IsSupportOrder=e.ContentPlatFormOrder.IsSupportOrder,
-                BelongEmpId=e.ContentPlatFormOrder.BelongEmpId.Value,
-                SupportEmpId=e.ContentPlatFormOrder.SupportEmpId
-            }).ToListAsync();
-            var employeeIdNameList =await dalAmiyaEmployee.GetAll().Select(e => new { e.Id, e.Name }).ToListAsync();
-            foreach (var item in pageData.List) {
+            if (queryDto.PerformanceType == (int)PerformanceType.Deal)
+            {
+                query = query.Where(e => e.DealPerformanceType != (int)ContentPlateFormOrderDealPerformanceType.AssistantCheck && e.DealPerformanceType != (int)ContentPlateFormOrderDealPerformanceType.FinanceCheck && e.Price > 0);
+            }
+            if (queryDto.PerformanceType == (int)PerformanceType.Refund)
+            {
+                query = query.Where(e => e.Price < 0);
+            }
+            if (queryDto.PerformanceType == (int)PerformanceType.Check)
+            {
+                query = query.Where(e => e.DealPerformanceType == (int)ContentPlateFormOrderDealPerformanceType.AssistantCheck || e.DealPerformanceType == (int)ContentPlateFormOrderDealPerformanceType.FinanceCheck && e.Price > 0);
+            }
+            if (!string.IsNullOrEmpty(queryDto.Keyword))
+            {
+                query = query.Where(e => e.Id == queryDto.Keyword || e.ContentPlatFormOrderId == queryDto.Keyword);
+            }
+            pageData.TotalCount = await query.CountAsync();
+            pageData.List = await query.Select(e => new DealInfoListDto
+            {
+                DealId = e.Id,
+                ContentPaltformOrderId = e.ContentPlatFormOrderId,
+                DealPrice = e.Price,
+                PerformanceType = e.DealPerformanceType,
+                PerformanceTypeText = ServiceClass.GetContentPlateFormOrderDealPerformanceType(e.DealPerformanceType),
+                CreateById = e.CreateBy,
+                CreateDate = e.CreateDate,
+                IsDeal = e.IsDeal,
+                IsSupportOrder = e.ContentPlatFormOrder.IsSupportOrder,
+                BelongEmpId = e.ContentPlatFormOrder.BelongEmpId.Value,
+                SupportEmpId = e.ContentPlatFormOrder.SupportEmpId
+            }).OrderByDescending(x => x.CreateDate).Skip((queryDto.PageNum.Value - 1) * queryDto.PageSize.Value).Take(queryDto.PageSize.Value).ToListAsync();
+            var employeeIdNameList = await dalAmiyaEmployee.GetAll().Select(e => new { e.Id, e.Name }).ToListAsync();
+            foreach (var item in pageData.List)
+            {
                 item.CreateByName = employeeIdNameList.FirstOrDefault(e => e.Id == item.CreateById)?.Name ?? "其他";
-                item.SupportEmpName= employeeIdNameList.FirstOrDefault(e => e.Id == item.SupportEmpId)?.Name ?? "其他";
+                item.SupportEmpName = employeeIdNameList.FirstOrDefault(e => e.Id == item.SupportEmpId)?.Name ?? "其他";
                 item.BelongEmpName = employeeIdNameList.FirstOrDefault(e => e.Id == item.BelongEmpId)?.Name ?? "其他";
             }
             return pageData;
         }
+
+        #region【枚举下拉框】
+        public List<BaseKeyValueDto<int>> GetPerformanceTypeText()
+        {
+            var performanceTypes = Enum.GetValues(typeof(PerformanceType));
+            List<BaseKeyValueDto<int>> performTypeList = new List<BaseKeyValueDto<int>>();
+            foreach (var item in performanceTypes)
+            {
+                BaseKeyValueDto<int> performTypeDto = new BaseKeyValueDto<int>();
+                performTypeDto.Key = Convert.ToInt32(item);
+                performTypeDto.Value = ServiceClass.GetPerformanceTypeText(performTypeDto.Key);
+                performTypeList.Add(performTypeDto);
+            }
+            return performTypeList;
+        }
+        #endregion
+
     }
 }

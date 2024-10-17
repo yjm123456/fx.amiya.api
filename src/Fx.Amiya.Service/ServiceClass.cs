@@ -1918,6 +1918,31 @@ namespace Fx.Amiya.Service
             }
             return inventoryStateText;
         }
+        /// <summary>
+        /// 获取助理薪资类型
+        /// </summary>
+        /// <param name="consulationType"></param>
+        /// <returns></returns>
+        public static string GetPerformanceTypeText(int performanceType)
+        {
+            string inventoryStateText = "";
+            switch (performanceType)
+            {
+                case 1:
+                    inventoryStateText = "成交业绩";
+                    break;
+
+                case 2:
+                    inventoryStateText = "退款业绩";
+                    break;
+
+                case 3:
+                    inventoryStateText = "稽查业绩";
+                    break;
+
+            }
+            return inventoryStateText;
+        }
 
 
         /// <summary>

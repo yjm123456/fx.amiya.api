@@ -234,5 +234,13 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ShoppingCartRegistration
         /// 是否为日不落直播顾客
         /// </summary>
         public bool IsRiBuLuoLiving { get; set; }
+        /// <summary>
+        /// 客户微信号
+        /// </summary>
+        public string CustomerWechatNo { get; set; }
+        /// <summary>
+        /// 词条来源
+        /// </summary>
+        public string FromTitle { get; set; }
     }
 }

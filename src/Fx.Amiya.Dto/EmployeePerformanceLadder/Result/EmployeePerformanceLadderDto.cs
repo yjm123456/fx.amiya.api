@@ -13,6 +13,10 @@ namespace Fx.Amiya.Dto.EmployeePerformanceLadder.Result
         /// </summary>
         public int? CustomerServiceId { get; set; }
         /// <summary>
+        /// 助理名称（若为私人配置则有值）
+        /// </summary>
+        public string CustomerServiceName { get; set; }
+        /// <summary>
         /// 是否为私人配置
         /// </summary>
         public bool IsPersonalConfig { get; set; }

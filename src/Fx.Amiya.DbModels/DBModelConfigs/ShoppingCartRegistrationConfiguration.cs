@@ -52,6 +52,10 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.CluePicture).HasColumnName("clue_picture").HasColumnType("varchar(100)").IsRequired(false);
             builder.Property(t => t.AddWechatEmpId).HasColumnName("add_wechat_empid").HasColumnType("int").IsRequired(false);
             builder.Property(t => t.IsRiBuLuoLiving).HasColumnName("is_ribuluo_living").HasColumnType("bit(1)").IsRequired();
+            builder.Property(t => t.IsHistoryCustomerActive).HasColumnName("is_history_customer_active").HasColumnType("bit(1)").IsRequired();
+            builder.Property(t => t.ActiveEmployeeId).HasColumnName("active_emp_id").HasColumnType("int").IsRequired(false);
+            builder.Property(t => t.CustomerWechatNo).HasColumnName("custoemr_wechat_no").HasColumnType("varchar(100)").IsRequired(false);
+            builder.Property(t => t.FromTitle).HasColumnName("from_title").HasColumnType("varchar(400)").IsRequired(false);
 
             builder.HasOne(e => e.Contentplatform).WithMany(e => e.ShoppingCartRegistrationList).HasForeignKey(e => e.ContentPlatFormId);
             builder.HasOne(e => e.LiveAnchor).WithMany(e => e.ShoppingCartRegistrationList).HasForeignKey(e => e.LiveAnchorId);

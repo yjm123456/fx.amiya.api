@@ -45,7 +45,7 @@ namespace Fx.Amiya.Dto.CustomerServiceCompensation.Result
         /// </summary>
         public bool IsDeal { get; set; }
         /// <summary>
-        /// 是否时辅助订单
+        /// 是否是辅助订单
         /// </summary>
         public bool IsSupportOrder { get; set; }
         /// <summary>

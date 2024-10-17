@@ -57,6 +57,14 @@ namespace Fx.Amiya.Service
             FxPageInfo<EmployeePerformanceLadderDto> employeePerformanceLadderPageInfo = new FxPageInfo<EmployeePerformanceLadderDto>();
             employeePerformanceLadderPageInfo.TotalCount = await employeePerformanceLadders.CountAsync();
             employeePerformanceLadderPageInfo.List = await employeePerformanceLadders.OrderByDescending(x => x.CreateDate).Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToListAsync();
+            foreach (var x in employeePerformanceLadderPageInfo.List)
+            {
+                if (x.CustomerServiceId.HasValue)
+                {
+                    var empInfo = await amiyaEmployeeService.GetByIdAsync(x.CustomerServiceId.Value);
+                    x.CustomerServiceName = empInfo.Name;
+                }
+            }
             return employeePerformanceLadderPageInfo;
         }
 

@@ -15,5 +15,10 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerServiceCompensation.Input
         /// 归属客服
         /// </summary>
         public int? BelongEmpId { get; set; }
+
+        /// <summary>
+        /// 业绩类型（1-成交；2-退款；3-稽查）
+        /// </summary>
+        public int? PerformanceType { get; set; }
     }
 }

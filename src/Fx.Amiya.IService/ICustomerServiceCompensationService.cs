@@ -24,5 +24,7 @@ namespace Fx.Amiya.IService
         Task DeleteAsync(string id);
         Task CopyAsync(string id, int createEmpId);
         Task<FxPageInfo<DealInfoListDto>> GetDealInfoListAsync(QueryDealInfoDto query);
+
+        List<BaseKeyValueDto<int>> GetPerformanceTypeText();
     }
 }

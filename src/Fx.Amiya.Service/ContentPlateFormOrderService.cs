@@ -308,7 +308,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ContentPlatFormOrderInfoDto>> GetOrderListWithPageAsync(List<int> liveAnchorId, int? getCustomerType, string liveAnchorWechatId, DateTime? startDate, DateTime? endDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int employeeId, int orderSource, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ContentPlatFormOrderInfoDto>> GetOrderListWithPageAsync(List<int> liveAnchorId, int? getCustomerType, string liveAnchorWechatId, DateTime? startDate, DateTime? endDate, DateTime? appointmentStartDate, DateTime? appointmentEndDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int employeeId, int orderSource, int pageNum, int pageSize)
         {
             try
             {
@@ -356,6 +356,14 @@ namespace Fx.Amiya.Service
                     DateTime endrq = ((DateTime)endDate).AddDays(1);
                     orders = from d in orders
                              where d.CreateDate >= startrq && d.CreateDate < endrq
+                             select d;
+                }
+                if (appointmentStartDate != null && appointmentEndDate != null)
+                {
+                    DateTime startrq = ((DateTime)appointmentStartDate);
+                    DateTime endrq = ((DateTime)appointmentEndDate).AddDays(1);
+                    orders = from d in orders
+                             where d.AppointmentDate.Value >= startrq && d.AppointmentDate.Value < endrq
                              select d;
                 }
 

@@ -621,6 +621,24 @@ namespace Fx.Amiya.IService
         /// </summary>
         HospitalDeclarationInApi = 7
     }
+    /// <summary>
+    /// 助理薪资类型
+    /// </summary>
+    public enum PerformanceType
+    {
+        /// <summary>
+        /// 成交业绩
+        /// </summary>
+        Deal = 1,
+        /// <summary>
+        /// 退款业绩
+        /// </summary>
+        Refund = 2,
+        /// <summary>
+        /// 稽查业绩
+        /// </summary>
+        Check = 3
+    }
     #endregion
 
     /// <summary>

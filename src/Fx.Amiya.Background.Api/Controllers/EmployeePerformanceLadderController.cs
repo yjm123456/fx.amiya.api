@@ -57,23 +57,24 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryDto.KeyWord = query.KeyWord;
                 var q = await employeePerformanceLadderService.GetListAsync(queryDto);
                 var employeePerformanceLadder = from d in q.List
-                                                   select new EmployeePerformanceLadderVo
-                                                   {
-                                                       Id = d.Id,
-                                                       CreateDate = d.CreateDate,
-                                                       UpdateDate = d.UpdateDate,
-                                                       Valid = d.Valid,
-                                                       DeleteDate = d.DeleteDate,
-                                                       CustomerServiceId = d.CustomerServiceId,
-                                                       IsPersonalConfig = d.IsPersonalConfig,
-                                                       PerformanceLowerLimit = d.PerformanceLowerLimit,
-                                                       PerformanceUpperLimit = d.PerformanceUpperLimit,
-                                                       BasePerformance = d.BasePerformance,
-                                                       Year = d.Year,
-                                                       Month = d.Month,
-                                                       Point = d.Point,
-                                                       Remark = d.Remark,
-                                                   };
+                                                select new EmployeePerformanceLadderVo
+                                                {
+                                                    Id = d.Id,
+                                                    CreateDate = d.CreateDate,
+                                                    UpdateDate = d.UpdateDate,
+                                                    Valid = d.Valid,
+                                                    DeleteDate = d.DeleteDate,
+                                                    CustomerServiceId = d.CustomerServiceId,
+                                                    CustomerServiceName = d.CustomerServiceName,
+                                                    IsPersonalConfig = d.IsPersonalConfig,
+                                                    PerformanceLowerLimit = d.PerformanceLowerLimit,
+                                                    PerformanceUpperLimit = d.PerformanceUpperLimit,
+                                                    BasePerformance = d.BasePerformance,
+                                                    Year = d.Year,
+                                                    Month = d.Month,
+                                                    Point = d.Point,
+                                                    Remark = d.Remark,
+                                                };
 
                 FxPageInfo<EmployeePerformanceLadderVo> pageInfo = new FxPageInfo<EmployeePerformanceLadderVo>();
                 pageInfo.TotalCount = q.TotalCount;
@@ -223,11 +224,11 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 var q = await employeePerformanceLadderService.GetValidListAsync();
                 var employeePerformanceLadder = from d in q
-                                                   select new BaseIdAndNameVo
-                                                   {
-                                                       Id = d.Key,
-                                                       Name = d.Value,
-                                                   };
+                                                select new BaseIdAndNameVo
+                                                {
+                                                    Id = d.Key,
+                                                    Name = d.Value,
+                                                };
 
                 return ResultData<List<BaseIdAndNameVo>>.Success().AddData("employeePerformanceLadder", employeePerformanceLadder.ToList());
             }

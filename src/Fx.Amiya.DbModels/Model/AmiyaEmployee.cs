@@ -127,5 +127,7 @@ namespace Fx.Amiya.DbModels.Model
         public List<EmployeePerformanceTarget> EmployeePerformanceTargetList { get; set; }
         public List<FansMeetingDetails> FansMeetingDetailsList { get; set; }
 
+        public List<CustomerServiceCheckPerformance> CustomerServiceNewCompensation { get; set; }
+
     }
 }

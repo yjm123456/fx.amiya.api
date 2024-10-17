@@ -43,5 +43,9 @@ namespace Fx.Amiya.Background.Api.Vo.EmployeePerformanceLadder.Result
         /// 备注
         /// </summary>
         public string Remark { get; set; }
+        /// <summary>
+        /// 助理名称（若为私人配置则有值）
+        /// </summary>
+        public string CustomerServiceName { get; set; }
     }
 }
