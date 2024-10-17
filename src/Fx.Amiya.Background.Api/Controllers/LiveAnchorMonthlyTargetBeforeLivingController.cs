@@ -163,6 +163,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                               VideoShowCaseFeeTarget = d.VideoShowCaseFeeTarget,
                                                               CumulativeVideoShowCaseFee = d.CumulativeVideoShowCaseFee,
                                                               VideoShowCaseFeeCompleteRate = d.VideoShowCaseFeeCompleteRate,
+                                                              OwnerName= d.OwnerName, 
                                                           };
 
                 FxPageInfo<LiveAnchorMonthlyTargetBeforeLivingVo> liveAnchorMonthlyTargetBeforeLivingPageInfo = new FxPageInfo<LiveAnchorMonthlyTargetBeforeLivingVo>();
@@ -253,7 +254,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.SinaWeiBoReleaseTarget = addVo.SinaWeiBoReleaseTarget;
                 addDto.SinaWeiBoFlowinvestmentTarget = addVo.SinaWeiBoFlowinvestmentTarget;
                 addDto.ReleaseTarget = addVo.ReleaseTarget;
-                addDto.FlowInvestmentTarget = addVo.FlowInvestmentTarget;               
+                addDto.FlowInvestmentTarget = addVo.FlowInvestmentTarget;
+                addDto.OwnerId = addVo.OwnerId;
                 await _liveAnchorMonthlyTargetBeforeLivingService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -433,6 +435,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.VideoShowcaseFeeTarget=updateVo.VideoShowcaseFeeTarget;
                 updateDto.TikTokShowcaseFeeTarget = updateVo.TikTokShowcaseFeeTarget;
                 updateDto.XiaoHongShuShowcaseFeeTarget = updateVo.XiaoHongShuShowcaseFeeTarget;
+                updateDto.OwnerId = updateVo.OwnerId;
                 await _liveAnchorMonthlyTargetBeforeLivingService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }

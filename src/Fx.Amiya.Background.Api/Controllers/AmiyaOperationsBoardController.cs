@@ -1188,8 +1188,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 SendOrderCount = e.SendOrderCount,
                 VisitCount = e.VisitCount,
                 DealCount = e.DealCount,
-                ToHospitalRate=e.ToHospitalRate,
-                DealRate=e.DealRate
+                ToHospitalRate = e.ToHospitalRate,
+                DealRate = e.DealRate
             }).ToList();
             return ResultData<AssistantHospitalCluesDataVo>.Success().AddData("data", dataVo);
         }
@@ -1487,7 +1487,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<AdminCustomerServiceCustomerTypeBrokenLineDataVo>.Success().AddData("data", data);
 
         }
-       
+
 
         /// <summary>
         /// 行政客服漏斗图数据
@@ -1621,6 +1621,232 @@ namespace Fx.Amiya.Background.Api.Controllers
                 AfterLiveValue = e.AfterLiveValue
             }).ToList();
             return ResultData<AdminCustomerAssistantDisAndAddVDataVo>.Success().AddData("data", data);
+        }
+
+        #endregion
+
+        #region 直播前数据运营看板
+
+        /// <summary>
+        /// 获取直播前客资和业绩数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("getBeforeLiveClueAndPerformanceData")]
+        public async Task<ResultData<BeforeLiveClueAndPerformanceDataVo>> GetBeforeLiveClueAndPerformanceDataAsync([FromQuery] QueryBeforeLiveDataVo query)
+        {
+            QueryBeforeLiveDataDto queryDto = new QueryBeforeLiveDataDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            var res = await amiyaOperationsBoardService.GetBeforeLiveClueAndPerformanceDataAsync(queryDto);
+            BeforeLiveClueAndPerformanceDataVo data = new BeforeLiveClueAndPerformanceDataVo();
+            data.DepartmentData = new BeforeLiveClueAndPerformanceDataItemVo();
+            data.EmployeeData = new BeforeLiveClueAndPerformanceDataItemVo();
+            data.DepartmentData.CustomerCount = res.DepartmentData.CustomerCount;
+            data.DepartmentData.Performance = res.DepartmentData.Performance;
+            data.EmployeeData.CustomerCount = res.EmployeeData.CustomerCount;
+            data.EmployeeData.Performance = res.EmployeeData.Performance;
+            return ResultData<BeforeLiveClueAndPerformanceDataVo>.Success().AddData("data", data);
+        }
+        /// <summary>
+        /// 获取直播前线索和业绩折线图数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("getBeforeLiveClueAndPerformanceBrokenData")]
+        public async Task<ResultData<BeforeLiveClueAndPerformanceBrokenDataVo>> GetBeforeLiveClueAndPerformanceBrokenDataAsync([FromQuery] QueryBeforeLiveBrokenDataVo query)
+        {
+            QueryBeforeLiveBrokenDataDto queryDto = new QueryBeforeLiveBrokenDataDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            queryDto.Department = query.Department;
+            queryDto.Employee = query.Employee;
+            var res = await amiyaOperationsBoardService.GetBeforeLiveClueAndPerformanceBrokenDataAsync(queryDto);
+            BeforeLiveClueAndPerformanceBrokenDataVo data = new BeforeLiveClueAndPerformanceBrokenDataVo();
+            data.ClueData = res.ClueData.Select(e => new PerformanceBrokenLineListInfoVo
+            {
+                date = e.date,
+                Performance = e.Performance
+            }).ToList();
+            data.PerformanceData = res.PerformanceData.Select(e => new PerformanceBrokenLineListInfoVo
+            {
+                date = e.date,
+                Performance = e.Performance
+            }).ToList();
+            return ResultData<BeforeLiveClueAndPerformanceBrokenDataVo>.Success().AddData("data", data);
+        }
+        /// <summary>
+        /// 获取直播前漏斗图数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("getBeforeLiveFilterData")]
+        public async Task<ResultData<BeforeLiveFilterDataVo>> GetBeforeLiveFilterDataAsync([FromQuery] QueryBeforeLiveFilterDataVo query)
+        {
+            QueryBeforeLiveFilterDataDto queryDto = new QueryBeforeLiveFilterDataDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            queryDto.Current = query.Current;
+            queryDto.History = query.History;
+            var res = await amiyaOperationsBoardService.GetBeforeLiveFilterDataAsync(queryDto);
+            BeforeLiveFilterDataVo data = new BeforeLiveFilterDataVo();
+            data.DepartData = new BeforeLiveFilterDataItemVo();
+            data.EmployeeData = new BeforeLiveFilterDataItemVo();
+            data.DepartData.AddWeChatRate = res.DepartData.AddWeChatRate;
+            data.DepartData.AddWeChatRateHealthValueThisMonth = res.DepartData.AddWeChatRateHealthValueThisMonth;
+            data.DepartData.SendOrderRate = res.DepartData.SendOrderRate;
+            data.DepartData.SendOrderRateHealthValueThisMonth = res.DepartData.SendOrderRateHealthValueThisMonth;
+            data.DepartData.ToHospitalRateHealthValueThisMonth = res.DepartData.ToHospitalRateHealthValueThisMonth;
+            data.DepartData.SendCycle = res.DepartData.SendCycle;
+            data.DepartData.HospitalCycle = res.DepartData.HospitalCycle;
+            data.DepartData.DataList = res.DepartData.DataList.Select(e => new BeforeLiveFilterDetailDataVo
+            {
+                Key = e.Key,
+                Value = e.Value,
+                Name = e.Name
+            }).ToList();
+
+            data.EmployeeData.AddWeChatRate = res.EmployeeData.AddWeChatRate;
+            data.EmployeeData.AddWeChatRateHealthValueThisMonth = res.EmployeeData.AddWeChatRateHealthValueThisMonth;
+            data.EmployeeData.SendOrderRate = res.EmployeeData.SendOrderRate;
+            data.EmployeeData.SendOrderRateHealthValueThisMonth = res.EmployeeData.SendOrderRateHealthValueThisMonth;
+            data.EmployeeData.ToHospitalRateHealthValueThisMonth = res.EmployeeData.ToHospitalRateHealthValueThisMonth;
+            data.EmployeeData.SendCycle = res.EmployeeData.SendCycle;
+            data.EmployeeData.HospitalCycle = res.EmployeeData.HospitalCycle;
+            data.EmployeeData.DataList = res.EmployeeData.DataList.Select(e => new BeforeLiveFilterDetailDataVo
+            {
+                Key = e.Key,
+                Value = e.Value,
+                Name = e.Name
+            }).ToList();
+            return ResultData<BeforeLiveFilterDataVo>.Success().AddData("data", data);
+        }
+        /// <summary>
+        /// 获取直播前转化周期
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("getBeforeLiveTransformCycleData")]
+        public async Task<ResultData<BeforeLiveTransformCycleDataVo>> GetBeforeLiveTransformCycleDataAsync([FromQuery] QueryBeforeLiveDataVo query)
+        {
+            QueryBeforeLiveDataDto queryDto = new QueryBeforeLiveDataDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            var res = await amiyaOperationsBoardService.GetBeforeLiveTransformCycleDataAsync(queryDto);
+            BeforeLiveTransformCycleDataVo data = new BeforeLiveTransformCycleDataVo();
+            data.SendCycleData = res.SendCycleData;
+            data.ToHospitalCycleData = res.ToHospitalCycleData;
+            return ResultData<BeforeLiveTransformCycleDataVo>.Success().AddData("data", data);
+        }
+        /// <summary>
+        /// 获取直播前业绩占比数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("getBeforeLivePerformanceRate")]
+        public async Task<ResultData<BeforeLiveTargetCompleteAndPerformanceRateVo>> GetBeforeLivePerformanceRateAsync([FromQuery] QueryBeforeLiveDataVo query)
+        {
+            QueryBeforeLiveDataDto queryDto = new QueryBeforeLiveDataDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            var res = await amiyaOperationsBoardService.GetBeforeLivePerformanceRateAsync(queryDto);
+            BeforeLiveTargetCompleteAndPerformanceRateVo data = new BeforeLiveTargetCompleteAndPerformanceRateVo();
+            data.PerformanceRate = res.PerformanceRate;
+            return ResultData<BeforeLiveTargetCompleteAndPerformanceRateVo>.Success().AddData("data", data);
+        }
+        /// <summary>
+        /// 获取直播前线索目标完成率数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("getBeforeLiveTargetCompleteRate")]
+        public async Task<ResultData<BeforeLiveTargetCompleteRateVo>> GetBeforeLiveTargetCompleteRateAsync([FromQuery] QueryBeforeLiveDataVo query)
+        {
+            QueryBeforeLiveDataDto queryDto = new QueryBeforeLiveDataDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            var res = await amiyaOperationsBoardService.GetBeforeLiveTargetCompleteRateAsync(queryDto);
+            BeforeLiveTargetCompleteRateVo data = new BeforeLiveTargetCompleteRateVo();
+            data.TargetComplete = res.TargetComplete;
+            return ResultData<BeforeLiveTargetCompleteRateVo>.Success().AddData("data", data);
+        }
+        /// <summary>
+        /// 获取直播前部门平台线索占比数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("getBeforeLiveDepartmentContentPlatformClueRate")]
+        public async Task<ResultData<BeforeLiveDepartmentContentPlatformClueRateVo>> GetBeforeLiveDepartmentContentPlatformClueRateAsync([FromQuery]QueryBeforeLiveDataVo query)
+        {
+            QueryBeforeLiveDataDto queryDto = new QueryBeforeLiveDataDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            var res = await amiyaOperationsBoardService.GetBeforeLiveDepartmentContentPlatformClueRateAsync(queryDto);
+            BeforeLiveDepartmentContentPlatformClueRateVo data = new BeforeLiveDepartmentContentPlatformClueRateVo();
+            data.DepartmentContentPlatformClueRate = res.DepartmentContentPlatformClueRate.Select(e => new BeforeLiveDepartmentContentPlatformClueRateDataItemVo
+            {
+                Name = e.Name,
+                Value = e.Value
+            }).ToList();
+            data.TikTokClueRate = res.TikTokClueRate.Select(e => new BeforeLiveDepartmentContentPlatformClueRateDataItemVo
+            {
+                Name = e.Name,
+                Value = e.Value
+            }).ToList();
+            data.WechatVideoClueRate = res.WechatVideoClueRate.Select(e => new BeforeLiveDepartmentContentPlatformClueRateDataItemVo
+            {
+                Name = e.Name,
+                Value = e.Value
+            }).ToList();
+            data.XiaohongshuClueRate = res.XiaohongshuClueRate.Select(e => new BeforeLiveDepartmentContentPlatformClueRateDataItemVo
+            {
+                Name = e.Name,
+                Value = e.Value
+            }).ToList();
+            return ResultData<BeforeLiveDepartmentContentPlatformClueRateVo>.Success().AddData("data",data);
+        }
+        /// <summary>
+        /// 获取直播前部门平台业绩占比数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("getBeforeLiveDepartmentContentPlatformPerformanceRate")]
+        public async Task<ResultData<BeforeLiveDepartmentContentPlatformPerformanceRateVo>> GetBeforeLiveDepartmentContentPlatformPerformanceRateAsync([FromQuery]QueryBeforeLiveFilterDataVo query) {
+            QueryBeforeLiveFilterDataDto queryDto = new QueryBeforeLiveFilterDataDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            queryDto.Current = query.Current;
+            queryDto.History = query.History;
+            var res = await amiyaOperationsBoardService.GetBeforeLiveDepartmentContentPlatformPerformanceRateAsync(queryDto);
+            BeforeLiveDepartmentContentPlatformPerformanceRateVo data = new BeforeLiveDepartmentContentPlatformPerformanceRateVo();
+            data.DepartmentContentPlatformPerformanceRate = res.DepartmentContentPlatformPerformanceRate.Select(e => new BeforeLiveDepartmentContentPlatformPerformanceRateDataItemVo {
+                Name=e.Name,
+                Value=e.Value
+            }).ToList();
+            data.TikTokPerformanceRate = res.TikTokPerformanceRate.Select(e => new BeforeLiveDepartmentContentPlatformPerformanceRateDataItemVo
+            {
+                Name = e.Name,
+                Value = e.Value
+            }).ToList();
+            data.WechatVideoPerformanceRate = res.WechatVideoPerformanceRate.Select(e => new BeforeLiveDepartmentContentPlatformPerformanceRateDataItemVo
+            {
+                Name = e.Name,
+                Value = e.Value
+            }).ToList();
+            data.XiaohongshuPerformanceRate = res.XiaohongshuPerformanceRate.Select(e => new BeforeLiveDepartmentContentPlatformPerformanceRateDataItemVo
+            {
+                Name = e.Name,
+                Value = e.Value
+            }).ToList();
+            return ResultData<BeforeLiveDepartmentContentPlatformPerformanceRateVo>.Success().AddData(data);
         }
 
         #endregion

@@ -164,5 +164,9 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.BeforeLiving
         /// 抖音橱窗付费
         /// </summary>
         public decimal TikTokShowcaseFeeTarget { get; set; }
+        /// <summary>
+        /// 负责人
+        /// </summary>
+        public int OwnerId { get; set; }
     }
 }

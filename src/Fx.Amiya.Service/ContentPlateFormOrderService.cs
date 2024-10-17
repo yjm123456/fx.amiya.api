@@ -40,6 +40,7 @@ namespace Fx.Amiya.Service
     {
 
         private IDalContentPlatformOrder _dalContentPlatformOrder;
+        private IDalShoppingCartRegistration dalShoppingCartRegistration;
         private IOrderRemarkService orderRemarkService;
         private IDalBindCustomerService _dalBindCustomerService;
         private IHospitalBindCustomerService hospitalBindCustomerService;
@@ -105,7 +106,7 @@ namespace Fx.Amiya.Service
             IContentPlatFormOrderDealInfoService contentPlatFormOrderDalService,
              IDalBindCustomerService dalBindCustomerService,
              IDalConfig dalConfig,
-             IWxAppConfigService wxAppConfigService, IDalLiveAnchor dalLiveAnchor, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalAmiyaHospitalDepartment dalAmiyaHospitalDepartment, IDalHospitalInfo dalHospitalInfo, ICustomerAppointmentScheduleService customerAppointmentScheduleService, IDalContentPlatformOrderSend dalContentPlatformOrderSend, ITrackService trackService, IFansMeetingDetailsService fansMeetingDetailsService, IFansMeetingService fansMeetingService, IDalFansMeetingDetails dalFansMeetingDetails, IDalHospitalCheckPhoneRecord dalHospitalCheckPhoneRecord, IHospitalEmployeeService hospitalEmployeeService)
+             IWxAppConfigService wxAppConfigService, IDalLiveAnchor dalLiveAnchor, IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalAmiyaHospitalDepartment dalAmiyaHospitalDepartment, IDalHospitalInfo dalHospitalInfo, ICustomerAppointmentScheduleService customerAppointmentScheduleService, IDalContentPlatformOrderSend dalContentPlatformOrderSend, ITrackService trackService, IFansMeetingDetailsService fansMeetingDetailsService, IFansMeetingService fansMeetingService, IDalFansMeetingDetails dalFansMeetingDetails, IDalHospitalCheckPhoneRecord dalHospitalCheckPhoneRecord, IHospitalEmployeeService hospitalEmployeeService, IDalShoppingCartRegistration dalShoppingCartRegistration)
         {
             _dalContentPlatformOrder = dalContentPlatformOrder;
             this.unitOfWork = unitOfWork;
@@ -146,6 +147,7 @@ namespace Fx.Amiya.Service
             this.dalFansMeetingDetails = dalFansMeetingDetails;
             _dalHospitalCheckPhoneRecord = dalHospitalCheckPhoneRecord;
             this.hospitalEmployeeService = hospitalEmployeeService;
+            this.dalShoppingCartRegistration = dalShoppingCartRegistration;
         }
 
         /// <summary>
@@ -5512,9 +5514,9 @@ namespace Fx.Amiya.Service
                     IsRepeatProfundityOrder = d.ContentPlatformOrderSendList.First().IsRepeatProfundityOrder,
                     IsMainHospital = d.ContentPlatformOrderSendList.First().IsMainHospital,
                     ConsultingContent2 = d.ConsultingContent2,
-                    BelongChannelText=ServiceClass.BelongChannelText(d.BelongChannel),
+                    BelongChannelText = ServiceClass.BelongChannelText(d.BelongChannel),
                     IsSpecifyHospitalEmployee = d.ContentPlatformOrderSendList.First().IsSpecifyHospitalEmployee,
-                    HospitalEmployeeId= d.ContentPlatformOrderSendList.First().HospitalEmployeeId,
+                    HospitalEmployeeId = d.ContentPlatformOrderSendList.First().HospitalEmployeeId,
                 })
                 .ToListAsync();
             foreach (var x in pageInfo.List)
@@ -5526,7 +5528,8 @@ namespace Fx.Amiya.Service
                     var empInfo = await _amiyaEmployeeService.GetByIdAsync(x.BelongEmpId);
                     x.BelongEmpName = empInfo.Name.ToString();
                 }
-                if (x.HospitalEmployeeId!=0) {
+                if (x.HospitalEmployeeId != 0)
+                {
                     var hospitalEmpInfo = await hospitalEmployeeService.GetByIdAsync(x.HospitalEmployeeId);
                     x.HospitalEmployeeName = hospitalEmpInfo.Name;
                 }
@@ -5547,7 +5550,6 @@ namespace Fx.Amiya.Service
             orderData.SendOrderNum = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList)
                 .Where(e => e.ContentPlatformOrderSendList.Where(o => o.IsMainHospital == true && o.SendDate >= startDate && o.SendDate < endDate).Count() == 1)
                 .Where(e => phoneList.Contains(e.Phone))
-                //.Where(o => o.SendDate >= startDate && o.SendDate < endDate)
                 .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsOldCustomer == false)
                 .Select(e => e.Phone)
                 .Distinct()
@@ -5557,11 +5559,126 @@ namespace Fx.Amiya.Service
                 .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsToHospital == true)
                 .Where(e => phoneList.Contains(e.Phone))
                 .ToListAsync();
-            string ids = "";
-            foreach (var x in visitCount)
+            orderData.VisitNum = visitCount
+                .Select(e => e.Phone)
+                .Distinct()
+                .Count();
+            orderData.DealNum = visitCount.Where(x => x.DealDate >= startDate && x.DealDate < endDate && x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete).Select(e => e.Phone)
+                .Distinct()
+                .Count();
+            orderData.DealPrice = visitCount.Where(x => x.DealDate >= startDate && x.DealDate < endDate && x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
+                .Sum(x => x.DealAmount);
+            return orderData;
+        }
+
+        /// <summary>
+        /// 根据手机号部门获取部门当月/历史派单成交数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="phoneList"></param>
+        /// <param name="assistantId"></param>
+        /// <returns></returns>
+        public async Task<OrderSendAndDealNumDto> GetBeforeLiveDepartOrderSendAndDealDataByAssistantIdListAsync(DateTime startDate, DateTime endDate, List<int> AssistantId, List<string> phoneList, bool isCurrent, BelongChannel belongChannel)
+        {
+            OrderSendAndDealNumDto orderData = new OrderSendAndDealNumDto();
+            var querySendOrder = _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList)
+            .Where(e => e.ContentPlatformOrderSendList.Where(o => o.IsMainHospital == true && o.SendDate >= startDate && o.SendDate < endDate).Count() == 1)
+            .Where(e => AssistantId.Contains(e.IsSupportOrder ? e.SupportEmpId : e.BelongEmpId.Value))
+            .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsOldCustomer == false);
+            if (isCurrent)
             {
-                ids += x.Id.ToString() + ",";
+                orderData.SendOrderNum = await querySendOrder.Where(e => phoneList.Contains(e.Phone))
+                    .Select(e => e.Phone)
+                    .Distinct()
+                    .CountAsync();
             }
+            else
+            {
+                orderData.SendOrderNum = await querySendOrder.Where(e => !phoneList.Contains(e.Phone))
+                    .Select(e => e.Phone)
+                    .Distinct()
+                    .CountAsync();
+            }
+
+            var queryVisit = _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderDealInfoList)
+            .Where(o => o.ContentPlatformOrderDealInfoList.Where(x => x.CreateDate >= startDate && x.CreateDate < endDate).Count() > 0)
+            .Where(e => AssistantId.Contains(e.IsSupportOrder ? e.SupportEmpId : e.BelongEmpId.Value))
+            .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsToHospital == true);
+            if (isCurrent)
+            {
+                queryVisit = queryVisit.Where(e => phoneList.Contains(e.Phone));
+            }
+            else
+            {
+                queryVisit = queryVisit.Where(e => !phoneList.Contains(e.Phone));
+            }
+            var visitCount = await queryVisit.Select(e => new { e.DealDate, e.OrderStatus, e.Phone, e.DealAmount }).ToListAsync();
+            orderData.VisitNum = visitCount
+                .Select(e => e.Phone)
+                .Distinct()
+                .Count();
+            orderData.DealNum = visitCount.Where(x => x.DealDate >= startDate && x.DealDate < endDate && x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete).Select(e => e.Phone)
+                .Distinct()
+                .Count();
+            orderData.DealPrice = visitCount.Where(x => x.DealDate >= startDate && x.DealDate < endDate && x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete)
+                .Sum(x => x.DealAmount);
+            return orderData;
+        }
+
+        /// <summary>
+        /// 根据手机号部门获取个人当月/历史派单成交数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="phoneList"></param>
+        /// <param name="assistantId"></param>
+        /// <returns></returns>
+        public async Task<OrderSendAndDealNumDto> GetBeforeLiveEmployeeOrderSendAndDealDataByAssistantIdListAsync(DateTime startDate, DateTime endDate, int AssistantId, List<string> phoneList, bool isCurrent, BelongChannel belongChannel)
+        {
+            OrderSendAndDealNumDto orderData = new OrderSendAndDealNumDto();
+            var querySendOrder = _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList)
+            .Where(e => e.ContentPlatformOrderSendList.Where(o => o.IsMainHospital == true && o.SendDate >= startDate && o.SendDate < endDate).Count() == 1)
+            .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsOldCustomer == false);
+            if (isCurrent)
+            {
+                orderData.SendOrderNum = await querySendOrder.Where(e => phoneList.Contains(e.Phone))
+                    .Select(e => e.Phone)
+                    .Distinct()
+                    .CountAsync();
+            }
+            else
+            {
+                var departTotalPhone = _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList)
+                .Where(e => e.ContentPlatformOrderSendList.Where(o => o.IsMainHospital == true && o.SendDate >= startDate && o.SendDate < endDate).Count() == 1).Select(e => e.Phone);
+                var employeeCurrentMonthTotalPhone = dalShoppingCartRegistration.GetAll()
+                .Where(e => e.CreateBy == AssistantId && e.BelongChannel == (int)belongChannel)
+                .Where(e => departTotalPhone.Contains(e.Phone)).Select(e => e.Phone).ToList();
+                var historyPhone = employeeCurrentMonthTotalPhone.Where(e => !phoneList.Contains(e)).ToList();
+                orderData.SendOrderNum = await querySendOrder.Where(e => historyPhone.Contains(e.Phone))
+                    .Select(e => e.Phone)
+                    .Distinct()
+                    .CountAsync();
+            }
+
+            var queryVisit = _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderDealInfoList)
+            .Where(o => o.ContentPlatformOrderDealInfoList.Where(x => x.CreateDate >= startDate && x.CreateDate < endDate).Count() > 0)
+            .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsToHospital == true);
+            if (isCurrent)
+            {
+                queryVisit = queryVisit.Where(e => phoneList.Contains(e.Phone));
+            }
+            else
+            {
+                var departTotalPhone = _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList)
+               .Where(e => e.ContentPlatformOrderSendList.Where(o => o.IsMainHospital == true && o.SendDate >= startDate && o.SendDate < endDate).Count() == 1).Select(e => e.Phone);
+                var employeeCurrentMonthTotalPhone = dalShoppingCartRegistration.GetAll()
+                .Where(e => e.CreateBy == AssistantId && e.BelongChannel == (int)belongChannel)
+                .Where(e => departTotalPhone.Contains(e.Phone)).Select(e => e.Phone).ToList();
+                var historyPhone = employeeCurrentMonthTotalPhone.Where(e => !phoneList.Contains(e)).ToList();
+                queryVisit = queryVisit.Where(e => historyPhone.Contains(e.Phone));
+            }
+            var visitCount = await queryVisit.Select(e => new { e.DealDate, e.OrderStatus, e.Phone, e.DealAmount }).ToListAsync();
             orderData.VisitNum = visitCount
                 .Select(e => e.Phone)
                 .Distinct()
@@ -5612,7 +5729,7 @@ namespace Fx.Amiya.Service
             catch (Exception ex)
             {
                 unitOfWork.RollBack();
-                throw ex; 
+                throw ex;
             }
         }
     }

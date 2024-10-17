@@ -205,6 +205,59 @@ namespace Fx.Amiya.IService
         /// <param name="query"></param>
         /// <returns></returns>
         Task<ToHospitalDto> GetToHospiatlByAssistantAndHospitalIdListAsync(QueryToHospiatlByAssistantAndHospitalIdListDto query);
+
+        #region 直播前数据运营看板
+
+        /// <summary>
+        /// 获取直播前客资和业绩数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<BeforeLiveClueAndPerformanceDataDto> GetBeforeLiveClueAndPerformanceDataAsync(QueryBeforeLiveDataDto query);
+        /// <summary>
+        /// 获取直播前线索和业绩折线图数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<BeforeLiveClueAndPerformanceBrokenDataDto> GetBeforeLiveClueAndPerformanceBrokenDataAsync(QueryBeforeLiveBrokenDataDto query);
+        /// <summary>
+        /// 获取直播前漏斗图数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<BeforeLiveFilterDataDto> GetBeforeLiveFilterDataAsync(QueryBeforeLiveFilterDataDto query);
+        /// <summary>
+        /// 获取直播前转化周期
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<BeforeLiveTransformCycleData> GetBeforeLiveTransformCycleDataAsync(QueryBeforeLiveDataDto query);
+        /// <summary>
+        /// 获取直播前业绩占比数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<BeforeLiveTargetCompleteAndPerformanceRateDto> GetBeforeLivePerformanceRateAsync(QueryBeforeLiveDataDto query);
+        /// <summary>
+        /// 获取直播前线索目标完成率数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<BeforeLiveTargetCompleteRateDto> GetBeforeLiveTargetCompleteRateAsync(QueryBeforeLiveDataDto query);
+        /// <summary>
+        /// 获取直播前部门平台线索占比数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<BeforeLiveDepartmentContentPlatformClueRateDto> GetBeforeLiveDepartmentContentPlatformClueRateAsync(QueryBeforeLiveDataDto query);
+        /// <summary>
+        /// 获取直播前部门平台业绩占比数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<BeforeLiveDepartmentContentPlatformPerformanceRateDto> GetBeforeLiveDepartmentContentPlatformPerformanceRateAsync(QueryBeforeLiveFilterDataDto query);
+        #endregion
+
         #region 【历史版本】
 
         ///// <summary>

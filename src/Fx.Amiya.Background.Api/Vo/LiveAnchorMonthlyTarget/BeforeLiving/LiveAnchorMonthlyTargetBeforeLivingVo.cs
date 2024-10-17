@@ -478,5 +478,9 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.BeforeLiving
         /// </summary>
 
         public decimal VideoShowCaseFeeCompleteRate { get; set; }
+        /// <summary>
+        /// 负责人
+        /// </summary>
+        public string OwnerName { get; set; }
     }
 }

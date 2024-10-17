@@ -21,17 +21,18 @@ namespace Fx.Amiya.Service
         private ILiveAnchorService _liveanchorService;
         private IAmiyaEmployeeService _amiyaEmployeeService;
         private IEmployeeBindLiveAnchorService employeeBindLiveAnchorService;
-
+        private IDalAmiyaEmployee dalAmiyaEmployee;
 
         public LiveAnchorMonthlyTargetBeforeLivingService(IDalLiveAnchorMonthlyTargetBeforeLiving dalLiveAnchorMonthlyTargetBeforeLiving,
             ILiveAnchorService liveAnchorService,
             IEmployeeBindLiveAnchorService employeeBindLiveAnchorService,
-            IAmiyaEmployeeService amiyaEmployeeService)
+            IAmiyaEmployeeService amiyaEmployeeService, IDalAmiyaEmployee dalAmiyaEmployee)
         {
             this.dalLiveAnchorMonthlyTargetBeforeLiving = dalLiveAnchorMonthlyTargetBeforeLiving;
             _amiyaEmployeeService = amiyaEmployeeService;
             this.employeeBindLiveAnchorService = employeeBindLiveAnchorService;
             _liveanchorService = liveAnchorService;
+            this.dalAmiyaEmployee = dalAmiyaEmployee;
         }
 
 
@@ -169,12 +170,16 @@ namespace Fx.Amiya.Service
                                                               VideoShowCaseFeeTarget = d.VideoShowCaseFeeTarget,
                                                               CumulativeVideoShowCaseFee = d.CumulativeVideoShowCaseFee,
                                                               VideoShowCaseFeeCompleteRate = d.VideoShowCaseFeeCompleteRate,
-
+                                                              OwnerId=d.OwnerId
                                                           };
 
                 FxPageInfo<LiveAnchorMonthlyTargetBeforeLivingDto> liveAnchorMonthlyTargetBeforeLivingPageInfo = new FxPageInfo<LiveAnchorMonthlyTargetBeforeLivingDto>();
                 liveAnchorMonthlyTargetBeforeLivingPageInfo.TotalCount = await liveAnchorMonthlyTargetBeforeLiving.CountAsync();
                 liveAnchorMonthlyTargetBeforeLivingPageInfo.List = await liveAnchorMonthlyTargetBeforeLiving.OrderByDescending(x => x.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+                var s = dalAmiyaEmployee.GetAll().Select(e => new { e.Id, e.Name }).ToList();
+                foreach (var item in liveAnchorMonthlyTargetBeforeLivingPageInfo.List) { 
+                    item.OwnerName=s.Where(e=>e.Id==item.OwnerId).FirstOrDefault()?.Name??"";
+                }
                 return liveAnchorMonthlyTargetBeforeLivingPageInfo;
             }
             catch (Exception ex)
@@ -297,7 +302,7 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.VideoShowCaseFeeTarget = addDto.VideoShowCaseFeeTarget;
                 liveAnchorMonthlyTarget.CumulativeVideoShowCaseFee = 0;
                 liveAnchorMonthlyTarget.VideoShowCaseFeeCompleteRate = 0.00M;
-
+                liveAnchorMonthlyTarget.OwnerId = addDto.OwnerId;
                 liveAnchorMonthlyTarget.CreateDate = DateTime.Now;
 
                 await dalLiveAnchorMonthlyTargetBeforeLiving.AddAsync(liveAnchorMonthlyTarget, true);
@@ -439,6 +444,11 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTargetDto.CumulativeFlowInvestment = liveAnchorMonthlyTarget.CumulativeFlowInvestment;
                 liveAnchorMonthlyTargetDto.FlowInvestmentCompleteRate = liveAnchorMonthlyTarget.FlowInvestmentCompleteRate;
                 liveAnchorMonthlyTargetDto.CreateDate = liveAnchorMonthlyTarget.CreateDate;
+                liveAnchorMonthlyTargetDto.Id=liveAnchorMonthlyTarget.Id;
+                liveAnchorMonthlyTargetDto.OwnerId= liveAnchorMonthlyTarget.OwnerId;
+                if (liveAnchorMonthlyTarget.OwnerId != null) {
+                    liveAnchorMonthlyTargetDto.OwnerName=dalAmiyaEmployee.GetAll().Where(e=>e.Id== liveAnchorMonthlyTarget.OwnerId).FirstOrDefault()?.Name??"";
+                }
                 var liveAnchor = await _liveanchorService.GetByIdAsync(liveAnchorMonthlyTargetDto.LiveAnchorId);
                 liveAnchorMonthlyTargetDto.ContentPlatFormId = liveAnchor.ContentPlateFormId;
                 return liveAnchorMonthlyTargetDto;
@@ -495,6 +505,7 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.TikTokShowCaseFeeTarget = updateDto.TikTokShowcaseFeeTarget;
                 liveAnchorMonthlyTarget.XiaoHongShuShowCaseFeeTarget = updateDto.XiaoHongShuShowcaseFeeTarget;
                 liveAnchorMonthlyTarget.VideoShowCaseFeeTarget = updateDto.VideoShowcaseFeeTarget;
+                liveAnchorMonthlyTarget.OwnerId = updateDto.OwnerId;
                 await dalLiveAnchorMonthlyTargetBeforeLiving.UpdateAsync(liveAnchorMonthlyTarget, true);
             }
             catch (Exception ex)

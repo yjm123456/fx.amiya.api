@@ -169,6 +169,9 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 抖音橱窗付费
         /// </summary>
         public decimal TikTokShowCaseFeeTarget { get; set; }
-
+        /// <summary>
+        /// 负责人id
+        /// </summary>
+        public int? OwnerId { get; set; }
     }
 }

@@ -437,6 +437,10 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
 
         public decimal VideoShowCaseFeeCompleteRate { get; set; }
+        /// <summary>
+        /// 负责人id
+        /// </summary>
+        public int? OwnerId { get; set; }
 
         public LiveAnchor LiveAnchor { get; set; }
 

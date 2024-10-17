@@ -336,7 +336,7 @@ namespace Fx.Amiya.IService
         /// <param name="isEffectiveCustomerData"></param>
         /// <param name="assistantIdList"></param>
         /// <returns></returns>
-        Task<List<ShoppingCartRegistrationDto>> GetAdminCustomerShopCartRegisterPerformanceByAssistantIdListAsync(DateTime startDate, DateTime endDate, List<int> assistantIds);
+        Task<List<ShoppingCartRegistrationDto>> GetAdminCustomerShopCartRegisterPerformanceByAssistantIdListAsync(DateTime startDate, DateTime endDate, List<int> assistantIds,BelongChannel? belongChannel=null);
         #endregion
     }
 }

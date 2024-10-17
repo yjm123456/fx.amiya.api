@@ -531,6 +531,8 @@ namespace Fx.Amiya.IService
         /// <param name="assistantId"></param>
         /// <returns></returns>
         Task<OrderSendAndDealNumDto> GetAdminCustomerOrderSendAndDealDataByAssistantIdListAsync(DateTime startDate, DateTime endDate, List<string> phoneList);
+        Task<OrderSendAndDealNumDto> GetBeforeLiveDepartOrderSendAndDealDataByAssistantIdListAsync(DateTime startDate, DateTime endDate, List<int> AssistantId, List<string> phoneList, bool isCurrent, BelongChannel belongChannel);
+        Task<OrderSendAndDealNumDto> GetBeforeLiveEmployeeOrderSendAndDealDataByAssistantIdListAsync(DateTime startDate, DateTime endDate, int AssistantId, List<string> phoneList, bool isCurrent, BelongChannel belongChannel);
         #endregion
         #region 医院看板
 

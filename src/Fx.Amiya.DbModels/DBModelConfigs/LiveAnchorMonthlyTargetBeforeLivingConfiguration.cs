@@ -112,6 +112,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.CumulativeFlowInvestment).HasColumnName("cumulative_flow_investment").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.FlowInvestmentCompleteRate).HasColumnName("flow_investment_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
 
+            builder.Property(t => t.OwnerId).HasColumnName("owner_id").HasColumnType("int").IsRequired(false);
 
             builder.Property(t => t.CreateDate).HasColumnName("create_date").HasColumnType("datetime").IsRequired();
             builder.HasOne(e => e.LiveAnchor).WithMany(e => e.LiveAnchorMonthlyTargetBeforeLivings).HasForeignKey(e => e.LiveAnchorId);

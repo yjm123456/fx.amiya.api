@@ -2536,13 +2536,16 @@ namespace Fx.Amiya.Service
         /// <param name="isEffectiveCustomerData"></param>
         /// <param name="assistantIdList"></param>
         /// <returns></returns>
-        public async Task<List<ShoppingCartRegistrationDto>> GetAdminCustomerShopCartRegisterPerformanceByAssistantIdListAsync(DateTime startDate, DateTime endDate, List<int> assistantIds)
+        public async Task<List<ShoppingCartRegistrationDto>> GetAdminCustomerShopCartRegisterPerformanceByAssistantIdListAsync(DateTime startDate, DateTime endDate, List<int> assistantIds,BelongChannel? belongChannel=null)
         {
             var result = from d in dalShoppingCartRegistration.GetAll()
             .Where(o => o.RecordDate >= startDate && o.RecordDate < endDate)
             .Where(o => o.AssignEmpId != null && o.IsReturnBackPrice == false)
             .Where(o => assistantIds.Contains(o.CreateBy))
                          select d;
+            if (belongChannel.HasValue) {
+                result = result.Where(e => e.BelongChannel == (int)belongChannel);
+            }
             var x = from d in result
                     select new ShoppingCartRegistrationDto
                     {
@@ -2556,6 +2559,8 @@ namespace Fx.Amiya.Service
 
             return await x.ToListAsync();
         }
+
+
 
 
 

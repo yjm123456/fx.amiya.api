@@ -613,5 +613,13 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// </summary>
 
         public decimal VideoShowCaseFeeCompleteRate { get; set; }
+        /// <summary>
+        /// 负责人id
+        /// </summary>
+        public int? OwnerId { get; set; }
+        /// <summary>
+        /// 负责人
+        /// </summary>
+        public string OwnerName { get; set; }
     }
 }
