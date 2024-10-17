@@ -752,7 +752,7 @@ namespace Fx.Amiya.Service
                     }
                 }
 
-                //await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
+                await dalShoppingCartRegistration.UpdateAsync(shoppingCartRegistration, true);
             }
         }
 
