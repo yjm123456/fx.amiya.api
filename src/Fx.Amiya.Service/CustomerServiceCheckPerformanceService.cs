@@ -34,9 +34,9 @@ namespace Fx.Amiya.Service
         public async Task<FxPageInfo<CustomerServiceCheckPerformanceDto>> GetListAsync(QueryCustomerServiceCheckPerformanceDto query)
         {
             AmiyaEmployeeDto employeeInfo = new AmiyaEmployeeDto();
-            var customerServiceCheckPerformances = from d in dalCustomerServiceCheckPerformance.GetAll().Include(x=>x.AmiyaEmployee)
+            var customerServiceCheckPerformances = from d in dalCustomerServiceCheckPerformance.GetAll().Include(x => x.AmiyaEmployee)
                                                    where (string.IsNullOrEmpty(query.KeyWord) || d.Remark.Contains(query.KeyWord))
-                                                   && (d.Valid == query.Valid)
+                                                   && (!query.Valid.HasValue || d.Valid == query.Valid)
                                                    select new CustomerServiceCheckPerformanceDto
                                                    {
                                                        Id = d.Id,
@@ -47,9 +47,11 @@ namespace Fx.Amiya.Service
                                                        DealInfoId = d.DealInfoId,
                                                        OrderId = d.OrderId,
                                                        OrderFrom = d.OrderFrom,
+                                                       OrderFromText = ServiceClass.GetOrderFromText(d.OrderFrom),
                                                        DealPrice = d.DealPrice,
                                                        DealCreateDate = d.DealCreateDate,
                                                        PerformanceType = d.PerformanceType,
+                                                       PerformanceTypeText=ServiceClass.GetPerformanceTypeText(d.PerformanceType),
                                                        BelongEmpId = d.BelongEmpId,
                                                        BelongEmpName = d.AmiyaEmployee.Name,
                                                        CheckEmpId = d.CheckEmpId,

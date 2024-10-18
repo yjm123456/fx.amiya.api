@@ -471,7 +471,15 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.AddWechatPicture = updateVo.AddWechatPicture;
                 updateDto.IsRiBuLuoLiving = updateVo.IsRiBuLuoLiving;
                 updateDto.IsHistoryCustomerActive = updateVo.IsHistoryCustomerActive;
-                updateDto.ActiveEmployeeId = updateVo.ActiveEmployeeId;
+                if (updateDto.IsHistoryCustomerActive == false)
+                {
+
+                    updateDto.ActiveEmployeeId = 128;
+                }
+                else
+                {
+                    updateDto.ActiveEmployeeId = updateVo.ActiveEmployeeId;
+                }
                 updateDto.CustomerWechatNo = updateVo.CustomerWechatNo;
                 updateDto.FromTitle = updateVo.FromTitle;
                 var contentPlatFormOrder = await contentPlateFormOrderService.GetOrderListByPhoneAsync(updateVo.Phone);

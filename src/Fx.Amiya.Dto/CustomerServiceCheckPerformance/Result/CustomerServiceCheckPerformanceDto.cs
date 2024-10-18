@@ -22,6 +22,10 @@ namespace Fx.Amiya.Dto.CustomerServiceCheckPerformance.Result
         /// 订单来源
         /// </summary>
         public int OrderFrom { get; set; }
+        /// <summary>
+        /// 订单来源文本
+        /// </summary>
+        public string OrderFromText { get; set; }
 
         /// <summary>
         /// 成交金额
@@ -37,6 +41,11 @@ namespace Fx.Amiya.Dto.CustomerServiceCheckPerformance.Result
         /// 助理薪资业绩类型
         /// </summary>
         public int PerformanceType { get; set; }
+
+        /// <summary>
+        /// 业绩类型文本
+        /// </summary>
+        public string PerformanceTypeText { get; set; }
 
         /// <summary>
         /// 归属客服

@@ -44,11 +44,6 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerServiceCheckPerformance.Input
         public int BelongEmpId { get; set; }
 
         /// <summary>
-        /// 归属客服名称
-        /// </summary>
-        public string BelongEmpName { get; set; }
-
-        /// <summary>
         /// 薪资点数
         /// </summary>
         public decimal Point { get; set; }
@@ -58,10 +53,6 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerServiceCheckPerformance.Input
         /// 稽查人员id
         /// </summary>
         public int? CheckEmpId { get; set; }
-        /// <summary>
-        /// 稽查人员名称
-        /// </summary>
-        public string CheckEmpName { get; set; }
 
         /// <summary>
         /// 备注

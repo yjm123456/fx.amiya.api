@@ -61,8 +61,6 @@ CREATE TABLE `amiyadb`.`tbl_hospital_contentplatform_code` (
   PRIMARY KEY (`id`));
 ------------------------------------余建明 2024/8/14 END--------------------------------------
 
---------------------------------------------------------------------------------------------------------以上部分已更新到线上--------------------------------------
-
 ------------------------------------余建明 2024/10/11 BEGIN--------------------------------------
 --助理阶梯薪资基础配置表
 CREATE TABLE `amiyadb`.`tbl_employee_performance_ladder` (
@@ -88,7 +86,7 @@ CREATE TABLE `amiyadb`.`tbl_employee_performance_ladder` (
   `deal_info_id` VARCHAR(50) NOT NULL,
   `order_id` VARCHAR(50) NOT NULL,
   `order_from` INT NOT NULL,
-  `deal_price` VARCHAR(45) NOT NULL,
+  `deal_price`  DECIMAL(12,2) NOT NULL,
   `deal_create_date` DATETIME NOT NULL,
   `performance_type` INT NOT NULL,
   `belong_emp_id` INT UNSIGNED NOT NULL,
@@ -97,6 +95,10 @@ CREATE TABLE `amiyadb`.`tbl_employee_performance_ladder` (
   `remark` VARCHAR(500) NULL,
   `bill_id` VARCHAR(50) NULL,
   `check_bill_id` VARCHAR(50) NULL,
+  `create_date` DATETIME NOT NULL,
+  `update_date` DATETIME NULL,
+  `valid` BIT(1) NOT NULL DEFAULT b'0',
+  `delete_date` DATETIME NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_belong_employee_idx` (`belong_emp_id` ASC) VISIBLE,
   CONSTRAINT `fk_belong_employee`
@@ -107,3 +109,5 @@ CREATE TABLE `amiyadb`.`tbl_employee_performance_ladder` (
 
 
 ------------------------------------余建明 2024/10/11 END--------------------------------------
+
+--------------------------------------------------------------------------------------------------------以上部分已更新到线上--------------------------------------
