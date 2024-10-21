@@ -9,5 +9,22 @@ namespace Fx.Amiya.Dto.CustomerServiceCheckPerformance.Input
     public class QueryCustomerServiceCheckPerformanceDto : BaseQueryDto
     {
         public bool? Valid { get; set; }
+        /// <summary>
+        /// 归属客服
+        /// </summary>
+        public int? BelongEmpId { get; set; }
+
+        /// <summary>
+        /// 是否为稽查业绩（默认传否）
+        /// </summary>
+        public bool IsCheckPerformance { get; set; }
+        /// <summary>
+        /// 稽查客服
+        /// </summary>
+        public int? CheckEmpId { get; set; }
+        /// <summary>
+        /// 业绩类型合集
+        /// </summary>
+        public List<int> PerformanceTypeList { get; set; }
     }
 }

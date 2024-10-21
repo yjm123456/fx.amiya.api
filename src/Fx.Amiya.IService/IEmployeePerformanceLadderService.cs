@@ -15,5 +15,13 @@ namespace Fx.Amiya.IService
         Task UpdateAsync(UpdateEmployeePerformanceLadderDto updateDto);
         Task DeleteAsync(string id);
         Task<List<BaseKeyValueDto>> GetValidListAsync();
+
+        /// <summary>
+        /// 根据业绩获取提点
+        /// </summary>
+        /// <param name="performance"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        Task<decimal> GetPointByPerformanceAsync(decimal performance, int? employeeId);
     }
 }

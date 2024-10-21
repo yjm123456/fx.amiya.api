@@ -73,6 +73,16 @@ namespace Fx.Amiya.Dto.CustomerServiceCheckPerformance.Result
         public string CheckEmpName{ get; set; }
 
         /// <summary>
+        /// 助理业绩提成
+        /// </summary>
+        public decimal PerformanceCommision { get; set; }
+
+        /// <summary>
+        /// 行政客服业绩提成
+        /// </summary>
+        public decimal PerformanceCommisionCheck { get; set; }
+
+        /// <summary>
         /// 备注
         /// </summary>
         public string Remark { get; set; }

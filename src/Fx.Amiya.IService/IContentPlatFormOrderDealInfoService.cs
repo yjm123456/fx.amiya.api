@@ -407,6 +407,22 @@ namespace Fx.Amiya.IService
         /// <param name="endDate"></param>
         /// <returns></returns>
         Task<List<ContentPlatFormOrderDealInfoDto>> GetSimplePerformanceDetailByDateAsync(DateTime startDate, DateTime endDate);
+
+        /// <summary>
+        /// 根据成交编号获取成交登记日期
+        /// </summary>
+        /// <param name="dealId"></param>
+        /// <returns></returns>
+        Task<DateTime> GetDealCraeteDateByDealIdAsync(string dealId);
+
+        /// <summary>
+        /// 根据时间和助理id获取当前总业绩值
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        Task<decimal> GetTotalPerformanceByEmployeeAndDateAsync(DateTime startDate, DateTime endDate, int employeeId);
         #endregion
 
         #region 【枚举下拉框】

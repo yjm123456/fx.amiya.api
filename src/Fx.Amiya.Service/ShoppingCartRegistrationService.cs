@@ -80,7 +80,7 @@ namespace Fx.Amiya.Service
             {
                 var config = await GetCallCenterConfig();
                 var shoppingCartRegistration = from d in dalShoppingCartRegistration.GetAll()
-                                               where (keyword == null || d.Phone.Contains(keyword) || d.SubPhone.Contains(keyword) || d.CustomerNickName.Contains(keyword) || d.LiveAnchorWechatNo.Contains(keyword) || d.Remark.Contains(keyword) || d.Id.Contains(keyword))
+                                               where (keyword == null || d.Phone.Contains(keyword) || d.SubPhone.Contains(keyword) || d.CustomerNickName.Contains(keyword) || d.LiveAnchorWechatNo.Contains(keyword) || d.Remark.Contains(keyword) || d.Id.Contains(keyword) || d.CustomerWechatNo.Contains(keyword) || d.FromTitle.Contains(keyword))
                                                && ((!startDate.HasValue && !endDate.HasValue) || d.RecordDate >= startDate.Value.Date && d.RecordDate < endDate.Value.AddDays(1).Date)
                                                && (string.IsNullOrEmpty(contentPlatFormId) || d.ContentPlatFormId == contentPlatFormId)
                                                && (!createBy.HasValue || d.CreateBy == createBy)

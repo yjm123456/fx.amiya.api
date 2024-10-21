@@ -69,6 +69,15 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public string CheckBillId { get; set; }
 
+        /// <summary>
+        /// 助理业绩提成
+        /// </summary>
+        public decimal PerformanceCommision { get; set; }
+
+        /// <summary>
+        /// 行政客服业绩提成
+        /// </summary>
+        public decimal PerformanceCommisionCheck { get; set; }
         public AmiyaEmployee AmiyaEmployee { get; set; }
     }
 }

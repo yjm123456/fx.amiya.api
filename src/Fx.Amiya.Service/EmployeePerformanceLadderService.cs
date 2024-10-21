@@ -35,25 +35,25 @@ namespace Fx.Amiya.Service
         {
             AmiyaEmployeeDto employeeInfo = new AmiyaEmployeeDto();
             var employeePerformanceLadders = from d in dalEmployeePerformanceLadder.GetAll()
-                                                where (string.IsNullOrEmpty(query.KeyWord) || d.Remark.Contains(query.KeyWord))
-                                                && (d.Valid == query.Valid)
-                                                select new EmployeePerformanceLadderDto
-                                                {
-                                                    Id = d.Id,
-                                                    CreateDate = d.CreateDate,
-                                                    UpdateDate = d.UpdateDate,
-                                                    Valid = d.Valid,
-                                                    DeleteDate = d.DeleteDate,
-                                                    CustomerServiceId = d.CustomerServiceId,
-                                                    IsPersonalConfig = d.IsPersonalConfig,
-                                                    PerformanceLowerLimit = d.PerformanceLowerLimit,
-                                                    PerformanceUpperLimit = d.PerformanceUpperLimit,
-                                                    BasePerformance = d.BasePerformance,
-                                                    Year = d.Year,
-                                                    Month = d.Month,
-                                                    Point = d.Point,
-                                                    Remark = d.Remark,
-                                                };
+                                             where (string.IsNullOrEmpty(query.KeyWord) || d.Remark.Contains(query.KeyWord))
+                                             && (d.Valid == query.Valid)
+                                             select new EmployeePerformanceLadderDto
+                                             {
+                                                 Id = d.Id,
+                                                 CreateDate = d.CreateDate,
+                                                 UpdateDate = d.UpdateDate,
+                                                 Valid = d.Valid,
+                                                 DeleteDate = d.DeleteDate,
+                                                 CustomerServiceId = d.CustomerServiceId,
+                                                 IsPersonalConfig = d.IsPersonalConfig,
+                                                 PerformanceLowerLimit = d.PerformanceLowerLimit,
+                                                 PerformanceUpperLimit = d.PerformanceUpperLimit,
+                                                 BasePerformance = d.BasePerformance,
+                                                 Year = d.Year,
+                                                 Month = d.Month,
+                                                 Point = d.Point,
+                                                 Remark = d.Remark,
+                                             };
             FxPageInfo<EmployeePerformanceLadderDto> employeePerformanceLadderPageInfo = new FxPageInfo<EmployeePerformanceLadderDto>();
             employeePerformanceLadderPageInfo.TotalCount = await employeePerformanceLadders.CountAsync();
             employeePerformanceLadderPageInfo.List = await employeePerformanceLadders.OrderByDescending(x => x.CreateDate).Skip((query.PageNum.Value - 1) * query.PageSize.Value).Take(query.PageSize.Value).ToListAsync();
@@ -182,15 +182,28 @@ namespace Fx.Amiya.Service
         public async Task<List<BaseKeyValueDto>> GetValidListAsync()
         {
             var employeePerformanceLadders = from d in dalEmployeePerformanceLadder.GetAll()
-                                                where (d.Valid == true)
-                                                select new BaseKeyValueDto
-                                                {
-                                                    Key = d.Id,
-                                                    Value = d.Remark
-                                                };
+                                             where (d.Valid == true)
+                                             select new BaseKeyValueDto
+                                             {
+                                                 Key = d.Id,
+                                                 Value = d.Remark
+                                             };
             List<BaseKeyValueDto> employeePerformanceLadderPageInfo = new List<BaseKeyValueDto>();
             employeePerformanceLadderPageInfo = await employeePerformanceLadders.ToListAsync();
             return employeePerformanceLadderPageInfo;
+        }
+
+
+        public async Task<decimal> GetPointByPerformanceAsync(decimal performance, int? employeeId)
+        {
+            var result = await dalEmployeePerformanceLadder.GetAll().Where(x => x.PerformanceLowerLimit <= performance && x.PerformanceUpperLimit > performance && x.Valid == true)
+                .Where(x => !employeeId.HasValue || x.IsPersonalConfig == true && x.CustomerServiceId == employeeId).FirstOrDefaultAsync();
+            if (result == null)
+            {
+                return 0.00M;
+            }
+
+            return result.Point;
         }
     }
 }

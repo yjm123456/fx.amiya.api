@@ -55,6 +55,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryDto.PageSize = query.PageSize;
                 queryDto.Valid = query.Valid;
                 queryDto.KeyWord = query.KeyWord;
+                queryDto.BelongEmpId = query.BelongEmpId;
+                queryDto.IsCheckPerformance = query.IsCheckPerformance;
+                queryDto.CheckEmpId = query.CheckEmpId;
+                queryDto.PerformanceTypeList = query.PerformanceTypeList;
                 var q = await customerServiceCheckPerformanceService.GetListAsync(queryDto);
                 var customerServiceCheckPerformance = from d in q.List
                                                       select new CustomerServiceCheckPerformanceVo
@@ -78,6 +82,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                           CheckEmpName = d.CheckEmpName,
                                                           Remark = d.Remark,
                                                           Point = d.Point,
+                                                          PerformanceCommision = d.PerformanceCommision,
+                                                          PerformanceCommisionCheck = d.PerformanceCommisionCheck,
                                                           BillId = d.BillId,
                                                           CheckBillId = d.CheckBillId,
                                                       };
@@ -118,6 +124,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.BelongEmpId = addVo.BelongEmpId;
                 addDto.Remark = addVo.Remark;
                 addDto.Point = addVo.Point;
+                addDto.PerformanceCommision = addVo.PerformanceCommision;
+                addDto.PerformanceCommisionCheck = addVo.PerformanceCommisionCheck;
                 addDto.CheckEmpId = addVo.CheckEmpId;
                 addDto.BillId = addVo.BillId;
                 addDto.CheckBillId = addVo.CheckBillId;
@@ -157,6 +165,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 customerServiceCheckPerformanceVo.BelongEmpId = customerServiceCheckPerformance.BelongEmpId;
                 customerServiceCheckPerformanceVo.Remark = customerServiceCheckPerformance.Remark;
                 customerServiceCheckPerformanceVo.Point = customerServiceCheckPerformance.Point;
+                customerServiceCheckPerformanceVo.PerformanceCommision = customerServiceCheckPerformance.PerformanceCommision;
+                customerServiceCheckPerformanceVo.PerformanceCommisionCheck = customerServiceCheckPerformance.PerformanceCommisionCheck;
                 customerServiceCheckPerformanceVo.CheckEmpId = customerServiceCheckPerformance.CheckEmpId;
                 customerServiceCheckPerformanceVo.BillId = customerServiceCheckPerformance.BillId;
                 customerServiceCheckPerformanceVo.CheckBillId = customerServiceCheckPerformance.CheckBillId;
@@ -193,6 +203,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.BelongEmpId = updateVo.BelongEmpId;
                 updateDto.Remark = updateVo.Remark;
                 updateDto.Point = updateVo.Point;
+                updateDto.PerformanceCommision = updateVo.PerformanceCommision;
+                updateDto.PerformanceCommisionCheck = updateVo.PerformanceCommisionCheck;
                 updateDto.CheckEmpId = updateVo.CheckEmpId;
                 updateDto.BillId = updateVo.BillId;
                 updateDto.CheckBillId = updateVo.CheckBillId;

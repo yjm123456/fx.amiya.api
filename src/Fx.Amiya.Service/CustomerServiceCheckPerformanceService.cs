@@ -35,8 +35,12 @@ namespace Fx.Amiya.Service
         {
             AmiyaEmployeeDto employeeInfo = new AmiyaEmployeeDto();
             var customerServiceCheckPerformances = from d in dalCustomerServiceCheckPerformance.GetAll().Include(x => x.AmiyaEmployee)
-                                                   where (string.IsNullOrEmpty(query.KeyWord) || d.Remark.Contains(query.KeyWord))
-                                                   && (!query.Valid.HasValue || d.Valid == query.Valid)
+                                                   where (string.IsNullOrEmpty(query.KeyWord) || d.Remark.Contains(query.KeyWord) || d.DealInfoId.Contains(query.KeyWord) || d.OrderId.Contains(query.KeyWord))
+                                                   && (!query.Valid.HasValue || d.Valid == query.Valid.Value)
+                                                   && (!query.BelongEmpId.HasValue || d.BelongEmpId == query.BelongEmpId.Value)
+                                                   && (query.IsCheckPerformance==false || d.PerformanceType ==(int)PerformanceType.Check)
+                                                   && (!query.CheckEmpId.HasValue || d.CheckEmpId == query.CheckEmpId.Value)
+                                                   && (query.PerformanceTypeList.Count()==0 || query.PerformanceTypeList.Contains(d.PerformanceType))
                                                    select new CustomerServiceCheckPerformanceDto
                                                    {
                                                        Id = d.Id,
@@ -51,12 +55,14 @@ namespace Fx.Amiya.Service
                                                        DealPrice = d.DealPrice,
                                                        DealCreateDate = d.DealCreateDate,
                                                        PerformanceType = d.PerformanceType,
-                                                       PerformanceTypeText=ServiceClass.GetPerformanceTypeText(d.PerformanceType),
+                                                       PerformanceTypeText = ServiceClass.GetPerformanceTypeText(d.PerformanceType),
                                                        BelongEmpId = d.BelongEmpId,
                                                        BelongEmpName = d.AmiyaEmployee.Name,
                                                        CheckEmpId = d.CheckEmpId,
                                                        Remark = d.Remark,
                                                        Point = d.Point,
+                                                       PerformanceCommision = d.PerformanceCommision,
+                                                       PerformanceCommisionCheck = d.PerformanceCommisionCheck,
                                                        BillId = d.BillId,
                                                        CheckBillId = d.CheckBillId,
                                                    };
@@ -100,6 +106,8 @@ namespace Fx.Amiya.Service
                 customerServiceCheckPerformance.CheckEmpId = addDto.CheckEmpId;
                 customerServiceCheckPerformance.BillId = addDto.BillId;
                 customerServiceCheckPerformance.CheckBillId = addDto.CheckBillId;
+                customerServiceCheckPerformance.PerformanceCommisionCheck = addDto.PerformanceCommisionCheck;
+                customerServiceCheckPerformance.PerformanceCommision = addDto.PerformanceCommision;
                 await dalCustomerServiceCheckPerformance.AddAsync(customerServiceCheckPerformance, true);
 
             }
@@ -132,6 +140,8 @@ namespace Fx.Amiya.Service
             returnResult.BelongEmpId = result.BelongEmpId;
             returnResult.Remark = result.Remark;
             returnResult.Point = result.Point;
+            returnResult.PerformanceCommision = result.PerformanceCommision;
+            returnResult.PerformanceCommisionCheck = result.PerformanceCommisionCheck;
             returnResult.CheckEmpId = result.CheckEmpId;
             returnResult.BillId = result.BillId;
             returnResult.CheckBillId = result.CheckBillId;
@@ -158,6 +168,8 @@ namespace Fx.Amiya.Service
             result.BelongEmpId = updateDto.BelongEmpId;
             result.Remark = updateDto.Remark;
             result.Point = updateDto.Point;
+            result.PerformanceCommision = updateDto.PerformanceCommision;
+            result.PerformanceCommisionCheck = updateDto.PerformanceCommisionCheck;
             result.CheckEmpId = updateDto.CheckEmpId;
             result.BillId = updateDto.BillId;
             result.CheckBillId = updateDto.CheckBillId;

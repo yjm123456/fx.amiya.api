@@ -48,6 +48,16 @@ namespace Fx.Amiya.Dto.CustomerServiceCheckPerformance.Input
         /// </summary>
         public decimal Point { get; set; }
 
+        /// <summary>
+        /// 助理业绩提成
+        /// </summary>
+        public decimal PerformanceCommision { get; set; }
+
+        /// <summary>
+        /// 行政客服业绩提成
+        /// </summary>
+        public decimal PerformanceCommisionCheck { get; set; }
+
 
         /// <summary>
         /// 稽查人员id

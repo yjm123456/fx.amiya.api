@@ -2320,7 +2320,7 @@ namespace Fx.Amiya.Service
                 .Where(o => assistantId.Count == 0 || (o.ContentPlatFormOrder.IsSupportOrder == false && assistantId.Contains(o.ContentPlatFormOrder.BelongEmpId.Value)))
                 .Select(ContentPlatFOrmOrderDealInfo => new ContentPlatFormOrderDealInfoDto
                 {
-                    ContentPlatFormOrderId= ContentPlatFOrmOrderDealInfo.ContentPlatFormOrderId,
+                    ContentPlatFormOrderId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrderId,
                     Phone = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.Phone,
                     BelongEmployeeId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.BelongEmpId.Value,
                     Price = ContentPlatFOrmOrderDealInfo.Price,
@@ -2328,7 +2328,7 @@ namespace Fx.Amiya.Service
                     AddOrderPrice = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.AddOrderPrice,
                     LastDealHospitalId = ContentPlatFOrmOrderDealInfo.LastDealHospitalId,
                     SendDate = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.SendDate,
-                    ConsultationType= ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.ConsulationType
+                    ConsultationType = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.ConsulationType
                 }
                 ).ToList();
             var supportData = dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
@@ -2482,6 +2482,39 @@ namespace Fx.Amiya.Service
                 }
                 ).ToList();
         }
+
+
+        /// <summary>
+        /// 根据成交编号获取成交登记日期
+        /// </summary>
+        /// <param name="dealId"></param>
+        /// <returns></returns>
+        public async Task<DateTime> GetDealCraeteDateByDealIdAsync(string dealId)
+        {
+            var result = await dalContentPlatFormOrderDealInfo.GetAll().Where(x=>x.Id==dealId).Select(x=>x.CreateDate).FirstOrDefaultAsync();
+            return result;
+        }
+
+
+        /// <summary>
+        /// 获取截止时间的助理总业绩
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        public async Task<decimal> GetTotalPerformanceByEmployeeAndDateAsync(DateTime startDate, DateTime endDate, int employeeId)
+        {
+            var query = await dalContentPlatFormOrderDealInfo.GetAll()
+             .Include(e => e.ContentPlatFormOrder)
+             .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate)
+             .Where(e => e.ContentPlatFormOrder.IsSupportOrder ? e.ContentPlatFormOrder.SupportEmpId == employeeId : e.ContentPlatFormOrder.BelongEmpId == employeeId)
+             .Where(e => e.DealPerformanceType != (int)ContentPlateFormOrderDealPerformanceType.AssistantCheck && e.DealPerformanceType != (int)ContentPlateFormOrderDealPerformanceType.FinanceCheck && e.Price > 0).ToListAsync();
+
+            var result = query.Sum(x => x.Price);
+            return result;
+        }
+
         #endregion
 
         #region 【枚举下拉框】
