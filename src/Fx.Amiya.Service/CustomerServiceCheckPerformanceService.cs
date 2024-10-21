@@ -38,9 +38,9 @@ namespace Fx.Amiya.Service
                                                    where (string.IsNullOrEmpty(query.KeyWord) || d.Remark.Contains(query.KeyWord) || d.DealInfoId.Contains(query.KeyWord) || d.OrderId.Contains(query.KeyWord))
                                                    && (!query.Valid.HasValue || d.Valid == query.Valid.Value)
                                                    && (!query.BelongEmpId.HasValue || d.BelongEmpId == query.BelongEmpId.Value)
-                                                   && (query.IsCheckPerformance==false || d.PerformanceType ==(int)PerformanceType.Check)
+                                                   && (query.IsCheckPerformance == false || d.PerformanceType == (int)PerformanceType.Check)
                                                    && (!query.CheckEmpId.HasValue || d.CheckEmpId == query.CheckEmpId.Value)
-                                                   && (query.PerformanceTypeList.Count()==0 || query.PerformanceTypeList.Contains(d.PerformanceType))
+                                                   && (query.PerformanceTypeList.Count() == 0 || query.PerformanceTypeList.Contains(d.PerformanceType))
                                                    select new CustomerServiceCheckPerformanceDto
                                                    {
                                                        Id = d.Id,

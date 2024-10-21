@@ -16,7 +16,7 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerServiceCheckPerformance.Input
         /// <summary>
         /// 是否为稽查业绩（默认传否）
         /// </summary>
-        public bool? IsCheckPerformance { get; set; }
+        public bool IsCheckPerformance { get; set; }
         /// <summary>
         /// 稽查客服
         /// </summary>
