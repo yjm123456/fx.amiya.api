@@ -8,18 +8,31 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
 {
     public class BeforeLiveDepartmentContentPlatformClueRateDto
     {
+        public int DepartmentClue { get; set; }
         /// <summary>
         /// 部门平台线索占比
         /// </summary>
         public List<BeforeLiveDepartmentContentPlatformClueRateDataItemDto> DepartmentContentPlatformClueRate { get; set; }
         /// <summary>
+        /// 抖音线索
+        /// </summary>
+        public int TikTokClue { get; set; }
+        /// <summary>
         /// 抖音部门平台线索占比
         /// </summary>
         public List<BeforeLiveDepartmentContentPlatformClueRateDataItemDto> TikTokClueRate { get; set; }
         /// <summary>
+        /// 视频号线索
+        /// </summary>
+        public int WechatVideoClue { get; set; }
+        /// <summary>
         /// 视频号部门平台线索占比
         /// </summary>
         public List<BeforeLiveDepartmentContentPlatformClueRateDataItemDto> WechatVideoClueRate { get; set; }
+        /// <summary>
+        /// 小红书线索
+        /// </summary>
+        public int XiaoHongShuClue { get; set; }
         /// <summary>
         /// 小红书部门平台线索占比
         /// </summary>
@@ -32,5 +45,6 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
     {
         public string Name { get; set; }
         public decimal Value { get; set; }
+        public decimal Performance { get; set; }
     }
 }

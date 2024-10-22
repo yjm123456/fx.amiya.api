@@ -4182,7 +4182,7 @@ namespace Fx.Amiya.Service
             var performance = performanceData.GroupBy(e => e.CreateDate.Day).Select(e => new PerformanceBrokenLineListInfoDto
             {
                 date = e.Key.ToString(),
-                Performance = e.Sum(e => e.Price)
+                Performance = ChangePriceToTenThousand(e.Sum(e => e.Price))
             }).ToList();
             beforeLiveClueAndPerformanceBrokenData.PerformanceData = FillDate(query.EndDate.Year, query.EndDate.Month, performance);
             return beforeLiveClueAndPerformanceBrokenData;
@@ -4208,7 +4208,7 @@ namespace Fx.Amiya.Service
             //组小黄车数据
             var baseBusinessPerformance = await shoppingCartRegistrationService.GetAdminCustomerShopCartRegisterPerformanceByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, assistantIdList, BelongChannel.LiveBefore);
             //个人小黄车数据
-            var assisatntBusinessPerformance = await shoppingCartRegistrationService.GetAdminCustomerShopCartRegisterPerformanceByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, new List<int> { query.AssistantId.Value });
+            var assisatntBusinessPerformance = await shoppingCartRegistrationService.GetAdminCustomerShopCartRegisterPerformanceByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, new List<int> { query.AssistantId.Value }, BelongChannel.LiveBefore);
             #endregion
 
 
@@ -4241,7 +4241,7 @@ namespace Fx.Amiya.Service
             if (query.History)
                 isCurrent = false;
             var depeartPhoneList = baseBusinessPerformance.Select(e => e.Phone).ToList();
-            var allOrderPerformance = await contentPlateFormOrderService.GetBeforeLiveDepartOrderSendAndDealDataByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, assistantIdList, depeartPhoneList, isCurrent, BelongChannel.LiveBefore);
+            var allOrderPerformance = await contentPlateFormOrderService.GetBeforeLiveDepartOrderSendAndDealDataByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, assistantIdList, depeartPhoneList, isCurrent);
 
             #endregion
             #region 【派单】
@@ -4277,7 +4277,7 @@ namespace Fx.Amiya.Service
             #region 【分诊】
             //当月数据
             var employeePhoneList = assisatntBusinessPerformance.Select(e => e.Phone).ToList();
-            var addWechatOrderPerformance = await contentPlateFormOrderService.GetBeforeLiveEmployeeOrderSendAndDealDataByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, query.AssistantId.Value, employeePhoneList, isCurrent, BelongChannel.LiveBefore);
+            var addWechatOrderPerformance = await contentPlateFormOrderService.GetBeforeLiveEmployeeOrderSendAndDealDataByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate,assistantIdList, query.AssistantId.Value, employeePhoneList, isCurrent);
             //分诊
             BeforeLiveFilterDetailDataDto consulationdetails2 = new BeforeLiveFilterDetailDataDto();
             consulationdetails2.Key = "Consulation";
@@ -4385,7 +4385,7 @@ namespace Fx.Amiya.Service
             res1.RemoveAll(e => e.Key == "其它" || e.Value == 0);
             data.SendCycleData = res1;
             #endregion
-
+                
             #region 分诊上门
             var dealInfoList = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate >= seqDate.StartDate && e.CreateDate < seqDate.EndDate && e.IsOldCustomer == false && e.IsToHospital == true && e.ToHospitalDate.HasValue)
                     .Where(e => (e.ContentPlatFormOrder.IsSupportOrder ? assistantIdList.Contains(e.ContentPlatFormOrder.SupportEmpId) : assistantIdList.Contains(e.ContentPlatFormOrder.BelongEmpId.Value)))
@@ -4409,7 +4409,7 @@ namespace Fx.Amiya.Service
             //转化周期数据
             var res2 = dataList2.GroupBy(e => e.EmpId).Select(e =>
             {
-                var endIndex = DecimalExtension.CalTakeCount(e.Count(), 0.6m);
+                var endIndex = DecimalExtension.CalTakeCount(e.Count(), 0.8m);
                 var resData = e.OrderBy(e => e.IntervalDays).Skip(0).Take(endIndex);
                 return new KeyValuePair<string, int>(
                 assistantList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其它",
@@ -4501,7 +4501,7 @@ namespace Fx.Amiya.Service
             return data;
         }
         /// <summary>
-        /// 获取直播前部门平台线索和业绩占比数据
+        /// 获取直播前部门平台线索占比数据
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
@@ -4520,28 +4520,36 @@ namespace Fx.Amiya.Service
                     LiveAnchorName = e.LiveAnchor.Name,
                 }).ToListAsync();
             var totalCount = baseData.Count;
+            beforeLiveDepartment.DepartmentClue = totalCount;
             beforeLiveDepartment.DepartmentContentPlatformClueRate = baseData.GroupBy(e => e.ContentPlatformName).Select(e => new BeforeLiveDepartmentContentPlatformClueRateDataItemDto
             {
                 Name = e.Key,
-                Value = DecimalExtension.CalculateTargetComplete(e.Count(), totalCount).Value
+                Value = DecimalExtension.CalculateTargetComplete(e.Count(), totalCount).Value,
+                Performance= e.Count()
             }).ToList();
+            beforeLiveDepartment.TikTokClue = baseData.Where(e => e.ContentPlatformId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Count();
             beforeLiveDepartment.TikTokClueRate = baseData.Where(e => e.ContentPlatformId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").GroupBy(e => e.LiveAnchorName)
                 .Select(e => new BeforeLiveDepartmentContentPlatformClueRateDataItemDto
                 {
                     Name = e.Key,
-                    Value = DecimalExtension.CalculateTargetComplete(e.Count(), baseData.Where(e => e.ContentPlatformId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Count()).Value
+                    Value = DecimalExtension.CalculateTargetComplete(e.Count(), baseData.Where(e => e.ContentPlatformId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Count()).Value,
+                    Performance= e.Count()
                 }).ToList();
+            beforeLiveDepartment.WechatVideoClue = baseData.Where(e => e.ContentPlatformId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Count();
             beforeLiveDepartment.WechatVideoClueRate = baseData.Where(e => e.ContentPlatformId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").GroupBy(e => e.LiveAnchorName)
                .Select(e => new BeforeLiveDepartmentContentPlatformClueRateDataItemDto
                {
                    Name = e.Key,
-                   Value = DecimalExtension.CalculateTargetComplete(e.Count(), baseData.Where(e => e.ContentPlatformId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Count()).Value
+                   Value = DecimalExtension.CalculateTargetComplete(e.Count(), baseData.Where(e => e.ContentPlatformId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Count()).Value,
+                   Performance= e.Count()
                }).ToList();
+            beforeLiveDepartment.XiaoHongShuClue = baseData.Where(e => e.ContentPlatformId == "317c03b8-aff9-4961-8392-fc44d04b1725").Count();
             beforeLiveDepartment.XiaohongshuClueRate = baseData.Where(e => e.ContentPlatformId == "317c03b8-aff9-4961-8392-fc44d04b1725").GroupBy(e => e.LiveAnchorName)
                .Select(e => new BeforeLiveDepartmentContentPlatformClueRateDataItemDto
                {
                    Name = e.Key,
-                   Value = DecimalExtension.CalculateTargetComplete(e.Count(), baseData.Where(e => e.ContentPlatformId == "317c03b8-aff9-4961-8392-fc44d04b1725").Count()).Value
+                   Value = DecimalExtension.CalculateTargetComplete(e.Count(), baseData.Where(e => e.ContentPlatformId == "317c03b8-aff9-4961-8392-fc44d04b1725").Count()).Value,
+                   Performance= e.Count()
                }).ToList();
             return beforeLiveDepartment;
 
@@ -4550,7 +4558,7 @@ namespace Fx.Amiya.Service
 
 
         /// <summary>
-        /// 获取直播前部门平台线索和业绩占比数据
+        /// 获取直播前部门平台业绩占比数据
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
@@ -4572,13 +4580,12 @@ namespace Fx.Amiya.Service
             }
             else
             {
-                var totalPhoneList = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.IsDeal == true && e.CreateDate >= selectDate.StartDate && e.CreateDate < selectDate.EndDate).Select(e => e.ContentPlatFormOrder.Phone).ToList();
-                var belongBeforeLivePhoneList = _dalShoppingCartRegistration.GetAll()
-                    .Where(e => e.RecordDate >= selectDate.StartDate && e.RecordDate < selectDate.EndDate && assistantIdList.Contains(e.CreateBy) && e.BelongChannel == (int)BelongChannel.LiveBefore)
-                    .Where(e => totalPhoneList.Contains(e.Phone))
-                    .Select(e => e.Phone)
-                    .ToList();
-                phoneList = belongBeforeLivePhoneList.Where(e => baseData.Select(e => e).Contains(e)).ToList();
+                //该部门本月直播前全部成交手机号(历史和当月)
+                var totalPhoneList = dalContentPlatFormOrderDealInfo.GetAll()
+                    .Where(e=>e.ContentPlatFormOrder.BelongChannel==(int)BelongChannel.LiveBefore)
+                    .Where(e=>assistantIdList.Contains(e.ContentPlatFormOrder.IsSupportOrder?e.ContentPlatFormOrder.SupportEmpId:e.ContentPlatFormOrder.BelongEmpId.Value))
+                    .Where(e => e.IsDeal == true && e.CreateDate >= selectDate.StartDate && e.CreateDate < selectDate.EndDate).Select(e => e.ContentPlatFormOrder.Phone).ToList();
+                phoneList = totalPhoneList.Where(e => !baseData.Select(e => e).Contains(e)).ToList();
             }
             var performanceList = dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.IsDeal == true && phoneList.Contains(e.ContentPlatFormOrder.Phone) && e.CreateDate >= selectDate.StartDate && e.CreateDate < selectDate.EndDate)
                    .Select(e => new
@@ -4589,29 +4596,37 @@ namespace Fx.Amiya.Service
                        Price = e.Price
                    }).ToList();
             var totalPerformance = performanceList.Sum(e => e.Price);
+            data.DepartmentPerformance = ChangePriceToTenThousand(totalPerformance);
             data.DepartmentContentPlatformPerformanceRate = performanceList.GroupBy(e => e.ContentPlatformName)
                 .Select(e => new BeforeLiveDepartmentContentPlatformPerformanceRateDataItemDto
                 {
                     Name = e.Key,
-                    Value = DecimalExtension.CalculateTargetComplete(performanceList.Sum(e => e.Price), totalPerformance).Value
+                    Value = DecimalExtension.CalculateTargetComplete(performanceList.Sum(e => e.Price), totalPerformance).Value,
+                    Performance= ChangePriceToTenThousand(performanceList.Sum(e => e.Price))
                 }).ToList();
+            data.TikTokPerformance = ChangePriceToTenThousand(performanceList.Where(e => e.ContentPlateformId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Sum(e => e.Price));
             data.TikTokPerformanceRate = performanceList.Where(e => e.ContentPlateformId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").GroupBy(e => e.LiveAnchorName)
                 .Select(e => new BeforeLiveDepartmentContentPlatformPerformanceRateDataItemDto
                 {
                     Name = e.Key,
-                    Value = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.Price), performanceList.Where(e => e.ContentPlateformId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Sum(e => e.Price)).Value
+                    Value = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.Price), performanceList.Where(e => e.ContentPlateformId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Sum(e => e.Price)).Value,
+                    Performance= ChangePriceToTenThousand(e.Sum(e => e.Price))
                 }).ToList();
+            data.WechatVideoPerformance =ChangePriceToTenThousand(performanceList.Where(e => e.ContentPlateformId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Sum(e => e.Price));
             data.WechatVideoPerformanceRate = performanceList.Where(e => e.ContentPlateformId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").GroupBy(e => e.LiveAnchorName)
                .Select(e => new BeforeLiveDepartmentContentPlatformPerformanceRateDataItemDto
                {
                    Name = e.Key,
-                   Value = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.Price), performanceList.Where(e => e.ContentPlateformId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Sum(e => e.Price)).Value
+                   Value = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.Price), performanceList.Where(e => e.ContentPlateformId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Sum(e => e.Price)).Value,
+                   Performance= ChangePriceToTenThousand(e.Sum(e => e.Price))
                }).ToList();
+            data.XiaohongshuPerformance = ChangePriceToTenThousand(performanceList.Where(e => e.ContentPlateformId == "317c03b8-aff9-4961-8392-fc44d04b1725").Sum(e => e.Price));
             data.XiaohongshuPerformanceRate = performanceList.Where(e => e.ContentPlateformId == "317c03b8-aff9-4961-8392-fc44d04b1725").GroupBy(e => e.LiveAnchorName)
                .Select(e => new BeforeLiveDepartmentContentPlatformPerformanceRateDataItemDto
                {
                    Name = e.Key,
-                   Value = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.Price), performanceList.Where(e => e.ContentPlateformId == "317c03b8-aff9-4961-8392-fc44d04b1725").Sum(e => e.Price)).Value
+                   Value = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.Price), performanceList.Where(e => e.ContentPlateformId == "317c03b8-aff9-4961-8392-fc44d04b1725").Sum(e => e.Price)).Value,
+                   Performance= ChangePriceToTenThousand(e.Sum(e => e.Price))
                }).ToList();
             return data;
         }

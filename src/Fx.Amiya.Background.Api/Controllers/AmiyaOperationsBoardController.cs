@@ -1790,25 +1790,33 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.AssistantId = query.AssistantId;
             var res = await amiyaOperationsBoardService.GetBeforeLiveDepartmentContentPlatformClueRateAsync(queryDto);
             BeforeLiveDepartmentContentPlatformClueRateVo data = new BeforeLiveDepartmentContentPlatformClueRateVo();
+            data.DepartmentPerformance = res.DepartmentClue;
             data.DepartmentContentPlatformClueRate = res.DepartmentContentPlatformClueRate.Select(e => new BeforeLiveDepartmentContentPlatformClueRateDataItemVo
             {
                 Name = e.Name,
-                Value = e.Value
+                Value = e.Value,
+                Performance=e.Performance
             }).ToList();
+            data.TikTokPerformance = res.TikTokClue;
             data.TikTokClueRate = res.TikTokClueRate.Select(e => new BeforeLiveDepartmentContentPlatformClueRateDataItemVo
             {
                 Name = e.Name,
-                Value = e.Value
+                Value = e.Value,
+                Performance = e.Performance
             }).ToList();
+            data.WechatVideoPerformance = res.WechatVideoClue;
             data.WechatVideoClueRate = res.WechatVideoClueRate.Select(e => new BeforeLiveDepartmentContentPlatformClueRateDataItemVo
             {
                 Name = e.Name,
-                Value = e.Value
+                Value = e.Value,
+                Performance = e.Performance
             }).ToList();
+            data.XiaohongshuPerformance = res.XiaoHongShuClue;
             data.XiaohongshuClueRate = res.XiaohongshuClueRate.Select(e => new BeforeLiveDepartmentContentPlatformClueRateDataItemVo
             {
                 Name = e.Name,
-                Value = e.Value
+                Value = e.Value,
+                Performance = e.Performance
             }).ToList();
             return ResultData<BeforeLiveDepartmentContentPlatformClueRateVo>.Success().AddData("data",data);
         }
@@ -1827,24 +1835,32 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.History = query.History;
             var res = await amiyaOperationsBoardService.GetBeforeLiveDepartmentContentPlatformPerformanceRateAsync(queryDto);
             BeforeLiveDepartmentContentPlatformPerformanceRateVo data = new BeforeLiveDepartmentContentPlatformPerformanceRateVo();
+            data.DepartmentPerformance = res.DepartmentPerformance;
             data.DepartmentContentPlatformPerformanceRate = res.DepartmentContentPlatformPerformanceRate.Select(e => new BeforeLiveDepartmentContentPlatformPerformanceRateDataItemVo {
                 Name=e.Name,
-                Value=e.Value
+                Value=e.Value,
+                Performance=e.Performance
             }).ToList();
+            data.TikTokPerformance = res.TikTokPerformance;
             data.TikTokPerformanceRate = res.TikTokPerformanceRate.Select(e => new BeforeLiveDepartmentContentPlatformPerformanceRateDataItemVo
             {
                 Name = e.Name,
-                Value = e.Value
+                Value = e.Value,
+                Performance = e.Performance
             }).ToList();
+            data.WechatVideoPerformance = res.WechatVideoPerformance;
             data.WechatVideoPerformanceRate = res.WechatVideoPerformanceRate.Select(e => new BeforeLiveDepartmentContentPlatformPerformanceRateDataItemVo
             {
                 Name = e.Name,
-                Value = e.Value
+                Value = e.Value,
+                Performance = e.Performance
             }).ToList();
+            data.XiaohongshuPerformance = data.XiaohongshuPerformance;
             data.XiaohongshuPerformanceRate = res.XiaohongshuPerformanceRate.Select(e => new BeforeLiveDepartmentContentPlatformPerformanceRateDataItemVo
             {
                 Name = e.Name,
-                Value = e.Value
+                Value = e.Value,
+                Performance = e.Performance
             }).ToList();
             return ResultData<BeforeLiveDepartmentContentPlatformPerformanceRateVo>.Success().AddData(data);
         }
