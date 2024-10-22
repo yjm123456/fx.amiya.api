@@ -56,9 +56,17 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryDto.Valid = query.Valid;
                 queryDto.KeyWord = query.KeyWord;
                 queryDto.BelongEmpId = query.BelongEmpId;
-                queryDto.IsCheckPerformance = query.IsCheckPerformance;
                 queryDto.CheckEmpId = query.CheckEmpId;
-                queryDto.PerformanceTypeList = query.PerformanceTypeList;
+                List<int> performanceTypeData = new List<int>();
+                if (!string.IsNullOrEmpty(query.PerformanceTypeList))
+                {
+                    var data = query.PerformanceTypeList.Split(',');
+                    foreach (var x in data)
+                    {
+                        performanceTypeData.Add(Convert.ToInt32(x));
+                    }
+                }
+                queryDto.PerformanceTypeList = performanceTypeData;
                 var q = await customerServiceCheckPerformanceService.GetListAsync(queryDto);
                 var customerServiceCheckPerformance = from d in q.List
                                                       select new CustomerServiceCheckPerformanceVo

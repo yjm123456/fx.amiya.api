@@ -2136,6 +2136,36 @@ namespace Fx.Amiya.Service
         }
 
 
+        /// <summary>
+        /// 根据成交编号获取成交登记日期
+        /// </summary>
+        /// <param name="dealId"></param>
+        /// <returns></returns>
+        public async Task<DateTime> GetDealCraeteDateByDealIdAsync(string dealId)
+        {
+            var result = await dalContentPlatFormOrderDealInfo.GetAll().Where(x => x.Id == dealId).Select(x => x.CreateDate).FirstOrDefaultAsync();
+            return result;
+        }
+
+
+        /// <summary>
+        /// 获取截止时间的助理总业绩
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        public async Task<decimal> GetTotalPerformanceByEmployeeAndDateAsync(DateTime startDate, DateTime endDate, int employeeId)
+        {
+            var query = await dalContentPlatFormOrderDealInfo.GetAll()
+             .Include(e => e.ContentPlatFormOrder)
+             .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate)
+             .Where(e => e.ContentPlatFormOrder.IsSupportOrder ? e.ContentPlatFormOrder.SupportEmpId == employeeId : e.ContentPlatFormOrder.BelongEmpId == employeeId)
+             .Where(e => e.DealPerformanceType != (int)ContentPlateFormOrderDealPerformanceType.AssistantCheck && e.DealPerformanceType != (int)ContentPlateFormOrderDealPerformanceType.FinanceCheck && e.Price > 0).ToListAsync();
+
+            var result = query.Sum(x => x.Price);
+            return result;
+        }
 
 
         #endregion
@@ -2283,7 +2313,7 @@ namespace Fx.Amiya.Service
                     SendDate = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.SendDate.Value,
                     AddOrderPrice = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.AddOrderPrice,
                     ContentPlatFormId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.ContentPlateformId,
-                    ConsulationType = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.ConsulationType
+                    ConsulationType = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.ConsulationType,
                 }).ToListAsync();
         }
         public async Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceDetailByDateAsync(DateTime startDate, DateTime endDate, List<int> LiveAnchorIds)
@@ -2351,6 +2381,7 @@ namespace Fx.Amiya.Service
             return belongData;
         }
         #endregion
+
         #region 助理首页
         /// <summary>
         /// 获取今日到院数据
@@ -2484,36 +2515,6 @@ namespace Fx.Amiya.Service
         }
 
 
-        /// <summary>
-        /// 根据成交编号获取成交登记日期
-        /// </summary>
-        /// <param name="dealId"></param>
-        /// <returns></returns>
-        public async Task<DateTime> GetDealCraeteDateByDealIdAsync(string dealId)
-        {
-            var result = await dalContentPlatFormOrderDealInfo.GetAll().Where(x=>x.Id==dealId).Select(x=>x.CreateDate).FirstOrDefaultAsync();
-            return result;
-        }
-
-
-        /// <summary>
-        /// 获取截止时间的助理总业绩
-        /// </summary>
-        /// <param name="startDate"></param>
-        /// <param name="endDate"></param>
-        /// <param name="employeeId"></param>
-        /// <returns></returns>
-        public async Task<decimal> GetTotalPerformanceByEmployeeAndDateAsync(DateTime startDate, DateTime endDate, int employeeId)
-        {
-            var query = await dalContentPlatFormOrderDealInfo.GetAll()
-             .Include(e => e.ContentPlatFormOrder)
-             .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate)
-             .Where(e => e.ContentPlatFormOrder.IsSupportOrder ? e.ContentPlatFormOrder.SupportEmpId == employeeId : e.ContentPlatFormOrder.BelongEmpId == employeeId)
-             .Where(e => e.DealPerformanceType != (int)ContentPlateFormOrderDealPerformanceType.AssistantCheck && e.DealPerformanceType != (int)ContentPlateFormOrderDealPerformanceType.FinanceCheck && e.Price > 0).ToListAsync();
-
-            var result = query.Sum(x => x.Price);
-            return result;
-        }
 
         #endregion
 

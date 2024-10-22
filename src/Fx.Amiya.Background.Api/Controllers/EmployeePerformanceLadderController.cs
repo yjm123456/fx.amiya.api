@@ -237,5 +237,21 @@ namespace Fx.Amiya.Background.Api.Controllers
                 return ResultData<List<BaseIdAndNameVo>>.Fail(ex.Message);
             }
         }
+
+
+        /// <summary>
+        /// 根据总成交额和归属客服获取业绩提点
+        /// </summary>
+        /// <param name="totalPerformance"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        /// <returns></returns>
+        [HttpGet("getByDealPriceAndEmployee")]
+        [FxInternalOrTenantAuthroize]
+        public async Task<ResultData<decimal>> GetTotalPerformanceByEmployeeAndDateAsync(decimal totalPerformance, int employeeId)
+        {
+            var result = await employeePerformanceLadderService.GetPointByPerformanceAsync(totalPerformance, employeeId);
+            return ResultData<decimal>.Success().AddData("point", result);
+        }
     }
 }
