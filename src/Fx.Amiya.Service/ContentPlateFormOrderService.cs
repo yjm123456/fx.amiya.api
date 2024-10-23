@@ -5692,6 +5692,9 @@ namespace Fx.Amiya.Service
                 .Select(e => e.Phone)
                 .Distinct()
                 .Count();
+            orderData.DealNum = visitCount.Where(x => x.DealDate >= startDate && x.DealDate < endDate && x.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete).Select(e => e.Phone)
+                .Distinct()
+                .Count();
             return orderData;
         }
 

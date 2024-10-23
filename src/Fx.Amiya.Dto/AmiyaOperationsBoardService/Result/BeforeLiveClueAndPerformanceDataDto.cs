@@ -20,6 +20,14 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
     public class BeforeLiveClueAndPerformanceDataItemDto
     {
         /// <summary>
+        /// 当日客资
+        /// </summary>
+        public int CurrentDayCustomerCount { get; set; }
+        /// <summary>
+        /// 当日业绩
+        /// </summary>
+        public decimal CurrentDayPerformance { get; set; }
+        /// <summary>
         /// 客资
         /// </summary>
         public int CustomerCount { get; set; }

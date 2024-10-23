@@ -857,6 +857,16 @@ namespace Fx.Amiya.Service
             }
         }
         /// <summary>
+        /// 获取直播前员工名称列表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<AmiyaEmployeeNameDto>> GetLiveBeforeEmployeeNameListAsync() { 
+            var nameList=await dalAmiyaEmployee.GetAll()
+                .Where(e=>e.AmiyaPositionId==19||e.AmiyaPositionId==21&&e.Valid==true)
+                .Select(e=>new AmiyaEmployeeNameDto { Id=e.Id,Name=e.Name}).ToListAsync();
+            return nameList;
+        }
+        /// <summary>
         /// 获取助理(包含行政客服)
         /// </summary>
         /// <returns></returns>

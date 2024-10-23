@@ -2556,6 +2556,8 @@ namespace Fx.Amiya.Service
                         IsAddWeChat = d.IsAddWeChat,
                         Price = d.Price,
                         Phone = d.Phone,
+                        CreateBy=d.CreateBy,
+                        RecordDate=d.RecordDate,
                         BelongChannel = d.BelongChannel
                     };
 

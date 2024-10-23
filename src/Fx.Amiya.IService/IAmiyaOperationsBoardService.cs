@@ -256,6 +256,13 @@ namespace Fx.Amiya.IService
         /// <param name="query"></param>
         /// <returns></returns>
         Task<BeforeLiveDepartmentContentPlatformPerformanceRateDto> GetBeforeLiveDepartmentContentPlatformPerformanceRateAsync(QueryBeforeLiveFilterDataDto query);
+        /// <summary>
+        /// 获取主播ip线索数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<List<BeforeLiveLiveanchorIPDataDto>> GetBeforeLiveLiveanchorIPDataAsync(QueryBeforeLiveDataDto query);
+        Task<List<BeforeLiveLiveanchorIPDataItemDto>> GetBeforeLiveLiveanchorIPDataItemsAsync(DateTime startDate,DateTime endDate,List<int> assistandIds);
         #endregion
 
         #region 【历史版本】

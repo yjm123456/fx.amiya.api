@@ -45,6 +45,14 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
         /// </summary>
         public decimal ToHospitalRateHealthValueThisMonth { get; set; }
         /// <summary>
+        /// 成交率
+        /// </summary>
+        public decimal? DealRate { get; set; }
+        /// <summary>
+        /// 成交率健康值
+        /// </summary>
+        public decimal DealRateHealthValueThisMonth { get; set; }
+        /// <summary>
         /// 派单周期
         /// </summary>
         public int SendCycle { get; set; }

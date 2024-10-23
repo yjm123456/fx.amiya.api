@@ -1643,10 +1643,14 @@ namespace Fx.Amiya.Background.Api.Controllers
             BeforeLiveClueAndPerformanceDataVo data = new BeforeLiveClueAndPerformanceDataVo();
             data.DepartmentData = new BeforeLiveClueAndPerformanceDataItemVo();
             data.EmployeeData = new BeforeLiveClueAndPerformanceDataItemVo();
+            data.DepartmentData.CurrentDayCustomerCount=res.DepartmentData.CurrentDayCustomerCount;
+            data.DepartmentData.CurrentDayPerformance = res.DepartmentData.CurrentDayPerformance;
             data.DepartmentData.CustomerCount = res.DepartmentData.CustomerCount;
             data.DepartmentData.Performance = res.DepartmentData.Performance;
             data.EmployeeData.CustomerCount = res.EmployeeData.CustomerCount;
             data.EmployeeData.Performance = res.EmployeeData.Performance;
+            data.EmployeeData.CurrentDayCustomerCount = res.EmployeeData.CurrentDayCustomerCount;
+            data.EmployeeData.CurrentDayPerformance = res.EmployeeData.CurrentDayPerformance;
             return ResultData<BeforeLiveClueAndPerformanceDataVo>.Success().AddData("data", data);
         }
         /// <summary>
@@ -1702,6 +1706,9 @@ namespace Fx.Amiya.Background.Api.Controllers
             data.DepartData.ToHospitalRateHealthValueThisMonth = res.DepartData.ToHospitalRateHealthValueThisMonth;
             data.DepartData.SendCycle = res.DepartData.SendCycle;
             data.DepartData.HospitalCycle = res.DepartData.HospitalCycle;
+            data.DepartData.ToHospitalRate = res.DepartData.ToHospitalRate;
+            data.DepartData.DealRate = res.DepartData.DealRate;
+            data.DepartData.DealRateHealthValueThisMonth = res.DepartData.DealRateHealthValueThisMonth;
             data.DepartData.DataList = res.DepartData.DataList.Select(e => new BeforeLiveFilterDetailDataVo
             {
                 Key = e.Key,
@@ -1716,6 +1723,9 @@ namespace Fx.Amiya.Background.Api.Controllers
             data.EmployeeData.ToHospitalRateHealthValueThisMonth = res.EmployeeData.ToHospitalRateHealthValueThisMonth;
             data.EmployeeData.SendCycle = res.EmployeeData.SendCycle;
             data.EmployeeData.HospitalCycle = res.EmployeeData.HospitalCycle;
+            data.EmployeeData.ToHospitalRate = res.EmployeeData.ToHospitalRate;
+            data.EmployeeData.DealRate = res.EmployeeData.DealRate;
+            data.EmployeeData.DealRateHealthValueThisMonth = res.EmployeeData.DealRateHealthValueThisMonth;
             data.EmployeeData.DataList = res.EmployeeData.DataList.Select(e => new BeforeLiveFilterDetailDataVo
             {
                 Key = e.Key,
@@ -1863,6 +1873,28 @@ namespace Fx.Amiya.Background.Api.Controllers
                 Performance = e.Performance
             }).ToList();
             return ResultData<BeforeLiveDepartmentContentPlatformPerformanceRateVo>.Success().AddData(data);
+        }
+        /// <summary>
+        /// 部门线索同/环比数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("getBeforeLiveLiveanchorIPData")]
+        public async Task<ResultData<List<BeforeLiveLiveanchorIPDataVo>>> GetBeforeLiveLiveanchorIPDataAsync([FromQuery]QueryBeforeLiveDataVo query) {
+            QueryBeforeLiveDataDto queryDto = new QueryBeforeLiveDataDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.AssistantId = query.AssistantId;
+            var data = await amiyaOperationsBoardService.GetBeforeLiveLiveanchorIPDataAsync(queryDto);
+            var res= data.Select(e => new BeforeLiveLiveanchorIPDataVo
+            {
+                LiveanchorIP=e.LiveanchorIP,
+                ClueCount = e.ClueCount,
+                YearOnYear = e.YearOnYear,
+                Chain = e.Chain,
+                TargetComplete = e.TargetComplete,
+            }).ToList();
+            return ResultData<List<BeforeLiveLiveanchorIPDataVo>>.Success().AddData("data",res);
         }
 
         #endregion
