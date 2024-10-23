@@ -1853,6 +1853,7 @@ namespace Fx.Amiya.Service
 
 
         #endregion
+
         #region 全国机构top10运营数据
 
         /// <summary>
@@ -1951,6 +1952,7 @@ namespace Fx.Amiya.Service
 
 
         #endregion
+
         #region 全国城市top10运营数据
 
         /// <summary>
@@ -2143,8 +2145,16 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<DateTime> GetDealCraeteDateByDealIdAsync(string dealId)
         {
-            var result = await dalContentPlatFormOrderDealInfo.GetAll().Where(x => x.Id == dealId).Select(x => x.CreateDate).FirstOrDefaultAsync();
-            return result;
+            var result = await dalContentPlatFormOrderDealInfo.GetAll().Where(x => x.Id == dealId).FirstOrDefaultAsync();
+            DateTime resultDate = result.CreateDate;
+            if (result.Price < 0)
+            {
+                //寻找上一条成交的成交时间
+                var dealInfo = await this.GetByOrderIdAsync(result.ContentPlatFormOrderId);
+                var dealResult = dealInfo.Where(x => x.CreateDate < resultDate && x.Price > 0).OrderByDescending(x => x.CreateDate).FirstOrDefault();
+                resultDate = dealResult.CreateDate;
+            }
+            return resultDate;
         }
 
 

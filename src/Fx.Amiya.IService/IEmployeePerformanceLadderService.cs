@@ -23,5 +23,13 @@ namespace Fx.Amiya.IService
         /// <param name="employeeId"></param>
         /// <returns></returns>
         Task<decimal> GetPointByPerformanceAsync(decimal performance, int? employeeId);
+
+        /// <summary>
+        /// 根据成交编号获取助理业绩提点
+        /// </summary>
+        /// <param name="dealId"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        Task<decimal> GetPointByDealIdAndEmpIdAsync(string dealId, int? employeeId);
     }
 }

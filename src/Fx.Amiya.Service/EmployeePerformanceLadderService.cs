@@ -18,10 +18,12 @@ namespace Fx.Amiya.Service
     {
         private readonly IDalEmployeePerformanceLadder dalEmployeePerformanceLadder;
         private readonly IAmiyaEmployeeService amiyaEmployeeService;
-        public EmployeePerformanceLadderService(IDalEmployeePerformanceLadder dalEmployeePerformanceLadder, IAmiyaEmployeeService amiyaEmployeeService)
+        private readonly IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService;
+        public EmployeePerformanceLadderService(IDalEmployeePerformanceLadder dalEmployeePerformanceLadder, IAmiyaEmployeeService amiyaEmployeeService, IContentPlatFormOrderDealInfoService contentPlatFormOrderDealInfoService)
         {
             this.dalEmployeePerformanceLadder = dalEmployeePerformanceLadder;
             this.amiyaEmployeeService = amiyaEmployeeService;
+            this.contentPlatFormOrderDealInfoService = contentPlatFormOrderDealInfoService;
         }
 
 
@@ -196,14 +198,32 @@ namespace Fx.Amiya.Service
 
         public async Task<decimal> GetPointByPerformanceAsync(decimal performance, int? employeeId)
         {
-            var result = await dalEmployeePerformanceLadder.GetAll().Where(x => x.PerformanceLowerLimit <= performance && x.PerformanceUpperLimit > performance && x.Valid == true)
-                .Where(x => !employeeId.HasValue || x.IsPersonalConfig == true && x.CustomerServiceId == employeeId).FirstOrDefaultAsync();
-            if (result == null)
+            var point = 0.00M;
+            var result = await dalEmployeePerformanceLadder.GetAll().Where(x => x.PerformanceLowerLimit <= performance && x.PerformanceUpperLimit > performance && x.Valid == true).ToListAsync();
+            if (employeeId.HasValue)
             {
-                return 0.00M;
+                var personalConfig = result.Where(x => x.IsPersonalConfig == true && x.CustomerServiceId == employeeId).FirstOrDefault();
+                if (personalConfig != null)
+                {
+                    point = personalConfig.Point;
+                }
+                else
+                {
+                    point = result.Where(x => x.IsPersonalConfig == false).FirstOrDefault().Point;
+                }
             }
+            return point;
+        }
+        public async Task<decimal> GetPointByDealIdAndEmpIdAsync(string dealId, int? employeeId)
+        {
 
-            return result.Point;
+            var dealCreateDate = await contentPlatFormOrderDealInfoService.GetDealCraeteDateByDealIdAsync(dealId);
+            var year = dealCreateDate.Year;
+            var month = dealCreateDate.Month;
+            var startDate = Convert.ToDateTime(year + "-" + month + "-01");
+            var totalPerformance = await contentPlatFormOrderDealInfoService.GetTotalPerformanceByEmployeeAndDateAsync(startDate, dealCreateDate, employeeId.Value);
+            var point = await this.GetPointByPerformanceAsync(totalPerformance, employeeId);
+            return point;
         }
     }
 }

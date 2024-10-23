@@ -36,7 +36,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.PerformanceCommisionCheck).HasColumnName("performance_commission_check").HasColumnType("DECIMAL(12,2)").IsRequired();
 
 
-            builder.HasOne(t => t.AmiyaEmployee).WithMany(t => t.CustomerServiceCheckPerformance).HasForeignKey(t => t.CheckEmpId);
+            builder.HasOne(t => t.AmiyaEmployee).WithMany(t => t.CustomerServiceCheckPerformance).HasForeignKey(t => t.BelongEmpId);
         }
     }
 }
