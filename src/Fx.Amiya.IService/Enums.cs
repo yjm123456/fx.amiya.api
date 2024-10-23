@@ -630,10 +630,10 @@ namespace Fx.Amiya.IService
         /// 成交业绩
         /// </summary>
         Deal = 1,
-        /// <summary>
-        /// 退款业绩
-        /// </summary>
-        Refund = 2,
+        ///// <summary>
+        ///// 退款业绩
+        ///// </summary>
+        //Refund = 2,
         /// <summary>
         /// 稽查业绩
         /// </summary>

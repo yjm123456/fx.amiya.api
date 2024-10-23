@@ -1932,9 +1932,9 @@ namespace Fx.Amiya.Service
                     inventoryStateText = "成交业绩";
                     break;
 
-                case 2:
-                    inventoryStateText = "退款业绩";
-                    break;
+                //case 2:
+                //    inventoryStateText = "退款业绩";
+                //    break;
 
                 case 3:
                     inventoryStateText = "稽查业绩";

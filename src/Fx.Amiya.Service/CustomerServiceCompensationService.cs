@@ -313,15 +313,15 @@ namespace Fx.Amiya.Service
             }
             if (queryDto.PerformanceType == (int)PerformanceType.Deal)
             {
-                query = query.Where(e => e.DealPerformanceType != (int)ContentPlateFormOrderDealPerformanceType.AssistantCheck && e.DealPerformanceType != (int)ContentPlateFormOrderDealPerformanceType.FinanceCheck && e.Price > 0);
+                query = query.Where(e => e.DealPerformanceType != (int)ContentPlateFormOrderDealPerformanceType.AssistantCheck && e.DealPerformanceType != (int)ContentPlateFormOrderDealPerformanceType.FinanceCheck );
             }
-            if (queryDto.PerformanceType == (int)PerformanceType.Refund)
-            {
-                query = query.Where(e => e.Price < 0);
-            }
+            //if (queryDto.PerformanceType == (int)PerformanceType.Refund)
+            //{
+            //    query = query.Where(e => e.Price < 0);
+            //}
             if (queryDto.PerformanceType == (int)PerformanceType.Check)
             {
-                query = query.Where(e => e.DealPerformanceType == (int)ContentPlateFormOrderDealPerformanceType.AssistantCheck || e.DealPerformanceType == (int)ContentPlateFormOrderDealPerformanceType.FinanceCheck && e.Price > 0);
+                query = query.Where(e => e.DealPerformanceType == (int)ContentPlateFormOrderDealPerformanceType.AssistantCheck || e.DealPerformanceType == (int)ContentPlateFormOrderDealPerformanceType.FinanceCheck);
             }
             if (!string.IsNullOrEmpty(queryDto.Keyword))
             {
