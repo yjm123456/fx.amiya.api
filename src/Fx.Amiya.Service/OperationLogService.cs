@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Fx.Amiya.Service
 {
@@ -47,6 +48,8 @@ namespace Fx.Amiya.Service
             {
                 message = message.Substring(0, 4999);
             }
+            //message = "'123'";
+            //message = HttpUtility.HtmlEncode(message);
             operationLog.Message = message;
             operationLog.OperationBy = operationAdd.OperationBy;
             operationLog.CreateDate = DateTime.Now;
@@ -56,7 +59,15 @@ namespace Fx.Amiya.Service
             MySqlConnection addOrderInfo = new MySqlConnection(context);
             addOrderInfo.Open();
             var date = operationLog.CreateDate.ToString("yyyy-MM-dd HH:mm:ss");
-            string addSql = $"INSERT INTO `tbl_system_operation_log` (`id`, `route_address`, `request_type`, `code`, `parameters`, `message`, `create_date`,`operation_by`, `valid`) VALUES('{operationLog.Id}', '{operationLog.RouteAddress}', '{operationLog.RequestType}', '{operationLog.Code}', '{operationLog.Parameters}', '{operationLog.Message}', '{date}',{operationLog.OperationBy} ,1);";
+            string addSql = string.Empty;
+            if (operationLog.OperationBy != null)
+            {
+                addSql = $"INSERT INTO `tbl_system_operation_log` (`id`, `route_address`, `request_type`, `code`, `parameters`, `message`, `create_date`,`operation_by`, `valid`) VALUES('{operationLog.Id}', '{operationLog.RouteAddress}', '{operationLog.RequestType}', '{operationLog.Code}', '{operationLog.Parameters}', '{operationLog.Message}', '{date}',{operationLog.OperationBy} ,1);";
+            }
+            else {
+                addSql = $"INSERT INTO `tbl_system_operation_log` (`id`, `route_address`, `request_type`, `code`, `parameters`, `message`, `create_date`,`operation_by`, `valid`) VALUES('{operationLog.Id}', '{operationLog.RouteAddress}', '{operationLog.RequestType}', '{operationLog.Code}', '{operationLog.Parameters}', '{operationLog.Message}', '{date}',null ,1);";
+            }
+             
             MySqlCommand addCmd = new MySqlCommand(addSql, addOrderInfo);
             addCmd.ExecuteNonQuery();
             addOrderInfo.Close();

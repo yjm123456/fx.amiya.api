@@ -862,7 +862,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<List<AmiyaEmployeeNameDto>> GetLiveBeforeEmployeeNameListAsync() { 
             var nameList=await dalAmiyaEmployee.GetAll()
-                .Where(e=>e.AmiyaPositionId==19||e.AmiyaPositionId==21&&e.Valid==true)
+                .Where(e=>(e.AmiyaPositionId == 19 || e.AmiyaPositionId == 21) &&e.Valid==true)
                 .Select(e=>new AmiyaEmployeeNameDto { Id=e.Id,Name=e.Name}).ToListAsync();
             return nameList;
         }

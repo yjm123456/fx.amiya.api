@@ -120,5 +120,6 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         /// 词条来源
         /// </summary>
         public string FromTitle { get; set; }
+       
     }
 }

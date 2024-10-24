@@ -4471,11 +4471,13 @@ namespace Fx.Amiya.Service
             var seqDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.EndDate.Year, query.EndDate.Month);
             var info = await amiyaEmployeeService.GetByIdAsync(query.AssistantId.Value);
             //var assistantList = await amiyaEmployeeService.GetByLiveAnchorBaseIdNameListAsync(new List<string> { info.LiveAnchorBaseId }); GetLiveBeforeEmployeeNameListAsync
-            var assistantList = await amiyaEmployeeService.GetLiveBeforeEmployeeNameListAsync();
+            var liveBeforeAssistantList = await amiyaEmployeeService.GetLiveBeforeEmployeeNameListAsync();
             //var assistantList = await amiyaEmployeeService.GetAssistantAsync();
+            var liveBeforeAssistantIdList = liveBeforeAssistantList.Select(e => e.Id).ToList();
+            var assistantList =await amiyaEmployeeService.GetAllAssistantAsync();
             var assistantIdList = assistantList.Select(e => e.Id).ToList();
             var cartInfoList = _dalShoppingCartRegistration.GetAll()
-                .Where(e => e.IsReturnBackPrice == false && e.BelongChannel == (int)BelongChannel.LiveBefore && assistantIdList.Contains(e.CreateBy))
+                .Where(e => e.IsReturnBackPrice == false && e.BelongChannel == (int)BelongChannel.LiveBefore && liveBeforeAssistantIdList.Contains(e.CreateBy))
                 .Where(e => e.CreateDate >= seqDate.StartDate && e.CreateDate < seqDate.EndDate)
                 .Select(e => new
                 {
@@ -4505,7 +4507,7 @@ namespace Fx.Amiya.Service
                 var endIndex = DecimalExtension.CalTakeCount(e.Count());
                 var resData = e.OrderBy(e => e.IntervalDays).Skip(0).Take(endIndex);
                 return new KeyValuePair<string, int>(
-                assistantList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其它",
+                liveBeforeAssistantList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其它",
                 DecimalExtension.CalAvg(resData.Sum(e => e.IntervalDays), resData.Count())
              );
             }).OrderBy(e => e.Value).ToList();
@@ -4539,7 +4541,7 @@ namespace Fx.Amiya.Service
                 var endIndex = DecimalExtension.CalTakeCount(e.Count(), 0.8m);
                 var resData = e.OrderBy(e => e.IntervalDays).Skip(0).Take(endIndex);
                 return new KeyValuePair<string, int>(
-                assistantList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其它",
+                liveBeforeAssistantList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其它",
                 DecimalExtension.CalAvg(resData.Sum(e => e.IntervalDays), resData.Count()));
             }).OrderBy(e => e.Value).ToList();
             res2.RemoveAll(e => e.Key == "其它" || e.Value == 0);

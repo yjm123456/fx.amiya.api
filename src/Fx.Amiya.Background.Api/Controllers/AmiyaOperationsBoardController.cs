@@ -1749,7 +1749,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             var res = await amiyaOperationsBoardService.GetBeforeLiveTransformCycleDataAsync(queryDto);
             BeforeLiveTransformCycleDataVo data = new BeforeLiveTransformCycleDataVo();
             data.SendCycleData = res.SendCycleData;
-            data.ToHospitalCycleData = res.ToHospitalCycleData;
+            data.ToHospitalCycleData = res.ToHospitalCycleData.OrderBy(e=>e.Value).ToList();
             return ResultData<BeforeLiveTransformCycleDataVo>.Success().AddData("data", data);
         }
         /// <summary>
@@ -1766,7 +1766,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.AssistantId = query.AssistantId;
             var res = await amiyaOperationsBoardService.GetBeforeLivePerformanceRateAsync(queryDto);
             BeforeLiveTargetCompleteAndPerformanceRateVo data = new BeforeLiveTargetCompleteAndPerformanceRateVo();
-            data.PerformanceRate = res.PerformanceRate;
+            data.PerformanceRate = res.PerformanceRate.OrderByDescending(e=>e.Value).ToList();
             return ResultData<BeforeLiveTargetCompleteAndPerformanceRateVo>.Success().AddData("data", data);
         }
         /// <summary>
@@ -1783,7 +1783,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.AssistantId = query.AssistantId;
             var res = await amiyaOperationsBoardService.GetBeforeLiveTargetCompleteRateAsync(queryDto);
             BeforeLiveTargetCompleteRateVo data = new BeforeLiveTargetCompleteRateVo();
-            data.TargetComplete = res.TargetComplete;
+            data.TargetComplete = res.TargetComplete.OrderByDescending(e=>e.Value).ToList();
             return ResultData<BeforeLiveTargetCompleteRateVo>.Success().AddData("data", data);
         }
         /// <summary>
@@ -1893,7 +1893,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 YearOnYear = e.YearOnYear,
                 Chain = e.Chain,
                 TargetComplete = e.TargetComplete,
-            }).ToList();
+            }).OrderByDescending(e=>e.TargetComplete).ToList();
             return ResultData<List<BeforeLiveLiveanchorIPDataVo>>.Success().AddData("data",res);
         }
 

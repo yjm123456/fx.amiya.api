@@ -362,13 +362,16 @@ namespace Fx.Amiya.Service
                     shoppingCartRegistration.IsCreateOrder = addDto.IsCreateOrder;
                     shoppingCartRegistration.IsSendOrder = addDto.IsSendOrder;
                     shoppingCartRegistration.EmergencyLevel = addDto.EmergencyLevel;
-                    shoppingCartRegistration.GetCustomerType = (int)ShoppingCartGetCustomerType.Ohter;
+                    shoppingCartRegistration.GetCustomerType = addDto.GetCustomerType;
                     shoppingCartRegistration.Source = addDto.Source;
                     shoppingCartRegistration.BelongChannel = addDto.BelongChannel;
                     shoppingCartRegistration.IsRiBuLuoLiving = addDto.IsRiBuLuoLiving;
                     shoppingCartRegistration.IsHistoryCustomerActive = false;
                     shoppingCartRegistration.FromTitle = addDto.FromTitle;
                     shoppingCartRegistration.CustomerWechatNo = addDto.CustomerWechatNo;
+                    shoppingCartRegistration.ProductType = addDto.ProductType;
+                    shoppingCartRegistration.CluePicture = addDto.CluePicture;
+                    shoppingCartRegistration.AddWechatPicture = addDto.AddWechatPicture;
                     var baseLiveAnchorId = await _liveAnchorService.GetByIdAsync(addDto.LiveAnchorId);
                     if (!string.IsNullOrEmpty(baseLiveAnchorId.LiveAnchorBaseId))
                     {
@@ -382,8 +385,13 @@ namespace Fx.Amiya.Service
                             throw new Exception("已存在该客户手机号" + addDto.Phone + "，无法录入，请重新填写！");
                         }
                     }
+                    //添加加v人员
+                    if (shoppingCartRegistration.IsAddWeChat == true)
+                    {
+                        shoppingCartRegistration.AddWechatEmpId = addDto.CreateBy;
+                    }
                     await dalShoppingCartRegistration.AddAsync(shoppingCartRegistration, true);
-                    Thread.Sleep(1000);
+                    await Task.Delay(1);
                 }
                 unitOfWork.Commit();
             }

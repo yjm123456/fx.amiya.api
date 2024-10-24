@@ -34,6 +34,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         private IContentPlateFormOrderService contentPlateFormOrderService;
         private IOperationLogService operationLogService;
         private readonly ILiveAnchorService liveAnchorService;
+        private readonly IContentPlatformService contentPlatformService;
+        private readonly ILiveAnchorWeChatInfoService liveAnchorWeChatInfoService;
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -42,13 +44,15 @@ namespace Fx.Amiya.Background.Api.Controllers
             IContentPlateFormOrderService contentPlateFormOrderService,
             IHttpContextAccessor httpContextAccessor,
             IOperationLogService operationLogService,
-            ILiveAnchorService liveAnchorService)
+            ILiveAnchorService liveAnchorService, IContentPlatformService contentPlatformService, ILiveAnchorWeChatInfoService liveAnchorWeChatInfoService)
         {
             this.shoppingCartRegistrationService = shoppingCartRegistrationService;
             this.httpContextAccessor = httpContextAccessor;
             this.contentPlateFormOrderService = contentPlateFormOrderService;
             this.operationLogService = operationLogService;
             this.liveAnchorService = liveAnchorService;
+            this.contentPlatformService = contentPlatformService;
+            this.liveAnchorWeChatInfoService = liveAnchorWeChatInfoService;
         }
 
 
@@ -715,6 +719,13 @@ namespace Fx.Amiya.Background.Api.Controllers
                 throw new Exception("请检查文件是否存在");
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
+            var liveanchorList = await liveAnchorService.GetValidAsync();
+            var contentPlatformList = await contentPlatformService.GetValidListAsync();
+            var liveWechatNoList = await liveAnchorWeChatInfoService.GetValidAsync();
+            
+            var getCustomerTypeList = shoppingCartRegistrationService.GetShoppingCartGetCustomerTypeText();
+            var customerTypeList = shoppingCartRegistrationService.GetCustomerTypeList();
+            var importantList = shoppingCartRegistrationService.GetEmergencyLevelList();
             using (var stream = new MemoryStream())
             {
                 await file.CopyToAsync(stream);//取到文件流
@@ -737,18 +748,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                         if (worksheet.Cells[x, 1].Value != null)
                         {
                             string liveanchorName = worksheet.Cells[x, 1].Value.ToString();
-                            if (liveanchorName == "刀刀")
-                            {
-                                addDto.LiveAnchorId = 84;
-                            }
-                            else if (liveanchorName == "吉娜")
-                            {
-                                addDto.LiveAnchorId = 12;
-                            }
-                            else
-                            {
-                                throw new Exception("主播栏目有数据输入非“刀刀”或者“吉娜”，请检查表格数据！");
-                            }
+                            var liveAnchorId = liveanchorList.Where(e => e.Name == liveanchorName).FirstOrDefault()?.Id ?? 0;
+                            if (liveAnchorId == 0)
+                                throw new Exception("主播IP栏目包含不存在的主播");
+                            addDto.LiveAnchorId = liveAnchorId;
                         }
                         else
                         {
@@ -817,12 +820,120 @@ namespace Fx.Amiya.Background.Api.Controllers
                         {
                             throw new Exception("归属部门有参数列为空，请检查表格数据！");
                         }
+
                         if (worksheet.Cells[x, 7].Value != null)
                         {
-                            addDto.Remark = worksheet.Cells[x, 7].Value.ToString();
+                            var contentPlatformName = worksheet.Cells[x, 7].Value.ToString();
+                            var contentPlatformId = contentPlatformList.Where(e => e.ContentPlatformName == contentPlatformName).FirstOrDefault()?.Id ?? "";
+                            if (string.IsNullOrEmpty(contentPlatformId))
+                            {
+                                throw new Exception("渠道不存在");
+                            }
+                            else
+                            {
+                                addDto.ContentPlatFormId = contentPlatformId;
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("渠道有参数列为空，请检查表格数据！");
+                        }
+                        if (worksheet.Cells[x, 8].Value != null)
+                        {
+                            var liveWechatName = worksheet.Cells[x, 8].Value.ToString();
+                            var contentPlatformId = liveWechatNoList.Where(e => e.WeChatNo == liveWechatName).FirstOrDefault()?.WeChatNo ?? "";
+                            if (string.IsNullOrEmpty(contentPlatformId))
+                            {
+                                throw new Exception("主播微信号不存在");
+                            }
+                            else
+                            {
+                                addDto.LiveAnchorWechatNo = contentPlatformId;
+                            }
                         }
 
-                        addDto.ContentPlatFormId = "9196b247-1ab9-4d0c-a11e-a1ef09019878";
+                        if (worksheet.Cells[x, 9].Value != null)
+                        {
+                            var customerSource = worksheet.Cells[x, 9].Value.ToString();
+                            var customerSourceList = shoppingCartRegistrationService.GetCustomerSourceList(addDto.ContentPlatFormId, addDto.BelongChannel);
+                            var customerSourceId = customerSourceList.Where(e => e.Value == customerSource).FirstOrDefault()?.Key ?? null;
+
+                            if (customerSourceId == null)
+                            {
+                                throw new Exception("客户来源不存在");
+                            }
+                            else
+                            {
+                                addDto.Source = customerSourceId.Value;
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("客户来源有参数列为空，请检查表格数据！");
+                        }
+
+                        if (worksheet.Cells[x, 10].Value != null)
+                        {
+                            var getCustomerType = worksheet.Cells[x, 10].Value.ToString();
+                            var customerTypeId = getCustomerTypeList.Where(e => e.Value == getCustomerType).FirstOrDefault()?.Key ?? 0;
+                            addDto.GetCustomerType = customerTypeId;
+                        }
+                        else
+                        {
+                            throw new Exception("获客方式有参数列为空，请检查表格数据！");
+                        }
+
+                        if (worksheet.Cells[x, 11].Value != null)
+                        {
+                            var customerType = worksheet.Cells[x, 11].Value.ToString();
+                            var customerTypeId = customerTypeList.Where(e => e.Value == customerType).FirstOrDefault()?.Key ?? 0;
+                            addDto.ShoppingCartRegistrationCustomerType = customerTypeId;
+                        }
+                        else
+                        {
+                            throw new Exception("客户类型有参数列为空，请检查表格数据！");
+                        }
+
+                        if (worksheet.Cells[x, 12].Value != null)
+                        {
+                            var important = worksheet.Cells[x, 12].Value.ToString();
+                            var importantId = importantList.Where(e => e.EmergencyText == important).FirstOrDefault()?.EmergencyLevel ?? null;
+                            if (important == null)
+                                throw new Exception("重要程度不存在！");
+                            addDto.EmergencyLevel = importantId.Value;
+                        }
+                        else
+                        {
+                            throw new Exception("重要程度有参数列为空，请检查表格数据！");
+                        }
+
+                        if (worksheet.Cells[x, 13].Value != null)
+                        {
+                            var isRiBuLuo = worksheet.Cells[x, 13].Value.ToString();
+                            switch (isRiBuLuo)
+                            {
+                                case "是":
+                                    addDto.IsRiBuLuoLiving = true;
+                                    break;
+                                case "否":
+                                    addDto.IsRiBuLuoLiving = false;
+                                    break;
+                                default:
+                                    throw new Exception("是否为日不落参数列只能为是或否");
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("是否为日不落有参数列为空，请检查表格数据！");
+                        }
+
+
+                        if (worksheet.Cells[x, 14].Value != null)
+                        {
+                            addDto.Remark = worksheet.Cells[x, 14].Value.ToString();
+                        }
+
+                        //addDto.ContentPlatFormId = "9196b247-1ab9-4d0c-a11e-a1ef09019878";
                         addDto.SubPhone = "";
                         addDto.IsConsultation = false;
                         addDto.ConsultationType = 4;
@@ -832,8 +943,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                         addDto.IsReContent = false;
                         addDto.CreateBy = employeeId;
                         addDto.IsBadReview = false;
-                        addDto.EmergencyLevel = 2;
-                        addDto.Source = 7;
+                        //addDto.EmergencyLevel = 2;
+                        //addDto.Source = 7;
                         addDtoList.Add(addDto);
                     }
                     await shoppingCartRegistrationService.AddListAsync(addDtoList);
