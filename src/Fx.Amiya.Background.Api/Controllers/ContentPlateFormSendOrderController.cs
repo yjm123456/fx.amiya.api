@@ -386,6 +386,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="keyword"></param>
         /// <param name="baseLiveAnchorId">基础主播id</param>
+        /// <param name="belongChannel">归属部门</param>
         /// <param name="employeeId"> -1(归属客服)查询全部</param>
         /// <param name="sendBy"> 派单人（空查询全部）</param>
         /// <param name="isAcompanying">是否陪诊，为空查询所有</param>
@@ -413,7 +414,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("list")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<SendContentPlatformOrderVo>>> GetSendOrderList(string keyword, string baseLiveAnchorId, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? liveAnchorId, int? consultationEmpId, int? employeeId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int? hospitalEmpId, int pageNum, int pageSize, bool? isMainHospital)
+        public async Task<ResultData<FxPageInfo<SendContentPlatformOrderVo>>> GetSendOrderList(string keyword, string baseLiveAnchorId, int? belongChannel, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? liveAnchorId, int? consultationEmpId, int? employeeId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int? hospitalEmpId, int pageNum, int pageSize, bool? isMainHospital)
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             var loginEmployeeId = Convert.ToInt32(employee.Id);
@@ -451,7 +452,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 employeeId = -1;
             }
-            var orders = await _sendOrderInfoService.GetSendOrderList(liveAnchorIds, consultationEmpId, sendBy, isAcompanying, isOldCustomer, commissionRatio, keyword, belongMonth, minAddOrderPrice, maxAddOrderPrice, loginEmployeeId, (int)employeeId, orderStatus, contentPlatFormId, startDate, endDate, hospitalId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, orderSource, hospitalEmpId, pageNum, pageSize, isMainHospital);
+            var orders = await _sendOrderInfoService.GetSendOrderList(liveAnchorIds, consultationEmpId, sendBy, isAcompanying, isOldCustomer, commissionRatio, keyword, belongChannel, belongMonth, minAddOrderPrice, maxAddOrderPrice, loginEmployeeId, (int)employeeId, orderStatus, contentPlatFormId, startDate, endDate, hospitalId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, orderSource, hospitalEmpId, pageNum, pageSize, isMainHospital);
 
             var contentPlatformOrders = from d in orders.List
                                         select new SendContentPlatformOrderVo

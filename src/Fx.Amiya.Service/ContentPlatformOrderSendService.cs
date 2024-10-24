@@ -701,6 +701,7 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="keyword"></param>
         /// <param name="loginEmployeeId">登陆员工id</param>
+        /// <param name="belongChannel">归属部门</param>
         /// <param name="belongEmployeeId">归属客服</param>
         /// <param name="liveAnchorId">归属主播ID</param>
         /// <param name="orderStatus"></param>
@@ -713,7 +714,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<SendContentPlatformOrderDto>> GetSendOrderList(List<int?> liveAnchorIds, int? consultationEmpId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, string keyword, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int loginEmployeeId, int belongEmployeeId, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int? hospitalEmpId, int pageNum, int pageSize, bool? isMainHospital)
+        public async Task<FxPageInfo<SendContentPlatformOrderDto>> GetSendOrderList(List<int?> liveAnchorIds, int? consultationEmpId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, string keyword, int? belongChannel, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int loginEmployeeId, int belongEmployeeId, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int? hospitalEmpId, int pageNum, int pageSize, bool? isMainHospital)
         {
 
             var orders = _dalContentPlatformOrderSend.GetAll().Include(x => x.ContentPlatformOrder)
@@ -722,6 +723,7 @@ namespace Fx.Amiya.Service
                        .Where(e => !isMainHospital.HasValue || e.IsMainHospital == isMainHospital)
                        .Where(e => orderSource == -1 || e.ContentPlatformOrder.OrderSource == orderSource)
                        .Where(e => !IsToHospital.HasValue || e.ContentPlatformOrder.IsToHospital == IsToHospital.Value)
+                       .Where(e => !belongChannel.HasValue || e.ContentPlatformOrder.BelongChannel == belongChannel.Value)
                        .Where(e => !belongMonth.HasValue || e.ContentPlatformOrder.BelongMonth == belongMonth.Value)
                        .Where(e => !minAddOrderPrice.HasValue || e.ContentPlatformOrder.AddOrderPrice >= minAddOrderPrice.Value)
                        .Where(e => !maxAddOrderPrice.HasValue || e.ContentPlatformOrder.AddOrderPrice <= maxAddOrderPrice.Value)
@@ -786,7 +788,7 @@ namespace Fx.Amiya.Service
                                             ContentPlatFormName = d.ContentPlatformOrder.Contentplatform.ContentPlatformName,
                                             LiveAnchorName = d.ContentPlatformOrder.LiveAnchor.HostAccountName,
                                             LiveAnchorWeChatNo = d.ContentPlatformOrder.LiveAnchorWeChatNo,
-                                            BelongChannelText=ServiceClass.BelongChannelText(d.ContentPlatformOrder.BelongChannel),
+                                            BelongChannelText = ServiceClass.BelongChannelText(d.ContentPlatformOrder.BelongChannel),
                                             //IsOldCustomer = d.ContentPlatformOrder.IsOldCustomer == true ? "老客业绩" : "新客业绩",
                                             //IsAcompanying = d.ContentPlatformOrder.IsAcompanying,
                                             //CommissionRatio = d.ContentPlatformOrder.CommissionRatio,
