@@ -326,6 +326,15 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<EffOrPotAssistantDistributeConsulationDataDto> GetEffOrPotDistributeConsulationTypeDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIdList);
+
+        /// <summary>
+        /// 根据助理获取直播前中后客资人数
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="assistantIdList"></param>
+        /// <returns></returns>
+        Task<LivingAssistantDistributeConsulationDataDto> GetLivingDistributeConsulationTypeDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIdList);
         /// <summary>
         /// 根据助理获取助理分诊折线图基础数据
         /// </summary>
@@ -337,7 +346,7 @@ namespace Fx.Amiya.IService
         #endregion
         #region 行政客服看板
         /// <summary>
-        /// 获取行政客服客资数据
+        /// 获取行政客服客资数据（根据一级二级三级客资）
         /// </summary>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
@@ -345,14 +354,33 @@ namespace Fx.Amiya.IService
         /// <param name="isAddWechat"></param>
         /// <returns></returns>
         Task<AssistantDistributeConsulationTypeDataDto> GetAdminCustomerDistributeConsulationTypeDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIds, bool? isAddWechat = null);
+
         /// <summary>
-        /// 获取行政客服分诊折线图基础数据
+        /// 获取行政客服客资数据(根据直播前中后)
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="assistantIds"></param>
+        /// <param name="isAddWechat"></param>
+        /// <returns></returns>
+        Task<AssistantDistributeConsulationTypeDataDto> GetAdminCustomerDistributeByLivingDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIds, bool? isAddWechat = null);
+        /// <summary>
+        /// 获取行政客服分诊折线图基础数据(根据一级二级三级客资)
         /// </summary>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
         /// <param name="assistantIdList"></param>
         /// <returns></returns>
         Task<List<BaseKeyValueDto<string, int>>> GetAdminCustomerDistributeConsulationTypeBrokenLineDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIds);
+
+        /// <summary>
+        /// 获取行政客服分诊折线图基础数据（根据直播前中后）
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="assistantIds"></param>
+        /// <returns></returns>
+        Task<List<BaseKeyValueDto<string, int>>> GetAdminCustomerDistributeByLivingBrokenLineDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIds);
 
         /// <summary>
         /// 根据条件获取行政客服小黄车业绩

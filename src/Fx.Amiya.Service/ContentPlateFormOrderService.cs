@@ -313,7 +313,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ContentPlatFormOrderInfoDto>> GetOrderListWithPageAsync(List<int> liveAnchorId, int? getCustomerType, string liveAnchorWechatId, DateTime? startDate, DateTime? endDate, DateTime? appointmentStartDate, DateTime? appointmentEndDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int employeeId, int? belongCompany,int orderSource, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ContentPlatFormOrderInfoDto>> GetOrderListWithPageAsync(List<int> liveAnchorId, int? getCustomerType, string liveAnchorWechatId, DateTime? startDate, DateTime? endDate, DateTime? appointmentStartDate, DateTime? appointmentEndDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int employeeId, int? belongCompany, int orderSource, int pageNum, int pageSize)
         {
             try
             {
@@ -445,7 +445,7 @@ namespace Fx.Amiya.Service
                                 BelongChannelText = ServiceClass.BelongChannelText(d.BelongChannel),
                                 ConsultingContent2 = d.ConsultingContent2,
                                 IsRiBuLuoLiving = d.IsRiBuLuoLiving,
-                                OrderBelongCompany=ServiceClass.GetBelongCompanyTypeText(d.OrderBelongCompany),
+                                OrderBelongCompany = ServiceClass.GetBelongCompanyTypeText(d.OrderBelongCompany),
                             };
 
 
@@ -4252,7 +4252,7 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="startDate">开始时间</param>
         /// <param name="endDate">结束时间</param>
-        /// <param name="isEffectiveCustomerData">有效/潜在业绩</param>
+        /// <param name="isEffectiveCustomerData">当月/历史业绩</param>
         /// <param name="contentPlatFormId">内容平台id</param>
         /// <param name="liveAnchorIds">主播id集合</param>
         /// <returns></returns>
@@ -4266,7 +4266,8 @@ namespace Fx.Amiya.Service
              .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
              .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsOldCustomer == false)
              .Where(o => string.IsNullOrEmpty(contentPlatFormId) || o.ContentPlateformId == contentPlatFormId)
-             .Where(o => (!isEffectiveCustomerData.HasValue || (isEffectiveCustomerData.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0))).ToListAsync();
+            // .Where(o => (!isEffectiveCustomerData.HasValue || (isEffectiveCustomerData.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0)))
+             .ToListAsync();
             //（todo：查询小黄车数据比对登记时间）
 
             orderData.SendOrderNum = sendOrder.Select(e => e.Phone)
@@ -5730,7 +5731,7 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
-        /// 根据手机号部门获取部门当月/历史派单成交数据
+        /// 根据手机号部门获取直播前部门当月/历史派单成交数据
         /// </summary>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
@@ -5743,7 +5744,7 @@ namespace Fx.Amiya.Service
             var querySendOrder = _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList)
             .Where(e => e.ContentPlatformOrderSendList.Where(o => o.IsMainHospital == true && o.SendDate >= startDate && o.SendDate < endDate).Count() == 1)
             .Where(e => AssistantId.Contains(e.IsSupportOrder ? e.SupportEmpId : e.BelongEmpId.Value))
-            .Where(e => e.BelongChannel == (int)BelongChannel.LiveBefore)
+            .Where(e => e.BelongChannel == (int)BelongChannel.Living)
             .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsOldCustomer == false);
             if (isCurrent)
             {
@@ -5784,20 +5785,21 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
-        /// 获取直播前自播达人当月/历史派单成交数据
+        /// 获取直播中自播达人当月/历史派单成交数据
         /// </summary>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
         /// <param name="phoneList"></param>
         /// <param name="assistantId"></param>
+        /// <param name="isLiving">是否查询直播中数据</param>
         /// <returns></returns>
-        public async Task<OrderSendAndDealNumDto> GetLivingOrderSendAndDealDataAsync(DateTime startDate, DateTime endDate, List<string> baseLiveanchorIds, List<string> phoneList, bool isCurrent)
+        public async Task<OrderSendAndDealNumDto> GetLivingOrderSendAndDealDataAsync(DateTime startDate, DateTime endDate, List<string> baseLiveanchorIds, List<string> phoneList, bool isCurrent, bool isLiving)
         {
             OrderSendAndDealNumDto orderData = new OrderSendAndDealNumDto();
             var querySendOrder = _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList)
             .Where(e => e.ContentPlatformOrderSendList.Where(o => o.IsMainHospital == true && o.SendDate >= startDate && o.SendDate < endDate).Count() == 1)
             .Where(e => baseLiveanchorIds.Contains(e.LiveAnchor.LiveAnchorBaseId))
-            .Where(e => e.BelongChannel == (int)BelongChannel.Living)
+           .Where(e => isLiving != true || e.BelongChannel == (int)BelongChannel.Living)
             .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsOldCustomer == false);
             if (isCurrent)
             {

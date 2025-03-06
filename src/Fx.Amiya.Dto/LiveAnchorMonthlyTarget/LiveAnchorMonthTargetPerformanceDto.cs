@@ -196,6 +196,11 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 老客成交目标
         /// </summary>
         public int OldCustomerDealTarget { get; set; }
+
+        /// <summary>
+        /// 新客业绩目标
+        /// </summary>
+        public decimal NewCustomerPerformanceTarget { get; set; }
     }
 
     public class LiveAnchorBaseBusinessMonthTargetBeforeLivingDto { 

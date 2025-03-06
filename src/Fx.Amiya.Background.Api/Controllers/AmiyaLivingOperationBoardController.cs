@@ -43,6 +43,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             var res =await amiyaLivingOperationBoardService.GetLivingCustomerAndPerformanceDataAsync(queryDto);
             data.ClueCount = res.ClueCount;
             data.CurrentClueCount = res.CurrentClueCount;
+            data.ClueTarget = res.ClueTarget;
             data.ClueTargetCompleteRate = res.ClueTargetCompleteRate;
             data.ClueChain = res.ClueChain;
             data.ClueYearOnYear = res.ClueYearOnYear;
@@ -51,6 +52,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             data.PerformanceChain = res.PerformanceChain;
             data.PerformanceYearOnYear = res.PerformanceYearOnYear;
             data.CurrentMontPerformance=res.CurrentMontPerformance;
+            data.PerformanceTarget = res.PerformanceTarget;
+            data.PerformanceTargetCompleteRate = res.PerformanceTargetCompleteRate;
             return ResultData<LivingCustomerAndPerformanceDataVo>.Success().AddData("data",data);
         }
         /// <summary>

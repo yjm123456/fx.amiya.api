@@ -954,7 +954,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 OldCustomerUnitPrice = e.OldCustomerUnitPrice,
                 CustomerUnitPrice = e.CustomerUnitPrice,
                 Rate = e.Rate,
-                TotalPerformance = e.TotalPerformance
+                TotalPerformance = e.TotalPerformance,
+                OldCustomerBuyRate = e.OldCustomerBuyRate
             }).ToList();
 
             return ResultData<List<FlowTransFormDataVo>>.Success().AddData("data", res.ToList());
@@ -1686,15 +1687,20 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.EndDate = query.EndDate;
             queryDto.AssistantId = query.AssistantId;
             var res = await amiyaOperationsBoardService.GetAssistantEffOrPotDistributeConsulationDataAsync(queryDto);
-            data.EffctiveCurrentDayData = res.EffctiveData.CurrentDay;
-            data.EffctiveTotalData = res.EffctiveData.Total;
-            data.EffctiveChainRateData = res.EffctiveData.ChainRate;
-            data.EffctiveYearOnYearData = res.EffctiveData.YearOnYear;
+            data.BeforeLivingCurrentDayData = res.BeforeLivingData.CurrentDay;
+            data.BeforeLivingTotalData = res.BeforeLivingData.Total;
+            data.BeforeLivingChainRateData = res.BeforeLivingData.ChainRate;
+            data.BeforeLivingYearOnYearData = res.BeforeLivingData.YearOnYear;
 
-            data.PotentialCurrentDayData = res.PotentialData.CurrentDay;
-            data.PotentialTotalData = res.PotentialData.Total;
-            data.PotentialChainRateData = res.PotentialData.ChainRate;
-            data.PotentialYearOnYearData = res.PotentialData.YearOnYear;
+            data.LivingCurrentDayData = res.LivingData.CurrentDay;
+            data.LivingTotalData = res.LivingData.Total;
+            data.LivingChainRateData = res.LivingData.ChainRate;
+            data.LivingYearOnYearData = res.LivingData.YearOnYear;
+
+            data.AfrerLivingCurrentDayData = res.AfterLivingData.CurrentDay;
+            data.AfterLivingTotalData = res.AfterLivingData.Total;
+            data.AfrerLivingChainRateData = res.AfterLivingData.ChainRate;
+            data.AfrerLivingYearOnYearData = res.AfterLivingData.YearOnYear;
 
             data.TotalCurrentDayData = res.TotalData.CurrentDay;
             data.TotalTotalData = res.TotalData.Total;
@@ -1755,8 +1761,9 @@ namespace Fx.Amiya.Background.Api.Controllers
             var res = await amiyaOperationsBoardService.GetAssistantEffOrPotBrokenLineDataAsync(queryDto);
 
             AdminCustomerServiceEffOrPotBrokenLineDataVo data = new AdminCustomerServiceEffOrPotBrokenLineDataVo();
-            data.Effective = res.Effective.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
-            data.Potential = res.Potential.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
+            data.BeforeLivingData = res.BeforeLivingData.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
+            data.LivingData = res.LivingData.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
+            data.AfterLivingData = res.AfterLivingData.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
             data.Total = res.Total.Select(e => new PerformanceBrokenLineListInfoVo { date = e.date, Performance = e.Performance }).ToList();
 
             return ResultData<AdminCustomerServiceEffOrPotBrokenLineDataVo>.Success().AddData("data", data);
@@ -1777,12 +1784,13 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.AssistantId = query.AssistantId;
             queryDto.IsCurrent = query.IsCurrent;
             var res = await amiyaOperationsBoardService.GetAssistantTransformCycleDataAsync(queryDto);
-            data.EffectiveSendCycle = res.EffectiveSendCycle;
-            data.EffectiveToHospitalCycle = res.EffectiveToHospitalCycle;
-            data.PotionelSendCycle = res.PotionelSendCycle;
-            data.PotionelToHospitalCycle = res.PotionelToHospitalCycle;
-            data.TotalSendCycle = res.TotalSendCycle;
-            data.TotalToHospitalCycle = res.TotalToHospitalCycle;
+            //data.EffectiveSendCycle = res.EffectiveSendCycle;
+            //data.EffectiveToHospitalCycle = res.EffectiveToHospitalCycle;
+            //data.PotionelSendCycle = res.PotionelSendCycle;
+            //data.PotionelToHospitalCycle = res.PotionelToHospitalCycle;
+            //data.TotalSendCycle = res.TotalSendCycle;
+            //data.TotalToHospitalCycle = res.TotalToHospitalCycle;
+           
             data.SendCycleData = res.SendCycleData;
             data.ToHospitalCycleData = res.ToHospitalCycleData;
             data.OldCustomerRePurcheData = res.OldCustomerRePurcheData;
@@ -1809,6 +1817,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             data.PotionelToHospitalCycle = res.PotionelToHospitalCycle;
             data.TotalSendCycle = res.TotalSendCycle;
             data.TotalToHospitalCycle = res.TotalToHospitalCycle;
+            
             data.SendCycleData = res.SendCycleData;
             data.ToHospitalCycleData = res.ToHospitalCycleData;
             data.OldCustomerRePurcheData = res.OldCustomerRePurcheData;
@@ -1837,15 +1846,26 @@ namespace Fx.Amiya.Background.Api.Controllers
             data.FirstTypeTotal = res.FirstTypeTotal;
             data.FirstTypeChainRate = res.FirstTypeChainRate;
             data.FirstTypeYearOnYear = res.FirstTypeYearOnYear;
+            data.FirstTypeCustomerTarget = res.FirstTypeCustomerTarget;
+            data.FirstTypeCustomerComplete = res.FirstTypeCustomerComplete;
+
             data.SecondTypeTotal = res.SecondTypeTotal;
             data.SecondTypeChainRate = res.SecondTypeChainRate;
             data.SecondTypeYearOnYear = res.SecondTypeYearOnYear;
+            data.SecondTypeCustomerTarget = res.SecondTypeCustomerTarget;
+            data.SecondTypeCustomerComplete = res.SecondTypeCustomerComplete;
+
             data.ThirdTypeTotal = res.ThirdTypeTotal;
             data.ThirdTypeChainRate = res.ThirdTypeChainRate;
             data.ThirdTypeYearOnYear = res.ThirdTypeYearOnYear;
+            data.ThirdTypeCustomerTarget = res.ThirdTypeCustomerTarget;
+            data.ThirdTypeCustomerComplete = res.ThirdTypeCustomerComplete;
+
             data.TotalTypeTotal = res.TotalTypeTotal;
             data.TotalTypeChainRate = res.TotalTypeChainRate;
             data.TotalTypeYearOnYear = res.TotalTypeYearOnYear;
+            data.TotalCustomerTarget = res.TotalCustomerTarget;
+            data.TotalCustomerComplete = res.TotalCustomerComplete;
 
             return ResultData<AdminCustomerServiceCustomerTypeVo>.Success().AddData("data", data);
         }
@@ -1865,15 +1885,19 @@ namespace Fx.Amiya.Background.Api.Controllers
             var res = await amiyaOperationsBoardService.GetAdminCustomerServiceCustomerTypeAddWechatDataAsync(queryDto);
             AdminCustomerServiceCustomerTypeVo data = new AdminCustomerServiceCustomerTypeVo();
             data.FirstTypeTotal = res.FirstTypeTotal;
-            data.FirstTypeChainRate = res.FirstTypeChainRate;
+            data.FirstTypeToday = res.FirstTypeToday;
+            data.FirstTypeChainRate = res.FirstTypeChainRate; 
             data.FirstTypeYearOnYear = res.FirstTypeYearOnYear;
             data.SecondTypeTotal = res.SecondTypeTotal;
+            data.SecondTypeToday = res.SecondTypeToday;
             data.SecondTypeChainRate = res.SecondTypeChainRate;
             data.SecondTypeYearOnYear = res.SecondTypeYearOnYear;
             data.ThirdTypeTotal = res.ThirdTypeTotal;
+            data.ThirdTypeToday = res.ThirdTypeToday;
             data.ThirdTypeChainRate = res.ThirdTypeChainRate;
             data.ThirdTypeYearOnYear = res.ThirdTypeYearOnYear;
             data.TotalTypeTotal = res.TotalTypeTotal;
+            data.TotalTypeToday = res.TotalTypeToday;
             data.TotalTypeChainRate = res.TotalTypeChainRate;
             data.TotalTypeYearOnYear = res.TotalTypeYearOnYear;
 
@@ -2062,6 +2086,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             data.DepartmentData.CurrentDayPerformance = res.DepartmentData.CurrentDayPerformance;
             data.DepartmentData.CustomerCount = res.DepartmentData.CustomerCount;
             data.DepartmentData.Performance = res.DepartmentData.Performance;
+            data.DepartmentData.CustomerCountTarget = res.DepartmentData.CustomerCountTarget;
+            data.DepartmentData.CustomerCountTargetComplete = res.DepartmentData.CustomerCountTargetComplete;
             data.EmployeeData.CustomerCount = res.EmployeeData.CustomerCount;
             data.EmployeeData.Performance = res.EmployeeData.Performance;
             data.EmployeeData.CurrentDayCustomerCount = res.EmployeeData.CurrentDayCustomerCount;

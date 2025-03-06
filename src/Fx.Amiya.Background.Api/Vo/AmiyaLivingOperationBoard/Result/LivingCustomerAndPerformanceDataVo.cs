@@ -17,6 +17,10 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaLivingOperationBoard.Result
         /// </summary>
         public decimal CurrentClueCount { get; set; }
         /// <summary>
+        /// 客资目标
+        /// </summary>
+        public decimal ClueTarget { get; set; }
+        /// <summary>
         /// 客资目标完成率
         /// </summary>
         public decimal ClueTargetCompleteRate { get; set; }
@@ -48,5 +52,14 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaLivingOperationBoard.Result
         /// 业绩同比
         /// </summary>
         public decimal PerformanceYearOnYear { get; set; }
+        /// <summary>
+        /// 新客业绩目标
+        /// </summary>
+        public decimal PerformanceTarget { get; set; }
+
+        /// <summary>
+        /// 新客业绩目标完成率
+        /// </summary>
+        public decimal PerformanceTargetCompleteRate { get; set; }
     }
 }

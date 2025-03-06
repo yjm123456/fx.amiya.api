@@ -3,6 +3,7 @@ using Fx.Amiya.Dto.AmiyaOperationsBoardService;
 using Fx.Amiya.Dto.AmiyaOperationsBoardService.Input;
 using Fx.Amiya.Dto.AmiyaOperationsBoardService.Result;
 using Fx.Amiya.Dto.HospitalPerformance;
+using Fx.Amiya.Dto.NewBusinessDashboard;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.Dto.ReconciliationDocuments;
 using Fx.Amiya.Dto.ShoppingCartRegistration;
@@ -1763,11 +1764,12 @@ namespace Fx.Amiya.Service
             query.ContentPlatFormIds = GetContentPlatformIdList(query);
             List<FlowTransFormDataDto> dataListThisMonth = new List<FlowTransFormDataDto>();
 
+            var totalCustomer = await bindCustomerServiceService.GetBindCustomerServiceCountByAssistantAndPricePhone(assistantInfo.Id, 199);
             for (int month = 1; month < 13; month++)
             {
                 var baseDataStartDate = Convert.ToDateTime(selectDate.EndDate.Year + "-" + month + "-01");
                 var baseDataEndDate = DateTime.Now;
-              
+
                 if (month != 12)
                 {
                     baseDataEndDate = Convert.ToDateTime(selectDate.EndDate.Year + "-" + (month + 1) + "-01");
@@ -1802,14 +1804,73 @@ namespace Fx.Amiya.Service
                 groupData.NewCustomerUnitPrice = DecimalExtension.Division(groupData.NewCustomerPerformance, groupBaseData.NewCustomerDealCount).Value;
                 groupData.CustomerUnitPrice = DecimalExtension.Division(groupData.NewCustomerPerformance + groupData.OldCustomerPerformance, groupBaseData.OldCustomerDealCount + groupBaseData.NewCustomerDealCount).Value;
                 groupData.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(groupData.NewCustomerPerformance, groupData.OldCustomerPerformance);
-                var totalCustomer = await bindCustomerServiceService.GetBindCustomerServiceCountByAssistantAndPricePhone(assistantInfo.Id, 199);
                 groupData.OldCustomerBuyRate = DecimalExtension.CalculateTargetComplete(Convert.ToDecimal(groupBaseData.OldCustomerDealCount), Convert.ToDecimal(totalCustomer)).Value;
                 dataListThisMonth.Add(groupData);
             }
-            foreach (var item in dataListThisMonth)
-            {
-                item.Rate = DecimalExtension.CalculateTargetComplete(item.NewCustomerPerformance + item.OldCustomerPerformance, dataListThisMonth.Sum(e => e.NewCustomerPerformance) + dataListThisMonth.Sum(e => e.OldCustomerPerformance)).Value;
-            }
+
+            #region 【合计】
+            FlowTransFormDataDto groupDataSum = new FlowTransFormDataDto();
+            groupDataSum.YearAndMonth = "合计";
+            groupDataSum.ClueCount = dataListThisMonth.Sum(x => x.ClueCount);
+            groupDataSum.SendOrderCount = dataListThisMonth.Sum(x => x.SendOrderCount);
+            groupDataSum.DistributeConsulationNum = dataListThisMonth.Sum(x => x.DistributeConsulationNum);
+            //groupDataSum.ClueEffectiveRate = DecimalExtension.CalculateTargetComplete(groupDataSum.DistributeConsulationNum, groupDataSum.ClueCount).Value;
+            groupDataSum.AddWechatCount = dataListThisMonth.Sum(x => x.AddWechatCount);
+            groupDataSum.AddWechatRate = DecimalExtension.CalculateTargetComplete(dataListThisMonth.Sum(x => x.AddWechatCount), dataListThisMonth.Sum(x => x.DistributeConsulationNum)).Value;
+            groupDataSum.SendOrderRate = DecimalExtension.CalculateTargetComplete(dataListThisMonth.Sum(x => x.SendOrderCount), dataListThisMonth.Sum(x => x.AddWechatCount)).Value;
+            groupDataSum.ToHospitalCount = dataListThisMonth.Sum(x => x.ToHospitalCount);
+            groupDataSum.ToHospitalRate = DecimalExtension.CalculateTargetComplete(dataListThisMonth.Sum(x => x.ToHospitalCount), dataListThisMonth.Sum(x => x.SendOrderCount)).Value;
+            groupDataSum.DealCount = dataListThisMonth.Sum(x => x.DealCount);
+            groupDataSum.NewCustomerDealCount = dataListThisMonth.Sum(x => x.NewCustomerDealCount);
+            groupDataSum.OldCustomerDealCount = dataListThisMonth.Sum(x => x.OldCustomerDealCount);
+            groupDataSum.DealRate = DecimalExtension.CalculateTargetComplete(groupDataSum.DealCount, groupDataSum.ToHospitalCount).Value;
+
+            groupDataSum.NewCustomerPerformance = dataListThisMonth.Sum(x => x.NewCustomerPerformance);
+            groupDataSum.OldCustomerPerformance = dataListThisMonth.Sum(x => x.OldCustomerPerformance);
+            groupDataSum.TotalPerformance = dataListThisMonth.Sum(x => x.TotalPerformance);
+            groupDataSum.OldCustomerUnitPrice = DecimalExtension.Division(groupDataSum.OldCustomerPerformance, groupDataSum.OldCustomerDealCount).Value;
+            groupDataSum.NewCustomerUnitPrice = DecimalExtension.Division(groupDataSum.NewCustomerPerformance, groupDataSum.NewCustomerDealCount).Value;
+            groupDataSum.CustomerUnitPrice = DecimalExtension.Division(groupDataSum.NewCustomerPerformance + groupDataSum.OldCustomerPerformance, groupDataSum.OldCustomerDealCount + groupDataSum.NewCustomerDealCount).Value;
+            groupDataSum.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(groupDataSum.NewCustomerPerformance, groupDataSum.OldCustomerPerformance);
+
+            groupDataSum.OldCustomerBuyRate = DecimalExtension.CalculateTargetComplete(Convert.ToDecimal(groupDataSum.OldCustomerDealCount), Convert.ToDecimal(totalCustomer)).Value;
+            #endregion
+
+            #region 【月均】
+            FlowTransFormDataDto groupDataAvg = new FlowTransFormDataDto();
+            var thisMonth = DateTime.Now.Month;
+            groupDataAvg.YearAndMonth = "月均";
+            groupDataAvg.ClueCount = groupDataSum.ClueCount / thisMonth;
+            groupDataAvg.SendOrderCount = Math.Round(groupDataSum.SendOrderCount / thisMonth, 2, MidpointRounding.AwayFromZero);
+            groupDataAvg.DistributeConsulationNum = groupDataSum.DistributeConsulationNum / thisMonth;
+            //groupDataAvg.ClueEffectiveRate = DecimalExtension.CalculateTargetComplete(groupDataAvg.DistributeConsulationNum, groupDataAvg.ClueCount).Value;
+            groupDataAvg.AddWechatCount = groupDataSum.AddWechatCount / thisMonth;
+            groupDataAvg.AddWechatRate = DecimalExtension.CalculateTargetComplete(dataListThisMonth.Sum(x => x.AddWechatCount), dataListThisMonth.Sum(x => x.DistributeConsulationNum)).Value;
+            groupDataAvg.SendOrderRate = DecimalExtension.CalculateTargetComplete(dataListThisMonth.Sum(x => x.SendOrderCount), dataListThisMonth.Sum(x => x.AddWechatCount)).Value;
+            groupDataAvg.ToHospitalCount = groupDataSum.ToHospitalCount / thisMonth;
+            groupDataAvg.ToHospitalRate = DecimalExtension.CalculateTargetComplete(dataListThisMonth.Sum(x => x.ToHospitalCount), dataListThisMonth.Sum(x => x.SendOrderCount)).Value;
+            groupDataAvg.DealCount = groupDataSum.DealCount / thisMonth;
+            groupDataAvg.NewCustomerDealCount = groupDataSum.NewCustomerDealCount / thisMonth;
+            groupDataAvg.OldCustomerDealCount = groupDataSum.OldCustomerDealCount / thisMonth;
+            groupDataAvg.DealRate = DecimalExtension.CalculateTargetComplete(groupDataAvg.DealCount, groupDataAvg.ToHospitalCount).Value;
+
+            groupDataAvg.NewCustomerPerformance = groupDataSum.NewCustomerPerformance / thisMonth;
+            groupDataAvg.OldCustomerPerformance = groupDataSum.OldCustomerPerformance / thisMonth;
+            groupDataAvg.TotalPerformance = Math.Round(groupDataSum.TotalPerformance / thisMonth, 2, MidpointRounding.AwayFromZero);
+            groupDataAvg.OldCustomerUnitPrice = DecimalExtension.Division(groupDataAvg.OldCustomerPerformance, groupDataAvg.OldCustomerDealCount).Value;
+            groupDataAvg.NewCustomerUnitPrice = DecimalExtension.Division(groupDataAvg.NewCustomerPerformance, groupDataAvg.NewCustomerDealCount).Value;
+            groupDataAvg.CustomerUnitPrice = DecimalExtension.Division(groupDataAvg.NewCustomerPerformance + groupDataAvg.OldCustomerPerformance, groupDataAvg.OldCustomerDealCount + groupDataAvg.NewCustomerDealCount).Value;
+            groupDataAvg.NewAndOldCustomerRate = DecimalExtension.CalculateAccounted(groupDataAvg.NewCustomerPerformance, groupDataAvg.OldCustomerPerformance);
+
+            groupDataAvg.OldCustomerBuyRate = DecimalExtension.CalculateTargetComplete(Convert.ToDecimal(groupDataAvg.OldCustomerDealCount), Convert.ToDecimal(totalCustomer)).Value;
+            #endregion
+
+            dataListThisMonth.Add(groupDataSum);
+            dataListThisMonth.Add(groupDataAvg);
+            //foreach (var item in dataListThisMonth)
+            //{
+            //    item.Rate = DecimalExtension.CalculateTargetComplete(item.NewCustomerPerformance + item.OldCustomerPerformance, dataListThisMonth.Sum(e => e.NewCustomerPerformance) + dataListThisMonth.Sum(e => e.OldCustomerPerformance)).Value;
+            //}
             return dataListThisMonth;
         }
         /// <summary>
@@ -1930,6 +1991,7 @@ namespace Fx.Amiya.Service
             var daoDaoPerformanceLastYear = totalPerformanceLastYear.Where(x => LiveAnchorInfoDaoDao.Contains(x.LiveAnchorId)).ToList();
             var jiNaPerformanceLastYear = totalPerformanceLastYear.Where(x => LiveAnchorInfoJiNa.Contains(x.LiveAnchorId)).ToList();
             #endregion
+            var thisMonth = DateTime.Now.Month;
             for (int y = 0; y <= totalCount; y++)
             {
                 PerformanceYearDataDto totalPerformanceYearData = new PerformanceYearDataDto();
@@ -1956,7 +2018,7 @@ namespace Fx.Amiya.Service
                         totalPerformanceYearData.NovemberPerformance = targetAfterLiving.Where(x => x.Month == 11).Sum(t => t.TotalPerformanceTarget).ToString();
                         totalPerformanceYearData.DecemberPerformance = targetAfterLiving.Where(x => x.Month == 12).Sum(t => t.TotalPerformanceTarget).ToString();
                         totalPerformanceYearData.SumPerformance = targetAfterLiving.Sum(x => x.TotalPerformanceTarget).ToString();
-                        totalPerformanceYearData.AveragePerformance = Math.Round(targetAfterLiving.Sum(x => x.TotalPerformanceTarget) / 12, 2, MidpointRounding.AwayFromZero).ToString();
+                        totalPerformanceYearData.AveragePerformance = Math.Round(targetAfterLiving.Sum(x => x.TotalPerformanceTarget) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
                         #endregion
                         #region 刀刀
                         daoDaoPerformanceYearData.JanuaryPerformance = targetAfterLivingDaodao.Where(x => x.Month == 1).Sum(t => t.TotalPerformanceTarget).ToString();
@@ -1972,7 +2034,7 @@ namespace Fx.Amiya.Service
                         daoDaoPerformanceYearData.NovemberPerformance = targetAfterLivingDaodao.Where(x => x.Month == 11).Sum(t => t.TotalPerformanceTarget).ToString();
                         daoDaoPerformanceYearData.DecemberPerformance = targetAfterLivingDaodao.Where(x => x.Month == 12).Sum(t => t.TotalPerformanceTarget).ToString();
                         daoDaoPerformanceYearData.SumPerformance = targetAfterLivingDaodao.Sum(x => x.TotalPerformanceTarget).ToString();
-                        daoDaoPerformanceYearData.AveragePerformance = Math.Round(targetAfterLivingDaodao.Sum(x => x.TotalPerformanceTarget) / 12, 2, MidpointRounding.AwayFromZero).ToString();
+                        daoDaoPerformanceYearData.AveragePerformance = Math.Round(targetAfterLivingDaodao.Sum(x => x.TotalPerformanceTarget) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
                         #endregion
                         #region 吉娜
                         jiNaPerformanceYearData.JanuaryPerformance = targetAfterLivingJiNa.Where(x => x.Month == 1).Sum(t => t.TotalPerformanceTarget).ToString();
@@ -1988,7 +2050,7 @@ namespace Fx.Amiya.Service
                         jiNaPerformanceYearData.NovemberPerformance = targetAfterLivingJiNa.Where(x => x.Month == 11).Sum(t => t.TotalPerformanceTarget).ToString();
                         jiNaPerformanceYearData.DecemberPerformance = targetAfterLivingJiNa.Where(x => x.Month == 12).Sum(t => t.TotalPerformanceTarget).ToString();
                         jiNaPerformanceYearData.SumPerformance = targetAfterLivingJiNa.Sum(x => x.TotalPerformanceTarget).ToString();
-                        jiNaPerformanceYearData.AveragePerformance = Math.Round(targetAfterLivingDaodao.Sum(x => x.TotalPerformanceTarget) / 12, 2, MidpointRounding.AwayFromZero).ToString();
+                        jiNaPerformanceYearData.AveragePerformance = Math.Round(targetAfterLivingDaodao.Sum(x => x.TotalPerformanceTarget) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
                         #endregion
                         break;
                     case 1:
@@ -2020,7 +2082,7 @@ namespace Fx.Amiya.Service
                         var DecTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 12, LiveAnchorInfo, query.IsOldCustomer);
                         totalPerformanceYearData.DecemberPerformance = DecTotalLossPerformance.Sum(x => x.Price).ToString();
                         totalPerformanceYearData.SumPerformance = totalPerformance.Sum(x => x.Price).ToString();
-                        totalPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(totalPerformanceYearData.SumPerformance) / 12, 2, MidpointRounding.AwayFromZero).ToString();
+                        totalPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(totalPerformanceYearData.SumPerformance) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
                         #endregion
                         #region 刀刀
                         var JanDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 1, LiveAnchorInfoDaoDao, query.IsOldCustomer);
@@ -2048,7 +2110,7 @@ namespace Fx.Amiya.Service
                         var DecDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 12, LiveAnchorInfoDaoDao, query.IsOldCustomer);
                         daoDaoPerformanceYearData.DecemberPerformance = DecDaoDaoLossPerformance.Sum(x => x.Price).ToString();
                         daoDaoPerformanceYearData.SumPerformance = daoDaoPerformance.Sum(x => x.Price).ToString();
-                        daoDaoPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(daoDaoPerformanceYearData.SumPerformance) / 12, 2, MidpointRounding.AwayFromZero).ToString();
+                        daoDaoPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(daoDaoPerformanceYearData.SumPerformance) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
 
 
                         #endregion
@@ -2079,7 +2141,7 @@ namespace Fx.Amiya.Service
                         var DecJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 12, LiveAnchorInfoJiNa, query.IsOldCustomer);
                         jiNaPerformanceYearData.DecemberPerformance = DecJiNaLossPerformance.Sum(x => x.Price).ToString();
                         jiNaPerformanceYearData.SumPerformance = jiNaPerformance.Sum(x => x.Price).ToString();
-                        jiNaPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(jiNaPerformanceYearData.SumPerformance) / 12, 2, MidpointRounding.AwayFromZero).ToString();
+                        jiNaPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(jiNaPerformanceYearData.SumPerformance) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
                         #endregion
                         break;
                     case 2:
@@ -2370,7 +2432,7 @@ namespace Fx.Amiya.Service
                         totalPerformanceYearData.OctoberPerformance = DecimalExtension.CalculateAccounted(totalNewCustomer.Where(x => x.CreateDate.Month == 10).Count(), totalOldCustomer.Where(x => x.CreateDate.Month == 10).Count());
                         totalPerformanceYearData.NovemberPerformance = DecimalExtension.CalculateAccounted(totalNewCustomer.Where(x => x.CreateDate.Month == 11).Count(), totalOldCustomer.Where(x => x.CreateDate.Month == 11).Count());
                         totalPerformanceYearData.DecemberPerformance = DecimalExtension.CalculateAccounted(totalNewCustomer.Where(x => x.CreateDate.Month == 12).Count(), totalOldCustomer.Where(x => x.CreateDate.Month == 12).Count());
-                        totalPerformanceYearData.SumPerformance = "/";
+                        totalPerformanceYearData.SumPerformance = DecimalExtension.CalculateAccounted(totalNewCustomer.Count(), totalOldCustomer.Count());
                         totalPerformanceYearData.AveragePerformance = "/";
                         #endregion
                         #region 刀刀
@@ -2389,7 +2451,7 @@ namespace Fx.Amiya.Service
                         daoDaoPerformanceYearData.OctoberPerformance = DecimalExtension.CalculateAccounted(daoDaoNewCustomer.Where(x => x.CreateDate.Month == 10).Count(), daoDaoOldCustomer.Where(x => x.CreateDate.Month == 10).Count());
                         daoDaoPerformanceYearData.NovemberPerformance = DecimalExtension.CalculateAccounted(daoDaoNewCustomer.Where(x => x.CreateDate.Month == 11).Count(), daoDaoOldCustomer.Where(x => x.CreateDate.Month == 11).Count());
                         daoDaoPerformanceYearData.DecemberPerformance = DecimalExtension.CalculateAccounted(daoDaoNewCustomer.Where(x => x.CreateDate.Month == 12).Count(), daoDaoOldCustomer.Where(x => x.CreateDate.Month == 12).Count());
-                        daoDaoPerformanceYearData.SumPerformance = "/";
+                        daoDaoPerformanceYearData.SumPerformance = DecimalExtension.CalculateAccounted(daoDaoNewCustomer.Count(), daoDaoOldCustomer.Count());
                         daoDaoPerformanceYearData.AveragePerformance = "/";
 
                         #endregion
@@ -2408,7 +2470,7 @@ namespace Fx.Amiya.Service
                         jiNaPerformanceYearData.OctoberPerformance = DecimalExtension.CalculateAccounted(jiNaNewCustomer.Where(x => x.CreateDate.Month == 10).Count(), jiNaOldCustomer.Where(x => x.CreateDate.Month == 10).Count());
                         jiNaPerformanceYearData.NovemberPerformance = DecimalExtension.CalculateAccounted(jiNaNewCustomer.Where(x => x.CreateDate.Month == 11).Count(), jiNaOldCustomer.Where(x => x.CreateDate.Month == 11).Count());
                         jiNaPerformanceYearData.DecemberPerformance = DecimalExtension.CalculateAccounted(jiNaNewCustomer.Where(x => x.CreateDate.Month == 12).Count(), jiNaOldCustomer.Where(x => x.CreateDate.Month == 12).Count());
-                        jiNaPerformanceYearData.SumPerformance = "/";
+                        jiNaPerformanceYearData.SumPerformance = DecimalExtension.CalculateAccounted(jiNaNewCustomer.Count(), jiNaOldCustomer.Count());
                         jiNaPerformanceYearData.AveragePerformance = "/";
                         #endregion
 
@@ -2429,6 +2491,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<AssistantPersonalPerformanceYearDataListDto> GetTotalAssistantPersonalAchievementByYearAsync(QueryPerfomanceYearDataDto query)
         {
+            var thisMonth = DateTime.Now.Month;
             #region 实例化输出项
             AssistantPersonalPerformanceYearDataListDto result = new AssistantPersonalPerformanceYearDataListDto();
             result.TotalPerformanceData = new List<PerformanceYearDataDto>();
@@ -2477,7 +2540,7 @@ namespace Fx.Amiya.Service
                         totalPerformanceYearData.NovemberPerformance = targetAfterLiving.Where(x => x.BelongMonth == 11).Sum(t => t.PerformanceTarget).ToString();
                         totalPerformanceYearData.DecemberPerformance = targetAfterLiving.Where(x => x.BelongMonth == 12).Sum(t => t.PerformanceTarget).ToString();
                         totalPerformanceYearData.SumPerformance = targetAfterLiving.Sum(x => x.PerformanceTarget).ToString();
-                        totalPerformanceYearData.AveragePerformance = Math.Round(targetAfterLiving.Sum(x => x.PerformanceTarget) / 12, 2, MidpointRounding.AwayFromZero).ToString();
+                        totalPerformanceYearData.AveragePerformance = Math.Round(targetAfterLiving.Sum(x => x.PerformanceTarget) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
                         #endregion
                         #region 新客
                         newPerformanceYearData.JanuaryPerformance = targetAfterLiving.Where(x => x.BelongMonth == 1).Sum(t => t.NewCustomerPerformanceTarget).ToString();
@@ -2493,7 +2556,7 @@ namespace Fx.Amiya.Service
                         newPerformanceYearData.NovemberPerformance = targetAfterLiving.Where(x => x.BelongMonth == 11).Sum(t => t.NewCustomerPerformanceTarget).ToString();
                         newPerformanceYearData.DecemberPerformance = targetAfterLiving.Where(x => x.BelongMonth == 12).Sum(t => t.NewCustomerPerformanceTarget).ToString();
                         newPerformanceYearData.SumPerformance = targetAfterLiving.Sum(x => x.NewCustomerPerformanceTarget).ToString();
-                        newPerformanceYearData.AveragePerformance = Math.Round(targetAfterLiving.Sum(x => x.NewCustomerPerformanceTarget) / 12, 2, MidpointRounding.AwayFromZero).ToString();
+                        newPerformanceYearData.AveragePerformance = Math.Round(targetAfterLiving.Sum(x => x.NewCustomerPerformanceTarget) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
                         #endregion
                         #region 老客
                         oldPerformanceYearData.JanuaryPerformance = targetAfterLiving.Where(x => x.BelongMonth == 1).Sum(t => t.OldCustomerPerformanceTarget).ToString();
@@ -2509,7 +2572,7 @@ namespace Fx.Amiya.Service
                         oldPerformanceYearData.NovemberPerformance = targetAfterLiving.Where(x => x.BelongMonth == 11).Sum(t => t.OldCustomerPerformanceTarget).ToString();
                         oldPerformanceYearData.DecemberPerformance = targetAfterLiving.Where(x => x.BelongMonth == 12).Sum(t => t.OldCustomerPerformanceTarget).ToString();
                         oldPerformanceYearData.SumPerformance = targetAfterLiving.Sum(x => x.OldCustomerPerformanceTarget).ToString();
-                        oldPerformanceYearData.AveragePerformance = Math.Round(targetAfterLiving.Sum(x => x.OldCustomerPerformanceTarget) / 12, 2, MidpointRounding.AwayFromZero).ToString();
+                        oldPerformanceYearData.AveragePerformance = Math.Round(targetAfterLiving.Sum(x => x.OldCustomerPerformanceTarget) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
                         #endregion
                         break;
                     case 1:
@@ -2540,67 +2603,67 @@ namespace Fx.Amiya.Service
                         totalPerformanceYearData.NovemberPerformance = NovTotalLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
                         var DecTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 12, LiveAnchorInfo, query.IsOldCustomer);
                         totalPerformanceYearData.DecemberPerformance = DecTotalLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        totalPerformanceYearData.SumPerformance = totalPerformance.Sum(x => x.Price).ToString();
-                        totalPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(totalPerformanceYearData.SumPerformance) / 12, 2, MidpointRounding.AwayFromZero).ToString();
+                        totalPerformanceYearData.SumPerformance = (Convert.ToDecimal(totalPerformanceYearData.JanuaryPerformance) + Convert.ToDecimal(totalPerformanceYearData.FebruaryPerformance) + Convert.ToDecimal(totalPerformanceYearData.MarchPerformance) + Convert.ToDecimal(totalPerformanceYearData.AprilPerformance) + Convert.ToDecimal(totalPerformanceYearData.MayPerformance) + Convert.ToDecimal(totalPerformanceYearData.JunePerformance) + Convert.ToDecimal(totalPerformanceYearData.JulyPerformance) + Convert.ToDecimal(totalPerformanceYearData.AugustPerformance) + Convert.ToDecimal(totalPerformanceYearData.SeptemberPerformance) + Convert.ToDecimal(totalPerformanceYearData.OctoberPerformance) + Convert.ToDecimal(totalPerformanceYearData.NovemberPerformance) + Convert.ToDecimal(totalPerformanceYearData.DecemberPerformance)).ToString();
+                        totalPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(totalPerformanceYearData.SumPerformance) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
                         #endregion
                         #region 新客
-                        var JanDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 1, LiveAnchorInfo, query.IsOldCustomer);
+                        var JanDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 1, LiveAnchorInfo, false);
                         newPerformanceYearData.JanuaryPerformance = JanDaoDaoLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        var FebDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 2, LiveAnchorInfo, query.IsOldCustomer);
+                        var FebDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 2, LiveAnchorInfo, false);
                         newPerformanceYearData.FebruaryPerformance = FebDaoDaoLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        var MarDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 3, LiveAnchorInfo, query.IsOldCustomer);
+                        var MarDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 3, LiveAnchorInfo, false);
                         newPerformanceYearData.MarchPerformance = MarDaoDaoLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        var AprDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 4, LiveAnchorInfo, query.IsOldCustomer);
+                        var AprDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 4, LiveAnchorInfo, false);
                         newPerformanceYearData.AprilPerformance = AprDaoDaoLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        var MayDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 5, LiveAnchorInfo, query.IsOldCustomer);
+                        var MayDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 5, LiveAnchorInfo, false);
                         newPerformanceYearData.MayPerformance = MayDaoDaoLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        var JunDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 6, LiveAnchorInfo, query.IsOldCustomer);
+                        var JunDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 6, LiveAnchorInfo, false);
                         newPerformanceYearData.JunePerformance = JunDaoDaoLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        var JulDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 7, LiveAnchorInfo, query.IsOldCustomer);
+                        var JulDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 7, LiveAnchorInfo, false);
                         newPerformanceYearData.JulyPerformance = JulDaoDaoLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        var AugDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 8, LiveAnchorInfo, query.IsOldCustomer);
+                        var AugDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 8, LiveAnchorInfo, false);
                         newPerformanceYearData.AugustPerformance = AugDaoDaoLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        var SepDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 9, LiveAnchorInfo, query.IsOldCustomer);
+                        var SepDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 9, LiveAnchorInfo, false);
                         newPerformanceYearData.SeptemberPerformance = SepDaoDaoLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        var OctDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 10, LiveAnchorInfo, query.IsOldCustomer);
+                        var OctDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 10, LiveAnchorInfo, false);
                         newPerformanceYearData.OctoberPerformance = OctDaoDaoLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        var NovDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 11, LiveAnchorInfo, query.IsOldCustomer);
+                        var NovDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 11, LiveAnchorInfo, false);
                         newPerformanceYearData.NovemberPerformance = NovDaoDaoLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        var DecDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 12, LiveAnchorInfo, query.IsOldCustomer);
+                        var DecDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 12, LiveAnchorInfo, false);
                         newPerformanceYearData.DecemberPerformance = DecDaoDaoLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        newPerformanceYearData.SumPerformance = totalPerformance.Where(x => x.IsOldCustomer == false && x.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        newPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(newPerformanceYearData.SumPerformance) / 12, 2, MidpointRounding.AwayFromZero).ToString();
+                        newPerformanceYearData.SumPerformance = (Convert.ToDecimal(newPerformanceYearData.JanuaryPerformance) + Convert.ToDecimal(newPerformanceYearData.FebruaryPerformance) + Convert.ToDecimal(newPerformanceYearData.MarchPerformance) + Convert.ToDecimal(newPerformanceYearData.AprilPerformance) + Convert.ToDecimal(newPerformanceYearData.MayPerformance) + Convert.ToDecimal(newPerformanceYearData.JunePerformance) + Convert.ToDecimal(newPerformanceYearData.JulyPerformance) + Convert.ToDecimal(newPerformanceYearData.AugustPerformance) + Convert.ToDecimal(newPerformanceYearData.SeptemberPerformance) + Convert.ToDecimal(newPerformanceYearData.OctoberPerformance) + Convert.ToDecimal(newPerformanceYearData.NovemberPerformance) + Convert.ToDecimal(newPerformanceYearData.DecemberPerformance)).ToString();
+                        newPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(newPerformanceYearData.SumPerformance) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
 
 
                         #endregion
                         #region 老客
 
-                        var JanJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 1, LiveAnchorInfo, query.IsOldCustomer);
+                        var JanJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 1, LiveAnchorInfo, true);
                         oldPerformanceYearData.JanuaryPerformance = JanJiNaLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        var FebJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 2, LiveAnchorInfo, query.IsOldCustomer);
+                        var FebJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 2, LiveAnchorInfo, true);
                         oldPerformanceYearData.FebruaryPerformance = FebJiNaLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        var MarJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 3, LiveAnchorInfo, query.IsOldCustomer);
+                        var MarJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 3, LiveAnchorInfo, true);
                         oldPerformanceYearData.MarchPerformance = MarJiNaLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        var AprJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 4, LiveAnchorInfo, query.IsOldCustomer);
+                        var AprJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 4, LiveAnchorInfo, true);
                         oldPerformanceYearData.AprilPerformance = AprJiNaLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        var MayJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 5, LiveAnchorInfo, query.IsOldCustomer);
+                        var MayJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 5, LiveAnchorInfo, true);
                         oldPerformanceYearData.MayPerformance = MayJiNaLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        var JunJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 6, LiveAnchorInfo, query.IsOldCustomer);
+                        var JunJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 6, LiveAnchorInfo, true);
                         oldPerformanceYearData.JunePerformance = JunJiNaLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        var JulJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 7, LiveAnchorInfo, query.IsOldCustomer);
+                        var JulJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 7, LiveAnchorInfo, true);
                         oldPerformanceYearData.JulyPerformance = JulJiNaLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        var AugJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 8, LiveAnchorInfo, query.IsOldCustomer);
+                        var AugJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 8, LiveAnchorInfo, true);
                         oldPerformanceYearData.AugustPerformance = AugJiNaLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        var SepJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 9, LiveAnchorInfo, query.IsOldCustomer);
+                        var SepJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 9, LiveAnchorInfo, true);
                         oldPerformanceYearData.SeptemberPerformance = SepJiNaLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        var OctJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 10, LiveAnchorInfo, query.IsOldCustomer);
+                        var OctJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 10, LiveAnchorInfo, true);
                         oldPerformanceYearData.OctoberPerformance = OctJiNaLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        var NovJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 11, LiveAnchorInfo, query.IsOldCustomer);
+                        var NovJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 11, LiveAnchorInfo, true);
                         oldPerformanceYearData.NovemberPerformance = NovJiNaLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        var DecJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 12, LiveAnchorInfo, query.IsOldCustomer);
+                        var DecJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 12, LiveAnchorInfo, true);
                         oldPerformanceYearData.DecemberPerformance = DecJiNaLossPerformance.Where(k => k.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        oldPerformanceYearData.SumPerformance = totalPerformance.Where(x => x.IsOldCustomer == true && x.BelongEmployeeId == query.AssistantId.Value).Sum(x => x.Price).ToString();
-                        oldPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(oldPerformanceYearData.SumPerformance) / 12, 2, MidpointRounding.AwayFromZero).ToString();
+                        oldPerformanceYearData.SumPerformance = (Convert.ToDecimal(oldPerformanceYearData.JanuaryPerformance) + Convert.ToDecimal(oldPerformanceYearData.FebruaryPerformance) + Convert.ToDecimal(oldPerformanceYearData.MarchPerformance) + Convert.ToDecimal(oldPerformanceYearData.AprilPerformance) + Convert.ToDecimal(oldPerformanceYearData.MayPerformance) + Convert.ToDecimal(oldPerformanceYearData.JunePerformance) + Convert.ToDecimal(oldPerformanceYearData.JulyPerformance) + Convert.ToDecimal(oldPerformanceYearData.AugustPerformance) + Convert.ToDecimal(oldPerformanceYearData.SeptemberPerformance) + Convert.ToDecimal(oldPerformanceYearData.OctoberPerformance) + Convert.ToDecimal(oldPerformanceYearData.NovemberPerformance) + Convert.ToDecimal(oldPerformanceYearData.DecemberPerformance)).ToString();
+                        oldPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(oldPerformanceYearData.SumPerformance) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
                         #endregion
                         break;
                     case 2:
@@ -2681,7 +2744,7 @@ namespace Fx.Amiya.Service
                         totalPerformanceYearData.OctoberPerformance = DecimalExtension.CalculateAccounted(totalNewCustomer.Where(x => x.BelongEmployeeId == query.AssistantId && x.CreateDate.Month == 10).Count(), totalOldCustomer.Where(x => x.BelongEmployeeId == query.AssistantId && x.CreateDate.Month == 10).Count());
                         totalPerformanceYearData.NovemberPerformance = DecimalExtension.CalculateAccounted(totalNewCustomer.Where(x => x.BelongEmployeeId == query.AssistantId && x.CreateDate.Month == 11).Count(), totalOldCustomer.Where(x => x.BelongEmployeeId == query.AssistantId && x.CreateDate.Month == 11).Count());
                         totalPerformanceYearData.DecemberPerformance = DecimalExtension.CalculateAccounted(totalNewCustomer.Where(x => x.BelongEmployeeId == query.AssistantId && x.CreateDate.Month == 12).Count(), totalOldCustomer.Where(x => x.BelongEmployeeId == query.AssistantId && x.CreateDate.Month == 12).Count());
-                        totalPerformanceYearData.SumPerformance = "/";
+                        totalPerformanceYearData.SumPerformance = DecimalExtension.CalculateAccounted(totalNewCustomer.Where(x => x.BelongEmployeeId == query.AssistantId).Count(), totalOldCustomer.Where(x => x.BelongEmployeeId == query.AssistantId).Count());
                         totalPerformanceYearData.AveragePerformance = "/";
                         #endregion
 
@@ -2992,6 +3055,7 @@ namespace Fx.Amiya.Service
             var daoDaoPerformance = totalPerformance.Where(x => LiveAnchorInfoDaoDao.Contains(x.LiveAnchorId)).ToList();
             var jiNaPerformance = totalPerformance.Where(x => LiveAnchorInfoJiNa.Contains(x.LiveAnchorId)).ToList();
             #endregion
+            var thisMonth = DateTime.Now.Month;
             foreach (var y in assistant.Where(x => x.LiveAnchorBaseId == "f0a77257-c905-4719-95c4-ad2c4f33855c").ToList())
             {
                 PerformanceYearDataDto daoDaoPerformanceYearData = new PerformanceYearDataDto();
@@ -3023,7 +3087,7 @@ namespace Fx.Amiya.Service
                 var DecDaoDaoPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 12, LiveAnchorInfoDaoDao, query.IsOldCustomer);
                 daoDaoPerformanceYearData.DecemberPerformance = DecDaoDaoPerformance.Where(o => o.BelongEmployeeId == y.Id).Sum(x => x.Price).ToString();
                 daoDaoPerformanceYearData.SumPerformance = daoDaoPerformance.Where(o => o.BelongEmployeeId == y.Id).Sum(x => x.Price).ToString();
-                daoDaoPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(daoDaoPerformanceYearData.SumPerformance) / 12, 2, MidpointRounding.AwayFromZero).ToString();
+                daoDaoPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(daoDaoPerformanceYearData.SumPerformance) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
 
 
                 #endregion
@@ -3061,7 +3125,7 @@ namespace Fx.Amiya.Service
                 var DecJiNaPerformance = await contentPlatFormOrderDealInfoService.GetSimplePerformanceDetailByDateAsync(query.Year, 12, LiveAnchorInfoJiNa, query.IsOldCustomer);
                 jiNaPerformanceYearData.DecemberPerformance = DecJiNaPerformance.Where(o => o.BelongEmployeeId == y.Id).Sum(x => x.Price).ToString();
                 jiNaPerformanceYearData.SumPerformance = jiNaPerformance.Where(x => x.BelongEmployeeId == y.Id).Sum(x => x.Price).ToString();
-                jiNaPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(jiNaPerformanceYearData.SumPerformance) / 12, 2, MidpointRounding.AwayFromZero).ToString();
+                jiNaPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(jiNaPerformanceYearData.SumPerformance) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
 
 
                 #endregion
@@ -3934,8 +3998,8 @@ namespace Fx.Amiya.Service
             var liveAnchorBaseInfo = await liveAnchorBaseInfoService.GetValidAsync(true);
             var liveanchorBaseIds = liveAnchorBaseInfo.Select(x => x.Id).ToList();
             var liveAnchorTotal = await liveAnchorService.GetLiveAnchorListByBaseInfoIdListAsync(liveanchorBaseIds);
-            var LiveAnchorInfo = liveAnchorTotal.Select(x => x.Id).ToList();
-
+            //var LiveAnchorInfo = liveAnchorTotal.Select(x => x.Id).ToList();
+            var LiveAnchorInfo = new List<int>();
             var assistantTarget = await dalEmployeePerformanceTarget.GetAll()
                 .Where(e => e.Valid == true)
                 .Where(e => e.BelongYear == query.EndDate.Year && e.BelongMonth == query.EndDate.Month)
@@ -3957,8 +4021,8 @@ namespace Fx.Amiya.Service
             assistantPerformance.TodayNewCustomerPerformance = todayPerformance.Where(e => e.IsOldCustomer == false).Sum(e => e.Price);
             assistantPerformance.TodayOldCustomerPerformance = todayPerformance.Where(e => e.IsOldCustomer == true).Sum(e => e.Price);
             assistantPerformance.TodayTotalPerformance = assistantPerformance.TodayNewCustomerPerformance + assistantPerformance.TodayOldCustomerPerformance;
-            assistantPerformance.LastMonthNewCustomerPerformance = lastMonthContentOrderList.Where(e => e.IsOldCustomer == false).Sum(e => e.Price);
-            assistantPerformance.LastMonthOldCustomerPerformance = lastMonthContentOrderList.Where(e => e.IsOldCustomer == true).Sum(e => e.Price);
+            assistantPerformance.LastMonthNewCustomerPerformance = lastMonthContentOrderList.Where(e => e.IsOldCustomer == false && e.BelongEmployeeId == query.AssistantId).Sum(e => e.Price);
+            assistantPerformance.LastMonthOldCustomerPerformance = lastMonthContentOrderList.Where(e => e.IsOldCustomer == true && e.BelongEmployeeId == query.AssistantId).Sum(e => e.Price);
             assistantPerformance.LastMonthTotalPerformance = assistantPerformance.LastMonthNewCustomerPerformance + assistantPerformance.LastMonthOldCustomerPerformance;
             assistantPerformance.LastYearNewCustomerPerformance = lastYearContentOrderList.Where(e => e.IsOldCustomer == false).Sum(e => e.Price);
             assistantPerformance.LastYearOldCustomerPerformance = lastYearContentOrderList.Where(e => e.IsOldCustomer == true).Sum(e => e.Price);
@@ -4057,6 +4121,9 @@ namespace Fx.Amiya.Service
             {
                 assistantIdList = (await amiyaEmployeeService.GetAllAssistantAsync()).Select(e => e.Id).ToList();
             }
+            List<string> baseLiveAnchorInfoIds = new List<string>();
+            var assistantInfo = await amiyaEmployeeService.GetByIdAsync(query.AssistantId.Value);
+            baseLiveAnchorInfoIds.Add(assistantInfo.LiveAnchorBaseId);
             AssistantOperationDataDto amiyaOperationDataDto = new AssistantOperationDataDto();
             AssistantNewCustomerOperationDataDto newCustomerOperationDataDto = new AssistantNewCustomerOperationDataDto();
             newCustomerOperationDataDto.newCustomerOperationDataDetails = new List<AssistantNewCustomerOperationDataDetails>();
@@ -4067,7 +4134,9 @@ namespace Fx.Amiya.Service
             var baseBusinessPerformance = await shoppingCartRegistrationService.GetShopCartRegisterPerformanceByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, query.IsEffectiveCustomerData, assistantIdList);
             #endregion
             #region【订单数据】
-            var baseOrderPerformance = await contentPlateFormOrderService.GetOrderSendAndDealDataByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, query.IsEffectiveCustomerData, assistantIdList);
+            //var baseOrderPerformance = await contentPlateFormOrderService.GetOrderSendAndDealDataByAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, query.IsEffectiveCustomerData, assistantIdList);
+
+            var baseOrderPerformance = await contentPlateFormOrderService.GetLivingOrderSendAndDealDataAsync(selectDate.StartDate, selectDate.EndDate, baseLiveAnchorInfoIds, baseBusinessPerformance.Select(x => x.Phone).ToList(), query.IsEffectiveCustomerData.Value, false);
             #endregion
 
             #region 【分诊】
@@ -4138,6 +4207,7 @@ namespace Fx.Amiya.Service
 
             amiyaOperationDataDto.NewCustomerData = newCustomerOperationDataDto;
             //老客数据
+            query.IsEffectiveCustomerData = null;
             var oldCustomerData = await contentPlateFormOrderService.GetAssistantOldCustomerBuyAgainByMonthAsync(selectDate.EndDate, query.IsEffectiveCustomerData, assistantIdList);
             oldCustomerOperationDataDto.TotalDealPeople = oldCustomerData.TotalDealCustomer;
             oldCustomerOperationDataDto.SecondDealPeople = oldCustomerData.SecondDealCustomer;
@@ -4551,24 +4621,31 @@ namespace Fx.Amiya.Service
             {
                 assistantIdList = (await amiyaEmployeeService.GetAllAssistantAsync()).Select(e => e.Id).ToList();
             }
-            var todayData = await shoppingCartRegistrationService.GetEffOrPotDistributeConsulationTypeDataAsync(DateTime.Now.Date, DateTime.Now.AddDays(1).Date, assistantIdList);
-            var currentData = await shoppingCartRegistrationService.GetEffOrPotDistributeConsulationTypeDataAsync(selectDate.StartDate, selectDate.EndDate, assistantIdList);
-            var historyData = await shoppingCartRegistrationService.GetEffOrPotDistributeConsulationTypeDataAsync(selectDate.LastMonthStartDate, selectDate.LastMonthEndDate, assistantIdList);
-            var lastYearData = await shoppingCartRegistrationService.GetEffOrPotDistributeConsulationTypeDataAsync(selectDate.LastYearThisMonthStartDate, selectDate.LastYearThisMonthEndDate, assistantIdList);
+            var todayData = await shoppingCartRegistrationService.GetLivingDistributeConsulationTypeDataAsync(DateTime.Now.Date, DateTime.Now.AddDays(1).Date, assistantIdList);
+            var currentData = await shoppingCartRegistrationService.GetLivingDistributeConsulationTypeDataAsync(selectDate.StartDate, selectDate.EndDate, assistantIdList);
+            var historyData = await shoppingCartRegistrationService.GetLivingDistributeConsulationTypeDataAsync(selectDate.LastMonthStartDate, selectDate.LastMonthEndDate, assistantIdList);
+            var lastYearData = await shoppingCartRegistrationService.GetLivingDistributeConsulationTypeDataAsync(selectDate.LastYearThisMonthStartDate, selectDate.LastYearThisMonthEndDate, assistantIdList);
 
-            EffOrPotDistributeConsulationItemDto effective = new EffOrPotDistributeConsulationItemDto();
-            effective.CurrentDay = todayData.Effective;
-            effective.Total = currentData.Effective;
-            effective.YearOnYear = DecimalExtension.CalculateChain(effective.Total, lastYearData.Effective).Value;
-            effective.ChainRate = DecimalExtension.CalculateChain(effective.Total, historyData.Effective).Value;
-            data.EffctiveData = effective;
+            EffOrPotDistributeConsulationItemDto beforeLiving = new EffOrPotDistributeConsulationItemDto();
+            beforeLiving.CurrentDay = todayData.BeforeLiving;
+            beforeLiving.Total = currentData.BeforeLiving;
+            beforeLiving.YearOnYear = DecimalExtension.CalculateChain(beforeLiving.Total, lastYearData.BeforeLiving).Value;
+            beforeLiving.ChainRate = DecimalExtension.CalculateChain(beforeLiving.Total, historyData.BeforeLiving).Value;
+            data.BeforeLivingData = beforeLiving;
 
-            EffOrPotDistributeConsulationItemDto potential = new EffOrPotDistributeConsulationItemDto();
-            potential.CurrentDay = todayData.Potential;
-            potential.Total = currentData.Potential;
-            potential.YearOnYear = DecimalExtension.CalculateChain(potential.Total, lastYearData.Potential).Value;
-            potential.ChainRate = DecimalExtension.CalculateChain(potential.Total, historyData.Potential).Value;
-            data.PotentialData = potential;
+            EffOrPotDistributeConsulationItemDto living = new EffOrPotDistributeConsulationItemDto();
+            living.CurrentDay = todayData.Living;
+            living.Total = currentData.Living;
+            living.YearOnYear = DecimalExtension.CalculateChain(living.Total, lastYearData.Living).Value;
+            living.ChainRate = DecimalExtension.CalculateChain(living.Total, historyData.Living).Value;
+            data.LivingData = living;
+
+            EffOrPotDistributeConsulationItemDto afterAfterLiving = new EffOrPotDistributeConsulationItemDto();
+            afterAfterLiving.CurrentDay = todayData.AfterLiving;
+            afterAfterLiving.Total = currentData.AfterLiving;
+            afterAfterLiving.YearOnYear = DecimalExtension.CalculateChain(afterAfterLiving.Total, lastYearData.AfterLiving).Value;
+            afterAfterLiving.ChainRate = DecimalExtension.CalculateChain(afterAfterLiving.Total, historyData.AfterLiving).Value;
+            data.AfterLivingData = afterAfterLiving;
 
             EffOrPotDistributeConsulationItemDto totalData = new EffOrPotDistributeConsulationItemDto();
             totalData.CurrentDay = todayData.TotalCount;
@@ -4656,23 +4733,29 @@ namespace Fx.Amiya.Service
             var baseData = await _dalShoppingCartRegistration.GetAll().Where(e => e.RecordDate >= selectDate.StartDate && e.RecordDate < selectDate.EndDate && assistantIdList.Contains(e.AssignEmpId.Value) && e.AssignEmpId != null).Select(e => new BaseKeyValueDto<string, decimal>
             {
                 Key = e.RecordDate.Date.Date.Day.ToString(),
-                Value = e.Price,
+                Value = e.BelongChannel,
             }).ToListAsync();
-            var effticveData = baseData.Where(e => e.Value > 0)
+            var beforeLiving = baseData.Where(e => e.Value == (int)BelongChannel.LiveBefore)
                 .GroupBy(e => e.Key)
                 .Select(e => new PerformanceBrokenLineListInfoDto
                 {
                     date = e.Key,
                     Performance = e.Count()
                 }).ToList();
-            var potentialData = baseData.Where(e => e.Value == 0)
+            var living = baseData.Where(e => e.Value == (int)BelongChannel.Living)
                 .GroupBy(e => e.Key)
                 .Select(e => new PerformanceBrokenLineListInfoDto
                 {
                     date = e.Key,
                     Performance = e.Count()
                 }).ToList();
-
+            var afterLiving = baseData.Where(e => e.Value == (int)BelongChannel.LiveAfter)
+             .GroupBy(e => e.Key)
+             .Select(e => new PerformanceBrokenLineListInfoDto
+             {
+                 date = e.Key,
+                 Performance = e.Count()
+             }).ToList();
             var totalData = baseData
                .GroupBy(e => e.Key)
                .Select(e => new PerformanceBrokenLineListInfoDto
@@ -4680,8 +4763,9 @@ namespace Fx.Amiya.Service
                    date = e.Key,
                    Performance = e.Count()
                }).ToList();
-            data.Effective = this.FillDate(query.EndDate.Year, query.EndDate.Month, effticveData);
-            data.Potential = this.FillDate(query.EndDate.Year, query.EndDate.Month, potentialData);
+            data.BeforeLivingData = this.FillDate(query.EndDate.Year, query.EndDate.Month, beforeLiving);
+            data.LivingData = this.FillDate(query.EndDate.Year, query.EndDate.Month, living);
+            data.AfterLivingData = this.FillDate(query.EndDate.Year, query.EndDate.Month, afterLiving);
             data.Total = this.FillDate(query.EndDate.Year, query.EndDate.Month, totalData);
             return data;
         }
@@ -4696,7 +4780,6 @@ namespace Fx.Amiya.Service
         {
             AssistantTransformCycleDataDto data = new AssistantTransformCycleDataDto();
             var seqDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.EndDate.Year, query.EndDate.Month);
-            var info = await amiyaEmployeeService.GetByIdAsync(query.AssistantId.Value);
             var assistantList = await amiyaEmployeeService.GetAssistantAsync();
             var assistantIdList = assistantList.Select(e => e.Id).ToList();
             #region 分诊派单
@@ -4743,17 +4826,42 @@ namespace Fx.Amiya.Service
             }).OrderBy(e => e.Value).ToList();
             res1.RemoveAll(e => e.Key == "其它" || e.Value == 0);
             //当前助理转化周期
-            var currentAssistanListCount = dataList.Where(e => e.EmpId == query.AssistantId.Value).Count();
-            var endIndex = DecimalExtension.CalTakeCount(currentAssistanListCount);
-            var currentAssistanList = dataList.Where(e => e.EmpId == query.AssistantId.Value).OrderBy(e => e.IntervalDays).Skip(0).Take(endIndex);
-            var currentEffectiveDays = currentAssistanList.Where(e => e.AddPrice > 0).Sum(e => e.IntervalDays);
-            var currentEffectiveCount = currentAssistanList.Where(e => e.AddPrice > 0).Count();
-            var currentPotionelDays = currentAssistanList.Where(e => e.AddPrice == 0).Sum(e => e.IntervalDays);
-            var currentPotionelCount = currentAssistanList.Where(e => e.AddPrice == 0).Count();
-            data.TotalSendCycle = DecimalExtension.CalAvg(currentAssistanList.Sum(e => e.IntervalDays), currentAssistanList.Count());
-            data.EffectiveSendCycle = DecimalExtension.CalAvg(currentEffectiveDays, currentEffectiveCount);
-            data.PotionelSendCycle = DecimalExtension.CalAvg(currentPotionelDays, currentPotionelCount);
-            data.SendCycleData = res1;
+            //var currentAssistanListCount = dataList.Where(e => e.EmpId == query.AssistantId.Value).Count();
+            //var endIndex = DecimalExtension.CalTakeCount(currentAssistanListCount);
+            //var currentAssistanList = dataList.Where(e => e.EmpId == query.AssistantId.Value).OrderBy(e => e.IntervalDays).Skip(0).Take(endIndex);
+            //var currentEffectiveDays = currentAssistanList.Where(e => e.AddPrice > 0).Sum(e => e.IntervalDays);
+            //var currentEffectiveCount = currentAssistanList.Where(e => e.AddPrice > 0).Count();
+            //var currentPotionelDays = currentAssistanList.Where(e => e.AddPrice == 0).Sum(e => e.IntervalDays);
+            //var currentPotionelCount = currentAssistanList.Where(e => e.AddPrice == 0).Count();
+            //data.TotalSendCycle = DecimalExtension.CalAvg(currentAssistanList.Sum(e => e.IntervalDays), currentAssistanList.Count());
+            //data.EffectiveSendCycle = DecimalExtension.CalAvg(currentEffectiveDays, currentEffectiveCount);
+            //data.PotionelSendCycle = DecimalExtension.CalAvg(currentPotionelDays, currentPotionelCount);
+            List<Dictionary<string, int>> resultData1 = new List<Dictionary<string, int>>();
+            foreach (var z in res1)
+            {
+                Dictionary<string, int> resultData = new Dictionary<string, int>();
+                resultData.Add(z.Key, z.Value);
+                resultData1.Add(resultData);
+            }
+            foreach (var k in assistantList)
+            {
+                bool exists = resultData1.Any(dic => dic.ContainsKey(k.Name));
+                if (exists == false)
+                {
+                    Dictionary<string, int> resultData = new Dictionary<string, int>();
+                    resultData.Add(k.Name, 0);
+                    resultData1.Add(resultData);
+                }
+            }
+            List<KeyValuePair<string, int>> sendCycleData = new List<KeyValuePair<string, int>>();
+            foreach (var x in resultData1)
+            {
+                foreach (var kvp in x)
+                {
+                    sendCycleData.Add(new KeyValuePair<string, int>(kvp.Key, kvp.Value));
+                }
+            }
+            data.SendCycleData = sendCycleData.OrderBy(x => x.Value).ToList();
 
             #endregion
 
@@ -4804,17 +4912,42 @@ namespace Fx.Amiya.Service
             }).OrderBy(e => e.Value).ToList();
             res2.RemoveAll(e => e.Key == "其它" || e.Value == 0);
             //当前助理转化周期
-            var currentAssistanListCount2 = dataList2.Where(e => e.EmpId == query.AssistantId.Value).Count();
-            var endIndex2 = DecimalExtension.CalTakeCount(currentAssistanListCount2, 0.6m);
-            var currentAssistanList2 = dataList2.Where(e => e.EmpId == query.AssistantId.Value).OrderBy(e => e.IntervalDays).Skip(0).Take(endIndex2);
-            var currentEffectiveDays2 = currentAssistanList2.Where(e => e.AddPrice > 0).Sum(e => e.IntervalDays);
-            var currentEffectiveCount2 = currentAssistanList2.Where(e => e.AddPrice > 0).Count();
-            var currentPotionelDays2 = currentAssistanList2.Where(e => e.AddPrice == 0).Sum(e => e.IntervalDays);
-            var currentPotionelCount2 = currentAssistanList2.Where(e => e.AddPrice == 0).Count();
-            data.TotalToHospitalCycle = DecimalExtension.CalAvg(currentAssistanList2.Sum(e => e.IntervalDays), currentAssistanList2.Count());
-            data.EffectiveToHospitalCycle = DecimalExtension.CalAvg(currentEffectiveDays2, currentEffectiveCount2);
-            data.PotionelToHospitalCycle = DecimalExtension.CalAvg(currentPotionelDays2, currentPotionelCount2);
-            data.ToHospitalCycleData = res2;
+            //var currentAssistanListCount2 = dataList2.Where(e => e.EmpId == query.AssistantId.Value).Count();
+            //var endIndex2 = DecimalExtension.CalTakeCount(currentAssistanListCount2, 0.6m);
+            //var currentAssistanList2 = dataList2.Where(e => e.EmpId == query.AssistantId.Value).OrderBy(e => e.IntervalDays).Skip(0).Take(endIndex2);
+            //var currentEffectiveDays2 = currentAssistanList2.Where(e => e.AddPrice > 0).Sum(e => e.IntervalDays);
+            //var currentEffectiveCount2 = currentAssistanList2.Where(e => e.AddPrice > 0).Count();
+            //var currentPotionelDays2 = currentAssistanList2.Where(e => e.AddPrice == 0).Sum(e => e.IntervalDays);
+            //var currentPotionelCount2 = currentAssistanList2.Where(e => e.AddPrice == 0).Count();
+            //data.TotalToHospitalCycle = DecimalExtension.CalAvg(currentAssistanList2.Sum(e => e.IntervalDays), currentAssistanList2.Count());
+            //data.EffectiveToHospitalCycle = DecimalExtension.CalAvg(currentEffectiveDays2, currentEffectiveCount2);
+            //data.PotionelToHospitalCycle = DecimalExtension.CalAvg(currentPotionelDays2, currentPotionelCount2);
+            List<Dictionary<string, int>> resultData2 = new List<Dictionary<string, int>>();
+            foreach (var z in res2)
+            {
+                Dictionary<string, int> resultData = new Dictionary<string, int>();
+                resultData.Add(z.Key, z.Value);
+                resultData2.Add(resultData);
+            }
+            foreach (var k in assistantList)
+            {
+                bool exists = resultData2.Any(dic => dic.ContainsKey(k.Name));
+                if (exists == false)
+                {
+                    Dictionary<string, int> resultData = new Dictionary<string, int>();
+                    resultData.Add(k.Name, 0);
+                    resultData2.Add(resultData);
+                }
+            }
+            List<KeyValuePair<string, int>> toHospitalCycleData = new List<KeyValuePair<string, int>>();
+            foreach (var x in resultData2)
+            {
+                foreach (var kvp in x)
+                {
+                    toHospitalCycleData.Add(new KeyValuePair<string, int>(kvp.Key, kvp.Value));
+                }
+            }
+            data.ToHospitalCycleData = toHospitalCycleData.OrderBy(x => x.Value).ToList();
 
 
             #endregion
@@ -4854,7 +4987,33 @@ namespace Fx.Amiya.Service
                             r != null ? (total.TotalDealCount == 0 ? 0 : DecimalExtension.CalculateTargetComplete(r.TotalDealCount, total.TotalDealCount).Value) : 0)
                       ).OrderByDescending(e => e.Value).ToList();
             res3.RemoveAll(e => e.Key == "其它" || e.Value == 0);
-            data.OldCustomerRePurcheData = res3;
+
+            List<Dictionary<string, decimal>> resultData3 = new List<Dictionary<string, decimal>>();
+            foreach (var z in res3)
+            {
+                Dictionary<string, decimal> resultData = new Dictionary<string, decimal>();
+                resultData.Add(z.Key, z.Value);
+                resultData3.Add(resultData);
+            }
+            foreach (var k in assistantList)
+            {
+                bool exists = resultData3.Any(dic => dic.ContainsKey(k.Name));
+                if (exists == false)
+                {
+                    Dictionary<string, decimal> resultData = new Dictionary<string, decimal>();
+                    resultData.Add(k.Name, 0);
+                    resultData3.Add(resultData);
+                }
+            }
+            List<KeyValuePair<string, decimal>> repeateBuyCycleData = new List<KeyValuePair<string, decimal>>();
+            foreach (var x in resultData3)
+            {
+                foreach (var kvp in x)
+                {
+                    repeateBuyCycleData.Add(new KeyValuePair<string, decimal>(kvp.Key, kvp.Value));
+                }
+            }
+            data.OldCustomerRePurcheData = repeateBuyCycleData.OrderBy(x => x.Value).ToList();
 
             #endregion
 
@@ -4945,6 +5104,7 @@ namespace Fx.Amiya.Service
             data.TotalSendCycle = DecimalExtension.CalAvg(currentEffectiveDays + currentPotionelDays, currentEffectiveCount + currentPotionelCount);
             data.EffectiveSendCycle = DecimalExtension.CalAvg(currentEffectiveDays, currentEffectiveCount);
             data.PotionelSendCycle = DecimalExtension.CalAvg(currentPotionelDays, currentPotionelCount);
+
             data.SendCycleData = res1;
 
             #endregion
@@ -5083,24 +5243,41 @@ namespace Fx.Amiya.Service
             var seqDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.EndDate.Year, query.EndDate.Month);
             var info = await amiyaEmployeeService.GetByIdAsync(query.AssistantId.Value);
             var assistantList = await amiyaEmployeeService.GetByLiveAnchorBaseIdNameListAsync(new List<string> { info.LiveAnchorBaseId });
-            var currentData = await shoppingCartRegistrationService.GetAdminCustomerDistributeConsulationTypeDataAsync(seqDate.StartDate, seqDate.EndDate, assistantList.Select(e => e.Id).ToList());
-            var lastMonthData = await shoppingCartRegistrationService.GetAdminCustomerDistributeConsulationTypeDataAsync(seqDate.LastMonthStartDate, seqDate.LastMonthEndDate, assistantList.Select(e => e.Id).ToList());
-            var latYearData = await shoppingCartRegistrationService.GetAdminCustomerDistributeConsulationTypeDataAsync(seqDate.LastYearThisMonthStartDate, seqDate.LastYearThisMonthEndDate, assistantList.Select(e => e.Id).ToList());
+            var liveAnchorIds = await liveAnchorService.GetAllLiveAnchorListByBaseInfoId(info.LiveAnchorBaseId);
+            var afterLivingtarget = await liveAnchorMonthlyTargetAfterLivingService.GetPerformanceTargetAsync(query.StartDate.Year, query.StartDate.Month, liveAnchorIds.Select(x => x.Id).ToList());
+            var livingtarget = await liveAnchorMonthlyTargetLivingService.GetBasePerformanceTargetAsync(query.StartDate.Year, query.StartDate.Month, liveAnchorIds.Select(x => x.Id).ToList());
+            var beforeLivingtarget = await liveAnchorMonthlyTargetBeforeLivingService.GetCluePerformanceTargetAsync(query.StartDate.Year, query.StartDate.Month, liveAnchorIds.Select(x => x.Id).ToList());
+            var todayData = await shoppingCartRegistrationService.GetAdminCustomerDistributeByLivingDataAsync(seqDate.NowDateStartDate, seqDate.NowDateEndDate, assistantList.Select(e => e.Id).ToList());
+            var currentData = await shoppingCartRegistrationService.GetAdminCustomerDistributeByLivingDataAsync(seqDate.StartDate, seqDate.EndDate, assistantList.Select(e => e.Id).ToList());
+            var lastMonthData = await shoppingCartRegistrationService.GetAdminCustomerDistributeByLivingDataAsync(seqDate.LastMonthStartDate, seqDate.LastMonthEndDate, assistantList.Select(e => e.Id).ToList());
+            var latYearData = await shoppingCartRegistrationService.GetAdminCustomerDistributeByLivingDataAsync(seqDate.LastYearThisMonthStartDate, seqDate.LastYearThisMonthEndDate, assistantList.Select(e => e.Id).ToList());
             data.FirstTypeTotal = currentData.FirstType;
+            data.FirstTypeToday = todayData.FirstType;
             data.FirstTypeChainRate = DecimalExtension.CalculateChain(data.FirstTypeTotal, lastMonthData.FirstType).Value;
             data.FirstTypeYearOnYear = DecimalExtension.CalculateChain(data.FirstTypeTotal, latYearData.FirstType).Value;
+            data.FirstTypeCustomerTarget = beforeLivingtarget.CluesTarget;
+            data.FirstTypeCustomerComplete = DecimalExtension.CalculateTargetComplete(data.FirstTypeTotal, data.FirstTypeCustomerTarget);
 
             data.SecondTypeTotal = currentData.SecondType;
+            data.SecondTypeToday = todayData.SecondType;
             data.SecondTypeChainRate = DecimalExtension.CalculateChain(data.SecondTypeTotal, lastMonthData.SecondType).Value;
             data.SecondTypeYearOnYear = DecimalExtension.CalculateChain(data.SecondTypeTotal, latYearData.SecondType).Value;
+            data.SecondTypeCustomerTarget = livingtarget.ConsulationCardTarget;
+            data.SecondTypeCustomerComplete = DecimalExtension.CalculateTargetComplete(data.SecondTypeTotal, data.SecondTypeCustomerTarget);
 
             data.ThirdTypeTotal = currentData.ThirdType;
+            data.ThirdTypeToday = todayData.ThirdType;
             data.ThirdTypeChainRate = DecimalExtension.CalculateChain(data.ThirdTypeTotal, lastMonthData.ThirdType).Value;
             data.ThirdTypeYearOnYear = DecimalExtension.CalculateChain(data.ThirdTypeTotal, latYearData.ThirdType).Value;
+            data.ThirdTypeCustomerTarget = afterLivingtarget.CluesTarget;
+            data.ThirdTypeCustomerComplete = DecimalExtension.CalculateTargetComplete(data.ThirdTypeTotal, data.ThirdTypeCustomerTarget);
 
             data.TotalTypeTotal = data.FirstTypeTotal + data.SecondTypeTotal + data.ThirdTypeTotal;
+            data.TotalTypeToday = data.FirstTypeToday + data.SecondTypeToday + data.ThirdTypeToday;
             data.TotalTypeChainRate = DecimalExtension.CalculateChain(data.TotalTypeTotal, lastMonthData.FirstType + lastMonthData.SecondType + lastMonthData.ThirdType).Value;
             data.TotalTypeYearOnYear = DecimalExtension.CalculateChain(data.TotalTypeTotal, latYearData.FirstType + latYearData.SecondType + latYearData.ThirdType).Value;
+            data.TotalCustomerTarget = data.FirstTypeCustomerTarget + data.SecondTypeCustomerTarget + data.ThirdTypeCustomerTarget;
+            data.TotalCustomerComplete = DecimalExtension.CalculateTargetComplete(data.TotalTypeTotal, data.TotalCustomerTarget);
             return data;
         }
 
@@ -5113,22 +5290,28 @@ namespace Fx.Amiya.Service
         {
             AdminCustomerServiceCustomerTypeDto data = new AdminCustomerServiceCustomerTypeDto();
             var seqDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.EndDate.Year, query.EndDate.Month);
-            var currentData = await shoppingCartRegistrationService.GetAdminCustomerDistributeConsulationTypeDataAsync(seqDate.StartDate, seqDate.EndDate, new List<int> { query.AssistantId.Value }, null);
-            var lastMonthData = await shoppingCartRegistrationService.GetAdminCustomerDistributeConsulationTypeDataAsync(seqDate.LastMonthStartDate, seqDate.LastMonthEndDate, new List<int> { query.AssistantId.Value }, null);
-            var latYearData = await shoppingCartRegistrationService.GetAdminCustomerDistributeConsulationTypeDataAsync(seqDate.LastYearThisMonthStartDate, seqDate.LastYearThisMonthEndDate, new List<int> { query.AssistantId.Value }, null);
+
+            var todayData = await shoppingCartRegistrationService.GetAdminCustomerDistributeByLivingDataAsync(seqDate.NowDateStartDate, seqDate.NowDateEndDate, new List<int> { query.AssistantId.Value }, null);
+            var currentData = await shoppingCartRegistrationService.GetAdminCustomerDistributeByLivingDataAsync(seqDate.StartDate, seqDate.EndDate, new List<int> { query.AssistantId.Value }, null);
+            var lastMonthData = await shoppingCartRegistrationService.GetAdminCustomerDistributeByLivingDataAsync(seqDate.LastMonthStartDate, seqDate.LastMonthEndDate, new List<int> { query.AssistantId.Value }, null);
+            var latYearData = await shoppingCartRegistrationService.GetAdminCustomerDistributeByLivingDataAsync(seqDate.LastYearThisMonthStartDate, seqDate.LastYearThisMonthEndDate, new List<int> { query.AssistantId.Value }, null);
             data.FirstTypeTotal = currentData.FirstType;
+            data.FirstTypeToday = todayData.FirstType;
             data.FirstTypeChainRate = DecimalExtension.CalculateChain(data.FirstTypeTotal, lastMonthData.FirstType).Value;
             data.FirstTypeYearOnYear = DecimalExtension.CalculateChain(data.FirstTypeTotal, latYearData.FirstType).Value;
 
             data.SecondTypeTotal = currentData.SecondType;
+            data.SecondTypeToday = todayData.SecondType;
             data.SecondTypeChainRate = DecimalExtension.CalculateChain(data.SecondTypeTotal, lastMonthData.SecondType).Value;
             data.SecondTypeYearOnYear = DecimalExtension.CalculateChain(data.SecondTypeTotal, latYearData.SecondType).Value;
 
             data.ThirdTypeTotal = currentData.ThirdType;
+            data.ThirdTypeToday = todayData.ThirdType;
             data.ThirdTypeChainRate = DecimalExtension.CalculateChain(data.ThirdTypeTotal, lastMonthData.ThirdType).Value;
             data.ThirdTypeYearOnYear = DecimalExtension.CalculateChain(data.ThirdTypeTotal, latYearData.ThirdType).Value;
 
             data.TotalTypeTotal = data.FirstTypeTotal + data.SecondTypeTotal + data.ThirdTypeTotal;
+            data.TotalTypeToday = data.FirstTypeToday + data.SecondTypeToday + data.ThirdTypeToday;
             data.TotalTypeChainRate = DecimalExtension.CalculateChain(data.TotalTypeTotal, lastMonthData.FirstType + lastMonthData.SecondType + lastMonthData.ThirdType).Value;
             data.TotalTypeYearOnYear = DecimalExtension.CalculateChain(data.TotalTypeTotal, latYearData.FirstType + latYearData.SecondType + latYearData.ThirdType).Value;
 
@@ -5146,22 +5329,22 @@ namespace Fx.Amiya.Service
             var selectDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.EndDate.Year, query.EndDate.Month);
             var info = await amiyaEmployeeService.GetByIdAsync(query.AssistantId.Value);
             var assistantList = await amiyaEmployeeService.GetByLiveAnchorBaseIdNameListAsync(new List<string> { info.LiveAnchorBaseId });
-            var baseData = await shoppingCartRegistrationService.GetAdminCustomerDistributeConsulationTypeBrokenLineDataAsync(selectDate.StartDate, selectDate.EndDate, assistantList.Select(e => e.Id).ToList());
-            var firstTypeData = baseData.Where(e => e.Value == (int)EmergencyLevel.Important)
+            var baseData = await shoppingCartRegistrationService.GetAdminCustomerDistributeByLivingBrokenLineDataAsync(selectDate.StartDate, selectDate.EndDate, assistantList.Select(e => e.Id).ToList());
+            var firstTypeData = baseData.Where(e => e.Value == (int)BelongChannel.LiveBefore)
                 .GroupBy(e => e.Key)
                 .Select(e => new PerformanceBrokenLineListInfoDto
                 {
                     date = e.Key,
                     Performance = e.Count()
                 }).ToList();
-            var secondTypeData = baseData.Where(e => e.Value == (int)EmergencyLevel.Generally)
+            var secondTypeData = baseData.Where(e => e.Value == (int)BelongChannel.Living)
                 .GroupBy(e => e.Key)
                 .Select(e => new PerformanceBrokenLineListInfoDto
                 {
                     date = e.Key,
                     Performance = e.Count()
                 }).ToList();
-            var thirdTypeData = baseData.Where(e => e.Value == (int)EmergencyLevel.Ignorable)
+            var thirdTypeData = baseData.Where(e => e.Value == (int)BelongChannel.LiveAfter)
                .GroupBy(e => e.Key)
                .Select(e => new PerformanceBrokenLineListInfoDto
                {
@@ -5272,7 +5455,7 @@ namespace Fx.Amiya.Service
             AdminCustomerFilterDetailDataDto consulationdetails2 = new AdminCustomerFilterDetailDataDto();
             consulationdetails2.Key = "Consulation";
             consulationdetails2.Name = "分诊量";
-            consulationdetails2.Value = assisatntBusinessPerformance.Where(x => x.AssignEmpId != null && x.IsReturnBackPrice == false).Count();
+            consulationdetails2.Value = assisatntBusinessPerformance.Where(x => x.AssignEmpId != null && x.AssignEmpId.HasValue && x.IsReturnBackPrice == false).Count();
             addWechatDataDto.DataList.Add(consulationdetails2);
             #endregion
 
@@ -5539,6 +5722,24 @@ namespace Fx.Amiya.Service
             beforeLiveClueAndPerformanceData.DepartmentData.Performance = performanceData.Sum(e => e.Price);
             beforeLiveClueAndPerformanceData.DepartmentData.CurrentDayCustomerCount = basePhoneList.Where(e => e.RecordDate.Date == DateTime.Now.Date).Count();
             beforeLiveClueAndPerformanceData.DepartmentData.CurrentDayPerformance = performanceData.Where(e => e.CreateDate.Date == DateTime.Now.Date).Sum(e => e.Price);
+            QueryBeforeLivingBusinessDataDto querytarget = new QueryBeforeLivingBusinessDataDto();
+            querytarget.Year = query.EndDate.Year;
+            querytarget.Month = query.EndDate.Month;
+            querytarget.BaseLiveAnchorId = info.LiveAnchorBaseId;
+            querytarget.ShowTikokData = true;
+            querytarget.ShowWechatVideoData = true;
+            querytarget.ShowXiaoHongShuData = true;
+            var beforeLivingTarget = await liveAnchorMonthlyTargetBeforeLivingService.GetBeforeLivingTargetByYearAndMonthAsync(querytarget);
+            if (beforeLivingTarget != null)
+            {
+                beforeLiveClueAndPerformanceData.DepartmentData.CustomerCountTarget = beforeLivingTarget.CluesTarget;
+                beforeLiveClueAndPerformanceData.DepartmentData.CustomerCountTargetComplete = DecimalExtension.CalculateTargetComplete(beforeLiveClueAndPerformanceData.DepartmentData.CustomerCount, beforeLiveClueAndPerformanceData.DepartmentData.CustomerCountTarget).Value;
+            }
+            else
+            {
+                beforeLiveClueAndPerformanceData.DepartmentData.CustomerCountTarget = 0;
+                beforeLiveClueAndPerformanceData.DepartmentData.CustomerCountTargetComplete = 0.00M;
+            }
             return beforeLiveClueAndPerformanceData;
         }
         /// <summary>

@@ -74,7 +74,7 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, int? createBy, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? assignEmpId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? ShoppingCartRegistrationCustomerType, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId, int? source, int? belongChannel,int?belongCompany, bool? isRibuluoLiving)
+        public async Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, int? createBy, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? assignEmpId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? ShoppingCartRegistrationCustomerType, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId, int? source, int? belongChannel, int? belongCompany, bool? isRibuluoLiving)
         {
             try
             {
@@ -1528,16 +1528,17 @@ namespace Fx.Amiya.Service
             .Where(o => o.RecordDate >= startDate && o.RecordDate < endDate)
 
                          select d;
-            if (isEffectiveCustomerData.HasValue)
-            {
-                result = result.Where(o => isEffectiveCustomerData == true ? o.Price > 0 : o.Price == 0);
-            }
+            //if (isEffectiveCustomerData.HasValue)
+            //{
+            //    result = result.Where(o => isEffectiveCustomerData == true ? o.Price > 0 : o.Price == 0);
+            //}
             var x = from d in result
                     select new ShoppingCartRegistrationDto
                     {
                         IsReturnBackPrice = d.IsReturnBackPrice,
                         AssignEmpId = d.AssignEmpId,
                         IsAddWeChat = d.IsAddWeChat,
+                        Phone=d.Phone,
                     };
             return await x.ToListAsync();
         }
@@ -1623,10 +1624,10 @@ namespace Fx.Amiya.Service
                         IsAddWeChat = d.IsAddWeChat,
                         Price = d.Price
                     };
-            if (isEffectiveCustomerData.HasValue)
-            {
-                x = x.Where(o => isEffectiveCustomerData == true ? o.Price > 0 : o.Price == 0);
-            }
+            //if (isEffectiveCustomerData.HasValue)
+            //{
+            //    x = x.Where(o => isEffectiveCustomerData == true ? o.Price > 0 : o.Price == 0);
+            //}
             return await x.ToListAsync();
         }
 
@@ -2627,6 +2628,24 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
+        /// 根据助理获取直播前中后客资人数
+        /// </summary>
+        /// <returns></returns>
+        public async Task<LivingAssistantDistributeConsulationDataDto> GetLivingDistributeConsulationTypeDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIdList)
+        {
+            LivingAssistantDistributeConsulationDataDto data = new LivingAssistantDistributeConsulationDataDto();
+            var data2 = await dalShoppingCartRegistration.GetAll()
+                .Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && assistantIdList.Contains(e.AssignEmpId.Value))
+                .Select(e => e.BelongChannel)
+                .ToListAsync();
+            data.BeforeLiving = data2.Where(e => e == (int)BelongChannel.LiveBefore).Count();
+            data.Living = data2.Where(e => e == (int)BelongChannel.Living).Count();
+            data.AfterLiving = data2.Where(e => e == (int)BelongChannel.LiveAfter).Count();
+            data.TotalCount = data.BeforeLiving + data.Living + data.AfterLiving;
+            return data;
+        }
+
+        /// <summary>
         /// 根据助理获取助理分诊折线图基础数据
         /// </summary>
         /// <param name="startDate"></param>
@@ -2648,7 +2667,7 @@ namespace Fx.Amiya.Service
         #region 行政客服看板
 
         /// <summary>
-        /// 获取行政客服客资数据
+        /// 获取行政客服客资数据(根据一级二级三级)
         /// </summary>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
@@ -2673,8 +2692,35 @@ namespace Fx.Amiya.Service
             return data;
         }
 
+
         /// <summary>
-        /// 获取行政客服分诊折线图基础数据
+        /// 获取行政客服客资数据(根据直播前中后)
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="assistantId"></param>
+        /// <param name="isAddWechat"></param>
+        /// <returns></returns>
+        public async Task<AssistantDistributeConsulationTypeDataDto> GetAdminCustomerDistributeByLivingDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIds, bool? isAddWechat = null)
+        {
+            AssistantDistributeConsulationTypeDataDto data = new AssistantDistributeConsulationTypeDataDto();
+            var data2 = await dalShoppingCartRegistration.GetAll()
+                .Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && assistantIds.Contains(e.CreateBy))
+                .Where(e => e.AssignEmpId != null)
+                .GroupBy(e => e.BelongChannel).Select(e => new
+                {
+                    CustomerType = e.Key,
+                    Count = e.Count()
+                }).ToListAsync();
+            data.FirstType = data2.Where(e => e.CustomerType == (int)BelongChannel.LiveBefore).FirstOrDefault()?.Count ?? 0;
+            data.SecondType = data2.Where(e => e.CustomerType == (int)BelongChannel.Living).FirstOrDefault()?.Count ?? 0;
+            data.ThirdType = data2.Where(e => e.CustomerType == (int)BelongChannel.LiveAfter).FirstOrDefault()?.Count ?? 0;
+            data.TotalCount = data.FirstType + data.SecondType + data.ThirdType;
+            return data;
+        }
+
+        /// <summary>
+        /// 获取行政客服分诊折线图基础数据(根据一级二级三级客资)
         /// </summary>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
@@ -2686,6 +2732,21 @@ namespace Fx.Amiya.Service
             {
                 Key = e.RecordDate.Date.Date.Day.ToString(),
                 Value = e.EmergencyLevel,
+            }).ToListAsync();
+        }
+        /// <summary>
+        /// 获取行政客服分诊折线图基础数据（根据直播前中后）
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="assistantIdList"></param>
+        /// <returns></returns>
+        public async Task<List<BaseKeyValueDto<string, int>>> GetAdminCustomerDistributeByLivingBrokenLineDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIds)
+        {
+            return await dalShoppingCartRegistration.GetAll().Where(e => e.RecordDate >= startDate && e.RecordDate < endDate && assistantIds.Contains(e.CreateBy) && e.AssignEmpId != null).Select(e => new BaseKeyValueDto<string, int>
+            {
+                Key = e.RecordDate.Date.Date.Day.ToString(),
+                Value = e.BelongChannel,
             }).ToListAsync();
         }
 

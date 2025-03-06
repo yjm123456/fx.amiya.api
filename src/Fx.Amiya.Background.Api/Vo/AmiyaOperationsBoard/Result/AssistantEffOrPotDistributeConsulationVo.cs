@@ -8,40 +8,57 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
     public class AssistantEffOrPotDistributeConsulationVo
     {
         /// <summary>
-        /// 当日有效客资
+        /// 当日直播前客资
         /// </summary>
-        public int EffctiveCurrentDayData { get; set; }
+        public int BeforeLivingCurrentDayData { get; set; }
         /// <summary>
-        /// 累计有效客资
+        /// 累计直播前客资
         /// </summary>
-        public int EffctiveTotalData { get; set; }
+        public int BeforeLivingTotalData { get; set; }
         /// <summary>
-        /// 同比有效客资
+        /// 同比直播前客资
         /// </summary>
-        public decimal EffctiveYearOnYearData { get; set; }
+        public decimal BeforeLivingYearOnYearData { get; set; }
         /// <summary>
-        /// 环比有效客资
+        /// 环比直播前客资
         /// </summary>
-        public decimal EffctiveChainRateData { get; set; }
+        public decimal BeforeLivingChainRateData { get; set; }
 
 
         /// <summary>
-        /// 当日潜在客资
+        /// 当日直播中客资
         /// </summary>
-        public int PotentialCurrentDayData { get; set; }
+        public int LivingCurrentDayData { get; set; }
         /// <summary>
-        /// 累计潜在客资
+        /// 累计直播中客资
         /// </summary>
-        public int PotentialTotalData { get; set; }
+        public int LivingTotalData { get; set; }
         /// <summary>
-        /// 同比潜在客资
+        /// 同比直播中客资
         /// </summary>
-        public decimal PotentialYearOnYearData { get; set; }
+        public decimal LivingYearOnYearData { get; set; }
         /// <summary>
-        /// 环比潜在客资
+        /// 环比直播中客资
         /// </summary>
-        public decimal PotentialChainRateData { get; set; }
+        public decimal LivingChainRateData { get; set; }
 
+
+        /// <summary>
+        /// 当日直播中客资
+        /// </summary>
+        public int AfrerLivingCurrentDayData { get; set; }
+        /// <summary>
+        /// 累计直播中客资
+        /// </summary>
+        public int AfterLivingTotalData { get; set; }
+        /// <summary>
+        /// 同比直播中客资
+        /// </summary>
+        public decimal AfrerLivingYearOnYearData { get; set; }
+        /// <summary>
+        /// 环比直播中客资
+        /// </summary>
+        public decimal AfrerLivingChainRateData { get; set; }
 
         /// <summary>
         /// 当日总客资

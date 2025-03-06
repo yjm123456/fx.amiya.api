@@ -35,5 +35,13 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
         /// 业绩
         /// </summary>
         public decimal Performance { get; set; }
+        /// <summary>
+        /// 客资目标
+        /// </summary>
+        public int CustomerCountTarget { get; set; }
+        /// <summary>
+        /// 客资目标完成率
+        /// </summary>
+        public decimal CustomerCountTargetComplete { get; set; }
     }
 }

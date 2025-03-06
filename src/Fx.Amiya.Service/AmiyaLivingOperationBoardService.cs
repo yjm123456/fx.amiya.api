@@ -63,14 +63,15 @@ namespace Fx.Amiya.Service
         public async Task<LivingCustomerAndPerformanceDataDto> GetLivingCustomerAndPerformanceDataAsync(QueryLivingDataDto query)
         {
             var selectDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.EndDate.Year, query.EndDate.Month);
+            var liveAnchor = await liveAnchorService.GetAllLiveAnchorListByBaseInfoId(query.BaseLiveAnchorId);
             LivingCustomerAndPerformanceDataDto data = new LivingCustomerAndPerformanceDataDto();
             var baseData = _dalShoppingCartRegistration.GetAll()
                .Where(e => e.IsReturnBackPrice == false)
                .Where(e => string.IsNullOrEmpty(query.BaseLiveAnchorId) || e.BaseLiveAnchorId == query.BaseLiveAnchorId)
                .Where(e => e.RecordDate >= selectDate.StartDate && e.RecordDate < selectDate.EndDate)
                .Where(e => e.BelongChannel == (int)BelongChannel.Living)
-               .Select(e => new { e.Phone,e.RecordDate }).ToList();
-            var currentPhoneList= baseData.Select(e=>e.Phone).ToList();
+               .Select(e => new { e.Phone, e.RecordDate }).ToList();
+            var currentPhoneList = baseData.Select(e => e.Phone).ToList();
             var lastData = _dalShoppingCartRegistration.GetAll()
               .Where(e => e.IsReturnBackPrice == false)
               .Where(e => string.IsNullOrEmpty(query.BaseLiveAnchorId) || e.BaseLiveAnchorId == query.BaseLiveAnchorId)
@@ -83,7 +84,7 @@ namespace Fx.Amiya.Service
               .Where(e => e.RecordDate >= selectDate.LastYearThisMonthStartDate && e.RecordDate < selectDate.LastYearThisMonthEndDate)
               .Where(e => e.BelongChannel == (int)BelongChannel.Living)
               .Count();
-            var target =  dalLiveAnchorMonthlyTargetLiving.GetAll()
+            var target = dalLiveAnchorMonthlyTargetLiving.GetAll()
                 .Where(e => e.LiveAnchor.LiveAnchorBaseId == query.BaseLiveAnchorId && e.Month == query.EndDate.Month && e.Year == query.EndDate.Year)
                 .Where(e => e.ConsultationTarget > 1)
                 .Sum(e => e.ConsultationTarget);
@@ -93,7 +94,7 @@ namespace Fx.Amiya.Service
                 .Where(e => e.ContentPlatFormOrder.BelongChannel == (int)BelongChannel.Living)
                 .Where(e => e.IsDeal == true)
                 .Where(e => e.IsOldCustomer == false)
-                .Select(e=>new {e.Price,e.CreateDate,e.ContentPlatFormOrder.Phone });
+                .Select(e => new { e.Price, e.CreateDate, e.ContentPlatFormOrder.Phone });
             var lastPerformance = dalContentPlatFormOrderDealInfo.GetAll()
                 .Where(e => e.CreateDate >= selectDate.LastMonthStartDate && e.CreateDate < selectDate.LastMonthEndDate)
                 .Where(e => string.IsNullOrEmpty(query.BaseLiveAnchorId) || e.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId == query.BaseLiveAnchorId)
@@ -108,18 +109,23 @@ namespace Fx.Amiya.Service
                 .Where(e => e.IsDeal == true)
                 .Where(e => e.IsOldCustomer == false)
                 .Sum(e => e.Price);
+            var newCustomerPerformanceTarget = await liveAnchorMonthlyTargetAfterLivingService.GetSendOrDealTargetAsync(query.EndDate.Year, query.EndDate.Month, liveAnchor.Select(x => x.Id).ToList());
+
             data.ClueCount = baseData.Count();
             data.CurrentClueCount = baseData.Where(e => e.RecordDate.Date == DateTime.Now.Date).Count();
-            data.ClueTargetCompleteRate = DecimalExtension.CalculateTargetComplete(data.ClueCount,target).Value;
+            data.ClueTarget = target;
+            data.ClueTargetCompleteRate = DecimalExtension.CalculateTargetComplete(data.ClueCount, target).Value;
             data.ClueChain = DecimalExtension.CalculateTargetComplete(data.ClueCount, lastData).Value;
             data.ClueYearOnYear = DecimalExtension.CalculateTargetComplete(data.ClueCount, historyData).Value;
-            
-            data.Performance = performance.Sum(e=>e.Price);
-            data.CurrentPerformance = performance.Where(e => e.CreateDate.Date == DateTime.Now.Date).Sum(e=>e.Price);
-            data.PerformanceChain = DecimalExtension.CalculateTargetComplete(data.Performance,lastPerformance).Value;
+
+            data.Performance = performance.Sum(e => e.Price);
+            data.CurrentPerformance = performance.Where(e => e.CreateDate.Date == DateTime.Now.Date).Sum(e => e.Price);
+            data.PerformanceChain = DecimalExtension.CalculateTargetComplete(data.Performance, lastPerformance).Value;
             data.PerformanceYearOnYear = DecimalExtension.CalculateTargetComplete(data.Performance, historyPerformance).Value;
-            var currentPerformance=performance.Where(e=>currentPhoneList.Contains(e.Phone)).Sum(e => e.Price);
+            var currentPerformance = performance.Where(e => currentPhoneList.Contains(e.Phone)).Sum(e => e.Price);
             data.CurrentMontPerformance = currentPerformance;
+            data.PerformanceTarget = (decimal)Math.Round((newCustomerPerformanceTarget.NewCustomerPerformanceTarget * 0.65M), 2, MidpointRounding.AwayFromZero);
+            data.PerformanceTargetCompleteRate = DecimalExtension.CalculateTargetComplete(data.Performance, data.PerformanceTarget).Value;
             return data;
         }
         /// <summary>
@@ -128,7 +134,7 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<LivingCustomerAndPerformanceBrokenLineDataDto> GetLivingCustomerAndPerformanceBrokenLineDataAsync(QueryLivingDataDto query)
         {
-            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate,query.EndDate);
+            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
             LivingCustomerAndPerformanceBrokenLineDataDto data = new LivingCustomerAndPerformanceBrokenLineDataDto();
             var baseData = _dalShoppingCartRegistration.GetAll()
                .Where(e => e.IsReturnBackPrice == false)
@@ -144,13 +150,13 @@ namespace Fx.Amiya.Service
                 .Where(e => e.IsDeal == true)
                 .Where(e => e.IsOldCustomer == false)
                 .Select(e => new { e.Price, e.CreateDate }).ToListAsync();
-            
+
             var clueData = baseData.GroupBy(e => e.RecordDate.Date.Day).Select(e => new PerformanceBrokenLineListInfoDto
             {
                 date = e.Key.ToString(),
                 Performance = e.Count()
             }).ToList();
-            data.ClueData = FillDate(query.EndDate.Year,query.EndDate.Month, clueData);
+            data.ClueData = FillDate(query.EndDate.Year, query.EndDate.Month, clueData);
             var performanceDataList = performanceData.GroupBy(e => e.CreateDate.Date.Day).Select(e => new PerformanceBrokenLineListInfoDto
             {
                 date = e.Key.ToString(),
@@ -180,7 +186,7 @@ namespace Fx.Amiya.Service
                 .Where(e => e.BelongChannel == (int)BelongChannel.Living)
                 .Where(e => e.RecordDate >= selectDate.StartDate && e.RecordDate < selectDate.EndDate)
                 .Where(e => e.IsReturnBackPrice == false)
-                .Where(e=>baseLiveanchorIdList.Contains(e.BaseLiveAnchorId))
+                .Where(e => baseLiveanchorIdList.Contains(e.BaseLiveAnchorId))
                 .Select(e => new
                 {
                     BaseLiveAnchorId = e.BaseLiveAnchorId,
@@ -218,14 +224,14 @@ namespace Fx.Amiya.Service
 
             #region 获取部门基础数据
             var depeartPhoneList = baseData.Select(e => e.Phone).ToList();
-            var allOrderPerformance = await contentPlateFormOrderService.GetLivingOrderSendAndDealDataAsync(selectDate.StartDate, selectDate.EndDate, baseLiveanchorIdList, depeartPhoneList, query.IsCurrent);
+            var allOrderPerformance = await contentPlateFormOrderService.GetLivingOrderSendAndDealDataAsync(selectDate.StartDate, selectDate.EndDate, baseLiveanchorIdList, depeartPhoneList, query.IsCurrent,true);
 
             #endregion
             #region 【派单】
             LivingFilterDetailDataDto sendOrderdetails = new LivingFilterDetailDataDto();
             //派单
             sendOrderdetails.Key = "SendOrder";
-            sendOrderdetails.Name = "派单量"; 
+            sendOrderdetails.Name = "派单量";
             sendOrderdetails.Value = allOrderPerformance.SendOrderNum;
             departmentDataDto.DataList.Add(sendOrderdetails);
 
@@ -355,7 +361,7 @@ namespace Fx.Amiya.Service
             #region 【分诊】
             //当月数据
             var employeePhoneList = baseData.Where(e => e.BaseLiveAnchorId == query.BaseLiveAnchorId).Select(e => e.Phone).ToList();
-            var addWechatOrderPerformance = await contentPlateFormOrderService.GetLivingOrderSendAndDealDataAsync(selectDate.StartDate, selectDate.EndDate, new List<string> { query.BaseLiveAnchorId }, employeePhoneList, query.IsCurrent);
+            var addWechatOrderPerformance = await contentPlateFormOrderService.GetLivingOrderSendAndDealDataAsync(selectDate.StartDate, selectDate.EndDate, new List<string> { query.BaseLiveAnchorId }, employeePhoneList, query.IsCurrent,true);
             //分诊
             LivingFilterDetailDataDto consulationdetails2 = new LivingFilterDetailDataDto();
             consulationdetails2.Key = "Consulation";
@@ -443,7 +449,7 @@ namespace Fx.Amiya.Service
             var baseLiveanchorList = await liveAnchorBaseInfoService.GetAllLiveAnchorAsync(true);
             var baseLiveanchorIdList = baseLiveanchorList.Select(e => e.Id).ToList();
             LivingCycleDataDto data = new LivingCycleDataDto();
-            var seqDate = DateTimeExtension.GetStartDateEndDate(query.StartDate,query.EndDate);
+            var seqDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
             var cartInfoList = _dalShoppingCartRegistration.GetAll()
                 .Where(e => e.IsReturnBackPrice == false && e.BelongChannel == (int)BelongChannel.Living)
                 .Where(e => e.RecordDate >= seqDate.StartDate && e.RecordDate < seqDate.EndDate)
@@ -533,14 +539,14 @@ namespace Fx.Amiya.Service
             {
                 var historyDealPhone = dealInfoList.Where(e => !cartInfoList.Select(e => e.Phone).Contains(e.Phone)).Select(e => e.Phone);
                 var historyCardList = _dalShoppingCartRegistration.GetAll().Where(e => baseLiveanchorIdList.Contains(e.BaseLiveAnchorId) && historyDealPhone.Contains(e.Phone) && e.BelongChannel == (int)BelongChannel.Living);
-                    dataList2 = (from deal in dealInfoList
-                                 join cart in historyCardList
-                                 on deal.Phone equals cart.Phone
-                                 select new KeyValuePair<string, int>
-                                 (
-                                     cart.BaseLiveAnchorId,
-                                     (deal.ToHospitalDate- cart.RecordDate).Days
-                                 )).ToList();
+                dataList2 = (from deal in dealInfoList
+                             join cart in historyCardList
+                             on deal.Phone equals cart.Phone
+                             select new KeyValuePair<string, int>
+                             (
+                                 cart.BaseLiveAnchorId,
+                                 (deal.ToHospitalDate - cart.RecordDate).Days
+                             )).ToList();
             }
 
             dataList2.RemoveAll(e => e.Value < 0);
@@ -568,17 +574,18 @@ namespace Fx.Amiya.Service
             LivingClueTargetDataDto data = new LivingClueTargetDataDto();
             var baseLiveanchorList = await liveAnchorBaseInfoService.GetAllLiveAnchorAsync(true);
             var baseLiveanchorIdList = baseLiveanchorList.Select(e => e.Id).ToList();
-            var seqDate = DateTimeExtension.GetStartDateEndDate(query.StartDate,query.EndDate);
-            var target =await dalLiveAnchorMonthlyTargetLiving.GetAll()
+            var seqDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
+            var target = await dalLiveAnchorMonthlyTargetLiving.GetAll()
                 .Where(e => baseLiveanchorIdList.Contains(e.LiveAnchor.LiveAnchorBaseId) && e.Month == query.EndDate.Month && e.Year == query.EndDate.Year)
-                .Where(e=>e.ConsultationTarget>1)
+                .Where(e => e.ConsultationTarget > 1)
                 .Select(e => new { e.LiveAnchor.LiveAnchorBaseId, e.ConsultationTarget })
                 .GroupBy(e => e.LiveAnchorBaseId)
-                .Select(e=>new { 
-                    BaseLiveanchorId=e.Key,
-                    Target=e.Sum(e=>e.ConsultationTarget)
+                .Select(e => new
+                {
+                    BaseLiveanchorId = e.Key,
+                    Target = e.Sum(e => e.ConsultationTarget)
                 }).ToListAsync();
-            var clueData= _dalShoppingCartRegistration.GetAll()
+            var clueData = _dalShoppingCartRegistration.GetAll()
                 .Where(e => e.IsReturnBackPrice == false && e.BelongChannel == (int)BelongChannel.Living)
                 .Where(e => e.RecordDate >= seqDate.StartDate && e.RecordDate < seqDate.EndDate)
                 .Where(e => baseLiveanchorIdList.Contains(e.BaseLiveAnchorId))
@@ -586,10 +593,11 @@ namespace Fx.Amiya.Service
                 {
                     BaseLiveAnchorId = e.BaseLiveAnchorId,
                 }).ToList();
-            var targetData= clueData.GroupBy(e => e.BaseLiveAnchorId).Select(e => { 
-                var name=baseLiveanchorList.Where(x=>x.Id==e.Key).FirstOrDefault()?.LiveAnchorName??"其他";
-                var t = target.Where(x => x.BaseLiveanchorId == e.Key).FirstOrDefault()?.Target??0;
-                var targetComplete = DecimalExtension.CalculateTargetComplete(e.Count(),t).Value;
+            var targetData = clueData.GroupBy(e => e.BaseLiveAnchorId).Select(e =>
+            {
+                var name = baseLiveanchorList.Where(x => x.Id == e.Key).FirstOrDefault()?.LiveAnchorName ?? "其他";
+                var t = target.Where(x => x.BaseLiveanchorId == e.Key).FirstOrDefault()?.Target ?? 0;
+                var targetComplete = DecimalExtension.CalculateTargetComplete(e.Count(), t).Value;
                 return new KeyValuePair<string, decimal>(name, targetComplete);
             }).ToList();
             data.ClueTargetComplete = targetData;
@@ -604,8 +612,8 @@ namespace Fx.Amiya.Service
             LivingPerformanceRateDto data = new LivingPerformanceRateDto();
             var baseLiveanchorList = await liveAnchorBaseInfoService.GetAllLiveAnchorAsync(true);
             var baseLiveanchorIdList = baseLiveanchorList.Select(e => e.Id).ToList();
-            var seqDate = DateTimeExtension.GetStartDateEndDate(query.StartDate,query.EndDate);
-            
+            var seqDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
+
             var performanceData = dalContentPlatFormOrderDealInfo.GetAll()
                 .Where(e => e.IsDeal == true && e.ContentPlatFormOrder.BelongChannel == (int)BelongChannel.Living)
                 .Where(e => e.CreateDate >= seqDate.StartDate && e.CreateDate < seqDate.EndDate)
@@ -613,10 +621,11 @@ namespace Fx.Amiya.Service
                 .Select(e => new
                 {
                     BaseLiveAnchorId = e.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId,
-                    Price=e.Price
+                    Price = e.Price
                 }).ToList();
             var totalPerformance = performanceData.Sum(e => e.Price);
-            var performanceRateData = performanceData.GroupBy(e => e.BaseLiveAnchorId).Select(e => {
+            var performanceRateData = performanceData.GroupBy(e => e.BaseLiveAnchorId).Select(e =>
+            {
                 var name = baseLiveanchorList.Where(x => x.Id == e.Key).FirstOrDefault()?.LiveAnchorName ?? "其他";
                 var perfromance = e.Sum(e => e.Price);
                 var performanceRate = DecimalExtension.CalculateTargetComplete(perfromance, totalPerformance).Value;
@@ -650,7 +659,7 @@ namespace Fx.Amiya.Service
                 Performance = e.Count()
             }).ToList();
             livingData.TikTokTotalClue = baseData.Where(e => e.ContentPlatformId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Count();
-            livingData.TikTokClueRate= baseData.Where(e=>e.ContentPlatformId== "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").GroupBy(e => e.LiveAnchorName).Select(e => new LivingContentplatformClueDataItemDto
+            livingData.TikTokClueRate = baseData.Where(e => e.ContentPlatformId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").GroupBy(e => e.LiveAnchorName).Select(e => new LivingContentplatformClueDataItemDto
             {
                 Name = e.Key,
                 Value = DecimalExtension.CalculateTargetComplete(e.Count(), livingData.TikTokTotalClue).Value,
@@ -675,8 +684,8 @@ namespace Fx.Amiya.Service
             var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
             var performanceList = dalContentPlatFormOrderDealInfo.GetAll()
                 .Where(e => e.ContentPlatFormOrder.BelongChannel == (int)BelongChannel.Living)
-                .Where(e => e.IsDeal == true&& e.CreateDate >= selectDate.StartDate && e.CreateDate < selectDate.EndDate)
-                .Where(e => e.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId==query.BaseLiveAnchorId)
+                .Where(e => e.IsDeal == true && e.CreateDate >= selectDate.StartDate && e.CreateDate < selectDate.EndDate)
+                .Where(e => e.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId == query.BaseLiveAnchorId)
                    .Select(e => new
                    {
                        LiveAnchorName = e.ContentPlatFormOrder.LiveAnchor.Name,
@@ -684,7 +693,7 @@ namespace Fx.Amiya.Service
                        ContentPlatformName = e.ContentPlatFormOrder.Contentplatform.ContentPlatformName,
                        Price = e.Price
                    }).ToList();
-            var totalPerformance = performanceList.Sum(e=>e.Price);
+            var totalPerformance = performanceList.Sum(e => e.Price);
             livingData.ContentPlatformTotalPerformance = ChangePriceToTenThousand(totalPerformance);
             livingData.ContentPlatformPerformanceRate = performanceList.GroupBy(e => e.ContentPlatformName)
                 .Select(e => new LivingContentplatformPerformanceDataItemDto
@@ -694,14 +703,14 @@ namespace Fx.Amiya.Service
                     Performance = ChangePriceToTenThousand(e.Sum(e => e.Price))
                 }).ToList();
             livingData.TikTokAccountTotalPerformance = ChangePriceToTenThousand(performanceList.Where(e => e.ContentPlateformId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").Sum(e => e.Price));
-            livingData.TikTokAccountPerformanceRate = performanceList.Where(e=>e.ContentPlateformId== "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").GroupBy(e => e.LiveAnchorName)
+            livingData.TikTokAccountPerformanceRate = performanceList.Where(e => e.ContentPlateformId == "4e4e9564-f6c3-47b6-a7da-e4518bab66a1").GroupBy(e => e.LiveAnchorName)
                 .Select(e => new LivingContentplatformPerformanceDataItemDto
                 {
                     Name = e.Key,
                     Value = DecimalExtension.CalculateTargetComplete(e.Sum(e => e.Price), totalPerformance).Value,
                     Performance = ChangePriceToTenThousand(e.Sum(e => e.Price))
                 }).ToList();
-            livingData.WechatVideoAccountTotalPerformance = ChangePriceToTenThousand(performanceList.Where(e => e.ContentPlateformId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Sum(e=>e.Price));
+            livingData.WechatVideoAccountTotalPerformance = ChangePriceToTenThousand(performanceList.Where(e => e.ContentPlateformId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").Sum(e => e.Price));
             livingData.WechatVideoAccountPerformanceRate = performanceList.Where(e => e.ContentPlateformId == "9196b247-1ab9-4d0c-a11e-a1ef09019878").GroupBy(e => e.LiveAnchorName)
                 .Select(e => new LivingContentplatformPerformanceDataItemDto
                 {

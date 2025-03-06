@@ -19,4 +19,11 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         public int Potential { get; set; }
         public int TotalCount { get; set; }
     }
+    public class LivingAssistantDistributeConsulationDataDto
+    {
+        public int BeforeLiving { get; set; }
+        public int Living { get; set; }
+        public int AfterLiving { get; set; }
+        public int TotalCount { get; set; }
+    }
 }

@@ -75,6 +75,10 @@ namespace Fx.Amiya.Service
 
         public async Task<FxPageInfo<RecommandDocumentSettleDto>> GetListWithPageAsync(QueryReconciliationDocumentsSettleDto query)
         {
+            if (query.LiveAnchorIds == null)
+            {
+                query.LiveAnchorIds = new List<int>();
+            }
             var record = _dalRecommandDocumentSettle.GetAll().Include(x => x.AmiyaEmployee)
               .Where(e => Convert.ToInt32(e.DealInfoId) < 2410010000000000M)
               .Where(e => (string.IsNullOrEmpty(query.KeyWord) || e.RecommandDocumentId.Contains(query.KeyWord) || e.OrderId.Contains(query.KeyWord) || e.DealInfoId.Contains(query.KeyWord) || e.CustomerServiceCompensationId == query.KeyWord || e.InspectCustomerServiceCompensationId == query.KeyWord || e.CheckRemark.Contains(query.KeyWord)))
@@ -84,9 +88,11 @@ namespace Fx.Amiya.Service
               .Where(e => !query.IsOldCustoemr.HasValue || e.IsOldCustomer == query.IsOldCustoemr)
               .Where(e => !query.CheckState.HasValue || e.CompensationCheckState == query.CheckState)
               .Where(e => query.OrderFrom == 0 || e.OrderFrom == query.OrderFrom)
+
               .Where(e => query.AddOrderPrice == -1 || (query.AddOrderPrice == 0 ? e.ContentPlatFormOrderAddOrderPrice == query.AddOrderPrice : e.ContentPlatFormOrderAddOrderPrice > 0))
               .Where(e => !query.CreateEmpId.HasValue || e.CreateEmpId == query.CreateEmpId)
               .Where(e => !query.IsInspectOrder.HasValue || e.IsInspectPerformance == query.IsInspectOrder.Value)
+
               .Where(e => !query.InspectEmpId.HasValue || e.InspectEmpId == query.InspectEmpId.Value).OrderByDescending(x => x.CreateDate)
               .Where(e => query.LiveAnchorIds.Count == 0 || query.LiveAnchorIds.Contains(e.BelongLiveAnchorAccount.Value))
               .Select(e => new RecommandDocumentSettleDto
@@ -126,6 +132,7 @@ namespace Fx.Amiya.Service
                   CustomerServicePerformance = e.CustomerServicePerformance,
                   PerformancePercent = e.PerformancePercent,
               });
+            
             if (query.CheckState != (int)CheckType.CheckedSuccess)
             {
                 record = record.Where(e => query.BelongEmpId.Count == 0 || query.BelongEmpId.Contains(e.BelongEmpId));

@@ -884,30 +884,30 @@ namespace Fx.Amiya.Service
             LiveAnchorBeforeLivingTargetDto liveAnchorBeforeLivingTargetDto = new LiveAnchorBeforeLivingTargetDto();
             if (query.ShowTikokData)
             {
-                liveAnchorBeforeLivingTargetDto.IncreaseFansFeesTarget += res.Sum(e => e.TikTokIncreaseFansFeesTarget);
-                liveAnchorBeforeLivingTargetDto.IncreaseFansTarget += res.Sum(e => e.TikTokIncreaseFansTarget);
-                liveAnchorBeforeLivingTargetDto.ShowcaseIncomeTarget += res.Sum(e => e.TikTokShowcaseIncomeTarget);
-                liveAnchorBeforeLivingTargetDto.ShowcaseFeeTarget += res.Sum(e => e.TikTokShowCaseFeeTarget);
-                liveAnchorBeforeLivingTargetDto.CluesTarget += res.Sum(e => e.TikTokCluesTarget);
-                liveAnchorBeforeLivingTargetDto.SendNumTarget += res.Sum(e => e.TikTokReleaseTarget);
+                liveAnchorBeforeLivingTargetDto.IncreaseFansFeesTarget += res.Where(x=>x.TikTokIncreaseFansFeesTarget>1).Sum(e => e.TikTokIncreaseFansFeesTarget);
+                liveAnchorBeforeLivingTargetDto.IncreaseFansTarget += res.Where(x => x.TikTokIncreaseFansTarget > 1).Sum(e => e.TikTokIncreaseFansTarget);
+                liveAnchorBeforeLivingTargetDto.ShowcaseIncomeTarget += res.Where(x => x.TikTokShowcaseIncomeTarget > 1).Sum(e => e.TikTokShowcaseIncomeTarget);
+                liveAnchorBeforeLivingTargetDto.ShowcaseFeeTarget += res.Where(x => x.TikTokShowCaseFeeTarget > 1).Sum(e => e.TikTokShowCaseFeeTarget);
+                liveAnchorBeforeLivingTargetDto.CluesTarget += res.Where(x => x.TikTokCluesTarget > 1).Sum(e => e.TikTokCluesTarget);
+                liveAnchorBeforeLivingTargetDto.SendNumTarget += res.Where(x => x.TikTokReleaseTarget > 1).Sum(e => e.TikTokReleaseTarget);
             }
             if (query.ShowWechatVideoData)
             {
-                liveAnchorBeforeLivingTargetDto.IncreaseFansFeesTarget += res.Sum(e => e.VideoIncreaseFansFeesTarget);
-                liveAnchorBeforeLivingTargetDto.IncreaseFansTarget += res.Sum(e => e.VideoIncreaseFansTarget);
-                liveAnchorBeforeLivingTargetDto.ShowcaseIncomeTarget += res.Sum(e => e.VideoShowcaseIncomeTarget);
-                liveAnchorBeforeLivingTargetDto.ShowcaseFeeTarget += res.Sum(e => e.VideoShowCaseFeeTarget);
-                liveAnchorBeforeLivingTargetDto.CluesTarget += res.Sum(e => e.VideoCluesTarget);
-                liveAnchorBeforeLivingTargetDto.SendNumTarget += res.Sum(e => e.VideoReleaseTarget);
+                liveAnchorBeforeLivingTargetDto.IncreaseFansFeesTarget += res.Where(x => x.VideoIncreaseFansFeesTarget > 1).Sum(e => e.VideoIncreaseFansFeesTarget);
+                liveAnchorBeforeLivingTargetDto.IncreaseFansTarget += res.Where(x => x.VideoIncreaseFansTarget > 1).Sum(e => e.VideoIncreaseFansTarget);
+                liveAnchorBeforeLivingTargetDto.ShowcaseIncomeTarget += res.Where(x => x.VideoShowcaseIncomeTarget > 1).Sum(e => e.VideoShowcaseIncomeTarget);
+                liveAnchorBeforeLivingTargetDto.ShowcaseFeeTarget += res.Where(x => x.VideoShowCaseFeeTarget > 1).Sum(e => e.VideoShowCaseFeeTarget);
+                liveAnchorBeforeLivingTargetDto.CluesTarget += res.Where(x => x.VideoCluesTarget > 1).Sum(e => e.VideoCluesTarget);
+                liveAnchorBeforeLivingTargetDto.SendNumTarget += res.Where(x => x.VideoReleaseTarget > 1).Sum(e => e.VideoReleaseTarget);
             }
             if (query.ShowXiaoHongShuData)
             {
-                liveAnchorBeforeLivingTargetDto.IncreaseFansFeesTarget += res.Sum(e => e.XiaoHongShuIncreaseFansFeesTarget);
-                liveAnchorBeforeLivingTargetDto.IncreaseFansTarget += res.Sum(e => e.XiaoHongShuIncreaseFansTarget);
-                liveAnchorBeforeLivingTargetDto.ShowcaseIncomeTarget += res.Sum(e => e.XiaoHongShuShowcaseIncomeTarget);
-                liveAnchorBeforeLivingTargetDto.ShowcaseFeeTarget += res.Sum(e => e.XiaoHongShuShowCaseFeeTarget);
-                liveAnchorBeforeLivingTargetDto.CluesTarget += res.Sum(e => e.XiaoHongShuCluesTarget);
-                liveAnchorBeforeLivingTargetDto.SendNumTarget += res.Sum(e => e.XiaoHongShuReleaseTarget);
+                liveAnchorBeforeLivingTargetDto.IncreaseFansFeesTarget += res.Where(x => x.XiaoHongShuIncreaseFansFeesTarget > 1).Sum(e => e.XiaoHongShuIncreaseFansFeesTarget);
+                liveAnchorBeforeLivingTargetDto.IncreaseFansTarget += res.Where(x => x.XiaoHongShuIncreaseFansTarget > 1).Sum(e => e.XiaoHongShuIncreaseFansTarget);
+                liveAnchorBeforeLivingTargetDto.ShowcaseIncomeTarget += res.Where(x => x.XiaoHongShuShowcaseIncomeTarget > 1).Sum(e => e.XiaoHongShuShowcaseIncomeTarget);
+                liveAnchorBeforeLivingTargetDto.ShowcaseFeeTarget += res.Where(x => x.XiaoHongShuShowCaseFeeTarget > 1).Sum(e => e.XiaoHongShuShowCaseFeeTarget);
+                liveAnchorBeforeLivingTargetDto.CluesTarget += res.Where(x => x.XiaoHongShuCluesTarget > 1).Sum(e => e.XiaoHongShuCluesTarget);
+                liveAnchorBeforeLivingTargetDto.SendNumTarget += res.Where(x => x.XiaoHongShuReleaseTarget > 1).Sum(e => e.XiaoHongShuReleaseTarget);
             }
             return liveAnchorBeforeLivingTargetDto;
         }

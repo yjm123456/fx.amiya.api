@@ -10,13 +10,17 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
     public class AssistantEffOrPotDistributeConsulationDto
     {
         /// <summary>
-        /// 有效客资
+        /// 直播前客资
         /// </summary>
-        public EffOrPotDistributeConsulationItemDto EffctiveData { get; set; }
+        public EffOrPotDistributeConsulationItemDto BeforeLivingData { get; set; }
         /// <summary>
-        /// 潜在客资
+        /// 直播中客资
         /// </summary>
-        public EffOrPotDistributeConsulationItemDto PotentialData { get; set; }
+        public EffOrPotDistributeConsulationItemDto LivingData { get; set; }
+        /// <summary>
+        /// 直播后客资
+        /// </summary>
+        public EffOrPotDistributeConsulationItemDto AfterLivingData { get; set; }
         /// <summary>
         /// 总客资
         /// </summary>

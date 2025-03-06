@@ -959,6 +959,7 @@ namespace Fx.Amiya.Service
                 TotalDealTarget = await performance.SumAsync(t => t.DealTarget),
                 NewCustomerDealTarget = await performance.SumAsync(t => t.NewCustomerDealTarget),
                 OldCustomerDealTarget = await performance.SumAsync(t => t.OldCustomerDealTarget),
+                NewCustomerPerformanceTarget=await performance.SumAsync(t=>t.NewCustomerPerformanceTarget),
 
             };
             return performanceInfoDto;

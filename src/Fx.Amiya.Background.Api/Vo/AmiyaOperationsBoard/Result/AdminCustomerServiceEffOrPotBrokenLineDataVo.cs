@@ -9,13 +9,17 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
     public class AdminCustomerServiceEffOrPotBrokenLineDataVo
     {
         /// <summary>
-        /// 有效客资
+        /// 直播前客资
         /// </summary>
-        public List<PerformanceBrokenLineListInfoVo> Effective { get; set; }
+        public List<PerformanceBrokenLineListInfoVo> BeforeLivingData { get; set; }
         /// <summary>
-        /// 潜在客资
+        /// 直播中客资
         /// </summary>
-        public List<PerformanceBrokenLineListInfoVo> Potential { get; set; }
+        public List<PerformanceBrokenLineListInfoVo> LivingData { get; set; }
+        /// <summary>
+        /// 直播后客资
+        /// </summary>
+        public List<PerformanceBrokenLineListInfoVo> AfterLivingData { get; set; }
 
         /// <summary>
         /// 总客资

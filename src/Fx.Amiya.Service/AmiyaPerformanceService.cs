@@ -1394,6 +1394,7 @@ namespace Fx.Amiya.Service
             #region{订单数据}
             //获取各个平台的主播ID
             List<int> LiveAnchorInfo = new List<int>();
+            var baseInfo = await liveAnchorBaseInfoService.GetByIdAndIsSelfLiveAnchorAsync("", true);
             if (!string.IsNullOrEmpty(liveAnchorBaseId))
             {
                 var liveAnchorTotal = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync(liveAnchorBaseId);
@@ -1415,7 +1416,7 @@ namespace Fx.Amiya.Service
                     LiveAnchorInfo.Add(x.Id);
                 }
             }
-            var baseOrderPerformance = await contentPlateFormOrderService.GetOrderSendAndDealDataByMonthAsync(sequentialDate.StartDate, sequentialDate.EndDate, isEffectiveCustomerData, contentPlatFormId, LiveAnchorInfo);
+            var baseOrderPerformance = await contentPlateFormOrderService.GetLivingOrderSendAndDealDataAsync(sequentialDate.StartDate, sequentialDate.EndDate, baseInfo.Select(x => x.Id).ToList(), baseBusinessPerformance.Select(x => x.Phone).ToList(), isEffectiveCustomerData.Value, false);
 
             //var baseLastMonthOrderPerformance = await contentPlateFormOrderService.GetOrderSendAndDealDataByMonthAsync(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate, isEffectiveCustomerData, contentPlatFormId, liveAnchorIds);
 
@@ -1627,6 +1628,7 @@ namespace Fx.Amiya.Service
             #endregion
             amiyaOperationDataDto.NewCustomerData = newCustomerOperationDataDto;
             //老客数据
+            isEffectiveCustomerData = null;
             var oldCustomerData = await contentPlateFormOrderService.GetOldCustomerBuyAgainByMonthAsync(sequentialDate.StartDate, isEffectiveCustomerData, contentPlatFormId, LiveAnchorInfo);
             oldCustomerOperationDataDto.TotalDealPeople = oldCustomerData.TotalDealCustomer;
             oldCustomerOperationDataDto.SecondDealPeople = oldCustomerData.SecondDealCustomer;
@@ -1645,7 +1647,7 @@ namespace Fx.Amiya.Service
             //oldCustomerOperationDataDto.ThirdTimeBuyRate = CalculateTargetComplete(Convert.ToDecimal(oldCustomerOperationDataDto.ThirdDealPeople), Convert.ToDecimal(oldCustomerOperationDataDto.SecondDealPeople)).Value;
             oldCustomerOperationDataDto.ThirdTimeBuyRateProportion = CalculateTargetComplete(Convert.ToDecimal(oldCustomerOperationDataDto.ThirdDealPeople), Convert.ToDecimal(oldCustomerOperationDataDto.TotalDealPeople)).Value;
 
-           // oldCustomerOperationDataDto.FourthTimeBuyRate = CalculateTargetComplete(Convert.ToDecimal(oldCustomerOperationDataDto.FourthDealCustomer), Convert.ToDecimal(oldCustomerOperationDataDto.ThirdDealPeople)).Value;
+            // oldCustomerOperationDataDto.FourthTimeBuyRate = CalculateTargetComplete(Convert.ToDecimal(oldCustomerOperationDataDto.FourthDealCustomer), Convert.ToDecimal(oldCustomerOperationDataDto.ThirdDealPeople)).Value;
             oldCustomerOperationDataDto.FourthTimeBuyRateProportion = CalculateTargetComplete(Convert.ToDecimal(oldCustomerOperationDataDto.FourthDealCustomer), Convert.ToDecimal(oldCustomerOperationDataDto.TotalDealPeople)).Value;
 
             //oldCustomerOperationDataDto.FifthTimeOrMoreBuyRate = CalculateTargetComplete(Convert.ToDecimal(oldCustomerOperationDataDto.FifThOrMoreOrMoreDealCustomer), Convert.ToDecimal(oldCustomerOperationDataDto.FourthDealCustomer)).Value;
