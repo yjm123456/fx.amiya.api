@@ -2,6 +2,7 @@
 using Fx.Amiya.Dto.AmiyaMingSuoOperationBoard.Input;
 using Fx.Amiya.Dto.AmiyaMingSuoOperationBoard.Result;
 using Fx.Amiya.Dto.AmiyaOperationsBoardService;
+using Fx.Amiya.Dto.AmiyaOperationsBoardService.Input;
 using Fx.Amiya.Dto.AmiyaOperationsBoardService.Result;
 using System;
 using System.Collections.Generic;
@@ -25,5 +26,9 @@ namespace Fx.Amiya.IService
         Task<MingSuoContentplatformClueDataDto> GetMingSuoContentplatformClueDataAsync(QueryMingSuoAssistantPerformanceDto query);
 
         Task<MingSuoContentplatformPerformanceDataDto> GetMingSuoContentplatformPerformanceDataAsync(QueryMingSuoAssistantPerformanceDto query);
+
+        Task<PerformanceYearDataListDto> GetTotalAchievementByYearAsync(QueryMingSuoPerfomanceYearDataDto query);
+
+        Task<PerformanceYearDataListDto> GetTotalCluesByYearAsync(QueryMingSuoPerfomanceYearDataDto query);
     }
 }

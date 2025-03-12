@@ -22,5 +22,7 @@ namespace Fx.Amiya.DbModels.Model
         public bool Valid { get; set; }
         public bool IsSelfLivevAnchor { get; set; }
 
+        public bool IsDoctor { get; set; }
+
     }
 }

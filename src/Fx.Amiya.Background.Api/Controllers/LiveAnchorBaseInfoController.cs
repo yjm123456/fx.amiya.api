@@ -1,4 +1,5 @@
-﻿using Fx.Amiya.Background.Api.Vo.LiveAnchorBaseInfo;
+﻿using Fx.Amiya.Background.Api.Vo;
+using Fx.Amiya.Background.Api.Vo.LiveAnchorBaseInfo;
 using Fx.Amiya.Dto.LiveAnchorBaseInfo;
 using Fx.Amiya.IService;
 using Fx.Common;
@@ -37,11 +38,11 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<LiveAnchorBaseInfoIdAndNameVo>>> GetValidListAsync(bool? isSelfLiveAnchor)
         {
             var liveAnchorBaseInfos = from d in await liveAnchorBaseInfoService.GetValidAsync(isSelfLiveAnchor)
-                              select new LiveAnchorBaseInfoIdAndNameVo
-                              {
-                                  Id = d.Id,
-                                  Name =d.LiveAnchorName,
-                              };
+                                      select new LiveAnchorBaseInfoIdAndNameVo
+                                      {
+                                          Id = d.Id,
+                                          Name = d.LiveAnchorName,
+                                      };
             return ResultData<List<LiveAnchorBaseInfoIdAndNameVo>>.Success().AddData("liveAnchorBaseInfos", liveAnchorBaseInfos.ToList());
         }
 
@@ -70,7 +71,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("list")]
-        public async Task<ResultData<FxPageInfo<LiveAnchorBaseInfoVo>>> GetListAsync(string name,bool valid, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<LiveAnchorBaseInfoVo>>> GetListAsync(string name, bool valid, int pageNum, int pageSize)
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
@@ -91,7 +92,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                           IsMain = d.IsMain,
                                           Valid = d.Valid,
                                           IsSelfLivevAnchor = d.IsSelfLivevAnchor,
-                              };
+                                          IsDoctor = d.IsDoctor,
+                                      };
             FxPageInfo<LiveAnchorBaseInfoVo> liveAnchorBaseInfoPageInfo = new FxPageInfo<LiveAnchorBaseInfoVo>();
             liveAnchorBaseInfoPageInfo.TotalCount = q.TotalCount;
             liveAnchorBaseInfoPageInfo.List = liveAnchorBaseInfos;
@@ -121,6 +123,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.Description = addVo.Description;
             addDto.DetailPicture = addVo.DetailPicture;
             addDto.IsMain = addVo.IsMain;
+            addDto.IsDoctor = addVo.IsDoctor;
             await liveAnchorBaseInfoService.AddAsync(addDto);
             return ResultData.Success();
         }
@@ -150,6 +153,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             liveAnchorBaseInfoVo.IsMain = result.IsMain;
             liveAnchorBaseInfoVo.IsSelfLivevAnchor = result.IsSelfLivevAnchor;
             liveAnchorBaseInfoVo.Valid = true;
+            liveAnchorBaseInfoVo.IsDoctor = result.IsDoctor;
             return ResultData<LiveAnchorBaseInfoVo>.Success().AddData("liveAnchorBaseInfo", liveAnchorBaseInfoVo);
         }
 
@@ -174,6 +178,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.VideoUrl = updateVo.VideoUrl;
             updateDto.DueTime = updateVo.DueTime;
             updateDto.Valid = updateVo.Valid;
+            updateDto.IsDoctor = updateVo.IsDoctor;
             updateDto.IsSelfLivevAnchor = updateVo.IsSelfLivevAnchor;
             await liveAnchorBaseInfoService.UpdateAsync(updateDto);
             return ResultData.Success();
@@ -191,6 +196,23 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             await liveAnchorBaseInfoService.DeleteAsync(id);
             return ResultData.Success();
+        }
+
+
+        /// <summary>
+        /// 获取名索医生列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getDoctorList")]
+        public async Task<ResultData<List<BaseIdAndNameVo<string>>>> GetBelongCompanyListAsync()
+        {
+            var nameList =await liveAnchorBaseInfoService.GetMingSuoLiveAnchorAsync();
+            var result = nameList.Select(e => new BaseIdAndNameVo<string>
+            {
+                Id = e.Id,
+                Name = e.LiveAnchorName
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo<string>>>.Success().AddData("DoctorList", result);
         }
     }
 }

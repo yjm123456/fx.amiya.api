@@ -21,5 +21,9 @@ namespace Fx.Amiya.Dto.LiveAnchorBaseInfo
         public bool IsSelfLivevAnchor { get; set; }
         public DateTime? DueTime { get; set; }
         public bool Valid { get; set; }
+        /// <summary>
+        /// 是否为医生
+        /// </summary>
+        public bool IsDoctor { get; set; }
     }
 }

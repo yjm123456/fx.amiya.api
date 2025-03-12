@@ -285,6 +285,120 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<MingSuoContentplatformPerformanceDataVo>.Success().AddData("data", data);
         }
 
+        /// <summary>
+        /// 名索医美业绩趋势
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("getTotalAchievementByYear")]
+        public async Task<ResultData<PerformanceYearDataListVo>> GetTotalAchievementByYearAsync([FromQuery] QueryMingSuoPerfomanceYearDataVo query)
+        {
+            QueryMingSuoPerfomanceYearDataDto queryDto = new QueryMingSuoPerfomanceYearDataDto();
+            queryDto.Year = query.Year;
+            queryDto.IsOldCustomer = query.IsOldCustomer;
+            queryDto.LiveAnchorBaseIdId = query.LiveAnchorBaseIdId;
+            var result = await amiyaMingSuoOperationBoardService.GetTotalAchievementByYearAsync(queryDto);
+            PerformanceYearDataListVo resultData = new PerformanceYearDataListVo();
+            var res1 = result.TotalPerformanceData.Select(e => new PerformanceYearDataVo
+            {
+                GroupName = e.GroupName,
+                SortName = e.SortName,
+                JanuaryPerformance = e.JanuaryPerformance,
+                FebruaryPerformance = e.FebruaryPerformance,
+                MarchPerformance = e.MarchPerformance,
+                AprilPerformance = e.AprilPerformance,
+                MayPerformance = e.MayPerformance,
+                JunePerformance = e.JunePerformance,
+                JulyPerformance = e.JulyPerformance,
+                AugustPerformance = e.AugustPerformance,
+                SeptemberPerformance = e.SeptemberPerformance,
+                OctoberPerformance = e.OctoberPerformance,
+                NovemberPerformance = e.NovemberPerformance,
+                DecemberPerformance = e.DecemberPerformance,
+                SumPerformance = e.SumPerformance,
+                AveragePerformance = e.AveragePerformance,
+            }).ToList();
+            resultData.TotalPerformanceData = res1;
+            return ResultData<PerformanceYearDataListVo>.Success().AddData("data", resultData);
+        }
+
+
+        /// <summary>
+        /// 名索医美线索趋势
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("getMingSuoTotalCluesByYear")]
+        public async Task<ResultData<PerformanceYearDataListVo>> GetMingSuoTotalCluesByYearAsync([FromQuery] QueryMingSuoPerfomanceYearDataVo query)
+        {
+            QueryMingSuoPerfomanceYearDataDto queryDto = new QueryMingSuoPerfomanceYearDataDto();
+            queryDto.Year = query.Year;
+            queryDto.IsOldCustomer = query.IsOldCustomer;
+            queryDto.LiveAnchorBaseIdId = query.LiveAnchorBaseIdId;
+            queryDto.BelongChannel = query.BelongChannel;
+            var result = await amiyaMingSuoOperationBoardService.GetTotalCluesByYearAsync(queryDto);
+            PerformanceYearDataListVo resultData = new PerformanceYearDataListVo();
+            var res1 = result.TotalPerformanceData.Select(e => new PerformanceYearDataVo
+            {
+                GroupName = e.GroupName,
+                SortName = e.SortName,
+                JanuaryPerformance = e.JanuaryPerformance,
+                FebruaryPerformance = e.FebruaryPerformance,
+                MarchPerformance = e.MarchPerformance,
+                AprilPerformance = e.AprilPerformance,
+                MayPerformance = e.MayPerformance,
+                JunePerformance = e.JunePerformance,
+                JulyPerformance = e.JulyPerformance,
+                AugustPerformance = e.AugustPerformance,
+                SeptemberPerformance = e.SeptemberPerformance,
+                OctoberPerformance = e.OctoberPerformance,
+                NovemberPerformance = e.NovemberPerformance,
+                DecemberPerformance = e.DecemberPerformance,
+                SumPerformance = e.SumPerformance,
+                AveragePerformance = e.AveragePerformance,
+            }).ToList();
+            resultData.TotalPerformanceData = res1;
+           
+            return ResultData<PerformanceYearDataListVo>.Success().AddData("data", resultData);
+        }
+
+        /// <summary>
+        /// 机构转化情况
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("mingSuoHospitalTransformData")]
+        public async Task<ResultData<List<HospitalTransformDataVo>>> GetMingSuoHospitalTransformDataAsync([FromQuery] QueryHospitalTransformDataVo query)
+        {
+            QueryHospitalTransformDataDto queryDto = new QueryHospitalTransformDataDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.ShowDaoDao = query.ShowDaoDao;
+            queryDto.ShowJiNa = query.ShowJiNa;
+            queryDto.ShowLuLu = query.ShowLuLu;
+            queryDto.ShowCooperate = query.ShowCooperate;
+            var result = await amiyaOperationsBoardService.GetHospitalPerformanceByDateAsync(queryDto);
+            var res = result.Select(e => new HospitalTransformDataVo
+            {
+                City = e.City,
+                HospitalName = e.HospitalName,
+                SendNum = e.SendNum,
+                VisitNum = e.VisitNum,
+                VisitRate = e.VisitRate,
+                NewCustomerDealNum = e.NewCustomerDealNum,
+                NewCustomerDealRate = e.NewCustomerDealRate,
+                NewCustomerAchievement = e.NewCustomerAchievement,
+                NewCustomerUnitPrice = e.NewCustomerUnitPrice,
+                OldCustomerDealNum = e.OldCustomerDealNum,
+                OldCustomerAchievement = e.OldCustomerAchievement,
+                OldCustomerUnitPrice = e.OldCustomerUnitPrice,
+                TotalAchievement = e.TotalAchievement,
+                NewOrOldCustomerRate = e.NewOrOldCustomerRate,
+                Rate = e.Rate
+            }).ToList();
+            return ResultData<List<HospitalTransformDataVo>>.Success().AddData("data", res);
+        }
+
         #endregion
     }
 }

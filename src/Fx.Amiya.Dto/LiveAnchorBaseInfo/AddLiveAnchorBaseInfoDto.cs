@@ -20,5 +20,7 @@ namespace Fx.Amiya.Dto.LiveAnchorBaseInfo
         public DateTime? DueTime { get; set; }
         public bool IsSelfLivevAnchor { get; set; }
         public int? IsMain { get; set; }
+
+        public bool IsDoctor { get; set; }
     }
 }

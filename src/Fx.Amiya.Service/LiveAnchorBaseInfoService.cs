@@ -68,7 +68,7 @@ namespace Fx.Amiya.Service
         public async Task<List<LiveAnchorBaseInfoDto>> GetMingSuoLiveAnchorAsync()
         {
             var liveAnchorBaseInfos = from d in dalLiveAnchorBaseInfo.GetAll()
-                                      where (d.LiveAnchorName=="李芬"|| d.LiveAnchorName == "马瑶" || d.LiveAnchorName == "林合晟" )
+                                      where d.IsDoctor == true
                                       select new LiveAnchorBaseInfoDto
                                       {
                                           Id = d.Id,
@@ -101,7 +101,8 @@ namespace Fx.Amiya.Service
                                           DetailPicture = d.DetailPicture,
                                           IsMain = d.IsMain,
                                           Valid = d.Valid,
-                                          IsSelfLivevAnchor = d.IsSelfLivevAnchor
+                                          IsSelfLivevAnchor = d.IsSelfLivevAnchor,
+                                          IsDoctor = d.IsDoctor,
                                       };
             FxPageInfo<LiveAnchorBaseInfoDto> liveAnchorBaseInfoPageInfo = new FxPageInfo<LiveAnchorBaseInfoDto>();
             liveAnchorBaseInfoPageInfo.TotalCount = await liveAnchorBaseInfos.CountAsync();
@@ -137,6 +138,7 @@ namespace Fx.Amiya.Service
                 liveAchor.IsMain = addDto.IsMain;
                 liveAchor.IsSelfLivevAnchor = addDto.IsSelfLivevAnchor;
                 liveAchor.Valid = true;
+                liveAchor.IsDoctor = addDto.IsDoctor;
                 await dalLiveAnchorBaseInfo.AddAsync(liveAchor, true);
             }
             catch (Exception err)
@@ -171,6 +173,7 @@ namespace Fx.Amiya.Service
             liveAnchorBaseInfoDto.IsMain = x.IsMain;
             liveAnchorBaseInfoDto.IsSelfLivevAnchor = x.IsSelfLivevAnchor;
             liveAnchorBaseInfoDto.Valid = true;
+            liveAnchorBaseInfoDto.IsDoctor = x.IsDoctor;
             return liveAnchorBaseInfoDto;
         }
 
@@ -199,6 +202,7 @@ namespace Fx.Amiya.Service
             liveAnchorBaseInfoDto.IsMain = x.IsMain;
             liveAnchorBaseInfoDto.IsSelfLivevAnchor = x.IsSelfLivevAnchor;
             liveAnchorBaseInfoDto.Valid = true;
+            liveAnchorBaseInfoDto.IsDoctor = x.IsDoctor;
             return liveAnchorBaseInfoDto;
         }
 
@@ -260,6 +264,7 @@ namespace Fx.Amiya.Service
             liveAchor.VideoUrl = updateDto.VideoUrl;
             liveAchor.ContractUrl = updateDto.ContractUrl;
             liveAchor.DueTime = updateDto.DueTime;
+            liveAchor.IsDoctor = updateDto.IsDoctor;
             await dalLiveAnchorBaseInfo.UpdateAsync(liveAchor, true);
         }
 
@@ -299,6 +304,7 @@ namespace Fx.Amiya.Service
                                           ContractUrl = d.ContractUrl,
                                           VideoUrl = d.VideoUrl,
                                           IsSelfLivevAnchor = d.IsSelfLivevAnchor,
+                                          IsDoctor = d.IsDoctor
                                       };
             var resultList = await liveAnchorBaseInfos.ToListAsync();
             return resultList;

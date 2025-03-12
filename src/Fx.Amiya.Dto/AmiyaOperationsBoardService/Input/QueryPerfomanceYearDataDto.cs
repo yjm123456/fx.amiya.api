@@ -26,4 +26,27 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Input
         /// </summary>
         public int? AssistantId { get; set; }
     }
+
+    public class QueryMingSuoPerfomanceYearDataDto
+    {
+        /// <summary>
+        /// 年份
+        /// </summary>
+        public int Year { get; set; }
+        /// <summary>
+        /// 新/老客（可传空）
+        /// </summary>
+        public bool? IsOldCustomer { get; set; }
+
+
+        /// <summary>
+        /// 主播基础id（可传空）
+        /// </summary>
+        public string LiveAnchorBaseIdId { get; set; }
+
+        /// <summary>
+        /// 渠道
+        /// </summary>
+        public int BelongChannel { get; set; }
+    }
 }
