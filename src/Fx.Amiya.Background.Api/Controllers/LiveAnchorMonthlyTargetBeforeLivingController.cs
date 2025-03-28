@@ -94,6 +94,13 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                               XiaoHongShuFlowinvestmentTarget = d.XiaoHongShuFlowinvestmentTarget,
                                                               CumulativeXiaoHongShuFlowinvestment = d.CumulativeXiaoHongShuFlowinvestment,
                                                               XiaoHongShuFlowinvestmentCompleteRate = d.XiaoHongShuFlowinvestmentCompleteRate,
+                                                              XiaoHongShuPrivateMessageOpenTarget = d.XiaoHongShuPrivateMessageOpenTarget,
+                                                              CumulativeXiaoHongShuPrivateMessageOpen = d.CumulativeXiaoHongShuPrivateMessageOpen,
+                                                              XiaoHongShuPrivateMessageOpenCompleteRate = d.XiaoHongShuPrivateMessageOpenCompleteRate,
+                                                              XiaoHongShuCallingCardSendNumTarget = d.XiaoHongShuCallingCardSendNumTarget,
+                                                              CumulativeXiaoHongShuCallingCardSendNum = d.CumulativeXiaoHongShuCallingCardSendNum,
+                                                              XiaoHongShuCallingCardSendNumCompleteRate = d.XiaoHongShuCallingCardSendNumCompleteRate,
+
 
                                                               SinaWeiBoReleaseTarget = d.SinaWeiBoReleaseTarget,
                                                               CumulativeSinaWeiBoRelease = d.CumulativeSinaWeiBoRelease,
@@ -249,6 +256,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.XiaoHongShuShowcaseIncomeTarget = addVo.XiaoHongShuShowcaseIncomeTarget;
                 addDto.XiaoHongShuCluesTarget = addVo.XiaoHongShuCluesTarget;
                 addDto.XiaoHongShuIncreaseFansTarget = addVo.XiaoHongShuIncreaseFansTarget;
+                addDto.XiaoHongShuCallingCardSendNumTarget = addVo.XiaoHongShuCallingCardSendNumTarget;
+                addDto.XiaoHongShuPrivateMessageOpenTarget = addVo.XiaoHongShuPrivateMessageOpenTarget;
                 addDto.XiaoHongShuIncreaseFansFeesTarget = addVo.XiaoHongShuIncreaseFansFeesTarget;               
                 addDto.XiaoHongShuShowCaseFeeTarget = addVo.XiaoHongShuShowCaseFeeTarget;
                 addDto.SinaWeiBoReleaseTarget = addVo.SinaWeiBoReleaseTarget;
@@ -320,6 +329,15 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorMonthlyTargetBeforeLivingVo.XiaoHongShuShowcaseIncomeTarget = liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuShowcaseIncomeTarget;
                 liveAnchorMonthlyTargetBeforeLivingVo.CumulativeXiaoHongShuShowcaseIncome = liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuShowcaseIncome;
                 liveAnchorMonthlyTargetBeforeLivingVo.XiaoHongShuShowcaseIncomeCompleteRate = liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuShowcaseIncomeCompleteRate;
+
+                liveAnchorMonthlyTargetBeforeLivingVo.XiaoHongShuCallingCardSendNumTarget = liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuCallingCardSendNumTarget;
+                liveAnchorMonthlyTargetBeforeLivingVo.CumulativeXiaoHongShuCallingCardSendNum = liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuCallingCardSendNum;
+                liveAnchorMonthlyTargetBeforeLivingVo.XiaoHongShuCallingCardSendNumCompleteRate = liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuCallingCardSendNumCompleteRate;
+
+                liveAnchorMonthlyTargetBeforeLivingVo.XiaoHongShuPrivateMessageOpenTarget = liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuPrivateMessageOpenTarget;
+                liveAnchorMonthlyTargetBeforeLivingVo.CumulativeXiaoHongShuPrivateMessageOpen = liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuPrivateMessageOpen;
+                liveAnchorMonthlyTargetBeforeLivingVo.XiaoHongShuPrivateMessageOpenCompleteRate = liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuPrivateMessageOpenCompleteRate;
+
                 liveAnchorMonthlyTargetBeforeLivingVo.XiaoHongShuCluesTarget = liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuCluesTarget;
                 liveAnchorMonthlyTargetBeforeLivingVo.CumulativeXiaoHongShuClues = liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuClues;
                 liveAnchorMonthlyTargetBeforeLivingVo.XiaoHongShuCluesCompleteRate = liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuCluesCompleteRate;
@@ -436,6 +454,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.VideoShowcaseFeeTarget=updateVo.VideoShowcaseFeeTarget;
                 updateDto.TikTokShowcaseFeeTarget = updateVo.TikTokShowcaseFeeTarget;
                 updateDto.XiaoHongShuShowcaseFeeTarget = updateVo.XiaoHongShuShowcaseFeeTarget;
+                updateDto.XiaoHongShuPrivateMessageOpenTarget = updateVo.XiaoHongShuPrivateMessageOpenTarget;
+                updateDto.XiaoHongShuCallingCardSendNumTarget = updateVo.XiaoHongShuCallingCardSendNumTarget;
                 updateDto.OwnerId = updateVo.OwnerId;
                 await _liveAnchorMonthlyTargetBeforeLivingService.UpdateAsync(updateDto);
                 return ResultData.Success();

@@ -65,6 +65,14 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalInfo
         /// 保证金金额
         /// </summary>
         public decimal SecurityDepositMoney { get; set; }
+        /// <summary>
+        /// 医院类型(0：其他；1：直客；2：渠道)
+        /// </summary>
+        public int HospitalType { get; set; }
+        /// <summary>
+        /// 医院类型文本
+        /// </summary>
+        public string HospitalTypeText { get; set; }
 
         /// <summary>
         /// 图片url

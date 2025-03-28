@@ -75,7 +75,13 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.XiaoHongShuIncreaseFansFeesTarget).HasColumnName("xiaohongshu_increase_fans_fees_target").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.CumulativeXiaoHongShuIncreaseFansFees).HasColumnName("cumulative_xiaohongshu_increase_fans_fees").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.XiaoHongShuIncreaseFansFeesCompleteRate).HasColumnName("xiaohongshu_increase_fans_fees_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
-            
+            builder.Property(t => t.XiaoHongShuCallingCardSendNumTarget).HasColumnName("xiaohongshu_calling_card_sendnum_target").HasColumnType("int").IsRequired();
+            builder.Property(t => t.CumulativeXiaoHongShuCallingCardSendNum).HasColumnName("cumulative_xiaohongshu_calling_card_sendnum").HasColumnType("int").IsRequired();
+            builder.Property(t => t.XiaoHongShuCallingCardSendNumCompleteRate).HasColumnName("xiaohongshu_calling_card_sendnum_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(t => t.XiaoHongShuPrivateMessageOpenTarget).HasColumnName("xiaohongshu_private_message_open_target").HasColumnType("int").IsRequired();
+            builder.Property(t => t.CumulativeXiaoHongShuPrivateMessageOpen).HasColumnName("cumulative_xiaohongshu_private_message_open").HasColumnType("int").IsRequired();
+            builder.Property(t => t.XiaoHongShuPrivateMessageOpenCompleteRate).HasColumnName("xiaohongshu_private_message_open_complete_rate").HasColumnType("decimal(12,2)").IsRequired();
+
             builder.Property(t => t.XiaoHongShuShowCaseFeeTarget).HasColumnName("xiaohongshu_showcase_fee_target").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.CumulativeXiaoHongShuShowCaseFee).HasColumnName("cumulative_xiaohongshu_showcase_fee").HasColumnType("decimal(12,2)").IsRequired();
             builder.Property(t => t.XiaoHongShuShowCaseFeeCompleteRate).HasColumnName("xiaohongshu_showcase_fee_complete_rate").HasColumnType("decimal(12,2)").IsRequired();

@@ -40,6 +40,17 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public decimal XiaoHongShuShowCaseFee { get; set; }
 
+        /// <summary>
+        /// 小红书名片发送
+        /// </summary>
+        public int XiaoHongShuCallingCardSendNum { get; set; }
+
+        /// <summary>
+        /// 小红书私信开口量
+        /// </summary>
+        public int XiaoHongShuPrivateMessageOpen { get; set; }
+
+
         public LiveAnchorMonthlyTargetBeforeLiving LiveAnchorMonthlyTargetBeforeLiving { get; set; }
 
         public AmiyaEmployee AmiyaEmployee { get; set; }

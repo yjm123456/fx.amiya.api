@@ -161,6 +161,19 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 小红书橱窗付费
         /// </summary>
         public decimal XiaoHongShuShowcaseFeeTarget { get; set; }
+
+
+        /// <summary>
+        /// 小红书私信开口量目标
+        /// </summary>
+        public int XiaoHongShuPrivateMessageOpenTarget { get; set; }
+
+
+
+        /// <summary>
+        /// 小红书名片发送目标
+        /// </summary>
+        public int XiaoHongShuCallingCardSendNumTarget { get; set; }
         /// <summary>
         /// 抖音橱窗付费
         /// </summary>

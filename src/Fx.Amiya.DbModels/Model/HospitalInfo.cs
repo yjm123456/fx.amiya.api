@@ -88,6 +88,11 @@ namespace Fx.Amiya.DbModels.Model
         public decimal? Area { get; set; }
 
         /// <summary>
+        /// 医院类型(0：其他；1：直客；2：渠道)
+        /// </summary>
+        public int HospitalType { get; set; }
+
+        /// <summary>
         /// 简介
         /// </summary>
         public string Description { get; set; }

@@ -77,6 +77,10 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalInfo
         public decimal Latitude { get; set; }
 
         public string Phone { get; set; }
+        /// <summary>
+        /// 医院类型(0：其他；1：直客；2：渠道)
+        /// </summary>
+        public int HospitalType { get; set; }
 
         public bool Valid { get; set; }
         public int? CityId { get; set; }

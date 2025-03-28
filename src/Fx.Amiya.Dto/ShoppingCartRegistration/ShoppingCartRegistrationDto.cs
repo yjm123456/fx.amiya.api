@@ -182,5 +182,14 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         /// 归属公司id
         /// </summary>
         public int BelongCompanyEnumId { get; set; }
+
+        /// <summary>
+        /// 关联人
+        /// </summary>
+        public int? AffiliatedPerson { get; set; }
+        /// <summary>
+        /// 关联人名字
+        /// </summary>
+        public string AffiliatedPersonEmpName { get; set; }
     }
 }

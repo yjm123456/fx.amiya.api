@@ -86,6 +86,11 @@ namespace Fx.Amiya.Dto.HospitalInfo
         public int? CityId { get; set; }
         public string City { get; set; }
         public DateTime? DueTime { get; set; }
+
+        /// <summary>
+        /// 医院类型(0：其他；1：直客；2：渠道)
+        /// </summary>
+        public int HospitalType { get; set; }
         public string ContractUrl { get; set; }
         public string DescriptionPicture { get; set; }
 

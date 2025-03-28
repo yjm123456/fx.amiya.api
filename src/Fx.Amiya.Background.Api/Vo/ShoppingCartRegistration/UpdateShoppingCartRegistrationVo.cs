@@ -61,6 +61,10 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// </summary>
         public bool IsConsultation { get; set; }
         /// <summary>
+        /// 关联人
+        /// </summary>
+        public int? AffiliatedPerson { get; set; }
+        /// <summary>
         /// 面诊时间
         /// </summary>
         public DateTime? ConsultationDate { get; set; }

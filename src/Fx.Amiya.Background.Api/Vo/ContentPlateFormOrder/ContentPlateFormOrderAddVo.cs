@@ -192,5 +192,20 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         public int BelongCompanyEnumId { get; set; }
 
+        /// <summary>
+        /// 预约具体时间段（0:00—12:00）
+        /// </summary>
+        public string AppointmentDetailDate { get; set; }
+
+        /// <summary>
+        /// 是否为医生订单
+        /// </summary>
+        public bool IsDoctorOrder { get; set; }
+
+        /// <summary>
+        /// 咨询师（卖手）id
+        /// </summary>
+        public int? ConsultEmpId { get; set; }
+
     }
 }

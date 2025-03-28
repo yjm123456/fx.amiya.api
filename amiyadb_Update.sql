@@ -75,10 +75,48 @@ ALTER TABLE `amiyadb`.`tbl_content_platform_order`
 ADD COLUMN `order_belong_company` INT NOT NULL DEFAULT 0 AFTER `is_ribuluo_living`;
 
 ------------------------------------余建明 2025/01/09 END--------------------------------------
---------------------------------------------------------------------------------------------------------以上部分已更新到线上--------------------------------------
 
 ------------------------------------余建明 2025/03/08 BEGIN--------------------------------------
 --主播基础信息新增是否为医生标识
 ALTER TABLE `amiyadb`.`tbl_live_anchor_base_info` 
 ADD COLUMN `is_doctor` BIT(1) NOT NULL AFTER `is_self_live_anchor`;
 ------------------------------------余建明 2025/03/08 END--------------------------------------
+--------------------------------------------------------------------------------------------------------以上部分已更新到线上--------------------------------------
+
+------------------------------------余建明 2025/03/19 BEGIN--------------------------------------
+--新增医院类型（0：其他；1：直客；2：渠道）
+ALTER TABLE `amiyadb`.`tbl_hospital_info` 
+ADD COLUMN `hospital_type` INT NOT NULL DEFAULT 0 AFTER `security_deposit_money`;
+
+update tbl_hospital_info set hospital_type=1;
+
+
+--直播前月目标新增小红书的私信开口量和名片发送量
+ALTER TABLE `amiyadb`.`tbl_liveanchor_monthly_target_before_living` 
+ADD COLUMN `xiaohongshu_private_message_open_target` INT NOT NULL DEFAULT 0.00 AFTER `owner_id`,
+ADD COLUMN `cumulative_xiaohongshu_private_message_open` INT NOT NULL DEFAULT 0.00 AFTER `xiaohongshu_private_message_open_target`,
+ADD COLUMN `xiaohongshu_private_message_open_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_xiaohongshu_private_message_open`,
+ADD COLUMN `xiaohongshu_calling_card_sendnum_target` INT NOT NULL DEFAULT 0.00 AFTER `xiaohongshu_private_message_open_complete_rate`,
+ADD COLUMN `cumulative_xiaohongshu_calling_card_sendnum` INT NOT NULL DEFAULT 0.00 AFTER `xiaohongshu_calling_card_sendnum_target`,
+ADD COLUMN `xiaohongshu_calling_card_sendnum_complete_rate` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `cumulative_xiaohongshu_calling_card_sendnum`;
+
+--直播前小红书日数据新增私信开口量和名片发送量数据
+ALTER TABLE `amiyadb`.`tbl_beforeliving_xiaohongshu_daily_target` 
+ADD COLUMN `xiaohongshu_private_message_open` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `xiaohongshu_showcase_fee`,
+ADD COLUMN `xiaohongshu_calling_card_sendnum` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `xiaohongshu_private_message_open`;
+
+
+--小黄车登记列表新增关联人
+ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration` 
+ADD COLUMN `affiliated_person` INT NULL AFTER `belong_company`;
+
+--订单列表新增预约时段，是否为医生订单，指派（医生）咨询师id
+ALTER TABLE `amiyadb`.`tbl_content_platform_order` 
+ADD COLUMN `appointment_detail_date` VARCHAR(45) NULL AFTER `appointment_date`,
+ADD COLUMN `is_doctor_order` BIT(1) NOT NULL DEFAULT b'0' AFTER `order_belong_company`,
+ADD COLUMN `consult_emp_id` INT NULL AFTER `is_doctor_order`;
+
+
+------------------------------------余建明 2025/03/24 END--------------------------------------
+
+

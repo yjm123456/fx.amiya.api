@@ -2788,7 +2788,7 @@ namespace Fx.Amiya.Service
             //漏单
             var result3 = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
              .Where(x => x.Valid == false)
-                .Where(o => o.CreateDate >= startDate && o.CreateDate < endDate && o.IsDeal == true && o.ContentPlatFormOrderId != null )
+                .Where(o => o.CreateDate >= startDate && o.CreateDate < endDate && o.IsDeal == true && o.ContentPlatFormOrderId != null)
                 .Where(o => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.Id))
                  .Where(o => !isOldCustomer.HasValue || o.IsOldCustomer == isOldCustomer.Value)
                 .Select(ContentPlatFOrmOrderDealInfo => new ContentPlatFormOrderDealInfoDto
@@ -2815,7 +2815,7 @@ namespace Fx.Amiya.Service
             return result1;
         }
 
-        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetSimplePerformanceDetailByDateAsync(DateTime startDate,DateTime endDate, List<int> liveAnchorIds, bool? isOldCustomer)
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetSimplePerformanceDetailByDateAsync(DateTime startDate, DateTime endDate, List<int> liveAnchorIds, bool? isOldCustomer)
         {
 
             //正常成交单
@@ -2915,7 +2915,7 @@ namespace Fx.Amiya.Service
             //漏单
             var result3 = await dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
              .Where(x => x.Valid == false)
-                .Where(o => o.CreateDate >= startDate && o.CreateDate < endDate && o.IsDeal == true && o.ContentPlatFormOrderId != null )
+                .Where(o => o.CreateDate >= startDate && o.CreateDate < endDate && o.IsDeal == true && o.ContentPlatFormOrderId != null)
                 .Where(o => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.Id))
                  .Where(o => !isOldCustomer.HasValue || o.IsOldCustomer == isOldCustomer.Value)
                 .Select(ContentPlatFOrmOrderDealInfo => new ContentPlatFormOrderDealInfoDto

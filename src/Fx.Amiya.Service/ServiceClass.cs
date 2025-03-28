@@ -1378,6 +1378,28 @@ namespace Fx.Amiya.Service
 
         }
 
+
+        public static string GetHospitalTypeText(int sendOrder)
+        {
+            string sendOrderText = "";
+            switch (sendOrder)
+            {
+                case 0:
+                    sendOrderText = "其他";
+                    break;
+                case 1:
+                    sendOrderText = "直客";
+                    break;
+                case 2:
+                    sendOrderText = "渠道";
+                    break;
+                default:
+                    sendOrderText = "";
+                    break;
+            }
+            return sendOrderText;
+        }
+
         /// <summary>
         /// 获取派单顺序
         /// </summary>

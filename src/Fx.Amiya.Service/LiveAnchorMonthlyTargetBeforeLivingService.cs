@@ -105,6 +105,13 @@ namespace Fx.Amiya.Service
                                                               XiaoHongShuFlowinvestmentTarget = d.XiaoHongShuFlowinvestmentTarget,
                                                               CumulativeXiaoHongShuFlowinvestment = d.CumulativeXiaoHongShuFlowinvestment,
                                                               XiaoHongShuFlowinvestmentCompleteRate = d.XiaoHongShuFlowinvestmentCompleteRate,
+                                                              XiaoHongShuPrivateMessageOpenTarget = d.XiaoHongShuPrivateMessageOpenTarget,
+                                                              CumulativeXiaoHongShuPrivateMessageOpen = d.CumulativeXiaoHongShuPrivateMessageOpen,
+                                                              XiaoHongShuPrivateMessageOpenCompleteRate = d.XiaoHongShuPrivateMessageOpenCompleteRate,
+                                                              XiaoHongShuCallingCardSendNumTarget = d.XiaoHongShuCallingCardSendNumTarget,
+                                                              CumulativeXiaoHongShuCallingCardSendNum = d.CumulativeXiaoHongShuCallingCardSendNum,
+                                                              XiaoHongShuCallingCardSendNumCompleteRate = d.XiaoHongShuCallingCardSendNumCompleteRate,
+
 
                                                               SinaWeiBoReleaseTarget = d.SinaWeiBoReleaseTarget,
                                                               CumulativeSinaWeiBoRelease = d.CumulativeSinaWeiBoRelease,
@@ -171,15 +178,16 @@ namespace Fx.Amiya.Service
                                                               VideoShowCaseFeeTarget = d.VideoShowCaseFeeTarget,
                                                               CumulativeVideoShowCaseFee = d.CumulativeVideoShowCaseFee,
                                                               VideoShowCaseFeeCompleteRate = d.VideoShowCaseFeeCompleteRate,
-                                                              OwnerId=d.OwnerId
+                                                              OwnerId = d.OwnerId
                                                           };
 
                 FxPageInfo<LiveAnchorMonthlyTargetBeforeLivingDto> liveAnchorMonthlyTargetBeforeLivingPageInfo = new FxPageInfo<LiveAnchorMonthlyTargetBeforeLivingDto>();
                 liveAnchorMonthlyTargetBeforeLivingPageInfo.TotalCount = await liveAnchorMonthlyTargetBeforeLiving.CountAsync();
                 liveAnchorMonthlyTargetBeforeLivingPageInfo.List = await liveAnchorMonthlyTargetBeforeLiving.OrderByDescending(x => x.CreateDate).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
                 var s = dalAmiyaEmployee.GetAll().Select(e => new { e.Id, e.Name }).ToList();
-                foreach (var item in liveAnchorMonthlyTargetBeforeLivingPageInfo.List) { 
-                    item.OwnerName=s.Where(e=>e.Id==item.OwnerId).FirstOrDefault()?.Name??"";
+                foreach (var item in liveAnchorMonthlyTargetBeforeLivingPageInfo.List)
+                {
+                    item.OwnerName = s.Where(e => e.Id == item.OwnerId).FirstOrDefault()?.Name ?? "";
                 }
                 return liveAnchorMonthlyTargetBeforeLivingPageInfo;
             }
@@ -241,6 +249,13 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.CumulativeXiaoHongShuFlowinvestment = 0;
                 liveAnchorMonthlyTarget.XiaoHongShuFlowinvestmentCompleteRate = 0.00M;
 
+                liveAnchorMonthlyTarget.XiaoHongShuPrivateMessageOpenTarget = addDto.XiaoHongShuPrivateMessageOpenTarget;
+                liveAnchorMonthlyTarget.CumulativeXiaoHongShuPrivateMessageOpen = 0;
+                liveAnchorMonthlyTarget.XiaoHongShuPrivateMessageOpenCompleteRate = 0.00M;
+
+                liveAnchorMonthlyTarget.XiaoHongShuCallingCardSendNumTarget = addDto.XiaoHongShuCallingCardSendNumTarget;
+                liveAnchorMonthlyTarget.CumulativeXiaoHongShuCallingCardSendNum = 0;
+                liveAnchorMonthlyTarget.XiaoHongShuCallingCardSendNumCompleteRate = 0.00M;
 
 
                 liveAnchorMonthlyTarget.SinaWeiBoReleaseTarget = addDto.SinaWeiBoReleaseTarget;
@@ -395,6 +410,13 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTargetDto.CumulativeXiaoHongShuIncreaseFans = liveAnchorMonthlyTarget.CumulativeXiaoHongShuIncreaseFans;
                 liveAnchorMonthlyTargetDto.XiaoHongShuIncreaseFanseCompleteRate = liveAnchorMonthlyTarget.XiaoHongShuIncreaseFanseCompleteRate;
 
+                liveAnchorMonthlyTargetDto.XiaoHongShuCallingCardSendNumTarget = liveAnchorMonthlyTarget.XiaoHongShuCallingCardSendNumTarget;
+                liveAnchorMonthlyTargetDto.CumulativeXiaoHongShuCallingCardSendNum = liveAnchorMonthlyTarget.CumulativeXiaoHongShuCallingCardSendNum;
+                liveAnchorMonthlyTargetDto.XiaoHongShuCallingCardSendNumCompleteRate = liveAnchorMonthlyTarget.XiaoHongShuCallingCardSendNumCompleteRate;
+
+                liveAnchorMonthlyTargetDto.XiaoHongShuPrivateMessageOpenTarget = liveAnchorMonthlyTarget.XiaoHongShuPrivateMessageOpenTarget;
+                liveAnchorMonthlyTargetDto.CumulativeXiaoHongShuPrivateMessageOpen = liveAnchorMonthlyTarget.CumulativeXiaoHongShuPrivateMessageOpen;
+                liveAnchorMonthlyTargetDto.XiaoHongShuPrivateMessageOpenCompleteRate = liveAnchorMonthlyTarget.XiaoHongShuPrivateMessageOpenCompleteRate;
 
                 liveAnchorMonthlyTargetDto.XiaoHongShuIncreaseFansFeesTarget = liveAnchorMonthlyTarget.XiaoHongShuIncreaseFansFeesTarget;
                 liveAnchorMonthlyTargetDto.XiaoHongShuIncreaseFansFeesTarget = liveAnchorMonthlyTarget.XiaoHongShuIncreaseFansFeesTarget;
@@ -445,10 +467,11 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTargetDto.CumulativeFlowInvestment = liveAnchorMonthlyTarget.CumulativeFlowInvestment;
                 liveAnchorMonthlyTargetDto.FlowInvestmentCompleteRate = liveAnchorMonthlyTarget.FlowInvestmentCompleteRate;
                 liveAnchorMonthlyTargetDto.CreateDate = liveAnchorMonthlyTarget.CreateDate;
-                liveAnchorMonthlyTargetDto.Id=liveAnchorMonthlyTarget.Id;
-                liveAnchorMonthlyTargetDto.OwnerId= liveAnchorMonthlyTarget.OwnerId;
-                if (liveAnchorMonthlyTarget.OwnerId != null) {
-                    liveAnchorMonthlyTargetDto.OwnerName=dalAmiyaEmployee.GetAll().Where(e=>e.Id== liveAnchorMonthlyTarget.OwnerId).FirstOrDefault()?.Name??"";
+                liveAnchorMonthlyTargetDto.Id = liveAnchorMonthlyTarget.Id;
+                liveAnchorMonthlyTargetDto.OwnerId = liveAnchorMonthlyTarget.OwnerId;
+                if (liveAnchorMonthlyTarget.OwnerId != null)
+                {
+                    liveAnchorMonthlyTargetDto.OwnerName = dalAmiyaEmployee.GetAll().Where(e => e.Id == liveAnchorMonthlyTarget.OwnerId).FirstOrDefault()?.Name ?? "";
                 }
                 var liveAnchor = await _liveanchorService.GetByIdAsync(liveAnchorMonthlyTargetDto.LiveAnchorId);
                 liveAnchorMonthlyTargetDto.ContentPlatFormId = liveAnchor.ContentPlateFormId;
@@ -493,6 +516,8 @@ namespace Fx.Amiya.Service
                 liveAnchorMonthlyTarget.XiaoHongShuCluesTarget = updateDto.XiaoHongShuCluesTarget;
                 liveAnchorMonthlyTarget.XiaoHongShuIncreaseFansTarget = updateDto.XiaoHongShuIncreaseFansTarget;
                 liveAnchorMonthlyTarget.XiaoHongShuIncreaseFansFeesTarget = updateDto.XiaoHongShuIncreaseFansFeesTarget;
+                liveAnchorMonthlyTarget.XiaoHongShuCallingCardSendNumTarget = updateDto.XiaoHongShuCallingCardSendNumTarget;
+                liveAnchorMonthlyTarget.XiaoHongShuPrivateMessageOpenTarget = updateDto.XiaoHongShuPrivateMessageOpenTarget;
 
                 liveAnchorMonthlyTarget.VideoShowcaseIncomeTarget = updateDto.VideoShowcaseIncomeTarget;
                 liveAnchorMonthlyTarget.VideoCluesTarget = updateDto.VideoCluesTarget;
@@ -793,6 +818,33 @@ namespace Fx.Amiya.Service
 
                 #endregion
 
+
+                #region 小红书私信开口量
+                liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuPrivateMessageOpen += editDto.CumulativeXiaoHongShuPrivateMessageOpen;
+                if (liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuPrivateMessageOpen <= 0)
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuPrivateMessageOpenCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuPrivateMessageOpenCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuPrivateMessageOpen) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuPrivateMessageOpenTarget)) * 100, 2);
+                }
+
+                #endregion
+
+                #region 小红书名片发送量
+                liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuCallingCardSendNum += editDto.CumulativeXiaoHongShuCallingCardSendNum;
+                if (liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuCallingCardSendNum <= 0)
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuCallingCardSendNumCompleteRate = 0.00M;
+                }
+                else
+                {
+                    liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuCallingCardSendNumCompleteRate = Math.Round((Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.CumulativeXiaoHongShuCallingCardSendNum) / Convert.ToDecimal(liveAnchorMonthlyTargetBeforeLiving.XiaoHongShuCallingCardSendNumTarget)) * 100, 2);
+                }
+
+                #endregion
+
                 #region #微博发布
                 liveAnchorMonthlyTargetBeforeLiving.CumulativeSinaWeiBoRelease += editDto.CumulativeSinaWeiBoRelease;
                 if (liveAnchorMonthlyTargetBeforeLiving.CumulativeSinaWeiBoRelease <= 0)
@@ -884,7 +936,7 @@ namespace Fx.Amiya.Service
             LiveAnchorBeforeLivingTargetDto liveAnchorBeforeLivingTargetDto = new LiveAnchorBeforeLivingTargetDto();
             if (query.ShowTikokData)
             {
-                liveAnchorBeforeLivingTargetDto.IncreaseFansFeesTarget += res.Where(x=>x.TikTokIncreaseFansFeesTarget>1).Sum(e => e.TikTokIncreaseFansFeesTarget);
+                liveAnchorBeforeLivingTargetDto.IncreaseFansFeesTarget += res.Where(x => x.TikTokIncreaseFansFeesTarget > 1).Sum(e => e.TikTokIncreaseFansFeesTarget);
                 liveAnchorBeforeLivingTargetDto.IncreaseFansTarget += res.Where(x => x.TikTokIncreaseFansTarget > 1).Sum(e => e.TikTokIncreaseFansTarget);
                 liveAnchorBeforeLivingTargetDto.ShowcaseIncomeTarget += res.Where(x => x.TikTokShowcaseIncomeTarget > 1).Sum(e => e.TikTokShowcaseIncomeTarget);
                 liveAnchorBeforeLivingTargetDto.ShowcaseFeeTarget += res.Where(x => x.TikTokShowCaseFeeTarget > 1).Sum(e => e.TikTokShowCaseFeeTarget);
@@ -926,8 +978,8 @@ namespace Fx.Amiya.Service
                 .Select(e => new AmiyaOperationBoardCluesChannelTargetDto
                 {
                     CluesTarget = e.TikTokCluesTarget + e.XiaoHongShuCluesTarget + e.VideoCluesTarget,
-                    Month=e.Month,
-                    LiveAnchorId=e.LiveAnchorId
+                    Month = e.Month,
+                    LiveAnchorId = e.LiveAnchorId
                 })
                 .ToList();
             return performance;

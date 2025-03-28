@@ -274,5 +274,15 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// </summary>
         public int BelongCompanyEnumId { get; set; }
 
+        /// <summary>
+        /// 关联人
+        /// </summary>
+        public int? AffiliatedPerson { get; set; }
+
+        /// <summary>
+        /// 关联人名字
+        /// </summary>
+        public string AffiliatedPersonEmpName { get; set; }
+
     }
 }

@@ -22,6 +22,7 @@ namespace Fx.Amiya.Dto.HospitalInfo
         /// 纬度
         /// </summary>
         public decimal Latitude { get; set; }
+        public int HospitalType { get; set; }
 
         public string Phone { get; set; }
 

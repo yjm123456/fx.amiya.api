@@ -170,6 +170,38 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.BeforeLiving
         /// </summary>
         public decimal XiaoHongShuFlowinvestmentCompleteRate { get; set; }
 
+        /// <summary>
+        /// 小红书私信开口量目标
+        /// </summary>
+        public int XiaoHongShuPrivateMessageOpenTarget { get; set; }
+
+        /// <summary>
+        /// 月累计小红书私信开口量
+        /// </summary>
+        public int CumulativeXiaoHongShuPrivateMessageOpen { get; set; }
+
+        /// <summary>
+        /// 小红书私信开口量目标完成率
+        /// </summary>
+        public decimal XiaoHongShuPrivateMessageOpenCompleteRate { get; set; }
+
+
+
+        /// <summary>
+        /// 小红书名片发送目标
+        /// </summary>
+        public int XiaoHongShuCallingCardSendNumTarget { get; set; }
+
+        /// <summary>
+        /// 月累计小红书名片发送
+        /// </summary>
+        public int CumulativeXiaoHongShuCallingCardSendNum { get; set; }
+
+        /// <summary>
+        /// 小红书名片发送目标完成率
+        /// </summary>
+        public decimal XiaoHongShuCallingCardSendNumCompleteRate { get; set; }
+
 
         /// <summary>
         /// 微博发布目标

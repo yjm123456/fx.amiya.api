@@ -306,6 +306,16 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 小红书今日橱窗付费
         /// </summary>
         public decimal XiaoHongShuShowcaseFee { get; set; }
+
+        /// <summary>
+        /// 小红书今日名片发送
+        /// </summary>
+        public int XiaoHongShuCallingCardSendNum { get; set; }
+
+        /// <summary>
+        /// 小红书今日私信开口量
+        /// </summary>
+        public int XiaoHongShuPrivateMessageOpen { get; set; }
     }
 
     /// <summary>

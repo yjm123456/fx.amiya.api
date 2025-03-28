@@ -88,15 +88,16 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="source">客户来源</param>
         /// <param name="belongCompany">归属公司</param>
         /// <param name="isRibuluoLiving">是否为日不落直播</param>
+        /// <param name="affiliatedPerson">关联人（默认传0）</param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<ShoppingCartRegistrationVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, int? createBy, bool? isSendOrder, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? assignEmpId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? ShoppingCartRegistrationCustomerType, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId, int? source, int? belongChannel,int?belongCompany,bool?isRibuluoLiving)
+        public async Task<ResultData<FxPageInfo<ShoppingCartRegistrationVo>>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, int? createBy, bool? isSendOrder, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? assignEmpId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? ShoppingCartRegistrationCustomerType, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId, int? source, int? belongChannel, int? belongCompany, bool? isRibuluoLiving, int? affiliatedPerson)
         {
             try
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await shoppingCartRegistrationService.GetListWithPageAsync(startDate, endDate, LiveAnchorId, isCreateOrder, createBy, isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, pageNum, pageSize, minPrice, maxPrice, assignEmpId, startRefundTime, endRefundTime, startBadReviewTime, endBadReviewTime, ShoppingCartRegistrationCustomerType, emergencyLevel, isBadReview, baseLiveAnchorId, source, belongChannel,belongCompany,isRibuluoLiving);
+                var q = await shoppingCartRegistrationService.GetListWithPageAsync(startDate, endDate, LiveAnchorId, isCreateOrder, createBy, isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, pageNum, pageSize, minPrice, maxPrice, assignEmpId, startRefundTime, endRefundTime, startBadReviewTime, endBadReviewTime, ShoppingCartRegistrationCustomerType, emergencyLevel, isBadReview, baseLiveAnchorId, source, belongChannel, belongCompany, isRibuluoLiving, affiliatedPerson);
 
                 var shoppingCartRegistration = from d in q.List
                                                select new ShoppingCartRegistrationVo
@@ -111,6 +112,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                    HiddenPhone = d.HiddenPhone,
                                                    EncryptPhone = d.EncryptPhone,
                                                    SubPhone = d.SubPhone,
+                                                   AffiliatedPerson = d.AffiliatedPerson,
+                                                   AffiliatedPersonEmpName = d.AffiliatedPersonEmpName,
                                                    HiddenSubPhone = d.HiddenSubPhone,
                                                    EncryptSubPhone = d.EncryptSubPhone,
                                                    Price = d.Price,
@@ -159,7 +162,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                    CustomerWechatNo = d.CustomerWechatNo,
                                                    FromTitle = d.FromTitle,
                                                    IsRepeateCreateOrder = d.IsRepeateCreateOrder,
-                                                   BelongCompany=d.BelongCompany,
+                                                   BelongCompany = d.BelongCompany,
                                                };
 
                 FxPageInfo<ShoppingCartRegistrationVo> shoppingCartRegistrationPageInfo = new FxPageInfo<ShoppingCartRegistrationVo>();
@@ -204,6 +207,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.CustomerNickName = addVo.CustomerNickName;
                 addDto.Phone = addVo.Phone;
                 addDto.SubPhone = addVo.SubPhone;
+                addDto.AffiliatedPerson = addVo.AffiliatedPerson;
                 addDto.Price = addVo.Price;
                 addDto.ConsultationType = addVo.ConsultationType;
                 addDto.ShoppingCartRegistrationCustomerType = addVo.ShoppingCartRegistrationCustomerType;
@@ -294,6 +298,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shoppingCartRegistrationVo.ReContent = shoppingCartRegistration.ReContent;
                 shoppingCartRegistrationVo.IsSendOrder = shoppingCartRegistration.IsSendOrder;
                 shoppingCartRegistrationVo.IsCreateOrder = shoppingCartRegistration.IsCreateOrder;
+                shoppingCartRegistrationVo.AffiliatedPerson = shoppingCartRegistration.AffiliatedPerson;
                 shoppingCartRegistrationVo.RefundDate = shoppingCartRegistration.RefundDate;
                 shoppingCartRegistrationVo.RefundReason = shoppingCartRegistration.RefundReason;
                 shoppingCartRegistrationVo.BadReviewContent = shoppingCartRegistration.BadReviewContent;
@@ -350,6 +355,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shoppingCartRegistrationVo.LiveAnchorId = shoppingCartRegistration.LiveAnchorId;
                 shoppingCartRegistrationVo.LiveAnchorName = shoppingCartRegistration.LiveAnchorName;
                 shoppingCartRegistrationVo.LiveAnchorWechatNo = shoppingCartRegistration.LiveAnchorWechatNo;
+                shoppingCartRegistrationVo.AffiliatedPerson = shoppingCartRegistration.AffiliatedPerson;
                 shoppingCartRegistrationVo.LiveAnchorWeChatId = shoppingCartRegistration.LiveAnchorWeChatId;
                 shoppingCartRegistrationVo.CustomerNickName = shoppingCartRegistration.CustomerNickName;
                 shoppingCartRegistrationVo.Phone = shoppingCartRegistration.Phone;
@@ -474,6 +480,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.GetCustomerType = updateVo.GetCustomerType;
                 updateDto.RefundReason = updateVo.RefundReason;
                 updateDto.BadReviewDate = updateVo.BadReviewDate;
+                updateDto.AffiliatedPerson= updateVo.AffiliatedPerson;
                 updateDto.BadReviewReason = updateVo.BadReviewReason;
                 updateDto.IsBadReview = updateVo.IsBadReview;
                 updateDto.AssignEmpId = updateVo.AssignEmpId;
@@ -564,6 +571,47 @@ namespace Fx.Amiya.Background.Api.Controllers
                 foreach (var x in assignVo.IdList)
                 {
                     await shoppingCartRegistrationService.AssignAsync(x, assignVo.AssignBy);
+                }
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 关联小黄车登记信息
+        /// </summary>
+        /// <param name="assignVo"></param>
+        /// <returns></returns>
+        [HttpPut("affiliated")]
+        public async Task<ResultData> AffiliatedAsync(AssignVo assignVo)
+        {
+            try
+            {
+                await shoppingCartRegistrationService.AffiliatedAsync(assignVo.Id, assignVo.AssignBy);
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 批量关联小黄车登记信息
+        /// </summary>
+        /// <param name="assignVo"></param>
+        /// <returns></returns>
+        [HttpPut("affiliatedList")]
+        public async Task<ResultData> AffiliatedListAsync(AssignListVo assignVo)
+        {
+            try
+            {
+                foreach (var x in assignVo.IdList)
+                {
+                    await shoppingCartRegistrationService.AffiliatedAsync(x, assignVo.AssignBy);
                 }
                 return ResultData.Success();
             }

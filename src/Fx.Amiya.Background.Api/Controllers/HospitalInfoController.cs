@@ -84,6 +84,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                    City = d.City,
                                    DueTime = d.DueTime,
                                    ContractUrl = d.ContractUrl,
+                                   HospitalType = d.HospitalType,
+                                   HospitalTypeText = d.HospitalTypeText,
                                    HasUsedTime = d.HasUsedTime,
                                    BelongCompany = d.BelongCompany,
                                    IsShareInMiniProgram = d.IsShareInMiniProgram,
@@ -456,6 +458,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.ContractUrl = addVo.ContractUrl;
                 addDto.DueTime = addVo.DueTime;
                 addDto.CityId = addVo.CityId;
+                addDto.HospitalType = addVo.HospitalType;
                 addDto.BusinessHours = addVo.BusinessHours;
                 addDto.BelongCompany = addVo.BelongCompany;
                 addDto.IsShareInMiniProgram = addVo.IsShareInMiniProgram;
@@ -499,6 +502,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 hospitalInfoVo.Longitude = hospital.Longitude;
                 hospitalInfoVo.Latitude = hospital.Latitude;
                 hospitalInfoVo.Phone = hospital.Phone;
+                hospitalInfoVo.HospitalType = hospital.HospitalType;
                 hospitalInfoVo.Valid = hospital.Valid;
                 hospitalInfoVo.ContractUrl = hospital.ContractUrl;
                 hospitalInfoVo.DueTime = hospital.DueTime;
@@ -581,6 +585,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.SecurityDepositMoney = updateVo.SecurityDepositMoney;
                 updateDto.SimpleName = updateVo.SimpleName;
                 updateDto.Sort = updateVo.Sort;
+                updateDto.HospitalType = updateVo.HospitalType;
                 await hospitalInfoService.UpdateAsync(updateDto, employeeId);
                 return ResultData.Success();
             }
@@ -728,6 +733,23 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetRequestSourceNameListAsync()
         {
             var nameList = await hospitalInfoService.GetSendOrderListAsync();
+            var result = nameList.Select(e => new BaseIdAndNameVo<int>
+            {
+                Id = e.Key,
+                Name = e.Value
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo<int>>>.Success().AddData("nameList", result);
+
+        }
+
+        /// <summary>
+        /// 医院类型列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("HospitalTypeList")]
+        public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetHospitalTypeAsync()
+        {
+            var nameList = await hospitalInfoService.GetHospitalTypeTextAsync();
             var result = nameList.Select(e => new BaseIdAndNameVo<int>
             {
                 Id = e.Key,
@@ -917,7 +939,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         public async Task<ResultData> AddProjectAsync(AddHospitalProjectVo addVo)
         {
             try
-            {              
+            {
                 AddHospitalProjectDto addDto = new AddHospitalProjectDto();
                 addDto.HospitalId = addVo.HospitalId;
                 addDto.Name = addVo.Name;
@@ -1005,16 +1027,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("activeHospitalList")]
-        public async Task<ResultData<List<ActiveHospitalInfoVo>>> GetActiveHospitalListByTimeAsync([FromQuery]QueryActiveHospitalVo query) {
+        public async Task<ResultData<List<ActiveHospitalInfoVo>>> GetActiveHospitalListByTimeAsync([FromQuery] QueryActiveHospitalVo query)
+        {
             QueryActiveHospitalDto queryDto = new QueryActiveHospitalDto();
             queryDto.StartDate = query.StartDate;
             queryDto.EndDate = query.EndDate;
-            var res=(await hospitalInfoService.GetActiveHospitalListByTimeAsync(queryDto)).Select(e=>new ActiveHospitalInfoVo { 
-                HospitalId=e.HospitalId,
-                HospitalName=e.HospitalName,
-                SendOrderCount=e.SendOrderCount
-            }).OrderByDescending(e=>e.SendOrderCount).ToList();
-            return ResultData<List<ActiveHospitalInfoVo>>.Success().AddData("data",res);
+            var res = (await hospitalInfoService.GetActiveHospitalListByTimeAsync(queryDto)).Select(e => new ActiveHospitalInfoVo
+            {
+                HospitalId = e.HospitalId,
+                HospitalName = e.HospitalName,
+                SendOrderCount = e.SendOrderCount
+            }).OrderByDescending(e => e.SendOrderCount).ToList();
+            return ResultData<List<ActiveHospitalInfoVo>>.Success().AddData("data", res);
         }
     }
 }

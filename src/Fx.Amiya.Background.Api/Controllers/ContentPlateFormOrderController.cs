@@ -176,6 +176,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.ConsultingContent2 = addVo.ConsultingContent2;
                 addDto.IsRiBuLuoLiving = addVo.IsRiBuLuoLiving;
                 addDto.BelongCompanyEnumId = addVo.BelongCompanyEnumId;
+                addDto.AppointmentDetailDate = addVo.AppointmentDetailDate;
+                addDto.IsDoctorOrder = addVo.IsDoctorOrder;
+                addDto.ConsultEmpId = addVo.ConsultEmpId;
                 await _orderService.AddContentPlateFormOrderAsync(addDto);
 
 
@@ -870,6 +873,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderUpdateInfo.LiveAnchorId = order.LiveAnchorId;
             orderUpdateInfo.GoodsId = order.GoodsId;
             orderUpdateInfo.CustomerName = order.CustomerName;
+            orderUpdateInfo.ConsultEmpId = order.ConsultEmpId;
+            orderUpdateInfo.ConsultEmpName = order.ConsultEmpName;
+            orderUpdateInfo.IsDoctorOrder = order.IsDoctorOrder;
+            orderUpdateInfo.AppointmentDetailDate = order.AppointmentDetailDate;
             orderUpdateInfo.Phone = order.Phone;
             orderUpdateInfo.GetCustomerType = order.GetCustomerType;
             orderUpdateInfo.GetCustomerTypeText = order.GetCustomerTypeText;
@@ -976,7 +983,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("orderProsperity/{id}")]
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData<OrderProsperityVo>> OrderProsperityAsync(string id)
-        {
+        {                                                                               
             var order = await _orderService.GetByOrderIdAsync(id);
             if (order.OrderStatus != (int)ContentPlateFormOrderStatus.OrderComplete)
             { throw new Exception("该订单暂未成交，无法生成喜报！"); }
@@ -1091,6 +1098,9 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.AcceptConsulting = updateVo.AcceptConsulting;
             updateDto.UnSendReason = updateVo.UnSendReason;
             updateDto.CustomerPictures = updateVo.CustomerPictures;
+            updateDto.AppointmentDetailDate = updateVo.AppointmentDetailDate;
+            updateDto.IsDoctorOrder = updateVo.IsDoctorOrder;
+            updateDto.ConsultEmpId = updateVo.ConsultEmpId;
 
             updateDto.City = updateVo.City;
             updateDto.Sex = updateVo.Sex;

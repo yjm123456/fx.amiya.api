@@ -137,7 +137,9 @@ namespace Fx.Amiya.Service
         {
             var result = await dalEmployeePerformanceLadder.GetAll().Where(x => x.Id == updateDto.Id && x.Valid == true).FirstOrDefaultAsync();
             if (result == null)
+            {
                 throw new Exception("未找到助理业绩提点阶梯信息");
+            }
 
             result.CustomerServiceId = updateDto.CustomerServiceId;
             result.IsPersonalConfig = updateDto.IsPersonalConfig;
@@ -200,7 +202,7 @@ namespace Fx.Amiya.Service
         {
             var point = 0.00M;
             var result = await dalEmployeePerformanceLadder.GetAll().Where(x => x.PerformanceLowerLimit <= performance && x.PerformanceUpperLimit > performance && x.Valid == true).ToListAsync();
-            if (employeeId.HasValue)
+            if (employeeId.HasValue&&result.Count>0)
             {
                 var personalConfig = result.Where(x => x.IsPersonalConfig == true && x.CustomerServiceId == employeeId).FirstOrDefault();
                 if (personalConfig != null)

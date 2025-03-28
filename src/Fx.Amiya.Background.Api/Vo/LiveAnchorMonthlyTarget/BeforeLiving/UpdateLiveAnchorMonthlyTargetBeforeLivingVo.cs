@@ -129,6 +129,19 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorMonthlyTarget.BeforeLiving
         /// </summary>
         public decimal XiaoHongShuShowcaseIncomeTarget { get; set; }
 
+
+        /// <summary>
+        /// 小红书私信开口量目标
+        /// </summary>
+        public int XiaoHongShuPrivateMessageOpenTarget { get; set; }
+
+
+
+        /// <summary>
+        /// 小红书名片发送目标
+        /// </summary>
+        public int XiaoHongShuCallingCardSendNumTarget { get; set; }
+
         /// <summary>
         /// 视频号涨粉目标
         /// </summary>

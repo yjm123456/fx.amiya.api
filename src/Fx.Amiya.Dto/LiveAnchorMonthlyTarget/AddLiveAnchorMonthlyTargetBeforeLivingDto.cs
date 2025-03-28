@@ -67,6 +67,18 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// </summary>
         public decimal XiaoHongShuFlowinvestmentTarget { get; set; }
 
+        /// <summary>
+        /// 小红书私信开口量目标
+        /// </summary>
+        public int XiaoHongShuPrivateMessageOpenTarget { get; set; }
+
+
+
+        /// <summary>
+        /// 小红书名片发送目标
+        /// </summary>
+        public int XiaoHongShuCallingCardSendNumTarget { get; set; }
+
 
         /// <summary>
         /// 微博发布目标

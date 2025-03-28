@@ -401,9 +401,19 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// </summary>
         public decimal VideoShowcaseFee { get; set; }
         /// <summary>
-        /// 视频号橱窗付费
+        /// 小红书橱窗付费
         /// </summary>
         public decimal XiaoHongShuShowcaseFee { get; set; }
+
+        /// <summary>
+        /// 小红书今日名片发送
+        /// </summary>
+        public int XiaoHongShuCallingCardSendNum { get; set; }
+
+        /// <summary>
+        /// 小红书今日私信开口量
+        /// </summary>
+        public int XiaoHongShuPrivateMessageOpen { get; set; }
         /// <summary>
         /// 视频号橱窗付费
         /// </summary>

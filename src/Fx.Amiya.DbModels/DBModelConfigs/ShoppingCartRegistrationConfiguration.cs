@@ -58,6 +58,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.FromTitle).HasColumnName("from_title").HasColumnType("varchar(400)").IsRequired(false);
             builder.Property(t => t.IsRepeateCreateOrder).HasColumnName("is_repeate_create_order").HasColumnType("bit(1)").IsRequired();
             builder.Property(t => t.BelongCompany).HasColumnName("belong_company").HasColumnType("int").IsRequired();
+            builder.Property(t => t.AffiliatedPerson).HasColumnName("affiliated_person").HasColumnType("int").IsRequired(false);
 
             builder.HasOne(e => e.Contentplatform).WithMany(e => e.ShoppingCartRegistrationList).HasForeignKey(e => e.ContentPlatFormId);
             builder.HasOne(e => e.LiveAnchor).WithMany(e => e.ShoppingCartRegistrationList).HasForeignKey(e => e.LiveAnchorId);

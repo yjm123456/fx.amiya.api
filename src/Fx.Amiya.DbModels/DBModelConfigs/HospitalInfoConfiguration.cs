@@ -52,6 +52,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.SecurityDeposit).HasColumnName("security_deposit").HasColumnType("int").IsRequired(false);
             builder.Property(t => t.YearServiceMoney).HasColumnName("year_service_money").HasColumnType("decimal(10,2)").IsRequired();
             builder.Property(t => t.SecurityDepositMoney).HasColumnName("security_deposit_money").HasColumnType("decimal(10,2)").IsRequired();
+            builder.Property(t => t.HospitalType).HasColumnName("hospital_type").HasColumnType("int").IsRequired();
 
             builder.HasOne(t => t.CreateByAmiyaEmployee).WithMany(t => t.CreateByHospitalInfoList).HasForeignKey(t=>t.CreateBy);
             builder.HasOne(t => t.UpdateByAmiyaEmployee).WithMany(t => t.UpdateByHospitalInfoList).HasForeignKey(t=>t.UpdateBy);

@@ -29,6 +29,10 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
 
         public bool IsCreateOrder { get; set; }
         /// <summary>
+        /// 关联人
+        /// </summary>
+        public int? AffiliatedPerson { get; set; }
+        /// <summary>
         /// 派单触达
         /// </summary>
         public bool IsSendOrder { get; set; }

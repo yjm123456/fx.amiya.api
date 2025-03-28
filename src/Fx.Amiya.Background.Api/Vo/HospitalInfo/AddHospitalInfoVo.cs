@@ -49,7 +49,10 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalInfo
         /// </summary>
         [Range(0, 90.0, ErrorMessage = "请输入正确的纬度")]
         public decimal Latitude { get; set; }
-
+        /// <summary>
+        /// 医院类型
+        /// </summary>
+        public int HospitalType { get; set; }
         /// <summary>
         /// 医院电话
         /// </summary>

@@ -153,6 +153,14 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// </summary>
         public decimal CumulativeXiaoHongShuShowCaseFee { get; set; }
         /// <summary>
+        /// 当日小红书私信开口量
+        /// </summary>
+        public int CumulativeXiaoHongShuPrivateMessageOpen { get; set; }
+        /// <summary>
+        /// 当日小红书名片发送
+        /// </summary>
+        public int CumulativeXiaoHongShuCallingCardSendNum { get; set; }
+        /// <summary>
         /// 当日视频号橱窗付费
         /// </summary>
         public decimal CumulativeVideoShowCaseFee { get; set; }

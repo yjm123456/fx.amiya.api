@@ -128,6 +128,10 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         /// 归属公司
         /// </summary>
         public int BelongCompany { get; set; }
+        /// <summary>
+        /// 关联人
+        /// </summary>
+        public int? AffiliatedPerson { get; set; }
 
     }
 }

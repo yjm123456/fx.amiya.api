@@ -106,6 +106,10 @@ namespace Fx.Amiya.Background.Api.Vo.ShoppingCartRegistration
         /// </summary>
         public int? AssignEmpId { get; set; }
         /// <summary>
+        /// 关联人
+        /// </summary>
+        public int? AffiliatedPerson { get; set; }
+        /// <summary>
         /// 是否差评
         /// </summary>
         public bool IsBadReview { get; set; }

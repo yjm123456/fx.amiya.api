@@ -238,6 +238,9 @@ namespace Fx.Amiya.Service
                 order.SupportEmpId = input.SupportEmpId;
                 order.AcceptConsulting = input.AcceptConsulting;
                 order.HospitalDepartmentId = input.HospitalDepartmentId;
+                order.IsDoctorOrder = input.IsDoctorOrder;
+                order.AppointmentDetailDate = input.AppointmentDetailDate;
+                order.ConsultEmpId = input.ConsultEmpId;
                 order.Phone = input.Phone;
                 order.GetCustomerType = input.GetCustomerType;
                 order.AppointmentDate = input.AppointmentDate;
@@ -374,12 +377,22 @@ namespace Fx.Amiya.Service
                 }
 
                 var employee = await _dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
-                //普通客服角色过滤其他订单信息只展示自己录单信息
-                if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
+                //卖手角色过滤该选项
+                if (employee.AmiyaPositionId != 36)
+                {
+                    //普通客服角色过滤其他订单信息只展示自己录单信息
+                    if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
+                    {
+                        orders = from d in orders
+                                 where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.Phone) > 0 || d.SupportEmpId == employeeId || d.BelongEmpId == employeeId
+                                 where (d.IsSupportOrder == false || d.SupportEmpId == employeeId)
+                                 select d;
+                    }
+                }
+                else
                 {
                     orders = from d in orders
-                             where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == employeeId && e.BuyerPhone == d.Phone) > 0 || d.SupportEmpId == employeeId || d.BelongEmpId == employeeId
-                             where (d.IsSupportOrder == false || d.SupportEmpId == employeeId)
+                             where d.ConsultEmpId == employeeId
                              select d;
                 }
                 var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
@@ -1844,6 +1857,14 @@ namespace Fx.Amiya.Service
             result.CommissionRatio = order.CommissionRatio;
             result.BelongMonth = order.BelongMonth;
             result.AddOrderPrice = order.AddOrderPrice;
+            result.IsDoctorOrder = order.IsDoctorOrder;
+            result.AppointmentDetailDate = order.AppointmentDetailDate;
+            result.ConsultEmpId = order.ConsultEmpId;
+            if (result.ConsultEmpId != 0 && result.ConsultEmpId.HasValue)
+            {
+                var empInfo = await _amiyaEmployeeService.GetByIdAsync(result.ConsultEmpId.Value);
+                result.ConsultEmpName = empInfo.Name;
+            }
             result.UnSendReason = order.UnSendReason;
             result.OrderTypeText = ServiceClass.GetContentPlateFormOrderTypeText((byte)order.OrderType);
             result.UpdateDate = order.UpdateDate;
@@ -2216,6 +2237,9 @@ namespace Fx.Amiya.Service
                 order.BelongChannel = input.BelongChannel;
                 order.IsRiBuLuoLiving = input.IsRiBuLuoLiving;
                 order.OrderBelongCompany = input.BelongCompanyEnumId;
+                order.ConsultEmpId = input.ConsultEmpId;
+                order.AppointmentDetailDate = input.AppointmentDetailDate;
+                order.IsDoctorOrder = input.IsDoctorOrder;
                 await _contentPlatFormCustomerPictureService.DeleteByContentPlatFormOrderIdAsync(order.Id);
                 foreach (var z in input.CustomerPictures)
                 {

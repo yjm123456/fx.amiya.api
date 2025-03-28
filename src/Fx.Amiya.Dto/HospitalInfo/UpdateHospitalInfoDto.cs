@@ -36,6 +36,10 @@ namespace Fx.Amiya.Dto.HospitalInfo
         /// 标签编号数组
         /// </summary>
         public int[] TagIds { get; set; }
+        /// <summary>
+        /// 医院类型
+        /// </summary>
+        public int HospitalType { get; set; }
 
         /// <summary>
         /// 到期日期

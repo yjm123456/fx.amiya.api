@@ -87,6 +87,8 @@ namespace Fx.Amiya.Service
                                    Phone = d.Phone,
                                    Valid = d.Valid,
                                    ThumbPicUrl = d.ThumbPicUrl,
+                                   HospitalType = d.HospitalType,
+                                   HospitalTypeText = ServiceClass.GetHospitalTypeText(d.HospitalType),
                                    CreateBy = d.CreateBy,
                                    CreateName = d.CreateByAmiyaEmployee.Name,
                                    CreateDate = d.CreateDate,
@@ -468,6 +470,7 @@ namespace Fx.Amiya.Service
                 hospitalInfo.Address = addDto.Address;
                 hospitalInfo.Longitude = addDto.Longitude;
                 hospitalInfo.Latitude = addDto.Latitude;
+                hospitalInfo.HospitalType = addDto.HospitalType;
                 hospitalInfo.Phone = addDto.Phone;
                 hospitalInfo.Valid = true;
                 hospitalInfo.CreateBy = employeeId;
@@ -537,6 +540,7 @@ namespace Fx.Amiya.Service
                                        CityId = d.CityId,
                                        DescriptionPicture = d.DescriptionPicture,
                                        DueTime = d.DueTime,
+                                       HospitalType=d.HospitalType,
                                        IndustryHonors = d.IndustryHonors,
                                        Description = d.Description,
                                        ProfileRank = d.ProfileRank,
@@ -619,6 +623,7 @@ namespace Fx.Amiya.Service
                 hospitalInfoDto.Phone = hospital.Phone;
                 hospitalInfoDto.Valid = hospital.Valid;
                 hospitalInfoDto.DueTime = hospital.DueTime;
+                hospitalInfoDto.HospitalType = hospital.HospitalType;
                 hospitalInfoDto.ContractUrl = hospital.ContractUrl;
                 hospitalInfoDto.CreateBy = hospital.CreateBy;
                 hospitalInfoDto.CreateName = hospital.CreateByAmiyaEmployee.Name;
@@ -703,6 +708,7 @@ namespace Fx.Amiya.Service
                 hospital.Valid = updateDto.Valid;
                 hospital.UpdateBy = employeeId;
                 hospital.UpdateDate = DateTime.Now;
+                hospital.HospitalType = updateDto.HospitalType;
                 hospital.DueTime = updateDto.DueTime;
                 hospital.CityId = updateDto.CityId;
                 hospital.BusinessHours = updateDto.BusinessHours;
@@ -1314,6 +1320,21 @@ namespace Fx.Amiya.Service
                 BaseKeyValueDto<int> requestType = new BaseKeyValueDto<int>();
                 requestType.Key = Convert.ToInt32(item);
                 requestType.Value = ServiceClass.GetSendOrderText(Convert.ToInt32(item));
+                requestTypeList.Add(requestType);
+            }
+            return requestTypeList;
+        }
+
+
+        public async Task<List<BaseKeyValueDto<int>>> GetHospitalTypeTextAsync()
+        {
+            var hospitalTypes = Enum.GetValues(typeof(HospitalType));
+            List<BaseKeyValueDto<int>> requestTypeList = new List<BaseKeyValueDto<int>>();
+            foreach (var item in hospitalTypes)
+            {
+                BaseKeyValueDto<int> requestType = new BaseKeyValueDto<int>();
+                requestType.Key = Convert.ToInt32(item);
+                requestType.Value = ServiceClass.GetHospitalTypeText(Convert.ToInt32(item));
                 requestTypeList.Add(requestType);
             }
             return requestTypeList;

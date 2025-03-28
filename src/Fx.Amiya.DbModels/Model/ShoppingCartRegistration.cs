@@ -119,6 +119,11 @@ namespace Fx.Amiya.DbModels.Model
         /// 归属公司
         /// </summary>
         public int BelongCompany { get; set; }
+
+        /// <summary>
+        /// 关联人
+        /// </summary>
+        public int? AffiliatedPerson { get; set; }
         public Contentplatform Contentplatform { get; set; }
         public LiveAnchor LiveAnchor { get; set; }
         public AmiyaEmployee AmiyaEmployee { get; set; }

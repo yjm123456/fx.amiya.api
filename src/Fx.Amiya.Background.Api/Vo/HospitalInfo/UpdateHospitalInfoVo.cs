@@ -79,6 +79,10 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalInfo
         /// </summary>
         public int Sort { get; set; }
         /// <summary>
+        /// 医院类型
+        /// </summary>
+        public int HospitalType { get; set; }
+        /// <summary>
         /// 简称
         /// </summary>
         public string SimpleName { get; set; }

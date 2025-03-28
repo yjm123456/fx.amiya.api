@@ -132,6 +132,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 addDto.ConsultingContent2 = addVo.ConsultingContent2;
                 addDto.IsRiBuLuoLiving = addVo.IsRiBuLuoLiving;
                 addDto.BelongCompanyEnumId = addVo.BelongCompanyEnumId;
+                addDto.IsDoctorOrder = false;
+                addDto.AppointmentDetailDate = "0：00—12:00";
                 await _orderService.AddContentPlateFormOrderAsync(addDto);
 
 
@@ -415,6 +417,10 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             orderUpdateInfo.WechatNumber = customerBaseInfo.WechatNumber;
             orderUpdateInfo.LiveAnchorBaseWechatId = order.LiveAnchorBaseWechatId;
             orderUpdateInfo.AppointmentDate = order.AppointmentDate;
+            orderUpdateInfo.AppointmentDetailDate = order.AppointmentDetailDate;
+            orderUpdateInfo.IsDoctorOrder = order.IsDoctorOrder;
+            orderUpdateInfo.ConsultEmpId = order.ConsultEmpId;
+            orderUpdateInfo.ConsultEmpName = order.ConsultEmpName;
             orderUpdateInfo.ConsultationEmpId = order.ConsultationEmpId;
             orderUpdateInfo.AppointmentHospitalId = order.AppointmentHospitalId;
             orderUpdateInfo.DepositAmount = order.DepositAmount;
@@ -422,7 +428,6 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             orderUpdateInfo.OrderStatus = order.OrderStatus;
             orderUpdateInfo.OrderStatusText = order.OrderStatusText;
             orderUpdateInfo.AppointmentHospitalName = order.AppointmentHospitalName;
-            orderUpdateInfo.AppointmentHospitalId = order.AppointmentHospitalId;
             orderUpdateInfo.Remark = order.Remark;
             orderUpdateInfo.LateProjectStage = order.LateProjectStage;
             orderUpdateInfo.CheckState = order.CheckState;
@@ -447,7 +452,6 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             orderUpdateInfo.UpdateDate = order.UpdateDate;
             orderUpdateInfo.DealDate = order.DealDate;
             orderUpdateInfo.DealAmount = order.DealAmount;
-            orderUpdateInfo.AppointmentHospitalName = order.AppointmentHospitalName;
             orderUpdateInfo.GoodsName = order.GoodsName;
             orderUpdateInfo.ContentPlateFormName = order.ContentPlateFormName;
             orderUpdateInfo.OrderTypeText = order.OrderTypeText;
@@ -561,6 +565,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             updateDto.ConsultingContent2 = updateVo.ConsultingContent2;
             updateDto.IsRiBuLuoLiving = updateVo.IsRiBuLuoLiving;
             updateDto.BelongCompanyEnumId = updateVo.BelongCompanyEnumId;
+            updateDto.IsDoctorOrder = false;
+            updateDto.AppointmentDetailDate = "0:00—12:00";
             await _orderService.UpdateContentPlateFormOrderAsync(updateDto);
 
 

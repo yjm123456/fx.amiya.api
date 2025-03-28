@@ -199,7 +199,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 IncreaseFansFees = d.IncreaseFansFees,
                                                 Clues = d.Clues,
                                                 ShowCaseFee = d.ShowCaseFee,
-                                                IncreaseFansFeesCost = d.IncreaseFansFeesCost
+                                                IncreaseFansFeesCost = d.IncreaseFansFeesCost,
+                                                XiaoHongShuCallingCardSendNum = d.XiaoHongShuCallingCardSendNum,
+                                                XiaoHongShuPrivateMessageOpen = d.XiaoHongShuPrivateMessageOpen,
                                             };
 
                 FxPageInfo<BeforeLivingDailyTargetVo> liveAnchorDailyTargetPageInfo = new FxPageInfo<BeforeLivingDailyTargetVo>();
@@ -256,7 +258,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 QianChuanNum = d.QianChuanNum,
                                                 ShuiXinTuiNum = d.ShuiXinTuiNum,
                                                 WeiXinDou = d.WeiXinDou,
-                                                Clues=d.Clues
+                                                Clues = d.Clues
                                             };
 
                 FxPageInfo<LivingDailyTargetVo> liveAnchorDailyTargetPageInfo = new FxPageInfo<LivingDailyTargetVo>();
@@ -323,8 +325,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 MiniVanBadReviews = d.MiniVanBadReviews,
                                                 EffectivePerformance = d.EffectivePerformance,
                                                 PotentialPerformance = d.PotentialPerformance,
-                                                DistributeConsulation=d.DistributeConsulation,
-                                                Clues=d.Clues
+                                                DistributeConsulation = d.DistributeConsulation,
+                                                Clues = d.Clues
                                             };
 
                 FxPageInfo<AfterLivingDailyTargetVo> liveAnchorDailyTargetPageInfo = new FxPageInfo<AfterLivingDailyTargetVo>();
@@ -384,6 +386,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorDailyTargetVo.XiaoHongShuIncreaseFansFees = liveAnchorDailyTarget.XiaoHongShuIncreaseFansFees;
                 liveAnchorDailyTargetVo.XiaoHongShuIncreaseFansFeesCost = liveAnchorDailyTarget.XiaoHongShuIncreaseFansFeesCost;
                 liveAnchorDailyTargetVo.XiaoHongShuShowcaseFee = liveAnchorDailyTarget.XiaoHongShuShowcaseFee;
+                liveAnchorDailyTargetVo.XiaoHongShuPrivateMessageOpen = liveAnchorDailyTarget.XiaoHongShuPrivateMessageOpen;
+                liveAnchorDailyTargetVo.XiaoHongShuCallingCardSendNum = liveAnchorDailyTarget.XiaoHongShuCallingCardSendNum;
 
                 liveAnchorDailyTargetVo.SinaWeiBoOperationEmployeeId = liveAnchorDailyTarget.SinaWeiBoOperationEmployeeId;
                 liveAnchorDailyTargetVo.SinaWeiBoSendNum = liveAnchorDailyTarget.SinaWeiBoSendNum;
@@ -438,10 +442,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorDailyTargetVo.EliminateCardGMV = liveAnchorDailyTarget.EliminateCardGMV;
                 liveAnchorDailyTargetVo.EffectivePerformance = liveAnchorDailyTarget.EffectivePerformance;
                 liveAnchorDailyTargetVo.PotentialPerformance = liveAnchorDailyTarget.PotentialPerformance;
-                liveAnchorDailyTargetVo.DistributeConsulation=liveAnchorDailyTarget.DistributeConsulation;
+                liveAnchorDailyTargetVo.DistributeConsulation = liveAnchorDailyTarget.DistributeConsulation;
                 liveAnchorDailyTargetVo.RefundGMV = liveAnchorDailyTarget.RefundGMV;
-                liveAnchorDailyTargetVo.Clues=liveAnchorDailyTarget.Clues;
-                liveAnchorDailyTargetVo.LivingClues=liveAnchorDailyTarget.LivingClues;
+                liveAnchorDailyTargetVo.Clues = liveAnchorDailyTarget.Clues;
+                liveAnchorDailyTargetVo.LivingClues = liveAnchorDailyTarget.LivingClues;
                 return ResultData<LiveAnchorDailyTargetByIdVo>.Success().AddData("liveAnchorDailyTargetInfo", liveAnchorDailyTargetVo);
             }
             catch (Exception ex)
@@ -702,6 +706,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.XiaoHongShuIncreaseFans = addVo.XiaoHongShuIncreaseFans;
                     addDto.XiaoHongShuIncreaseFansFees = addVo.XiaoHongShuIncreaseFansFees;
                     addDto.XiaoHongShuShowCaseFee = addVo.XiaoHongShuShowcaseFee;
+                    addDto.XiaoHongShuPrivateMessageOpen = addVo.XiaoHongShuPrivateMessageOpen;
+                    addDto.XiaoHongShuCallingCardSendNum = addVo.XiaoHongShuCallingCardSendNum;
                     await _liveAnchorDailyTargetService.BeforeLivingXiaoHongShuAddAsync(addDto);
                 }
                 return ResultData.Success();
@@ -740,6 +746,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.XiaoHongShuIncreaseFansFees = updateVo.XiaoHongShuIncreaseFansFees;
                 updateDto.RecordDate = updateVo.RecordDate;
                 updateDto.XiaoHongShuShowCaseFee = updateVo.XiaoHongShuShowcaseFee;
+                updateDto.XiaoHongShuCallingCardSendNum = updateVo.XiaoHongShuCallingCardSendNum;
+                updateDto.XiaoHongShuPrivateMessageOpen = updateVo.XiaoHongShuPrivateMessageOpen;
                 await _liveAnchorDailyTargetService.BeforeLivingXiaoHongShuUpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -867,7 +875,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.QianChuanNum = addVo.QianChuanNum;
                     addDto.ShuiXinTuiNum = addVo.ShuiXinTuiNum;
                     addDto.WeiXinDou = addVo.WeiXinDou;
-                    addDto.Clues=addVo.Clues;
+                    addDto.Clues = addVo.Clues;
                     await _liveAnchorDailyTargetService.LivingAddAsync(addDto);
                 }
                 return ResultData.Success();
@@ -907,7 +915,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.QianChuanNum = updateVo.QianChuanNum;
                 updateDto.ShuiXinTuiNum = updateVo.ShuiXinTuiNum;
                 updateDto.WeiXinDou = updateVo.WeiXinDou;
-                updateDto.Clues=updateVo.Clues;
+                updateDto.Clues = updateVo.Clues;
                 await _liveAnchorDailyTargetService.LivingUpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -1016,8 +1024,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.RecordDate = addVo.RecordDate;
                     addDto.EffectivePerformance = addVo.EffectivePerformance;
                     addDto.PotentialPerformance = addVo.PotentialPerformance;
-                    addDto.DistributeConsulation=addVo.DistributeConsulation;
-                    addDto.Clues=addVo.Clues;
+                    addDto.DistributeConsulation = addVo.DistributeConsulation;
+                    addDto.Clues = addVo.Clues;
                     await _liveAnchorDailyTargetService.AfterLivingAddAsync(addDto);
                 }
                 return ResultData.Success();
@@ -1069,7 +1077,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.PotentialPerformance = updateVo.PotentialPerformance;
                 updateDto.EffectivePerformance = updateVo.EffectivePerformance;
                 updateDto.DistributeConsulation = updateVo.DistributeConsulation;
-                updateDto.Clues=updateVo.Clues;
+                updateDto.Clues = updateVo.Clues;
                 await _liveAnchorDailyTargetService.AfterLivingUpdateAsync(updateDto);
                 return ResultData.Success();
             }

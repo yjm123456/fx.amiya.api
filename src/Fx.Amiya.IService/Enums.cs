@@ -250,6 +250,27 @@ namespace Fx.Amiya.IService
         SecondMinorAdjustment = 6,
 
     }
+
+
+    /// <summary>
+    /// 医院类型
+    /// </summary>
+    public enum HospitalType
+    {
+        /// <summary>
+        /// 前天
+        /// </summary>
+        Other = 0,
+        /// <summary>
+        /// 直客
+        /// </summary>
+        DirectToConsumerHospital = 1,
+        /// <summary>
+        /// 渠道
+        /// </summary>
+        ChannelHospital = 2,
+    }
+
     /// <summary>
     /// 年服务费和保证金缴纳状态
     /// </summary>

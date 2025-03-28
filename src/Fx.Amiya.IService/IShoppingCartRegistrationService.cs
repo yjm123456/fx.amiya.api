@@ -15,7 +15,7 @@ namespace Fx.Amiya.IService
 {
     public interface IShoppingCartRegistrationService
     {
-        Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, int? createBy, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? AdmissionId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? ShoppingCartRegistrationCustomerType, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId, int? source, int? belongDepartment,int?belongCompany, bool? isRibuluoLiving);
+        Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, int? createBy, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? AdmissionId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? ShoppingCartRegistrationCustomerType, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId, int? source, int? belongDepartment,int?belongCompany, bool? isRibuluoLiving, int? AffiliatedPerson);
         Task AddAsync(AddShoppingCartRegistrationDto addDto);
 
         Task AddListAsync(List<AddShoppingCartRegistrationDto> addDtoList);
@@ -26,6 +26,8 @@ namespace Fx.Amiya.IService
         Task UpdateAsync(UpdateShoppingCartRegistrationDto updateDto);
 
         Task AssignAsync(string id, int assignBy);
+
+        Task AffiliatedAsync(string id, int AffiliatedBy);
         /// <summary>
         /// 录单触达
         /// </summary>
