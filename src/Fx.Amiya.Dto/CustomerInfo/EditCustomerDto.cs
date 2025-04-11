@@ -12,6 +12,11 @@ namespace Fx.Amiya.Dto.CustomerInfo
         public DateTime? Birthday { get; set; }
         public string Occupation { get; set; }
         public string WechatNumber { get; set; }
+
+        /// <summary>
+        /// 省份
+        /// </summary>
+        public string Province { get; set; }
         public string City { get; set; }
     }
 }

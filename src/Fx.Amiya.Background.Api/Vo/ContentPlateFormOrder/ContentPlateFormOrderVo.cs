@@ -111,6 +111,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         public string WechatNumber { get; set; }
         /// <summary>
+        /// 省份
+        /// </summary>
+        public string Province { get; set; }
+        /// <summary>
         /// 城市
         /// </summary>
         public string City { get; set; }

@@ -392,7 +392,8 @@ namespace Fx.Amiya.Service
                 else
                 {
                     orders = from d in orders
-                             where d.ConsultEmpId == employeeId
+                             where d.ConsultEmpId == employeeId || d.SupportEmpId == employeeId
+                             || d.BelongEmpId == employeeId
                              select d;
                 }
                 var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
@@ -562,15 +563,25 @@ namespace Fx.Amiya.Service
                          select o;
             }
             var employee = await _amiyaEmployeeService.GetByIdAsync(loginEmployeeId);
-            if (employee.IsCustomerService && !employee.IsDirector)
+            if (employee.PositionId != 36)
+            {
+                if (employee.IsCustomerService && !employee.IsDirector)
+                {
+                    orders = from d in orders
+                             where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == loginEmployeeId && e.BuyerPhone == d.Phone) > 0
+                             || d.SupportEmpId == loginEmployeeId
+                             || d.BelongEmpId == loginEmployeeId
+                             || (d.IsSupportOrder == false || d.SupportEmpId == loginEmployeeId)
+                             select d;
+
+                }
+            }
+            else
             {
                 orders = from d in orders
-                         where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == loginEmployeeId && e.BuyerPhone == d.Phone) > 0
-                         || d.SupportEmpId == loginEmployeeId
-                         || d.BelongEmpId == loginEmployeeId
-                         || (d.IsSupportOrder == false || d.SupportEmpId == loginEmployeeId)
+                         where d.ConsultEmpId == loginEmployeeId || d.SupportEmpId == loginEmployeeId
+                             || d.BelongEmpId == loginEmployeeId
                          select d;
-
             }
             if (!belongCustomerid.HasValue)
             {

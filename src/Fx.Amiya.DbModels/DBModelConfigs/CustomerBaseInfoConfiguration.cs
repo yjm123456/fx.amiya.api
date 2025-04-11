@@ -22,6 +22,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.Birthday).HasColumnName("birthday").HasColumnType("date").IsRequired(false);
             builder.Property(t => t.Occupation).HasColumnName("occupation").HasColumnType("varchar(50)").IsRequired(false);
             builder.Property(t => t.WechatNumber).HasColumnName("wechat_number").HasColumnType("varchar(50)").IsRequired(false);
+            builder.Property(t => t.Province).HasColumnName("province").HasColumnType("varchar(45)").IsRequired(false);
             builder.Property(t => t.City).HasColumnName("city").HasColumnType("varchar(20)").IsRequired(false);
             builder.Property(t => t.PersonalWechat).HasColumnName("personal_wechat").HasColumnType("bit").IsRequired();
             builder.Property(t => t.BusinessWeChat).HasColumnName("business_wechat").HasColumnType("bit").IsRequired();

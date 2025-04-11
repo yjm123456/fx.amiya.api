@@ -53,6 +53,11 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// </summary>
         [Required]
         public string Phone { get; set; }
+
+        /// <summary>
+        /// 省份
+        /// </summary>
+        public string Province { get; set; }
         /// <summary>
         /// 城市
         /// </summary>

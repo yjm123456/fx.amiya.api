@@ -215,7 +215,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         public async Task<ResultData<string>> GetMyRankAsync(int year, int month, int custonerServiceId)
         {
             var result = await amiyaPerformanceService.GetMyRankAsync(year, month, custonerServiceId);
-            return ResultData<string>.Success().AddData("rank", result); ;
+            return ResultData<string>.Success().AddData("rank", result);
         }
 
         /// <summary>

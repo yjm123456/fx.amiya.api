@@ -109,6 +109,11 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder
         /// 微信号
         /// </summary>
         public string WechatNumber { get; set; }
+
+        /// <summary>
+        /// 省份
+        /// </summary>
+        public string Province { get; set; }
         /// <summary>
         /// 城市
         /// </summary>

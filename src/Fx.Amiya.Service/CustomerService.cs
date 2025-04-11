@@ -1000,6 +1000,7 @@ namespace Fx.Amiya.Service
                     customerInfo.Birthday = editDto.Birthday;
                     customerInfo.Occupation = editDto.Occupation;
                     customerInfo.WechatNumber = editDto.WechatNumber;
+                    customerInfo.Province = editDto.Province;
                     customerInfo.City = editDto.City;
                     await dalCustomerBaseInfo.AddAsync(customerInfo, true);
                 }
@@ -1010,6 +1011,7 @@ namespace Fx.Amiya.Service
                     customerBaseInfo.Birthday = editDto.Birthday;
                     customerBaseInfo.Occupation = editDto.Occupation;
                     customerBaseInfo.WechatNumber = editDto.WechatNumber;
+                    customerBaseInfo.Province = editDto.Province;
                     customerBaseInfo.City = editDto.City;
                     await dalCustomerBaseInfo.UpdateAsync(customerBaseInfo, true);
                 }
@@ -1037,6 +1039,7 @@ namespace Fx.Amiya.Service
             customerBaseInfoDto.Birthday = customerBaseInfo.Birthday;
             customerBaseInfoDto.Occupation = customerBaseInfo.Occupation;
             customerBaseInfoDto.WechatNumber = customerBaseInfo.WechatNumber;
+            customerBaseInfoDto.Province = customerBaseInfo.Province;
             customerBaseInfoDto.City = customerBaseInfo.City;
             customerBaseInfoDto.EncryptPhone = ServiceClass.Encrypt(customerBaseInfo.Phone, config.PhoneEncryptKey);
 

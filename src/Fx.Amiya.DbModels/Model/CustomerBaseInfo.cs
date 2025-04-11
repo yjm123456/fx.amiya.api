@@ -27,6 +27,11 @@ namespace Fx.Amiya.DbModels.Model
         public int CustomerState { get; set; }
         public string CustomerRequirement { get; set; }
         public string WechatNumber { get; set; }
+
+        /// <summary>
+        /// 省份
+        /// </summary>
+        public string Province { get; set; }
         public string City { get; set; }
 
         public string Remark { get; set; }

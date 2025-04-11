@@ -544,9 +544,6 @@ namespace Fx.Amiya.Service
                 case 0:
                     emergencyLevelText = "三级线索";
                     break;
-                /*case 1:
-                    emergencyLevelText = "轻微";
-                    break;*/
                 case 2:
                     emergencyLevelText = "二级线索";
                     break;

@@ -16,6 +16,7 @@ namespace Fx.Amiya.Dto.CustomerInfo
         public int? Age { get; set; }
         public string Occupation { get; set; }
         public string WechatNumber { get; set; }
+        public string Province { get; set; }
         public string City { get; set; }
        
     }

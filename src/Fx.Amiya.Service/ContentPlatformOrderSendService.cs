@@ -720,24 +720,24 @@ namespace Fx.Amiya.Service
             var orders = _dalContentPlatformOrderSend.GetAll().Include(x => x.ContentPlatformOrder)
                        .Where(e => string.IsNullOrWhiteSpace(keyword) || e.ContentPlatformOrderId == keyword || e.ContentPlatformOrder.Phone.Contains(keyword) || e.ContentPlatformOrder.LiveAnchorWeChatNo.Contains(keyword))
                        .Where(e => hospitalId == 0 || e.HospitalId == hospitalId)
-                       .Where(e => !isMainHospital.HasValue || e.IsMainHospital == isMainHospital)
-                       .Where(e => orderSource == -1 || e.ContentPlatformOrder.OrderSource == orderSource)
-                       .Where(e => !IsToHospital.HasValue || e.ContentPlatformOrder.IsToHospital == IsToHospital.Value)
-                       .Where(e => !belongChannel.HasValue || e.ContentPlatformOrder.BelongChannel == belongChannel.Value)
-                       .Where(e => !belongMonth.HasValue || e.ContentPlatformOrder.BelongMonth == belongMonth.Value)
-                       .Where(e => !minAddOrderPrice.HasValue || e.ContentPlatformOrder.AddOrderPrice >= minAddOrderPrice.Value)
-                       .Where(e => !maxAddOrderPrice.HasValue || e.ContentPlatformOrder.AddOrderPrice <= maxAddOrderPrice.Value)
-                       .Where(e => !sendBy.HasValue || e.Sender == sendBy.Value)
-                       .Where(e => !isAcompanying.HasValue || e.ContentPlatformOrder.IsAcompanying == isAcompanying.Value)
-                       .Where(e => !isOldCustomer.HasValue || e.ContentPlatformOrder.IsOldCustomer == isOldCustomer.Value)
-                       .Where(e => !commissionRatio.HasValue || e.ContentPlatformOrder.CommissionRatio == commissionRatio.Value)
-                       .Where(e => !toHospitalType.HasValue || e.ContentPlatformOrder.ToHospitalType == toHospitalType.Value)
-                       .Where(e => !consultationEmpId.HasValue || e.ContentPlatformOrder.ConsultationEmpId == consultationEmpId.Value)
-                       .Where(e => !hospitalEmpId.HasValue || e.HospitalEmployeeId == hospitalEmpId.Value)
-                       .Where(e => liveAnchorIds.Count <= 0 || liveAnchorIds.Contains(e.ContentPlatformOrder.LiveAnchorId))
-                       .Where(e => belongEmployeeId == -1 || (e.ContentPlatformOrder.SupportEmpId == 0 ? e.ContentPlatformOrder.BelongEmpId == belongEmployeeId : e.ContentPlatformOrder.SupportEmpId == belongEmployeeId))
-                       .Where(e => orderStatus == null || (orderStatus != null && orderStatus == (int)ContentPlateFormOrderStatus.RepeatOrderProfundity ? e.IsRepeatProfundityOrder == true : e.OrderStatus == orderStatus))
-                       .Where(e => string.IsNullOrWhiteSpace(contentPlatFormId) || e.ContentPlatformOrder.ContentPlateformId == contentPlatFormId);
+            .Where(e => !isMainHospital.HasValue || e.IsMainHospital == isMainHospital)
+            .Where(e => orderSource == -1 || e.ContentPlatformOrder.OrderSource == orderSource)
+            .Where(e => !IsToHospital.HasValue || e.ContentPlatformOrder.IsToHospital == IsToHospital.Value)
+            .Where(e => !belongChannel.HasValue || e.ContentPlatformOrder.BelongChannel == belongChannel.Value)
+            .Where(e => !belongMonth.HasValue || e.ContentPlatformOrder.BelongMonth == belongMonth.Value)
+            .Where(e => !minAddOrderPrice.HasValue || e.ContentPlatformOrder.AddOrderPrice >= minAddOrderPrice.Value)
+            .Where(e => !maxAddOrderPrice.HasValue || e.ContentPlatformOrder.AddOrderPrice <= maxAddOrderPrice.Value)
+            .Where(e => !sendBy.HasValue || e.Sender == sendBy.Value)
+            .Where(e => !isAcompanying.HasValue || e.ContentPlatformOrder.IsAcompanying == isAcompanying.Value)
+            .Where(e => !isOldCustomer.HasValue || e.ContentPlatformOrder.IsOldCustomer == isOldCustomer.Value)
+            .Where(e => !commissionRatio.HasValue || e.ContentPlatformOrder.CommissionRatio == commissionRatio.Value)
+            .Where(e => !toHospitalType.HasValue || e.ContentPlatformOrder.ToHospitalType == toHospitalType.Value)
+            .Where(e => !consultationEmpId.HasValue || e.ContentPlatformOrder.ConsultationEmpId == consultationEmpId.Value)
+            .Where(e => !hospitalEmpId.HasValue || e.HospitalEmployeeId == hospitalEmpId.Value)
+            .Where(e => liveAnchorIds.Count <= 0 || liveAnchorIds.Contains(e.ContentPlatformOrder.LiveAnchorId))
+            .Where(e => belongEmployeeId == -1 || (e.ContentPlatformOrder.SupportEmpId == 0 ? e.ContentPlatformOrder.BelongEmpId == belongEmployeeId || e.ContentPlatformOrder.ConsultEmpId == belongEmployeeId : e.ContentPlatformOrder.SupportEmpId == belongEmployeeId || e.ContentPlatformOrder.ConsultEmpId == belongEmployeeId))
+            .Where(e => orderStatus == null || (orderStatus != null && orderStatus == (int)ContentPlateFormOrderStatus.RepeatOrderProfundity ? e.IsRepeatProfundityOrder == true : e.OrderStatus == orderStatus))
+            .Where(e => string.IsNullOrWhiteSpace(contentPlatFormId) || e.ContentPlatformOrder.ContentPlateformId == contentPlatFormId);
 
             if (startDate != null && endDate != null)
             {
@@ -757,27 +757,28 @@ namespace Fx.Amiya.Service
             }
 
             var employee = await _amiyaEmployeeService.GetByIdAsync(loginEmployeeId);
-            //普通客服角色过滤其他订单信息只展示自己录单信息
-            if (employee.IsCustomerService && !employee.IsDirector)
+            //卖手角色过滤该选项
+            if (employee.PositionId != 36)
+            {
+                //普通客服角色过滤其他订单信息只展示自己录单信息
+                if (employee.IsCustomerService && !employee.IsDirector)
+                {
+                    orders = from d in orders
+                             where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == loginEmployeeId && e.BuyerPhone == d.ContentPlatformOrder.Phone) > 0
+                             || d.ContentPlatformOrder.SupportEmpId == loginEmployeeId
+                             || d.ContentPlatformOrder.BelongEmpId == loginEmployeeId
+                             || (d.ContentPlatformOrder.IsSupportOrder == false || d.ContentPlatformOrder.SupportEmpId == loginEmployeeId)
+                             select d;
+
+                }
+            }
+            else
             {
                 orders = from d in orders
-                         where _dalBindCustomerService.GetAll().Count(e => e.CustomerServiceId == loginEmployeeId && e.BuyerPhone == d.ContentPlatformOrder.Phone) > 0
-                         || d.ContentPlatformOrder.SupportEmpId == loginEmployeeId
-                         || d.ContentPlatformOrder.BelongEmpId == loginEmployeeId
-                         || (d.ContentPlatformOrder.IsSupportOrder == false || d.ContentPlatformOrder.SupportEmpId == loginEmployeeId)
+                         where d.ContentPlatformOrder.ConsultEmpId == loginEmployeeId || d.ContentPlatformOrder.SupportEmpId == loginEmployeeId
+                             || d.ContentPlatformOrder.BelongEmpId == loginEmployeeId
                          select d;
-
             }
-            //else
-            //{
-
-            //    if (loginEmployeeId != -1)
-            //    {
-            //        orders = from d in orders
-            //                 where d.ContentPlatformOrder.BelongEmpId == loginEmployeeId
-            //                 select d;
-            //    }
-            //}
             var orderCount = await orders.CountAsync();
             var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
             var contentPlatformOrders = from d in orders

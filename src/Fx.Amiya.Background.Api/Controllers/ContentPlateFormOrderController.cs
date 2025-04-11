@@ -192,6 +192,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 editDto.Birthday = addVo.Birthday;
                 editDto.Occupation = addVo.Occupation;
                 editDto.WechatNumber = addVo.WechatNumber;
+                editDto.Province = addVo.Province;
                 editDto.City = addVo.City;
                 await customerService.EditAsync(editDto);
                 return ResultData.Success();
@@ -884,6 +885,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
             string encryptPhone = ServiceClass.Encrypt(order.Phone, config.PhoneEncryptKey);
             var customerBaseInfo = await customerService.GetCustomerBaseInfoByEncryptPhoneAsync(encryptPhone);
+            orderUpdateInfo.Province = customerBaseInfo.Province;
             orderUpdateInfo.City = customerBaseInfo.City;
             orderUpdateInfo.Sex = customerBaseInfo.Sex;
             orderUpdateInfo.Birthday = customerBaseInfo.Birthday;

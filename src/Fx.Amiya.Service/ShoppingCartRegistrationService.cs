@@ -556,7 +556,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.ShoppingCartRegistrationCustomerTypeText = ServiceClass.GetShoppingCartCustomerTypeText(shoppingCartRegistration.ShoppingCartRegistrationCustomerType);
                 shoppingCartRegistrationDto.SourceText = ServiceClass.GetTiktokCustomerSourceText(shoppingCartRegistration.Source);
                 shoppingCartRegistrationDto.BelongChannel = shoppingCartRegistration.BelongChannel;
-                shoppingCartRegistrationDto.BelongChannelName = ServiceClass.BelongChannelText(shoppingCartRegistrationDto.BelongChannel);
+                shoppingCartRegistrationDto.BelongChannelName = ServiceClass.BelongChannelText(shoppingCartRegistration.BelongChannel);
                 shoppingCartRegistrationDto.IsRiBuLuoLiving = shoppingCartRegistration.IsRiBuLuoLiving;
                 shoppingCartRegistrationDto.IsHistoryCustomerActive = shoppingCartRegistration.IsHistoryCustomerActive;
                 shoppingCartRegistrationDto.ActiveEmployeeId = shoppingCartRegistration.ActiveEmployeeId;
@@ -622,7 +622,7 @@ namespace Fx.Amiya.Service
                     shoppingCartRegistrationDto.LiveAnchorWechatNo = shoppingCartRegistration.LiveAnchorWechatNo;
                     shoppingCartRegistrationDto.BaseLiveAnchorId = shoppingCartRegistration.BaseLiveAnchorId;
                     shoppingCartRegistrationDto.CustomerNickName = shoppingCartRegistration.CustomerNickName;
-                    shoppingCartRegistrationDto.ShoppingCartRegistrationCustomerType = shoppingCartRegistrationDto.ShoppingCartRegistrationCustomerType;
+                    shoppingCartRegistrationDto.ShoppingCartRegistrationCustomerType = shoppingCartRegistration.ShoppingCartRegistrationCustomerType;
                     shoppingCartRegistrationDto.GetCustomerType = shoppingCartRegistration.GetCustomerType;
                     shoppingCartRegistrationDto.Phone = shoppingCartRegistration.Phone;
                     shoppingCartRegistrationDto.SubPhone = shoppingCartRegistration.SubPhone;
@@ -648,8 +648,8 @@ namespace Fx.Amiya.Service
                     shoppingCartRegistrationDto.BadReviewReason = shoppingCartRegistration.BadReviewReason;
                     shoppingCartRegistrationDto.IsBadReview = shoppingCartRegistration.IsBadReview;
                     shoppingCartRegistrationDto.Source = shoppingCartRegistration.Source;
-                    shoppingCartRegistrationDto.ProductType = shoppingCartRegistrationDto.ProductType;
-                    shoppingCartRegistrationDto.BelongChannel = shoppingCartRegistrationDto.BelongChannel;
+                    shoppingCartRegistrationDto.ProductType = shoppingCartRegistration.ProductType;
+                    shoppingCartRegistrationDto.BelongChannel = shoppingCartRegistration.BelongChannel;
                     shoppingCartRegistrationDto.IsRiBuLuoLiving = shoppingCartRegistration.IsRiBuLuoLiving;
                     shoppingCartRegistrationDto.IsHistoryCustomerActive = shoppingCartRegistration.IsHistoryCustomerActive;
                     shoppingCartRegistrationDto.ActiveEmployeeId = shoppingCartRegistration.ActiveEmployeeId;

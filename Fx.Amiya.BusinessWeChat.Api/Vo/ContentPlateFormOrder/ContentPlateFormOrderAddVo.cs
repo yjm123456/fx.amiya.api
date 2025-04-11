@@ -54,6 +54,10 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder
         [Required]
         public string Phone { get; set; }
         /// <summary>
+        /// 省份/直辖市
+        /// </summary>
+        public string Province { get; set; }
+        /// <summary>
         /// 城市
         /// </summary>
         public string City { get; set; }
