@@ -99,6 +99,11 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         public int ConsultationEmpId { get; set; }
 
         /// <summary>
+        /// 省份
+        /// </summary>
+        public string Province { get; set; }
+
+        /// <summary>
         /// 面诊类型
         /// </summary>
         public int ConsultationType { get; set; }

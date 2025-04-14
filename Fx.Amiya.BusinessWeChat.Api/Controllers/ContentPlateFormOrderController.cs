@@ -582,6 +582,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             editDto.Birthday = updateVo.Birthday;
             editDto.Occupation = updateVo.Occupation;
             editDto.WechatNumber = updateVo.WechatNumber;
+            editDto.Province = updateVo.Province;
             editDto.City = updateVo.City;
             await customerService.EditAsync(editDto);
             return ResultData.Success();
