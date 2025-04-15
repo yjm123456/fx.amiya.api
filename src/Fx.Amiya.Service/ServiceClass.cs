@@ -936,6 +936,10 @@ namespace Fx.Amiya.Service
                 case 4:
                     sourceText = "名索";
                     break;
+
+                case 5:
+                    sourceText = "润棠";
+                    break;
             }
             return sourceText;
 

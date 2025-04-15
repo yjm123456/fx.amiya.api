@@ -79,6 +79,10 @@ namespace Fx.Amiya.IService
         /// 名索
         /// </summary>
         MingSuo=4,
+        /// <summary>
+        /// 润棠
+        /// </summary>
+        RunTang = 5,
     }
 
     /// <summary>

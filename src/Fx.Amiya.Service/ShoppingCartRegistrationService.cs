@@ -1006,6 +1006,8 @@ namespace Fx.Amiya.Service
                         contentPlatFormIds.Add("317c03b8-aff9-4961-8392-fc44d04b1725");
                         //快手
                         contentPlatFormIds.Add("7a9d6564-e273-4847-9047-e7bbb7c6805c");
+                        //私域
+                        contentPlatFormIds.Add("22a0b287-232d-4373-a9dd-c372aaae57dc");
                         channels.Add((int)BelongChannel.LiveBefore);
                         channels.Add((int)BelongChannel.LiveAfter);
                         res.Add(contentPlatFormIds, channels);
