@@ -16,6 +16,11 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
         /// 年度月份
         /// </summary>
         public string YearAndMonth { get; set; }
+
+        /// <summary>
+        /// 线索目标
+        /// </summary>
+        public int ClueTarget { get; set; }
         /// <summary>
         /// 线索量
         /// </summary>
@@ -107,5 +112,39 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
         /// 当月老客复购率
         /// </summary>
         public decimal OldCustomerBuyRate { get; set; }
+    }
+
+
+    public class GetListAdminCustomerTransFormVo
+    {
+        public List<GetAdminCustomerTransFormDataVo> DaoDaoData { get; set; }
+        public List<GetAdminCustomerTransFormDataVo> JiNaData { get; set; }
+    }
+    public class GetAdminCustomerTransFormDataVo
+    {
+        /// <summary>
+        /// 部门
+        /// </summary>
+        public string Department { get; set; }
+        /// <summary>
+        /// 线索目标
+        /// </summary>
+        public int ClueTarget { get; set; }
+        /// <summary>
+        /// 线索实际
+        /// </summary>
+        public int ClueNum { get; set; }
+        /// <summary>
+        /// 线索完成率
+        /// </summary>
+        public decimal? ClueCompleteRate { get; set; }
+        /// <summary>
+        /// 加v实际
+        /// </summary>
+        public int AddWeChatNum { get; set; }
+        /// <summary>
+        /// 加v率
+        /// </summary>
+        public decimal? AddWeChatRate { get; set; }
     }
 }

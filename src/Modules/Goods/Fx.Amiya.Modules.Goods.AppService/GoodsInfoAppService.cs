@@ -823,7 +823,7 @@ namespace Fx.Amiya.Modules.Goods.AppService
                 };
                 return goods;
             }
-            catch (Exception err)
+            catch (Exception )
             {
                 return new GoodsInfoForSingleDto()
                 {

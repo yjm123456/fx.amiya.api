@@ -669,7 +669,7 @@ namespace Fx.Amiya.Service
                                                        IsReturnBackPrice = d.IsReturnBackPrice,
                                                        ReturnBackDate = d.ReturnBackDate,
                                                        ReturnBackPrice = d.ReturnBackPrice,
-                                                       CreateBy = d.ContentPlatFormOrder.BelongEmpId.HasValue ? d.ContentPlatFormOrder.BelongEmpId.Value : -1,
+                                                       CreateBy = d.CreateBy,
                                                        ReconciliationDocumentsId = d.ReconciliationDocumentsId,
                                                        IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
                                                        ConsumptionType = d.ConsumptionType,
@@ -2754,6 +2754,7 @@ namespace Fx.Amiya.Service
                     IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer,
                     LiveAnchorId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.LiveAnchorId.HasValue ? ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.LiveAnchorId.Value : 0,
                     BelongEmployeeId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.IsSupportOrder == true ? ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.SupportEmpId : ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.BelongEmpId.Value,
+                    BelongChannel = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.BelongChannel
                 }).ToListAsync();
 
             //补单
@@ -2772,6 +2773,7 @@ namespace Fx.Amiya.Service
                     IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer,
                     LiveAnchorId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.LiveAnchorId.HasValue ? ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.LiveAnchorId.Value : 0,
                     BelongEmployeeId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.IsSupportOrder == true ? ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.SupportEmpId : ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.BelongEmpId.Value,
+                    BelongChannel = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.BelongChannel
                 }).ToListAsync();
             foreach (var x in result2)
             {
@@ -2801,6 +2803,7 @@ namespace Fx.Amiya.Service
                     IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer,
                     LiveAnchorId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.LiveAnchorId.HasValue ? ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.LiveAnchorId.Value : 0,
                     BelongEmployeeId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.IsSupportOrder == true ? ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.SupportEmpId : ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.BelongEmpId.Value,
+                    BelongChannel = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.BelongChannel
                 }).ToListAsync();
             List<ContentPlatFormOrderDealInfoDto> ContentPlatFormOrderDealInfoDtoResults = new List<ContentPlatFormOrderDealInfoDto>();
             foreach (var x in result3)

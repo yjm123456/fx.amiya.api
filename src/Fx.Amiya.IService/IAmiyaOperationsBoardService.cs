@@ -106,6 +106,8 @@ namespace Fx.Amiya.IService
         Task<AdminCustomerFilterDataDto> GetAdminCustomerFilterDataAsync(QueryAssistantPerformanceDto query);
         Task<AdminCustomerAnalysisDataDto> GetAdminCustomerAnalysisDataAsync(QueryAssistantPerformanceDto query);
         Task<AdminCustomerAssistantDisAndAddVDataDto> GetAdminCustomerAssistantDisAndAddVDataAsync(QueryAssistantPerformanceDto query);
+
+        Task<GetListAdminCustomerTransFormDto> AdminCustomerMonthTransformDataAsync(QueryTransformDataDto query);
         #endregion
 
         #endregion
@@ -174,6 +176,13 @@ namespace Fx.Amiya.IService
         /// <param name="query"></param>
         /// <returns></returns>
         Task<List<FlowTransFormDataDto>> GetAssistantYearFlowTransFormNewDataAsync(QueryTransformDataDto query);
+
+        /// <summary>
+        /// 根据部门获取年度业绩转化分析
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<List<FlowTransFormDataDto>> GetYearFlowTransFormNewDataByChannelAsync(QueryTransformDataByChannelDto query);
         /// <summary>
         /// 根据时间获取全国机构运营数据概况
         /// </summary>

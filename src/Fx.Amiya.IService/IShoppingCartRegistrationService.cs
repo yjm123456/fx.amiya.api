@@ -300,6 +300,15 @@ namespace Fx.Amiya.IService
         /// <param name="contentPlatformIds"></param>
         /// <returns></returns>
         Task<ShoppingCartRegistrationIndicatorBaseDataDto> GetAssistantFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate, int assignEmpId, List<string> contentPlatformIds);
+
+        /// <summary>
+        /// 获取部门流量和客户转化基础数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="benlongChannel"></param>
+        /// <returns></returns>
+        Task<ShoppingCartRegistrationIndicatorBaseDataDto> GetBelongChannelFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate, int benlongChannel);
         /// <summary>
         /// 获取助理流量和客户转化基础数据
         /// </summary>
@@ -365,7 +374,7 @@ namespace Fx.Amiya.IService
         /// <param name="assistantIds"></param>
         /// <param name="isAddWechat"></param>
         /// <returns></returns>
-        Task<AssistantDistributeConsulationTypeDataDto> GetAdminCustomerDistributeByLivingDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIds, bool? isAddWechat = null);
+        Task<AssistantDistributeConsulationTypeDataDto> GetAdminCustomerDistributeByLivingDataAsync(DateTime startDate, DateTime endDate, List<int> assistantIds, string baseLiveAnchorId, bool? isAddWechat = null);
         /// <summary>
         /// 获取行政客服分诊折线图基础数据(根据一级二级三级客资)
         /// </summary>

@@ -29,11 +29,16 @@ namespace Fx.Amiya.Background.Api.Controllers
         private readonly IAmiyaOperationsBoardService amiyaOperationsBoardService;
         private readonly ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService;
         private readonly ILiveAnchorBaseInfoService liveAnchorBaseInfoService;
-        public AmiyaOperationsBoardController(IAmiyaOperationsBoardService amiyaOperationsBoardService, ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService, ILiveAnchorBaseInfoService liveAnchorBaseInfoService)
+        private readonly IAmiyaEmployeeService amiyaEmployeeService;
+        private IHttpContextAccessor _httpContextAccessor;
+        public AmiyaOperationsBoardController(IAmiyaOperationsBoardService amiyaOperationsBoardService, ILiveAnchorMonthlyTargetLivingService liveAnchorMonthlyTargetLivingService,
+            IHttpContextAccessor httpContextAccessor, ILiveAnchorBaseInfoService liveAnchorBaseInfoService, IAmiyaEmployeeService amiyaEmployeeService)
         {
             this.amiyaOperationsBoardService = amiyaOperationsBoardService;
             this.liveAnchorMonthlyTargetLivingService = liveAnchorMonthlyTargetLivingService;
             this.liveAnchorBaseInfoService = liveAnchorBaseInfoService;
+            _httpContextAccessor = httpContextAccessor;
+            this.amiyaEmployeeService = amiyaEmployeeService;
         }
         /// <summary>
         /// 根据结束时间获取时间进度
@@ -1790,7 +1795,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             //data.PotionelToHospitalCycle = res.PotionelToHospitalCycle;
             //data.TotalSendCycle = res.TotalSendCycle;
             //data.TotalToHospitalCycle = res.TotalToHospitalCycle;
-           
+
             data.SendCycleData = res.SendCycleData;
             data.ToHospitalCycleData = res.ToHospitalCycleData;
             data.OldCustomerRePurcheData = res.OldCustomerRePurcheData;
@@ -1817,7 +1822,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             data.PotionelToHospitalCycle = res.PotionelToHospitalCycle;
             data.TotalSendCycle = res.TotalSendCycle;
             data.TotalToHospitalCycle = res.TotalToHospitalCycle;
-            
+
             data.SendCycleData = res.SendCycleData;
             data.ToHospitalCycleData = res.ToHospitalCycleData;
             data.OldCustomerRePurcheData = res.OldCustomerRePurcheData;
@@ -1886,7 +1891,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             AdminCustomerServiceCustomerTypeVo data = new AdminCustomerServiceCustomerTypeVo();
             data.FirstTypeTotal = res.FirstTypeTotal;
             data.FirstTypeToday = res.FirstTypeToday;
-            data.FirstTypeChainRate = res.FirstTypeChainRate; 
+            data.FirstTypeChainRate = res.FirstTypeChainRate;
             data.FirstTypeYearOnYear = res.FirstTypeYearOnYear;
             data.SecondTypeTotal = res.SecondTypeTotal;
             data.SecondTypeToday = res.SecondTypeToday;
@@ -2062,6 +2067,45 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<AdminCustomerAssistantDisAndAddVDataVo>.Success().AddData("data", data);
         }
 
+
+        /// <summary>
+        /// 行政客服月度线索转化情况
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("adminCustomerMonthTransformData")]
+        public async Task<ResultData<GetListAdminCustomerTransFormVo>> AdminCustomerMonthTransformDataAsync([FromQuery] QueryTransformDataVo query)
+        {
+            GetListAdminCustomerTransFormVo res = new GetListAdminCustomerTransFormVo();
+            res.DaoDaoData = new List<GetAdminCustomerTransFormDataVo>();
+            res.JiNaData = new List<GetAdminCustomerTransFormDataVo>();
+            QueryTransformDataDto queryDto = new QueryTransformDataDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            var resultData = await amiyaOperationsBoardService.AdminCustomerMonthTransformDataAsync(queryDto);
+
+            res.DaoDaoData = resultData.DaoDaoData.Select(e => new GetAdminCustomerTransFormDataVo
+            {
+                Department = e.Department,
+                ClueNum = e.ClueNum,
+                ClueTarget = e.ClueTarget,
+                ClueCompleteRate = e.ClueCompleteRate,
+                AddWeChatNum = e.AddWeChatNum,
+                AddWeChatRate = e.AddWeChatRate,
+            }).ToList();
+
+            res.JiNaData = resultData.JiNaData.Select(e => new GetAdminCustomerTransFormDataVo
+            {
+                Department = e.Department,
+                ClueNum = e.ClueNum,
+                ClueTarget = e.ClueTarget,
+                ClueCompleteRate = e.ClueCompleteRate,
+                AddWeChatNum = e.AddWeChatNum,
+                AddWeChatRate = e.AddWeChatRate,
+            }).ToList();
+
+            return ResultData<GetListAdminCustomerTransFormVo>.Success().AddData("data", res);
+        }
         #endregion
 
         #region 直播前数据运营看板
@@ -2341,6 +2385,60 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<List<BeforeLiveLiveanchorIPDataVo>>.Success().AddData("data", res);
         }
 
+
+
+        /// <summary>
+        /// 直播前月度线索转化情况
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("BeforeLivingYearTransformData")]
+        public async Task<ResultData<List<FlowTransFormDataVo>>> BeforeLivingYearFlowTransformDataAsync([FromQuery] QueryTransformDataVo query)
+        {
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeId = Convert.ToInt32(employee.Id);
+            var empInfo = await amiyaEmployeeService.GetByIdAsync(employeeId);
+            QueryTransformDataByChannelDto queryDto = new QueryTransformDataByChannelDto();
+            if (empInfo.IsDirector == false)
+            {
+                queryDto.BaseLiveAnchorId = empInfo.LiveAnchorBaseId;
+            }
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.BelongChannel = (int)BelongChannel.LiveBefore;
+            var resultData = await amiyaOperationsBoardService.GetYearFlowTransFormNewDataByChannelAsync(queryDto);
+
+            var res = resultData.Select(e => new FlowTransFormDataVo
+            {
+                GroupName = e.GroupName,
+                YearAndMonth = e.YearAndMonth,
+                ClueTarget = e.ClueTarget,
+                ClueCount = e.ClueCount,
+                ClueEffectiveRate = e.ClueEffectiveRate,
+                SendOrderCount = e.SendOrderCount,
+                DistributeConsulationNum = e.DistributeConsulationNum,
+                AddWechatCount = e.AddWechatCount,
+                AddWechatRate = e.AddWechatRate,
+                SendOrderRate = e.SendOrderRate,
+                ToHospitalCount = e.ToHospitalCount,
+                ToHospitalRate = e.ToHospitalRate,
+                DealCount = e.DealCount,
+                NewCustomerDealCount = e.NewCustomerDealCount,
+                OldCustomerDealCount = e.OldCustomerDealCount,
+                DealRate = e.DealRate,
+                NewCustomerPerformance = e.NewCustomerPerformance,
+                NewAndOldCustomerRate = e.NewAndOldCustomerRate,
+                OldCustomerPerformance = e.OldCustomerPerformance,
+                NewCustomerUnitPrice = e.NewCustomerUnitPrice,
+                OldCustomerUnitPrice = e.OldCustomerUnitPrice,
+                CustomerUnitPrice = e.CustomerUnitPrice,
+                Rate = e.Rate,
+                TotalPerformance = e.TotalPerformance,
+                OldCustomerBuyRate = e.OldCustomerBuyRate
+            }).ToList();
+
+            return ResultData<List<FlowTransFormDataVo>>.Success().AddData("data", res.ToList());
+        }
         #endregion
 
 

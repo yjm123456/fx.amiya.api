@@ -502,9 +502,13 @@ namespace Fx.Amiya.Service
         {
             var performance = dalLiveAnchorMonthlyTargetLiving.GetAll().Where(t => t.Year == year && t.Month == month)
                 .Where(o => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(o.LiveAnchorId));
+            if (performance == null)
+            {
+                return new LiveAnchorBaseBusinessMonthTargetPerformanceDto();
+            }
             LiveAnchorBaseBusinessMonthTargetPerformanceDto performanceInfoDto = new LiveAnchorBaseBusinessMonthTargetPerformanceDto
             {
-                ConsulationCardTarget = await performance.SumAsync(t => t.ConsultationTarget + t.ConsultationTarget2),
+                ConsulationCardTarget = await performance.SumAsync(t => (t.ConsultationTarget > 1 ? t.ConsultationTarget : 0) + (t.ConsultationTarget2 > 0 ? t.ConsultationTarget2 : 0)),
                 GMVTarget = await performance.SumAsync(e => e.GMVTarget),
                 LivingRoomFlowInvestmentTarget = await performance.SumAsync(e => e.LivingRoomFlowInvestmentTarget),
                 LivingRoomCumulativeFlowInvestment = await performance.SumAsync(e => e.LivingRoomCumulativeFlowInvestment),

@@ -169,6 +169,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HistoryDataBase", "HistoryD
 		amiyadbUpdateHistory-2022.sql = amiyadbUpdateHistory-2022.sql
 		amiyadbUpdateHistory-2023.sql = amiyadbUpdateHistory-2023.sql
 		amiyadbUpdateHistory-2024.sql = amiyadbUpdateHistory-2024.sql
+		SqlQuery_1.sql = SqlQuery_1.sql
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fx.Amiya.SyncOrder.WeChatVideo", "Fx.Amiya.SyncOrder.WeChatVideo\Fx.Amiya.SyncOrder.WeChatVideo.csproj", "{F3FA4120-22B4-459E-8C3C-8A1B366DCC94}"

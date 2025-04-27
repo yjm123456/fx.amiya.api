@@ -21,6 +21,11 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
         /// 线索量
         /// </summary>
         public int ClueCount { get; set; }
+
+        /// <summary>
+        /// 线索目标
+        /// </summary>
+        public int ClueTarget { get; set; }
         /// <summary>
         /// 线索有效率
         /// </summary>

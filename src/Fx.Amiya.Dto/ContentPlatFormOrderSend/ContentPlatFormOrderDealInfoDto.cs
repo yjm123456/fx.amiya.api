@@ -222,6 +222,11 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 开票公司id
         /// </summary>
         public string BelongCompany { get; set; }
+
+        /// <summary>
+        /// 归属部门
+        /// </summary>
+        public int BelongChannel { get; set; }
         /// <summary>
         /// 开票公司名称
         /// </summary>

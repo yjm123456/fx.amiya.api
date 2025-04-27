@@ -33,7 +33,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 获取总览数据
         /// </summary>
         /// <returns></returns> 
-       [HttpGet("headCollectivityData")]
+        [HttpGet("headCollectivityData")]
         public async Task<ResultData<HeadCollectivityDataVo>> GetHeadCollectivityDataAsync()
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
@@ -69,18 +69,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="fansInfo">粉丝信息</param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<LiveRequirementInfoVo>>> GetListWithPageAsync(int pageNum, int pageSize, byte? status, byte? liveTypeId, string keyword,string fansInfo)
+        public async Task<ResultData<FxPageInfo<LiveRequirementInfoVo>>> GetListWithPageAsync(int pageNum, int pageSize, byte? status, byte? liveTypeId, string keyword, string fansInfo)
         {
-            var q = await liveRequirementInfoService.GetListWithPageAsync(pageNum, pageSize, status, liveTypeId, keyword,fansInfo);
+            var q = await liveRequirementInfoService.GetListWithPageAsync(pageNum, pageSize, status, liveTypeId, keyword, fansInfo);
             var liveRequirementInfo = from d in q.List
                                       select new LiveRequirementInfoVo
                                       {
                                           Id = d.Id,
                                           CreateDate = d.CreateDate,
-                                          CreateBy=d.CreateBy,
-                                          CreateName=d.CreateName,
+                                          CreateBy = d.CreateBy,
+                                          CreateName = d.CreateName,
                                           Anchor = d.Anchor,
-                                          LiveAnchorId=d.LiveAnchorId,
+                                          LiveAnchorId = d.LiveAnchorId,
                                           LiveTypeId = d.LiveTypeId,
                                           LiveTypeName = d.LiveTypeName,
                                           RequirementTypeId = d.RequirementTypeId,
@@ -95,12 +95,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                                           StatusText = d.StatusText,
                                           ResponseDate = d.ResponseDate,
                                           ResponseRemark = d.ResponseRemark,
-                                          ResponseBy=d.ResponseBy,
-                                          ResponseByName=d.ResponseByName,
-                                          DecideBy=d.DecideBy,
-                                          DecideByName=d.DecideByName,
-                                          DecideDate=d.DecideDate,
-                                          DecideRemark=d.DecideRemark,
+                                          ResponseBy = d.ResponseBy,
+                                          ResponseByName = d.ResponseByName,
+                                          DecideBy = d.DecideBy,
+                                          DecideByName = d.DecideByName,
+                                          DecideDate = d.DecideDate,
+                                          DecideRemark = d.DecideRemark,
                                           ExecuteDate = d.ExecuteDate,
                                           ExecuteRemark = d.ExecuteRemark,
                                           ExecuteBy = d.ExecuteBy,
@@ -177,8 +177,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                       {
                                           Id = d.Id,
                                           CreateDate = d.CreateDate,
-                                          CreateBy=d.CreateBy,
-                                          CreateName=d.CreateName,
+                                          CreateBy = d.CreateBy,
+                                          CreateName = d.CreateName,
                                           Anchor = d.Anchor,
                                           LiveTypeId = d.LiveTypeId,
                                           LiveTypeName = d.LiveTypeName,
@@ -218,10 +218,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                                       {
                                           Id = d.Id,
                                           CreateDate = d.CreateDate,
-                                          CreateBy=d.CreateBy,
-                                          CreateName=d.CreateName,
+                                          CreateBy = d.CreateBy,
+                                          CreateName = d.CreateName,
                                           Anchor = d.Anchor,
-                                          LiveAnchorId=d.LiveAnchorId,
+                                          LiveAnchorId = d.LiveAnchorId,
                                           LiveTypeId = d.LiveTypeId,
                                           LiveTypeName = d.LiveTypeName,
                                           RequirementTypeId = d.RequirementTypeId,
@@ -236,9 +236,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                                           StatusText = d.StatusText,
                                           ResponseDate = d.ResponseDate,
                                           ResponseRemark = d.ResponseRemark,
-                                          ResponseBy=d.ResponseBy,
-                                          ResponseByName=d.ResponseByName
-                                          
+                                          ResponseBy = d.ResponseBy,
+                                          ResponseByName = d.ResponseByName
+
                                       };
             FxPageInfo<LiveRequirementInfoVo> requirementPageInfo = new FxPageInfo<LiveRequirementInfoVo>();
             requirementPageInfo.TotalCount = q.TotalCount;
@@ -265,10 +265,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                                       {
                                           Id = d.Id,
                                           CreateDate = d.CreateDate,
-                                          CreateBy=d.CreateBy,
-                                          CreateName=d.CreateName,
+                                          CreateBy = d.CreateBy,
+                                          CreateName = d.CreateName,
                                           Anchor = d.Anchor,
-                                          LiveAnchorId=d.LiveAnchorId,
+                                          LiveAnchorId = d.LiveAnchorId,
                                           LiveTypeId = d.LiveTypeId,
                                           LiveTypeName = d.LiveTypeName,
                                           RequirementTypeId = d.RequirementTypeId,
@@ -281,14 +281,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                                           PriorityLevelText = d.PriorityLevelText,
                                           Status = d.Status,
                                           StatusText = d.StatusText,
-                                          DecideBy=d.DecideBy,
-                                          DecideByName=d.DecideByName,
-                                          DecideDate=d.DecideDate,
-                                          DecideRemark=d.DecideRemark,
+                                          DecideBy = d.DecideBy,
+                                          DecideByName = d.DecideByName,
+                                          DecideDate = d.DecideDate,
+                                          DecideRemark = d.DecideRemark,
                                           ResponseDate = d.ResponseDate,
                                           ResponseRemark = d.ResponseRemark,
-                                          ResponseBy=d.ResponseBy,
-                                          ResponseByName=d.ResponseByName
+                                          ResponseBy = d.ResponseBy,
+                                          ResponseByName = d.ResponseByName
                                       };
             FxPageInfo<LiveRequirementInfoVo> requirementPageInfo = new FxPageInfo<LiveRequirementInfoVo>();
             requirementPageInfo.TotalCount = q.TotalCount;
@@ -335,7 +335,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             decideRequirementDto.IsAcceptResponse = decideRequirementVo.IsAcceptResponse;
             decideRequirementDto.DepartmentId = decideRequirementVo.DepartmentId;
             decideRequirementDto.DecideRemark = decideRequirementVo.DecideRemark;
-            await liveRequirementInfoService.DecideRequirementAsync(decideRequirementDto,employeeId);
+            await liveRequirementInfoService.DecideRequirementAsync(decideRequirementDto, employeeId);
             return ResultData.Success();
         }
 
@@ -397,7 +397,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-       [HttpGet("unConfirmList")]
+        [HttpGet("unConfirmList")]
         public async Task<ResultData<FxPageInfo<UnConfirmLiveRequirementInfoVo>>> GetUnConfirmFinishListAsync(int pageNum, int pageSize)
         {
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
@@ -409,7 +409,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                            Id = d.Id,
                                            CreateDate = d.CreateDate,
                                            Anchor = d.Anchor,
-                                           LiveAnchorId=d.LiveAnchorId,
+                                           LiveAnchorId = d.LiveAnchorId,
                                            LiveTypeId = d.LiveTypeId,
                                            LiveTypeName = d.LiveTypeName,
                                            RequirementTypeId = d.RequirementTypeId,
@@ -428,7 +428,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             FxPageInfo<UnConfirmLiveRequirementInfoVo> requirementPageInfo = new FxPageInfo<UnConfirmLiveRequirementInfoVo>();
             requirementPageInfo.TotalCount = q.TotalCount;
             requirementPageInfo.List = unConfirmRequirement;
-           return ResultData<FxPageInfo<UnConfirmLiveRequirementInfoVo>>.Success().AddData("unConfirmRequirement", requirementPageInfo);
+            return ResultData<FxPageInfo<UnConfirmLiveRequirementInfoVo>>.Success().AddData("unConfirmRequirement", requirementPageInfo);
         }
     }
 }

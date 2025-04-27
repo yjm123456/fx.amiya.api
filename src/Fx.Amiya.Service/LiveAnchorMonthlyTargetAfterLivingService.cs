@@ -805,7 +805,7 @@ namespace Fx.Amiya.Service
                     SendOrderTarget = e.SendOrderTarget,
                     NewCustomerVisitTarget = e.NewCustomerVisitTarget,
                     BaseLiveAnchorId = e.LiveAnchor.LiveAnchorBaseId,
-                    CluesTaget = e.CluesTarget,
+                    CluesTaget = e.CluesTarget > 1 ? e.CluesTarget : 0,
 
                 })
                 .ToList();
@@ -959,7 +959,7 @@ namespace Fx.Amiya.Service
                 TotalDealTarget = await performance.SumAsync(t => t.DealTarget),
                 NewCustomerDealTarget = await performance.SumAsync(t => t.NewCustomerDealTarget),
                 OldCustomerDealTarget = await performance.SumAsync(t => t.OldCustomerDealTarget),
-                NewCustomerPerformanceTarget=await performance.SumAsync(t=>t.NewCustomerPerformanceTarget),
+                NewCustomerPerformanceTarget = await performance.SumAsync(t => t.NewCustomerPerformanceTarget),
 
             };
             return performanceInfoDto;

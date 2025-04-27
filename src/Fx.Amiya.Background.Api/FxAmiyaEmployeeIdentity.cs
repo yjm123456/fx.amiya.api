@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Fx.Amiya.Background.Api
 {
-    public class FxAmiyaEmployeeIdentity:FxInternalEmployeeIdentity
+    public class FxAmiyaEmployeeIdentity : FxInternalEmployeeIdentity
     {
         public bool IsCustomerService { get; set; }
     }

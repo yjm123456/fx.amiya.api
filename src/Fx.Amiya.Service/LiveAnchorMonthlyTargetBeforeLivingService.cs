@@ -932,7 +932,7 @@ namespace Fx.Amiya.Service
             {
                 res = res.Where(e => e.LiveAnchor.LiveAnchorBaseId == query.BaseLiveAnchorId);
             }
-            if (res.ToList().Count == 0) return null;
+            if (res.ToList().Count == 0) return new LiveAnchorBeforeLivingTargetDto() ;
             LiveAnchorBeforeLivingTargetDto liveAnchorBeforeLivingTargetDto = new LiveAnchorBeforeLivingTargetDto();
             if (query.ShowTikokData)
             {
@@ -977,7 +977,7 @@ namespace Fx.Amiya.Service
                 .Where(o => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(o.LiveAnchorId))
                 .Select(e => new AmiyaOperationBoardCluesChannelTargetDto
                 {
-                    CluesTarget = e.TikTokCluesTarget + e.XiaoHongShuCluesTarget + e.VideoCluesTarget,
+                    CluesTarget = (e.TikTokCluesTarget == 1 ? 0 : e.TikTokCluesTarget) + (e.XiaoHongShuCluesTarget == 1 ? 0 : e.XiaoHongShuCluesTarget) + (e.VideoCluesTarget == 1 ? 0 : e.VideoCluesTarget),
                     Month = e.Month,
                     LiveAnchorId = e.LiveAnchorId
                 })
@@ -999,7 +999,7 @@ namespace Fx.Amiya.Service
                 .Where(o => liveAnchorIds.Count == 0 || liveAnchorIds.Contains(o.LiveAnchorId))
                 .Select(e => new LiveAnchorBaseBusinessMonthTargetBeforeLivingDto
                 {
-                    CluesTarget = e.TikTokCluesTarget + e.XiaoHongShuCluesTarget + e.VideoCluesTarget,
+                    CluesTarget = (e.TikTokCluesTarget == 1 ? 0 : e.TikTokCluesTarget) + (e.XiaoHongShuCluesTarget == 1 ? 0 : e.XiaoHongShuCluesTarget) + (e.VideoCluesTarget == 1 ? 0 : e.VideoCluesTarget),
                 })
                 .ToList();
             LiveAnchorBaseBusinessMonthTargetBeforeLivingDto performanceInfoDto = new LiveAnchorBaseBusinessMonthTargetBeforeLivingDto
