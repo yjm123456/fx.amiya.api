@@ -1898,7 +1898,6 @@ namespace Fx.Amiya.Service
             // var totalCustomer = await bindCustomerServiceService.GetBindCustomerServiceCountByAssistantAndPricePhone(assistantInfo.Id, 199);
             QueryBeforeLivingBusinessDataDto queryBeforeLivingBusinessDataDto = new QueryBeforeLivingBusinessDataDto();
             queryBeforeLivingBusinessDataDto.Year = query.EndDate.Year;
-            queryBeforeLivingBusinessDataDto.Month = query.EndDate.Month;
             queryBeforeLivingBusinessDataDto.ShowTikokData = true;
             queryBeforeLivingBusinessDataDto.ShowXiaoHongShuData = true;
             queryBeforeLivingBusinessDataDto.ShowWechatVideoData = true;
@@ -1915,6 +1914,7 @@ namespace Fx.Amiya.Service
                 {
                     baseDataEndDate = Convert.ToDateTime((selectDate.EndDate.Year + 1) + "-01-01");
                 }
+                queryBeforeLivingBusinessDataDto.Month = month;
                 var groupBaseData = await shoppingCartRegistrationService.GetBelongChannelFlowAndCustomerTransformDataAsync(baseDataStartDate, baseDataEndDate, query.BelongChannel);
                 FlowTransFormDataDto groupData = new FlowTransFormDataDto();
                 // groupData.GroupName = $"{assistantInfo.Name}";
@@ -1950,6 +1950,7 @@ namespace Fx.Amiya.Service
             #region 【合计】
             FlowTransFormDataDto groupDataSum = new FlowTransFormDataDto();
             groupDataSum.YearAndMonth = "合计";
+            groupDataSum.ClueTarget = dataListThisMonth.Sum(x => x.ClueTarget);
             groupDataSum.ClueCount = dataListThisMonth.Sum(x => x.ClueCount);
             groupDataSum.SendOrderCount = dataListThisMonth.Sum(x => x.SendOrderCount);
             groupDataSum.DistributeConsulationNum = dataListThisMonth.Sum(x => x.DistributeConsulationNum);
@@ -1979,6 +1980,7 @@ namespace Fx.Amiya.Service
             FlowTransFormDataDto groupDataAvg = new FlowTransFormDataDto();
             var thisMonth = DateTime.Now.Month;
             groupDataAvg.YearAndMonth = "月均";
+            groupDataAvg.ClueTarget = groupDataSum.ClueTarget / thisMonth;
             groupDataAvg.ClueCount = groupDataSum.ClueCount / thisMonth;
             groupDataAvg.SendOrderCount = Math.Round(groupDataSum.SendOrderCount / thisMonth, 2, MidpointRounding.AwayFromZero);
             groupDataAvg.DistributeConsulationNum = groupDataSum.DistributeConsulationNum / thisMonth;
@@ -5386,7 +5388,7 @@ namespace Fx.Amiya.Service
             var afterLivingtarget = await liveAnchorMonthlyTargetAfterLivingService.GetPerformanceTargetAsync(query.StartDate.Year, query.StartDate.Month, liveAnchorIds.Select(x => x.Id).ToList());
             var livingtarget = await liveAnchorMonthlyTargetLivingService.GetBasePerformanceTargetAsync(query.StartDate.Year, query.StartDate.Month, liveAnchorIds.Select(x => x.Id).ToList());
             var beforeLivingtarget = await liveAnchorMonthlyTargetBeforeLivingService.GetCluePerformanceTargetAsync(query.StartDate.Year, query.StartDate.Month, liveAnchorIds.Select(x => x.Id).ToList());
-            var todayData = await shoppingCartRegistrationService.GetAdminCustomerDistributeByLivingDataAsync(seqDate.NowDateStartDate, seqDate.NowDateEndDate, assistantList.Select(e => e.Id).ToList(),"");
+            var todayData = await shoppingCartRegistrationService.GetAdminCustomerDistributeByLivingDataAsync(seqDate.NowDateStartDate, seqDate.NowDateEndDate, assistantList.Select(e => e.Id).ToList(), "");
             var currentData = await shoppingCartRegistrationService.GetAdminCustomerDistributeByLivingDataAsync(seqDate.StartDate, seqDate.EndDate, assistantList.Select(e => e.Id).ToList(), "");
             var lastMonthData = await shoppingCartRegistrationService.GetAdminCustomerDistributeByLivingDataAsync(seqDate.LastMonthStartDate, seqDate.LastMonthEndDate, assistantList.Select(e => e.Id).ToList(), "");
             var latYearData = await shoppingCartRegistrationService.GetAdminCustomerDistributeByLivingDataAsync(seqDate.LastYearThisMonthStartDate, seqDate.LastYearThisMonthEndDate, assistantList.Select(e => e.Id).ToList(), "");
@@ -5430,7 +5432,7 @@ namespace Fx.Amiya.Service
             AdminCustomerServiceCustomerTypeDto data = new AdminCustomerServiceCustomerTypeDto();
             var seqDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.EndDate.Year, query.EndDate.Month);
 
-            var todayData = await shoppingCartRegistrationService.GetAdminCustomerDistributeByLivingDataAsync(seqDate.NowDateStartDate, seqDate.NowDateEndDate, new List<int> { query.AssistantId.Value },"", null);
+            var todayData = await shoppingCartRegistrationService.GetAdminCustomerDistributeByLivingDataAsync(seqDate.NowDateStartDate, seqDate.NowDateEndDate, new List<int> { query.AssistantId.Value }, "", null);
             var currentData = await shoppingCartRegistrationService.GetAdminCustomerDistributeByLivingDataAsync(seqDate.StartDate, seqDate.EndDate, new List<int> { query.AssistantId.Value }, "", null);
             var lastMonthData = await shoppingCartRegistrationService.GetAdminCustomerDistributeByLivingDataAsync(seqDate.LastMonthStartDate, seqDate.LastMonthEndDate, new List<int> { query.AssistantId.Value }, "", null);
             var latYearData = await shoppingCartRegistrationService.GetAdminCustomerDistributeByLivingDataAsync(seqDate.LastYearThisMonthStartDate, seqDate.LastYearThisMonthEndDate, new List<int> { query.AssistantId.Value }, "", null);
@@ -5845,7 +5847,7 @@ namespace Fx.Amiya.Service
                         getAdminCustomerTransFormDataDto.ClueNum = currentData.FirstType;
                         getAdminCustomerTransFormDataDto.ClueCompleteRate = DecimalExtension.CalculateTargetComplete(Convert.ToDecimal(getAdminCustomerTransFormDataDto.ClueNum), Convert.ToDecimal(getAdminCustomerTransFormDataDto.ClueTarget));
                         getAdminCustomerTransFormDataDto.AddWeChatNum = currentDataAddWechat.FirstType;
-                        getAdminCustomerTransFormDataDto.AddWeChatRate= DecimalExtension.CalculateTargetComplete(Convert.ToDecimal(getAdminCustomerTransFormDataDto.AddWeChatNum), Convert.ToDecimal(getAdminCustomerTransFormDataDto.ClueNum));
+                        getAdminCustomerTransFormDataDto.AddWeChatRate = DecimalExtension.CalculateTargetComplete(Convert.ToDecimal(getAdminCustomerTransFormDataDto.AddWeChatNum), Convert.ToDecimal(getAdminCustomerTransFormDataDto.ClueNum));
 
                         break;
                     case 2:
