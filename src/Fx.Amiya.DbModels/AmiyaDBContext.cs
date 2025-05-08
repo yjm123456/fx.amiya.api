@@ -29,6 +29,7 @@ namespace Fx.Amiya.DbModels
         public virtual DbSet<MessageNotice> MessageNotice { get; set; }
         public virtual DbSet<AmiyaInWarehouse> AmiyaInWarehouse { get; set; }
         public virtual DbSet<GreatHospitalDataWrite> GreatHospitalDataWrite { get; set; }
+        public virtual DbSet<RunTangDateOperation> RunTangDateOperation { get; set; }
         public virtual DbSet<UnCheckOrder> UnCheckOrder { get; set; }
         public virtual DbSet<CustomerTagInfo> CustomerTagInfo { get; set; }
         public virtual DbSet<HospitalNetWorkConsulationOperationData> HospitalNetWorkConsulationOperationData { get; set; }
@@ -295,6 +296,7 @@ namespace Fx.Amiya.DbModels
             modelBuilder.ApplyConfiguration(new ModuleCategoryConfiguration());
             modelBuilder.ApplyConfiguration(new ModuleConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaPositionDefaultRouteConfiguration());
+            modelBuilder.ApplyConfiguration(new RunTangDateOperationConfiguration());
             modelBuilder.ApplyConfiguration(new HospitalConsulationOperationDataConfiguration());
             modelBuilder.ApplyConfiguration(new AmiyaPositionModulePermissionConfiguration());
             modelBuilder.ApplyConfiguration(new ShootingAndClipConfiguration());

@@ -155,8 +155,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                 hospitalOperationDataVo.Valid = hospitalOperationData.Valid;
                 hospitalOperationDataVo.HospitalId = hospitalOperationData.HospitalId;
                 hospitalOperationDataVo.IndicatorId = hospitalOperationData.IndicatorId;
-                hospitalOperationDataVo.HospitalId = hospitalOperationData.HospitalId;
-                hospitalOperationDataVo.IndicatorId = hospitalOperationData.IndicatorId;
                 hospitalOperationDataVo.ConsulationName = hospitalOperationData.ConsulationName;
                 hospitalOperationDataVo.SendOrderNum = hospitalOperationData.SendOrderNum;
                 hospitalOperationDataVo.NewCustomerVisitNum = hospitalOperationData.NewCustomerVisitNum;

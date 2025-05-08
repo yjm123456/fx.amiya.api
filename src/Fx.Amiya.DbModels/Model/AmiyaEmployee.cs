@@ -129,5 +129,7 @@ namespace Fx.Amiya.DbModels.Model
 
         public List<CustomerServiceCheckPerformance> CustomerServiceCheckPerformance { get; set; }
 
+        public List<RunTangDateOperation> RunTangDateOperationList { get; set; }
+
     }
 }

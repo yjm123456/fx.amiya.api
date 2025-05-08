@@ -24,5 +24,7 @@ namespace Fx.Amiya.DbModels.Model
 
         public bool IsDoctor { get; set; }
 
+        public List<RunTangDateOperation> RunTangDateOperationList { get; set; }
+
     }
 }

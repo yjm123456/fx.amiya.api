@@ -53,27 +53,27 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        
-        public async Task<ResultData<FxPageInfo<AmiyaWareHouseVo>>> GetListWithPageAsync( string keyword, string wareHouseInfoId, string warehouseStorageRacksId, int pageNum, int pageSize)
+
+        public async Task<ResultData<FxPageInfo<AmiyaWareHouseVo>>> GetListWithPageAsync(string keyword, string wareHouseInfoId, string warehouseStorageRacksId, int pageNum, int pageSize)
         {
             try
             {
-                var q = await _amiyaWareHouseService.GetListWithPageAsync(keyword,wareHouseInfoId,warehouseStorageRacksId, pageNum, pageSize);
+                var q = await _amiyaWareHouseService.GetListWithPageAsync(keyword, wareHouseInfoId, warehouseStorageRacksId, pageNum, pageSize);
 
                 var amiyaWareHouse = from d in q.List
-                              select new AmiyaWareHouseVo
-                              {
-                                  Id = d.Id,
-                                  Unit = d.Unit,
-                                  GoodsName = d.GoodsName,
-                                  GoodsSourceName = d.GoodsSourceName,
-                                  StorageRacks=d.StorageRacks,
-                                  SinglePrice = d.SinglePrice,
-                                  Amount = d.Amount,
-                                  TotalPrice = d.TotalPrice,
-                                  ExpireDate = d.ExpireDate,
-                                  HasUsedTime = d.HasUsedTime,
-                              };
+                                     select new AmiyaWareHouseVo
+                                     {
+                                         Id = d.Id,
+                                         Unit = d.Unit,
+                                         GoodsName = d.GoodsName,
+                                         GoodsSourceName = d.GoodsSourceName,
+                                         StorageRacks = d.StorageRacks,
+                                         SinglePrice = d.SinglePrice,
+                                         Amount = d.Amount,
+                                         TotalPrice = d.TotalPrice,
+                                         ExpireDate = d.ExpireDate,
+                                         HasUsedTime = d.HasUsedTime,
+                                     };
 
                 FxPageInfo<AmiyaWareHouseVo> amiyaWareHousePageInfo = new FxPageInfo<AmiyaWareHouseVo>();
                 amiyaWareHousePageInfo.TotalCount = q.TotalCount;
@@ -95,7 +95,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="addVo"></param>
         /// <returns></returns>
         [HttpPost]
-       
+
         public async Task<ResultData> AddAsync(AmiyaWareHouseAddVo addVo)
         {
             try
@@ -126,7 +126,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("byId/{id}")]
-       
+
         public async Task<ResultData<AmiyaWareHouseVo>> GetByIdAsync(string id)
         {
             try
@@ -157,7 +157,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="updateVo"></param>
         /// <returns></returns>
         [HttpPut("update")]
-       
+
         public async Task<ResultData> UpdateAsync(AmiyaWareHouseUpdateVo updateVo)
         {
             try
@@ -183,7 +183,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="updateVo"></param>
         /// <returns></returns>
         [HttpPut("InventoryWareHouse")]
-       
+
         public async Task<ResultData> InventoryWareHouseAsync(InventoryWareHouseVo updateVo)
         {
             try
@@ -271,7 +271,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        
+
         public async Task<ResultData> DeleteAsync(string id)
         {
             try
@@ -292,7 +292,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("AmiyaWareHouseExport")]
         [FxInternalAuthorize]
-        public async Task<FileStreamResult> AmiyaWareHouseExportAsync([FromQuery]QueryAmiyaWareHouseExportVo query)
+        public async Task<FileStreamResult> AmiyaWareHouseExportAsync([FromQuery] QueryAmiyaWareHouseExportVo query)
         {
             OperationAddDto operationAddDto = new OperationAddDto();
             operationAddDto.Code = 0;
@@ -301,7 +301,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
                 operationAddDto.OperationBy = employeeId;
-                var q = await _amiyaWareHouseService.ExportListAsync(query.Keyword, query.WareHouseInfoId,query.WarehouseStorageRacksId);
+                var q = await _amiyaWareHouseService.ExportListAsync(query.Keyword, query.WareHouseInfoId, query.WarehouseStorageRacksId);
                 var res = from d in q
                           select new ExportAmiyaWareHouseVo()
                           {
@@ -312,8 +312,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                               StorageRacks = d.StorageRacks,
                               Amount = d.Amount,
                               TotalPrice = d.TotalPrice,
-                              ExpireDate=d.ExpireDate,
-                              HasUsedTime=d.HasUsedTime,
+                              ExpireDate = d.ExpireDate,
+                              HasUsedTime = d.HasUsedTime,
                           };
                 var exportOrderWriteOff = res.ToList();
                 var stream = ExportExcelHelper.ExportExcel(exportOrderWriteOff);
@@ -328,7 +328,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             finally
             {
-                
+
                 operationAddDto.Parameters = JsonConvert.SerializeObject(query);
                 operationAddDto.RequestType = (int)RequestType.Export;
                 operationAddDto.RouteAddress = httpContextAccessor.HttpContext.Request.Path;

@@ -1,7 +1,10 @@
 ﻿using Fx.Amiya.Background.Api.Vo.AmiyaLivingOperationBoard.Input;
 using Fx.Amiya.Background.Api.Vo.AmiyaLivingOperationBoard.Result;
+using Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Input;
+using Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result;
 using Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result;
 using Fx.Amiya.Dto.AmiyaLivingOperationBoard.Input;
+using Fx.Amiya.Dto.AmiyaOperationsBoardService.Input;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Open.Infrastructure.Web;
@@ -22,11 +25,17 @@ namespace Fx.Amiya.Background.Api.Controllers
     [FxInternalAuthorize]
     public class AmiyaLivingOperationBoardController : ControllerBase
     {
+        private readonly IAmiyaOperationsBoardService amiyaOperationsBoardService;
         private readonly IAmiyaLivingOperationBoardService amiyaLivingOperationBoardService;
+        private IHttpContextAccessor _httpContextAccessor;
+        private readonly IAmiyaEmployeeService amiyaEmployeeService;
 
-        public AmiyaLivingOperationBoardController(IAmiyaLivingOperationBoardService amiyaLivingOperationBoardService)
+        public AmiyaLivingOperationBoardController(IAmiyaOperationsBoardService amiyaOperationsBoardService, IHttpContextAccessor httpContextAccessor, IAmiyaLivingOperationBoardService amiyaLivingOperationBoardService, IAmiyaEmployeeService amiyaEmployeeService)
         {
+            this.amiyaOperationsBoardService = amiyaOperationsBoardService;
             this.amiyaLivingOperationBoardService = amiyaLivingOperationBoardService;
+            _httpContextAccessor = httpContextAccessor;
+            this.amiyaEmployeeService = amiyaEmployeeService;
         }
         /// <summary>
         /// 直播中客资和新客业绩
@@ -249,6 +258,58 @@ namespace Fx.Amiya.Background.Api.Controllers
             }).ToList();
 
             return ResultData<LivingContentplatformPerformanceDataVo>.Success().AddData("data", data);
+        }
+        /// <summary>
+        /// 直播中月度线索转化情况
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("LivingYearTransformData")]
+        public async Task<ResultData<List<FlowTransFormDataVo>>> BeforeLivingYearFlowTransformDataAsync([FromQuery] QueryTransformDataVo query)
+        {
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeId = Convert.ToInt32(employee.Id);
+            var empInfo = await amiyaEmployeeService.GetByIdAsync(employeeId);
+            QueryTransformDataByChannelDto queryDto = new QueryTransformDataByChannelDto();
+            if (empInfo.IsDirector == false)
+            {
+                queryDto.BaseLiveAnchorId = empInfo.LiveAnchorBaseId;
+            }
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.BelongChannel = (int)BelongChannel.Living;
+            var resultData = await amiyaOperationsBoardService.GetYearFlowTransFormNewDataByChannelAsync(queryDto);
+
+            var res = resultData.Select(e => new FlowTransFormDataVo
+            {
+                GroupName = e.GroupName,
+                YearAndMonth = e.YearAndMonth,
+                ClueTarget = e.ClueTarget,
+                ClueCount = e.ClueCount,
+                ClueEffectiveRate = e.ClueEffectiveRate,
+                SendOrderCount = e.SendOrderCount,
+                DistributeConsulationNum = e.DistributeConsulationNum,
+                AddWechatCount = e.AddWechatCount,
+                AddWechatRate = e.AddWechatRate,
+                SendOrderRate = e.SendOrderRate,
+                ToHospitalCount = e.ToHospitalCount,
+                ToHospitalRate = e.ToHospitalRate,
+                DealCount = e.DealCount,
+                NewCustomerDealCount = e.NewCustomerDealCount,
+                OldCustomerDealCount = e.OldCustomerDealCount,
+                DealRate = e.DealRate,
+                NewCustomerPerformance = e.NewCustomerPerformance,
+                NewAndOldCustomerRate = e.NewAndOldCustomerRate,
+                OldCustomerPerformance = e.OldCustomerPerformance,
+                NewCustomerUnitPrice = e.NewCustomerUnitPrice,
+                OldCustomerUnitPrice = e.OldCustomerUnitPrice,
+                CustomerUnitPrice = e.CustomerUnitPrice,
+                Rate = e.Rate,
+                TotalPerformance = e.TotalPerformance,
+                OldCustomerBuyRate = e.OldCustomerBuyRate
+            }).ToList();
+
+            return ResultData<List<FlowTransFormDataVo>>.Success().AddData("data", res.ToList());
         }
 
     }
