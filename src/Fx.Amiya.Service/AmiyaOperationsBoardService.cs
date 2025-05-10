@@ -1901,6 +1901,7 @@ namespace Fx.Amiya.Service
             queryBeforeLivingBusinessDataDto.ShowTikokData = true;
             queryBeforeLivingBusinessDataDto.ShowXiaoHongShuData = true;
             queryBeforeLivingBusinessDataDto.ShowWechatVideoData = true;
+            queryBeforeLivingBusinessDataDto.BaseLiveAnchorId = query.BaseLiveAnchorId;
             for (int month = 1; month < 13; month++)
             {
                 var baseDataStartDate = Convert.ToDateTime(selectDate.EndDate.Year + "-" + month + "-01");
@@ -1915,7 +1916,7 @@ namespace Fx.Amiya.Service
                     baseDataEndDate = Convert.ToDateTime((selectDate.EndDate.Year + 1) + "-01-01");
                 }
                 queryBeforeLivingBusinessDataDto.Month = month;
-                var groupBaseData = await shoppingCartRegistrationService.GetBelongChannelFlowAndCustomerTransformDataAsync(baseDataStartDate, baseDataEndDate, query.BelongChannel);
+                var groupBaseData = await shoppingCartRegistrationService.GetBelongChannelFlowAndCustomerTransformDataAsync(baseDataStartDate, baseDataEndDate, query.BelongChannel,query.BaseLiveAnchorId);
                 FlowTransFormDataDto groupData = new FlowTransFormDataDto();
                 // groupData.GroupName = $"{assistantInfo.Name}";
                 groupData.YearAndMonth = selectDate.StartDate.Year + "/" + month;

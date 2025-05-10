@@ -308,7 +308,7 @@ namespace Fx.Amiya.IService
         /// <param name="endDate"></param>
         /// <param name="benlongChannel"></param>
         /// <returns></returns>
-        Task<ShoppingCartRegistrationIndicatorBaseDataDto> GetBelongChannelFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate, int benlongChannel);
+        Task<ShoppingCartRegistrationIndicatorBaseDataDto> GetBelongChannelFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate, int benlongChannel,string baseLiveAnchorId);
         /// <summary>
         /// 获取助理流量和客户转化基础数据
         /// </summary>

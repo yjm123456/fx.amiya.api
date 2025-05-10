@@ -2487,11 +2487,12 @@ namespace Fx.Amiya.Service
         /// <param name="endDate"></param>
         /// <param name="baseLiveAnchorId"></param>
         /// <returns></returns>
-        public async Task<ShoppingCartRegistrationIndicatorBaseDataDto> GetBelongChannelFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate, int benlongChannel)
+        public async Task<ShoppingCartRegistrationIndicatorBaseDataDto> GetBelongChannelFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate, int benlongChannel,string baseLiveAnchorId)
         {
             ShoppingCartRegistrationIndicatorBaseDataDto data = new ShoppingCartRegistrationIndicatorBaseDataDto();
             var baseData = dalShoppingCartRegistration.GetAll()
                 .Where(e => e.RecordDate >= startDate && e.RecordDate < endDate)
+                .Where(e => string.IsNullOrEmpty(baseLiveAnchorId) || e.BaseLiveAnchorId == baseLiveAnchorId)
                 .Where(e => benlongChannel == 0 || e.BelongChannel == benlongChannel)
                 .Select(e => new
                 {
@@ -2511,9 +2512,10 @@ namespace Fx.Amiya.Service
             //  .Select(o => o.Phone)
             //  .Distinct()
             //  .Count();
-            var sendC = dalContentPlatformOrderSend.GetAll()
+            var sendC = dalContentPlatformOrderSend.GetAll().Include(x=>x.ContentPlatformOrder).ThenInclude(x=>x.LiveAnchor)
               .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
               .Where(o => o.ContentPlatformOrder.BelongChannel == benlongChannel)
+                .Where(e => string.IsNullOrEmpty(baseLiveAnchorId) || e.ContentPlatformOrder.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId)
               .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder && e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder)
               .Where(e => e.IsMainHospital == true)
               .Select(o => o.ContentPlatformOrder.Phone)
@@ -2522,8 +2524,9 @@ namespace Fx.Amiya.Service
             data.ClueCount = baseData.Count();
             data.TotalCount = baseData.Where(e => e.AssignEmpId != 0).Count();
             data.SendOrderCount = sendC;
-            var contentOrderList = dalContentPlatFormOrderDealInfo.GetAll()
+            var contentOrderList = dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
                 .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate)
+                .Where(e => string.IsNullOrEmpty(baseLiveAnchorId) || e.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId)
                 .Where(o => o.ContentPlatFormOrder.BelongChannel == benlongChannel && o.Valid == true)
                 .Select(e => new
                 {

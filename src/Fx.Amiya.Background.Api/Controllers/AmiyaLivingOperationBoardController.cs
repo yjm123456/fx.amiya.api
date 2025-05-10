@@ -42,14 +42,15 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getLivingCustomerAndPerformanceData")]
-        public async Task<ResultData<LivingCustomerAndPerformanceDataVo>> GetLivingCustomerAndPerformanceDataAsync([FromQuery]QueryLivingDataVo query){
+        public async Task<ResultData<LivingCustomerAndPerformanceDataVo>> GetLivingCustomerAndPerformanceDataAsync([FromQuery] QueryLivingDataVo query)
+        {
             LivingCustomerAndPerformanceDataVo data = new LivingCustomerAndPerformanceDataVo();
             QueryLivingDataDto queryDto = new QueryLivingDataDto();
             queryDto.BaseLiveAnchorId = query.BaseLiveAnchorId;
             queryDto.StartDate = query.StartDate;
             queryDto.EndDate = query.EndDate;
-            
-            var res =await amiyaLivingOperationBoardService.GetLivingCustomerAndPerformanceDataAsync(queryDto);
+
+            var res = await amiyaLivingOperationBoardService.GetLivingCustomerAndPerformanceDataAsync(queryDto);
             data.ClueCount = res.ClueCount;
             data.CurrentClueCount = res.CurrentClueCount;
             data.ClueTarget = res.ClueTarget;
@@ -60,27 +61,29 @@ namespace Fx.Amiya.Background.Api.Controllers
             data.CurrentPerformance = res.CurrentPerformance;
             data.PerformanceChain = res.PerformanceChain;
             data.PerformanceYearOnYear = res.PerformanceYearOnYear;
-            data.CurrentMontPerformance=res.CurrentMontPerformance;
+            data.CurrentMontPerformance = res.CurrentMontPerformance;
             data.PerformanceTarget = res.PerformanceTarget;
             data.PerformanceTargetCompleteRate = res.PerformanceTargetCompleteRate;
-            return ResultData<LivingCustomerAndPerformanceDataVo>.Success().AddData("data",data);
+            return ResultData<LivingCustomerAndPerformanceDataVo>.Success().AddData("data", data);
         }
         /// <summary>
         /// 直播中客资和业绩折线图
         /// </summary>
         /// <returns></returns>
         [HttpGet("getLivingCustomerAndPerformanceBrokenLineData")]
-        public async Task<ResultData<LivingCustomerAndPerformanceBrokenLineDataVo>> GetLivingCustomerAndPerformanceBrokenLineDataAsync([FromQuery]QueryLivingDataVo query){
+        public async Task<ResultData<LivingCustomerAndPerformanceBrokenLineDataVo>> GetLivingCustomerAndPerformanceBrokenLineDataAsync([FromQuery] QueryLivingDataVo query)
+        {
             LivingCustomerAndPerformanceBrokenLineDataVo data = new LivingCustomerAndPerformanceBrokenLineDataVo();
             QueryLivingDataDto queryDto = new QueryLivingDataDto();
             queryDto.BaseLiveAnchorId = query.BaseLiveAnchorId;
             queryDto.StartDate = query.StartDate;
             queryDto.EndDate = query.EndDate;
-            
+
             var res = await amiyaLivingOperationBoardService.GetLivingCustomerAndPerformanceBrokenLineDataAsync(queryDto);
-            data.ClueData = res.ClueData.Select(e => new PerformanceBrokenLineListInfoVo {
-                date=e.date,
-                Performance=e.Performance
+            data.ClueData = res.ClueData.Select(e => new PerformanceBrokenLineListInfoVo
+            {
+                date = e.date,
+                Performance = e.Performance
             }).ToList();
             data.PerformanceData = res.PerformanceData.Select(e => new PerformanceBrokenLineListInfoVo
             {
@@ -94,7 +97,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getLivingFilterData")]
-        public async Task<ResultData<LivingFilterDataVo>> GetLivingFilterDataAsync([FromQuery]QueryLivingDataVo query){
+        public async Task<ResultData<LivingFilterDataVo>> GetLivingFilterDataAsync([FromQuery] QueryLivingDataVo query)
+        {
             LivingFilterDataVo data = new LivingFilterDataVo();
             QueryLivingDataDto queryDto = new QueryLivingDataDto();
             queryDto.BaseLiveAnchorId = query.BaseLiveAnchorId;
@@ -113,10 +117,11 @@ namespace Fx.Amiya.Background.Api.Controllers
             data.CurrentGroup.DealRateHealthValueThisMonth = res.CurrentGroup.DealRateHealthValueThisMonth;
             data.CurrentGroup.SendCycle = res.CurrentGroup.SendCycle;
             data.CurrentGroup.HospitalCycle = res.CurrentGroup.HospitalCycle;
-            data.CurrentGroup.DataList = res.CurrentGroup.DataList.Select(e=>new LivingFilterDetailDataVo { 
-                Name=e.Name,
-                Key=e.Key,
-                Value=e.Value
+            data.CurrentGroup.DataList = res.CurrentGroup.DataList.Select(e => new LivingFilterDetailDataVo
+            {
+                Name = e.Name,
+                Key = e.Key,
+                Value = e.Value
             }).ToList();
             data.Company = new LivingFilterDataItemVo();
             data.Company.AddWeChatRate = res.Company.AddWeChatRate;
@@ -142,7 +147,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getLivingCycleData")]
-        public async Task<ResultData<LivingCycleDataVo>> GetLivingCycleDataAsync([FromQuery]QueryLivingDataVo query){
+        public async Task<ResultData<LivingCycleDataVo>> GetLivingCycleDataAsync([FromQuery] QueryLivingDataVo query)
+        {
             LivingCycleDataVo data = new LivingCycleDataVo();
             QueryLivingDataDto queryDto = new QueryLivingDataDto();
             queryDto.BaseLiveAnchorId = query.BaseLiveAnchorId;
@@ -159,7 +165,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getLivingClueTargetData")]
-        public async Task<ResultData<LivingClueTargetDataVo>> GetLivingClueTargetDataAsync([FromQuery]QueryLivingDataVo query){
+        public async Task<ResultData<LivingClueTargetDataVo>> GetLivingClueTargetDataAsync([FromQuery] QueryLivingDataVo query)
+        {
             LivingClueTargetDataVo data = new LivingClueTargetDataVo();
             QueryLivingDataDto queryDto = new QueryLivingDataDto();
             queryDto.BaseLiveAnchorId = query.BaseLiveAnchorId;
@@ -174,7 +181,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getLivingPerformanceRate")]
-        public async Task<ResultData<LivingPerformanceRateVo>> GetLivingPerformanceRateAsync([FromQuery]QueryLivingDataVo query){
+        public async Task<ResultData<LivingPerformanceRateVo>> GetLivingPerformanceRateAsync([FromQuery] QueryLivingDataVo query)
+        {
             LivingPerformanceRateVo data = new LivingPerformanceRateVo();
             QueryLivingDataDto queryDto = new QueryLivingDataDto();
             queryDto.BaseLiveAnchorId = query.BaseLiveAnchorId;
@@ -189,7 +197,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getLivingContentplatformClueData")]
-        public async Task<ResultData<LivingContentplatformClueDataVo>> GetLivingContentplatformClueDataAsync([FromQuery]QueryLivingDataVo query){
+        public async Task<ResultData<LivingContentplatformClueDataVo>> GetLivingContentplatformClueDataAsync([FromQuery] QueryLivingDataVo query)
+        {
             LivingContentplatformClueDataVo data = new LivingContentplatformClueDataVo();
             QueryLivingDataDto queryDto = new QueryLivingDataDto();
             queryDto.BaseLiveAnchorId = query.BaseLiveAnchorId;
@@ -197,10 +206,11 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.EndDate = query.EndDate;
             var res = await amiyaLivingOperationBoardService.GetLivingContentplatformClueDataAsync(queryDto);
             data.ContentPlatformTotalClue = res.ContentPlatformTotalClue;
-            data.ContentPlatformClueRate = res.ContentPlatformClueRate.Select(e => new LivingContentplatformClueDataItemVo { 
-                Name=e.Name,
-                Performance=e.Performance,
-                Value=e.Value
+            data.ContentPlatformClueRate = res.ContentPlatformClueRate.Select(e => new LivingContentplatformClueDataItemVo
+            {
+                Name = e.Name,
+                Performance = e.Performance,
+                Value = e.Value
             }).ToList();
 
 
@@ -226,7 +236,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getLivingContentplatformPerformanceData")]
-        public async Task<ResultData<LivingContentplatformPerformanceDataVo>> GetLivingContentplatformPerformanceDataAsync([FromQuery]QueryLivingDataVo query){
+        public async Task<ResultData<LivingContentplatformPerformanceDataVo>> GetLivingContentplatformPerformanceDataAsync([FromQuery] QueryLivingDataVo query)
+        {
             LivingContentplatformPerformanceDataVo data = new LivingContentplatformPerformanceDataVo();
             QueryLivingDataDto queryDto = new QueryLivingDataDto();
             queryDto.BaseLiveAnchorId = query.BaseLiveAnchorId;
@@ -274,6 +285,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             if (empInfo.IsDirector == false)
             {
                 queryDto.BaseLiveAnchorId = empInfo.LiveAnchorBaseId;
+            }
+            else
+            {
+                queryDto.BaseLiveAnchorId = query.BaseLiveAnchorId;
             }
             queryDto.StartDate = query.StartDate;
             queryDto.EndDate = query.EndDate;
