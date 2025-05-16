@@ -244,6 +244,10 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// </summary>
         public decimal TikTokShowCaseFee { get; set; }
         /// <summary>
+        /// 备注
+        /// </summary>
+        public string Remark { get; set; }
+        /// <summary>
         /// 填报日期
         /// </summary>
         public DateTime RecordDate { get; set; }
@@ -296,6 +300,7 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 抖音涨粉付费
         /// </summary>
         public decimal TikTokIncreaseFansFees { get; set; }
+        public string Remark { get; set; }
 
         /// <summary>
         /// 抖音线索量
@@ -365,6 +370,7 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 填报日期
         /// </summary>
         public DateTime RecordDate { get; set; }
+        public string Remark { get; set; }
     }
 
     public class BeforeLivingZhihuUpdateLiveAnchorDailyTargetDto
@@ -448,6 +454,7 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 今日运营渠道投流费用（当前渠道投流费用）
         /// </summary>
         public decimal FlowInvestmentNum { get; set; }
+        public string Remark { get; set; }
         ///// <summary>
         ///// 今日线索量
         ///// </summary>
@@ -510,6 +517,7 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 填报日期
         /// </summary>
         public DateTime RecordDate { get; set; }
+        public string Remark { get; set; }
     }
 
     #endregion
@@ -590,6 +598,7 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 填报日期
         /// </summary>
         public DateTime RecordDate { get; set; }
+        public string Remark { get; set; }
     }
 
     public class BeforeLivingXiaoHongShuUpdateLiveAnchorDailyTargetDto
@@ -671,6 +680,7 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 填报日期
         /// </summary>
         public DateTime RecordDate { get; set; }
+        public string Remark { get; set; }
     }
 
     #endregion
@@ -741,6 +751,7 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 视频号今日橱窗付费
         /// </summary>
         public decimal VideoShowCaseFee { get; set; }
+        public string Remark { get; set; }
     }
 
     public class BeforeLivingVideoUpdateLiveAnchorDailyTargetDto
@@ -815,6 +826,7 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 视频号今日橱窗付费
         /// </summary>
         public decimal VideoShowCaseFee { get; set; }
+        public string Remark { get; set; }
     }
 
     #endregion

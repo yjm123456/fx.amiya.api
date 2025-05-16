@@ -95,6 +95,7 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 小红书今日私信开口量
         /// </summary>
         public int XiaoHongShuPrivateMessageOpen { get; set; }
+        public string Remark { get; set; }
 
     }
 }

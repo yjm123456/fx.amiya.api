@@ -126,3 +126,21 @@ ADD COLUMN `province` VARCHAR(45) NULL AFTER `wechat_number`;
 
 
 --------------------------------------------------------------------------------------------------------以上部分已更新到线上--------------------------------------
+
+------------------------------------余建明 2025/05/16 BEGIN--------------------------------------
+--微博数据加入备注
+ALTER TABLE `amiyadb`.`tbl_beforeliving_sina_weibo_daily_target` 
+ADD COLUMN `remark` VARCHAR(500) NULL AFTER `record_date`;
+
+--抖音直播前日运营数据加入备注
+ALTER TABLE `amiyadb`.`tbl_beforeliving_tiktok_daily_target` 
+ADD COLUMN `remark` VARCHAR(500) NULL AFTER `tiktok_showcase_fee`;
+
+--视频号直播前日运营数据加入备注
+ALTER TABLE `amiyadb`.`tbl_beforeliving_video_daily_target` 
+ADD COLUMN `remark` VARCHAR(500) NULL AFTER `video_showcase_fee`;
+
+--小红书直播前日运营数据加入备注
+ALTER TABLE `amiyadb`.`tbl_beforeliving_xiaohongshu_daily_target` 
+ADD COLUMN `remark` VARCHAR(500) NULL AFTER `xiaohongshu_calling_card_sendnum`;
+------------------------------------余建明 2025/05/16 END--------------------------------------

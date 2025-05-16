@@ -218,7 +218,8 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 抖音涨粉付费
         /// </summary>
         public decimal TikTokIncreaseFansFees { get; set; }
-      
+        public string Remark { get; set; }
+
         /// <summary>
         /// 抖音线索量
         /// </summary>
@@ -316,6 +317,7 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 小红书今日私信开口量
         /// </summary>
         public int XiaoHongShuPrivateMessageOpen { get; set; }
+        public string Remark { get; set; }
     }
 
     /// <summary>
@@ -420,6 +422,7 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 填报日期
         /// </summary>
         public DateTime RecordDate { get; set; }
+        public string Remark { get; set; }
     }
 
     /// <summary>
@@ -497,6 +500,7 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 视频号今日橱窗付费
         /// </summary>
         public decimal VideoShowCaseFee { get; set; }
+        public string Remark { get; set; }
     }
 
 

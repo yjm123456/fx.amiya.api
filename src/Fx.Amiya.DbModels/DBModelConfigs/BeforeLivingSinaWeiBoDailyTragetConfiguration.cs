@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Fx.Amiya.DbModels.DBModelConfigs
 {
+    /// <summary>
+    /// 微博数据改为快手数据
+    /// </summary>
     public class BeforeLivingSinaWeiBoDailyTargetConfiguration : IEntityTypeConfiguration<BeforeLivingSinaWeiBoDailyTarget>
     {
         public void Configure(EntityTypeBuilder<BeforeLivingSinaWeiBoDailyTarget> builder)
@@ -22,6 +25,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.UpdateDate).HasColumnName("update_date").HasColumnType("datetime").IsRequired(false);
             builder.Property(e => e.Valid).HasColumnName("valid").HasColumnType("bit").IsRequired();
             builder.Property(e => e.DeleteDate).HasColumnName("delete_date").HasColumnType("datetime").IsRequired(false);
+            builder.Property(e => e.Remark).HasColumnName("remark").HasColumnType("varchar(500)").IsRequired(false);
             builder.HasOne(e => e.LiveAnchorMonthlyTargetBeforeLiving).WithMany(e => e.beforeLivingSinaWeiBoDailyTarget).HasForeignKey(e => e.LiveAnchorMonthlyTargetId);
             builder.HasOne(e => e.AmiyaEmployee).WithMany(e => e.beforeLivingSinaWeiBoDailyTarget).HasForeignKey(e => e.OperationEmpId);
         }

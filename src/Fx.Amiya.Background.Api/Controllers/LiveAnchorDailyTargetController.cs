@@ -202,6 +202,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                 IncreaseFansFeesCost = d.IncreaseFansFeesCost,
                                                 XiaoHongShuCallingCardSendNum = d.XiaoHongShuCallingCardSendNum,
                                                 XiaoHongShuPrivateMessageOpen = d.XiaoHongShuPrivateMessageOpen,
+                                                Remark = d.Remark,
+
                                             };
 
                 FxPageInfo<BeforeLivingDailyTargetVo> liveAnchorDailyTargetPageInfo = new FxPageInfo<BeforeLivingDailyTargetVo>();
@@ -446,6 +448,9 @@ namespace Fx.Amiya.Background.Api.Controllers
                 liveAnchorDailyTargetVo.RefundGMV = liveAnchorDailyTarget.RefundGMV;
                 liveAnchorDailyTargetVo.Clues = liveAnchorDailyTarget.Clues;
                 liveAnchorDailyTargetVo.LivingClues = liveAnchorDailyTarget.LivingClues;
+                liveAnchorDailyTargetVo.Remark = liveAnchorDailyTarget.Remark;
+
+
                 return ResultData<LiveAnchorDailyTargetByIdVo>.Success().AddData("liveAnchorDailyTargetInfo", liveAnchorDailyTargetVo);
             }
             catch (Exception ex)
@@ -487,6 +492,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.TikTokIncreaseFans = addVo.TikTokIncreaseFans;
                     addDto.TikTokIncreaseFansFees = addVo.TikTokIncreaseFansFees;
                     addDto.TikTokShowCaseFee = addVo.TikTokShowCaseFee;
+                    addDto.Remark = addVo.Remark;
                     await _liveAnchorDailyTargetService.BeforeLivingTikTokAddAsync(addDto);
                 }
                 return ResultData.Success();
@@ -523,6 +529,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.TikTokClues = updateVo.TikTokClues;
                 updateDto.TikTokIncreaseFans = updateVo.TikTokIncreaseFans;
                 updateDto.TikTokIncreaseFansFees = updateVo.TikTokIncreaseFansFees;
+                updateDto.Remark = updateVo.Remark;
                 await _liveAnchorDailyTargetService.BeforeLivingTikTokUpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -558,6 +565,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.ZhihuFlowInvestmentNum = addVo.ZhihuFlowInvestmentNum;
                     addDto.TodaySendNum = addVo.TodaySendNum;
                     addDto.FlowInvestmentNum = addVo.FlowInvestmentNum;
+                    addDto.Remark = addVo.Remark;
                     //addDto.CluesNum = addVo.CluesNum;
                     //addDto.AddFansNum = addVo.AddFansNum;
                     addDto.RecordDate = addVo.RecordDate;
@@ -629,6 +637,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.SinaWeiBoFlowInvestmentNum = addVo.SinaWeiBoFlowInvestmentNum;
                     addDto.TodaySendNum = addVo.TodaySendNum;
                     addDto.FlowInvestmentNum = addVo.FlowInvestmentNum;
+                    addDto.Remark = addVo.Remark;
                     //addDto.CluesNum = addVo.CluesNum;
                     //addDto.AddFansNum = addVo.AddFansNum;
                     addDto.RecordDate = addVo.RecordDate;
@@ -665,6 +674,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 //updateDto.CluesNum = updateVo.CluesNum;
                 //updateDto.AddFansNum = updateVo.AddFansNum;
                 updateDto.RecordDate = updateVo.RecordDate;
+                updateDto.Remark = updateVo.Remark;
                 await _liveAnchorDailyTargetService.BeforeLivingSinaWeiBoUpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -708,6 +718,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.XiaoHongShuShowCaseFee = addVo.XiaoHongShuShowcaseFee;
                     addDto.XiaoHongShuPrivateMessageOpen = addVo.XiaoHongShuPrivateMessageOpen;
                     addDto.XiaoHongShuCallingCardSendNum = addVo.XiaoHongShuCallingCardSendNum;
+                    addDto.Remark = addVo.Remark;
                     await _liveAnchorDailyTargetService.BeforeLivingXiaoHongShuAddAsync(addDto);
                 }
                 return ResultData.Success();
@@ -748,6 +759,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.XiaoHongShuShowCaseFee = updateVo.XiaoHongShuShowcaseFee;
                 updateDto.XiaoHongShuCallingCardSendNum = updateVo.XiaoHongShuCallingCardSendNum;
                 updateDto.XiaoHongShuPrivateMessageOpen = updateVo.XiaoHongShuPrivateMessageOpen;
+                updateDto.Remark = updateVo.Remark;
                 await _liveAnchorDailyTargetService.BeforeLivingXiaoHongShuUpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -790,6 +802,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     addDto.VideoShowCaseFee = addVo.VideoShowcaseFee;
                     //addDto.CluesNum = addVo.CluesNum;
                     //addDto.AddFansNum = addVo.AddFansNum;
+                    addDto.Remark = addVo.Remark;
                     addDto.RecordDate = addVo.RecordDate;
                     await _liveAnchorDailyTargetService.BeforeLivingVideoAddAsync(addDto);
                 }
@@ -829,6 +842,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 //updateDto.CluesNum = updateVo.CluesNum;
                 //updateDto.AddFansNum = updateVo.AddFansNum;
                 updateDto.RecordDate = updateVo.RecordDate;
+                updateDto.Remark = updateVo.Remark;
                 await _liveAnchorDailyTargetService.BeforeLivingVideoUpdateAsync(updateDto);
                 return ResultData.Success();
             }

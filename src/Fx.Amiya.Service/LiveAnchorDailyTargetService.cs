@@ -522,6 +522,7 @@ namespace Fx.Amiya.Service
                                               IncreaseFans = d.TikTokIncreaseFans,
                                               IncreaseFansFees = d.TikTokIncreaseFansFees,
                                               ShowCaseFee = d.TikTokShowCaseFee,
+                                              Remark = d.Remark,
                                               IncreaseFansFeesCost = d.TikTokIncreaseFans <= 0 ? d.TikTokIncreaseFansFees : Math.Round(d.TikTokIncreaseFansFees / Convert.ToDecimal(d.TikTokIncreaseFans), 2)
                                           };
                     BeforeLivingDailyTargetDtoList = await tikTokDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
@@ -566,6 +567,7 @@ namespace Fx.Amiya.Service
                                                  OperationEmpName = d.AmiyaEmployee.Name,
                                                  FlowInvestmentNum = d.FlowInvestmentNum,
                                                  SendNum = d.SendNum,
+                                                 Remark = d.Remark,
                                              };
                     BeforeLivingDailyTargetDtoList = await sinaWeiBoDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
                 }
@@ -597,6 +599,7 @@ namespace Fx.Amiya.Service
                                                    IncreaseFansFeesCost = d.XiaoHongShuIncreaseFans <= 0 ? d.XiaoHongShuIncreaseFansFees : Math.Round(d.XiaoHongShuIncreaseFansFees / Convert.ToDecimal(d.XiaoHongShuIncreaseFans), 2),
                                                    XiaoHongShuCallingCardSendNum = d.XiaoHongShuCallingCardSendNum,
                                                    XiaoHongShuPrivateMessageOpen = d.XiaoHongShuPrivateMessageOpen,
+                                                   Remark = d.Remark,
                                                };
                     BeforeLivingDailyTargetDtoList = await xiaohongshuDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
                 }
@@ -624,6 +627,7 @@ namespace Fx.Amiya.Service
                                              IncreaseFans = d.VideoIncreaseFans,
                                              IncreaseFansFees = d.VideoIncreaseFansFees,
                                              ShowCaseFee = d.VideoShowCaseFee,
+                                             Remark = d.Remark,
                                              IncreaseFansFeesCost = d.VideoIncreaseFans <= 0 ? d.VideoIncreaseFansFees : Math.Round(d.VideoIncreaseFansFees / Convert.ToDecimal(d.VideoIncreaseFans), 2)
                                          };
                     BeforeLivingDailyTargetDtoList = await videoDailyInfo.OrderByDescending(x => x.RecordDate).ToListAsync();
@@ -855,6 +859,7 @@ namespace Fx.Amiya.Service
                     liveAnchorDailyTargetDto.TikTokShowcaseIncome = liveAnchorDailyTarget.TikTokShowcaseIncome;
                     liveAnchorDailyTargetDto.TikTokIncreaseFans = liveAnchorDailyTarget.TikTokIncreaseFans;
                     liveAnchorDailyTargetDto.TikTokIncreaseFansFees = liveAnchorDailyTarget.TikTokIncreaseFansFees;
+                    liveAnchorDailyTargetDto.Remark = liveAnchorDailyTarget.Remark;
                     if (liveAnchorDailyTarget.TikTokIncreaseFans <= 0)
                     {
                         liveAnchorDailyTargetDto.TikTokIncreaseFansFeesCost = liveAnchorDailyTarget.TikTokIncreaseFansFees;
@@ -899,6 +904,7 @@ namespace Fx.Amiya.Service
                     liveAnchorDailyTargetDto.SinaWeiBoSendNum = liveAnchorDailyTarget.SendNum;
                     liveAnchorDailyTargetDto.SinaWeiBoFlowInvestmentNum = liveAnchorDailyTarget.FlowInvestmentNum;
                     liveAnchorDailyTargetDto.RecordDate = liveAnchorDailyTarget.RecordDate;
+                    liveAnchorDailyTargetDto.Remark = liveAnchorDailyTarget.Remark;
                 }
 
                 if (type == 4)
@@ -921,6 +927,7 @@ namespace Fx.Amiya.Service
                     liveAnchorDailyTargetDto.XiaoHongShuIncreaseFansFees = liveAnchorDailyTarget.XiaoHongShuIncreaseFansFees;
                     liveAnchorDailyTargetDto.XiaoHongShuCallingCardSendNum = liveAnchorDailyTarget.XiaoHongShuCallingCardSendNum;
                     liveAnchorDailyTargetDto.XiaoHongShuPrivateMessageOpen = liveAnchorDailyTarget.XiaoHongShuPrivateMessageOpen;
+                    liveAnchorDailyTargetDto.Remark = liveAnchorDailyTarget.Remark;
                     if (liveAnchorDailyTarget.XiaoHongShuIncreaseFans <= 0)
                     {
                         liveAnchorDailyTargetDto.XiaoHongShuIncreaseFansFeesCost = liveAnchorDailyTarget.XiaoHongShuIncreaseFansFees;
@@ -952,6 +959,7 @@ namespace Fx.Amiya.Service
                     liveAnchorDailyTargetDto.VideoShowcaseIncome = liveAnchorDailyTarget.VideoShowcaseIncome;
                     liveAnchorDailyTargetDto.VideoIncreaseFans = liveAnchorDailyTarget.VideoIncreaseFans;
                     liveAnchorDailyTargetDto.VideoIncreaseFansFees = liveAnchorDailyTarget.VideoIncreaseFansFees;
+                    liveAnchorDailyTargetDto.Remark = liveAnchorDailyTarget.Remark;
                     //liveAnchorDailyTargetDto.VideoIncreaseFansFeesCost = liveAnchorDailyTarget.VideoIncreaseFansFeesCost;
                     if (liveAnchorDailyTarget.VideoIncreaseFans <= 0)
                     {
@@ -1336,6 +1344,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.TikTokIncreaseFansFees = addDto.TikTokIncreaseFansFees;
 
                 liveAnchorDailyTarget.TikTokShowCaseFee = addDto.TikTokShowCaseFee;
+                liveAnchorDailyTarget.Remark = addDto.Remark;
                 await _beforeLivingTikTokDailyTraget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto();
@@ -1391,6 +1400,7 @@ namespace Fx.Amiya.Service
                 editLiveAnchorMonthlyTarget.CumulativeTikTokIncreaseFansFees = -liveAnchorDailyTarget.TikTokIncreaseFansFees;
                 editLiveAnchorMonthlyTarget.CumulativeTikTokClues = -liveAnchorDailyTarget.TikTokClues;
                 editLiveAnchorMonthlyTarget.CumulativeTikTokShowCaseFee = -liveAnchorDailyTarget.TikTokShowCaseFee;
+
                 await _liveAnchorMonthlyTargetService.EditAsync(editLiveAnchorMonthlyTarget);
 
                 liveAnchorDailyTarget.LiveAnchorMonthlyTargetId = updateDto.LiveanchorMonthlyTargetId;
@@ -1405,7 +1415,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.TikTokShowCaseFee = updateDto.TikTokShowCaseFee;
                 liveAnchorDailyTarget.RecordDate = updateDto.RecordDate;
                 liveAnchorDailyTarget.UpdateDate = DateTime.Now;
-
+                liveAnchorDailyTarget.Remark = updateDto.Remark;
                 await _beforeLivingTikTokDailyTraget.UpdateAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto lasteditLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto();
@@ -1595,7 +1605,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.XiaoHongShuShowCaseFee = addDto.XiaoHongShuShowCaseFee;
                 liveAnchorDailyTarget.XiaoHongShuCallingCardSendNum = addDto.XiaoHongShuCallingCardSendNum;
                 liveAnchorDailyTarget.XiaoHongShuPrivateMessageOpen = addDto.XiaoHongShuPrivateMessageOpen;
-
+                liveAnchorDailyTarget.Remark = addDto.Remark;
                 await _beforeLivingXiaoHongShuDailyTraget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto();
@@ -1672,6 +1682,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.XiaoHongShuShowCaseFee = updateDto.XiaoHongShuShowCaseFee;
                 liveAnchorDailyTarget.XiaoHongShuPrivateMessageOpen = updateDto.XiaoHongShuPrivateMessageOpen;
                 liveAnchorDailyTarget.XiaoHongShuCallingCardSendNum = updateDto.XiaoHongShuCallingCardSendNum;
+                liveAnchorDailyTarget.Remark = updateDto.Remark;
                 await _beforeLivingXiaoHongShuDailyTraget.UpdateAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto lasteditLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto();
@@ -1738,6 +1749,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.Valid = true;
                 liveAnchorDailyTarget.UpdateDate = DateTime.Now;
                 liveAnchorDailyTarget.RecordDate = addDto.RecordDate;
+                liveAnchorDailyTarget.Remark = addDto.Remark;
                 await _beforeLivingSinaWeiBoDailyTraget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto();
@@ -1796,6 +1808,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.FlowInvestmentNum = updateDto.FlowInvestmentNum;
                 liveAnchorDailyTarget.RecordDate = updateDto.RecordDate;
                 liveAnchorDailyTarget.UpdateDate = DateTime.Now;
+                liveAnchorDailyTarget.Remark = updateDto.Remark;
                 await _beforeLivingSinaWeiBoDailyTraget.UpdateAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto lasteditLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto();
@@ -1863,7 +1876,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.VideoIncreaseFans = addDto.VideoIncreaseFans;
                 liveAnchorDailyTarget.VideoIncreaseFansFees = addDto.VideoIncreaseFansFees;
                 liveAnchorDailyTarget.VideoShowCaseFee = addDto.VideoShowCaseFee;
-
+                liveAnchorDailyTarget.Remark = addDto.Remark;
                 await _beforeLivingVideoDailyTraget.AddAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto editLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto();
@@ -1937,6 +1950,7 @@ namespace Fx.Amiya.Service
                 liveAnchorDailyTarget.VideoIncreaseFansFees = updateDto.VideoIncreaseFansFees;
                 liveAnchorDailyTarget.VideoClues = updateDto.VideoClues;
                 liveAnchorDailyTarget.VideoShowCaseFee = updateDto.VideoShowCaseFee;
+                liveAnchorDailyTarget.Remark = updateDto.Remark;
                 await _beforeLivingVideoDailyTraget.UpdateAsync(liveAnchorDailyTarget, true);
 
                 UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto lasteditLiveAnchorMonthlyTarget = new UpdateLiveAnchorMonthlyBeforeLivingTargetRateAndNumDto();

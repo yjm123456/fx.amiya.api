@@ -28,6 +28,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             
             builder.Property(t => t.VideoShowcaseIncome).HasColumnName("video_showcase_income").HasColumnType("decimal(12, 2)").IsRequired();
             builder.Property(t => t.VideoShowCaseFee).HasColumnName("video_showcase_fee").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.Remark).HasColumnName("remark").HasColumnType("varchar(500)").IsRequired(false);
             builder.HasOne(e => e.LiveAnchorMonthlyTargetBeforeLiving).WithMany(e => e.beforeLivingVideoDailyTarget).HasForeignKey(e => e.LiveAnchorMonthlyTargetId);
             builder.HasOne(e => e.AmiyaEmployee).WithMany(e => e.beforeLivingVideoDailyTarget).HasForeignKey(e => e.OperationEmpId);
         }

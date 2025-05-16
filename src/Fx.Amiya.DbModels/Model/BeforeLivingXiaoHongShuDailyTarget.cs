@@ -49,6 +49,7 @@ namespace Fx.Amiya.DbModels.Model
         /// 小红书私信开口量
         /// </summary>
         public int XiaoHongShuPrivateMessageOpen { get; set; }
+        public string Remark { get; set; }
 
 
         public LiveAnchorMonthlyTargetBeforeLiving LiveAnchorMonthlyTargetBeforeLiving { get; set; }

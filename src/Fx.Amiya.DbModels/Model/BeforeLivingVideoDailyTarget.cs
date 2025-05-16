@@ -40,6 +40,7 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public decimal VideoShowCaseFee { get; set; }
 
+        public string Remark { get; set; }
         public LiveAnchorMonthlyTargetBeforeLiving LiveAnchorMonthlyTargetBeforeLiving { get; set; }
 
         public AmiyaEmployee AmiyaEmployee { get; set; }

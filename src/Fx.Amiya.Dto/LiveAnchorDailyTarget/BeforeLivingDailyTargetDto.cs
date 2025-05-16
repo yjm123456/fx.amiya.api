@@ -204,6 +204,7 @@ namespace Fx.Amiya.Dto.LiveAnchorDailyTarget
         /// 今日橱窗付费
         /// </summary>
         public decimal ShowCaseFee { get; set; }
+        public string Remark { get; set; }
         /// <summary>
         /// 抖音今日橱窗付费
         /// </summary>

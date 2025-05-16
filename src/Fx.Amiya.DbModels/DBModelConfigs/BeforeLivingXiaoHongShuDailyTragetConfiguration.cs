@@ -30,6 +30,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
 
             builder.Property(t => t.XiaoHongShuShowcaseIncome).HasColumnName("xiaohongshu_showcase_income").HasColumnType("decimal(12, 2)").IsRequired();
             builder.Property(t => t.XiaoHongShuShowCaseFee).HasColumnName("xiaohongshu_showcase_fee").HasColumnType("decimal(12,2)").IsRequired();
+            builder.Property(e => e.Remark).HasColumnName("remark").HasColumnType("varchar(500)").IsRequired(false);
             builder.HasOne(e => e.LiveAnchorMonthlyTargetBeforeLiving).WithMany(e => e.beforeLivingXiaoHongShuDailyTraget).HasForeignKey(e => e.LiveAnchorMonthlyTargetId);
             builder.HasOne(e => e.AmiyaEmployee).WithMany(e => e.beforeLivingXiaoHongShuDailyTragets).HasForeignKey(e => e.OperationEmpId);
         }

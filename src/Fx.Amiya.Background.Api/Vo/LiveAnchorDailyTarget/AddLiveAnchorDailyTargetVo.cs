@@ -231,6 +231,10 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 抖音橱窗付费
         /// </summary>
         public decimal TikTokShowCaseFee { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string Remark { get; set; }
 
 
         /// <summary>
@@ -284,6 +288,7 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 填报日期
         /// </summary>
         public DateTime RecordDate { get; set; }
+        public string Remark { get; set; }
     }
 
 
@@ -354,6 +359,7 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 视频号今日橱窗付费
         /// </summary>
         public decimal VideoShowcaseFee { get; set; }
+        public string Remark { get; set; }
     }
 
 
@@ -402,6 +408,7 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 填报日期
         /// </summary>
         public DateTime RecordDate { get; set; }
+        public string Remark { get; set; }
     }
 
 
@@ -482,6 +489,7 @@ namespace Fx.Amiya.Background.Api.Vo.LiveAnchorDailyTarget
         /// 小红书今日橱窗付费
         /// </summary>
         public decimal XiaoHongShuShowcaseFee { get; set; }
+        public string Remark { get; set; }
     }
 
 

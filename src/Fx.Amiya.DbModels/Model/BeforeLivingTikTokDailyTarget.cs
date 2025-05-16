@@ -39,6 +39,7 @@ namespace Fx.Amiya.DbModels.Model
         /// 抖音线索量
         /// </summary>
         public int TikTokClues { get; set; }
+        public string Remark { get; set; }
 
         public LiveAnchorMonthlyTargetBeforeLiving LiveAnchorMonthlyTargetBeforeLiving { get; set; }
 
