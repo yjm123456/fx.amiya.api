@@ -169,13 +169,16 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("hospitalLogin")]
         public async Task<ResultData<HospitalEmployeeAccountVo>> HospitalLoginAsync([Required(ErrorMessage = "请输入用户名")] string userName, [Required(ErrorMessage = "请输入密码")] string password)
         {
+            OperationAddDto operationLog = new OperationAddDto();
+            operationLog.Source = (int)RequestSource.AmiyaBackground;
+            operationLog.Code = 0;
             try
             {
                 var jwtConfig = _fxAppGlobal.AppConfig.FxJwtConfig;
                 var employee = await hospitalEmployeeService.LoginAsync(userName.Trim(), password.Trim().GetMD5String());
 
                 var identity = new FxTenantIdentity().CreateFxIdentity(employee.Id.ToString());
-
+                //operationLog.OperationBy = employee.Id;
                 HospitalEmployeeAccountVo avvountVo = new HospitalEmployeeAccountVo()
                 {
                     Avatar = employee.Avatar ?? "",
@@ -195,7 +198,17 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             catch (Exception ex)
             {
+                operationLog.Message = ex.Message;
+                operationLog.Code = -1;
                 return ResultData<HospitalEmployeeAccountVo>.Fail(ex.Message);
+
+            }
+            finally
+            {
+                operationLog.Parameters = "医院用户登陆 账户：" + userName +"";
+                operationLog.RequestType = (int)RequestType.Login;
+                operationLog.RouteAddress = httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationLog);
             }
         }
 

@@ -1642,6 +1642,36 @@ namespace Fx.Amiya.Service
                     };
             return await x.ToListAsync();
         }
+
+        /// <summary>
+        /// 根据主播基础id获取获取潜在/有效 加v,分诊
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="isEffectiveCustomerData"></param>
+        /// <param name="contentPlatFormId"></param>
+        /// <returns></returns>
+        public async Task<List<ShoppingCartRegistrationDto>> GetPerformanceByLiveAnchorBaseIdListAsync(DateTime startDate, DateTime endDate, string liveAnchorBaseId)
+        {
+
+            var result = from d in dalShoppingCartRegistration.GetAll()
+            .Where(o => o.RecordDate >= startDate && o.RecordDate < endDate)
+            .Where(o => string.IsNullOrEmpty(liveAnchorBaseId) || o.BaseLiveAnchorId == liveAnchorBaseId)
+                         select d;
+
+            var x = from d in result
+                    select new ShoppingCartRegistrationDto
+                    {
+                        Phone = d.Phone,
+                        AddPrice = d.Price,
+                        IsReturnBackPrice = d.IsReturnBackPrice,
+                        AssignEmpId = d.AssignEmpId,
+                        IsAddWeChat = d.IsAddWeChat,
+                        IsSendOrder = d.IsSendOrder,
+                        EmergencyLevel = d.EmergencyLevel
+                    };
+            return await x.ToListAsync();
+        }
         /// <summary>
         /// 根据条件获取助理小黄车业绩
         /// </summary>
@@ -2487,7 +2517,7 @@ namespace Fx.Amiya.Service
         /// <param name="endDate"></param>
         /// <param name="baseLiveAnchorId"></param>
         /// <returns></returns>
-        public async Task<ShoppingCartRegistrationIndicatorBaseDataDto> GetBelongChannelFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate, int benlongChannel,string baseLiveAnchorId)
+        public async Task<ShoppingCartRegistrationIndicatorBaseDataDto> GetBelongChannelFlowAndCustomerTransformDataAsync(DateTime startDate, DateTime endDate, int benlongChannel, string baseLiveAnchorId)
         {
             ShoppingCartRegistrationIndicatorBaseDataDto data = new ShoppingCartRegistrationIndicatorBaseDataDto();
             var baseData = dalShoppingCartRegistration.GetAll()
@@ -2512,7 +2542,7 @@ namespace Fx.Amiya.Service
             //  .Select(o => o.Phone)
             //  .Distinct()
             //  .Count();
-            var sendC = dalContentPlatformOrderSend.GetAll().Include(x=>x.ContentPlatformOrder).ThenInclude(x=>x.LiveAnchor)
+            var sendC = dalContentPlatformOrderSend.GetAll().Include(x => x.ContentPlatformOrder).ThenInclude(x => x.LiveAnchor)
               .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
               .Where(o => o.ContentPlatformOrder.BelongChannel == benlongChannel)
                 .Where(e => string.IsNullOrEmpty(baseLiveAnchorId) || e.ContentPlatformOrder.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId)

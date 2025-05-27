@@ -934,7 +934,7 @@ namespace Fx.Amiya.Service
                     break;
 
                 case 4:
-                    sourceText = "名索";
+                    sourceText = "美妍";
                     break;
 
                 case 5:

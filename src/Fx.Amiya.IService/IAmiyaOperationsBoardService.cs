@@ -56,8 +56,11 @@ namespace Fx.Amiya.IService
         Task<AssistantOperationDataDto> GetAssistantPerformanceFilterDataAsync(QueryAssistantPerformanceFilterDataDto query);
         Task<AssistantPerformanceAnalysisDataDto> GetAssistantPerformanceAnalysisDataAsync(QueryAssistantPerformanceDto query);
         Task<AssiatantTargetCompleteAndPerformanceRateDto> GetAssiatantTargetCompleteAndPerformanceRateDataAsync(QueryAssistantPerformanceDto query);
+        Task<List<AssistantHospitalPerformanceDto>> GetBaseLiveAnchorHospitalPerformanceDataAsync(QueryLiveAnchorPerformanceDto query);
         Task<List<AssistantHospitalPerformanceDto>> GetAssistantHospitalPerformanceDataAsync(QueryAssistantPerformanceDto query);
         Task<AssistantHospitalCluesDataDto> GetAssistantHospitalCluesDataAsync(QueryAssistantHospitalCluesDataDto query);
+
+        Task<AssistantHospitalCluesDataDto> GetLiveAnchorHospitalCluesDataAsync(QueryLiveAnchorHospitalCluesDataDto query);
         /// <summary>
         /// 获取助理分诊数据
         /// </summary>

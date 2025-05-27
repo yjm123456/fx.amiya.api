@@ -44,6 +44,7 @@ namespace Fx.Amiya.Service
         private IDalLiveAnchor dalLiveAnchor;
         private ILiveAnchorService liveAnchorService;
         private IDalConfig dalConfig;
+        private ILiveAnchorBaseInfoService liveAnchorBaseInfoService;
         public ContentPlatFormOrderDealInfoService(IDalContentPlatFormOrderDealInfo dalContentPlatFormOrderDealInfo,
             IAmiyaEmployeeService amiyaEmployeeService,
             ICompanyBaseInfoService companyBaseInfoService,
@@ -52,6 +53,7 @@ namespace Fx.Amiya.Service
             IContentPlatFormCustomerPictureService contentPlatFormCustomerPictureService,
             IDalBindCustomerService dalBindCustomerService,
             IDalAmiyaEmployee dalAmiyaEmployee,
+            ILiveAnchorBaseInfoService liveAnchorBaseInfoService,
             IContentPlatFormOrderDealDetailsService contentPlatFormOrderDealDetailsService,
             IHospitalInfoService hospitalInfoService, IDalHospitalInfo dalHospitalInfo, IDalRecommandDocumentSettle dalRecommandDocumentSettle, IDalCompanyBaseInfo dalCompanyBaseInfo, IDalLiveAnchor dalLiveAnchor, ILiveAnchorService liveAnchorService, IDalConfig dalConfig)
         {
@@ -59,6 +61,7 @@ namespace Fx.Amiya.Service
             _hospitalInfoService = hospitalInfoService;
             this.contentPlatFormOrderDealDetailsService = contentPlatFormOrderDealDetailsService;
             _amiyaEmployeeService = amiyaEmployeeService;
+            this.liveAnchorBaseInfoService = liveAnchorBaseInfoService;
             this.wxAppConfigService = wxAppConfigService;
             _contentPlatFormCustomerPictureService = contentPlatFormCustomerPictureService;
             _dalBindCustomerService = dalBindCustomerService;
@@ -2573,6 +2576,75 @@ namespace Fx.Amiya.Service
            .Where(x => x.Valid == true && x.DealPerformanceType == (int)ContentPlateFormOrderDealPerformanceType.CustomerServiceReplenishmentOrder)
           .Where(o => o.CreateDate >= startDate && o.CreateDate < endDate && o.IsDeal == true && o.ContentPlatFormOrderId != null)
           .Where(o => assistantId.Count == 0 || assistantId.Contains(o.CreateBy))
+          .Select(ContentPlatFOrmOrderDealInfo => new ContentPlatFormOrderDealInfoDto
+          {
+              ContentPlatFormOrderId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrderId,
+              Phone = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.Phone,
+              BelongEmployeeId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.SupportEmpId,
+              Price = ContentPlatFOrmOrderDealInfo.Price,
+              IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer,
+              AddOrderPrice = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.AddOrderPrice,
+              LastDealHospitalId = ContentPlatFOrmOrderDealInfo.LastDealHospitalId,
+              SendDate = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.SendDate,
+              ConsultationType = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.ConsulationType,
+              LastDealInfoId = ContentPlatFOrmOrderDealInfo.LastDealInfoId,
+          }
+          ).ToList();
+            foreach (var x in replenishmentData)
+            {
+                //取上一条的成交信息
+                var lastDealInfo = await this.GetByIdAsync(x.LastDealInfoId);
+                //用上一条的成交信息的“创建时间”与当前查询开始时间进行比对，若小于当前查询开始时间，成交金额=当前成交金额-上一条成交单的成交金额，若大于等于则跳过
+                if (lastDealInfo.CreateDate < startDate)
+                {
+                    x.Price -= lastDealInfo.Price;
+                }
+
+            }
+            belongData.AddRange(replenishmentData);
+            return belongData;
+        }
+        /// <summary>
+        /// 获取医生派单成交业绩
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="baseLiveAnchorId"></param>
+        /// <returns></returns>
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceDetailByDateAndBaseLiveAnchorIdAsync(DateTime startDate, DateTime endDate, string baseLiveAnchorId)
+        {
+            List<string> baseLiveAnchorIds = new List<string>();
+            if (string.IsNullOrEmpty(baseLiveAnchorId))
+            {
+                var baseLiveAnchorIdList = await liveAnchorBaseInfoService.GetMingSuoLiveAnchorAsync();
+                baseLiveAnchorIds = baseLiveAnchorIdList.Select(x => x.Id).ToList();
+            }
+            else
+            {
+                baseLiveAnchorIds.Add(baseLiveAnchorId);
+            }
+            //归属客服业绩
+            var belongData = dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
+             .Where(x => x.Valid == true && x.DealPerformanceType != (int)ContentPlateFormOrderDealPerformanceType.CustomerServiceReplenishmentOrder)
+                .Where(o => o.CreateDate >= startDate && o.CreateDate < endDate && o.IsDeal == true && o.ContentPlatFormOrderId != null)
+                .Where(o => baseLiveAnchorIds.Contains(o.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId))
+                .Select(ContentPlatFOrmOrderDealInfo => new ContentPlatFormOrderDealInfoDto
+                {
+                    ContentPlatFormOrderId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrderId,
+                    Phone = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.Phone,
+                    BelongEmployeeId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.BelongEmpId.Value,
+                    Price = ContentPlatFOrmOrderDealInfo.Price,
+                    IsOldCustomer = ContentPlatFOrmOrderDealInfo.IsOldCustomer,
+                    AddOrderPrice = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.AddOrderPrice,
+                    LastDealHospitalId = ContentPlatFOrmOrderDealInfo.LastDealHospitalId,
+                    SendDate = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.SendDate,
+                    ConsultationType = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrder.ConsulationType
+                }
+                ).ToList();
+            var replenishmentData = dalContentPlatFormOrderDealInfo.GetAll().Include(x => x.ContentPlatFormOrder).ThenInclude(x => x.LiveAnchor)
+           .Where(x => x.Valid == true && x.DealPerformanceType == (int)ContentPlateFormOrderDealPerformanceType.CustomerServiceReplenishmentOrder)
+          .Where(o => o.CreateDate >= startDate && o.CreateDate < endDate && o.IsDeal == true && o.ContentPlatFormOrderId != null)
+           .Where(o => string.IsNullOrEmpty(baseLiveAnchorId) || o.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId == baseLiveAnchorId)
           .Select(ContentPlatFOrmOrderDealInfo => new ContentPlatFormOrderDealInfoDto
           {
               ContentPlatFormOrderId = ContentPlatFOrmOrderDealInfo.ContentPlatFormOrderId,

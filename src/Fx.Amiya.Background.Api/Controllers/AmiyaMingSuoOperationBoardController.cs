@@ -113,8 +113,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.History = query.History;
             var res = await amiyaMingSuoOperationBoardService.GetMingSuoFilterDataAsync(queryDto);
             MingSuoOperationDataVo data = new MingSuoOperationDataVo();
-            data.NewCustomerData = new AssistantNewCustomerOperationDataVo(); 
-            data.OldCustomerData =new AssistantOldCustomerOperationDataVo ();
+            data.NewCustomerData = new AssistantNewCustomerOperationDataVo();
+            data.OldCustomerData = new AssistantOldCustomerOperationDataVo();
             data.NewCustomerData.ClueEffectiveRate = res.NewCustomerData.ClueEffectiveRate;
             data.NewCustomerData.ClueEffectiveRateHealthValueThisMonth = res.NewCustomerData.ClueEffectiveRateHealthValueThisMonth;
             data.NewCustomerData.AddWeChatRate = res.NewCustomerData.AddWeChatRate;
@@ -122,7 +122,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             data.NewCustomerData.SendOrderRate = res.NewCustomerData.SendOrderRate;
             data.NewCustomerData.SendOrderRateHealthValueThisMonth = res.NewCustomerData.SendOrderRateHealthValueThisMonth;
             data.NewCustomerData.ToHospitalRateHealthValueThisMonth = res.NewCustomerData.ToHospitalRateHealthValueThisMonth;
-           
+
             data.NewCustomerData.ToHospitalRate = res.NewCustomerData.ToHospitalRate;
             data.NewCustomerData.DealRate = res.NewCustomerData.DealRate;
             data.NewCustomerData.DealRateHealthValueThisMonth = res.NewCustomerData.DealRateHealthValueThisMonth;
@@ -358,7 +358,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 AveragePerformance = e.AveragePerformance,
             }).ToList();
             resultData.TotalPerformanceData = res1;
-           
+
             return ResultData<PerformanceYearDataListVo>.Success().AddData("data", resultData);
         }
 
@@ -399,6 +399,62 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<List<HospitalTransformDataVo>>.Success().AddData("data", res);
         }
 
+
+        /// <summary>
+        /// 名索机构线索数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("doctorHospitalCluesData")]
+        public async Task<ResultData<AssistantHospitalCluesDataVo>> GetAssistantHospitalCluesDataAsync([FromQuery] QueryLiveAnchorHospitalCluesDataVo query)
+        {
+            AssistantHospitalCluesDataVo dataVo = new AssistantHospitalCluesDataVo();
+            QueryLiveAnchorHospitalCluesDataDto queryDto = new QueryLiveAnchorHospitalCluesDataDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.BaseLiveAnchorId = query.BaseLiveAnchorId;
+            queryDto.CurrentMonth = query.CurrentMonth;
+            queryDto.History = query.History;
+            var res = await amiyaOperationsBoardService.GetLiveAnchorHospitalCluesDataAsync(queryDto);
+            dataVo.TotalSendOrderCount = res.TotalSendOrderCount;
+            dataVo.TotalVisitCount = res.TotalVisitCount;
+            dataVo.TotalDealCount = res.TotalDealCount;
+            dataVo.ToHospitalRate = res.ToHospitalRate;
+            dataVo.DealRate = res.DealRate;
+            dataVo.Items = res.Items.OrderByDescending(e => e.SendOrderCount).Select(e => new AssistantCluesDataItemVo
+            {
+                Name = e.Name,
+                SendOrderCount = e.SendOrderCount,
+                VisitCount = e.VisitCount,
+                DealCount = e.DealCount,
+                ToHospitalRate = e.ToHospitalRate,
+                DealRate = e.DealRate
+            }).ToList();
+            return ResultData<AssistantHospitalCluesDataVo>.Success().AddData("data", dataVo);
+        }
+
+        /// <summary>
+        /// 名索机构业绩数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("assistantHospitalPerformanceData")]
+        public async Task<ResultData<List<AssistantHospitalPerformanceVo>>> GetAssistantHospitalPerformanceDataAsync([FromQuery] QueryLiveAnchorPerformanceVo query)
+        {
+            QueryLiveAnchorPerformanceDto queryDto = new QueryLiveAnchorPerformanceDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.LiveAnchorBaseId = query.LiveAnchorBaseId;
+            var res = await amiyaOperationsBoardService.GetBaseLiveAnchorHospitalPerformanceDataAsync(queryDto);
+            var result = res.Select(e => new AssistantHospitalPerformanceVo
+            {
+                Name = e.Name,
+                NewCustomerPerformance = e.NewCustomerPerformance,
+                OldCustomerPerformance = e.OldCustomerPerformance,
+                TotalPerformance = e.TotalPerformance
+            }).OrderByDescending(e => e.TotalPerformance).ToList();
+            return ResultData<List<AssistantHospitalPerformanceVo>>.Success().AddData("data", result);
+        }
         #endregion
     }
 }

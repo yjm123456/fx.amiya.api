@@ -190,6 +190,15 @@ namespace Fx.Amiya.IService
         /// <param name="contentPlatFormId"></param>
         /// <returns></returns>
         Task<List<ShoppingCartRegistrationDto>> GetPerformanceByAssistantIdListAsync(DateTime startDate, DateTime endDate, List<int> assistantIdList);
+
+        /// <summary>
+        /// 根据主播基础id获取获取潜在/有效 加v,分诊
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="liveAnchorBaseId"></param>
+        /// <returns></returns>
+        Task<List<ShoppingCartRegistrationDto>> GetPerformanceByLiveAnchorBaseIdListAsync(DateTime startDate, DateTime endDate, string liveAnchorBaseId);
         /// <summary>
         /// 根据条件获取助理小黄车业绩
         /// </summary>

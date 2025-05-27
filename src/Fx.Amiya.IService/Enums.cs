@@ -76,9 +76,9 @@ namespace Fx.Amiya.IService
         ShangXueYuan = 3,
 
         /// <summary>
-        /// 名索
+        /// 美妍
         /// </summary>
-        MingSuo=4,
+        MeiYan=4,
         /// <summary>
         /// 润棠
         /// </summary>

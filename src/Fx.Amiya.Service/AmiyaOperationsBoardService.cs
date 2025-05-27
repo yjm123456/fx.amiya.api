@@ -4588,6 +4588,27 @@ namespace Fx.Amiya.Service
             #endregion
         }
         /// <summary>
+        /// 获取基础主播IP机构业绩分析
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<List<AssistantHospitalPerformanceDto>> GetBaseLiveAnchorHospitalPerformanceDataAsync(QueryLiveAnchorPerformanceDto query)
+        {
+            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
+            //成交数据
+            var orderDealInfo = await contentPlatFormOrderDealInfoService.GetPerformanceDetailByDateAndBaseLiveAnchorIdAsync(selectDate.StartDate, selectDate.EndDate, query.LiveAnchorBaseId);
+
+            #region 机构业绩
+            var hospitalInfo = await hospitalInfoService.GetHospitalNameListAsync(null, null);
+            return orderDealInfo.GroupBy(x => x.LastDealHospitalId).Select(e => new AssistantHospitalPerformanceDto
+            {
+                Name = hospitalInfo.Where(h => h.Id == e.Key).Select(e => e.Name).FirstOrDefault(),
+                NewCustomerPerformance = ChangePriceToTenThousand(orderDealInfo.Where(h => h.LastDealHospitalId == e.Key).Where(e => e.IsOldCustomer == false).Select(e => e.Price).Sum()),
+                OldCustomerPerformance = ChangePriceToTenThousand(orderDealInfo.Where(h => h.LastDealHospitalId == e.Key).Where(e => e.IsOldCustomer == true).Select(e => e.Price).Sum()),
+            }).ToList();
+            #endregion
+        }
+        /// <summary>
         /// 获取助理机构线索分析
         /// </summary>
         /// <param name="query"></param>
@@ -4613,7 +4634,68 @@ namespace Fx.Amiya.Service
             var currentSendPhoneList = totalSendPhoneList.Where(e => shoppingCartRegistionData.Select(e => e.Phone).Contains(e)).ToList();
             var historySendPhoneList = totalSendPhoneList.Where(e => !currentSendPhoneList.Contains(e)).ToList();
             var sendPhoneList = new List<string>();
-            //如何两个都没有选中,则视为都选中查询所有数据
+            //两个都没有选中,则视为都选中查询所有数据
+            if (!query.CurrentMonth && !query.History)
+            {
+                query.CurrentMonth = true;
+                query.History = true;
+            }
+            if (query.CurrentMonth && query.History)
+            {
+                sendPhoneList = currentSendPhoneList.Concat(historySendPhoneList).ToList();
+            }
+            else
+            {
+                if (query.CurrentMonth)
+                {
+                    sendPhoneList = currentSendPhoneList;
+                }
+                if (query.History)
+                {
+                    sendPhoneList = historySendPhoneList;
+                }
+            }
+            #region 机构线索
+            var hospitalInfo = await hospitalInfoService.GetHospitalNameListAsync(null, null);
+            var sendOrderHospitalList = await contentPlateFormOrderService.GetDealCountDataByPhoneListAsync(selectDate.StartDate, selectDate.EndDate, sendPhoneList);
+            var hospitalIds = sendOrderHospitalList.Distinct().ToList();
+            var toHospitalData = await contentPlatFormOrderDealInfoService.GeVisitAndDealNumByHospitalIdAndPhoneListAsync(hospitalIds, selectDate.StartDate, selectDate.EndDate, sendPhoneList);
+            result.Items = hospitalIds.Select(e =>
+            {
+                AssistantCluesDataItemDto item = new AssistantCluesDataItemDto();
+                item.Name = hospitalInfo.Where(h => h.Id == e).Select(e => e.Name).FirstOrDefault();
+                item.SendOrderCount = sendOrderHospitalList.Where(x => x == e).Count();
+                item.VisitCount = toHospitalData.Where(x => x.IsToHospital == true && x.LastDealHospitalId == e).Count();
+                item.DealCount = toHospitalData.Where(x => x.IsDeal == true && x.LastDealHospitalId == e).Count();
+                item.ToHospitalRate = DecimalExtension.CalculateTargetComplete(item.VisitCount, item.SendOrderCount).Value;
+                item.DealRate = DecimalExtension.CalculateTargetComplete(item.DealCount, item.VisitCount).Value;
+                return item;
+            }).ToList();
+            #endregion
+            result.ToHospitalRate = DecimalExtension.CalculateTargetComplete(result.TotalVisitCount, result.TotalSendOrderCount).Value;
+            result.DealRate = DecimalExtension.CalculateTargetComplete(result.TotalDealCount, result.TotalVisitCount).Value;
+            return result;
+        }
+
+        /// <summary>
+        /// 获主播IP机构线索分析
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<AssistantHospitalCluesDataDto> GetLiveAnchorHospitalCluesDataAsync(QueryLiveAnchorHospitalCluesDataDto query)
+        {
+            AssistantHospitalCluesDataDto result = new AssistantHospitalCluesDataDto();
+            var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
+           
+            var shoppingCartRegistionData = await shoppingCartRegistrationService.GetPerformanceByLiveAnchorBaseIdListAsync(selectDate.StartDate, selectDate.EndDate, query.BaseLiveAnchorId);
+            var totalSendPhoneList = await _dalContentPlatformOrderSend.GetAll().Include(x=>x.ContentPlatformOrder).ThenInclude(x=>x.LiveAnchor)
+                .Where(e => e.IsMainHospital == true && e.SendDate >= selectDate.StartDate && e.SendDate < selectDate.EndDate)
+                .Where(e => e.ContentPlatformOrder.LiveAnchor.LiveAnchorBaseId==query.BaseLiveAnchorId)
+                .Select(e => e.ContentPlatformOrder.Phone).ToListAsync();
+            var currentSendPhoneList = totalSendPhoneList.Where(e => shoppingCartRegistionData.Select(e => e.Phone).Contains(e)).ToList();
+            var historySendPhoneList = totalSendPhoneList.Where(e => !currentSendPhoneList.Contains(e)).ToList();
+            var sendPhoneList = new List<string>();
+            //两个都没有选中,则视为都选中查询所有数据
             if (!query.CurrentMonth && !query.History)
             {
                 query.CurrentMonth = true;

@@ -735,7 +735,7 @@ namespace Fx.Amiya.Service
                     totalCount = 5;
                 }
             }
-            string totalPerformanceName = "名索" + text;
+            string totalPerformanceName = "美妍" + text;
             var liveAnchorBaseInfo = await liveAnchorBaseInfoService.GetMingSuoLiveAnchorAsync();
             if (!string.IsNullOrEmpty(query.LiveAnchorBaseIdId))
             {
@@ -973,7 +973,7 @@ namespace Fx.Amiya.Service
             string text = "（线索）";
             int totalCount = 4;
 
-            string totalPerformanceName = "名索" + text;
+            string totalPerformanceName = "美妍" + text;
             var liveAnchorBaseInfo = await liveAnchorBaseInfoService.GetMingSuoLiveAnchorAsync();
             if (!string.IsNullOrEmpty(query.LiveAnchorBaseIdId))
             {

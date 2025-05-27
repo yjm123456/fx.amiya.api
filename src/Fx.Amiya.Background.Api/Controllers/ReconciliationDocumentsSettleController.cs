@@ -145,7 +145,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 {
                     if ((query.EndDate.Value - query.StartDate.Value).TotalDays > 31)
                     {
-                        throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
+                       // throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
                     }
                 }
                 var res = new List<ReconciliationDocumentsSettleVo>();

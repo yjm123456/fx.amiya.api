@@ -290,6 +290,15 @@ namespace Fx.Amiya.IService
         Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceDetailByDateAndAssistantIdListAsync(DateTime startDate, DateTime endDate, List<int> assistantId);
 
         /// <summary>
+        /// 根据主播基础id获取业绩数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="baseLiveAnchorId"></param>
+        /// <returns></returns>
+
+        Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceDetailByDateAndBaseLiveAnchorIdAsync(DateTime startDate, DateTime endDate, string baseLiveAnchorId);
+        /// <summary>
         /// 根据精确时间线获取派单成交业绩
         /// </summary>
         /// <param name="startDate"></param>
