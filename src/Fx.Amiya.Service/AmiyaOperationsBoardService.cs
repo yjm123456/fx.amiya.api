@@ -1922,6 +1922,8 @@ namespace Fx.Amiya.Service
                 groupData.YearAndMonth = selectDate.StartDate.Year + "/" + month;
                 groupData.ClueCount = groupBaseData.ClueCount;
                 var targetData = await liveAnchorMonthlyTargetBeforeLivingService.GetBeforeLivingTargetByYearAndMonthAsync(queryBeforeLivingBusinessDataDto);
+                groupData.FlowInvestmentTotalNum = targetData.FlowInvestmentTotalNum;
+                groupData.FlowInvestmentTarget = targetData.FlowInvestmentTarget;
                 groupData.ClueTarget = targetData.CluesTarget;
                 groupData.DistributeConsulationNum = groupBaseData.TotalCount;
                 groupData.ClueEffectiveRate = DecimalExtension.CalculateTargetComplete(groupData.DistributeConsulationNum, groupData.ClueCount).Value;
@@ -1951,6 +1953,8 @@ namespace Fx.Amiya.Service
             #region 【合计】
             FlowTransFormDataDto groupDataSum = new FlowTransFormDataDto();
             groupDataSum.YearAndMonth = "合计";
+            groupDataSum.FlowInvestmentTarget = dataListThisMonth.Sum(x => x.FlowInvestmentTarget);
+            groupDataSum.FlowInvestmentTotalNum = dataListThisMonth.Sum(x => x.FlowInvestmentTotalNum);
             groupDataSum.ClueTarget = dataListThisMonth.Sum(x => x.ClueTarget);
             groupDataSum.ClueCount = dataListThisMonth.Sum(x => x.ClueCount);
             groupDataSum.SendOrderCount = dataListThisMonth.Sum(x => x.SendOrderCount);

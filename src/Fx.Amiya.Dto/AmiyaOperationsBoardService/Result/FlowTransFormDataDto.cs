@@ -17,6 +17,15 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
         /// 年度月份
         /// </summary>
         public string YearAndMonth { get; set; }
+
+        /// <summary>
+        /// 投流目标
+        /// </summary>
+        public decimal FlowInvestmentTarget { get; set; }
+        /// <summary>
+        /// 累计投流
+        /// </summary>
+        public decimal FlowInvestmentTotalNum { get; set; }
         /// <summary>
         /// 线索量
         /// </summary>

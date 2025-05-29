@@ -18,6 +18,15 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result
         public string YearAndMonth { get; set; }
 
         /// <summary>
+        /// 投流目标
+        /// </summary>
+        public decimal FlowInvestmentTarget { get; set; }
+        /// <summary>
+        /// 累计投流
+        /// </summary>
+        public decimal FlowInvestmentTotalNum { get; set; }
+
+        /// <summary>
         /// 线索目标
         /// </summary>
         public int ClueTarget { get; set; }

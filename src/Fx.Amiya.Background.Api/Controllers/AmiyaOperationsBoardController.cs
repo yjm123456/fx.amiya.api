@@ -2412,6 +2412,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 GroupName = e.GroupName,
                 YearAndMonth = e.YearAndMonth,
+                FlowInvestmentTarget = e.FlowInvestmentTarget,
+                FlowInvestmentTotalNum = e.FlowInvestmentTotalNum,
                 ClueTarget = e.ClueTarget,
                 ClueCount = e.ClueCount,
                 ClueEffectiveRate = e.ClueEffectiveRate,

@@ -934,6 +934,8 @@ namespace Fx.Amiya.Service
             }
             if (res.ToList().Count == 0) return new LiveAnchorBeforeLivingTargetDto() ;
             LiveAnchorBeforeLivingTargetDto liveAnchorBeforeLivingTargetDto = new LiveAnchorBeforeLivingTargetDto();
+            liveAnchorBeforeLivingTargetDto.FlowInvestmentTarget = res.Where(x => x.FlowInvestmentTarget > 5).Sum(x => x.FlowInvestmentTarget);
+            liveAnchorBeforeLivingTargetDto.FlowInvestmentTotalNum = res.Where(x => x.CumulativeFlowInvestment > 5).Sum(x => x.CumulativeFlowInvestment);
             if (query.ShowTikokData)
             {
                 liveAnchorBeforeLivingTargetDto.IncreaseFansFeesTarget += res.Where(x => x.TikTokIncreaseFansFeesTarget > 1).Sum(e => e.TikTokIncreaseFansFeesTarget);

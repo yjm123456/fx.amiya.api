@@ -43,6 +43,16 @@ namespace Fx.Amiya.Dto.LiveAnchorMonthlyTarget
         /// 发布量目标
         /// </summary>
         public int SendNumTarget { get; set; }
-        
+
+
+
+        /// <summary>
+        /// 投流目标
+        /// </summary>
+        public decimal FlowInvestmentTarget { get; set; }
+        /// <summary>
+        /// 累计投流
+        /// </summary>
+        public decimal FlowInvestmentTotalNum { get; set; }
     }
 }
