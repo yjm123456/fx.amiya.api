@@ -2128,14 +2128,22 @@ namespace Fx.Amiya.Background.Api.Controllers
             data.EmployeeData = new BeforeLiveClueAndPerformanceDataItemVo();
             data.DepartmentData.CurrentDayCustomerCount = res.DepartmentData.CurrentDayCustomerCount;
             data.DepartmentData.CurrentDayPerformance = res.DepartmentData.CurrentDayPerformance;
+            data.DepartmentData.CurrentDayNewCustomerPerformance = res.DepartmentData.CurrentDayNewCustomerPerformance;
+            data.DepartmentData.CurrentDayOldCustomerPerformance = res.DepartmentData.CurrentDayOldCustomerPerformance;
             data.DepartmentData.CustomerCount = res.DepartmentData.CustomerCount;
             data.DepartmentData.Performance = res.DepartmentData.Performance;
+            data.DepartmentData.NewCustomerPerformance = res.DepartmentData.NewCustomerPerformance;
+            data.DepartmentData.OldCustomerPerformance = res.DepartmentData.OldCustomerPerformance;
             data.DepartmentData.CustomerCountTarget = res.DepartmentData.CustomerCountTarget;
             data.DepartmentData.CustomerCountTargetComplete = res.DepartmentData.CustomerCountTargetComplete;
             data.EmployeeData.CustomerCount = res.EmployeeData.CustomerCount;
             data.EmployeeData.Performance = res.EmployeeData.Performance;
+            data.EmployeeData.NewCustomerPerformance = res.EmployeeData.NewCustomerPerformance;
+            data.EmployeeData.OldCustomerPerformance = res.EmployeeData.OldCustomerPerformance;
             data.EmployeeData.CurrentDayCustomerCount = res.EmployeeData.CurrentDayCustomerCount;
             data.EmployeeData.CurrentDayPerformance = res.EmployeeData.CurrentDayPerformance;
+            data.EmployeeData.CurrentDayNewCustomerPerformance = res.EmployeeData.CurrentDayNewCustomerPerformance;
+            data.EmployeeData.CurrentDayOldCustomerPerformance = res.EmployeeData.CurrentDayOldCustomerPerformance;
             return ResultData<BeforeLiveClueAndPerformanceDataVo>.Success().AddData("data", data);
         }
         /// <summary>
@@ -2160,6 +2168,17 @@ namespace Fx.Amiya.Background.Api.Controllers
                 Performance = e.Performance
             }).ToList();
             data.PerformanceData = res.PerformanceData.Select(e => new PerformanceBrokenLineListInfoVo
+            {
+                date = e.date,
+                Performance = e.Performance
+            }).ToList();
+
+            data.NewCustomerPerformanceData = res.NewCustomerPerformanceData.Select(e => new PerformanceBrokenLineListInfoVo
+            {
+                date = e.date,
+                Performance = e.Performance
+            }).ToList();
+            data.OldCustomerPerformanceData = res.OldCustomerPerformanceData.Select(e => new PerformanceBrokenLineListInfoVo
             {
                 date = e.date,
                 Performance = e.Performance

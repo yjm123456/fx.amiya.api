@@ -1916,7 +1916,7 @@ namespace Fx.Amiya.Service
                     baseDataEndDate = Convert.ToDateTime((selectDate.EndDate.Year + 1) + "-01-01");
                 }
                 queryBeforeLivingBusinessDataDto.Month = month;
-                var groupBaseData = await shoppingCartRegistrationService.GetBelongChannelFlowAndCustomerTransformDataAsync(baseDataStartDate, baseDataEndDate, query.BelongChannel,query.BaseLiveAnchorId);
+                var groupBaseData = await shoppingCartRegistrationService.GetBelongChannelFlowAndCustomerTransformDataAsync(baseDataStartDate, baseDataEndDate, query.BelongChannel, query.BaseLiveAnchorId);
                 FlowTransFormDataDto groupData = new FlowTransFormDataDto();
                 // groupData.GroupName = $"{assistantInfo.Name}";
                 groupData.YearAndMonth = selectDate.StartDate.Year + "/" + month;
@@ -2000,7 +2000,7 @@ namespace Fx.Amiya.Service
             //groupDataAvg.OldCustomerDealCount = groupDataSum.OldCustomerDealCount / thisMonth;
             groupDataAvg.DealRate = DecimalExtension.CalculateTargetComplete(groupDataAvg.DealCount, groupDataAvg.ToHospitalCount).Value;
 
-            groupDataAvg.NewCustomerPerformance = groupDataSum.NewCustomerPerformance / thisMonth;
+            groupDataAvg.NewCustomerPerformance = Math.Round((groupDataSum.NewCustomerPerformance / thisMonth), 2, MidpointRounding.AwayFromZero);
             //groupDataAvg.OldCustomerPerformance = groupDataSum.OldCustomerPerformance / thisMonth;
             //groupDataAvg.TotalPerformance = Math.Round(groupDataSum.TotalPerformance / thisMonth, 2, MidpointRounding.AwayFromZero);
             //groupDataAvg.OldCustomerUnitPrice = DecimalExtension.Division(groupDataAvg.OldCustomerPerformance, groupDataAvg.OldCustomerDealCount).Value;
@@ -2672,7 +2672,7 @@ namespace Fx.Amiya.Service
                 {
                     case 0:
                         totalPerformanceYearData.SortName = newPerformanceYearData.SortName = oldPerformanceYearData.SortName = query.Year + "年预算目标";
-                        #region 整体
+                        #region 整体业务线
                         totalPerformanceYearData.JanuaryPerformance = targetAfterLiving.Where(x => x.BelongMonth == 1).Sum(t => t.PerformanceTarget).ToString();
                         totalPerformanceYearData.FebruaryPerformance = targetAfterLiving.Where(x => x.BelongMonth == 2).Sum(t => t.PerformanceTarget).ToString();
                         totalPerformanceYearData.MarchPerformance = targetAfterLiving.Where(x => x.BelongMonth == 3).Sum(t => t.PerformanceTarget).ToString();
@@ -2688,7 +2688,7 @@ namespace Fx.Amiya.Service
                         totalPerformanceYearData.SumPerformance = targetAfterLiving.Sum(x => x.PerformanceTarget).ToString();
                         totalPerformanceYearData.AveragePerformance = Math.Round(targetAfterLiving.Sum(x => x.PerformanceTarget) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
                         #endregion
-                        #region 新客
+                        #region 新客业务线
                         newPerformanceYearData.JanuaryPerformance = targetAfterLiving.Where(x => x.BelongMonth == 1).Sum(t => t.NewCustomerPerformanceTarget).ToString();
                         newPerformanceYearData.FebruaryPerformance = targetAfterLiving.Where(x => x.BelongMonth == 2).Sum(t => t.NewCustomerPerformanceTarget).ToString();
                         newPerformanceYearData.MarchPerformance = targetAfterLiving.Where(x => x.BelongMonth == 3).Sum(t => t.NewCustomerPerformanceTarget).ToString();
@@ -2704,7 +2704,7 @@ namespace Fx.Amiya.Service
                         newPerformanceYearData.SumPerformance = targetAfterLiving.Sum(x => x.NewCustomerPerformanceTarget).ToString();
                         newPerformanceYearData.AveragePerformance = Math.Round(targetAfterLiving.Sum(x => x.NewCustomerPerformanceTarget) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
                         #endregion
-                        #region 老客
+                        #region 老客业务线
                         oldPerformanceYearData.JanuaryPerformance = targetAfterLiving.Where(x => x.BelongMonth == 1).Sum(t => t.OldCustomerPerformanceTarget).ToString();
                         oldPerformanceYearData.FebruaryPerformance = targetAfterLiving.Where(x => x.BelongMonth == 2).Sum(t => t.OldCustomerPerformanceTarget).ToString();
                         oldPerformanceYearData.MarchPerformance = targetAfterLiving.Where(x => x.BelongMonth == 3).Sum(t => t.OldCustomerPerformanceTarget).ToString();
@@ -4690,11 +4690,11 @@ namespace Fx.Amiya.Service
         {
             AssistantHospitalCluesDataDto result = new AssistantHospitalCluesDataDto();
             var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
-           
+
             var shoppingCartRegistionData = await shoppingCartRegistrationService.GetPerformanceByLiveAnchorBaseIdListAsync(selectDate.StartDate, selectDate.EndDate, query.BaseLiveAnchorId);
-            var totalSendPhoneList = await _dalContentPlatformOrderSend.GetAll().Include(x=>x.ContentPlatformOrder).ThenInclude(x=>x.LiveAnchor)
+            var totalSendPhoneList = await _dalContentPlatformOrderSend.GetAll().Include(x => x.ContentPlatformOrder).ThenInclude(x => x.LiveAnchor)
                 .Where(e => e.IsMainHospital == true && e.SendDate >= selectDate.StartDate && e.SendDate < selectDate.EndDate)
-                .Where(e => e.ContentPlatformOrder.LiveAnchor.LiveAnchorBaseId==query.BaseLiveAnchorId)
+                .Where(e => e.ContentPlatformOrder.LiveAnchor.LiveAnchorBaseId == query.BaseLiveAnchorId)
                 .Select(e => e.ContentPlatformOrder.Phone).ToListAsync();
             var currentSendPhoneList = totalSendPhoneList.Where(e => shoppingCartRegistionData.Select(e => e.Phone).Contains(e)).ToList();
             var historySendPhoneList = totalSendPhoneList.Where(e => !currentSendPhoneList.Contains(e)).ToList();
@@ -6040,6 +6040,7 @@ namespace Fx.Amiya.Service
                     Phone = e.ContentPlatFormOrder.Phone,
                     Price = e.Price,
                     CreateDate = e.CreateDate,
+                    IsOldCustomer = e.IsOldCustomer,
                 })
                 .OrderBy(e => e.Phone)
                 .ToListAsync();
@@ -6048,13 +6049,21 @@ namespace Fx.Amiya.Service
             beforeLiveClueAndPerformanceData.EmployeeData = new BeforeLiveClueAndPerformanceDataItemDto();
             beforeLiveClueAndPerformanceData.EmployeeData.CustomerCount = basePhoneList.Where(e => e.CreateBy == query.AssistantId.Value).Count();
             beforeLiveClueAndPerformanceData.EmployeeData.Performance = performanceData.Where(e => myPhoneList.Contains(e.Phone)).Sum(e => e.Price);
+            beforeLiveClueAndPerformanceData.EmployeeData.NewCustomerPerformance = performanceData.Where(e => myPhoneList.Contains(e.Phone) && e.IsOldCustomer == false).Sum(e => e.Price);
+            beforeLiveClueAndPerformanceData.EmployeeData.OldCustomerPerformance = performanceData.Where(e => myPhoneList.Contains(e.Phone) && e.IsOldCustomer == true).Sum(e => e.Price);
             beforeLiveClueAndPerformanceData.EmployeeData.CurrentDayCustomerCount = basePhoneList.Where(e => e.CreateBy == query.AssistantId.Value && e.RecordDate.Date == DateTime.Now.Date).Count();
             beforeLiveClueAndPerformanceData.EmployeeData.CurrentDayPerformance = performanceData.Where(e => myPhoneList.Contains(e.Phone) && e.CreateDate.Date == DateTime.Now.Date).Sum(e => e.Price);
+            beforeLiveClueAndPerformanceData.EmployeeData.CurrentDayNewCustomerPerformance = performanceData.Where(e => myPhoneList.Contains(e.Phone) && e.IsOldCustomer == false && e.CreateDate.Date == DateTime.Now.Date).Sum(e => e.Price);
+            beforeLiveClueAndPerformanceData.EmployeeData.CurrentDayOldCustomerPerformance = performanceData.Where(e => myPhoneList.Contains(e.Phone) && e.IsOldCustomer == true && e.CreateDate.Date == DateTime.Now.Date).Sum(e => e.Price);
             beforeLiveClueAndPerformanceData.DepartmentData = new BeforeLiveClueAndPerformanceDataItemDto();
             beforeLiveClueAndPerformanceData.DepartmentData.CustomerCount = basePhoneList.Count();
             beforeLiveClueAndPerformanceData.DepartmentData.Performance = performanceData.Sum(e => e.Price);
+            beforeLiveClueAndPerformanceData.DepartmentData.NewCustomerPerformance = performanceData.Where(z => z.IsOldCustomer == false).Sum(e => e.Price);
+            beforeLiveClueAndPerformanceData.DepartmentData.OldCustomerPerformance = performanceData.Where(z => z.IsOldCustomer == true).Sum(e => e.Price);
             beforeLiveClueAndPerformanceData.DepartmentData.CurrentDayCustomerCount = basePhoneList.Where(e => e.RecordDate.Date == DateTime.Now.Date).Count();
             beforeLiveClueAndPerformanceData.DepartmentData.CurrentDayPerformance = performanceData.Where(e => e.CreateDate.Date == DateTime.Now.Date).Sum(e => e.Price);
+            beforeLiveClueAndPerformanceData.DepartmentData.CurrentDayNewCustomerPerformance = performanceData.Where(e => e.CreateDate.Date == DateTime.Now.Date && e.IsOldCustomer == false).Sum(e => e.Price);
+            beforeLiveClueAndPerformanceData.DepartmentData.CurrentDayOldCustomerPerformance = performanceData.Where(e => e.CreateDate.Date == DateTime.Now.Date && e.IsOldCustomer == true).Sum(e => e.Price);
             QueryBeforeLivingBusinessDataDto querytarget = new QueryBeforeLivingBusinessDataDto();
             querytarget.Year = query.EndDate.Year;
             querytarget.Month = query.EndDate.Month;
@@ -6109,7 +6118,8 @@ namespace Fx.Amiya.Service
                 .Select(e => new
                 {
                     CreateDate = e.CreateDate,
-                    Price = e.Price
+                    Price = e.Price,
+                    IsOldcustomer = e.IsOldCustomer,
                 })
                 .ToListAsync();
             BeforeLiveClueAndPerformanceBrokenDataDto beforeLiveClueAndPerformanceBrokenData = new BeforeLiveClueAndPerformanceBrokenDataDto();
@@ -6125,6 +6135,20 @@ namespace Fx.Amiya.Service
                 Performance = ChangePriceToTenThousand(e.Sum(e => e.Price))
             }).ToList();
             beforeLiveClueAndPerformanceBrokenData.PerformanceData = FillDate(query.EndDate.Year, query.EndDate.Month, performance);
+
+            var newCustomerPerformance = performanceData.Where(x=>x.IsOldcustomer==false).GroupBy(e => e.CreateDate.Day).Select(e => new PerformanceBrokenLineListInfoDto
+            {
+                date = e.Key.ToString(),
+                Performance = ChangePriceToTenThousand(e.Sum(e => e.Price))
+            }).ToList();
+            beforeLiveClueAndPerformanceBrokenData.NewCustomerPerformanceData = FillDate(query.EndDate.Year, query.EndDate.Month, newCustomerPerformance);
+
+            var oldCustomerPerformance = performanceData.Where(x => x.IsOldcustomer == true).GroupBy(e => e.CreateDate.Day).Select(e => new PerformanceBrokenLineListInfoDto
+            {
+                date = e.Key.ToString(),
+                Performance = ChangePriceToTenThousand(e.Sum(e => e.Price))
+            }).ToList();
+            beforeLiveClueAndPerformanceBrokenData.OldCustomerPerformanceData = FillDate(query.EndDate.Year, query.EndDate.Month, oldCustomerPerformance);
             return beforeLiveClueAndPerformanceBrokenData;
         }
         /// <summary>

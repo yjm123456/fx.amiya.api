@@ -6,12 +6,14 @@ using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.CustomerServiceCheckPerformance.Input;
 using Fx.Amiya.Background.Api.Vo.CustomerServiceCheckPerformance.Result;
 using Fx.Amiya.Dto.CustomerServiceCheckPerformance.Input;
+using Fx.Amiya.Dto.OperationLog;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
 using Fx.Open.Infrastructure.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Fx.Amiya.Background.Api.Controllers
 {
@@ -24,15 +26,18 @@ namespace Fx.Amiya.Background.Api.Controllers
     {
         private ICustomerServiceCheckPerformanceService customerServiceCheckPerformanceService;
         private IHttpContextAccessor _httpContextAccessor;
+        private IOperationLogService operationLogService;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="customerServiceCheckPerformanceService"></param>
-        public CustomerServiceCheckPerformanceController(IHttpContextAccessor httpContextAccessor, ICustomerServiceCheckPerformanceService customerServiceCheckPerformanceService)
+        public CustomerServiceCheckPerformanceController(IHttpContextAccessor httpContextAccessor, ICustomerServiceCheckPerformanceService customerServiceCheckPerformanceService,
+             IOperationLogService operationLogService)
         {
             this.customerServiceCheckPerformanceService = customerServiceCheckPerformanceService;
             this._httpContextAccessor = httpContextAccessor;
+            this.operationLogService = operationLogService;
         }
 
 
@@ -160,8 +165,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData> AddListAsync(List<AddCustomerServiceCheckPerformanceVo> addVo)
         {
+            OperationAddDto operationLog = new OperationAddDto();
+            operationLog.Source = (int)RequestSource.AmiyaBackground;
+            operationLog.Code = 0;
             try
             {
+                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+                operationLog.OperationBy = employeeId;
                 List<AddCustomerServiceCheckPerformanceDto> addListDto = new List<AddCustomerServiceCheckPerformanceDto>();
                 var isExistCheck = addVo.Where(x => x.PerformanceType == (int)PerformanceType.Check).Count();
                 if (isExistCheck > 0)
@@ -170,6 +181,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                 }
                 foreach (var x in addVo)
                 {
+                    //成交单若出现相同数据则排除掉
+                    var IsExistData = addListDto.Where(z => z.DealInfoId == x.DealInfoId).ToList();
+                    if (IsExistData.Count > 0)
+                    {
+                        break;
+                    }
 
                     AddCustomerServiceCheckPerformanceDto addDto = new AddCustomerServiceCheckPerformanceDto();
                     addDto.DealInfoId = x.DealInfoId;
@@ -194,8 +211,18 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             catch (Exception ex)
             {
+                operationLog.Message = ex.Message;
+                operationLog.Code = -1;
                 return ResultData.Fail(ex.Message);
             }
+            finally
+            {
+                operationLog.Parameters = JsonConvert.SerializeObject(addVo);
+                operationLog.RequestType = (int)RequestType.Add;
+                operationLog.RouteAddress = _httpContextAccessor.HttpContext.Request.Path;
+                await operationLogService.AddOperationLogAsync(operationLog);
+            }
+
         }
 
 

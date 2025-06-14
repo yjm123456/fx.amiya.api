@@ -14,8 +14,16 @@ namespace Fx.Amiya.Dto.AmiyaOperationsBoardService.Result
         /// </summary>
         public List<PerformanceBrokenLineListInfoDto> ClueData { get; set; }
         /// <summary>
-        /// 业绩数据
+        /// 总业绩数据
         /// </summary>
         public List<PerformanceBrokenLineListInfoDto> PerformanceData { get; set; }
+        /// <summary>
+        /// 新客业绩数据
+        /// </summary>
+        public List<PerformanceBrokenLineListInfoDto> NewCustomerPerformanceData { get; set; }
+        /// <summary>
+        /// 老客业绩数据
+        /// </summary>
+        public List<PerformanceBrokenLineListInfoDto> OldCustomerPerformanceData { get; set; }
     }
 }

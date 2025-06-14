@@ -14,8 +14,16 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaLivingOperationBoard.Result
         /// </summary>
         public List<PerformanceBrokenLineListInfoVo> ClueData { get; set; }
         /// <summary>
-        /// 业绩数据
+        /// 总业绩数据
         /// </summary>
         public List<PerformanceBrokenLineListInfoVo> PerformanceData { get; set; }
+        /// <summary>
+        /// 新客业绩数据
+        /// </summary>
+        public List<PerformanceBrokenLineListInfoVo> NewPerformanceData { get; set; }
+        /// <summary>
+        /// 老客业绩数据
+        /// </summary>
+        public List<PerformanceBrokenLineListInfoVo> OldPerformanceData { get; set; }
     }
 }

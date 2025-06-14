@@ -88,26 +88,41 @@ namespace Fx.Amiya.Service
                 .Where(e => e.LiveAnchor.LiveAnchorBaseId == query.BaseLiveAnchorId && e.Month == query.EndDate.Month && e.Year == query.EndDate.Year)
                 .Where(e => e.ConsultationTarget > 1)
                 .Sum(e => e.ConsultationTarget);
-            var performance = dalContentPlatFormOrderDealInfo.GetAll()
+
+            var customerPerformance = dalContentPlatFormOrderDealInfo.GetAll()
                 .Where(e => e.CreateDate >= selectDate.StartDate && e.CreateDate < selectDate.EndDate)
                 .Where(e => string.IsNullOrEmpty(query.BaseLiveAnchorId) || e.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId == query.BaseLiveAnchorId)
                 .Where(e => e.ContentPlatFormOrder.BelongChannel == (int)BelongChannel.Living)
                 .Where(e => e.IsDeal == true)
-                .Where(e => e.IsOldCustomer == false)
-                .Select(e => new { e.Price, e.CreateDate, e.ContentPlatFormOrder.Phone });
-            var lastPerformance = dalContentPlatFormOrderDealInfo.GetAll()
+                .Select(e => new { e.Price, e.CreateDate, e.ContentPlatFormOrder.Phone, e.IsOldCustomer });
+            var lastNewCustomerPerformance = dalContentPlatFormOrderDealInfo.GetAll()
                 .Where(e => e.CreateDate >= selectDate.LastMonthStartDate && e.CreateDate < selectDate.LastMonthEndDate)
                 .Where(e => string.IsNullOrEmpty(query.BaseLiveAnchorId) || e.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId == query.BaseLiveAnchorId)
                 .Where(e => e.ContentPlatFormOrder.BelongChannel == (int)BelongChannel.Living)
                 .Where(e => e.IsDeal == true)
                 .Where(e => e.IsOldCustomer == false)
                 .Sum(e => e.Price);
-            var historyPerformance = dalContentPlatFormOrderDealInfo.GetAll()
+            var historyNewCustomerPerformance = dalContentPlatFormOrderDealInfo.GetAll()
                 .Where(e => e.CreateDate >= selectDate.LastYearThisMonthStartDate && e.CreateDate < selectDate.LastYearThisMonthEndDate)
                 .Where(e => string.IsNullOrEmpty(query.BaseLiveAnchorId) || e.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId == query.BaseLiveAnchorId)
                 .Where(e => e.ContentPlatFormOrder.BelongChannel == (int)BelongChannel.Living)
                 .Where(e => e.IsDeal == true)
                 .Where(e => e.IsOldCustomer == false)
+                .Sum(e => e.Price);
+
+            var lastOldCustomerPerformance = dalContentPlatFormOrderDealInfo.GetAll()
+                .Where(e => e.CreateDate >= selectDate.LastMonthStartDate && e.CreateDate < selectDate.LastMonthEndDate)
+                .Where(e => string.IsNullOrEmpty(query.BaseLiveAnchorId) || e.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId == query.BaseLiveAnchorId)
+                .Where(e => e.ContentPlatFormOrder.BelongChannel == (int)BelongChannel.Living)
+                .Where(e => e.IsDeal == true)
+                .Where(e => e.IsOldCustomer == true)
+                .Sum(e => e.Price);
+            var historyOldCustomerPerformance = dalContentPlatFormOrderDealInfo.GetAll()
+                .Where(e => e.CreateDate >= selectDate.LastYearThisMonthStartDate && e.CreateDate < selectDate.LastYearThisMonthEndDate)
+                .Where(e => string.IsNullOrEmpty(query.BaseLiveAnchorId) || e.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId == query.BaseLiveAnchorId)
+                .Where(e => e.ContentPlatFormOrder.BelongChannel == (int)BelongChannel.Living)
+                .Where(e => e.IsDeal == true)
+                .Where(e => e.IsOldCustomer == true)
                 .Sum(e => e.Price);
             var newCustomerPerformanceTarget = await liveAnchorMonthlyTargetAfterLivingService.GetSendOrDealTargetAsync(query.EndDate.Year, query.EndDate.Month, liveAnchor.Select(x => x.Id).ToList());
 
@@ -118,14 +133,28 @@ namespace Fx.Amiya.Service
             data.ClueChain = DecimalExtension.CalculateTargetComplete(data.ClueCount, lastData).Value;
             data.ClueYearOnYear = DecimalExtension.CalculateTargetComplete(data.ClueCount, historyData).Value;
 
-            data.Performance = performance.Sum(e => e.Price);
-            data.CurrentPerformance = performance.Where(e => e.CreateDate.Date == DateTime.Now.Date).Sum(e => e.Price);
-            data.PerformanceChain = DecimalExtension.CalculateTargetComplete(data.Performance, lastPerformance).Value;
-            data.PerformanceYearOnYear = DecimalExtension.CalculateTargetComplete(data.Performance, historyPerformance).Value;
-            var currentPerformance = performance.Where(e => currentPhoneList.Contains(e.Phone)).Sum(e => e.Price);
+            data.Performance = customerPerformance
+                .Where(e => e.IsOldCustomer == false).Sum(e => e.Price);
+            data.CurrentPerformance = customerPerformance
+                .Where(e => e.IsOldCustomer == false).Where(e => e.CreateDate.Date == DateTime.Now.Date).Sum(e => e.Price);
+            data.PerformanceChain = DecimalExtension.CalculateTargetComplete(data.Performance, lastNewCustomerPerformance).Value;
+            data.PerformanceYearOnYear = DecimalExtension.CalculateTargetComplete(data.Performance, historyNewCustomerPerformance).Value;
+            var currentPerformance = customerPerformance
+                .Where(e => e.IsOldCustomer == false).Where(e => currentPhoneList.Contains(e.Phone)).Sum(e => e.Price);
             data.CurrentMontPerformance = currentPerformance;
             data.PerformanceTarget = (decimal)Math.Round((newCustomerPerformanceTarget.NewCustomerPerformanceTarget * 0.65M), 2, MidpointRounding.AwayFromZero);
             data.PerformanceTargetCompleteRate = DecimalExtension.CalculateTargetComplete(data.Performance, data.PerformanceTarget).Value;
+
+
+            data.OldCustomerPerformance = customerPerformance
+                .Where(e => e.IsOldCustomer == true).Sum(e => e.Price);
+            data.OldCustomerCurrentPerformance = customerPerformance
+                .Where(e => e.IsOldCustomer == true).Where(e => e.CreateDate.Date == DateTime.Now.Date).Sum(e => e.Price);
+            data.OldCustomerPerformanceChain = DecimalExtension.CalculateTargetComplete(data.Performance, lastOldCustomerPerformance).Value;
+            data.OldCustomerPerformanceYearOnYear = DecimalExtension.CalculateTargetComplete(data.Performance, historyOldCustomerPerformance).Value;
+            var currentOldCustomerPerformance = customerPerformance
+                .Where(e => e.IsOldCustomer == true).Where(e => currentPhoneList.Contains(e.Phone)).Sum(e => e.Price);
+            data.CurrentMontPerformance = currentOldCustomerPerformance;
             return data;
         }
         /// <summary>
@@ -148,8 +177,7 @@ namespace Fx.Amiya.Service
                  .Where(e => string.IsNullOrEmpty(query.BaseLiveAnchorId) || e.ContentPlatFormOrder.LiveAnchor.LiveAnchorBaseId == query.BaseLiveAnchorId)
                 .Where(e => e.ContentPlatFormOrder.BelongChannel == (int)BelongChannel.Living)
                 .Where(e => e.IsDeal == true)
-                .Where(e => e.IsOldCustomer == false)
-                .Select(e => new { e.Price, e.CreateDate }).ToListAsync();
+                .Select(e => new { e.Price, e.CreateDate, e.IsOldCustomer }).ToListAsync();
 
             var clueData = baseData.GroupBy(e => e.RecordDate.Date.Day).Select(e => new PerformanceBrokenLineListInfoDto
             {
@@ -163,6 +191,21 @@ namespace Fx.Amiya.Service
                 Performance = ChangePriceToTenThousand(e.Sum(e => e.Price))
             }).ToList();
             data.PerformanceData = FillDate(query.EndDate.Year, query.EndDate.Month, performanceDataList);
+
+
+            var newPerformanceDataList = performanceData.Where(x => x.IsOldCustomer == false).GroupBy(e => e.CreateDate.Date.Day).Select(e => new PerformanceBrokenLineListInfoDto
+            {
+                date = e.Key.ToString(),
+                Performance = ChangePriceToTenThousand(e.Sum(e => e.Price))
+            }).ToList();
+            data.NewPerformanceData = FillDate(query.EndDate.Year, query.EndDate.Month, newPerformanceDataList);
+
+            var oldPerformanceDataList = performanceData.Where(x => x.IsOldCustomer == true).GroupBy(e => e.CreateDate.Date.Day).Select(e => new PerformanceBrokenLineListInfoDto
+            {
+                date = e.Key.ToString(),
+                Performance = ChangePriceToTenThousand(e.Sum(e => e.Price))
+            }).ToList();
+            data.OldPerformanceData = FillDate(query.EndDate.Year, query.EndDate.Month, oldPerformanceDataList);
             return data;
         }
         /// <summary>
@@ -224,7 +267,7 @@ namespace Fx.Amiya.Service
 
             #region 获取部门基础数据
             var depeartPhoneList = baseData.Select(e => e.Phone).ToList();
-            var allOrderPerformance = await contentPlateFormOrderService.GetLivingOrderSendAndDealDataAsync(selectDate.StartDate, selectDate.EndDate, baseLiveanchorIdList, depeartPhoneList, query.IsCurrent,true);
+            var allOrderPerformance = await contentPlateFormOrderService.GetLivingOrderSendAndDealDataAsync(selectDate.StartDate, selectDate.EndDate, baseLiveanchorIdList, depeartPhoneList, query.IsCurrent, true);
 
             #endregion
             #region 【派单】
@@ -361,7 +404,7 @@ namespace Fx.Amiya.Service
             #region 【分诊】
             //当月数据
             var employeePhoneList = baseData.Where(e => e.BaseLiveAnchorId == query.BaseLiveAnchorId).Select(e => e.Phone).ToList();
-            var addWechatOrderPerformance = await contentPlateFormOrderService.GetLivingOrderSendAndDealDataAsync(selectDate.StartDate, selectDate.EndDate, new List<string> { query.BaseLiveAnchorId }, employeePhoneList, query.IsCurrent,true);
+            var addWechatOrderPerformance = await contentPlateFormOrderService.GetLivingOrderSendAndDealDataAsync(selectDate.StartDate, selectDate.EndDate, new List<string> { query.BaseLiveAnchorId }, employeePhoneList, query.IsCurrent, true);
             //分诊
             LivingFilterDetailDataDto consulationdetails2 = new LivingFilterDetailDataDto();
             consulationdetails2.Key = "Consulation";

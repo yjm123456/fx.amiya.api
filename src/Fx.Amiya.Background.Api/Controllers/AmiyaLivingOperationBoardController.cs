@@ -38,7 +38,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             this.amiyaEmployeeService = amiyaEmployeeService;
         }
         /// <summary>
-        /// 直播中客资和新客业绩
+        /// 直播中客资和业绩
         /// </summary>
         /// <returns></returns>
         [HttpGet("getLivingCustomerAndPerformanceData")]
@@ -64,6 +64,13 @@ namespace Fx.Amiya.Background.Api.Controllers
             data.CurrentMontPerformance = res.CurrentMontPerformance;
             data.PerformanceTarget = res.PerformanceTarget;
             data.PerformanceTargetCompleteRate = res.PerformanceTargetCompleteRate;
+
+            data.OldCustomerPerformance = res.OldCustomerPerformance;
+            data.OldCustomerCurrentPerformance = res.OldCustomerCurrentPerformance;
+            data.OldCustomerCurrentMontPerformance = res.OldCustomerCurrentMontPerformance;
+            data.OldCustomerPerformanceChain = res.OldCustomerPerformanceChain;
+            data.OldCustomerPerformanceYearOnYear = res.OldCustomerPerformanceYearOnYear;
+
             return ResultData<LivingCustomerAndPerformanceDataVo>.Success().AddData("data", data);
         }
         /// <summary>
@@ -86,6 +93,16 @@ namespace Fx.Amiya.Background.Api.Controllers
                 Performance = e.Performance
             }).ToList();
             data.PerformanceData = res.PerformanceData.Select(e => new PerformanceBrokenLineListInfoVo
+            {
+                date = e.date,
+                Performance = e.Performance
+            }).ToList();
+            data.NewPerformanceData = res.NewPerformanceData.Select(e => new PerformanceBrokenLineListInfoVo
+            {
+                date = e.date,
+                Performance = e.Performance
+            }).ToList();
+            data.OldPerformanceData = res.OldPerformanceData.Select(e => new PerformanceBrokenLineListInfoVo
             {
                 date = e.date,
                 Performance = e.Performance

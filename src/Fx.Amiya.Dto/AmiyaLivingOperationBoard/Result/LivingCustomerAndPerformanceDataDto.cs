@@ -61,5 +61,26 @@ namespace Fx.Amiya.Dto.AmiyaLivingOperationBoard
         /// 新客业绩目标完成率
         /// </summary>
         public decimal PerformanceTargetCompleteRate { get; set; }
+
+        /// <summary>
+        /// 累计老客业绩
+        /// </summary>
+        public decimal OldCustomerPerformance { get; set; }
+        /// <summary>
+        /// 当日老客业绩
+        /// </summary>
+        public decimal OldCustomerCurrentPerformance { get; set; }
+        /// <summary>
+        /// 当月老客业绩
+        /// </summary>
+        public decimal OldCustomerCurrentMontPerformance { get; set; }
+        /// <summary>
+        /// 老客业绩环比
+        /// </summary>
+        public decimal OldCustomerPerformanceChain { get; set; }
+        /// <summary>
+        /// 老客业绩同比
+        /// </summary>
+        public decimal OldCustomerPerformanceYearOnYear { get; set; }
     }
 }
