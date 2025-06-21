@@ -4127,7 +4127,6 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<AssistantPerformanceDto> GetAssitantPerformanceAsync(QueryAssistantPerformanceDto query)
         {
-            List<AssitantTargetCompleteDto> assitantTargetCompletes = new List<AssitantTargetCompleteDto>();
 
             var sequentialDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.EndDate.Year, query.EndDate.Month == 0 ? 1 : query.EndDate.Month);
             var assistantIdList = new List<int>();

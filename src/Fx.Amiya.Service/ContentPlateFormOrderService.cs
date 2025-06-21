@@ -4617,6 +4617,66 @@ namespace Fx.Amiya.Service
             return orderData;
         }
 
+
+        /// <summary>
+        /// 获取机构老客复购数据
+        /// </summary>
+        /// <param name="date">时间</param>
+        /// <returns></returns>
+        public async Task<OldCustomerDealNumDto> GetHospitalOldCustomerBuyAgainByMonthAsync(DateTime date, bool? isEffectiveCustomerData, int hospitalId)
+        {
+            DateTime startDate = Convert.ToDateTime("2000-01-01");
+            var dealDate = _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderDealInfoList)
+                .Where(x => x.DealAmount > 0)
+                .Where(e => e.LastDealHospitalId == hospitalId)
+                .Where(o => (!isEffectiveCustomerData.HasValue || (isEffectiveCustomerData.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0)))
+                .Where(e => e.DealDate.Value >= startDate && e.DealDate.Value < date);
+            var daysCountList = await dealDate.Where(x => x.ContentPlatformOrderDealInfoList.Where(x => x.IsDeal == true && x.Price > 0).Count() >= 2 && x.ContentPlatformOrderDealInfoList.Where(x => x.IsDeal == true && x.Price > 0).Count() <= 5)
+                .SelectMany(e => e.ContentPlatformOrderDealInfoList)
+                .Where(e => e.IsDeal == true && e.Price > 0)
+                .GroupBy(e => e.ContentPlatFormOrder.Id).Select(e => new
+                {
+                    Count = e.Count(),
+                    Days = e.Max(e => e.CreateDate) - e.Min(e => e.CreateDate)
+                }).ToListAsync();
+
+            var top80Data = daysCountList.GroupBy(e => e.Count).Select(e =>
+            {
+                var endIndex = DecimalExtension.CalTakeCount(e.Count());
+                var tempdata = e.Skip(0).Take(endIndex);
+                var count = tempdata.Count();
+                return new
+                {
+                    Count = e.Key,
+                    Cycle = DecimalExtension.CalAvg(tempdata.Sum(e => e.Days.Days), count)
+                };
+            }).ToList();
+
+            OldCustomerDealNumDto orderData = new OldCustomerDealNumDto();
+            orderData.TotalDealCustomer = dealDate
+                .Select(e => e.Phone)
+                .Distinct()
+                .Count();
+
+            orderData.SecondDealCustomer = dealDate.Where(x => x.ContentPlatformOrderDealInfoList.Where(x => x.IsDeal == true && x.Price > 0).Count() == 2).Select(e => e.Phone)
+                .Distinct()
+                .Count();
+            orderData.SecondDealCycle = top80Data.Where(e => e.Count == 2).FirstOrDefault()?.Cycle ?? 0;
+            orderData.ThirdDealCustomer = dealDate.Where(x => x.ContentPlatformOrderDealInfoList.Where(x => x.IsDeal == true && x.Price > 0).Count() == 3).Select(e => e.Phone)
+                .Distinct()
+                .Count();
+            orderData.ThirdDealCycle = top80Data.Where(e => e.Count == 3).FirstOrDefault()?.Cycle ?? 0;
+            orderData.FourthDealCustomer = dealDate.Where(x => x.ContentPlatformOrderDealInfoList.Where(x => x.IsDeal == true && x.Price > 0).Count() == 4).Select(e => e.Phone)
+                .Distinct()
+                .Count();
+            orderData.FourthDealCycle = top80Data.Where(e => e.Count == 4).FirstOrDefault()?.Cycle ?? 0;
+            orderData.FifThOrMoreOrMoreDealCustomer = dealDate.Where(x => x.ContentPlatformOrderDealInfoList.Where(x => x.IsDeal == true && x.Price > 0).Count() == 5).Select(e => e.Phone)
+                .Distinct()
+                .Count();
+            orderData.FifthDealCycle = top80Data.Where(e => e.Count == 5).FirstOrDefault()?.Cycle ?? 0;
+            return orderData;
+        }
+
         /// <summary>
         /// 根据助理id获取上门和成交量
         /// </summary>
@@ -5875,6 +5935,58 @@ namespace Fx.Amiya.Service
             else
             {
                 queryVisit = queryVisit.Where(e => !phoneList.Contains(e.Phone));
+            }
+            var visitCount = await queryVisit.Select(e => new { e.CreateDate, e.Phone, e.Price, e.IsDeal }).ToListAsync();
+            orderData.VisitNum = visitCount
+                .Select(e => e.Phone)
+                .Distinct()
+                .Count();
+            orderData.DealNum = visitCount.Where(x => x.CreateDate >= startDate && x.CreateDate < endDate && x.IsDeal == true).Select(e => e.Phone)
+                .Distinct()
+                .Count();
+            orderData.DealPrice = visitCount.Where(x => x.CreateDate >= startDate && x.CreateDate < endDate && x.IsDeal == true)
+                .Sum(x => x.Price);
+            return orderData;
+        }
+
+        /// <summary>
+        /// 获取机构当月/历史派单上门成交数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="hospitalId"></param>
+        /// <param name="isCurrent"></param>
+        /// <returns></returns>
+        public async Task<OrderSendAndDealNumDto> GetHospitalOrderSendAndDealDataAsync(DateTime startDate, DateTime endDate, int hospitalId, bool isCurrent)
+        {
+            OrderSendAndDealNumDto orderData = new OrderSendAndDealNumDto();
+            var querySendOrder = _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList)
+            .Where(e => e.ContentPlatformOrderSendList.Where(o => o.IsMainHospital == true && o.HospitalId == hospitalId && o.SendDate >= startDate && o.SendDate < endDate).Count() == 1)
+            .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsOldCustomer == false);
+
+            var sendNumPhoneList = await querySendOrder
+                .Select(e => e.Phone)
+                .Distinct().ToListAsync();
+            orderData.SendOrderNum = sendNumPhoneList.Count();
+
+            var queryVisit = dalContentPlatFormOrderDealInfo.GetAll()
+            .Where(x => x.CreateDate >= startDate && x.CreateDate < endDate && x.IsOldCustomer == false)
+            .Where(e => e.LastDealHospitalId == hospitalId)
+            .Where(e => e.IsToHospital == true)
+            .Select(e => new
+            {
+                e.Price,
+                e.ContentPlatFormOrder.Phone,
+                e.CreateDate,
+                e.IsDeal
+            });
+            if (isCurrent)
+            {
+                queryVisit = queryVisit.Where(e => sendNumPhoneList.Contains(e.Phone));
+            }
+            else
+            {
+                queryVisit = queryVisit.Where(e => !sendNumPhoneList.Contains(e.Phone));
             }
             var visitCount = await queryVisit.Select(e => new { e.CreateDate, e.Phone, e.Price, e.IsDeal }).ToListAsync();
             orderData.VisitNum = visitCount

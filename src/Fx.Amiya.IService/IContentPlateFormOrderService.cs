@@ -449,6 +449,15 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<OldCustomerDealNumDto> GetAssistantOldCustomerBuyAgainByMonthAsync(DateTime date, bool? isEffectiveCustomerData, List<int> assistantIdList);
 
+
+        /// <summary>
+        /// 获取机构老客复购数据
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="isEffectiveCustomerData"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        Task<OldCustomerDealNumDto> GetHospitalOldCustomerBuyAgainByMonthAsync(DateTime date, bool? isEffectiveCustomerData, int hospitalId);
         /// <summary>
         /// 根据助理id获取上门和成交量
         /// </summary>
@@ -543,6 +552,16 @@ namespace Fx.Amiya.IService
         /// <param name="assistantId"></param>
         /// <returns></returns>
         Task<OrderSendAndDealNumDto> GetLivingOrderSendAndDealDataAsync(DateTime startDate, DateTime endDate, List<string> baseLiveanchorIds, List<string> phoneList, bool isCurrent, bool isLiving);
+
+        /// <summary>
+        /// 获取机构当月/历史派单上门成交数据
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="hospitalId"></param>
+        /// <param name="isCurrent"></param>
+        /// <returns></returns>
+        Task<OrderSendAndDealNumDto> GetHospitalOrderSendAndDealDataAsync(DateTime startDate, DateTime endDate, int hospitalId, bool isCurrent);
         #endregion
         #region 医院看板
 

@@ -289,6 +289,15 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceDetailByDateAndAssistantIdListAsync(DateTime startDate, DateTime endDate, List<int> assistantId);
 
+
+        /// <summary>
+        /// 获取医院成交业绩
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="hospitalId"></param>
+        /// <returns></returns>
+        Task<List<ContentPlatFormOrderDealInfoDto>> GetPerformanceDetailByDateAndHospitalIdListAsync(DateTime startDate, DateTime endDate, int hospitalId);
         /// <summary>
         /// 根据主播基础id获取业绩数据
         /// </summary>
@@ -430,6 +439,7 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<List<ContentPlatFormOrderDealInfoDto>> GetSimplePerformanceDetailByDateAsync(int year, int month, List<int> liveAnchorIds, bool? isOldCustomer);
 
+        Task<List<ContentPlatFormOrderDealInfoDto>> GetSimpleHospitalPerformanceDetailByDateAsync(int year, int month, int hospitalId, bool? isOldCustomer);
         Task<List<ContentPlatFormOrderDealInfoDto>> GetSimplePerformanceDetailByDateAsync(DateTime startDate, DateTime endDate, List<int> liveAnchorIds, bool? isOldCustomer);
         /// <summary>
         /// 根据年月获取漏单业绩
