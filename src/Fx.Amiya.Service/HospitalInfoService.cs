@@ -446,6 +446,30 @@ namespace Fx.Amiya.Service
             }
         }
 
+        /// <summary>
+        /// 获取资料审核通过的医院医院名称列表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<HospitalNameDto>> GetValidHospitalNameListAsync()
+        {
+            try
+            {
+                var hospital = from d in dalHospitalInfo.GetAll()
+                               where (d.Valid ==true)
+                               select new HospitalNameDto
+                               {
+                                   Id = d.Id,
+                                   Name = d.SimpleName
+                               };
+
+                return await hospital.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message.ToString());
+            }
+        }
+
 
         /// <summary>
         /// 添加医院

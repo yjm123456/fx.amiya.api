@@ -87,6 +87,7 @@ namespace Fx.Amiya.IService
         Task<decimal> GetPerformance(bool? IsOldCustomer);
 
         Task<List<ContentPlatFormOrderDealInfoDto>> GetNewOrOldCustomerNumByDateAsync(DateTime? startDate, DateTime? endDate, bool? IsOldCustomer, List<int> liveAnchorIds);
+        Task<List<ContentPlatFormOrderDealInfoDto>> GetHospitalNewOrOldCustomerNumByDateAsync(DateTime? startDate, DateTime? endDate, bool? IsOldCustomer, int hospitalId);
         /// <summary>
         /// 新客上门总人数
         /// </summary>
@@ -440,6 +441,8 @@ namespace Fx.Amiya.IService
         Task<List<ContentPlatFormOrderDealInfoDto>> GetSimplePerformanceDetailByDateAsync(int year, int month, List<int> liveAnchorIds, bool? isOldCustomer);
 
         Task<List<ContentPlatFormOrderDealInfoDto>> GetSimpleHospitalPerformanceDetailByDateAsync(int year, int month, int hospitalId, bool? isOldCustomer);
+
+        Task<List<ContentPlatFormOrderDealInfoDto>> GetSimpleHospitalPerformanceDetailByDateAsync(DateTime startDate, DateTime endDate, int hospitalId, bool? isOldCustomer);
         Task<List<ContentPlatFormOrderDealInfoDto>> GetSimplePerformanceDetailByDateAsync(DateTime startDate, DateTime endDate, List<int> liveAnchorIds, bool? isOldCustomer);
         /// <summary>
         /// 根据年月获取漏单业绩

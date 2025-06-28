@@ -2,6 +2,7 @@
 using Fx.Amiya.Background.Api.Vo;
 using Fx.Amiya.Background.Api.Vo.AmiyaHospitalOperation.Input;
 using Fx.Amiya.Background.Api.Vo.AmiyaHospitalOperation.Result;
+using Fx.Amiya.Background.Api.Vo.AmiyaOperationsBoard.Result;
 using Fx.Amiya.Background.Api.Vo.Performance.AmiyaPerformance2.Result;
 using Fx.Amiya.Dto.AmiyaHospitalOperation.Input;
 using Fx.Amiya.Dto.AmiyaHospitalOperation.Result;
@@ -86,16 +87,22 @@ namespace Fx.Amiya.Background.Api.Controllers
             var res = await amiyaHospitalOperationBoardService.GetHospitalVisitDataDto(queryDto);
             data.TodayNewCustomerNum = res.TodayNewCustomerNum;
             data.TotalNewCustomerNum = res.TotalNewCustomerNum;
+            data.LastMonthNewCustomerNum = res.LastMonthNewCustomerNum;
+            data.LastYearNewCustomerNum = res.LastYearNewCustomerNum;
             data.NewCustomerNumChainRate = res.NewCustomerNumChainRate;
             data.NewCustomerNumYearOnYearData = res.NewCustomerNumYearOnYearData;
 
             data.TodayOldCustomerNum = res.TodayOldCustomerNum;
             data.TotalOldCustomerNum = res.TotalOldCustomerNum;
+            data.LastMonthOldCustomerNum = res.LastMonthOldCustomerNum;
+            data.LastYearOldCustomerNum = res.LastYearOldCustomerNum;
             data.OldCustomerNumChainRate = res.OldCustomerNumChainRate;
             data.OldCustomerNumYearOnYearData = res.OldCustomerNumYearOnYearData;
 
             data.TodayTotalCustomerNum = res.TodayTotalCustomerNum;
             data.TotalTotalCustomerNum = res.TotalTotalCustomerNum;
+            data.LastMonthTotalCustomerNum = res.LastMonthTotalCustomerNum;
+            data.LastYearTotalCustomerNum = res.LastYearTotalCustomerNum;
             data.TotalCustomerNumChainRate = res.TotalCustomerNumChainRate;
             data.TotalCustomerNumYearOnYearData = res.TotalCustomerNumYearOnYearData;
 
@@ -188,7 +195,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             var performance = await amiyaHospitalOperationBoardService.GetAssistantPerformanceFilterDataAsync(queryDto);
 
             HospitalNewCustomerOperationDataVo newCustomerOperationDataVo = new HospitalNewCustomerOperationDataVo();
-           
+
             newCustomerOperationDataVo.ToHospitalRate = performance.NewCustomerData.ToHospitalRate.HasValue ? performance.NewCustomerData.ToHospitalRate.Value : 0.00M;
             newCustomerOperationDataVo.ToHospitalRateHealthValueThisMonth = performance.NewCustomerData.ToHospitalRateHealthValueThisMonth;
             newCustomerOperationDataVo.DealRate = performance.NewCustomerData.DealRate.HasValue ? performance.NewCustomerData.DealRate.Value : 0.00M;
@@ -270,7 +277,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 VisitCount = e.VisitCount,
                 DealCount = e.DealCount,
                 DealRate = e.DealRate
-            }).ToList();
+            }).Take(10).ToList();
             return ResultData<HospitaslVisitDataVo>.Success().AddData("data", dataVo);
         }
         /// <summary>
@@ -291,10 +298,90 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 Id = e.Key,
                 Name = e.Value,
-            }).ToList();
-           
+            }).Take(10).ToList();
+
             result.PerformanceRateData.RemoveAll(e => e.Name == 0m);
             return ResultData<HospitalPerformanceRateVo>.Success().AddData("data", result);
         }
+
+        #region 【转化看板接口】
+
+        /// <summary>
+        /// 机构月度业绩目标达成情况
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("getHospitalTotalAchievementByYear")]
+        public async Task<ResultData<HospitalPerformanceYearDataListVo>> GetHospitalTotalAchievementByYearAsync([FromQuery] QueryHospitalPerfomanceYearDataVo query)
+        {
+            QueryHospitalPerfomanceYearDataDto queryDto = new QueryHospitalPerfomanceYearDataDto();
+            queryDto.Year = query.Year;
+            queryDto.HospitalId = query.HospitalId;
+            var result = await amiyaHospitalOperationBoardService.GetTotalHospitalPersonalAchievementByYearAsync(queryDto);
+            HospitalPerformanceYearDataListVo resultData = new HospitalPerformanceYearDataListVo();
+            var res1 = result.TotalPerformanceData.Select(e => new PerformanceYearDataVo
+            {
+                GroupName = e.GroupName,
+                SortName = e.SortName,
+                JanuaryPerformance = e.JanuaryPerformance,
+                FebruaryPerformance = e.FebruaryPerformance,
+                MarchPerformance = e.MarchPerformance,
+                AprilPerformance = e.AprilPerformance,
+                MayPerformance = e.MayPerformance,
+                JunePerformance = e.JunePerformance,
+                JulyPerformance = e.JulyPerformance,
+                AugustPerformance = e.AugustPerformance,
+                SeptemberPerformance = e.SeptemberPerformance,
+                OctoberPerformance = e.OctoberPerformance,
+                NovemberPerformance = e.NovemberPerformance,
+                DecemberPerformance = e.DecemberPerformance,
+                SumPerformance = e.SumPerformance,
+                AveragePerformance = e.AveragePerformance,
+            }).ToList();
+            resultData.TotalPerformanceData = res1;
+            var res2 = result.NewCustomerPerformanceData.Select(e => new PerformanceYearDataVo
+            {
+                GroupName = e.GroupName,
+                SortName = e.SortName,
+                JanuaryPerformance = e.JanuaryPerformance,
+                FebruaryPerformance = e.FebruaryPerformance,
+                MarchPerformance = e.MarchPerformance,
+                AprilPerformance = e.AprilPerformance,
+                MayPerformance = e.MayPerformance,
+                JunePerformance = e.JunePerformance,
+                JulyPerformance = e.JulyPerformance,
+                AugustPerformance = e.AugustPerformance,
+                SeptemberPerformance = e.SeptemberPerformance,
+                OctoberPerformance = e.OctoberPerformance,
+                NovemberPerformance = e.NovemberPerformance,
+                DecemberPerformance = e.DecemberPerformance,
+                SumPerformance = e.SumPerformance,
+                AveragePerformance = e.AveragePerformance,
+            }).ToList();
+            resultData.NewCustomerPerformanceData = res2;
+
+            var res3 = result.OldCustomerPerformanceData.Select(e => new PerformanceYearDataVo
+            {
+                GroupName = e.GroupName,
+                SortName = e.SortName,
+                JanuaryPerformance = e.JanuaryPerformance,
+                FebruaryPerformance = e.FebruaryPerformance,
+                MarchPerformance = e.MarchPerformance,
+                AprilPerformance = e.AprilPerformance,
+                MayPerformance = e.MayPerformance,
+                JunePerformance = e.JunePerformance,
+                JulyPerformance = e.JulyPerformance,
+                AugustPerformance = e.AugustPerformance,
+                SeptemberPerformance = e.SeptemberPerformance,
+                OctoberPerformance = e.OctoberPerformance,
+                NovemberPerformance = e.NovemberPerformance,
+                DecemberPerformance = e.DecemberPerformance,
+                SumPerformance = e.SumPerformance,
+                AveragePerformance = e.AveragePerformance,
+            }).ToList();
+            resultData.OldCustomerPerformanceData = res3;
+            return ResultData<HospitalPerformanceYearDataListVo>.Success().AddData("data", resultData);
+        }
+        #endregion
     }
 }

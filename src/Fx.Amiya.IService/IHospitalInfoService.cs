@@ -109,6 +109,11 @@ namespace Fx.Amiya.IService
         /// <param name="Name"></param>
         /// <returns></returns>
         Task<HospitalInfoDto> GetBaseByNameAsync(string Name);
+        /// <summary>
+        /// 获取有效的医院列表
+        /// </summary>
+        /// <returns></returns>
+        Task<List<HospitalNameDto>> GetValidHospitalNameListAsync();
 
         /// <summary>
         /// 修改医院信息

@@ -1,6 +1,8 @@
 ﻿
+using Fx.Amiya.Dto;
 using Fx.Amiya.Dto.AmiyaHospitalOperation.Input;
 using Fx.Amiya.Dto.AmiyaHospitalOperation.Result;
+using Fx.Amiya.Dto.AmiyaOperationsBoardService.Result;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
@@ -92,16 +94,24 @@ namespace Fx.Amiya.Service
             result.TodayTotalCustomerNum = todayOrderList.Count();
 
             result.TotalNewCustomerNum = currentContentOrderList.Where(x => x.IsOldCustomer == false).Count();
+            result.LastMonthNewCustomerNum = lastMonthContentOrderList.Where(x => x.IsOldCustomer == false).Count();
+            result.LastYearNewCustomerNum = lastYearContentOrderList.Where(x => x.IsOldCustomer == false).Count();
+
             result.TotalOldCustomerNum = currentContentOrderList.Where(x => x.IsOldCustomer == true).Count();
+            result.LastMonthOldCustomerNum = lastMonthContentOrderList.Where(x => x.IsOldCustomer == true).Count();
+            result.LastYearOldCustomerNum = lastYearContentOrderList.Where(x => x.IsOldCustomer == true).Count();
+
             result.TotalTotalCustomerNum = currentContentOrderList.Count();
+            result.LastMonthTotalCustomerNum = lastMonthContentOrderList.Count();
+            result.LastYearTotalCustomerNum = lastYearContentOrderList.Count();
 
-            result.NewCustomerNumChainRate = DecimalExtension.CalculateChain(result.TotalNewCustomerNum, lastMonthContentOrderList.Where(x => x.IsOldCustomer == false).Count()).Value;
-            result.OldCustomerNumChainRate = DecimalExtension.CalculateChain(result.TotalOldCustomerNum, lastMonthContentOrderList.Where(x => x.IsOldCustomer == true).Count()).Value;
-            result.TotalCustomerNumChainRate = DecimalExtension.CalculateChain(result.TotalTotalCustomerNum, lastMonthContentOrderList.Count()).Value;
+            result.NewCustomerNumChainRate = DecimalExtension.CalculateChain(result.TotalNewCustomerNum, result.LastMonthNewCustomerNum).Value;
+            result.OldCustomerNumChainRate = DecimalExtension.CalculateChain(result.TotalOldCustomerNum, result.LastMonthOldCustomerNum).Value;
+            result.TotalCustomerNumChainRate = DecimalExtension.CalculateChain(result.TotalTotalCustomerNum, result.LastMonthTotalCustomerNum).Value;
 
-            result.NewCustomerNumYearOnYearData = DecimalExtension.CalculateChain(result.TotalNewCustomerNum, lastYearContentOrderList.Where(x => x.IsOldCustomer == false).Count()).Value;
-            result.OldCustomerNumYearOnYearData = DecimalExtension.CalculateChain(result.TotalOldCustomerNum, lastYearContentOrderList.Where(x => x.IsOldCustomer == true).Count()).Value;
-            result.TotalCustomerNumYearOnYearData = DecimalExtension.CalculateChain(result.TotalTotalCustomerNum, lastYearContentOrderList.Count()).Value;
+            result.NewCustomerNumYearOnYearData = DecimalExtension.CalculateChain(result.TotalNewCustomerNum, result.LastYearNewCustomerNum).Value;
+            result.OldCustomerNumYearOnYearData = DecimalExtension.CalculateChain(result.TotalOldCustomerNum, result.LastYearOldCustomerNum).Value;
+            result.TotalCustomerNumYearOnYearData = DecimalExtension.CalculateChain(result.TotalTotalCustomerNum, result.LastYearTotalCustomerNum).Value;
             return result;
         }
 
@@ -307,136 +317,127 @@ namespace Fx.Amiya.Service
             HospitalTransformCycleDataDto data = new HospitalTransformCycleDataDto();
             var seqDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.EndDate.Year, query.EndDate.Month);
 
+            var hospitalList = await hospitalInfoService.GetValidHospitalNameListAsync();
+            var hospitalIdList = hospitalList.Select(e => e.Id).ToList();
+
             #region 派单上门
 
-           // var dealInfoList = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate >= seqDate.StartDate && e.CreateDate < seqDate.EndDate && e.IsOldCustomer == false && e.IsToHospital == true && e.ToHospitalDate.HasValue)
-           //         .Where(e => e.LastDealHospitalId == query.HospitalId.Value)
-           //         .Select(e => new
-           //         {
-           //             HospitalId = e.LastDealHospitalId,
-           //             Phone = e.ContentPlatFormOrder.Phone,
-           //             ToHospitalDate = e.ToHospitalDate
-           //         }).ToListAsync();
-           // var dealPhoneList = dealInfoList.Select(e => e.Phone).ToList();
-           // var cartInfoList2 = _dalShoppingCartRegistration.GetAll().Where(e => e.IsReturnBackPrice == false && dealPhoneList.Contains(e.Phone))
-           //.Select(e => new
-           //{
-           //    Phone = e.Phone,
-           //    AddPrice = e.Price,
-           //    RecordDate = e.RecordDate
-           //}).ToList();
-           // if (query.IsCurrent)
-           // {
-           //     cartInfoList2 = cartInfoList2.Where(e => e.RecordDate >= seqDate.StartDate && e.RecordDate < seqDate.EndDate).ToList();
-           // }
-           // else
-           // {
-           //     cartInfoList2 = cartInfoList2.Where(e => e.RecordDate < seqDate.StartDate).ToList();
-           // }
-           // var dataList2 = (from deal in dealInfoList
-           //                  join cart in cartInfoList2
-           //                  on deal.Phone equals cart.Phone
-           //                  select new
-           //                  {
-           //                      EmpId = deal.EmpId,
-           //                      AddPrice = cart.AddPrice,
-           //                      IntervalDays = (deal.ToHospitalDate.Value - cart.RecordDate).Days
-           //                  }).ToList();
-           // dataList2.RemoveAll(e => e.IntervalDays < 0);
-           // //转化周期数据
-           // var res2 = dataList2.GroupBy(e => e.EmpId).Select(e =>
-           // {
-           //     var endIndex = DecimalExtension.CalTakeCount(e.Count(), 0.6m);
-           //     var resData = e.OrderBy(e => e.IntervalDays).Skip(0).Take(endIndex);
-           //     return new KeyValuePair<string, int>(
-           //     hospitalList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其它",
-           //     DecimalExtension.CalAvg(resData.Sum(e => e.IntervalDays), resData.Count()));
-           // }).OrderBy(e => e.Value).ToList();
-           // res2.RemoveAll(e => e.Key == "其它" || e.Value == 0);
-           // //当前助理转化周期
-           // //var currentAssistanListCount2 = dataList2.Where(e => e.EmpId == query.HospitalId.Value).Count();
-           // //var endIndex2 = DecimalExtension.CalTakeCount(currentAssistanListCount2, 0.6m);
-           // //var currentAssistanList2 = dataList2.Where(e => e.EmpId == query.HospitalId.Value).OrderBy(e => e.IntervalDays).Skip(0).Take(endIndex2);
-           // //var currentEffectiveDays2 = currentAssistanList2.Where(e => e.AddPrice > 0).Sum(e => e.IntervalDays);
-           // //var currentEffectiveCount2 = currentAssistanList2.Where(e => e.AddPrice > 0).Count();
-           // //var currentPotionelDays2 = currentAssistanList2.Where(e => e.AddPrice == 0).Sum(e => e.IntervalDays);
-           // //var currentPotionelCount2 = currentAssistanList2.Where(e => e.AddPrice == 0).Count();
-           // //data.TotalToHospitalCycle = DecimalExtension.CalAvg(currentAssistanList2.Sum(e => e.IntervalDays), currentAssistanList2.Count());
-           // //data.EffectiveToHospitalCycle = DecimalExtension.CalAvg(currentEffectiveDays2, currentEffectiveCount2);
-           // //data.PotionelToHospitalCycle = DecimalExtension.CalAvg(currentPotionelDays2, currentPotionelCount2);
-           // List<Dictionary<string, int>> resultData2 = new List<Dictionary<string, int>>();
-           // foreach (var z in res2)
-           // {
-           //     Dictionary<string, int> resultData = new Dictionary<string, int>();
-           //     resultData.Add(z.Key, z.Value);
-           //     resultData2.Add(resultData);
-           // }
-           // foreach (var k in hospitalList)
-           // {
-           //     bool exists = resultData2.Any(dic => dic.ContainsKey(k.Name));
-           //     if (exists == false)
-           //     {
-           //         Dictionary<string, int> resultData = new Dictionary<string, int>();
-           //         resultData.Add(k.Name, 0);
-           //         resultData2.Add(resultData);
-           //     }
-           // }
-           // List<KeyValuePair<string, int>> toHospitalCycleData = new List<KeyValuePair<string, int>>();
-           // foreach (var x in resultData2)
-           // {
-           //     foreach (var kvp in x)
-           //     {
-           //         toHospitalCycleData.Add(new KeyValuePair<string, int>(kvp.Key, kvp.Value));
-           //     }
-           // }
-           // data.ToHospitalCycleData = toHospitalCycleData.OrderBy(x => x.Value).ToList();
+            var dealInfoList = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate >= seqDate.StartDate && e.CreateDate < seqDate.EndDate && e.Valid == true && e.IsOldCustomer == false && e.IsToHospital == true && e.ToHospitalDate.HasValue)
+                    //.Where(e => e.LastDealHospitalId == query.HospitalId.Value)
+                    .Select(e => new
+                    {
+                        HospitalId = e.LastDealHospitalId,
+                        Phone = e.ContentPlatFormOrder.Phone,
+                        ToHospitalDate = e.ToHospitalDate
+                    }).ToListAsync();
+            var dealPhoneList = dealInfoList.Select(e => e.Phone).ToList();
+
+            var sendData = await _dalContentPlatformOrderSend.GetAll().Include(x => x.ContentPlatformOrder).Where(e => e.IsMainHospital == true && dealPhoneList.Contains(e.ContentPlatformOrder.Phone)).Select(e => new
+            {
+                SendDate = e.SendDate,
+                Phone = e.ContentPlatformOrder.Phone,
+                HospitalId = e.HospitalId,
+            }).ToListAsync();
+            if (query.IsCurrent.Value == true)
+            {
+                sendData = sendData.Where(e => e.SendDate >= seqDate.StartDate && e.SendDate < seqDate.EndDate).ToList();
+            }
+            else
+            {
+                sendData = sendData.Where(e => e.SendDate < seqDate.StartDate).ToList();
+            }
+            var dataList2 = (from deal in dealInfoList
+                             join cart in sendData
+                             on deal.Phone equals cart.Phone
+                             select new
+                             {
+                                 HospitalId = deal.HospitalId,
+                                 IntervalDays = (deal.ToHospitalDate.Value - cart.SendDate).Days
+                             }).ToList();
+            dataList2.RemoveAll(e => e.IntervalDays < 0);
+            //转化周期数据
+            var res2 = dataList2.GroupBy(e => e.HospitalId).Select(e =>
+            {
+                var endIndex = DecimalExtension.CalTakeCount(e.Count(), 0.6m);
+                var resData = e.OrderBy(e => e.IntervalDays).Skip(0).Take(endIndex);
+                return new KeyValuePair<string, int>(
+                hospitalList.Where(a => a.Id == e.Key).FirstOrDefault()?.Name ?? "其它",
+                DecimalExtension.CalAvg(resData.Sum(e => e.IntervalDays), resData.Count()));
+            }).OrderBy(e => e.Value).ToList();
+            res2.RemoveAll(e => e.Key == "其它");
+            List<Dictionary<string, int>> resultData2 = new List<Dictionary<string, int>>();
+            foreach (var z in res2)
+            {
+                Dictionary<string, int> resultData = new Dictionary<string, int>();
+                resultData.Add(z.Key, z.Value);
+                resultData2.Add(resultData);
+            }
+            //foreach (var k in hospitalList)
+            //{
+            //    bool exists = resultData2.Any(dic => dic.ContainsKey(k.Name));
+            //    if (exists == false)
+            //    {
+            //        Dictionary<string, int> resultData = new Dictionary<string, int>();
+            //        resultData.Add(k.Name, 0);
+            //        resultData2.Add(resultData);
+            //    }
+            //}
+            List<KeyValuePair<string, int>> toHospitalCycleData = new List<KeyValuePair<string, int>>();
+            foreach (var x in resultData2)
+            {
+                foreach (var kvp in x)
+                {
+                    toHospitalCycleData.Add(new KeyValuePair<string, int>(kvp.Key, kvp.Value));
+                }
+            }
+            data.ToHospitalCycleData = toHospitalCycleData.OrderBy(x => x.Value).Take(5).ToList();
 
 
             #endregion
 
             #region 复购率
 
-            //var totalDealList = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.IsDeal == true && e.Price > 0 && e.ContentPlatFormOrder.DealAmount > 0)
-            //    .Select(e => new
-            //    {
-            //        Phone = e.ContentPlatFormOrder.Phone,
-            //        EmpId = e.ContentPlatFormOrder.IsSupportOrder ? e.ContentPlatFormOrder.SupportEmpId : e.ContentPlatFormOrder.BelongEmpId,
-            //    }).Where(e => hospitalIdList.Contains(e.EmpId.Value)).ToListAsync();
-            //var hospitalTotalDealList = totalDealList.GroupBy(e => e.EmpId).Select(e => new
-            //{
-            //    EmpId = e.Key,
-            //    TotalDealCount = e.Select(e => e.Phone).Distinct().Count()
-            //}).ToList();
-            //var currentMonthDeal = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.IsToHospital == true && e.IsOldCustomer == true && e.CreateDate >= seqDate.StartDate && e.CreateDate < seqDate.EndDate)
-            //    .Select(e => new
-            //    {
-            //        Phone = e.ContentPlatFormOrder.Phone,
-            //        EmpId = e.ContentPlatFormOrder.IsSupportOrder ? e.ContentPlatFormOrder.SupportEmpId : e.ContentPlatFormOrder.BelongEmpId,
-            //    }).Where(e => hospitalIdList.Contains(e.EmpId.Value)).ToListAsync();
-            //var hospitalCurrentMonthDeal = currentMonthDeal.GroupBy(e => e.EmpId).Select(e => new
-            //{
-            //    EmpId = e.Key,
-            //    TotalDealCount = e.Select(e => e.Phone).Distinct().Count()
-            //}).ToList();
-            ////当月复购率数据
-            //var res3 = (from total in hospitalTotalDealList
-            //            join current in hospitalCurrentMonthDeal
-            //            on total.EmpId equals current.EmpId
-            //            into tc
-            //            from r in tc.DefaultIfEmpty()
-            //            select new KeyValuePair<string, decimal>(
-            //                hospitalList.Where(a => a.Id == total.EmpId).FirstOrDefault()?.Name ?? "其它",
-            //                r != null ? (total.TotalDealCount == 0 ? 0 : DecimalExtension.CalculateTargetComplete(r.TotalDealCount, total.TotalDealCount).Value) : 0)
-            //          ).OrderByDescending(e => e.Value).ToList();
-            //res3.RemoveAll(e => e.Key == "其它" || e.Value == 0);
+            var totalDealList = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.IsDeal == true && e.Price > 0 && e.ContentPlatFormOrder.DealAmount > 0)
+                .Select(e => new
+                {
+                    Phone = e.ContentPlatFormOrder.Phone,
+                    HospitalId = e.LastDealHospitalId,
+                }).Where(e => hospitalIdList.Contains(e.HospitalId.Value)).ToListAsync();
+            var hospitalTotalDealList = totalDealList.GroupBy(e => e.HospitalId).Select(e => new
+            {
+                HospitalId = e.Key,
+                TotalDealCount = e.Select(e => e.Phone).Distinct().Count()
+            }).ToList();
+            var currentMonthDeal = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.IsToHospital == true && e.IsOldCustomer == true && e.Valid == true && e.CreateDate >= seqDate.StartDate && e.CreateDate < seqDate.EndDate)
+                .Select(e => new
+                {
+                    Phone = e.ContentPlatFormOrder.Phone,
+                    HospitalId = e.LastDealHospitalId,
+                }).Where(e => hospitalIdList.Contains(e.HospitalId.Value)).ToListAsync();
+            var hospitalCurrentMonthDeal = currentMonthDeal.GroupBy(e => e.HospitalId).Select(e => new
+            {
+                HospitalId = e.Key,
+                TotalDealCount = e.Select(e => e.Phone).Distinct().Count()
+            }).ToList();
+            //当月复购率数据
+            var res3 = (from total in hospitalTotalDealList
+                        join current in hospitalCurrentMonthDeal
+                        on total.HospitalId equals current.HospitalId
+                        into tc
+                        from r in tc.DefaultIfEmpty()
+                        select new KeyValuePair<string, decimal>(
+                            hospitalList.Where(a => a.Id == total.HospitalId).FirstOrDefault()?.Name ?? "其它",
+                            r != null ? (total.TotalDealCount == 0 ? 0 : DecimalExtension.CalculateTargetComplete(r.TotalDealCount, total.TotalDealCount).Value) : 0)
+                      ).OrderByDescending(e => e.Value).ToList();
+            res3.RemoveAll(e => e.Key == "其它" || e.Value == 0);
 
-            //List<Dictionary<string, decimal>> resultData3 = new List<Dictionary<string, decimal>>();
-            //foreach (var z in res3)
-            //{
-            //    Dictionary<string, decimal> resultData = new Dictionary<string, decimal>();
-            //    resultData.Add(z.Key, z.Value);
-            //    resultData3.Add(resultData);
-            //}
+            List<Dictionary<string, decimal>> resultData3 = new List<Dictionary<string, decimal>>();
+            foreach (var z in res3)
+            {
+                Dictionary<string, decimal> resultData = new Dictionary<string, decimal>();
+                resultData.Add(z.Key, z.Value);
+                resultData3.Add(resultData);
+            }
             //foreach (var k in hospitalList)
             //{
             //    bool exists = resultData3.Any(dic => dic.ContainsKey(k.Name));
@@ -447,15 +448,15 @@ namespace Fx.Amiya.Service
             //        resultData3.Add(resultData);
             //    }
             //}
-            //List<KeyValuePair<string, decimal>> repeateBuyCycleData = new List<KeyValuePair<string, decimal>>();
-            //foreach (var x in resultData3)
-            //{
-            //    foreach (var kvp in x)
-            //    {
-            //        repeateBuyCycleData.Add(new KeyValuePair<string, decimal>(kvp.Key, kvp.Value));
-            //    }
-            //}
-            //data.OldCustomerRePurcheData = repeateBuyCycleData.OrderBy(x => x.Value).ToList();
+            List<KeyValuePair<string, decimal>> repeateBuyCycleData = new List<KeyValuePair<string, decimal>>();
+            foreach (var x in resultData3)
+            {
+                foreach (var kvp in x)
+                {
+                    repeateBuyCycleData.Add(new KeyValuePair<string, decimal>(kvp.Key, kvp.Value));
+                }
+            }
+            data.OldCustomerRePurcheData = repeateBuyCycleData.OrderByDescending(x => x.Value).Take(5).ToList();
 
             #endregion
 
@@ -473,26 +474,43 @@ namespace Fx.Amiya.Service
             result.Items = new List<HospitalCluesDataItemDto>();
             var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
 
+            var hospitalList = await hospitalInfoService.GetValidHospitalNameListAsync();
+            var hospitalIdList = hospitalList.Select(e => e.Id).ToList();
 
             #region 机构线索
-            //var hospitalInfo = await hospitalInfoService.GetHospitalNameListAsync(null, null);
-            //var sendOrderHospitalList = await contentPlateFormOrderService.GetDealCountDataByPhoneListAsync(selectDate.StartDate, selectDate.EndDate, sendPhoneList);
-            //var hospitalIds = sendOrderHospitalList.Distinct().ToList();
-            //var toHospitalData = await contentPlatFormOrderDealInfoService.GeVisitAndDealNumByHospitalIdAndPhoneListAsync(hospitalIds, selectDate.StartDate, selectDate.EndDate, sendPhoneList);
-            //result.Items = hospitalIds.Select(e =>
-            //{
-            //    HospitalCluesDataItemDto item = new HospitalCluesDataItemDto();
-            //    item.Name = hospitalInfo.Where(h => h.Id == e).Select(e => e.Name).FirstOrDefault();
-            //    item.VisitCount = toHospitalData.Where(x => x.IsToHospital == true && x.LastDealHospitalId == e).Count();
-            //    item.DealCount = toHospitalData.Where(x => x.IsDeal == true && x.LastDealHospitalId == e).Count();
-            //    item.DealRate = DecimalExtension.CalculateTargetComplete(item.DealCount, item.VisitCount).Value;
-            //    return item;
-            //}).ToList();
+            var dealInfoList = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate >= selectDate.StartDate && e.CreateDate < selectDate.EndDate && e.IsToHospital == true && e.Valid == true && e.ToHospitalDate.HasValue)
+                    //.Where(e => e.LastDealHospitalId == query.HospitalId.Value)
+                    .Select(e => new
+                    {
+                        IsOldCustomer = e.IsOldCustomer,
+                        IsDeal = e.IsDeal,
+                        HospitalId = e.LastDealHospitalId,
+                        Phone = e.ContentPlatFormOrder.Phone,
+                        ToHospitalDate = e.ToHospitalDate
+                    }).ToListAsync();
+            if (query.NewCustomer == true && query.OldCustomer == false)
+            {
+                dealInfoList = dealInfoList.Where(x => x.IsOldCustomer == false).ToList();
+            }
+            if (query.NewCustomer == false && query.OldCustomer == true)
+            {
+                dealInfoList = dealInfoList.Where(x => x.IsOldCustomer == true).ToList();
+            }
+            result.Items = hospitalIdList.Select(e =>
+            {
+                HospitalCluesDataItemDto item = new HospitalCluesDataItemDto();
+                item.Name = hospitalList.Where(x => x.Id == e).Select(z => z.Name).FirstOrDefault();
+                item.VisitCount = dealInfoList.Where(x => x.HospitalId == e).Count();
+                item.DealCount = dealInfoList.Where(x => x.IsDeal == true && x.HospitalId == e).Count();
+                item.DealRate = DecimalExtension.CalculateTargetComplete(item.DealCount, item.VisitCount).Value;
+                return item;
+            }).ToList();
             #endregion
-            // result.DealRate = DecimalExtension.CalculateTargetComplete(result.TotalDealCount, result.TotalVisitCount).Value;
+            result.TotalDealCount = result.Items.Sum(x => x.DealCount);
+            result.TotalVisitCount = result.Items.Sum(x => x.VisitCount);
+            result.DealRate = DecimalExtension.CalculateTargetComplete(result.TotalDealCount, result.TotalVisitCount).Value;
             return result;
         }
-
 
 
         /// <summary>
@@ -503,32 +521,175 @@ namespace Fx.Amiya.Service
         public async Task<HospitalPerformanceRateDto> GetHospitalPerformanceRateDataAsync(QueryHospitalPerformanceDto query)
         {
             HospitalPerformanceRateDto result = new HospitalPerformanceRateDto();
-            //var selectDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.EndDate.Year, query.EndDate.Month);
-            //var hospitalIdAndNameList = (await amiyaEmployeeService.GetAllHospitalAsync()).ToList();
-            //var hospitalTarget = await dalEmployeePerformanceTarget.GetAll()
-            //    .Where(e => e.Valid == true)
-            //    .Where(e => e.BelongYear == selectDate.EndDate.Year && e.BelongMonth == selectDate.EndDate.Month)
-            //    .Where(e => hospitalIdAndNameList.Select(e => e.Id).Contains(e.EmployeeId))
-            //    .Select(e => new
-            //    {
-            //        EmployeeId = e.EmployeeId,
-            //        Target = e.NewCustomerPerformanceTarget + e.OldCustomerPerformanceTarget,
-            //    }).ToListAsync();
-            //var currentContentOrderList = await contentPlatFormOrderDealInfoService.GetPerformanceDetailByDateAndHospitalIdListAsync(selectDate.StartDate, selectDate.EndDate, hospitalIdAndNameList.Select(e => e.Id).ToList());
-            //var totalPerformance = currentContentOrderList.Sum(e => e.Price);
-            //foreach (var hospital in hospitalIdAndNameList)
-            //{
-            //    var sumPerformance = currentContentOrderList.Where(e => e.BelongEmployeeId == hospital.Id).Sum(e => e.Price);
-            //    BaseKeyValueDto<string, decimal> targetItem = new BaseKeyValueDto<string, decimal>();
-            //    var target = hospitalTarget.Where(e => e.EmployeeId == hospital.Id).FirstOrDefault()?.Target ?? 0;
-            //    targetItem.Key = hospital.Name;
-            //    targetItem.Value = DecimalExtension.CalculateTargetComplete(sumPerformance, target).Value;
-            //    result.TargetCompleteData.Add(targetItem);
-            //    BaseKeyValueDto<string, decimal> rateItem = new BaseKeyValueDto<string, decimal>();
-            //    rateItem.Key = hospital.Name;
-            //    rateItem.Value = DecimalExtension.CalculateTargetComplete(sumPerformance, totalPerformance).Value;
-            //    result.PerformanceRateData.Add(rateItem);
-            //}
+            var selectDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.EndDate.Year, query.EndDate.Month);
+
+            var hospitalIdAndNameList = await hospitalInfoService.GetValidHospitalNameListAsync();
+
+            var dealInfoList = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate >= selectDate.StartDate && e.CreateDate < selectDate.EndDate && e.IsToHospital == true && e.Valid == true && e.ToHospitalDate.HasValue)
+                     //.Where(e => e.LastDealHospitalId == query.HospitalId.Value)
+                     .Select(e => new
+                     {
+                         IsDeal = e.IsDeal,
+                         HospitalId = e.LastDealHospitalId,
+                         Phone = e.ContentPlatFormOrder.Phone,
+                         Price = e.Price
+                     }).ToListAsync();
+            var totalPerformance = dealInfoList.Sum(e => e.Price);
+            foreach (var hospital in hospitalIdAndNameList)
+            {
+                var sumPerformance = dealInfoList.Where(e => e.HospitalId == hospital.Id).Sum(e => e.Price);
+                BaseKeyValueDto<string, decimal> rateItem = new BaseKeyValueDto<string, decimal>();
+                rateItem.Key = hospital.Name;
+                rateItem.Value = DecimalExtension.CalculateTargetComplete(sumPerformance, totalPerformance).Value;
+                result.PerformanceRateData.Add(rateItem);
+            }
+            return result;
+        }
+
+
+        /// <summary>
+        /// 获取机构（年度）业绩趋势
+        /// </summary>
+        /// <returns></returns>
+        public async Task<HospitalPerformanceYearDataListDto> GetTotalHospitalPersonalAchievementByYearAsync(QueryHospitalPerfomanceYearDataDto query)
+        {
+            var thisMonth = DateTime.Now.Month;
+            #region 实例化输出项
+            HospitalPerformanceYearDataListDto result = new HospitalPerformanceYearDataListDto();
+            result.TotalPerformanceData = new List<PerformanceYearDataDto>();
+            result.NewCustomerPerformanceData = new List<PerformanceYearDataDto>();
+            result.OldCustomerPerformanceData = new List<PerformanceYearDataDto>();
+            #endregion
+
+            int totalCount = 1;
+            for (int y = 0; y <= totalCount; y++)
+            {
+                PerformanceYearDataDto totalPerformanceYearData = new PerformanceYearDataDto();
+                PerformanceYearDataDto newPerformanceYearData = new PerformanceYearDataDto();
+                PerformanceYearDataDto oldPerformanceYearData = new PerformanceYearDataDto();
+                switch (y)
+                {
+                    case 0:
+                        totalPerformanceYearData.SortName = newPerformanceYearData.SortName = oldPerformanceYearData.SortName = query.Year + "年实际业绩";
+                        #region 整体
+                        var JanTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 1, query.HospitalId, null);
+                        totalPerformanceYearData.JanuaryPerformance = JanTotalLossPerformance.Sum(x => x.Price).ToString();
+                        var FebTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 2, query.HospitalId, null);
+                        totalPerformanceYearData.FebruaryPerformance = FebTotalLossPerformance.Sum(x => x.Price).ToString();
+                        var MarTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 3, query.HospitalId, null);
+                        totalPerformanceYearData.MarchPerformance = MarTotalLossPerformance.Sum(x => x.Price).ToString();
+                        var AprTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 4, query.HospitalId, null);
+                        totalPerformanceYearData.AprilPerformance = AprTotalLossPerformance.Sum(x => x.Price).ToString();
+                        var MayTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 5, query.HospitalId, null);
+                        totalPerformanceYearData.MayPerformance = MayTotalLossPerformance.Sum(x => x.Price).ToString();
+                        var JunTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 6, query.HospitalId, null);
+                        totalPerformanceYearData.JunePerformance = JunTotalLossPerformance.Sum(x => x.Price).ToString();
+                        var JulTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 7, query.HospitalId, null);
+                        totalPerformanceYearData.JulyPerformance = JulTotalLossPerformance.Sum(x => x.Price).ToString();
+                        var AugTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 8, query.HospitalId, null);
+                        totalPerformanceYearData.AugustPerformance = AugTotalLossPerformance.Sum(x => x.Price).ToString();
+                        var SepTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 9, query.HospitalId, null);
+                        totalPerformanceYearData.SeptemberPerformance = SepTotalLossPerformance.Sum(x => x.Price).ToString();
+                        var OctTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 10, query.HospitalId, null);
+                        totalPerformanceYearData.OctoberPerformance = OctTotalLossPerformance.Sum(x => x.Price).ToString();
+                        var NovTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 11, query.HospitalId, null);
+                        totalPerformanceYearData.NovemberPerformance = NovTotalLossPerformance.Sum(x => x.Price).ToString();
+                        var DecTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 12, query.HospitalId, null);
+                        totalPerformanceYearData.DecemberPerformance = DecTotalLossPerformance.Sum(x => x.Price).ToString();
+                        totalPerformanceYearData.SumPerformance = (Convert.ToDecimal(totalPerformanceYearData.JanuaryPerformance) + Convert.ToDecimal(totalPerformanceYearData.FebruaryPerformance) + Convert.ToDecimal(totalPerformanceYearData.MarchPerformance) + Convert.ToDecimal(totalPerformanceYearData.AprilPerformance) + Convert.ToDecimal(totalPerformanceYearData.MayPerformance) + Convert.ToDecimal(totalPerformanceYearData.JunePerformance) + Convert.ToDecimal(totalPerformanceYearData.JulyPerformance) + Convert.ToDecimal(totalPerformanceYearData.AugustPerformance) + Convert.ToDecimal(totalPerformanceYearData.SeptemberPerformance) + Convert.ToDecimal(totalPerformanceYearData.OctoberPerformance) + Convert.ToDecimal(totalPerformanceYearData.NovemberPerformance) + Convert.ToDecimal(totalPerformanceYearData.DecemberPerformance)).ToString();
+                        totalPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(totalPerformanceYearData.SumPerformance) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
+                        #endregion
+                        #region 新客
+                        var JanDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 1, query.HospitalId, false);
+                        newPerformanceYearData.JanuaryPerformance = JanDaoDaoLossPerformance.Sum(x => x.Price).ToString();
+                        var FebDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 2, query.HospitalId, false);
+                        newPerformanceYearData.FebruaryPerformance = FebDaoDaoLossPerformance.Sum(x => x.Price).ToString();
+                        var MarDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 3, query.HospitalId, false);
+                        newPerformanceYearData.MarchPerformance = MarDaoDaoLossPerformance.Sum(x => x.Price).ToString();
+                        var AprDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 4, query.HospitalId, false);
+                        newPerformanceYearData.AprilPerformance = AprDaoDaoLossPerformance.Sum(x => x.Price).ToString();
+                        var MayDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 5, query.HospitalId, false);
+                        newPerformanceYearData.MayPerformance = MayDaoDaoLossPerformance.Sum(x => x.Price).ToString();
+                        var JunDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 6, query.HospitalId, false);
+                        newPerformanceYearData.JunePerformance = JunDaoDaoLossPerformance.Sum(x => x.Price).ToString();
+                        var JulDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 7, query.HospitalId, false);
+                        newPerformanceYearData.JulyPerformance = JulDaoDaoLossPerformance.Sum(x => x.Price).ToString();
+                        var AugDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 8, query.HospitalId, false);
+                        newPerformanceYearData.AugustPerformance = AugDaoDaoLossPerformance.Sum(x => x.Price).ToString();
+                        var SepDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 9, query.HospitalId, false);
+                        newPerformanceYearData.SeptemberPerformance = SepDaoDaoLossPerformance.Sum(x => x.Price).ToString();
+                        var OctDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 10, query.HospitalId, false);
+                        newPerformanceYearData.OctoberPerformance = OctDaoDaoLossPerformance.Sum(x => x.Price).ToString();
+                        var NovDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 11, query.HospitalId, false);
+                        newPerformanceYearData.NovemberPerformance = NovDaoDaoLossPerformance.Sum(x => x.Price).ToString();
+                        var DecDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 12, query.HospitalId, false);
+                        newPerformanceYearData.DecemberPerformance = DecDaoDaoLossPerformance.Sum(x => x.Price).ToString();
+                        newPerformanceYearData.SumPerformance = (Convert.ToDecimal(newPerformanceYearData.JanuaryPerformance) + Convert.ToDecimal(newPerformanceYearData.FebruaryPerformance) + Convert.ToDecimal(newPerformanceYearData.MarchPerformance) + Convert.ToDecimal(newPerformanceYearData.AprilPerformance) + Convert.ToDecimal(newPerformanceYearData.MayPerformance) + Convert.ToDecimal(newPerformanceYearData.JunePerformance) + Convert.ToDecimal(newPerformanceYearData.JulyPerformance) + Convert.ToDecimal(newPerformanceYearData.AugustPerformance) + Convert.ToDecimal(newPerformanceYearData.SeptemberPerformance) + Convert.ToDecimal(newPerformanceYearData.OctoberPerformance) + Convert.ToDecimal(newPerformanceYearData.NovemberPerformance) + Convert.ToDecimal(newPerformanceYearData.DecemberPerformance)).ToString();
+                        newPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(newPerformanceYearData.SumPerformance) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
+
+
+                        #endregion
+                        #region 老客
+
+                        var JanJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 1, query.HospitalId, true);
+                        oldPerformanceYearData.JanuaryPerformance = JanJiNaLossPerformance.Sum(x => x.Price).ToString();
+                        var FebJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 2, query.HospitalId, true);
+                        oldPerformanceYearData.FebruaryPerformance = FebJiNaLossPerformance.Sum(x => x.Price).ToString();
+                        var MarJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 3, query.HospitalId, true);
+                        oldPerformanceYearData.MarchPerformance = MarJiNaLossPerformance.Sum(x => x.Price).ToString();
+                        var AprJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 4, query.HospitalId, true);
+                        oldPerformanceYearData.AprilPerformance = AprJiNaLossPerformance.Sum(x => x.Price).ToString();
+                        var MayJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 5, query.HospitalId, true);
+                        oldPerformanceYearData.MayPerformance = MayJiNaLossPerformance.Sum(x => x.Price).ToString();
+                        var JunJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 6, query.HospitalId, true);
+                        oldPerformanceYearData.JunePerformance = JunJiNaLossPerformance.Sum(x => x.Price).ToString();
+                        var JulJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 7, query.HospitalId, true);
+                        oldPerformanceYearData.JulyPerformance = JulJiNaLossPerformance.Sum(x => x.Price).ToString();
+                        var AugJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 8, query.HospitalId, true);
+                        oldPerformanceYearData.AugustPerformance = AugJiNaLossPerformance.Sum(x => x.Price).ToString();
+                        var SepJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 9, query.HospitalId, true);
+                        oldPerformanceYearData.SeptemberPerformance = SepJiNaLossPerformance.Sum(x => x.Price).ToString();
+                        var OctJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 10, query.HospitalId, true);
+                        oldPerformanceYearData.OctoberPerformance = OctJiNaLossPerformance.Sum(x => x.Price).ToString();
+                        var NovJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 11, query.HospitalId, true);
+                        oldPerformanceYearData.NovemberPerformance = NovJiNaLossPerformance.Sum(x => x.Price).ToString();
+                        var DecJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 12, query.HospitalId, true);
+                        oldPerformanceYearData.DecemberPerformance = DecJiNaLossPerformance.Sum(x => x.Price).ToString();
+                        oldPerformanceYearData.SumPerformance = (Convert.ToDecimal(oldPerformanceYearData.JanuaryPerformance) + Convert.ToDecimal(oldPerformanceYearData.FebruaryPerformance) + Convert.ToDecimal(oldPerformanceYearData.MarchPerformance) + Convert.ToDecimal(oldPerformanceYearData.AprilPerformance) + Convert.ToDecimal(oldPerformanceYearData.MayPerformance) + Convert.ToDecimal(oldPerformanceYearData.JunePerformance) + Convert.ToDecimal(oldPerformanceYearData.JulyPerformance) + Convert.ToDecimal(oldPerformanceYearData.AugustPerformance) + Convert.ToDecimal(oldPerformanceYearData.SeptemberPerformance) + Convert.ToDecimal(oldPerformanceYearData.OctoberPerformance) + Convert.ToDecimal(oldPerformanceYearData.NovemberPerformance) + Convert.ToDecimal(oldPerformanceYearData.DecemberPerformance)).ToString();
+                        oldPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(oldPerformanceYearData.SumPerformance) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
+                        #endregion
+                        break;
+                    case 1:
+                        totalPerformanceYearData.SortName = query.Year + "年新/老客占比";
+
+                        #region 整体
+                        var totalNewCustomer = await contentPlatFormOrderDealInfoService.GetHospitalNewOrOldCustomerNumByDateAsync(Convert.ToDateTime(query.Year + "-01-01"), Convert.ToDateTime(query.Year + "-12-31"), false, query.HospitalId);
+                        var totalOldCustomer = await contentPlatFormOrderDealInfoService.GetHospitalNewOrOldCustomerNumByDateAsync(Convert.ToDateTime(query.Year + "-01-01"), Convert.ToDateTime(query.Year + "-12-31"), true, query.HospitalId);
+                        totalPerformanceYearData.JanuaryPerformance = DecimalExtension.CalculateAccounted(totalNewCustomer.Where(x => x.CreateDate.Month == 1).Count(), totalOldCustomer.Where(x => x.CreateDate.Month == 1).Count());
+                        totalPerformanceYearData.FebruaryPerformance = DecimalExtension.CalculateAccounted(totalNewCustomer.Where(x => x.CreateDate.Month == 2).Count(), totalOldCustomer.Where(x => x.CreateDate.Month == 2).Count());
+                        totalPerformanceYearData.MarchPerformance = DecimalExtension.CalculateAccounted(totalNewCustomer.Where(x => x.CreateDate.Month == 3).Count(), totalOldCustomer.Where(x => x.CreateDate.Month == 3).Count());
+                        totalPerformanceYearData.AprilPerformance = DecimalExtension.CalculateAccounted(totalNewCustomer.Where(x => x.CreateDate.Month == 4).Count(), totalOldCustomer.Where(x => x.CreateDate.Month == 4).Count());
+                        totalPerformanceYearData.MayPerformance = DecimalExtension.CalculateAccounted(totalNewCustomer.Where(x => x.CreateDate.Month == 5).Count(), totalOldCustomer.Where(x => x.CreateDate.Month == 5).Count());
+                        totalPerformanceYearData.JunePerformance = DecimalExtension.CalculateAccounted(totalNewCustomer.Where(x => x.CreateDate.Month == 6).Count(), totalOldCustomer.Where(x => x.CreateDate.Month == 6).Count());
+                        totalPerformanceYearData.JulyPerformance = DecimalExtension.CalculateAccounted(totalNewCustomer.Where(x => x.CreateDate.Month == 7).Count(), totalOldCustomer.Where(x => x.CreateDate.Month == 7).Count());
+                        totalPerformanceYearData.AugustPerformance = DecimalExtension.CalculateAccounted(totalNewCustomer.Where(x => x.CreateDate.Month == 8).Count(), totalOldCustomer.Where(x => x.CreateDate.Month == 8).Count());
+                        totalPerformanceYearData.SeptemberPerformance = DecimalExtension.CalculateAccounted(totalNewCustomer.Where(x => x.CreateDate.Month == 9).Count(), totalOldCustomer.Where(x => x.CreateDate.Month == 9).Count());
+                        totalPerformanceYearData.OctoberPerformance = DecimalExtension.CalculateAccounted(totalNewCustomer.Where(x => x.CreateDate.Month == 10).Count(), totalOldCustomer.Where(x => x.CreateDate.Month == 10).Count());
+                        totalPerformanceYearData.NovemberPerformance = DecimalExtension.CalculateAccounted(totalNewCustomer.Where(x => x.CreateDate.Month == 11).Count(), totalOldCustomer.Where(x => x.CreateDate.Month == 11).Count());
+                        totalPerformanceYearData.DecemberPerformance = DecimalExtension.CalculateAccounted(totalNewCustomer.Where(x => x.CreateDate.Month == 12).Count(), totalOldCustomer.Where(x => x.CreateDate.Month == 12).Count());
+                        totalPerformanceYearData.SumPerformance = DecimalExtension.CalculateAccounted(totalNewCustomer.Count(), totalOldCustomer.Count());
+                        totalPerformanceYearData.AveragePerformance = "/";
+                        #endregion
+
+                        break;
+
+                }
+
+                result.TotalPerformanceData.Add(totalPerformanceYearData);
+                result.NewCustomerPerformanceData.Add(newPerformanceYearData);
+                result.OldCustomerPerformanceData.Add(oldPerformanceYearData);
+            }
+
             return result;
         }
 

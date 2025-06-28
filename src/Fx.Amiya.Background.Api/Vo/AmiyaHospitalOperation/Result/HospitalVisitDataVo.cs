@@ -16,6 +16,14 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaHospitalOperation.Result
         /// </summary>
         public int TotalNewCustomerNum { get; set; }
         /// <summary>
+        /// 上期新客上门人数
+        /// </summary>
+        public int LastMonthNewCustomerNum { get; set; }
+        /// <summary>
+        /// 同期新客上门人数
+        /// </summary>
+        public int LastYearNewCustomerNum { get; set; }
+        /// <summary>
         /// 新客上门人数上月环比
         /// </summary>
         public decimal NewCustomerNumChainRate { get; set; }
@@ -34,6 +42,14 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaHospitalOperation.Result
         /// </summary>
         public int TotalOldCustomerNum { get; set; }
         /// <summary>
+        /// 上期老客上门人数
+        /// </summary>
+        public int LastMonthOldCustomerNum { get; set; }
+        /// <summary>
+        /// 同期老客上门人数
+        /// </summary>
+        public int LastYearOldCustomerNum { get; set; }
+        /// <summary>
         /// 老客上门人数上月环比
         /// </summary>
         public decimal OldCustomerNumChainRate { get; set; }
@@ -47,6 +63,14 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaHospitalOperation.Result
         /// 今日总上门人数
         /// </summary>
         public int TodayTotalCustomerNum { get; set; }
+        /// <summary>
+        /// 上期总上门人数
+        /// </summary>
+        public int LastMonthTotalCustomerNum { get; set; }
+        /// <summary>
+        /// 同期总上门人数
+        /// </summary>
+        public int LastYearTotalCustomerNum { get; set; }
         /// <summary>
         /// 累计总上门人数
         /// </summary>
