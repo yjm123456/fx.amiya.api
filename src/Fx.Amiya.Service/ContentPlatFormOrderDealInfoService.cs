@@ -3287,9 +3287,6 @@ namespace Fx.Amiya.Service
             }
             return ContentPlatFormOrderDealInfoDtoResults;
         }
-
-
-
         #endregion
 
         #region 【枚举下拉框】
@@ -3307,15 +3304,6 @@ namespace Fx.Amiya.Service
             }
             return orderTypeList;
         }
-
-
-
-
-
-
-
-
-
         #endregion
 
 

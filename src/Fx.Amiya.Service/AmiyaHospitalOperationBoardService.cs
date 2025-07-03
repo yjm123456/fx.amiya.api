@@ -499,8 +499,10 @@ namespace Fx.Amiya.Service
             result.Items = hospitalIdList.Select(e =>
             {
                 HospitalCluesDataItemDto item = new HospitalCluesDataItemDto();
+                var sendNum = _dalContentPlatformOrderSend.GetAll().Where(x => x.SendDate >= query.StartDate && x.SendDate < query.EndDate && x.IsMainHospital == true && x.HospitalId == e).ToList();
                 item.Name = hospitalList.Where(x => x.Id == e).Select(z => z.Name).FirstOrDefault();
                 item.VisitCount = dealInfoList.Where(x => x.HospitalId == e).Count();
+                item.VisitRate = DecimalExtension.CalculateTargetComplete(item.VisitCount, sendNum.Count()).Value;
                 item.DealCount = dealInfoList.Where(x => x.IsDeal == true && x.HospitalId == e).Count();
                 item.DealRate = DecimalExtension.CalculateTargetComplete(item.DealCount, item.VisitCount).Value;
                 return item;
@@ -546,6 +548,53 @@ namespace Fx.Amiya.Service
             return result;
         }
 
+
+
+        /// <summary>
+        /// 获取机构新/老客单价
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<HospitalPerformanceRateDto> GetHospitalPerCustomerPriceDataAsync(QueryHospitalVisitDataDto query)
+        {
+            HospitalPerformanceRateDto result = new HospitalPerformanceRateDto();
+            var selectDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.EndDate.Year, query.EndDate.Month);
+
+            var hospitalIdAndNameList = await hospitalInfoService.GetValidHospitalNameListAsync();
+
+            var dealInfoList = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate >= selectDate.StartDate && e.CreateDate < selectDate.EndDate && e.IsToHospital == true && e.Valid == true && e.IsDeal == true && e.ToHospitalDate.HasValue)
+                     //.Where(e => e.LastDealHospitalId == query.HospitalId.Value)
+                     .Select(e => new
+                     {
+                         IsOldCustomer = e.IsOldCustomer,
+                         IsDeal = e.IsDeal,
+                         HospitalId = e.LastDealHospitalId,
+                         Phone = e.ContentPlatFormOrder.Phone,
+                         Price = e.Price
+                     }).ToListAsync();
+            if (query.NewCustomer == true && query.OldCustomer == false)
+            {
+                dealInfoList = dealInfoList.Where(x => x.IsOldCustomer == false).ToList();
+            }
+            if (query.NewCustomer == false && query.OldCustomer == true)
+            {
+                dealInfoList = dealInfoList.Where(x => x.IsOldCustomer == true).ToList();
+            }
+            var totalPerformance = dealInfoList.Sum(e => e.Price);
+            foreach (var hospital in hospitalIdAndNameList)
+            {
+                var sumPerformance = dealInfoList.Where(e => e.HospitalId == hospital.Id).Sum(e => e.Price);
+                var sumCustomer = dealInfoList.Where(e => e.HospitalId == hospital.Id).Count();
+                BaseKeyValueDto<string, decimal> rateItem = new BaseKeyValueDto<string, decimal>();
+                rateItem.Key = hospital.Name;
+                rateItem.Value = DecimalExtension.Division(sumPerformance, sumCustomer).Value;
+                if (rateItem.Value != 0)
+                {
+                    result.PerformanceRateData.Add(rateItem);
+                }
+            }
+            return result;
+        }
 
         /// <summary>
         /// 获取机构（年度）业绩趋势

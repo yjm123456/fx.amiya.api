@@ -37,6 +37,10 @@ namespace Fx.Amiya.Dto.AmiyaHospitalOperation.Result
         /// </summary>
         public int VisitCount { get; set; }
         /// <summary>
+        /// 上门率
+        /// </summary>
+        public decimal VisitRate { get; set; }
+        /// <summary>
         /// 成交数
         /// </summary>
         public int DealCount { get; set; }

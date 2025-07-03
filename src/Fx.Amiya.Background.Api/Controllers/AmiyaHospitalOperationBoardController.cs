@@ -253,6 +253,66 @@ namespace Fx.Amiya.Background.Api.Controllers
             return ResultData<HospitalTransformCycleDataVo>.Success().AddData(data);
         }
         /// <summary>
+        /// 机构上门率数据（新客true，老客false）5条数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("hospitalVisitRateData")]
+        public async Task<ResultData<HospitaslVisitDataVo>> GetHospitalVisitRateDataAsync([FromQuery] QueryHospitalVisitDataVo query)
+        {
+            HospitaslVisitDataVo dataVo = new HospitaslVisitDataVo();
+            QueryHospitalVisitDataDto queryDto = new QueryHospitalVisitDataDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.HospitalId = query.HospitalId;
+            queryDto.NewCustomer = query.NewCustomer;
+            queryDto.OldCustomer = query.OldCustomer;
+            var res = await amiyaHospitalOperationBoardService.GetHospitalsCluesDataAsync(queryDto);
+            dataVo.TotalVisitCount = res.TotalVisitCount;
+            dataVo.TotalDealCount = res.TotalDealCount;
+            dataVo.DealRate = res.DealRate;
+            dataVo.Items = res.Items.OrderByDescending(e => e.VisitRate).Select(e => new HospitalCluesDataItemVo
+            {
+                Name = e.Name,
+                VisitCount = e.VisitCount,
+                VisitRate = e.VisitRate,
+                DealCount = e.DealCount,
+                DealRate = e.DealRate
+            }).Take(5).ToList();
+            return ResultData<HospitaslVisitDataVo>.Success().AddData("data", dataVo);
+        }
+        /// <summary>
+        /// 机构成交率数据（新客true，老客false）5条数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("hospitalDealRateData")]
+        public async Task<ResultData<HospitaslVisitDataVo>> GetHospitalDealRateDataAsync([FromQuery] QueryHospitalVisitDataVo query)
+        {
+            HospitaslVisitDataVo dataVo = new HospitaslVisitDataVo();
+            QueryHospitalVisitDataDto queryDto = new QueryHospitalVisitDataDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.HospitalId = query.HospitalId;
+            queryDto.NewCustomer = query.NewCustomer;
+            queryDto.OldCustomer = query.OldCustomer;
+            var res = await amiyaHospitalOperationBoardService.GetHospitalsCluesDataAsync(queryDto);
+            dataVo.TotalVisitCount = res.TotalVisitCount;
+            dataVo.TotalDealCount = res.TotalDealCount;
+            dataVo.DealRate = res.DealRate;
+            dataVo.Items = res.Items.OrderByDescending(e => e.DealRate).Select(e => new HospitalCluesDataItemVo
+            {
+                Name = e.Name,
+                VisitCount = e.VisitCount,
+                VisitRate = e.VisitRate,
+                DealCount = e.DealCount,
+                DealRate = e.DealRate
+            }).Take(5).ToList();
+            return ResultData<HospitaslVisitDataVo>.Success().AddData("data", dataVo);
+        }
+
+
+        /// <summary>
         /// 机构线索数据
         /// </summary>
         /// <param name="query"></param>
@@ -275,9 +335,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 Name = e.Name,
                 VisitCount = e.VisitCount,
+                VisitRate = e.VisitRate,
                 DealCount = e.DealCount,
                 DealRate = e.DealRate
-            }).Take(10).ToList();
+            }).Take(5).ToList();
             return ResultData<HospitaslVisitDataVo>.Success().AddData("data", dataVo);
         }
         /// <summary>
@@ -298,7 +359,33 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 Id = e.Key,
                 Name = e.Value,
-            }).Take(10).ToList();
+            }).Take(5).ToList();
+
+            result.PerformanceRateData.RemoveAll(e => e.Name == 0m);
+            return ResultData<HospitalPerformanceRateVo>.Success().AddData("data", result);
+        }
+
+        /// <summary>
+        /// 机构新/老客单价柱状图5条数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("hospitalPerCustomerPriceDataData")]
+        public async Task<ResultData<HospitalPerformanceRateVo>> GetHospitalPerCustomerPriceDataAsync([FromQuery] QueryHospitalVisitDataVo query)
+        {
+            HospitalPerformanceRateVo result = new HospitalPerformanceRateVo();
+            QueryHospitalVisitDataDto queryDto = new QueryHospitalVisitDataDto();
+            queryDto.StartDate = query.StartDate;
+            queryDto.EndDate = query.EndDate;
+            queryDto.HospitalId = query.HospitalId;
+            queryDto.NewCustomer = query.NewCustomer;
+            queryDto.OldCustomer = query.OldCustomer;
+            var res = await amiyaHospitalOperationBoardService.GetHospitalPerCustomerPriceDataAsync(queryDto);
+            result.PerformanceRateData = res.PerformanceRateData.OrderByDescending(e => e.Value).Select(e => new BaseIdAndNameVo<string, decimal>
+            {
+                Id = e.Key,
+                Name = e.Value,
+            }).Take(5).ToList();
 
             result.PerformanceRateData.RemoveAll(e => e.Name == 0m);
             return ResultData<HospitalPerformanceRateVo>.Success().AddData("data", result);

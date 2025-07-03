@@ -18,6 +18,8 @@ namespace Fx.Amiya.IService
         Task<HospitalTransformCycleDataDto> GetHospitalTransformCycleDataAsync(QueryHospitalPerformanceDto query);
         Task<HospitalsCluesDataDto> GetHospitalsCluesDataAsync(QueryHospitalVisitDataDto query);
         Task<HospitalPerformanceRateDto> GetHospitalPerformanceRateDataAsync(QueryHospitalPerformanceDto query);
+
+        Task<HospitalPerformanceRateDto> GetHospitalPerCustomerPriceDataAsync(QueryHospitalVisitDataDto query);
         Task<HospitalPerformanceYearDataListDto> GetTotalHospitalPersonalAchievementByYearAsync(QueryHospitalPerfomanceYearDataDto query);
     }
 }
