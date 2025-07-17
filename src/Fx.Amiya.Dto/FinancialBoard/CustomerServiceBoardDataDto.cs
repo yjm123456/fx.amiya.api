@@ -29,6 +29,18 @@ namespace Fx.Amiya.Dto.FinancialBoard
         public int CustomerServiceId { get; set; }
         public string CustomerServiceName { get; set; }
         /// <summary>
+        /// 总上门
+        /// </summary>
+        public int TotalVisitCount { get; set; }
+        /// <summary>
+        /// 新客上门
+        /// </summary>
+        public int NewCustomerVisitCount { get; set; }
+        /// <summary>
+        /// 老客上门
+        /// </summary>
+        public int OldCustomerVisitCount { get; set; }
+        /// <summary>
         /// 当月派单+历史派单当月上门率
         /// </summary>
         public decimal? VisitNumRatio { get; set; }
@@ -36,6 +48,16 @@ namespace Fx.Amiya.Dto.FinancialBoard
         /// 当月派单当月上门率
         /// </summary>
         public decimal? ThisMonthSendThisMonthVisitNumRatio { get; set; }
+
+        /// <summary>
+        /// 成交率
+        /// </summary>
+        public decimal? DealNumRatio { get; set; }
+
+        /// <summary>
+        /// 复购率
+        /// </summary>
+        public decimal? BuyAgainNumRatio { get; set; }
         public decimal DealPrice { get; set; }
         public decimal TotalServicePrice { get; set; }
         public decimal SupportPrice { get; set; }

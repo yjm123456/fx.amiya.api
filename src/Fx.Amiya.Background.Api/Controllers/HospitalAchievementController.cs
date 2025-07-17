@@ -3,6 +3,7 @@ using Fx.Amiya.Background.Api.Vo.Performance;
 using Fx.Amiya.Dto.Performance;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
+using Fx.Common.Extensions;
 using Fx.Open.Infrastructure.Web;
 using jos_sdk_net.Util;
 using Microsoft.AspNetCore.Mvc;
@@ -37,10 +38,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getHospitalOperationDailyData")]
-        public async Task<ResultData<List<HospitalOperatingDataVo>>> GetHospitalOperationDailyData(int? year)
+        public async Task<ResultData<List<HospitalOperatingDataVo>>> GetHospitalOperationDailyData(int? year,int? month)
         {
             List<HospitalOperatingDataVo> hospitalPerformanceVo = new List<HospitalOperatingDataVo>();
-            var hospitalPerformanceDatas = await hospitalPerformanceService.GetHospitalPerformanceByDateAsync(year, null, false);
+            var hospitalPerformanceDatas = await hospitalPerformanceService.GetHospitalPerformanceByDateAsync(year, month, false);
             hospitalPerformanceDatas = hospitalPerformanceDatas.OrderByDescending(x => x.SendNum).ToList();
             foreach (var x in hospitalPerformanceDatas)
             {
@@ -132,11 +133,126 @@ namespace Fx.Amiya.Background.Api.Controllers
             topTenInfoAddCount.NewCustomerDealNum = topTenList.Sum(x => x.NewCustomerDealNum);
             topTenInfoAddCount.NewCustomerDealRate = hospitalPerformanceService.CalculateTargetComplete(topTenInfoAddCount.NewCustomerDealNum, topTenInfoAddCount.VisitNum).Value;
             topTenInfoAddCount.NewCustomerAchievement = topTenList.Sum(x => x.NewCustomerAchievement);
-            topTenInfoAddCount.NewCustomerUnitPrice = topTenInfoAddCount.NewCustomerAchievement / topTenInfoAddCount.NewCustomerDealNum;
+            topTenInfoAddCount.NewCustomerUnitPrice = DecimalExtension.Division(topTenInfoAddCount.NewCustomerAchievement, topTenInfoAddCount.NewCustomerDealNum).Value;
 
             topTenInfoAddCount.OldCustomerDealNum = topTenList.Sum(x => x.OldCustomerDealNum);
             topTenInfoAddCount.OldCustomerAchievement = topTenList.Sum(x => x.OldCustomerAchievement);
-            topTenInfoAddCount.OldCustomerUnitPrice = topTenInfoAddCount.OldCustomerAchievement / topTenInfoAddCount.OldCustomerDealNum;
+            topTenInfoAddCount.OldCustomerUnitPrice = DecimalExtension.Division(topTenInfoAddCount.OldCustomerAchievement, topTenInfoAddCount.OldCustomerDealNum).Value;
+            topTenInfoAddCount.TotalAchievement = topTenList.Sum(x => x.TotalAchievement);
+            topTenInfoAddCount.NewOrOldCustomerRate = hospitalPerformanceService.CalculateAccounted(topTenInfoAddCount.NewCustomerAchievement, topTenInfoAddCount.OldCustomerAchievement);
+            hospitalPerformanceVo.TopTenHospitalOperatingDataVo.Add(topTenInfoAddCount);
+            #endregion
+            #endregion
+
+            #region [其他数据输出]
+            var otherList = hospitalPerformanceDatas.ToList();
+            var allCount = otherList.Count();
+            if (allCount >= 10)
+            {
+                allCount = 10;
+
+                for (int i = 0; i < allCount; i++)
+                {
+                    otherList.RemoveAt(0);
+                }
+                hospitalPerformanceVo.OtherHospitalOperatingDataVo = new List<HospitalOperatingDataVo>();
+                foreach (var x in otherList)
+                {
+                    HospitalOperatingDataVo otherInfo = new HospitalOperatingDataVo();
+                    otherInfo.HospitalName = x.HospitalName;
+                    otherInfo.HospitalId = x.HospitalId;
+                    otherInfo.City = x.City;
+                    otherInfo.SendNum = x.SendNum;
+                    otherInfo.VisitNum = x.VisitNum;
+                    otherInfo.VisitRate = x.VisitRate;
+                    otherInfo.NewCustomerDealNum = x.NewCustomerDealNum;
+                    otherInfo.NewCustomerDealRate = x.NewCustomerDealRate;
+                    otherInfo.NewCustomerAchievement = x.NewCustomerAchievement;
+                    otherInfo.NewCustomerUnitPrice = x.NewCustomerUnitPrice;
+                    otherInfo.OldCustomerDealNum = x.OldCustomerDealNum;
+                    otherInfo.OldCustomerAchievement = x.OldCustomerAchievement;
+                    otherInfo.OldCustomerUnitPrice = x.OldCustomerUnitPrice;
+                    otherInfo.TotalAchievement = x.TotalAchievement;
+                    otherInfo.NewOrOldCustomerRate = x.NewOrOldCustomerRate;
+                    hospitalPerformanceVo.OtherHospitalOperatingDataVo.Add(otherInfo);
+                }
+            }
+
+            #endregion
+            return ResultData<HospitalOperatingYearDataVo>.Success().AddData("performance", hospitalPerformanceVo);
+        }
+
+        /// <summary>
+        /// 全国机构运营当月数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getHospitalOperationMonthData")]
+        public async Task<ResultData<HospitalOperatingYearDataVo>> GetHospitalOperationMonthData(DateTime startdate,DateTime endDate)
+        {
+            HospitalOperatingYearDataVo hospitalPerformanceVo = new HospitalOperatingYearDataVo();
+            var hospitalPerformanceDatas = await hospitalPerformanceService.GetHospitalPerformanceByDateAsync(startdate,endDate, false);
+            hospitalPerformanceDatas = hospitalPerformanceDatas.OrderByDescending(x => x.NewCustomerUnitPrice).ToList();
+
+
+            #region [总计数据输出]
+            HospitalOperatingDataVo allCountInfoAddCount = new HospitalOperatingDataVo();
+            allCountInfoAddCount.HospitalName = "/";
+            allCountInfoAddCount.City = "整体总计";
+            allCountInfoAddCount.SendNum = hospitalPerformanceDatas.Sum(x => x.SendNum);
+            allCountInfoAddCount.VisitNum = hospitalPerformanceDatas.Sum(x => x.VisitNum);
+            allCountInfoAddCount.VisitRate = hospitalPerformanceService.CalculateTargetComplete(allCountInfoAddCount.VisitNum, allCountInfoAddCount.SendNum).Value;
+            allCountInfoAddCount.NewCustomerDealNum = hospitalPerformanceDatas.Sum(x => x.NewCustomerDealNum);
+            allCountInfoAddCount.NewCustomerDealRate = hospitalPerformanceService.CalculateTargetComplete(allCountInfoAddCount.NewCustomerDealNum, allCountInfoAddCount.VisitNum).Value;
+            allCountInfoAddCount.NewCustomerAchievement = hospitalPerformanceDatas.Sum(x => x.NewCustomerAchievement);
+            allCountInfoAddCount.NewCustomerUnitPrice = hospitalPerformanceService.Division(allCountInfoAddCount.NewCustomerAchievement, allCountInfoAddCount.NewCustomerDealNum).Value;
+
+            allCountInfoAddCount.OldCustomerDealNum = hospitalPerformanceDatas.Sum(x => x.OldCustomerDealNum);
+            allCountInfoAddCount.OldCustomerAchievement = hospitalPerformanceDatas.Sum(x => x.OldCustomerAchievement);
+            allCountInfoAddCount.OldCustomerUnitPrice = hospitalPerformanceService.Division(allCountInfoAddCount.OldCustomerAchievement, allCountInfoAddCount.OldCustomerDealNum).Value;
+            allCountInfoAddCount.TotalAchievement = hospitalPerformanceDatas.Sum(x => x.TotalAchievement);
+            allCountInfoAddCount.NewOrOldCustomerRate = hospitalPerformanceService.CalculateAccounted(allCountInfoAddCount.NewCustomerAchievement, allCountInfoAddCount.OldCustomerAchievement);
+            hospitalPerformanceVo.TotalSum = allCountInfoAddCount;
+            #endregion
+
+            #region [前十数据输出]
+            var topTenList = hospitalPerformanceDatas.Take(10).ToList();
+            hospitalPerformanceVo.TopTenHospitalOperatingDataVo = new List<HospitalOperatingDataVo>();
+            foreach (var x in topTenList)
+            {
+                HospitalOperatingDataVo topTenInfo = new HospitalOperatingDataVo();
+                topTenInfo.HospitalName = x.HospitalName;
+                topTenInfo.HospitalId = x.HospitalId;
+                topTenInfo.City = x.City;
+                topTenInfo.SendNum = x.SendNum;
+                topTenInfo.VisitNum = x.VisitNum;
+                topTenInfo.VisitRate = x.VisitRate;
+                topTenInfo.NewCustomerDealNum = x.NewCustomerDealNum;
+                topTenInfo.NewCustomerDealRate = x.NewCustomerDealRate;
+                topTenInfo.NewCustomerAchievement = x.NewCustomerAchievement;
+                topTenInfo.NewCustomerUnitPrice = x.NewCustomerUnitPrice;
+                topTenInfo.OldCustomerDealNum = x.OldCustomerDealNum;
+                topTenInfo.OldCustomerAchievement = x.OldCustomerAchievement;
+                topTenInfo.OldCustomerUnitPrice = x.OldCustomerUnitPrice;
+                topTenInfo.TotalAchievement = x.TotalAchievement;
+                topTenInfo.NewOrOldCustomerRate = x.NewOrOldCustomerRate;
+                hospitalPerformanceVo.TopTenHospitalOperatingDataVo.Add(topTenInfo);
+            }
+
+            #region 加入前十总计数据
+            HospitalOperatingDataVo topTenInfoAddCount = new HospitalOperatingDataVo();
+            topTenInfoAddCount.HospitalName = "/";
+            topTenInfoAddCount.City = "头部总计";
+            topTenInfoAddCount.SendNum = topTenList.Sum(x => x.SendNum);
+            topTenInfoAddCount.VisitNum = topTenList.Sum(x => x.VisitNum);
+            topTenInfoAddCount.VisitRate = hospitalPerformanceService.CalculateTargetComplete(topTenInfoAddCount.VisitNum, topTenInfoAddCount.SendNum).Value;
+            topTenInfoAddCount.NewCustomerDealNum = topTenList.Sum(x => x.NewCustomerDealNum);
+            topTenInfoAddCount.NewCustomerDealRate = hospitalPerformanceService.CalculateTargetComplete(topTenInfoAddCount.NewCustomerDealNum, topTenInfoAddCount.VisitNum).Value;
+            topTenInfoAddCount.NewCustomerAchievement = topTenList.Sum(x => x.NewCustomerAchievement);
+            topTenInfoAddCount.NewCustomerUnitPrice = DecimalExtension.Division(topTenInfoAddCount.NewCustomerAchievement, topTenInfoAddCount.NewCustomerDealNum).Value;
+
+            topTenInfoAddCount.OldCustomerDealNum = topTenList.Sum(x => x.OldCustomerDealNum);
+            topTenInfoAddCount.OldCustomerAchievement = topTenList.Sum(x => x.OldCustomerAchievement);
+            topTenInfoAddCount.OldCustomerUnitPrice = DecimalExtension.Division(topTenInfoAddCount.OldCustomerAchievement, topTenInfoAddCount.OldCustomerDealNum).Value;
             topTenInfoAddCount.TotalAchievement = topTenList.Sum(x => x.TotalAchievement);
             topTenInfoAddCount.NewOrOldCustomerRate = hospitalPerformanceService.CalculateAccounted(topTenInfoAddCount.NewCustomerAchievement, topTenInfoAddCount.OldCustomerAchievement);
             hospitalPerformanceVo.TopTenHospitalOperatingDataVo.Add(topTenInfoAddCount);
@@ -723,14 +839,14 @@ namespace Fx.Amiya.Background.Api.Controllers
             result.LastNewCustomerDealRate = hospitalNewCustomerAchievementInfo.LastNewCustomerDealRate;
             result.ThisNewCustomerDealRate = hospitalNewCustomerAchievementInfo.ThisNewCustomerDealRate;
             result.NewCustomerDealChainRatio = hospitalNewCustomerAchievementInfo.NewCustomerDealChainRatio;
-            result.LastNewCustomerUnitPrice = hospitalNewCustomerAchievementInfo.LastNewCustomerUnitPrice/1000m;
-            result.ThisNewCustomerUnitPrice = hospitalNewCustomerAchievementInfo.ThisNewCustomerUnitPrice/1000m;
+            result.LastNewCustomerUnitPrice = hospitalNewCustomerAchievementInfo.LastNewCustomerUnitPrice / 1000m;
+            result.ThisNewCustomerUnitPrice = hospitalNewCustomerAchievementInfo.ThisNewCustomerUnitPrice / 1000m;
             result.NewCustomerUnitPriceChainRatio = hospitalNewCustomerAchievementInfo.NewCustomerUnitPriceChainRatio;
             result.LastOldCustomerRepurchaseRate = hospitalNewCustomerAchievementInfo.LastOldCustomerRepurchaseRate;
             result.ThisOldCustomerRepurchaseRate = hospitalNewCustomerAchievementInfo.ThisOldCustomerRepurchaseRate;
             result.OldCustomerRepurchaseChainRatio = hospitalNewCustomerAchievementInfo.OldCustomerRepurchaseChainRatio;
-            result.LastOldCustomerUnitPrice = hospitalNewCustomerAchievementInfo.LastOldCustomerUnitPrice/1000m;
-            result.ThisOldCustomerUnitPrice = hospitalNewCustomerAchievementInfo.ThisOldCustomerUnitPrice/1000m;
+            result.LastOldCustomerUnitPrice = hospitalNewCustomerAchievementInfo.LastOldCustomerUnitPrice / 1000m;
+            result.ThisOldCustomerUnitPrice = hospitalNewCustomerAchievementInfo.ThisOldCustomerUnitPrice / 1000m;
             result.OldCustomerUnitPriceChainRatio = hospitalNewCustomerAchievementInfo.OldCustomerUnitPriceChainRatio;
 
             return ResultData<HospitalNewCustomerAchievementVo>.Success().AddData("hospitalNewCustomerAchievement", result);

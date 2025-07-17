@@ -205,7 +205,7 @@ namespace Fx.Amiya.Service
             try
             {
                 var bindCustomerServiceInfo = await dalBindCustomerService.GetAll().ToListAsync();
-                var employee = await _dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
+                //var employee = await _dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
                 bindCustomerServiceInfo = bindCustomerServiceInfo.Where(e => e.CustomerServiceId == employeeId).ToList();
                 //if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
                 //{ }

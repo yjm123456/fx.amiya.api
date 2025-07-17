@@ -22,6 +22,8 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<List<HospitalPerformanceDto>> GetHospitalPerformanceByDateAsync(int? year, int? month, bool isCity);
 
+        Task<List<HospitalPerformanceDto>> GetHospitalPerformanceByDateAsync(DateTime startDate, DateTime endDate, bool isCity);
+
         /// <summary>
         /// 获取选择月份全国机构运营数据概况
         /// </summary>

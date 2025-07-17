@@ -2119,7 +2119,12 @@ namespace Fx.Amiya.Service
                                                NewCustomerPerformance = DecimalExtension.ChangePriceToTenThousand(d.NewCustomerPrice),
                                                OldCustomerPerformance = DecimalExtension.ChangePriceToTenThousand(d.OldCustomerPrice),
                                                TotalPerformance = DecimalExtension.ChangePriceToTenThousand(d.TotalServicePrice),
+                                               TotalVisitCount = d.TotalVisitCount,
+                                               NewCustomerVisitCount = d.NewCustomerVisitCount,
+                                               OldCustomerVisitCount = d.OldCustomerVisitCount,
                                                VisitNumRatio = d.VisitNumRatio,
+                                               DealNumRatio = d.DealNumRatio,
+                                               BuyAgainNumRatio = d.BuyAgainNumRatio,
                                            };
 
             return monthPerformanceRatioDto.ToList();

@@ -238,6 +238,11 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 customerPerformanceVo.TotalPerformance = x.TotalPerformance;
                 customerPerformanceVo.NewCustomerPerformance = x.NewCustomerPerformance;
                 customerPerformanceVo.OldCustomerPerformance = x.OldCustomerPerformance;
+                customerPerformanceVo.TotalVisitCount = x.TotalVisitCount;
+                customerPerformanceVo.NewCustomerVisitCount = x.NewCustomerVisitCount;
+                customerPerformanceVo.OldCustomerVisitCount = x.OldCustomerVisitCount;
+                customerPerformanceVo.DealNumRatio = x.DealNumRatio;
+                customerPerformanceVo.BuyAgainNumRatio = x.BuyAgainNumRatio;
                 customerPerformanceVo.VisitNumRatio = x.VisitNumRatio;
                 performanceVo.Add(customerPerformanceVo);
             }

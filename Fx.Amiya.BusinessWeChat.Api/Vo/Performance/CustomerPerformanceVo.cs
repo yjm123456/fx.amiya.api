@@ -34,9 +34,34 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.Performance
         public decimal? OldCustomerPerformance { get; set; }
 
         /// <summary>
+        /// 总上门
+        /// </summary>
+        public int TotalVisitCount { get; set; }
+        /// <summary>
+        /// 新客上门
+        /// </summary>
+        public int NewCustomerVisitCount { get; set; }
+        /// <summary>
+        /// 老客上门
+        /// </summary>
+        public int OldCustomerVisitCount { get; set; }
+
+        /// <summary>
         /// 上门率
         /// </summary>
         public decimal? VisitNumRatio { get; set; }
+
+        /// <summary>
+        /// 成交率
+        /// </summary>
+        public decimal? DealNumRatio { get; set; }
+
+        /// <summary>
+        /// 复购率
+        /// </summary>
+        public decimal? BuyAgainNumRatio { get; set; }
+
+
     }
 
     /// <summary>

@@ -49,7 +49,7 @@ namespace Fx.Amiya.Background.Api
             #region 配置全局路由
             //在各个控制器添加前缀
             //services.AddMvc(opt =>
-            //{
+            ////{
             //    opt.UseCentralRoutePrefix(new RouteAttribute("/amiyabg"));
             //});
             #endregion

@@ -1062,7 +1062,6 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-
                 throw new Exception(ex.Message.ToString());
             }
         }
@@ -1517,6 +1516,32 @@ namespace Fx.Amiya.Service
             DateTime currentDate = recordDate.Date;
             var result = await dalContentPlatFormOrderDealInfo.GetAll()
                 .Where(o => o.IsToHospital == true && o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= currentDate && o.ToHospitalDate < endDate)
+                .Where(o => hospitalId.Count == 0 || hospitalId.Contains(o.LastDealHospitalId.Value))
+                  .Where(o => o.Valid == true)
+                .ToListAsync();
+            var returnInfo = result.Select(
+                  d =>
+                       new ContentPlatFormOrderDealInfoDto
+                       {
+                           IsToHospital = d.IsToHospital,
+                           IsDeal = d.IsDeal,
+                           IsOldCustomer = d.IsOldCustomer,
+                           ToHospitalType = d.ToHospitalType,
+                           Price = d.Price,
+                           ToHospitalDate = d.ToHospitalDate,
+                           DealDate = d.DealDate,
+                       }
+                ).ToList();
+
+            return returnInfo;
+        }
+
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetTodaySendPerformanceByHospitalIdAsync(List<int> hospitalId, DateTime startDate,DateTime endDate)
+        {
+            //筛选结束的月份
+             endDate = endDate.Date.AddDays(1);
+            var result = await dalContentPlatFormOrderDealInfo.GetAll()
+                .Where(o => o.IsToHospital == true && o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= startDate && o.ToHospitalDate < endDate)
                 .Where(o => hospitalId.Count == 0 || hospitalId.Contains(o.LastDealHospitalId.Value))
                   .Where(o => o.Valid == true)
                 .ToListAsync();

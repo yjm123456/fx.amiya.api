@@ -11,7 +11,13 @@ namespace Fx.Amiya.Dto.Performance.BusinessWechatDto
     /// </summary>
     public class CustomerPerformanceBWDto
     {
+        /// <summary>
+        /// 客服id
+        /// </summary>
         public int CustomerServiceId { get; set; }
+        /// <summary>
+        /// 客服名称
+        /// </summary>
         public string CustomerServiceName { get; set; }
         /// <summary>
         /// 总业绩
@@ -29,9 +35,32 @@ namespace Fx.Amiya.Dto.Performance.BusinessWechatDto
         public decimal? OldCustomerPerformance { get; set; }
 
         /// <summary>
+        /// 总上门
+        /// </summary>
+        public int TotalVisitCount { get; set; }
+        /// <summary>
+        /// 新客上门
+        /// </summary>
+        public int NewCustomerVisitCount { get; set; }
+        /// <summary>
+        /// 老客上门
+        /// </summary>
+        public int OldCustomerVisitCount { get; set; }
+
+        /// <summary>
         /// 上门率
         /// </summary>
         public decimal? VisitNumRatio { get; set; }
+
+        /// <summary>
+        /// 成交率
+        /// </summary>
+        public decimal? DealNumRatio { get; set; }
+
+        /// <summary>
+        /// 复购率
+        /// </summary>
+        public decimal? BuyAgainNumRatio { get; set; }
     }
 
     public class DetailCustomerPerformanceBWDto

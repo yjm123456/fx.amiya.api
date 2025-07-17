@@ -106,6 +106,8 @@ namespace Fx.Amiya.IService
         /// <param name="hospitalId"></param>
         /// <returns></returns>
         Task<List<ContentPlatFormOrderDealInfoDto>> GetTodaySendPerformanceByHospitalIdAsync(List<int> hospitalId, DateTime recordDate);
+
+        Task<List<ContentPlatFormOrderDealInfoDto>> GetTodaySendPerformanceByHospitalIdAsync(List<int> hospitalId, DateTime startDate, DateTime endDate);
         /// <summary>
         /// 根据到院id获取指定时间内的上门成交业绩
         /// </summary>
