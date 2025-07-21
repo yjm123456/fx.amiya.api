@@ -62,13 +62,13 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
-        /// 获取名索医生列表
+        /// 获取医生列表
         /// </summary>
         /// <returns></returns>
         public async Task<List<LiveAnchorBaseInfoDto>> GetMingSuoLiveAnchorAsync()
         {
             var liveAnchorBaseInfos = from d in dalLiveAnchorBaseInfo.GetAll()
-                                      where d.IsDoctor == true
+                                      where d.IsDoctor == true && d.Valid == true
                                       select new LiveAnchorBaseInfoDto
                                       {
                                           Id = d.Id,

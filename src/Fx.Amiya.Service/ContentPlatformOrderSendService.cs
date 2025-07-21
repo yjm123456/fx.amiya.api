@@ -1085,7 +1085,7 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="startDate"></param>
         /// <returns></returns>
-        public async Task<List<SendContentPlatformOrderDto>> GetTodayOrderSendDataAsync(DateTime startDate,DateTime endDate)
+        public async Task<List<SendContentPlatformOrderDto>> GetTodayOrderSendDataAsync(DateTime startDate, DateTime endDate)
         {
             var orders = from d in _dalContentPlatformOrderSend.GetAll().Include(x => x.HospitalInfo).ThenInclude(x => x.CooperativeHospitalCity)
                          where d.SendDate >= startDate && d.SendDate < endDate.Date.AddDays(1).AddSeconds(-1)
@@ -1131,13 +1131,14 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="startDate"></param>
         /// <returns></returns>
-        public async Task<List<SendContentPlatformOrderDto>> GetOrderToHospitalDataByDateAsync(DateTime startDate)
+        public async Task<List<SendContentPlatformOrderDto>> GetOrderToHospitalDataByDateAsync(DateTime startDate, List<int> liveAnchorIds)
         {
 
             DateTime startrq = startDate;
             DateTime endrq = DateTime.Now.Date.AddDays(1).AddSeconds(-1);
-            var orders = from d in _dalContentPlatformOrderSend.GetAll().Include(x => x.HospitalInfo).ThenInclude(x => x.CooperativeHospitalCity)
-                         where d.ContentPlatformOrder.ToHospitalDate >= startrq && d.ContentPlatformOrder.ToHospitalDate < endrq
+            var orders = from d in _dalContentPlatformOrderSend.GetAll().Include(z => z.ContentPlatformOrder).Include(x => x.HospitalInfo).ThenInclude(x => x.CooperativeHospitalCity)
+                         where (d.ContentPlatformOrder.ToHospitalDate >= startrq && d.ContentPlatformOrder.ToHospitalDate < endrq)
+                         where (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.ContentPlatformOrder.LiveAnchorId.Value))
                          select new SendContentPlatformOrderDto
                          {
                              OrderId = d.ContentPlatformOrderId,

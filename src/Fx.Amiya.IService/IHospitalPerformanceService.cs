@@ -37,8 +37,9 @@ namespace Fx.Amiya.IService
         /// 企业微信获取选中月份数据概况
         /// </summary>
         /// <param name="date"></param>
+        /// <param name="baseLiveAnchorId"></param>
         /// <returns></returns>
-        Task<List<HospitalPerformanceDto>> GetHospitalPerformanceBymonthBWAsync(DateTime date);
+        Task<List<HospitalPerformanceDto>> GetHospitalPerformanceBymonthBWAsync(DateTime date, string baseLiveAnchorId);
         /// <summary>
         /// 根据医院id获取医院新客上月与前月业绩
         /// </summary>

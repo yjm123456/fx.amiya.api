@@ -84,5 +84,20 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             liveAnchorBaseInfoVo.Valid = true;
             return ResultData<LiveAnchorBaseInfoVo>.Success().AddData("liveAnchorBaseInfo", liveAnchorBaseInfoVo);
         }
+        /// <summary>
+        /// 获取医生列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getDoctorList")]
+        public async Task<ResultData<List<BaseKeyAndValueVo<string>>>> GetBelongCompanyListAsync()
+        {
+            var nameList = await liveAnchorBaseInfoService.GetMingSuoLiveAnchorAsync();
+            var result = nameList.Select(e => new BaseKeyAndValueVo<string>
+            {
+                Id = e.Id,
+                Name = e.LiveAnchorName
+            }).ToList();
+            return ResultData<List<BaseKeyAndValueVo<string>>>.Success().AddData("DoctorList", result);
+        }
     }
 }

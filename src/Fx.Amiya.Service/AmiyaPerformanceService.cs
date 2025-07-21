@@ -1677,6 +1677,8 @@ namespace Fx.Amiya.Service
             var SelfLiveAnchorInfo = await this.GetLiveAnchorIdsByBaseIdAndIsSelfLiveAnchorAsync("", true);
             //获取合作达人主播ID
             var OtherLiveAnchorInfo = await this.GetLiveAnchorIdsByBaseIdAndIsSelfLiveAnchorAsync("", false);
+            var doctorData = await liveAnchorBaseInfoService.GetMingSuoLiveAnchorAsync();
+            var DoctorInfo = await this.GetLiveAnchorIdsByBaseIdsAsync(doctorData.Select(x => x.Id).ToList(), false);
             //获取自播达人目标
             var selfLiveAnchortarget = await liveAnchorMonthlyTargetAfterLivingService.GetPerformance(year, month, SelfLiveAnchorInfo);
             //获取合作达人目标
@@ -1713,13 +1715,26 @@ namespace Fx.Amiya.Service
             var commercePerformanceChainRatio = await liveAnchorMonthlyTargetLivingService.GetPerformance(sequentialDate.LastMonthStartDate.Year, sequentialDate.LastMonthEndDate.Month, LiveAnchorInfo);
             #endregion
 
+
+            #region 医生业绩
+            //总业绩
+            var DoctorOrder = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(sequentialDate.StartDate, sequentialDate.EndDate, DoctorInfo);
+            var curDoctorTotalPerformance = DoctorOrder.Sum(o => o.Price);
+            //同比业绩
+            var DoctorOrderYearOnYear = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(sequentialDate.LastYearThisMonthStartDate, sequentialDate.LastYearThisMonthEndDate, DoctorInfo);
+            var DoctorTotalPerformanceYearOnYear = DoctorOrderYearOnYear.Sum(o => o.Price);
+            //环比业绩
+            var DoctorOrderChain = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(sequentialDate.LastMonthStartDate, sequentialDate.LastMonthEndDate, DoctorInfo);
+            var DoctorTotalPerformanceChainRatio = DoctorOrderChain.Sum(o => o.Price);
+            #endregion
+
             #region 其他业绩(todo;)
 
             #endregion
 
             #region 总业绩
-            var totalPerformance = Math.Round(curSelfLiveAnchorTotalPerformance + curOtherLiveAnchorTotalPerformance + target.CommerceCompletePerformance, MidpointRounding.AwayFromZero);
-            var lastMonthPerformance = Math.Round(selfLiveAnchorTotalPerformanceChainRatio + otherLiveAnchorTotalPerformanceChainRatio + commercePerformanceChainRatio.CommerceCompletePerformance, MidpointRounding.AwayFromZero);
+            var totalPerformance = Math.Round(curSelfLiveAnchorTotalPerformance + curOtherLiveAnchorTotalPerformance + curDoctorTotalPerformance, MidpointRounding.AwayFromZero);
+            var lastMonthPerformance = Math.Round(selfLiveAnchorTotalPerformanceChainRatio + otherLiveAnchorTotalPerformanceChainRatio + DoctorTotalPerformanceChainRatio, MidpointRounding.AwayFromZero);
             #endregion
 
             //数据组合
@@ -1738,11 +1753,18 @@ namespace Fx.Amiya.Service
                 OtherLiveAnchorPerformanceYearToYear = CalculateYearOnYear(curOtherLiveAnchorTotalPerformance, otherLiveAnchorTotalPerformanceYearOnYear),
                 OtherLiveAnchorPerformanceChainRatio = CalculateChainratio(curOtherLiveAnchorTotalPerformance, otherLiveAnchorTotalPerformanceChainRatio),
 
-                CommercePerformance = target.CommerceCompletePerformance,
-                CommercePerformanceTarget = DecimalExtension.ChangePriceToTenThousand(target.CommercePerformanceTarget),
-                CommercePerformanceCompleteRate = CalculateTargetComplete(target.CommerceCompletePerformance, target.CommercePerformanceTarget),
-                CommercePerformanceYearToYear = CalculateYearOnYear(target.CommerceCompletePerformance, commercePerformanceYearOnYear.CommerceCompletePerformance),
-                CommercePerformanceChainRatio = CalculateChainratio(target.CommerceCompletePerformance, commercePerformanceChainRatio.CommerceCompletePerformance),
+                //CommercePerformance = target.CommerceCompletePerformance,
+                //CommercePerformanceTarget = DecimalExtension.ChangePriceToTenThousand(target.CommercePerformanceTarget),
+                //CommercePerformanceCompleteRate = CalculateTargetComplete(target.CommerceCompletePerformance, target.CommercePerformanceTarget),
+                //CommercePerformanceYearToYear = CalculateYearOnYear(target.CommerceCompletePerformance, commercePerformanceYearOnYear.CommerceCompletePerformance),
+                //CommercePerformanceChainRatio = CalculateChainratio(target.CommerceCompletePerformance, commercePerformanceChainRatio.CommerceCompletePerformance),
+
+
+                DoctorPerformance = curDoctorTotalPerformance,
+                DoctorPerformanceTarget = 0.0M,
+                DoctorPerformanceCompleteRate = 0.00M,
+                DoctorPerformanceYearToYear = CalculateYearOnYear(curDoctorTotalPerformance, DoctorTotalPerformanceYearOnYear),
+                DoctorPerformanceChainRatio = CalculateChainratio(curDoctorTotalPerformance, DoctorTotalPerformanceChainRatio),
 
                 OtherPerformance = 0.00M,
                 OtherPerformanceTarget = 0.00M,
@@ -1754,7 +1776,8 @@ namespace Fx.Amiya.Service
                 TotalPerformanceChainRatio = CalculateChainratio(totalPerformance, lastMonthPerformance),
                 SelfLiveAnchorPerformanceRatio = CalculateTargetComplete(curSelfLiveAnchorTotalPerformance, totalPerformance),
                 OtherLiveAnchorPerformanceRatio = CalculateTargetComplete(curOtherLiveAnchorTotalPerformance, totalPerformance),
-                CommercePerformanceRatio = CalculateTargetComplete(target.CommerceCompletePerformance, totalPerformance),
+                DoctorPerformanceRatio=CalculateTargetComplete(curDoctorTotalPerformance,totalPerformance),
+                CommercePerformanceRatio = 0.00M,
                 OtherPerformanceRatio = 0.00M,
             };
 
@@ -3082,6 +3105,31 @@ namespace Fx.Amiya.Service
             return LiveAnchorInfo;
         }
 
+        /// <summary>
+        /// 根据多个主播基础id获取主播id集合
+        /// </summary>
+        /// <param name="liveAnchorName"></param>
+        /// <returns></returns>
+        private async Task<List<int>> GetLiveAnchorIdsByBaseIdsAsync(List<string> baseLiveAnchorId, bool? isSelfLiveAnchor)
+        {
+            List<int> LiveAnchorInfo = new List<int>();
+            foreach (var z in baseLiveAnchorId)
+            {
+                //获取主播基础信息id
+                var liveAnchorBaseInfo = await liveAnchorBaseInfoService.GetByIdAndIsSelfLiveAnchorAsync(z, isSelfLiveAnchor);
+                var liveanchorBaseIds = liveAnchorBaseInfo.Select(x => x.Id).ToList();
+                if (liveanchorBaseIds.Count != 0)
+                {
+                    var liveAnchor = await liveAnchorService.GetValidListByLiveAnchorBaseIdAsync(liveanchorBaseIds);
+                    var res = liveAnchor.Select(x => x.Id).ToList();
+                    foreach (var k in res)
+                    {
+                        LiveAnchorInfo.Add(k);
+                    }
+                }
+            }
+            return LiveAnchorInfo;
+        }
 
 
         #endregion

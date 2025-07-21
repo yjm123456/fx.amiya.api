@@ -69,11 +69,16 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 OtherLiveAnchorPerformanceYearToYear = groupPerformance.OtherLiveAnchorPerformanceYearToYear,
                 OtherLiveAnchorPerformanceChainRatio = groupPerformance.OtherLiveAnchorPerformanceChainRatio,
 
-                CommercePerformance = groupPerformance.CommercePerformance,
-                CommercePerformanceTarget = groupPerformance.CommercePerformanceTarget,
-                CommercePerformanceCompleteRate = groupPerformance.CommercePerformanceCompleteRate,
-                CommercePerformanceYearToYear = groupPerformance.CommercePerformanceYearToYear,
-                CommercePerformanceChainRatio = groupPerformance.CommercePerformanceChainRatio,
+                //CommercePerformance = groupPerformance.CommercePerformance,
+                //CommercePerformanceTarget = groupPerformance.CommercePerformanceTarget,
+                //CommercePerformanceCompleteRate = groupPerformance.CommercePerformanceCompleteRate,
+                //CommercePerformanceYearToYear = groupPerformance.CommercePerformanceYearToYear,
+                //CommercePerformanceChainRatio = groupPerformance.CommercePerformanceChainRatio,
+                DoctorPerformance = groupPerformance.DoctorPerformance,
+                DoctorPerformanceTarget = groupPerformance.DoctorPerformanceTarget,
+                DoctorPerformanceCompleteRate = groupPerformance.DoctorPerformanceCompleteRate,
+                DoctorPerformanceYearToYear = groupPerformance.DoctorPerformanceYearToYear,
+                DoctorPerformanceChainRatio = groupPerformance.DoctorPerformanceChainRatio,
 
                 OtherPerformance = groupPerformance.OtherPerformance,
                 OtherPerformanceTarget = groupPerformance.OtherPerformanceTarget,
@@ -85,7 +90,8 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 TotalPerformanceChainRatio = groupPerformance.TotalPerformanceChainRatio,
                 SelfLiveAnchorPerformanceRatio = groupPerformance.SelfLiveAnchorPerformanceRatio,
                 OtherLiveAnchorPerformanceRatio = groupPerformance.OtherLiveAnchorPerformanceRatio,
-                CommercePerformanceRatio = groupPerformance.CommercePerformanceRatio,
+                //CommercePerformanceRatio = groupPerformance.CommercePerformanceRatio,
+                DoctorPerformanceRatio = groupPerformance.DoctorPerformanceRatio,
                 OtherPerformanceRatio = groupPerformance.OtherPerformanceRatio,
 
 
@@ -105,7 +111,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// <param name="isSelfLiveAnchor">是否为自播主播</param>
         /// <returns></returns>
         [HttpGet("performanceByLiveAnchorName")]
-        public async Task<ResultData<LiveAnchorMonthAndDatePerformanceVo>> GetPerformanceByGroupAsync(DateTime date,  string liveAnchorBaseId, bool? isSelfLiveAnchor)
+        public async Task<ResultData<LiveAnchorMonthAndDatePerformanceVo>> GetPerformanceByGroupAsync(DateTime date, string liveAnchorBaseId, bool? isSelfLiveAnchor)
         {
             //获取当前月同比,环比等数据
             var groupPerformance = await amiyaPerformanceService.GetMonthPerformanceBySelfLiveAnchorAsync(date, liveAnchorBaseId, isSelfLiveAnchor);
@@ -339,12 +345,13 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// 获取机构业绩数据
         /// </summary>
         /// <param name="date"></param>
+        /// <param name="baseLiveAnchorId">基础主播ID,可空</param>
         /// <returns></returns>
         [HttpGet("hospitalPerformance")]
-        public async Task<ResultData<List<HospitalPerformanceVo>>> GetHospitalPerformanceAsync(DateTime date)
+        public async Task<ResultData<List<HospitalPerformanceVo>>> GetHospitalPerformanceAsync(DateTime date, string baseLiveAnchorId)
         {
             List<HospitalPerformanceVo> hospitalPerformanceVo = new List<HospitalPerformanceVo>();
-            var hospitalPerformanceDatasResult = await hospitalPerformanceService.GetHospitalPerformanceBymonthBWAsync(date);
+            var hospitalPerformanceDatasResult = await hospitalPerformanceService.GetHospitalPerformanceBymonthBWAsync(date, baseLiveAnchorId);
             var hospitalPerformanceDatasDecending = hospitalPerformanceDatasResult.OrderByDescending(x => x.TotalAchievement).ToList();
             var hospitalPerformanceDatas = hospitalPerformanceDatasDecending.ToList();
             // var hospitalPerformanceDatas = hospitalPerformanceDatasDecending.Take(20).ToList();

@@ -216,7 +216,7 @@ namespace Fx.Amiya.IService
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
         /// <returns></returns>
-        Task<List<SendContentPlatformOrderDto>> GetOrderToHospitalDataByDateAsync(DateTime startDate);
+        Task<List<SendContentPlatformOrderDto>> GetOrderToHospitalDataByDateAsync(DateTime startDate, List<int> liveAnchorIds);
 
         /// <summary>
         /// 根据医院id与月份获取派单业绩

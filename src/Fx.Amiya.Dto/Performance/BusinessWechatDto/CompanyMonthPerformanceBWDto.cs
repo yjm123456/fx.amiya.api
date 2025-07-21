@@ -32,6 +32,11 @@ namespace Fx.Amiya.Dto.Performance.BusinessWechatDto
         /// 带货业绩占比
         /// </summary>
         public decimal? CommercePerformanceRatio { get; set; }
+
+        /// <summary>
+        /// 医生业绩占比
+        /// </summary>
+        public decimal? DoctorPerformanceRatio { get; set; }
         /// <summary>
         /// 其他业绩占比
         /// </summary>
@@ -116,6 +121,32 @@ namespace Fx.Amiya.Dto.Performance.BusinessWechatDto
         /// 带货业绩环比
         /// </summary>
         public decimal? CommercePerformanceChainRatio { get; set; }
+
+
+        /// <summary>
+        /// 医生业绩
+        /// </summary>
+        public decimal DoctorPerformance { get; set; }
+
+        /// <summary>
+        /// 医生业绩目标值
+        /// </summary>
+        public decimal DoctorPerformanceTarget { get; set; }
+
+        /// <summary>
+        /// 医生业绩目标完成率
+        /// </summary>
+        public decimal? DoctorPerformanceCompleteRate { get; set; }
+
+        /// <summary>
+        /// 医生业绩同比
+        /// </summary>
+        public decimal? DoctorPerformanceYearToYear { get; set; }
+
+        /// <summary>
+        /// 医生业绩环比
+        /// </summary>
+        public decimal? DoctorPerformanceChainRatio { get; set; }
 
 
         /// <summary>
