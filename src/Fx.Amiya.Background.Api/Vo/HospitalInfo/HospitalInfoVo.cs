@@ -122,6 +122,11 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalInfo
         /// </summary>
         public bool IsShareInMiniProgram { get; set; }
 
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string Remark { get; set; }
+
 
     }
 }

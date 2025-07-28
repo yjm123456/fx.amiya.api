@@ -144,3 +144,6 @@ ALTER TABLE `amiyadb`.`tbl_beforeliving_xiaohongshu_daily_target`
 ADD COLUMN `remark` VARCHAR(500) NULL AFTER `xiaohongshu_calling_card_sendnum`;
 ------------------------------------余建明 2025/05/16 END--------------------------------------
 --------------------------------------------------------------------------------------------------------以上部分已更新到线上--------------------------------------
+--医院列表加入备注功能
+ALTER TABLE `amiyadb`.`tbl_hospital_info` 
+ADD COLUMN `remark` VARCHAR(500) NULL AFTER `hospital_type`;

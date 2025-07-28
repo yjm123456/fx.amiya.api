@@ -109,5 +109,10 @@ namespace Fx.Amiya.Dto.HospitalInfo
         /// </summary>
         public decimal SecurityDepositMoney { get; set; }
 
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string Remark { get; set; }
+
     }
 }

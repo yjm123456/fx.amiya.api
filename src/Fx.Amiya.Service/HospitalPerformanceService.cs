@@ -902,7 +902,7 @@ namespace Fx.Amiya.Service
             return changeSendOrderBrokenLine;
         }
 
-
+         
         /// <summary>
         /// 获取全年医院上门数折线图
         /// </summary>
@@ -929,10 +929,10 @@ namespace Fx.Amiya.Service
         /// <param name="hospitalId"></param>
         /// <returns></returns>
         public async Task<List<HospitalVisitRateDto>> GetHospitalVisitRateNum(int year, int hospitalId)
-        {
+        {                                                                                                    
             //当前医院派单情况
             DateTime date = Convert.ToDateTime(year + "-01-01");
-            //派单情况
+            //派单情况、
             var sendOrder = await contentPlatformOrderSendService.GetTodayOrderSendDataAsync(date);
             var sendOrderBrokenLine = sendOrder.Where(x => x.SendHospitalId == hospitalId).GroupBy(x => x.SendDate.Month).Select(x => new HospitalVisitRateDto { Date = x.Key.ToString(), SendOrderNum = x.Count() }).ToList();
             int month = DateTime.Now.Month;

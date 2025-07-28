@@ -113,7 +113,8 @@ namespace Fx.Amiya.Service
                                    SecurityDeposit = d.SecurityDeposit,
                                    SecurityDepositText = d.SecurityDeposit.HasValue ? ServiceClass.GetYearServiceFeeOrSecurityDepositText(d.SecurityDeposit.Value) : null,
                                    YearServiceMoney = d.YearServiceMoney,
-                                   SecurityDepositMoney = d.SecurityDepositMoney
+                                   SecurityDepositMoney = d.SecurityDepositMoney,
+                                   Remark = d.Remark,
 
                                };
                 FxPageInfo<HospitalInfoDto> hospitalPageInfo = new FxPageInfo<HospitalInfoDto>();
@@ -455,7 +456,7 @@ namespace Fx.Amiya.Service
             try
             {
                 var hospital = from d in dalHospitalInfo.GetAll()
-                               where (d.Valid ==true)
+                               where (d.Valid == true)
                                select new HospitalNameDto
                                {
                                    Id = d.Id,
@@ -513,6 +514,7 @@ namespace Fx.Amiya.Service
                 hospitalInfo.SecurityDeposit = addDto.SecurityDeposit;
                 hospitalInfo.YearServiceMoney = addDto.YearServiceMoney;
                 hospitalInfo.SecurityDepositMoney = addDto.SecurityDepositMoney;
+                hospitalInfo.Remark = addDto.Remark;
                 await dalHospitalInfo.AddAsync(hospitalInfo, true);
 
                 List<HospitalTagDetail> hospitalTagDetailList = new List<HospitalTagDetail>();
@@ -564,7 +566,7 @@ namespace Fx.Amiya.Service
                                        CityId = d.CityId,
                                        DescriptionPicture = d.DescriptionPicture,
                                        DueTime = d.DueTime,
-                                       HospitalType=d.HospitalType,
+                                       HospitalType = d.HospitalType,
                                        IndustryHonors = d.IndustryHonors,
                                        Description = d.Description,
                                        ProfileRank = d.ProfileRank,
@@ -587,6 +589,7 @@ namespace Fx.Amiya.Service
                                        OldCustomerCommissionRatio = d.OldCustomerCommissionRatio,
                                        RepeatOrderRule = d.RepeatOrderRule,
                                        YearServiceFee = d.YearServiceFee,
+                                       Remark = d.Remark,
                                        YearServiceFeeText = d.YearServiceFee.HasValue ? ServiceClass.GetYearServiceFeeOrSecurityDepositText(d.YearServiceFee.Value) : null,
                                        SecurityDeposit = d.SecurityDeposit,
                                        SecurityDepositText = d.SecurityDeposit.HasValue ? ServiceClass.GetYearServiceFeeOrSecurityDepositText(d.SecurityDeposit.Value) : null,
@@ -748,6 +751,7 @@ namespace Fx.Amiya.Service
                 hospital.SecurityDepositMoney = updateDto.SecurityDepositMoney;
                 hospital.Sort = updateDto.Sort;
                 hospital.SimpleName = updateDto.SimpleName;
+                hospital.Remark = updateDto.Remark;
                 await dalHospitalInfo.UpdateAsync(hospital, true);
 
                 var tagDetail = await dalHospitalTagDetail.GetAll().Where(e => e.HospitalId == updateDto.Id).ToListAsync();

@@ -99,7 +99,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                                    SecurityDeposit = d.SecurityDeposit,
                                    SecurityDepositText = d.SecurityDepositText,
                                    YearServiceMoney = d.YearServiceMoney,
-                                   SecurityDepositMoney = d.SecurityDepositMoney
+                                   SecurityDepositMoney = d.SecurityDepositMoney,
+                                   Remark = d.Remark
                                };
 
 
@@ -470,6 +471,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.SecurityDeposit = addVo.SecurityDeposit;
                 addDto.YearServiceMoney = addVo.YearServiceMoney;
                 addDto.SecurityDepositMoney = addVo.SecurityDepositMoney;
+                addDto.Remark = addVo.Remark;
                 await hospitalInfoService.AddAsync(addDto, employeeId);
                 return ResultData.Success();
             }
@@ -522,6 +524,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 hospitalInfoVo.SecurityDepositText = hospital.SecurityDepositText;
                 hospitalInfoVo.SecurityDepositMoney = hospital.SecurityDepositMoney;
                 hospitalInfoVo.YearServiceMoney = hospital.YearServiceMoney;
+                hospitalInfoVo.Remark = hospital.Remark;
                 List<int> scaleTagList = new List<int>();
                 foreach (var item in hospital.ScaleTagList)
                 {
@@ -585,6 +588,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.SecurityDepositMoney = updateVo.SecurityDepositMoney;
                 updateDto.SimpleName = updateVo.SimpleName;
                 updateDto.Sort = updateVo.Sort;
+                updateDto.Remark = updateVo.Remark;
                 updateDto.HospitalType = updateVo.HospitalType;
                 await hospitalInfoService.UpdateAsync(updateDto, employeeId);
                 return ResultData.Success();

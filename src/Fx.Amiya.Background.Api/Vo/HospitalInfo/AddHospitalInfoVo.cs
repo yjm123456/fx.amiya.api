@@ -120,5 +120,10 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalInfo
         /// 保证金金额
         /// </summary>
         public decimal SecurityDepositMoney { get; set; }
+
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string Remark { get; set; }
     }
 }

@@ -164,6 +164,11 @@ namespace Fx.Amiya.Dto.HospitalInfo
         /// </summary>
         public bool IsShareInMiniProgram { get; set; }
 
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string Remark { get; set; }
+
         public List<HospitalTagNameDto> ScaleTagList { get; set; }
         public List<HospitalTagNameDto> FacilityTagList { get; set; }
     }
