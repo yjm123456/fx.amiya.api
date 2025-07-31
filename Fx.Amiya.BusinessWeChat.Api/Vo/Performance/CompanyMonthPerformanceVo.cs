@@ -46,9 +46,17 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.Performance
 
 
         /// <summary>
-        /// 自播达人业绩
+        /// 自播达人总业绩
         /// </summary>
         public decimal SelfLiveAnchorPerformance { get; set; }
+        /// <summary>
+        /// 自播达人新客业绩
+        /// </summary>
+        public decimal SelfLiveAnchorNewCustomerPerformance { get; set; }
+        /// <summary>
+        /// 自播达人老客业绩
+        /// </summary>
+        public decimal SelfLiveAnchorOldCustomerPerformance { get; set; }
 
         /// <summary>
         /// 自播达人业绩目标值
@@ -73,9 +81,17 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.Performance
 
 
         /// <summary>
-        /// 合作达人业绩
+        /// 合作达人总业绩
         /// </summary>
         public decimal OtherLiveAnchorPerformance { get; set; }
+        /// <summary>
+        /// 合作达人新客业绩
+        /// </summary>
+        public decimal OtherLiveAnchorNewCustomerPerformance { get; set; }
+        /// <summary>
+        /// 合作达人老客业绩
+        /// </summary>
+        public decimal OtherLiveAnchorOldCustomerPerformance { get; set; }
 
         /// <summary>
         /// 合作达人业绩目标值
@@ -123,9 +139,17 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.Performance
         /// </summary>
         public decimal? CommercePerformanceChainRatio { get; set; }
         /// <summary>
-        /// 医生业绩
+        /// 医生总业绩
         /// </summary>
         public decimal DoctorPerformance { get; set; }
+        /// <summary>
+        /// 医生新客业绩
+        /// </summary>
+        public decimal DoctorNewCustomerPerformance { get; set; }
+        /// <summary>
+        /// 医生老客业绩
+        /// </summary>
+        public decimal DoctorOldCustomerPerformance { get; set; }
 
         /// <summary>
         /// 医生业绩目标值
@@ -149,9 +173,19 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.Performance
 
 
         /// <summary>
-        /// 其他业绩
+        /// 其他总业绩
         /// </summary>
         public decimal OtherPerformance { get; set; }
+
+        /// <summary>
+        /// 其他新客业绩
+        /// </summary>
+        public decimal OtherNewCustomerPerformance { get; set; }
+
+        /// <summary>
+        /// 其他老客业绩
+        /// </summary>
+        public decimal OtherOldCustomerPerformance { get; set; }
 
         /// <summary>
         /// 其他业绩目标值

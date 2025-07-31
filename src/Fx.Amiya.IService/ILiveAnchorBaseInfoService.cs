@@ -37,7 +37,11 @@ namespace Fx.Amiya.IService
         /// <param name="pageSize"></param>
         /// <returns></returns>
         Task<FxPageInfo<LiveAnchorBaseInfoDto>> GetListAsync(string name, bool valid, int pageNum, int pageSize);
-
+        /// <summary>
+        /// 获取合作达人列表
+        /// </summary>
+        /// <returns></returns>
+        Task<List<LiveAnchorBaseInfoDto>> GetCooperateLiveAnchorAsync();
         Task DeleteAsync(string id);
         Task AddAsync(AddLiveAnchorBaseInfoDto addDto);
         Task<LiveAnchorBaseInfoDto> GetByIdAsync(string id);

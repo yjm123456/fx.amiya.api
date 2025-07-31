@@ -1687,6 +1687,8 @@ namespace Fx.Amiya.Service
             #region 自播达人业绩
             //总业绩
             var selfLiveAnchorOrder = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(sequentialDate.StartDate, sequentialDate.EndDate, SelfLiveAnchorInfo);
+            var curSelfLiveAnchorNewCustomerPerformance = selfLiveAnchorOrder.Where(x => x.IsOldCustomer == false).Sum(o => o.Price);
+            var curSelfLiveAnchorOldCustomerPerformance = selfLiveAnchorOrder.Where(x => x.IsOldCustomer == true).Sum(o => o.Price);
             var curSelfLiveAnchorTotalPerformance = selfLiveAnchorOrder.Sum(o => o.Price);
             //同比业绩
             var selfLiveAnchorOrderYearOnYear = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(sequentialDate.LastYearThisMonthStartDate, sequentialDate.LastYearThisMonthEndDate, SelfLiveAnchorInfo);
@@ -1699,6 +1701,8 @@ namespace Fx.Amiya.Service
             #region 合作达人业绩
             //总业绩
             var otherLiveAnchorOrder = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(sequentialDate.StartDate, sequentialDate.EndDate, OtherLiveAnchorInfo);
+            var curOtherLiveAnchorNewCustomerPerformance = otherLiveAnchorOrder.Where(x => x.IsOldCustomer == false).Sum(o => o.Price);
+            var curOtherLiveAnchorOldCustomerPerformance = otherLiveAnchorOrder.Where(x => x.IsOldCustomer == true).Sum(o => o.Price);
             var curOtherLiveAnchorTotalPerformance = otherLiveAnchorOrder.Sum(o => o.Price);
             //同比业绩
             var otherLiveAnchorOrderYearOnYear = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(sequentialDate.LastYearThisMonthStartDate, sequentialDate.LastYearThisMonthEndDate, OtherLiveAnchorInfo);
@@ -1719,6 +1723,8 @@ namespace Fx.Amiya.Service
             #region 医生业绩
             //总业绩
             var DoctorOrder = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(sequentialDate.StartDate, sequentialDate.EndDate, DoctorInfo);
+            var curDoctorNewCustomerPerformance = DoctorOrder.Where(x => x.IsOldCustomer == false).Sum(o => o.Price);
+            var curDoctorOldCustomerPerformance = DoctorOrder.Where(x => x.IsOldCustomer == true).Sum(o => o.Price);
             var curDoctorTotalPerformance = DoctorOrder.Sum(o => o.Price);
             //同比业绩
             var DoctorOrderYearOnYear = await contentPlatFormOrderDealInfoService.GetPerformanceByDateAsync(sequentialDate.LastYearThisMonthStartDate, sequentialDate.LastYearThisMonthEndDate, DoctorInfo);
@@ -1742,12 +1748,16 @@ namespace Fx.Amiya.Service
             {
 
                 SelfLiveAnchorPerformance = curSelfLiveAnchorTotalPerformance,
+                SelfLiveAnchorNewCustomerPerformance = curSelfLiveAnchorNewCustomerPerformance,
+                SelfLiveAnchorOldCustomerPerformance = curSelfLiveAnchorOldCustomerPerformance,
                 SelfLiveAnchorPerformanceTarget = DecimalExtension.ChangePriceToTenThousand(selfLiveAnchortarget.TotalPerformanceTarget),
                 SelfLiveAnchorPerformanceCompleteRate = CalculateTargetComplete(curSelfLiveAnchorTotalPerformance, selfLiveAnchortarget.TotalPerformanceTarget),
                 SelfLiveAnchorPerformanceYearToYear = CalculateYearOnYear(curSelfLiveAnchorTotalPerformance, selfLiveAnchorTotalPerformanceYearOnYear),
                 SelfLiveAnchorPerformanceChainRatio = CalculateChainratio(curSelfLiveAnchorTotalPerformance, selfLiveAnchorTotalPerformanceChainRatio),
 
                 OtherLiveAnchorPerformance = curOtherLiveAnchorTotalPerformance,
+                OtherLiveAnchorNewCustomerPerformance = curOtherLiveAnchorNewCustomerPerformance,
+                OtherLiveAnchorOldCustomerPerformance = curOtherLiveAnchorOldCustomerPerformance,
                 OtherLiveAnchorPerformanceTarget = DecimalExtension.ChangePriceToTenThousand(otherLiveAnchortarget.TotalPerformanceTarget),
                 OtherLiveAnchorPerformanceCompleteRate = CalculateTargetComplete(curOtherLiveAnchorTotalPerformance, otherLiveAnchortarget.TotalPerformanceTarget),
                 OtherLiveAnchorPerformanceYearToYear = CalculateYearOnYear(curOtherLiveAnchorTotalPerformance, otherLiveAnchorTotalPerformanceYearOnYear),
@@ -1761,12 +1771,16 @@ namespace Fx.Amiya.Service
 
 
                 DoctorPerformance = curDoctorTotalPerformance,
+                DoctorNewCustomerPerformance = curDoctorNewCustomerPerformance,
+                DoctorOldCustomerPerformance = curDoctorOldCustomerPerformance,
                 DoctorPerformanceTarget = 0.0M,
                 DoctorPerformanceCompleteRate = 0.00M,
                 DoctorPerformanceYearToYear = CalculateYearOnYear(curDoctorTotalPerformance, DoctorTotalPerformanceYearOnYear),
                 DoctorPerformanceChainRatio = CalculateChainratio(curDoctorTotalPerformance, DoctorTotalPerformanceChainRatio),
 
                 OtherPerformance = 0.00M,
+                OtherNewCustomerPerformance = 0.00M,
+                OtherOldCustomerPerformance = 0.00M,
                 OtherPerformanceTarget = 0.00M,
                 OtherPerformanceCompleteRate = 0.00M,
                 OtherPerformanceYearToYear = 0.00M,
@@ -1776,7 +1790,7 @@ namespace Fx.Amiya.Service
                 TotalPerformanceChainRatio = CalculateChainratio(totalPerformance, lastMonthPerformance),
                 SelfLiveAnchorPerformanceRatio = CalculateTargetComplete(curSelfLiveAnchorTotalPerformance, totalPerformance),
                 OtherLiveAnchorPerformanceRatio = CalculateTargetComplete(curOtherLiveAnchorTotalPerformance, totalPerformance),
-                DoctorPerformanceRatio=CalculateTargetComplete(curDoctorTotalPerformance,totalPerformance),
+                DoctorPerformanceRatio = CalculateTargetComplete(curDoctorTotalPerformance, totalPerformance),
                 CommercePerformanceRatio = 0.00M,
                 OtherPerformanceRatio = 0.00M,
             };
@@ -1898,9 +1912,9 @@ namespace Fx.Amiya.Service
             //var notLiveAnchorAcompanyingPerformanceYearOnYear = notLiveAnchorAcompanyingYearOnYearr.Sum(o => o.Price);
             //var notLiveAnchorAcompanyingOrderChainRatio = orderChain.Where(x => x.IsAcompanying == false).ToList();
             //var notLiveAnchorAcompanyingPerformanceRatio = notLiveAnchorAcompanyingOrderChainRatio.Sum(o => o.Price);
-
             ////当日非主播接诊业绩
-            //var curTodayNotLiveAnchorAcompanyingPerformance = todayOrder.Where(o => o.IsAcompanying == false).Sum(o => o.Price);
+            //var curTodayNotLiveAnchorAcompanyingPerformance = todayOrder.Where(o => o.IsAcompanying == false).Sum(o => o.Price)
+;
             #endregion
 
             #region 有效业绩

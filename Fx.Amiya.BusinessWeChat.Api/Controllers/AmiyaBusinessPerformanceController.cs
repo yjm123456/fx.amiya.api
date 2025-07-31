@@ -58,12 +58,16 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             CompanyMonthPerformanceVo monthPerformanceRatioDto = new CompanyMonthPerformanceVo
             {
                 SelfLiveAnchorPerformance = groupPerformance.SelfLiveAnchorPerformance,
+                SelfLiveAnchorNewCustomerPerformance = groupPerformance.SelfLiveAnchorNewCustomerPerformance,
+                SelfLiveAnchorOldCustomerPerformance=groupPerformance.SelfLiveAnchorOldCustomerPerformance,
                 SelfLiveAnchorPerformanceTarget = groupPerformance.SelfLiveAnchorPerformanceTarget,
                 SelfLiveAnchorPerformanceCompleteRate = groupPerformance.SelfLiveAnchorPerformanceCompleteRate,
                 SelfLiveAnchorPerformanceYearToYear = groupPerformance.SelfLiveAnchorPerformanceYearToYear,
                 SelfLiveAnchorPerformanceChainRatio = groupPerformance.SelfLiveAnchorPerformanceChainRatio,
 
                 OtherLiveAnchorPerformance = groupPerformance.OtherLiveAnchorPerformance,
+                OtherLiveAnchorNewCustomerPerformance=groupPerformance.OtherLiveAnchorNewCustomerPerformance,
+                OtherLiveAnchorOldCustomerPerformance=groupPerformance.OtherLiveAnchorOldCustomerPerformance,
                 OtherLiveAnchorPerformanceTarget = groupPerformance.OtherLiveAnchorPerformanceTarget,
                 OtherLiveAnchorPerformanceCompleteRate = groupPerformance.OtherLiveAnchorPerformanceCompleteRate,
                 OtherLiveAnchorPerformanceYearToYear = groupPerformance.OtherLiveAnchorPerformanceYearToYear,
@@ -75,12 +79,16 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 //CommercePerformanceYearToYear = groupPerformance.CommercePerformanceYearToYear,
                 //CommercePerformanceChainRatio = groupPerformance.CommercePerformanceChainRatio,
                 DoctorPerformance = groupPerformance.DoctorPerformance,
+                DoctorNewCustomerPerformance=groupPerformance.DoctorNewCustomerPerformance,
+                DoctorOldCustomerPerformance=groupPerformance.DoctorOldCustomerPerformance,
                 DoctorPerformanceTarget = groupPerformance.DoctorPerformanceTarget,
                 DoctorPerformanceCompleteRate = groupPerformance.DoctorPerformanceCompleteRate,
                 DoctorPerformanceYearToYear = groupPerformance.DoctorPerformanceYearToYear,
                 DoctorPerformanceChainRatio = groupPerformance.DoctorPerformanceChainRatio,
 
                 OtherPerformance = groupPerformance.OtherPerformance,
+                OtherNewCustomerPerformance=groupPerformance.OtherNewCustomerPerformance,
+                OtherOldCustomerPerformance=groupPerformance.OtherOldCustomerPerformance,
                 OtherPerformanceTarget = groupPerformance.OtherPerformanceTarget,
                 OtherPerformanceCompleteRate = groupPerformance.OtherPerformanceCompleteRate,
                 OtherPerformanceYearToYear = groupPerformance.OtherPerformanceYearToYear,

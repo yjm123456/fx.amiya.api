@@ -15,10 +15,12 @@ namespace Fx.Amiya.Dto.Performance.BusinessWechatDto
         /// 总业绩
         /// </summary>
         public decimal TotalPerformance { get; set; }
+
         /// <summary>
         /// 总业绩环比
         /// </summary>
         public decimal? TotalPerformanceChainRatio { get; set; }
+
         /// <summary>
         /// 自播达人业绩占比
         /// </summary>
@@ -45,9 +47,17 @@ namespace Fx.Amiya.Dto.Performance.BusinessWechatDto
 
 
         /// <summary>
-        /// 自播达人业绩
+        /// 自播达人总业绩
         /// </summary>
         public decimal SelfLiveAnchorPerformance { get; set; }
+        /// <summary>
+        /// 自播达人新客业绩
+        /// </summary>
+        public decimal SelfLiveAnchorNewCustomerPerformance { get; set; }
+        /// <summary>
+        /// 自播达人老客业绩
+        /// </summary>
+        public decimal SelfLiveAnchorOldCustomerPerformance { get; set; }
 
         /// <summary>
         /// 自播达人业绩目标值
@@ -72,9 +82,17 @@ namespace Fx.Amiya.Dto.Performance.BusinessWechatDto
 
 
         /// <summary>
-        /// 合作达人业绩
+        /// 合作达人总业绩
         /// </summary>
         public decimal OtherLiveAnchorPerformance { get; set; }
+        /// <summary>
+        /// 合作达人新客业绩
+        /// </summary>
+        public decimal OtherLiveAnchorNewCustomerPerformance { get; set; }
+        /// <summary>
+        /// 合作达人老客业绩
+        /// </summary>
+        public decimal OtherLiveAnchorOldCustomerPerformance { get; set; }
 
         /// <summary>
         /// 合作达人业绩目标值
@@ -121,12 +139,18 @@ namespace Fx.Amiya.Dto.Performance.BusinessWechatDto
         /// 带货业绩环比
         /// </summary>
         public decimal? CommercePerformanceChainRatio { get; set; }
-
-
         /// <summary>
-        /// 医生业绩
+        /// 医生总业绩
         /// </summary>
         public decimal DoctorPerformance { get; set; }
+        /// <summary>
+        /// 医生新客业绩
+        /// </summary>
+        public decimal DoctorNewCustomerPerformance { get; set; }
+        /// <summary>
+        /// 医生老客业绩
+        /// </summary>
+        public decimal DoctorOldCustomerPerformance { get; set; }
 
         /// <summary>
         /// 医生业绩目标值
@@ -150,9 +174,19 @@ namespace Fx.Amiya.Dto.Performance.BusinessWechatDto
 
 
         /// <summary>
-        /// 其他业绩
+        /// 其他总业绩
         /// </summary>
         public decimal OtherPerformance { get; set; }
+
+        /// <summary>
+        /// 其他新客业绩
+        /// </summary>
+        public decimal OtherNewCustomerPerformance { get; set; }
+
+        /// <summary>
+        /// 其他老客业绩
+        /// </summary>
+        public decimal OtherOldCustomerPerformance { get; set; }
 
         /// <summary>
         /// 其他业绩目标值

@@ -81,6 +81,25 @@ namespace Fx.Amiya.Service
         }
 
 
+        /// <summary>
+        /// 获取合作达人列表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<LiveAnchorBaseInfoDto>> GetCooperateLiveAnchorAsync()
+        {
+            var liveAnchorBaseInfos = from d in dalLiveAnchorBaseInfo.GetAll()
+                                      where d.IsDoctor == false && d.IsSelfLivevAnchor == false && d.Valid == true
+                                      select new LiveAnchorBaseInfoDto
+                                      {
+                                          Id = d.Id,
+                                          LiveAnchorName = d.LiveAnchorName,
+                                          Valid = d.Valid,
+                                          IsSelfLivevAnchor = d.IsSelfLivevAnchor,
+                                      };
+            var resultList = await liveAnchorBaseInfos.ToListAsync();
+            return resultList;
+        }
+
         public async Task<FxPageInfo<LiveAnchorBaseInfoDto>> GetListAsync(string name, bool valid, int pageNum, int pageSize)
         {
 

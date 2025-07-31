@@ -99,5 +99,22 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             }).ToList();
             return ResultData<List<BaseKeyAndValueVo<string>>>.Success().AddData("DoctorList", result);
         }
+
+
+        /// <summary>
+        /// 获取合作达人列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getCooperateLiveAnchor")]
+        public async Task<ResultData<List<BaseKeyAndValueVo<string>>>> GetCooperateLiveAnchorListAsync()
+        {
+            var nameList = await liveAnchorBaseInfoService.GetCooperateLiveAnchorAsync();
+            var result = nameList.Select(e => new BaseKeyAndValueVo<string>
+            {
+                Id = e.Id,
+                Name = e.LiveAnchorName
+            }).ToList();
+            return ResultData<List<BaseKeyAndValueVo<string>>>.Success().AddData("CooperateLiveAnchorList", result);
+        }
     }
 }
