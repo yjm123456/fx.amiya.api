@@ -31,7 +31,8 @@ namespace Fx.Amiya.Background.Api
                 PositionName = employee.PositionName,
                 DepartmentId = employee.DepartmentId.ToString(),
                 DepartmentName = employee.DepartmentName,
-                IsCustomerService = employee.IsCustomerService
+                IsCustomerService = employee.IsCustomerService,
+                Area = employee.Area,
             };
         }
 

@@ -78,5 +78,16 @@ namespace Fx.Amiya.Dto.AmiyaEmployee
         /// 潜在新客提成
         /// </summary>
         public decimal? PotentialNewCustomerCommission { get; set; }
+
+        /// <summary>
+        /// 地区
+        /// </summary>
+        public int Area { get; set; }
+
+        /// <summary>
+        /// 地区文本
+        /// </summary>
+        public string AreaText { get; set; }
+
     }
 }

@@ -97,7 +97,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await shoppingCartRegistrationService.GetListWithPageAsync(startDate, endDate, LiveAnchorId, isCreateOrder, createBy, isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, pageNum, pageSize, minPrice, maxPrice, assignEmpId, startRefundTime, endRefundTime, startBadReviewTime, endBadReviewTime, ShoppingCartRegistrationCustomerType, emergencyLevel, isBadReview, baseLiveAnchorId, source, belongChannel, belongCompany, isRibuluoLiving, affiliatedPerson);
+                int empArea = Convert.ToInt32(employee.Area);
+                var q = await shoppingCartRegistrationService.GetListWithPageAsync(startDate, endDate, LiveAnchorId, isCreateOrder, createBy, isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, pageNum, pageSize, empArea, minPrice, maxPrice, assignEmpId, startRefundTime, endRefundTime, startBadReviewTime, endBadReviewTime, ShoppingCartRegistrationCustomerType, emergencyLevel, isBadReview, baseLiveAnchorId, source, belongChannel, belongCompany, isRibuluoLiving, affiliatedPerson);
 
                 var shoppingCartRegistration = from d in q.List
                                                select new ShoppingCartRegistrationVo
@@ -628,7 +629,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("emergencyLevels")]
         public ResultData<List<EmergencyLevelVo>> GetEmergencyLevel()
         {
-            var emergencyLevel = from d in shoppingCartRegistrationService.GetEmergencyLevelList()
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeArea = Convert.ToInt32(employee.Area);
+
+            var emergencyLevel = from d in shoppingCartRegistrationService.GetEmergencyLevelList(employeeArea)
                                  select new EmergencyLevelVo
                                  {
                                      EmergencyLevel = d.EmergencyLevel,
@@ -644,7 +648,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("customerSourceList")]
         public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetCustomerSourceListAsync(string contentPlatFormId, int? channel)
         {
-            var nameList = shoppingCartRegistrationService.GetCustomerSourceList(contentPlatFormId, channel);
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeArea = Convert.ToInt32(employee.Area);
+            var nameList = shoppingCartRegistrationService.GetCustomerSourceList(contentPlatFormId, employeeArea, channel);
             var result = nameList.Select(e => new BaseIdAndNameVo<int>
             {
                 Id = e.Key,
@@ -660,7 +666,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("customerTypeList")]
         public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetCustomerTypeListAsync()
         {
-            var nameList = shoppingCartRegistrationService.GetCustomerTypeList();
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeArea = Convert.ToInt32(employee.Area);
+            var nameList = shoppingCartRegistrationService.GetCustomerTypeList(employeeArea);
             var result = nameList.Select(e => new BaseIdAndNameVo<int>
             {
                 Id = e.Key,
@@ -678,7 +686,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("shoppingCartTakeGoodsProductTypeList")]
         public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetShoppingCartTakeGoodsProductTypeListAsync()
         {
-            var nameList = shoppingCartRegistrationService.GetShoppingCartTakeGoodsProductTypeList();
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeArea = Convert.ToInt32(employee.Area);
+            var nameList = shoppingCartRegistrationService.GetShoppingCartTakeGoodsProductTypeList(employeeArea);
             var result = nameList.Select(e => new BaseIdAndNameVo<int>
             {
                 Id = e.Key,
@@ -694,6 +704,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("consultationTypeList")]
         public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetConsultationTypeListAsync()
         {
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeArea = Convert.ToInt32(employee.Area);
             var nameList = shoppingCartRegistrationService.GetShoppingCartConsultationTypeText();
             var result = nameList.Select(e => new BaseIdAndNameVo<int>
             {
@@ -711,7 +723,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("shoppingCartGetCustomerTypeList")]
         public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetShoppingCartGetCustomerTypeListAsync()
         {
-            var nameList = shoppingCartRegistrationService.GetShoppingCartGetCustomerTypeText();
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeArea = Convert.ToInt32(employee.Area);
+            var nameList = shoppingCartRegistrationService.GetShoppingCartGetCustomerTypeText(employeeArea);
             var result = nameList.Select(e => new BaseIdAndNameVo<int>
             {
                 Id = e.Key,
@@ -727,7 +741,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("shoppingCartGetBelongChannelList")]
         public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetBelongChannelListAsync()
         {
-            var nameList = shoppingCartRegistrationService.GetBelongDepartmentList();
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeArea = Convert.ToInt32(employee.Area);
+            var nameList = shoppingCartRegistrationService.GetBelongDepartmentList(employeeArea);
             var result = nameList.Select(e => new BaseIdAndNameVo<int>
             {
                 Id = e.Id,
@@ -797,14 +813,15 @@ namespace Fx.Amiya.Background.Api.Controllers
             if (file == null || file.Length <= 0)
                 throw new Exception("请检查文件是否存在");
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeArea = Convert.ToInt32(employee.Area);
             int employeeId = Convert.ToInt32(employee.Id);
             var liveanchorList = await liveAnchorService.GetValidAsync();
             var contentPlatformList = await contentPlatformService.GetValidListAsync();
             var liveWechatNoList = await liveAnchorWeChatInfoService.GetValidAsync();
 
-            var getCustomerTypeList = shoppingCartRegistrationService.GetShoppingCartGetCustomerTypeText();
-            var customerTypeList = shoppingCartRegistrationService.GetCustomerTypeList();
-            var importantList = shoppingCartRegistrationService.GetEmergencyLevelList();
+            var getCustomerTypeList = shoppingCartRegistrationService.GetShoppingCartGetCustomerTypeText(employeeArea);
+            var customerTypeList = shoppingCartRegistrationService.GetCustomerTypeList(employeeArea);
+            var importantList = shoppingCartRegistrationService.GetEmergencyLevelList(employeeArea);
             var employeeList = amiyaEmployeeService.GetEmployeeNameList();
             using (var stream = new MemoryStream())
             {

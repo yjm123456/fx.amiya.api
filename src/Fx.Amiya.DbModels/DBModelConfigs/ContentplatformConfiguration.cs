@@ -14,7 +14,8 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.ToTable("tbl_content_platform");
             builder.HasKey(e => e.Id);
             builder.Property(e=>e.Id).HasColumnName("id").HasColumnType("varchar(50)").IsRequired();
-            builder.Property(e=>e.ContentPlatformName).HasColumnName("content_platform_name").HasColumnType("varchar(50)").IsRequired();
+            builder.Property(e=>e.ContentPlatformName).HasColumnName("content_platform_name").HasColumnType("varchar(45)").IsRequired();
+            builder.Property(e => e.ContentPlatformEnglishName).HasColumnName("content_platform_english_name").HasColumnType("varchar(45)").IsRequired();
             builder.Property(e=>e.Valid).HasColumnName("valid").HasColumnType("bit").IsRequired();
         }
     }

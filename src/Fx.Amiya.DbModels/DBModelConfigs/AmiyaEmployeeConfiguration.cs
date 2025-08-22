@@ -35,6 +35,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.CooperateLiveanchorNewCustomerCommission).HasColumnName("cooperate_liveanchor_new_customer_commission").HasColumnType("decimal(10,2)").IsRequired();
             builder.Property(t => t.CooperateLiveanchorOldCustomerCommission).HasColumnName("cooperate_liveanchor_old_customer_commission").HasColumnType("decimal(10,2)").IsRequired();
             builder.Property(t => t.TmallOrderCommission).HasColumnName("tmall_order_commission").HasColumnType("decimal(10,2)").IsRequired();
+            builder.Property(t => t.Area).HasColumnName("area").HasColumnType("int").IsRequired();
             builder.HasOne(t => t.AmiyaPositionInfo).WithMany(t => t.AmiyaEmployeeList).HasForeignKey(t => t.AmiyaPositionId);
 
         }

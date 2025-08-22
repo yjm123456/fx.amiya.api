@@ -48,7 +48,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("validList")]
         public async Task<ResultData<List<BaseKeyAndValueVo>>> GetValidListAsync(string name)
         {
-            var contentPalteForms = from d in await _contentPalteFormService.GetListAsync(name, true)
+            var contentPalteForms = from d in await _contentPalteFormService.GetListAsync(name,0, true)
                                     select new BaseKeyAndValueVo
                                     {
                                         Id = d.Id,

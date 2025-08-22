@@ -57,21 +57,36 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             //数据组合
             CompanyMonthPerformanceVo monthPerformanceRatioDto = new CompanyMonthPerformanceVo
             {
+                TimeSchedule = groupPerformance.TimeSchedule,
+
                 SelfLiveAnchorPerformance = groupPerformance.SelfLiveAnchorPerformance,
-                SelfLiveAnchorNewCustomerPerformance = groupPerformance.SelfLiveAnchorNewCustomerPerformance,
-                SelfLiveAnchorOldCustomerPerformance=groupPerformance.SelfLiveAnchorOldCustomerPerformance,
                 SelfLiveAnchorPerformanceTarget = groupPerformance.SelfLiveAnchorPerformanceTarget,
                 SelfLiveAnchorPerformanceCompleteRate = groupPerformance.SelfLiveAnchorPerformanceCompleteRate,
                 SelfLiveAnchorPerformanceYearToYear = groupPerformance.SelfLiveAnchorPerformanceYearToYear,
                 SelfLiveAnchorPerformanceChainRatio = groupPerformance.SelfLiveAnchorPerformanceChainRatio,
+                SelfLiveAnchorNewCustomerPerformance = groupPerformance.SelfLiveAnchorNewCustomerPerformance,
+                SelfLiveAnchorNewCustomerPerformanceYearToYear = groupPerformance.SelfLiveAnchorNewCustomerPerformanceYearToYear,
+                SelfLiveAnchorNewCustomerPerformanceChainRatio = groupPerformance.SelfLiveAnchorNewCustomerPerformanceChainRatio,
+                SelfLiveAnchorNewCustomerPerformanceCompleteRate = groupPerformance.SelfLiveAnchorNewCustomerPerformanceCompleteRate,
+                SelfLiveAnchorOldCustomerPerformance = groupPerformance.SelfLiveAnchorOldCustomerPerformance,
+                SelfLiveAnchorOldCustomerPerformanceYearToYear = groupPerformance.SelfLiveAnchorOldCustomerPerformanceYearToYear,
+                SelfLiveAnchorOldCustomerPerformanceChainRatio = groupPerformance.SelfLiveAnchorOldCustomerPerformanceChainRatio,
+                SelfLiveAnchorOldCustomerPerformanceCompleteRate = groupPerformance.SelfLiveAnchorOldCustomerPerformanceCompleteRate,
+
 
                 OtherLiveAnchorPerformance = groupPerformance.OtherLiveAnchorPerformance,
-                OtherLiveAnchorNewCustomerPerformance=groupPerformance.OtherLiveAnchorNewCustomerPerformance,
-                OtherLiveAnchorOldCustomerPerformance=groupPerformance.OtherLiveAnchorOldCustomerPerformance,
                 OtherLiveAnchorPerformanceTarget = groupPerformance.OtherLiveAnchorPerformanceTarget,
                 OtherLiveAnchorPerformanceCompleteRate = groupPerformance.OtherLiveAnchorPerformanceCompleteRate,
                 OtherLiveAnchorPerformanceYearToYear = groupPerformance.OtherLiveAnchorPerformanceYearToYear,
                 OtherLiveAnchorPerformanceChainRatio = groupPerformance.OtherLiveAnchorPerformanceChainRatio,
+                OtherLiveAnchorNewCustomerPerformance = groupPerformance.OtherLiveAnchorNewCustomerPerformance,
+                OtherLiveAnchorNewCustomerPerformanceYearToYear = groupPerformance.OtherLiveAnchorNewCustomerPerformanceYearToYear,
+                OtherLiveAnchorNewCustomerPerformanceChainRatio = groupPerformance.OtherLiveAnchorNewCustomerPerformanceChainRatio,
+                OtherLiveAnchorNewCustomerPerformanceCompleteRate = groupPerformance.OtherLiveAnchorNewCustomerPerformanceCompleteRate,
+                OtherLiveAnchorOldCustomerPerformance = groupPerformance.OtherLiveAnchorOldCustomerPerformance,
+                OtherLiveAnchorOldCustomerPerformanceYearToYear = groupPerformance.OtherLiveAnchorOldCustomerPerformanceYearToYear,
+                OtherLiveAnchorOldCustomerPerformanceChainRatio = groupPerformance.OtherLiveAnchorOldCustomerPerformanceChainRatio,
+                OtherLiveAnchorOldCustomerPerformanceCompleteRate = groupPerformance.OtherLiveAnchorOldCustomerPerformanceCompleteRate,
 
                 //CommercePerformance = groupPerformance.CommercePerformance,
                 //CommercePerformanceTarget = groupPerformance.CommercePerformanceTarget,
@@ -79,22 +94,30 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 //CommercePerformanceYearToYear = groupPerformance.CommercePerformanceYearToYear,
                 //CommercePerformanceChainRatio = groupPerformance.CommercePerformanceChainRatio,
                 DoctorPerformance = groupPerformance.DoctorPerformance,
-                DoctorNewCustomerPerformance=groupPerformance.DoctorNewCustomerPerformance,
-                DoctorOldCustomerPerformance=groupPerformance.DoctorOldCustomerPerformance,
                 DoctorPerformanceTarget = groupPerformance.DoctorPerformanceTarget,
                 DoctorPerformanceCompleteRate = groupPerformance.DoctorPerformanceCompleteRate,
                 DoctorPerformanceYearToYear = groupPerformance.DoctorPerformanceYearToYear,
                 DoctorPerformanceChainRatio = groupPerformance.DoctorPerformanceChainRatio,
+                DoctorNewCustomerPerformance = groupPerformance.DoctorNewCustomerPerformance,
+                DoctorNewCustomerPerformanceYearToYear = groupPerformance.DoctorNewCustomerPerformanceYearToYear,
+                DoctorNewCustomerPerformanceChainRatio = groupPerformance.DoctorNewCustomerPerformanceChainRatio,
+                DoctorNewCustomerPerformanceCompleteRate = groupPerformance.DoctorNewCustomerPerformanceCompleteRate,
+                DoctorOldCustomerPerformance = groupPerformance.DoctorOldCustomerPerformance,
+                DoctorOldCustomerPerformanceYearToYear = groupPerformance.DoctorOldCustomerPerformanceYearToYear,
+                DoctorOldCustomerPerformanceChainRatio = groupPerformance.DoctorOldCustomerPerformanceChainRatio,
+                DoctorOldCustomerPerformanceCompleteRate = groupPerformance.DoctorOldCustomerPerformanceCompleteRate,
 
                 OtherPerformance = groupPerformance.OtherPerformance,
-                OtherNewCustomerPerformance=groupPerformance.OtherNewCustomerPerformance,
-                OtherOldCustomerPerformance=groupPerformance.OtherOldCustomerPerformance,
+                OtherNewCustomerPerformance = groupPerformance.OtherNewCustomerPerformance,
+                OtherOldCustomerPerformance = groupPerformance.OtherOldCustomerPerformance,
                 OtherPerformanceTarget = groupPerformance.OtherPerformanceTarget,
                 OtherPerformanceCompleteRate = groupPerformance.OtherPerformanceCompleteRate,
                 OtherPerformanceYearToYear = groupPerformance.OtherPerformanceYearToYear,
                 OtherPerformanceChainRatio = groupPerformance.OtherPerformanceChainRatio,
 
                 TotalPerformance = groupPerformance.TotalPerformance,
+                NewCustomerPerformance = groupPerformance.NewCustomerPerformance,
+                OldCustomerPerformance = groupPerformance.OldCustomerPerformance,
                 TotalPerformanceChainRatio = groupPerformance.TotalPerformanceChainRatio,
                 SelfLiveAnchorPerformanceRatio = groupPerformance.SelfLiveAnchorPerformanceRatio,
                 OtherLiveAnchorPerformanceRatio = groupPerformance.OtherLiveAnchorPerformanceRatio,
@@ -258,6 +281,9 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 customerPerformanceVo.DealNumRatio = x.DealNumRatio;
                 customerPerformanceVo.BuyAgainNumRatio = x.BuyAgainNumRatio;
                 customerPerformanceVo.VisitNumRatio = x.VisitNumRatio;
+                customerPerformanceVo.VisitNumHealthNumber = x.VisitNumHealthNumber;
+                customerPerformanceVo.DealNumHealthNumber = x.DealNumHealthNumber;
+                customerPerformanceVo.BuyAgainNumHealthNumber = x.BuyAgainNumHealthNumber;
                 performanceVo.Add(customerPerformanceVo);
             }
 

@@ -24,7 +24,7 @@ namespace Fx.Amiya.IService
         /// 获取省份列表
         /// </summary>
         /// <returns></returns>
-        Task<List<ContentPlatformDto>> GetListAsync(string name, bool? valid);
+        Task<List<ContentPlatformDto>> GetListAsync(string name,int area, bool? valid);
 
 
 

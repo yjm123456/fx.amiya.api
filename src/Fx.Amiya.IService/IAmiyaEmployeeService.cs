@@ -107,6 +107,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <returns></returns>
         Task<List<AmiyaEmployeeNameDto>> GetAssistantAsync();
+
         /// <summary>
         /// 跟进员工姓名获取啊美雅员工信息
         /// </summary>
@@ -123,7 +124,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<AmiyaEmployeeDto>> GetListWithPageAsync(string keyword, bool valid, int positionId, int pageNum, int pageSize);
+        Task<FxPageInfo<AmiyaEmployeeDto>> GetListWithPageAsync(string keyword, bool valid, int positionId, int? area, int pageNum, int pageSize);
 
         /// <summary>
         /// 重置密码
@@ -156,7 +157,13 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task DeleteAsync(int employeeId, int deleteBy);
 
-
+        /// <summary>
+        /// 修改地区
+        /// </summary>
+        /// <param name="area"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        Task UpdateAreaAsync(int area, int employeeId);
 
         /// <summary>
         /// 修改用户名密码
@@ -243,6 +250,12 @@ namespace Fx.Amiya.IService
         /// 获取员工名称列表
         /// </summary>
         public List<BaseIdAndNameDto<int>> GetEmployeeNameList();
+
+        /// <summary>
+        /// 获取地区枚举
+        /// </summary>
+        /// <returns></returns>
+        Task<List<BaseKeyValueDto>> GetAreaTextAsync();
 
     }
 }

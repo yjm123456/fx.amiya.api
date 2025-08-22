@@ -204,15 +204,20 @@ namespace Fx.Amiya.Service
         {
             try
             {
+                //获取登陆员工职位是否为管理员，若为管理员则查询所有顾客
+                var empInfo = await _dalAmiyaEmployee.GetAll().Where(x => x.Id == employeeId).SingleOrDefaultAsync();
+
                 var bindCustomerServiceInfo = await dalBindCustomerService.GetAll().ToListAsync();
-                //var employee = await _dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
-                bindCustomerServiceInfo = bindCustomerServiceInfo.Where(e => e.CustomerServiceId == employeeId).ToList();
-                //if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
-                //{ }
+                if (empInfo.IsCustomerService && !empInfo.AmiyaPositionInfo.IsDirector)
+                {
+                    bindCustomerServiceInfo = bindCustomerServiceInfo.Where(e => e.CustomerServiceId == employeeId).ToList();
+                }
                 MyCustomerInfoDto result = new MyCustomerInfoDto();
                 result.MyCustomerCount = bindCustomerServiceInfo.Count();
-                result.SevenDaysInsertCount = bindCustomerServiceInfo.Where(x => x.CreateDate > DateTime.Now.Date.AddDays(-7)).Count();
-                result.TodayInsertCount = bindCustomerServiceInfo.Where(x => x.CreateDate > DateTime.Now.Date && x.CreateDate <= DateTime.Now.Date.AddDays(1)).Count();
+                result.NewCustomerCount = bindCustomerServiceInfo.Where(x => x.AllOrderCount == 1 && x.AllPrice > 200).Count();
+                result.OldCustomerCount = bindCustomerServiceInfo.Where(x => x.AllOrderCount > 1 && x.AllPrice > 200).Count();
+                //result.SevenDaysInsertCount = bindCustomerServiceInfo.Where(x => x.CreateDate > DateTime.Now.Date.AddDays(-7)).Count();
+                //result.TodayInsertCount = bindCustomerServiceInfo.Where(x => x.CreateDate > DateTime.Now.Date && x.CreateDate <= DateTime.Now.Date.AddDays(1)).Count();
                 return result;
             }
             catch (Exception err)

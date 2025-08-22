@@ -1009,7 +1009,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("shoppingCartGetCustomerTypeList")]
         public async Task<ResultData<List<BaseKeyAndValueVo>>> GetShoppingCartGetCustomerTypeListAsync()
         {
-            var nameList = shoppingCartRegistrationService.GetShoppingCartGetCustomerTypeText();
+            var nameList = shoppingCartRegistrationService.GetShoppingCartGetCustomerTypeText(0);
             var result = nameList.Select(e => new BaseKeyAndValueVo
             {
                 Id = e.Key.ToString(),

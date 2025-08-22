@@ -32,15 +32,16 @@ namespace Fx.Amiya.Service
         public async Task<FxPageInfo<ContentPlatformDto>> GetListWithPageAsync(int pageNum, int pageSize)
         {
             var contentPlatform = from d in dalContentPlatform.GetAll()
-                       select new ContentPlatformDto
-                       {
-                           Id = d.Id,
-                           ContentPlatformName = d.ContentPlatformName,
-                           Valid = d.Valid,
-                       };
+                                  select new ContentPlatformDto
+                                  {
+                                      Id = d.Id,
+                                      ContentPlatformName = d.ContentPlatformName,
+                                      ContentPlatformEnglishName = d.ContentPlatformEnglishName,
+                                      Valid = d.Valid,
+                                  };
             FxPageInfo<ContentPlatformDto> cityPageInfo = new FxPageInfo<ContentPlatformDto>();
             cityPageInfo.TotalCount = await contentPlatform.CountAsync();
-            cityPageInfo.List = await contentPlatform.OrderBy(z=>z.ContentPlatformName).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+            cityPageInfo.List = await contentPlatform.OrderBy(z => z.ContentPlatformName).Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
             return cityPageInfo;
         }
 
@@ -50,7 +51,7 @@ namespace Fx.Amiya.Service
         /// 获取内容平台列表
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ContentPlatformDto>> GetListAsync(string name, bool? valid)
+        public async Task<List<ContentPlatformDto>> GetListAsync(string name, int area, bool? valid)
         {
             var citys = from d in dalContentPlatform.GetAll()
                         where (string.IsNullOrWhiteSpace(name) || d.ContentPlatformName.Contains(name))
@@ -58,7 +59,7 @@ namespace Fx.Amiya.Service
                         select new ContentPlatformDto
                         {
                             Id = d.Id,
-                            ContentPlatformName = d.ContentPlatformName,
+                            ContentPlatformName = (area == (int)Area.China ? d.ContentPlatformName : d.ContentPlatformEnglishName),
                             Valid = d.Valid
                         };
             return await citys.ToListAsync();
@@ -74,15 +75,15 @@ namespace Fx.Amiya.Service
         public async Task<List<ContentPlatformDto>> GetValidListAsync()
         {
             var contentPlatform = from d in dalContentPlatform.GetAll()
-                       where d.Valid
-                       select new ContentPlatformDto
-                       {
-                           Id = d.Id,
-                           ContentPlatformName = d.ContentPlatformName,
-                           Valid = d.Valid
-                       };
+                                  where d.Valid
+                                  select new ContentPlatformDto
+                                  {
+                                      Id = d.Id,
+                                      ContentPlatformName = d.ContentPlatformName,
+                                      Valid = d.Valid
+                                  };
 
-            return await contentPlatform.OrderBy(z=>z.ContentPlatformName).ToListAsync();
+            return await contentPlatform.OrderBy(z => z.ContentPlatformName).ToListAsync();
         }
 
 
@@ -98,11 +99,12 @@ namespace Fx.Amiya.Service
             if (cityCount > 0)
                 throw new Exception("已存在该内容平台");
 
-            Contentplatform cooperativeHospitalCity = new Contentplatform();
-            cooperativeHospitalCity.Id = Guid.NewGuid().ToString();
-            cooperativeHospitalCity.ContentPlatformName = addDto.ContentPlatformName;
-            cooperativeHospitalCity.Valid = true;
-            await dalContentPlatform.AddAsync(cooperativeHospitalCity, true);
+            Contentplatform contentplatform = new Contentplatform();
+            contentplatform.Id = Guid.NewGuid().ToString();
+            contentplatform.ContentPlatformName = addDto.ContentPlatformName;
+            contentplatform.ContentPlatformEnglishName = addDto.ContentPlatformEnglishName;
+            contentplatform.Valid = true;
+            await dalContentPlatform.AddAsync(contentplatform, true);
         }
 
 
@@ -115,22 +117,24 @@ namespace Fx.Amiya.Service
                 return new ContentPlatformDto()
                 {
                     ContentPlatformName = "",
+                    ContentPlatformEnglishName = "",
                     Id = "",
                     Valid = false
                 };
             }
 
-            ContentPlatformDto cooperativeHospitalCityDto = new ContentPlatformDto();
-            cooperativeHospitalCityDto.Id = contentPlatform.Id;
-            cooperativeHospitalCityDto.ContentPlatformName = contentPlatform.ContentPlatformName;
-            cooperativeHospitalCityDto.Valid = contentPlatform.Valid;
+            ContentPlatformDto contentPlatformDto = new ContentPlatformDto();
+            contentPlatformDto.Id = contentPlatform.Id;
+            contentPlatformDto.ContentPlatformName = contentPlatform.ContentPlatformName;
+            contentPlatformDto.ContentPlatformEnglishName = contentPlatform.ContentPlatformEnglishName;
+            contentPlatformDto.Valid = contentPlatform.Valid;
 
-            return cooperativeHospitalCityDto;
+            return contentPlatformDto;
         }
 
 
         /// <summary>
-        /// 修改合作内容平台
+        /// 修改内容平台
         /// </summary>
         /// <param name="updateDto"></param>
         /// <returns></returns>
@@ -142,6 +146,7 @@ namespace Fx.Amiya.Service
 
             var contentPlatform = await dalContentPlatform.GetAll().SingleOrDefaultAsync(e => e.Id == updateDto.Id);
             contentPlatform.ContentPlatformName = updateDto.ContentPlatformName;
+            contentPlatform.ContentPlatformEnglishName = updateDto.ContentPlatformEnglishName;
             contentPlatform.Valid = updateDto.Valid;
 
             await dalContentPlatform.UpdateAsync(contentPlatform, true);

@@ -15,7 +15,7 @@ namespace Fx.Amiya.IService
 {
     public interface IShoppingCartRegistrationService
     {
-        Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, int? createBy, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? AdmissionId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? ShoppingCartRegistrationCustomerType, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId, int? source, int? belongDepartment,int?belongCompany, bool? isRibuluoLiving, int? AffiliatedPerson);
+        Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, int? createBy, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize,int area, decimal? minPrice, decimal? maxPrice, int? AdmissionId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? ShoppingCartRegistrationCustomerType, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId, int? source, int? belongDepartment,int?belongCompany, bool? isRibuluoLiving, int? AffiliatedPerson);
         Task AddAsync(AddShoppingCartRegistrationDto addDto);
 
         Task AddListAsync(List<AddShoppingCartRegistrationDto> addDtoList);
@@ -45,23 +45,23 @@ namespace Fx.Amiya.IService
         /// 输出紧急程度列表
         /// </summary>
         /// <returns></returns>
-        List<EmergencyLevelDto> GetEmergencyLevelList();
+        List<EmergencyLevelDto> GetEmergencyLevelList(int area);
         /// <summary>
         /// 获取客户来源
         /// </summary>
         /// <returns></returns>
-        List<BaseKeyValueDto<int>> GetCustomerSourceList(string contentPlatFormId, int? channel);
+        List<BaseKeyValueDto<int>> GetCustomerSourceList(string contentPlatFormId,int area, int? channel);
 
         /// <summary>
         /// 获取客户类型列表
         /// </summary>
         /// <returns></returns>
-        List<BaseKeyValueDto<int>> GetCustomerTypeList();
+        List<BaseKeyValueDto<int>> GetCustomerTypeList(int area);
         /// <summary>
         /// 获取带货产品类型列表
         /// </summary>
         /// <returns></returns>
-        List<BaseKeyValueDto<int>> GetShoppingCartTakeGoodsProductTypeList();
+        List<BaseKeyValueDto<int>> GetShoppingCartTakeGoodsProductTypeList(int area);
         /// <summary>
         /// 获取面诊方式列表
         /// </summary>
@@ -72,12 +72,12 @@ namespace Fx.Amiya.IService
         /// 获取获客方式
         /// </summary>
         /// <returns></returns>
-        List<BaseKeyValueDto<int>> GetShoppingCartGetCustomerTypeText();
+        List<BaseKeyValueDto<int>> GetShoppingCartGetCustomerTypeText(int area);
         /// <summary>
         /// 获取归属部门
         /// </summary>
         /// <returns></returns>
-        List<BaseIdAndNameDto<int>> GetBelongDepartmentList();
+        List<BaseIdAndNameDto<int>> GetBelongDepartmentList(int area);
 
         /// <summary>
         /// 获取归属公司

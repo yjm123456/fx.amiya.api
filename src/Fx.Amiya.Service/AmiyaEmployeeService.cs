@@ -85,6 +85,7 @@ namespace Fx.Amiya.Service
                 employeeDto.ReadSelfLiveAnchorData = employee.AmiyaPositionInfo.ReadSelfLiveAnchorData;
                 employeeDto.ReadCooperateLiveAnchorData = employee.AmiyaPositionInfo.ReadCooperateLiveAnchorData;
                 employeeDto.ReadTakeGoodsData = employee.AmiyaPositionInfo.ReadTakeGoodsData;
+                employeeDto.Area = employee.Area;
                 return employeeDto;
             }
             catch (Exception ex)
@@ -127,6 +128,7 @@ namespace Fx.Amiya.Service
                 employeeDto.ReadCooperateLiveAnchorData = employee.AmiyaPositionInfo.ReadCooperateLiveAnchorData;
                 employeeDto.ReadSelfLiveAnchorData = employee.AmiyaPositionInfo.ReadSelfLiveAnchorData;
                 employeeDto.ReadTakeGoodsData = employee.AmiyaPositionInfo.ReadTakeGoodsData;
+                employeeDto.Area = employee.Area;
                 return employeeDto;
             }
             catch (Exception ex)
@@ -279,7 +281,8 @@ namespace Fx.Amiya.Service
                     CooperateLiveanchorOldCustomerCommission = addDto.CooperateLiveanchorOldCustomerCommission,
                     TmallOrderCommission = addDto.TmallOrderCommission,
                     PotentialNewCustomerCommission = addDto.PotentialNewCustomerCommission,
-                    AdministrativeInspection = addDto.AdministrativeInspection
+                    AdministrativeInspection = addDto.AdministrativeInspection,
+                    Area = addDto.Area,
                 };
 
                 await dalAmiyaEmployee.AddAsync(employee, true);
@@ -329,6 +332,7 @@ namespace Fx.Amiya.Service
                     LiveAnchorBaseName = dalLiveAnchorBaseInfo.GetAll().Where(e => e.Id == employee.LiveAnchorBaseId).FirstOrDefault()?.LiveAnchorName,
                     PotentialNewCustomerCommission = employee.PotentialNewCustomerCommission,
                     AdministrativeInspection = employee.AdministrativeInspection,
+                    Area = employee.Area,
                 };
                 if (employeeDto.IsCustomerService == true || employeeDto.PositionId == 19)
                 {
@@ -411,7 +415,7 @@ namespace Fx.Amiya.Service
                 List<AmiyaEmployeeDto> amiyaEmployeeDtos = new List<AmiyaEmployeeDto>();
                 var employeeInfo = dalAmiyaEmployee.GetAll()
                     .Include(e => e.AmiyaPositionInfo).ThenInclude(e => e.AmiyaDepartment)
-                    .Where(e => ((liveAnchorBaseId == null || liveAnchorBaseId.Count() == 0) || liveAnchorBaseId.Contains(e.LiveAnchorBaseId)) && e.Id != 128 && e.AmiyaPositionId == 4&&e.Valid==true);
+                    .Where(e => ((liveAnchorBaseId == null || liveAnchorBaseId.Count() == 0) || liveAnchorBaseId.Contains(e.LiveAnchorBaseId)) && e.Id != 128 && e.AmiyaPositionId == 4 && e.Valid == true);
 
                 if (employeeInfo == null)
                     return amiyaEmployeeDtos;
@@ -484,7 +488,7 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<FxPageInfo<AmiyaEmployeeDto>> GetListWithPageAsync(string keyword, bool valid, int positionId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<AmiyaEmployeeDto>> GetListWithPageAsync(string keyword, bool valid, int positionId, int? area, int pageNum, int pageSize)
         {
             try
             {
@@ -492,6 +496,7 @@ namespace Fx.Amiya.Service
                                 where (keyword == null || d.Name.Contains(keyword))
                                 && (d.Valid == valid)
                                 && (positionId == 0 || d.AmiyaPositionId == positionId)
+                                && (!area.HasValue || d.Area == area)
                                 select new AmiyaEmployeeDto
                                 {
                                     Id = d.Id,
@@ -506,7 +511,9 @@ namespace Fx.Amiya.Service
                                     LiveAnchorBaseId = d.LiveAnchorBaseId,
                                     OldCustomerCommission = d.OldCustomerCommission,
                                     NewCustomerCommission = d.NewCustomerCommission,
-                                    InspectionCommission = d.InspectionCommission
+                                    InspectionCommission = d.InspectionCommission,
+                                    Area = d.Area,
+                                    AreaText = ServiceClass.GetAreaText(d.Area),
                                 };
                 FxPageInfo<AmiyaEmployeeDto> employeePageInfo = new FxPageInfo<AmiyaEmployeeDto>();
                 employeePageInfo.TotalCount = await employees.CountAsync();
@@ -597,6 +604,7 @@ namespace Fx.Amiya.Service
                 employee.TmallOrderCommission = updateDto.TmallOrderCommission;
                 employee.PotentialNewCustomerCommission = updateDto.PotentialNewCustomerCommission;
                 employee.AdministrativeInspection = updateDto.AdministrativeInspection;
+                employee.Area = updateDto.Area;
                 await dalAmiyaEmployee.UpdateAsync(employee, true);
 
 
@@ -646,7 +654,26 @@ namespace Fx.Amiya.Service
 
 
 
+        /// <summary>
+        /// 修改地区
+        /// </summary>
+        /// <param name="updateDto"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        public async Task UpdateAreaAsync(int area, int employeeId)
+        {
+            try
+            {
+                var employee = await dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == employeeId);
 
+                employee.Area =area;
+                await dalAmiyaEmployee.UpdateAsync(employee, true);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message.ToString());
+            }
+        }
 
 
 
@@ -964,5 +991,26 @@ namespace Fx.Amiya.Service
                            };
             return await employee.ToListAsync();
         }
+
+
+        /// <summary>
+        /// 地区枚举
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<BaseKeyValueDto>> GetAreaTextAsync()
+        {
+            var areaTypes = Enum.GetValues(typeof(Area));
+
+            List<BaseKeyValueDto> AreaData = new List<BaseKeyValueDto>();
+            foreach (var item in areaTypes)
+            {
+                BaseKeyValueDto baseKeyValueDto = new BaseKeyValueDto();
+                baseKeyValueDto.Key = Convert.ToInt32(item).ToString();
+                baseKeyValueDto.Value = ServiceClass.GetAreaText(Convert.ToInt32(item));
+                AreaData.Add(baseKeyValueDto);
+            }
+            return AreaData;
+        }
+
     }
 }

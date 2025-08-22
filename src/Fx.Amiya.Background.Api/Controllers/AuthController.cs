@@ -88,9 +88,10 @@ namespace Fx.Amiya.Background.Api.Controllers
                     Avatar = employee.Avatar ?? "",
                     DepartmentName = employee.DepartmentName,
                     ReadDataCenter = employee.ReadDataCenter,
-                    ReadSelfLiveAnchorData=employee.ReadSelfLiveAnchorData,
+                    ReadSelfLiveAnchorData = employee.ReadSelfLiveAnchorData,
                     ReadCooperateLiveAnchorData = employee.ReadCooperateLiveAnchorData,
                     ReadTakeGoodsData = employee.ReadTakeGoodsData,
+                    Area = employee.Area,
                 };
 
                 return ResultData<AmiyaEmployeeAccountVo>.Success().AddData("token", accountVo);

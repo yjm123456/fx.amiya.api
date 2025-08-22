@@ -36,5 +36,9 @@ namespace Fx.Amiya.Background.Api.Vo.Login
         /// 读取数据中心带货板块数据
         /// </summary>
         public bool ReadTakeGoodsData { get; set; }
+        /// <summary>
+        /// 地区
+        /// </summary>
+        public int Area { get; set; }
     }
 }

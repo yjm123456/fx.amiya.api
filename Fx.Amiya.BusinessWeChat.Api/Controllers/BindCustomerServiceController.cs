@@ -82,8 +82,10 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             var customer = await bindCustomerService.GetCustomerCountByEmployeeIdAsync(employeeId);
             MyCustomerInfoVo myCustomerInfoVo = new MyCustomerInfoVo();
             myCustomerInfoVo.MyCustomerCount = customer.MyCustomerCount;
-            myCustomerInfoVo.SevenDaysInsertCount = customer.SevenDaysInsertCount;
-            myCustomerInfoVo.TodayInsertCount = customer.TodayInsertCount;
+            myCustomerInfoVo.NewCustomerCount = customer.NewCustomerCount;
+            myCustomerInfoVo.OldCustomerCount = customer.OldCustomerCount;
+            //myCustomerInfoVo.SevenDaysInsertCount = customer.SevenDaysInsertCount;
+            //myCustomerInfoVo.TodayInsertCount = customer.TodayInsertCount;
             return ResultData<MyCustomerInfoVo>.Success().AddData("myCustomer", myCustomerInfoVo);
         }
 
@@ -142,7 +144,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 UpdateBindCustomerServiceDto updateDto = new UpdateBindCustomerServiceDto();
                 updateDto.CustomerServiceId = updateVo.CustomerServiceId;
                 updateDto.EncryptPhoneList = updateVo.EncryptPhoneList;
-                updateVo.OriginalCustomerServiceIds= await bindCustomerService.UpdateAsync(updateDto, employeeId);
+                updateVo.OriginalCustomerServiceIds = await bindCustomerService.UpdateAsync(updateDto, employeeId);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -179,7 +181,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 UpdateBindCustomerServiceDto updateDto = new UpdateBindCustomerServiceDto();
                 updateDto.CustomerServiceId = updateVo.CustomerServiceId;
                 updateDto.EncryptPhoneList = updateVo.EncryptPhoneList;
-                updateVo.OriginalCustomerServiceIds= await bindCustomerService.UpdateAsync(updateDto, employeeId);
+                updateVo.OriginalCustomerServiceIds = await bindCustomerService.UpdateAsync(updateDto, employeeId);
 
                 foreach (var x in updateVo.EncryptPhoneList)
                 {
@@ -189,7 +191,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                     UpdateBelongEmpInfoOrderDto updateOrderBelongEmpIdDto = new UpdateBelongEmpInfoOrderDto();
                     updateOrderBelongEmpIdDto.OrderId = orderIdList;
                     updateOrderBelongEmpIdDto.BelongEmpId = updateVo.CustomerServiceId;
-                    updateVo.OriginalCustomerServiceIds= await _contentPlatFormOrderService.UpdateOrderBelongEmpIdAsync(updateOrderBelongEmpIdDto);
+                    updateVo.OriginalCustomerServiceIds = await _contentPlatFormOrderService.UpdateOrderBelongEmpIdAsync(updateOrderBelongEmpIdDto);
                 }
                 return ResultData.Success();
             }

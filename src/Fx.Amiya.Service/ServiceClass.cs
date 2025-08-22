@@ -343,9 +343,9 @@ namespace Fx.Amiya.Service
                 case 3:
                     typeText = "(主播)语音面诊";
                     break;
-                //case 4:
-                //    typeText = "未面诊";
-                    break;
+                    //case 4:
+                    //    typeText = "未面诊";
+                    //break;
                 case 0:
                     typeText = "其他";
                     break;
@@ -560,6 +560,7 @@ namespace Fx.Amiya.Service
             }
             return emergencyLevelText;
         }
+
 
         /// <summary>
         /// 获取订单性质文本
@@ -830,7 +831,6 @@ namespace Fx.Amiya.Service
 
         }
 
-
         /// <summary>
         /// 获取小黄车带货产品类型
         /// </summary>
@@ -863,6 +863,8 @@ namespace Fx.Amiya.Service
             return sourceText;
 
         }
+
+
 
         /// <summary>
         /// 获取带货商品类型
@@ -910,6 +912,8 @@ namespace Fx.Amiya.Service
             return sourceText;
 
         }
+
+
         /// <summary>
         /// 获取归属公司
         /// </summary>
@@ -968,6 +972,7 @@ namespace Fx.Amiya.Service
             return sourceText;
 
         }
+
 
 
         public static string GetOrderFromText(int orderFrom)
@@ -1616,6 +1621,27 @@ namespace Fx.Amiya.Service
                     break;
                 case 1:
                     statusText = "已设计";
+                    break;
+            }
+            return statusText;
+        }
+
+
+        /// <summary>
+        /// 获取地区枚举
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public static string GetAreaText(int area)
+        {
+            string statusText = "";
+            switch (area)
+            {
+                case 0:
+                    statusText = "China";
+                    break;
+                case 1:
+                    statusText = "Vietnam";
                     break;
             }
             return statusText;
@@ -2598,6 +2624,8 @@ namespace Fx.Amiya.Service
             }
             return text;
         }
+
+
         /// <summary>
         /// 直播中带货订单状态
         /// </summary>

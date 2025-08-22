@@ -77,15 +77,16 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.IsCustomerService = addVo.IsCustomerService;
                 addDto.Email = addVo.Email;
                 addDto.LiveAnchorBaseId = addVo.LiveAnchorBaseId;
-                addDto.OldCustomerCommission= addVo.OldCustomerCommission;
-                addDto.NewCustomerCommission=addVo.NewCustomerCommission;
-                addDto.InspectionCommission= addVo.InspectionCommission;
+                addDto.OldCustomerCommission = addVo.OldCustomerCommission;
+                addDto.NewCustomerCommission = addVo.NewCustomerCommission;
+                addDto.InspectionCommission = addVo.InspectionCommission;
                 addDto.AdministrativeInspectionCommission = addVo.AdministrativeInspectionCommission;
                 addDto.CooperateLiveanchorNewCustomerCommission = addVo.CooperateLiveanchorNewCustomerCommission;
                 addDto.CooperateLiveanchorOldCustomerCommission = addVo.CooperateLiveanchorOldCustomerCommission;
                 addDto.TmallOrderCommission = addVo.TmallOrderCommission;
                 addDto.PotentialNewCustomerCommission = addVo.PotentialNewCustomerCommission;
-                addDto.AdministrativeInspection=addVo.AdministrativeInspection;
+                addDto.AdministrativeInspection = addVo.AdministrativeInspection;
+                addDto.Area = addVo.Area;
                 await employeeService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -143,15 +144,16 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="keyword">搜索员工名字关键字</param>
         /// <param name="valid">是否有效</param>
         /// <param name="positionId">职位id</param>
+        /// <param name="area">地区</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<AmiyaEmployeeVo>>> GetListWithPageAsync(string keyword, bool valid, int positionId, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<AmiyaEmployeeVo>>> GetListWithPageAsync(string keyword, bool valid, int positionId, int? area, int pageNum, int pageSize)
         {
             try
             {
-                var q = await employeeService.GetListWithPageAsync(keyword, valid, positionId, pageNum, pageSize);
+                var q = await employeeService.GetListWithPageAsync(keyword, valid, positionId, area, pageNum, pageSize);
 
                 var employeeInfos = from d in q.List
                                     select new AmiyaEmployeeVo
@@ -164,10 +166,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                                         PositionId = d.PositionId,
                                         PositionName = d.PositionName,
                                         IsCustomerService = d.IsCustomerService,
-                                        LiveAnchorBaseName=d.LiveAnchorBaseName,
-                                        OldCustomerCommission=d.OldCustomerCommission,
-                                        NewCustomerCommission=d.NewCustomerCommission,
-                                        InspectionCommission=d.InspectionCommission
+                                        LiveAnchorBaseName = d.LiveAnchorBaseName,
+                                        OldCustomerCommission = d.OldCustomerCommission,
+                                        NewCustomerCommission = d.NewCustomerCommission,
+                                        InspectionCommission = d.InspectionCommission,
+                                        Area = d.Area,
+                                        AreaText = d.AreaText,
                                     };
 
                 FxPageInfo<AmiyaEmployeeVo> employeePage = new FxPageInfo<AmiyaEmployeeVo>();
@@ -206,15 +210,16 @@ namespace Fx.Amiya.Background.Api.Controllers
                     employeeVo.IsCustomerService = q.IsCustomerService;
                     employeeVo.LiveAnchorIds = q.LiveAnchorIds;
                     employeeVo.LiveAnchorBaseId = q.LiveAnchorBaseId;
-                    employeeVo.OldCustomerCommission=q.OldCustomerCommission;
-                    employeeVo.NewCustomerCommission= q.NewCustomerCommission;
-                    employeeVo.InspectionCommission=q.InspectionCommission;
+                    employeeVo.OldCustomerCommission = q.OldCustomerCommission;
+                    employeeVo.NewCustomerCommission = q.NewCustomerCommission;
+                    employeeVo.InspectionCommission = q.InspectionCommission;
                     employeeVo.AdministrativeInspectionCommission = q.AdministrativeInspectionCommission;
                     employeeVo.CooperateLiveanchorNewCustomerCommission = q.CooperateLiveanchorNewCustomerCommission;
                     employeeVo.CooperateLiveanchorOldCustomerCommission = q.CooperateLiveanchorOldCustomerCommission;
                     employeeVo.TmallOrderCommission = q.TmallOrderCommission;
                     employeeVo.PotentialNewCustomerCommission = q.PotentialNewCustomerCommission;
-                    employeeVo.AdministrativeInspection=q.AdministrativeInspection;
+                    employeeVo.AdministrativeInspection = q.AdministrativeInspection;
+                    employeeVo.Area = q.Area;
                 }
                 return ResultData<AmiyaEmployeeVo>.Success().AddData("employeeInfo", employeeVo);
             }
@@ -246,15 +251,16 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.IsCustomerService = updateVo.IsCustomerService;
                 updateDto.LiveAnchorIds = updateVo.LiveAnchorIds;
                 updateDto.LiveAnchorBaseId = updateVo.LiveAnchorBaseId;
-                updateDto.InspectionCommission=updateVo.InspectionCommission;
-                updateDto.OldCustomerCommission=updateVo.OldCustomerCommission;
-                updateDto.NewCustomerCommission=updateVo.NewCustomerCommission;
+                updateDto.InspectionCommission = updateVo.InspectionCommission;
+                updateDto.OldCustomerCommission = updateVo.OldCustomerCommission;
+                updateDto.NewCustomerCommission = updateVo.NewCustomerCommission;
                 updateDto.AdministrativeInspectionCommission = updateVo.AdministrativeInspectionCommission;
                 updateDto.CooperateLiveanchorNewCustomerCommission = updateVo.CooperateLiveanchorNewCustomerCommission;
                 updateDto.CooperateLiveanchorOldCustomerCommission = updateVo.CooperateLiveanchorOldCustomerCommission;
                 updateDto.TmallOrderCommission = updateVo.TmallOrderCommission;
                 updateDto.PotentialNewCustomerCommission = updateVo.PotentialNewCustomerCommission;
-                updateDto.AdministrativeInspection=updateVo.AdministrativeInspection;
+                updateDto.AdministrativeInspection = updateVo.AdministrativeInspection;
+                updateDto.Area = updateVo.Area;
                 await employeeService.UpdateAsync(updateDto);
                 return ResultData.Success();
             }
@@ -281,6 +287,29 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.OldPassword = updateVo.OldPassword.GetMD5String();
                 updateDto.NewPassword = updateVo.NewPassword.GetMD5String();
                 await employeeService.UpdatePasswordAsync(updateDto, employeeId);
+                return ResultData.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultData.Fail(ex.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// 修改地区
+        /// </summary>
+        /// <param name="area"></param>
+        /// <returns></returns>
+        [HttpPut("updateArea")]
+        public async Task<ResultData> UpdateAreaAsync(int area)
+        {
+            try
+            {
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(employee.Id);
+
+                await employeeService.UpdateAreaAsync(area, employeeId);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -467,7 +496,24 @@ namespace Fx.Amiya.Background.Api.Controllers
                            };
             return ResultData<List<AmiyaEmployeeNameVo>>.Success().AddData("employee", employee.ToList());
         }
-        
+
+        #region 枚举展示
+        /// <summary>
+        /// 获取地区枚举
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getAreaTypeText")]
+        public async Task<ResultData<List<BaseIdAndNameVo>>> GetConsumptionVoucherTypeListAsync()
+        {
+            var list = (await employeeService.GetAreaTextAsync()).Select(c => new BaseIdAndNameVo
+            {
+                Id = c.Key,
+                Name = c.Value
+            }).ToList();
+            return ResultData<List<BaseIdAndNameVo>>.Success().AddData("areaTypeText", list);
+        }
+
+        #endregion
 
     }
 }

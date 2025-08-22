@@ -11,6 +11,7 @@ namespace Fx.Amiya.Dto.ContentPlatform
         public string Id { get; set; }
 
         public string ContentPlatformName { get; set; }
+        public string ContentPlatformEnglishName { get; set; }
         public bool Valid { get; set; }
     }
 }

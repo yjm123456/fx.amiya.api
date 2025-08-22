@@ -11,6 +11,10 @@ namespace Fx.Amiya.Dto.ContentPlatform
         public string Id { get; set; }
 
         public string ContentPlatformName { get; set; }
+        /// <summary>
+        /// 内容平台英文名
+        /// </summary>
+        public string ContentPlatformEnglishName { get; set; }
         public bool Valid { get; set; }
     }
 }

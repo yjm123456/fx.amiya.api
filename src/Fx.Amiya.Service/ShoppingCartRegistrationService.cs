@@ -74,7 +74,7 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, int? createBy, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, decimal? minPrice, decimal? maxPrice, int? assignEmpId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? ShoppingCartRegistrationCustomerType, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId, int? source, int? belongChannel, int? belongCompany, bool? isRibuluoLiving, int? AffiliatedPerson)
+        public async Task<FxPageInfo<ShoppingCartRegistrationDto>> GetListWithPageAsync(DateTime? startDate, DateTime? endDate, int? LiveAnchorId, bool? isCreateOrder, int? createBy, bool? isSendOrder, int? employeeId, bool? isAddWechat, bool? isWriteOff, bool? isConsultation, bool? isReturnBackPrice, string keyword, string contentPlatFormId, int pageNum, int pageSize, int area, decimal? minPrice, decimal? maxPrice, int? assignEmpId, DateTime? startRefundTime, DateTime? endRefundTime, DateTime? startBadReviewTime, DateTime? endBadReviewTime, int? ShoppingCartRegistrationCustomerType, int? emergencyLevel, bool? isBadReview, string baseLiveAnchorId, int? source, int? belongChannel, int? belongCompany, bool? isRibuluoLiving, int? AffiliatedPerson)
         {
             try
             {
@@ -123,10 +123,10 @@ namespace Fx.Amiya.Service
                                                    EncryptSubPhone = string.IsNullOrEmpty(d.SubPhone) ? "" : ServiceClass.Encrypt(d.SubPhone, config.PhoneEncryptKey),
                                                    Price = d.Price,
                                                    AffiliatedPerson = d.AffiliatedPerson,
-                                                   ConsultationType = d.ConsultationType,
-                                                   ConsultationTypeText = ServiceClass.GetConsulationTypeText(d.ConsultationType),
+                                                   //ConsultationType = d.ConsultationType,
+                                                   //ConsultationTypeText = ServiceClass.GetConsulationTypeText(d.ConsultationType),
                                                    ShoppingCartRegistrationCustomerType = d.ShoppingCartRegistrationCustomerType,
-                                                   ShoppingCartRegistrationCustomerTypeText = ServiceClass.GetShoppingCartCustomerTypeText(d.ShoppingCartRegistrationCustomerType),
+                                                   ShoppingCartRegistrationCustomerTypeText = (area == (int)Area.China ? ServiceClass.GetShoppingCartCustomerTypeText(d.ShoppingCartRegistrationCustomerType) : ServiceClassEnglishVersion.GetShoppingCartCustomerTypeTextEnglish(d.ShoppingCartRegistrationCustomerType)),
                                                    IsWriteOff = d.IsWriteOff,
                                                    IsCreateOrder = d.IsCreateOrder,
                                                    IsSendOrder = d.IsSendOrder,
@@ -148,14 +148,14 @@ namespace Fx.Amiya.Service
                                                    IsBadReview = d.IsBadReview,
                                                    EmergencyLevel = d.EmergencyLevel,
                                                    Source = d.Source,
-                                                   SourceText = ServiceClass.GetTiktokCustomerSourceText(d.Source),
+                                                   SourceText = (area == (int)Area.China ? ServiceClass.GetTiktokCustomerSourceText(d.Source) : ServiceClassEnglishVersion.GetTiktokCustomerSourceTextEnglish(d.Source)),
                                                    ProductType = d.ProductType,
-                                                   ProductTypeText = ServiceClass.GetShoppingCartTakeGoodsProductTypeText(d.ProductType),
+                                                   ProductTypeText = (area == (int)Area.China ? ServiceClass.GetShoppingCartTakeGoodsProductTypeText(d.ProductType) : ServiceClassEnglishVersion.GetShoppingCartTakeGoodsProductTypeTextEnglish(d.ProductType)),
                                                    BaseLiveAnchorId = d.BaseLiveAnchorId,
                                                    GetCustomerType = d.GetCustomerType,
-                                                   GetCustomerTypeText = ServiceClass.GetShoppingCartGetCustomerTypeText(d.GetCustomerType),
+                                                   GetCustomerTypeText = (area == (int)Area.China ? ServiceClass.GetShoppingCartGetCustomerTypeText(d.GetCustomerType) : ServiceClassEnglishVersion.GetShoppingCartGetCustomerTypeTextEnglish(d.GetCustomerType)),
                                                    BelongChannel = d.BelongChannel,
-                                                   BelongChannelName = ServiceClass.BelongChannelText(d.BelongChannel),
+                                                   BelongChannelName = (area == (int)Area.China ? ServiceClass.BelongChannelText(d.BelongChannel) : ServiceClassEnglishVersion.BelongChannelTextEnglish(d.BelongChannel)),
                                                    CluePicture = d.CluePicture,
                                                    AddWechatPicture = d.AddWechatPicture,
                                                    AddWechatEmpId = d.AddWechatEmpId,
@@ -926,7 +926,7 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public List<EmergencyLevelDto> GetEmergencyLevelList()
+        public List<EmergencyLevelDto> GetEmergencyLevelList(int area)
         {
             var emergencyLevels = Enum.GetValues(typeof(EmergencyLevel));
             List<EmergencyLevelDto> emergencyLevelList = new List<EmergencyLevelDto>();
@@ -934,7 +934,14 @@ namespace Fx.Amiya.Service
             {
                 EmergencyLevelDto emergencyLevelDto = new EmergencyLevelDto();
                 emergencyLevelDto.EmergencyLevel = Convert.ToInt32(item);
-                emergencyLevelDto.EmergencyText = ServiceClass.GetShopCartRegisterEmergencyLevelText(emergencyLevelDto.EmergencyLevel);
+                if (area == (int)Area.China)
+                {
+                    emergencyLevelDto.EmergencyText = ServiceClass.GetShopCartRegisterEmergencyLevelText(emergencyLevelDto.EmergencyLevel);
+                }
+                else
+                {
+                    emergencyLevelDto.EmergencyText = ServiceClassEnglishVersion.GetShopCartRegisterEmergencyLevelTextEnglish(emergencyLevelDto.EmergencyLevel);
+                }
                 emergencyLevelList.Add(emergencyLevelDto);
             }
             return emergencyLevelList;
@@ -943,7 +950,7 @@ namespace Fx.Amiya.Service
         /// 获取客户来源列表
         /// </summary>
         /// <returns></returns>
-        public List<BaseKeyValueDto<int>> GetCustomerSourceList(string contentPlatFormId, int? channel)
+        public List<BaseKeyValueDto<int>> GetCustomerSourceList(string contentPlatFormId, int area, int? channel)
         {
             var emergencyLevels = Enum.GetValues(typeof(TiktokCustomerSource));
             List<BaseKeyValueDto<int>> emergencyLevelList = new List<BaseKeyValueDto<int>>();
@@ -1093,7 +1100,14 @@ namespace Fx.Amiya.Service
                         {
                             BaseKeyValueDto<int> emergencyLevelDto = new BaseKeyValueDto<int>();
                             emergencyLevelDto.Key = k.Key;
-                            emergencyLevelDto.Value = ServiceClass.GetTiktokCustomerSourceText(emergencyLevelDto.Key);
+                            if (area == (int)Area.China)
+                            {
+                                emergencyLevelDto.Value = ServiceClass.GetTiktokCustomerSourceText(emergencyLevelDto.Key);
+                            }
+                            else
+                            {
+                                emergencyLevelDto.Value = ServiceClassEnglishVersion.GetTiktokCustomerSourceTextEnglish(emergencyLevelDto.Key);
+                            }
                             emergencyLevelList.Add(emergencyLevelDto);
 
                         }
@@ -1108,7 +1122,7 @@ namespace Fx.Amiya.Service
         /// 获取客户类型列表
         /// </summary>
         /// <returns></returns>
-        public List<BaseKeyValueDto<int>> GetCustomerTypeList()
+        public List<BaseKeyValueDto<int>> GetCustomerTypeList(int area)
         {
             var enumResult = Enum.GetValues(typeof(ShoppingCartRegistionCustomerSource));
             List<BaseKeyValueDto<int>> result = new List<BaseKeyValueDto<int>>();
@@ -1116,7 +1130,14 @@ namespace Fx.Amiya.Service
             {
                 BaseKeyValueDto<int> keyAndValue = new BaseKeyValueDto<int>();
                 keyAndValue.Key = Convert.ToInt32(item);
-                keyAndValue.Value = ServiceClass.GetShoppingCartCustomerTypeText(keyAndValue.Key);
+                if (area == (int)Area.China)
+                {
+                    keyAndValue.Value = ServiceClass.GetShoppingCartCustomerTypeText(keyAndValue.Key);
+                }
+                else
+                {
+                    keyAndValue.Value = ServiceClassEnglishVersion.GetShoppingCartCustomerTypeTextEnglish(keyAndValue.Key);
+                }
                 result.Add(keyAndValue);
             }
             return result;
@@ -1126,7 +1147,7 @@ namespace Fx.Amiya.Service
         /// 获取带货产品类型列表
         /// </summary>
         /// <returns></returns>
-        public List<BaseKeyValueDto<int>> GetShoppingCartTakeGoodsProductTypeList()
+        public List<BaseKeyValueDto<int>> GetShoppingCartTakeGoodsProductTypeList(int area)
         {
             var emergencyLevels = Enum.GetValues(typeof(ShoppingCartProductType));
             List<BaseKeyValueDto<int>> resultList = new List<BaseKeyValueDto<int>>();
@@ -1134,7 +1155,14 @@ namespace Fx.Amiya.Service
             {
                 BaseKeyValueDto<int> resultDto = new BaseKeyValueDto<int>();
                 resultDto.Key = Convert.ToInt32(item);
-                resultDto.Value = ServiceClass.GetShoppingCartTakeGoodsProductTypeText(resultDto.Key);
+                if (area == (int)Area.China)
+                {
+                    resultDto.Value = ServiceClass.GetShoppingCartTakeGoodsProductTypeText(resultDto.Key);
+                }
+                else
+                {
+                    resultDto.Value = ServiceClassEnglishVersion.GetShoppingCartTakeGoodsProductTypeTextEnglish(resultDto.Key);
+                }
                 resultList.Add(resultDto);
             }
             return resultList;
@@ -1162,7 +1190,7 @@ namespace Fx.Amiya.Service
         /// 获取获客方式
         /// </summary>
         /// <returns></returns>
-        public List<BaseKeyValueDto<int>> GetShoppingCartGetCustomerTypeText()
+        public List<BaseKeyValueDto<int>> GetShoppingCartGetCustomerTypeText(int area)
         {
             var emergencyLevels = Enum.GetValues(typeof(ShoppingCartGetCustomerType));
             List<BaseKeyValueDto<int>> emergencyLevelList = new List<BaseKeyValueDto<int>>();
@@ -1170,7 +1198,14 @@ namespace Fx.Amiya.Service
             {
                 BaseKeyValueDto<int> emergencyLevelDto = new BaseKeyValueDto<int>();
                 emergencyLevelDto.Key = Convert.ToInt32(item);
-                emergencyLevelDto.Value = ServiceClass.GetShoppingCartGetCustomerTypeText(emergencyLevelDto.Key);
+                if (area == (int)Area.China)
+                {
+                    emergencyLevelDto.Value = ServiceClass.GetShoppingCartGetCustomerTypeText(emergencyLevelDto.Key);
+                }
+                else
+                {
+                    emergencyLevelDto.Value = ServiceClassEnglishVersion.GetShoppingCartGetCustomerTypeTextEnglish(emergencyLevelDto.Key);
+                }
                 emergencyLevelList.Add(emergencyLevelDto);
             }
             return emergencyLevelList;
@@ -1179,7 +1214,7 @@ namespace Fx.Amiya.Service
         /// 获取归属渠道列表
         /// </summary>
         /// <returns></returns>
-        public List<BaseIdAndNameDto<int>> GetBelongDepartmentList()
+        public List<BaseIdAndNameDto<int>> GetBelongDepartmentList(int area)
         {
             var belongDepartments = Enum.GetValues(typeof(BelongChannel));
             List<BaseIdAndNameDto<int>> emergencyLevelList = new List<BaseIdAndNameDto<int>>();
@@ -1187,7 +1222,14 @@ namespace Fx.Amiya.Service
             {
                 BaseIdAndNameDto<int> item = new BaseIdAndNameDto<int>();
                 item.Id = Convert.ToInt32(belong);
-                item.Name = ServiceClass.BelongChannelText(item.Id);
+                if (area == (int)Area.China)
+                {
+                    item.Name = ServiceClass.BelongChannelText(item.Id);
+                }
+                else
+                {
+                    item.Name = ServiceClassEnglishVersion.BelongChannelTextEnglish(item.Id);
+                }
                 emergencyLevelList.Add(item);
             }
             return emergencyLevelList;

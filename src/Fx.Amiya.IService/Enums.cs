@@ -78,7 +78,7 @@ namespace Fx.Amiya.IService
         /// <summary>
         /// 美妍
         /// </summary>
-        MeiYan=4,
+        MeiYan = 4,
         /// <summary>
         /// 润棠
         /// </summary>
@@ -112,6 +112,17 @@ namespace Fx.Amiya.IService
         Completed = 2
     }
 
+    public enum Area
+    {
+        /// <summary>
+        /// 中国
+        /// </summary>
+        China = 0,
+        /// <summary>
+        /// 越南
+        /// </summary>
+        Vietnam = 1,
+    }
     public enum CheckType
     {
         /// <summary>
@@ -993,7 +1004,7 @@ namespace Fx.Amiya.IService
         //一级线索
         Important = 3,
         //无效线索
-        Invalid=4,
+        Invalid = 4,
     }
     public enum RechargeStatus
     {

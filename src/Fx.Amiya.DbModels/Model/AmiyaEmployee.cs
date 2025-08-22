@@ -57,6 +57,11 @@ namespace Fx.Amiya.DbModels.Model
         public decimal TmallOrderCommission { get; set; }
 
         public string LiveAnchorBaseId { get; set; }
+
+        /// <summary>
+        /// 地区
+        /// </summary>
+        public int Area { get; set; }
         public AmiyaPositionInfo AmiyaPositionInfo { get; set; }
         public List<AmiyaPositionInfo> UpdateByAmiyaPositionInfoList { get; set; }
 

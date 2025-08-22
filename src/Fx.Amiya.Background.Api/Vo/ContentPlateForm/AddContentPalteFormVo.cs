@@ -16,6 +16,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateForm
 
         public string ContentPlatformName { get; set; }
         /// <summary>
+        /// 内容平台英文名
+        /// </summary>
+        public string ContentPlatformEnglishName { get; set; }
+        /// <summary>
         /// 是否有效
         /// </summary>
         public bool Valid { get; set; }

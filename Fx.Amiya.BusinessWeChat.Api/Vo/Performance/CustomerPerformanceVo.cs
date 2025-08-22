@@ -62,6 +62,22 @@ namespace Fx.Amiya.BusinessWeChat.Api.Vo.Performance
         public decimal? BuyAgainNumRatio { get; set; }
 
 
+        /// <summary>
+        /// 上门率健康值
+        /// </summary>
+        public decimal? VisitNumHealthNumber { get; set; }
+
+        /// <summary>
+        /// 成交率健康值
+        /// </summary>
+        public decimal? DealNumHealthNumber { get; set; }
+
+        /// <summary>
+        /// 复购率健康值
+        /// </summary>
+        public decimal? BuyAgainNumHealthNumber { get; set; }
+
+
     }
 
     /// <summary>

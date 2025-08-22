@@ -56,7 +56,7 @@
 
   <ItemGroup>
     <None Update="Dockerfile">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="Fx.Amiya.Background.Api.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

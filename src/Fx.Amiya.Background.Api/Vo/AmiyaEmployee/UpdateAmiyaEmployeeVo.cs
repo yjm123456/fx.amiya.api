@@ -96,6 +96,10 @@ namespace Fx.Amiya.Background.Api.Vo.AmiyaEmployee
         /// 天猫升单比例
         /// </summary>
         public decimal TmallOrderCommission { get; set; }
+        /// <summary>
+        /// 地区
+        /// </summary>
+        public int Area { get; set; }
 
     }
 }

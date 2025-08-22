@@ -150,3 +150,13 @@ ALTER TABLE `amiyadb`.`tbl_hospital_info`
 ADD COLUMN `remark` VARCHAR(500) NULL AFTER `hospital_type`;
 ------------------------------------余建明 2025/07/31 END--------------------------------------
 --------------------------------------------------------------------------------------------------------以上部分已更新到线上--------------------------------------
+
+
+--员工管理新增地区（默认为“0”中国区）
+ALTER TABLE `amiyadb`.`tbl_amiya_employee` 
+ADD COLUMN `area` INT NOT NULL DEFAULT 0 AFTER `administrative_inspection`;
+
+
+--平台列表新增英文名
+ALTER TABLE `amiyadb`.`tbl_content_platform` 
+ADD COLUMN `content_platform_english_name` VARCHAR(45) NULL AFTER `content_platform_name`;

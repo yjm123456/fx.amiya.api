@@ -23,9 +23,17 @@ namespace Fx.Amiya.Background.Api.Controllers
     public class ContentPlatFormController : ControllerBase
     {
         private IContentPlatformService _contentPalteFormService;
-        public ContentPlatFormController(IContentPlatformService contentPalteFormService)
+        private IHttpContextAccessor httpContextAccessor;
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="contentPalteFormService"></param>
+        /// <param name="httpContextAccessor"></param>
+        public ContentPlatFormController(IContentPlatformService contentPalteFormService,
+            IHttpContextAccessor httpContextAccessor)
         {
             _contentPalteFormService = contentPalteFormService;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
 
@@ -41,12 +49,13 @@ namespace Fx.Amiya.Background.Api.Controllers
             var q = await _contentPalteFormService.GetListWithPageAsync(pageNum, pageSize);
 
             var contentPalteForm = from d in q.List
-                       select new ContentPalteFormVo
-                       {
-                           Id = d.Id,
-                           ContentPlatformName = d.ContentPlatformName,
-                           Valid = d.Valid,
-                       };
+                                   select new ContentPalteFormVo
+                                   {
+                                       Id = d.Id,
+                                       ContentPlatformName = d.ContentPlatformName,
+                                       ContentPlatformEnglishName = d.ContentPlatformEnglishName,
+                                       Valid = d.Valid,
+                                   };
             FxPageInfo<ContentPalteFormVo> contentPalteFormPageInfo = new FxPageInfo<ContentPalteFormVo>();
             contentPalteFormPageInfo.TotalCount = q.TotalCount;
             contentPalteFormPageInfo.List = contentPalteForm;
@@ -63,13 +72,15 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("allList")]
         public async Task<ResultData<List<ContentPalteFormVo>>> GetListAsync(string name)
         {
-            var contentPalteForms = from d in await _contentPalteFormService.GetListAsync(name, null)
-                        select new ContentPalteFormVo
-                        {
-                            Id = d.Id,
-                            ContentPlatformName = d.ContentPlatformName,
-                            Valid = d.Valid
-                        };
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeArea = Convert.ToInt32(employee.Area);
+            var contentPalteForms = from d in await _contentPalteFormService.GetListAsync(name, employeeArea, null)
+                                    select new ContentPalteFormVo
+                                    {
+                                        Id = d.Id,
+                                        ContentPlatformName = d.ContentPlatformName,
+                                        Valid = d.Valid
+                                    };
             return ResultData<List<ContentPalteFormVo>>.Success().AddData("contentPalteForms", contentPalteForms.ToList());
         }
 
@@ -83,13 +94,15 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("validList")]
         public async Task<ResultData<List<ContentPalteFormVo>>> GetValidListAsync(string name)
         {
-            var contentPalteForms = from d in await _contentPalteFormService.GetListAsync(name, true)
-                        select new ContentPalteFormVo
-                        {
-                            Id = d.Id,
-                            ContentPlatformName = d.ContentPlatformName,
-                            Valid = d.Valid
-                        };
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeArea = Convert.ToInt32(employee.Area);
+            var contentPalteForms = from d in await _contentPalteFormService.GetListAsync(name, employeeArea, true)
+                                    select new ContentPalteFormVo
+                                    {
+                                        Id = d.Id,
+                                        ContentPlatformName = d.ContentPlatformName,
+                                        Valid = d.Valid
+                                    };
             return ResultData<List<ContentPalteFormVo>>.Success().AddData("contentPalteForms", contentPalteForms.ToList());
         }
 
@@ -105,6 +118,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             AddContentPlatformDto addDto = new AddContentPlatformDto();
             addDto.ContentPlatformName = addVo.ContentPlatformName;
+            addDto.ContentPlatformEnglishName = addVo.ContentPlatformEnglishName;
             await _contentPalteFormService.AddAsync(addDto);
             return ResultData.Success();
         }
@@ -120,12 +134,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
 
             var contentPalteForm = await _contentPalteFormService.GetByIdAsync(id);
-            ContentPalteFormVo cooperativeHospitalCityVo = new ContentPalteFormVo();
-            cooperativeHospitalCityVo.Id = contentPalteForm.Id;
-            cooperativeHospitalCityVo.ContentPlatformName = contentPalteForm.ContentPlatformName;
-            cooperativeHospitalCityVo.Valid = contentPalteForm.Valid;
+            ContentPalteFormVo contentPalteFormVo = new ContentPalteFormVo();
+            contentPalteFormVo.Id = contentPalteForm.Id;
+            contentPalteFormVo.ContentPlatformName = contentPalteForm.ContentPlatformName;
+            contentPalteFormVo.ContentPlatformEnglishName = contentPalteForm.ContentPlatformEnglishName;
+            contentPalteFormVo.Valid = contentPalteForm.Valid;
 
-            return ResultData<ContentPalteFormVo>.Success().AddData("contentPalteForm", cooperativeHospitalCityVo);
+            return ResultData<ContentPalteFormVo>.Success().AddData("contentPalteForm", contentPalteFormVo);
         }
 
         /// <summary>
@@ -139,6 +154,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             UpdateContentPlatformDto updateDto = new UpdateContentPlatformDto();
             updateDto.Id = updateVo.Id;
             updateDto.ContentPlatformName = updateVo.ContentPlatformName;
+            updateDto.ContentPlatformEnglishName = updateVo.ContentPlatformEnglishName;
             updateDto.Valid = updateVo.Valid;
             await _contentPalteFormService.UpdateAsync(updateDto);
             return ResultData.Success();

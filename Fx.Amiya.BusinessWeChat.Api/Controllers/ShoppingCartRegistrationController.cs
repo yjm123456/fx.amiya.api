@@ -339,7 +339,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("customerSourceList")]
         public async Task<ResultData<List<BaseKeyAndValueVo<int>>>> GetCustomerSourceListAsync(string contentPlatFormId, int? channel)
         {
-            var nameList = shoppingCartRegistrationService.GetCustomerSourceList(contentPlatFormId, channel);
+            var nameList = shoppingCartRegistrationService.GetCustomerSourceList(contentPlatFormId, 0, channel);
             var result = nameList.Select(e => new BaseKeyAndValueVo<int>
             {
                 Id = e.Key,
@@ -355,7 +355,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("customerTypeList")]
         public async Task<ResultData<List<BaseKeyAndValueVo<int>>>> GetCustomerTypeListAsync()
         {
-            var nameList = shoppingCartRegistrationService.GetCustomerTypeList();
+            var nameList = shoppingCartRegistrationService.GetCustomerTypeList(0);
             var result = nameList.Select(e => new BaseKeyAndValueVo<int>
             {
                 Id = e.Key,
@@ -371,7 +371,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("shoppingCartGetBelongChannelList")]
         public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetBelongChannelListAsync()
         {
-            var nameList = shoppingCartRegistrationService.GetBelongDepartmentList();
+            var nameList = shoppingCartRegistrationService.GetBelongDepartmentList(0);
             var result = nameList.Select(e => new BaseIdAndNameVo<int>
             {
                 Id = e.Id,
@@ -387,7 +387,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("emergencyLevels")]
         public ResultData<List<EmergencyLevelVo>> GetEmergencyLevel()
         {
-            var emergencyLevel = from d in shoppingCartRegistrationService.GetEmergencyLevelList()
+            var emergencyLevel = from d in shoppingCartRegistrationService.GetEmergencyLevelList(0)
                                  select new EmergencyLevelVo
                                  {
                                      EmergencyLevel = d.EmergencyLevel,
@@ -404,7 +404,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("shoppingCartGetCustomerTypeList")]
         public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetShoppingCartGetCustomerTypeListAsync()
         {
-            var nameList = shoppingCartRegistrationService.GetShoppingCartGetCustomerTypeText();
+            var nameList = shoppingCartRegistrationService.GetShoppingCartGetCustomerTypeText(0);
             var result = nameList.Select(e => new BaseIdAndNameVo<int>
             {
                 Id = e.Key,
@@ -420,7 +420,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("shoppingCartTakeGoodsProductTypeList")]
         public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetShoppingCartTakeGoodsProductTypeListAsync()
         {
-            var nameList = shoppingCartRegistrationService.GetShoppingCartTakeGoodsProductTypeList();
+            var nameList = shoppingCartRegistrationService.GetShoppingCartTakeGoodsProductTypeList(0);
             var result = nameList.Select(e => new BaseIdAndNameVo<int>
             {
                 Id = e.Key,

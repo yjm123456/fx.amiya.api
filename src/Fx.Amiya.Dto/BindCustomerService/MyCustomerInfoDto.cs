@@ -14,6 +14,15 @@ namespace Fx.Amiya.Dto.BindCustomerService
         public int MyCustomerCount { get; set; }
 
         /// <summary>
+        /// 新客人数
+        /// </summary>
+        public int NewCustomerCount { get; set; }
+        /// <summary>
+        /// 老客人数
+        /// </summary>
+        public int OldCustomerCount { get; set; }
+
+        /// <summary>
         /// 近期新增（七日内）
         /// </summary>
         public int SevenDaysInsertCount { get; set; }
