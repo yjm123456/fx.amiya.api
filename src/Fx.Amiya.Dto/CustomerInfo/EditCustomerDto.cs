@@ -18,5 +18,6 @@ namespace Fx.Amiya.Dto.CustomerInfo
         /// </summary>
         public string Province { get; set; }
         public string City { get; set; }
+        public int Area { get; set; }
     }
 }

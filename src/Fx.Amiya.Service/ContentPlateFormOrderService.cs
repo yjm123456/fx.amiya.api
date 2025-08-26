@@ -165,7 +165,14 @@ namespace Fx.Amiya.Service
                 //验证手机号是否有归属
                 if (string.IsNullOrEmpty(input.Phone))
                 {
-                    throw new Exception("该订单没有手机号，不能绑定客服");
+                    if (input.Area == (int)Area.China)
+                    {
+                        throw new Exception("该订单没有手机号，不能绑定客服");
+                    }
+                    else
+                    {
+                        throw new Exception("This order does not have a mobile phone number and cannot be bound to the customer service.");
+                    }
                 }
                 var bind = await _dalBindCustomerService.GetAll()
                   .Include(e => e.CustomerServiceAmiyaEmployee)
@@ -177,7 +184,14 @@ namespace Fx.Amiya.Service
                         var employee = await _dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == input.EmployeeId);
                         if (employee.IsCustomerService && !employee.AmiyaPositionInfo.IsDirector)
                         {
-                            throw new Exception("该客户已绑定给" + bind.CustomerServiceAmiyaEmployee.Name + ",请联系对应人员进行操作！");
+                            if (input.Area == (int)Area.China)
+                            {
+                                throw new Exception("该客户已绑定给" + bind.CustomerServiceAmiyaEmployee.Name + ",请联系对应人员进行操作！");
+                            }
+                            else
+                            {
+                                throw new Exception("This client has been bound to" + bind.CustomerServiceAmiyaEmployee.Name + ",Please contact the corresponding personnel for operation.");
+                            }
                         }
                     }
                     else
@@ -264,6 +278,7 @@ namespace Fx.Amiya.Service
                 order.BelongChannel = input.BelongChannel;
                 order.IsRiBuLuoLiving = input.IsRiBuLuoLiving;
                 order.OrderBelongCompany = input.BelongCompanyEnumId;
+                order.Area = input.Area;
                 await _dalContentPlatformOrder.AddAsync(order, true);
 
                 foreach (var z in input.CustomerPictures)
@@ -316,7 +331,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ContentPlatFormOrderInfoDto>> GetOrderListWithPageAsync(List<int> liveAnchorId, int? getCustomerType, string liveAnchorWechatId, DateTime? startDate, DateTime? endDate, DateTime? appointmentStartDate, DateTime? appointmentEndDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int employeeId, int? belongCompany, int orderSource, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ContentPlatFormOrderInfoDto>> GetOrderListWithPageAsync(List<int> liveAnchorId, int? getCustomerType, string liveAnchorWechatId, DateTime? startDate, DateTime? endDate, DateTime? appointmentStartDate, DateTime? appointmentEndDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int employeeId, int? belongCompany, int orderSource, int area, int pageNum, int pageSize)
         {
             try
             {
@@ -357,6 +372,7 @@ namespace Fx.Amiya.Service
                              && (liveAnchorIds.Count == 0 || liveAnchorIds.Contains(d.LiveAnchorId.Value))
                              && (string.IsNullOrWhiteSpace(liveAnchorWechatId) || d.LiveAnchorWeChatNo == liveAnchorWechatId)
                              && (string.IsNullOrEmpty(contentPlateFormId) || d.ContentPlateformId == contentPlateFormId)
+                             && (d.Area == area)
                              select d;
 
                 if (startDate != null && endDate != null)
@@ -402,16 +418,18 @@ namespace Fx.Amiya.Service
                             {
                                 Id = d.Id,
                                 OrderType = d.OrderType,
-                                OrderTypeText = d.OrderType != 0 ? ServiceClass.GetContentPlateFormOrderTypeText((byte)d.OrderType) : "",
+                                OrderTypeText = d.OrderType != 0 ? (area == (int)Area.China ? ServiceClass.GetContentPlateFormOrderTypeText((byte)d.OrderType) : ServiceClassEnglishVersion.GetContentPlateFormOrderTypeTextEnglish((byte)d.OrderType)) : "",
                                 ContentPlateformId = d.ContentPlateformId,
-                                ContentPlatformName = d.Contentplatform.ContentPlatformName,
+                                ContentPlatformName = (area==(int)Area.China? d.Contentplatform.ContentPlatformName: d.Contentplatform.ContentPlatformEnglishName),
                                 LiveAnchorId = d.LiveAnchorId,
                                 LiveAnchorName = d.LiveAnchor.HostAccountName,
-                                GetCustomerTypeText = ServiceClass.GetShoppingCartGetCustomerTypeText(d.GetCustomerType),
-                                ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(d.ConsulationType),
+                                GetCustomerTypeText = (area == (int)Area.China ? ServiceClass.GetShoppingCartGetCustomerTypeText(d.GetCustomerType) : ServiceClassEnglishVersion.GetShoppingCartGetCustomerTypeTextEnglish(d.GetCustomerType)),
+                                ConsultationTypeText = (area == (int)Area.China ? ServiceClass.GetContentPlateFormOrderConsultationTypeText(d.ConsulationType) :
+                                ServiceClassEnglishVersion.GetContentPlateFormOrderConsultationTypeTextEnglish(d.ConsulationType)),
                                 LiveAnchorWeChatNo = d.LiveAnchorWeChatNo,
                                 CreateDate = d.CreateDate,
                                 BelongMonth = d.BelongMonth,
+                                BelongMonthText = (area == (int)Area.China ? (d.BelongMonth == 0 ? "当月" : "历史") : (d.BelongMonth == 0 ? "This month" : "History")),
                                 AddOrderPrice = d.AddOrderPrice,
                                 CustomerName = ServiceClass.GetIncompleteCustomerName(d.CustomerName),
                                 Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
@@ -428,7 +446,7 @@ namespace Fx.Amiya.Service
                                 ThumbPictureUrl = d.AmiyaGoodsDemand.ThumbPictureUrl,
                                 ConsultingContent = d.ConsultingContent,
                                 OrderStatus = d.OrderStatus,
-                                OrderStatusText = d.OrderStatus != 0 ? ServiceClass.GetContentPlateFormOrderStatusText((byte)d.OrderStatus) : "",
+                                OrderStatusText = d.OrderStatus != 0 ? (area == (int)Area.China ? ServiceClass.GetContentPlateFormOrderStatusText((byte)d.OrderStatus) : ServiceClassEnglishVersion.GetContentPlateFormOrderStatusTextEnglish((byte)d.OrderStatus)) : "",
                                 DepositAmount = d.DepositAmount,
                                 DealAmount = d.DealAmount,
                                 DealDate = d.DealDate,
@@ -441,9 +459,9 @@ namespace Fx.Amiya.Service
                                 BelongEmpId = d.BelongEmpId,
                                 UnSendReason = d.UnSendReason,
                                 OrderSource = d.OrderSource,
-                                OrderSourceText = ServiceClass.GerContentPlatFormOrderSourceText(d.OrderSource.Value),
+                                OrderSourceText = (area == (int)Area.China ? ServiceClass.GerContentPlatFormOrderSourceText(d.OrderSource.Value) : ServiceClassEnglishVersion.GerContentPlatFormOrderSourceTextEnglish(d.OrderSource.Value)),
                                 AcceptConsulting = d.AcceptConsulting,
-                                CheckStateText = d.CheckState.HasValue ? ServiceClass.GetCheckTypeText(d.CheckState.Value) : "未审核",
+                                CheckStateText = d.CheckState.HasValue ? (area == (int)Area.China ? ServiceClass.GetCheckTypeText(d.CheckState.Value) : ServiceClassEnglishVersion.GetCheckTypeTextEnglish(d.CheckState.Value)) : "",
                                 CheckState = d.CheckState,
                                 CheckDate = d.CheckDate,
                                 CheckBy = d.CheckBy,
@@ -456,7 +474,7 @@ namespace Fx.Amiya.Service
                                 ReturnBackDate = d.ReturnBackDate,
                                 IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
                                 BelongChannel = d.BelongChannel,
-                                BelongChannelText = ServiceClass.BelongChannelText(d.BelongChannel),
+                                BelongChannelText = (area == (int)Area.China ? ServiceClass.BelongChannelText(d.BelongChannel) : ServiceClassEnglishVersion.BelongChannelTextEnglish(d.BelongChannel)),
                                 ConsultingContent2 = d.ConsultingContent2,
                                 IsRiBuLuoLiving = d.IsRiBuLuoLiving,
                                 OrderBelongCompany = ServiceClass.GetBelongCompanyTypeText(d.OrderBelongCompany),
@@ -533,11 +551,12 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<UnSendContentPlatFormOrderInfoDto>> GetUnSendOrderListWithPageAsync(List<int?> liveAnchorIds, string keyword, DateTime? startDate, DateTime? endDate, int? consultationEmpId, int loginEmployeeId, int? belongCustomerid, int statusCode, string contentPlatFormId, int orderSource, int pageNum, int pageSize)
+        public async Task<FxPageInfo<UnSendContentPlatFormOrderInfoDto>> GetUnSendOrderListWithPageAsync(List<int?> liveAnchorIds, string keyword, DateTime? startDate, DateTime? endDate, int? consultationEmpId, int loginEmployeeId, int? belongCustomerid, int statusCode, string contentPlatFormId, int orderSource, int pageNum, int pageSize, int area)
         {
             var config = await GetCallCenterConfig();
 
             var orders = from o in _dalContentPlatformOrder.GetAll()
+                         where o.Area == area
                          where o.OrderStatus == Convert.ToInt16(ContentPlateFormOrderStatus.HaveOrder) || o.OrderStatus == Convert.ToInt16(ContentPlateFormOrderStatus.RepeatOrder)
                          select o;
 
@@ -598,7 +617,7 @@ namespace Fx.Amiya.Service
                               select new UnSendContentPlatFormOrderInfoDto
                               {
                                   OrderId = o.Id,
-                                  ContentPlatFormName = o.Contentplatform.ContentPlatformName,
+                                  ContentPlatFormName = (area == (int)Area.China ? o.Contentplatform.ContentPlatformName : o.Contentplatform.ContentPlatformEnglishName),
                                   LiveAnchorName = o.LiveAnchor.HostAccountName,
                                   GoodsName = o.AmiyaGoodsDemand.ProjectNname,
                                   BelongEmpId = o.BelongEmpId.HasValue ? o.BelongEmpId.Value : 0,
@@ -611,17 +630,17 @@ namespace Fx.Amiya.Service
                                   EncryptPhone = ServiceClass.Encrypt(o.Phone, config.PhoneEncryptKey),
                                   DealAmount = o.DealAmount,
                                   DepositAmount = o.DepositAmount.HasValue ? o.DepositAmount : 0,
-                                  OrderTypeText = ServiceClass.GetContentPlateFormOrderTypeText(Convert.ToByte(o.OrderType)),
-                                  OrderStatusText = ServiceClass.GetContentPlateFormOrderStatusText(Convert.ToByte(o.OrderStatus)),
+                                  OrderTypeText = (area == (int)Area.China ? ServiceClass.GetContentPlateFormOrderTypeText(Convert.ToByte(o.OrderType)) : ServiceClassEnglishVersion.GetContentPlateFormOrderTypeTextEnglish(Convert.ToByte(o.OrderType))),
+                                  OrderStatusText = (area == (int)Area.China ? ServiceClass.GetContentPlateFormOrderStatusText(Convert.ToByte(o.OrderStatus)) : ServiceClassEnglishVersion.GetContentPlateFormOrderStatusTextEnglish(Convert.ToByte(o.OrderStatus))),
                                   AppointmentHospitalId = o.AppointmentHospitalId.Value,
                                   AppointmentHospital = o.HospitalInfo.Name,
                                   AppointmentDate = o.AppointmentDate.HasValue ? o.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "未确认时间",
                                   Remark = o.Remark,
                                   ConsultationType = o.ConsulationType,
-                                  ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(o.ConsulationType),
+                                  ConsultationTypeText = (area == (int)Area.China ? ServiceClass.GetContentPlateFormOrderConsultationTypeText(o.ConsulationType) : ServiceClassEnglishVersion.GetContentPlateFormOrderConsultationTypeTextEnglish(o.ConsulationType)),
                                   LateProjectStage = o.LateProjectStage,
                                   UnSendReason = o.UnSendReason,
-                                  OrderSourceText = ServiceClass.GerContentPlatFormOrderSourceText(o.OrderSource.Value)
+                                  OrderSourceText = (area == (int)Area.China ? ServiceClass.GerContentPlatFormOrderSourceText(o.OrderSource.Value) : ServiceClassEnglishVersion.GerContentPlatFormOrderSourceTextEnglish(o.OrderSource.Value))
                               };
 
             FxPageInfo<UnSendContentPlatFormOrderInfoDto> pageInfo = new FxPageInfo<UnSendContentPlatFormOrderInfoDto>();
@@ -661,8 +680,8 @@ namespace Fx.Amiya.Service
                                             IsSupportOrder = d.IsSupportOrder,
                                             BelongEmpId = d.BelongEmpId,
                                             SupportEmpId = d.SupportEmpId,
-                                            Phone = d.Phone
-
+                                            Phone = d.Phone,
+                                            Area = d.Area
                                         };
             result = contentPlatformOrders.ToList();
             return result;
@@ -693,6 +712,7 @@ namespace Fx.Amiya.Service
                                             IsSupportOrder = d.IsSupportOrder,
                                             BelongEmpId = d.BelongEmpId,
                                             SupportEmpId = d.SupportEmpId,
+                                            Area = d.Area
 
                                         };
             result = contentPlatformOrders.ToList();
@@ -1818,6 +1838,195 @@ namespace Fx.Amiya.Service
             }
         }
 
+
+        /// <summary>
+        /// 根据编号获取要修改的内容平台订单信息
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<ContentPlateFormOrderUpdateDto> GetByOrderIdAsync(string orderId, int area)
+        {
+            var config = await _wxAppConfigService.GetWxAppCallCenterConfigAsync();
+            var order = await _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList).Include(x => x.ContentPlatformOrderDealInfoList).Where(x => x.Id == orderId).FirstOrDefaultAsync();
+            if (order == null)
+            {
+                return new ContentPlateFormOrderUpdateDto();
+            }
+            ContentPlateFormOrderUpdateDto result = new ContentPlateFormOrderUpdateDto();
+            result.Id = order.Id;
+            result.OrderType = order.OrderType;
+            result.ContentPlateFormId = order.ContentPlateformId;
+            result.LiveAnchorId = order.LiveAnchorId == null ? 0 : order.LiveAnchorId.Value;
+            if (result.LiveAnchorId != 0)
+            {
+                var empInfo = await _liveAnchorService.GetByIdAsync(result.LiveAnchorId);
+                result.LiveAnchorName = empInfo.Name;
+            }
+            result.GoodsId = order.GoodsId;
+            result.HospitalDepartmentId = order.HospitalDepartmentId;
+            result.CustomerName = order.CustomerName;
+            result.Phone = order.Phone;
+            result.EncryptPhone = ServiceClass.Encrypt(order.Phone, config.PhoneEncryptKey);
+            var bindCustomerServiceInfo = await bindCustomerServiceService.GetEmployeeDetailsByPhoneAsync(order.Phone);
+            result.UserId = bindCustomerServiceInfo.UserId;
+            result.CreateDate = order.CreateDate;
+            result.LiveAnchorBaseWechatId = order.LiveAnchorWeChatNo;
+            if (!string.IsNullOrEmpty(order.LiveAnchorWeChatNo))
+            {
+                var wechatInfo = await liveAnchorWeChatInfoService.GetByIdAsync(order.LiveAnchorWeChatNo);
+                if (wechatInfo.Id != null)
+                {
+                    result.LiveAnchorWeChatNo = wechatInfo.WeChatNo;
+                }
+
+            }
+            result.IsOldCustomer = order.IsOldCustomer;
+            result.IsAcompanying = order.IsAcompanying;
+            result.GetCustomerType = order.GetCustomerType;
+            result.GetCustomerTypeText = (area == (int)Area.China ? ServiceClass.GetShoppingCartGetCustomerTypeText(order.GetCustomerType) : ServiceClassEnglishVersion.GetShoppingCartGetCustomerTypeTextEnglish(order.GetCustomerType));
+            result.ConsultationTypeText = (area == (int)Area.China ? ServiceClass.GetContentPlateFormOrderConsultationTypeText(order.ConsulationType) : ServiceClassEnglishVersion.GetContentPlateFormOrderConsultationTypeTextEnglish(order.ConsulationType));
+            result.ConsultationType = order.ConsulationType;
+            result.CommissionRatio = order.CommissionRatio;
+            result.BelongMonth = order.BelongMonth;
+            result.AddOrderPrice = order.AddOrderPrice;
+            result.IsDoctorOrder = order.IsDoctorOrder;
+            result.AppointmentDetailDate = order.AppointmentDetailDate;
+            result.ConsultEmpId = order.ConsultEmpId;
+            if (result.ConsultEmpId != 0 && result.ConsultEmpId.HasValue)
+            {
+                var empInfo = await _amiyaEmployeeService.GetByIdAsync(result.ConsultEmpId.Value);
+                result.ConsultEmpName = empInfo.Name;
+            }
+            result.UnSendReason = order.UnSendReason;
+            result.OrderTypeText = (area == (int)Area.China ? ServiceClass.GetContentPlateFormOrderTypeText((byte)order.OrderType) : ServiceClassEnglishVersion.GetContentPlateFormOrderTypeTextEnglish((byte)order.OrderType));
+            result.UpdateDate = order.UpdateDate;
+            result.AppointmentDate = order.AppointmentDate;
+            result.AppointmentHospitalId = order.AppointmentHospitalId == null ? 0 : order.AppointmentHospitalId.Value;
+            result.DepositAmount = order.DepositAmount;
+            result.ConsultingContent = order.ConsultingContent;
+            result.Remark = order.Remark;
+            result.BelongChannel = order.BelongChannel;
+            result.BelongChannelText = (area == (int)Area.China ? ServiceClass.BelongChannelText(order.BelongChannel) : ServiceClassEnglishVersion.BelongChannelTextEnglish(order.BelongChannel));
+            result.ConsultationEmpId = order.ConsultationEmpId == null ? 0 : order.ConsultationEmpId.Value;
+            if (result.ConsultationEmpId != 0)
+            {
+                var empInfo = await _amiyaEmployeeService.GetByIdAsync(result.ConsultationEmpId);
+                result.ConsultationEmpName = empInfo.Name;
+            }
+            result.LateProjectStage = order.LateProjectStage;
+            result.DealPerformanceType = order.DealPerformanceType;
+            result.DealPerformanceTypeText = (area == (int)Area.China ? ServiceClass.GetContentPlateFormOrderDealPerformanceType(result.DealPerformanceType) : ServiceClassEnglishVersion.GetContentPlateFormOrderDealPerformanceTypeEnglish(result.DealPerformanceType));
+            result.CheckState = order.CheckState;
+            result.CheckStateText = (area == (int)Area.China ? ServiceClass.GetCheckTypeText(result.CheckState.Value) : ServiceClassEnglishVersion.GetCheckTypeTextEnglish(result.CheckState.Value));
+            result.CheckPrice = order.CheckPrice;
+            result.IsToHospital = order.IsToHospital;
+            result.ToHospitalType = order.ToHospitalType;
+            result.ToHospitalTypeText = (area == (int)Area.China ? ServiceClass.GerContentPlatFormOrderToHospitalTypeText(result.ToHospitalType) : ServiceClassEnglishVersion.GerContentPlatFormOrderToHospitalTypeTextEnglish(result.ToHospitalType));
+            result.UnDealPictureUrl = order.UnDealPictureUrl;
+            result.UnDealReason = order.UnDealReason;
+            result.DealPictureUrl = order.DealPictureUrl;
+            result.ToHospitalDate = order.ToHospitalDate;
+            result.IsReturnBackPrice = order.IsReturnBackPrice;
+            result.ConsultingContent2 = order.ConsultingContent2;
+            if (result.IsReturnBackPrice == true)
+            {
+                result.ReturnBackPrice = order.ReturnBackPrice;
+                result.ReturnBackDate = order.ReturnBackDate;
+            }
+            result.CheckBy = order.CheckBy;
+            if (result.CheckBy.HasValue)
+            {
+                var empInfo = await _amiyaEmployeeService.GetByIdAsync(result.CheckBy.Value);
+                result.CheckByName = empInfo.Name;
+                result.CheckDate = order.CheckDate;
+
+
+            }
+            result.DealDate = order.DealDate;
+            result.OrderStatus = order.OrderStatus;
+            result.OrderStatusText = (area == (int)Area.China ? ServiceClass.GetContentPlateFormOrderStatusText((byte)order.OrderStatus) : ServiceClassEnglishVersion.GetContentPlateFormOrderStatusTextEnglish((byte)order.OrderStatus));
+            result.DealAmount = order.DealAmount;
+            result.BelongEmpId = order.BelongEmpId;
+            if (result.BelongEmpId.HasValue)
+            {
+                var empInfo = await _amiyaEmployeeService.GetByIdAsync(result.BelongEmpId.Value);
+                result.BelongEmpName = empInfo.Name;
+            }
+            result.IsSupportOrder = order.IsSupportOrder;
+            result.SupportEmpId = order.SupportEmpId;
+            if (result.SupportEmpId != 0)
+            {
+                var empInfo = await _amiyaEmployeeService.GetByIdAsync(result.SupportEmpId);
+                result.SupportEmpName = empInfo.Name;
+            }
+            result.SettlePrice = order.SettlePrice;
+            result.OrderSource = order.OrderSource;
+            result.SceneConsulationName = order.SceneConsulationName;
+            result.NetWorkConsulationName = order.NetWorkConsulationName;
+            if (order.ContentPlatformOrderSendList != null)
+            {
+                var sendHospital = order.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate).FirstOrDefault();
+                if (sendHospital != null)
+                {
+                    result.SendBy = sendHospital.Sender;
+                    var hospitalInfo = await _hospitalInfoService.GetBaseByIdAsync(sendHospital.HospitalId);
+                    result.SendHospitalName = hospitalInfo.Name;
+                    var empInfo = await _amiyaEmployeeService.GetByIdAsync(result.SendBy.Value);
+                    result.SendByName = empInfo.Name;
+                    result.SendDate = sendHospital.SendDate;
+                }
+            }
+            if (order.ContentPlatformOrderDealInfoList != null)
+            {
+                var dealHospital = order.ContentPlatformOrderDealInfoList.OrderByDescending(x => x.CreateDate).FirstOrDefault();
+                if (dealHospital != null)
+                {
+                    var hospitalInfo = await _hospitalInfoService.GetBaseByIdAsync(dealHospital.LastDealHospitalId.Value);
+                    result.SendHospitaPicture = hospitalInfo.ThumbPicUrl;
+                }
+            }
+            if (result.OrderSource.HasValue)
+            {
+                result.OrderSourceText = (area == (int)Area.China ? ServiceClass.GerContentPlatFormOrderSourceText(order.OrderSource.Value) : ServiceClassEnglishVersion.GerContentPlatFormOrderSourceTextEnglish(order.OrderSource.Value));
+            }
+            if (result.AppointmentHospitalId != 0)
+            {
+                var hospitalInfo = await _hospitalInfoService.GetBaseByIdAsync(result.AppointmentHospitalId);
+                result.AppointmentHospitalName = hospitalInfo.Name;
+            }
+            result.CustomerSource = order.CustomerSource;
+            result.CustomerSourceText = (area == (int)Area.China ? ServiceClass.GetTiktokCustomerSourceText(order.CustomerSource) : ServiceClassEnglishVersion.GetTiktokCustomerSourceTextEnglish(order.CustomerSource));
+            result.CustomerType = order.CustomerType;
+            result.CustomerTypeText = (area == (int)Area.China ? ServiceClass.GetShoppingCartCustomerTypeText(order.CustomerType) : ServiceClassEnglishVersion.GetShoppingCartCustomerTypeTextEnglish(order.CustomerType));
+            var goodsInfo = await amiyaGoodsDemandService.GetByIdAsync(order.GoodsId);
+            result.GoodsName = goodsInfo.ProjectNname;
+            result.GoodsDescription = goodsInfo.Description;
+            result.ThumbPicture = goodsInfo.ThumbPictureUrl;
+            result.HospitalDepartmentName = goodsInfo.HospitalDepartmentName;
+            result.UnSendReason = order.UnSendReason;
+            result.AcceptConsulting = order.AcceptConsulting;
+            result.LastDealHospitalId = order.LastDealHospitalId;
+            result.OtherContentPlatFormOrderId = order.OtherContentPlatFormOrderId;
+            if (result.LastDealHospitalId.HasValue && result.LastDealHospitalId != 0)
+            {
+                var hospitalInfo = await _hospitalInfoService.GetBaseByIdAsync(result.LastDealHospitalId.Value);
+                result.LastDealHospitalName = hospitalInfo.Name;
+            }
+            var contentPlatFormInfo = await _contentPlatformService.GetByIdAsync(order.ContentPlateformId);
+            result.ContentPlateFormName =(area==(int)Area.China ? contentPlatFormInfo.ContentPlatformName : contentPlatFormInfo.ContentPlatformEnglishName);
+            result.IsRepeatProfundityOrder = order.IsRepeatProfundityOrder;
+            result.IsCreateBill = order.IsCreateBill;
+            result.CreateBillCompany = dalCompanyBaseInfo.GetAll().Where(e => e.Id == order.BelongCompany).SingleOrDefault()?.Name;
+            result.CustomerServiceSettlePrice = order.CustomerServiceSettlePrice;
+            var pictures = await _contentPlatFormCustomerPictureService.GetListAsync(order.Id, null);
+            result.CustomerPictures = pictures.Select(x => x.CustomerPicture).ToList();
+            result.HasDealInfo = order.ContentPlatformOrderDealInfoList.Count() > 0;
+            result.IsRiBuLuoLiving = order.IsRiBuLuoLiving;
+            result.BelongCompanyEnumId = order.OrderBelongCompany;
+            result.BelongCompanyName = ServiceClass.GetBelongCompanyTypeText(order.OrderBelongCompany);
+            return result;
+        }
+
         /// <summary>
         /// 根据编号获取要修改的内容平台订单信息
         /// </summary>
@@ -2046,7 +2255,7 @@ namespace Fx.Amiya.Service
                                 DepositAmount = d.DepositAmount,
                                 DealAmount = d.DealAmount,
                                 UnDealReason = d.UnDealReason,
-                                AppointmentDate = d.AppointmentDate.HasValue ? d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "未确认时间",
+                                AppointmentDate = d.AppointmentDate.HasValue ? d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "/",
                                 AppointmentHospitalName = d.HospitalInfo.Name,
                                 OrderStatusText = ServiceClass.GetContentPlateFormOrderStatusText((byte)d.OrderStatus),
                                 Remark = d.Remark,
@@ -2090,7 +2299,7 @@ namespace Fx.Amiya.Service
                                 DealAmount = d.DealAmount,
                                 HospitalDepartmentId = d.HospitalDepartmentId,
                                 UnDealReason = d.UnDealReason,
-                                AppointmentDate = d.AppointmentDate.HasValue ? d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "未确认时间",
+                                AppointmentDate = d.AppointmentDate.HasValue ? d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "/",
                                 AppointmentHospitalName = d.HospitalInfo.Name,
                                 OrderStatus = d.OrderStatus,
                                 OrderStatusText = ServiceClass.GetContentPlateFormOrderStatusText((byte)d.OrderStatus),
@@ -2134,7 +2343,7 @@ namespace Fx.Amiya.Service
                                 DealAmount = d.DealAmount,
                                 HospitalDepartmentId = d.HospitalDepartmentId,
                                 UnDealReason = d.UnDealReason,
-                                AppointmentDate = d.AppointmentDate.HasValue ? d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "未确认时间",
+                                AppointmentDate = d.AppointmentDate.HasValue ? d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "/",
                                 AppointmentHospitalName = d.HospitalInfo.Name,
                                 OrderStatus = d.OrderStatus,
                                 OrderStatusText = ServiceClass.GetContentPlateFormOrderStatusText((byte)d.OrderStatus),
@@ -2164,7 +2373,14 @@ namespace Fx.Amiya.Service
                 //验证手机号是否有归属
                 if (string.IsNullOrEmpty(input.Phone))
                 {
-                    throw new Exception("该订单没有手机号，不能绑定客服");
+                    if (input.EmployeeArea == (int)Area.China)
+                    {
+                        throw new Exception("该订单没有手机号，不能绑定客服");
+                    }
+                    else
+                    {
+                        throw new Exception("This order does not have a mobile phone number and cannot be bound to the customer service.");
+                    }
                 }
 
                 var order = await _dalContentPlatformOrder.GetAll().Where(x => x.Id == input.Id).SingleOrDefaultAsync();
@@ -2178,7 +2394,15 @@ namespace Fx.Amiya.Service
                     {
                         if (input.EmployeeId != order.SupportEmpId)
                         {
-                            throw new Exception("该客户已绑定给" + bind.CustomerServiceAmiyaEmployee.Name + ",请联系对应人员进行编辑！");
+                            if (input.EmployeeArea == (int)Area.China)
+                            {
+                                throw new Exception("该客户已绑定给" + bind.CustomerServiceAmiyaEmployee.Name + ",请联系对应人员进行编辑！");
+                            }
+                            else
+                            {
+                                throw new Exception("This client has been bound to" + bind.CustomerServiceAmiyaEmployee.Name + ",Please contact the corresponding personnel for editing.");
+                            }
+
                         }
                     }
                     //更新绑定客服列表bind_customer_info表的消费平台与主播微信数据
@@ -2216,7 +2440,14 @@ namespace Fx.Amiya.Service
                 }
                 if (order == null)
                 {
-                    throw new Exception("未找到该订单的相关信息！");
+                    if (input.EmployeeArea == (int)Area.China)
+                    {
+                        throw new Exception("未找到该订单的相关信息");
+                    }
+                    else
+                    {
+                        throw new Exception("No relevant information about this order was found.");
+                    }
                 }
                 order.OrderType = input.OrderType;
                 order.ContentPlateformId = input.ContentPlateFormId;
@@ -2302,7 +2533,6 @@ namespace Fx.Amiya.Service
             order.AcceptConsulting = input.HospitalConsulationEmployeeName;
             order.RepeatOrderPictureUrl = input.RepeateOrderPicture;
             await _dalContentPlatformOrder.UpdateAsync(order, true);
-
         }
 
         /// <summary>
@@ -2318,7 +2548,14 @@ namespace Fx.Amiya.Service
                 var order = await _dalContentPlatformOrder.GetAll().Where(x => x.Id == input.Id).SingleOrDefaultAsync();
                 if (order == null)
                 {
-                    throw new Exception("未找到该订单的相关信息！");
+                    if (input.EmployeeArea == (int)Area.China)
+                    {
+                        throw new Exception("未找到该订单的相关信息");
+                    }
+                    else
+                    {
+                        throw new Exception("No relevant information about this order was found.");
+                    }
                 }
                 var dealInfo = await _contentPlatFormOrderDalService.GetByOrderIdAsync(input.Id);
                 dealInfo = dealInfo.Where(x => x.IsDeal == true).ToList();
@@ -3482,7 +3719,7 @@ namespace Fx.Amiya.Service
         #endregion
 
         #region 枚举展示
-        public List<ContentPlateFormOrderTypeDto> GetOrderTypeList()
+        public List<ContentPlateFormOrderTypeDto> GetOrderTypeList(int area)
         {
             var orderTypes = Enum.GetValues(typeof(ContentPlateFormOrderType));
             List<ContentPlateFormOrderTypeDto> orderTypeList = new List<ContentPlateFormOrderTypeDto>();
@@ -3490,7 +3727,14 @@ namespace Fx.Amiya.Service
             {
                 ContentPlateFormOrderTypeDto orderType = new ContentPlateFormOrderTypeDto();
                 orderType.OrderType = Convert.ToByte(item);
-                orderType.OrderTypeText = ServiceClass.GetContentPlateFormOrderTypeText(Convert.ToByte(item));
+                if (area == (int)Area.China)
+                {
+                    orderType.OrderTypeText = ServiceClass.GetContentPlateFormOrderTypeText(Convert.ToByte(item));
+                }
+                else
+                {
+                    orderType.OrderTypeText = ServiceClassEnglishVersion.GetContentPlateFormOrderTypeTextEnglish(Convert.ToByte(item));
+                }
                 orderTypeList.Add(orderType);
             }
             return orderTypeList;
@@ -3510,7 +3754,7 @@ namespace Fx.Amiya.Service
             return orderTypeList;
         }
 
-        public List<ContentPlateFormOrderStatusDto> GetOrderStatusList()
+        public List<ContentPlateFormOrderStatusDto> GetOrderStatusList(int area)
         {
             var orderStatusResult = Enum.GetValues(typeof(ContentPlateFormOrderStatus));
             List<ContentPlateFormOrderStatusDto> orderTypeList = new List<ContentPlateFormOrderStatusDto>();
@@ -3518,13 +3762,20 @@ namespace Fx.Amiya.Service
             {
                 ContentPlateFormOrderStatusDto orderStatus = new ContentPlateFormOrderStatusDto();
                 orderStatus.OrderStatus = Convert.ToByte(item);
-                orderStatus.OrderStatusText = ServiceClass.GetContentPlateFormOrderStatusText(Convert.ToByte(item));
+                if (area == (int)Area.China)
+                {
+                    orderStatus.OrderStatusText = ServiceClass.GetContentPlateFormOrderStatusText(Convert.ToByte(item));
+                }
+                else
+                {
+                    orderStatus.OrderStatusText = ServiceClassEnglishVersion.GetContentPlateFormOrderStatusTextEnglish(Convert.ToByte(item));
+                }
                 orderTypeList.Add(orderStatus);
             }
             return orderTypeList;
         }
 
-        public List<ContentPlateFormOrderSourceDto> GetOrderSourceList()
+        public List<ContentPlateFormOrderSourceDto> GetOrderSourceList(int area)
         {
             var orderSources = Enum.GetValues(typeof(ContentPlateFormOrderSource));
             List<ContentPlateFormOrderSourceDto> orderTypeList = new List<ContentPlateFormOrderSourceDto>();
@@ -3532,13 +3783,20 @@ namespace Fx.Amiya.Service
             {
                 ContentPlateFormOrderSourceDto orderType = new ContentPlateFormOrderSourceDto();
                 orderType.OrderSource = Convert.ToByte(item);
-                orderType.OrderSourceText = ServiceClass.GerContentPlatFormOrderSourceText(Convert.ToByte(item));
+                if (area == (int)Area.China)
+                {
+                    orderType.OrderSourceText = ServiceClass.GerContentPlatFormOrderSourceText(Convert.ToByte(item));
+                }
+                else
+                {
+                    orderType.OrderSourceText = ServiceClassEnglishVersion.GerContentPlatFormOrderSourceTextEnglish(Convert.ToByte(item));
+                }
                 orderTypeList.Add(orderType);
             }
             return orderTypeList;
         }
 
-        public List<ContentPlateFormOrderTypeDto> GetOrderConsultationTypeList()
+        public List<ContentPlateFormOrderTypeDto> GetOrderConsultationTypeList(int area)
         {
             var orderTypes = Enum.GetValues(typeof(ContentPlateFormOrderConsultationType));
             List<ContentPlateFormOrderTypeDto> orderTypeList = new List<ContentPlateFormOrderTypeDto>();
@@ -3546,7 +3804,14 @@ namespace Fx.Amiya.Service
             {
                 ContentPlateFormOrderTypeDto orderType = new ContentPlateFormOrderTypeDto();
                 orderType.OrderType = Convert.ToByte(item);
-                orderType.OrderTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(Convert.ToByte(item));
+                if (area == (int)Area.China)
+                {
+                    orderType.OrderTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(Convert.ToByte(item));
+                }
+                else
+                {
+                    orderType.OrderTypeText = ServiceClassEnglishVersion.GetContentPlateFormOrderConsultationTypeTextEnglish(Convert.ToByte(item));
+                }
                 orderTypeList.Add(orderType);
             }
             return orderTypeList;
@@ -4311,7 +4576,7 @@ namespace Fx.Amiya.Service
              .Where(o => o.SendDate >= startDate && o.SendDate < endDate)
              .Where(e => e.OrderStatus != (int)ContentPlateFormOrderStatus.RepeatOrder && e.IsOldCustomer == false)
              .Where(o => string.IsNullOrEmpty(contentPlatFormId) || o.ContentPlateformId == contentPlatFormId)
-            // .Where(o => (!isEffectiveCustomerData.HasValue || (isEffectiveCustomerData.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0)))
+             // .Where(o => (!isEffectiveCustomerData.HasValue || (isEffectiveCustomerData.Value ? o.AddOrderPrice > 0 : o.AddOrderPrice <= 0)))
              .ToListAsync();
             //（todo：查询小黄车数据比对登记时间）
 

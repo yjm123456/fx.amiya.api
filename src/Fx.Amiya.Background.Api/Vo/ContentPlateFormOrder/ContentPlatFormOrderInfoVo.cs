@@ -124,6 +124,11 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 订单状态
         /// </summary>
         [Description("订单状态")]
+        public int OrderStatus { get; set; }
+        /// <summary>
+        /// 订单状态文本
+        /// </summary>
+        [Description("订单状态文本")]
         public string OrderStatusText { get; set; }
 
         /// <summary>

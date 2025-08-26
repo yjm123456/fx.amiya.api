@@ -84,6 +84,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.AppointmentDetailDate).HasColumnName("appointment_detail_date").HasColumnType("varchar(45)").IsRequired(false);
             builder.Property(t => t.IsDoctorOrder).HasColumnName("is_doctor_order").HasColumnType("bit").IsRequired();
             builder.Property(e => e.ConsultEmpId).HasColumnName("consult_emp_id").HasColumnType("int").IsRequired(false);
+            builder.Property(e => e.Area).HasColumnName("area").HasColumnType("int").IsRequired();
 
             builder.HasOne(e => e.Contentplatform).WithMany(e => e.ContentPlatformOrderList).HasForeignKey(e=>e.ContentPlateformId);
             builder.HasOne(e => e.LiveAnchor).WithMany(e => e.ContentPlatformOrderList).HasForeignKey(e=>e.LiveAnchorId);

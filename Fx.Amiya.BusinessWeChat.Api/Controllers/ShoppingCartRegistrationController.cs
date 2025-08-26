@@ -83,7 +83,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await shoppingCartRegistrationService.GetListWithPageAsync(startDate, endDate, LiveAnchorId, isCreateOrder, createBy, isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, pageNum, pageSize, minPrice, maxPrice, assignEmpId, startRefundTime, endRefundTime, startBadReviewTime, endBadReviewTime, ShoppingCartRegistrationCustomerType, emergencyLevel, isBadReview, baseLiveAnchorId, source, belongChannel,belongCompany,isRibuluoLiving,AffiliatedPerson);
+                var q = await shoppingCartRegistrationService.GetListWithPageAsync(startDate, endDate, LiveAnchorId, isCreateOrder, createBy, isSendOrder, employeeId, isAddWechat, isWriteOff, isConsultation, isReturnBackPrice, keyword, contentPlatFormId, pageNum, pageSize,(int)Area.China, minPrice, maxPrice, assignEmpId, startRefundTime, endRefundTime, startBadReviewTime, endBadReviewTime, ShoppingCartRegistrationCustomerType, emergencyLevel, isBadReview, baseLiveAnchorId, source, belongChannel,belongCompany,isRibuluoLiving,AffiliatedPerson);
 
                 var shoppingCartRegistration = from d in q.List
                                                select new ShoppingCartRegistrationVo
@@ -98,7 +98,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                                                    Remark = d.Remark,
                                                    CreateBy = d.CreateByName,
                                                    AssignEmpName = d.AssignEmpName,
-                                                   EmergencyLevelText = ServiceClass.GetShopCartRegisterEmergencyLevelText(d.EmergencyLevel),
+                                                   EmergencyLevelText = d.EmergencyLevelText,
                                                    SourceText = d.SourceText,
                                                    ShoppingCartRegistrationCustomerTypeText = d.ShoppingCartRegistrationCustomerTypeText,
                                                    GetCustomerTypeText = d.GetCustomerTypeText,
@@ -213,6 +213,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 addDto.FromTitle = addVo.FromTitle;
                 addDto.IsRepeateCreateOrder = addVo.IsRepeateCreateOrder;
                 addDto.BelongCompany = addVo.BelongCompany;
+                addDto.Area = (int)Area.China;
                 var contentPlatFormOrder = await contentPlateFormOrderService.GetOrderListByPhoneAsync(addVo.Phone);
                 var isSendOrder = contentPlatFormOrder.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder).Count();
                 if (contentPlatFormOrder.Count > 0)
@@ -339,7 +340,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("customerSourceList")]
         public async Task<ResultData<List<BaseKeyAndValueVo<int>>>> GetCustomerSourceListAsync(string contentPlatFormId, int? channel)
         {
-            var nameList = shoppingCartRegistrationService.GetCustomerSourceList(contentPlatFormId, 0, channel);
+            var nameList = shoppingCartRegistrationService.GetCustomerSourceList(contentPlatFormId, (int)Area.China, channel);
             var result = nameList.Select(e => new BaseKeyAndValueVo<int>
             {
                 Id = e.Key,
@@ -355,7 +356,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("customerTypeList")]
         public async Task<ResultData<List<BaseKeyAndValueVo<int>>>> GetCustomerTypeListAsync()
         {
-            var nameList = shoppingCartRegistrationService.GetCustomerTypeList(0);
+            var nameList = shoppingCartRegistrationService.GetCustomerTypeList((int)Area.China);
             var result = nameList.Select(e => new BaseKeyAndValueVo<int>
             {
                 Id = e.Key,
@@ -371,7 +372,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("shoppingCartGetBelongChannelList")]
         public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetBelongChannelListAsync()
         {
-            var nameList = shoppingCartRegistrationService.GetBelongDepartmentList(0);
+            var nameList = shoppingCartRegistrationService.GetBelongDepartmentList((int)Area.China);
             var result = nameList.Select(e => new BaseIdAndNameVo<int>
             {
                 Id = e.Id,
@@ -387,7 +388,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("emergencyLevels")]
         public ResultData<List<EmergencyLevelVo>> GetEmergencyLevel()
         {
-            var emergencyLevel = from d in shoppingCartRegistrationService.GetEmergencyLevelList(0)
+            var emergencyLevel = from d in shoppingCartRegistrationService.GetEmergencyLevelList((int)Area.China)
                                  select new EmergencyLevelVo
                                  {
                                      EmergencyLevel = d.EmergencyLevel,
@@ -404,7 +405,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("shoppingCartGetCustomerTypeList")]
         public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetShoppingCartGetCustomerTypeListAsync()
         {
-            var nameList = shoppingCartRegistrationService.GetShoppingCartGetCustomerTypeText(0);
+            var nameList = shoppingCartRegistrationService.GetShoppingCartGetCustomerTypeText((int)Area.China);
             var result = nameList.Select(e => new BaseIdAndNameVo<int>
             {
                 Id = e.Key,
@@ -420,7 +421,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("shoppingCartTakeGoodsProductTypeList")]
         public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetShoppingCartTakeGoodsProductTypeListAsync()
         {
-            var nameList = shoppingCartRegistrationService.GetShoppingCartTakeGoodsProductTypeList(0);
+            var nameList = shoppingCartRegistrationService.GetShoppingCartTakeGoodsProductTypeList((int)Area.China);
             var result = nameList.Select(e => new BaseIdAndNameVo<int>
             {
                 Id = e.Key,

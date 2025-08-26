@@ -208,5 +208,10 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 咨询师（卖手）id
         /// </summary>
         public int? ConsultEmpId { get; set; }
+
+        /// <summary>
+        /// 地区
+        /// </summary>
+        public int Area { get; set; }
     }
 }

@@ -126,6 +126,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 operationLog.OperationBy = Convert.ToInt32(employee.Id);
+
                 //if (employee.PositionName == "客服" || employee.PositionName == "客服管理员")
                 //{
                 //    var IsExistOrder = _tmallOrderService.IsExistPhoneAsync(addVo.Phone);
@@ -137,6 +138,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
                 //添加订单
                 ContentPlateFormOrderAddDto addDto = new ContentPlateFormOrderAddDto();
+                addDto.Area = Convert.ToInt32(employee.Area);
                 addDto.EmployeeId = addVo.BelongEmpId;
                 addDto.Id = CreateOrderIdHelper.GetNextNumber();
                 addDto.BelongMonth = addVo.BelongMonth;
@@ -179,6 +181,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.AppointmentDetailDate = addVo.AppointmentDetailDate;
                 addDto.IsDoctorOrder = addVo.IsDoctorOrder;
                 addDto.ConsultEmpId = addVo.ConsultEmpId;
+                addDto.Area = Convert.ToInt32(employee.Area);
                 await _orderService.AddContentPlateFormOrderAsync(addDto);
 
 
@@ -194,6 +197,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 editDto.WechatNumber = addVo.WechatNumber;
                 editDto.Province = addVo.Province;
                 editDto.City = addVo.City;
+                editDto.Area = Convert.ToInt32(employee.Area) ;
                 await customerService.EditAsync(editDto);
                 return ResultData.Success();
             }
@@ -249,6 +253,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
+                int empArea = Convert.ToInt32(employee.Area);
                 List<int> liveAnchorIds = new List<int>();
                 if (!string.IsNullOrEmpty(baseLiveAnchorId))
                 {
@@ -276,7 +281,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     }
                 }
                 var q = await _orderService.GetOrderListWithPageAsync(liveAnchorIds, getCustomerType, liveAnchorWechatId, startDate, endDate, appointmentStartDate, appointmentEndDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, appointmentHospital, consultationType, hospitalDepartmentId, keyword, orderStatus, contentPlateFormId, belongEmpId, employeeId, belongCompany
-                    , orderSource, pageNum, pageSize);
+                    , orderSource, empArea, pageNum, pageSize);
                 List<ContentPlatFormOrderInfoVo> contentPlatFormOrderInfoVoList = new List<ContentPlatFormOrderInfoVo>();
                 var resutList = q.List.ToList();
                 foreach (var x in resutList)
@@ -299,11 +304,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                     resultVo.Phone = x.Phone;
                     var customerBaseInfo = await customerService.GetCustomerBaseInfoByEncryptPhoneAsync(x.EncryptPhone);
                     resultVo.City = customerBaseInfo.City;
-                    resultVo.AppointmentDate = x.AppointmentDate == null ? "未预约时间" : x.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss");
+                    resultVo.AppointmentDate = x.AppointmentDate == null ? "/" : x.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss");
                     resultVo.AppointmentHospitalName = x.AppointmentHospitalName;
                     resultVo.GoodsName = x.GoodsName;
                     resultVo.ThumbPictureUrl = x.ThumbPictureUrl;
                     resultVo.ConsultingContent = x.ConsultingContent;
+                    resultVo.OrderStatus = x.OrderStatus;
                     resultVo.OrderStatusText = x.OrderStatusText;
                     resultVo.DepositAmount = x.DepositAmount;
                     resultVo.IsToHospital = x.IsToHospital;
@@ -432,7 +438,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     liveAnchorIds.Add(liveAnchorId.Value);
                 }
             }
-            var q = await _orderService.GetUnSendOrderListWithPageAsync(liveAnchorIds, keyword, startDate, endDate, consultationEmpId, (int)loginEmployeeId, employeeId, orderStatus, contentPlateFormId, orderSource, pageNum, pageSize);
+            var q = await _orderService.GetUnSendOrderListWithPageAsync(liveAnchorIds, keyword, startDate, endDate, consultationEmpId, (int)loginEmployeeId, employeeId, orderStatus, contentPlateFormId, orderSource, pageNum, pageSize,Convert.ToInt32(employee.Area));
             var unSendOrder = from d in q.List
                               select new UnContentPlateFormSendOrderInfoVo
                               {
@@ -656,7 +662,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 ContentPlatformName = d.ContentPlatformName,
                                 LiveAnchorName = d.LiveAnchorName,
                                 CreateDate = d.CreateDate,
-                                BelongMonth = d.BelongMonth == 0 ? "当月" : "次月",
+                                BelongMonth = d.BelongMonth == 0 ? "当月" : "历史",
                                 City = d.City,
                                 AddOrderPrice = d.AddOrderPrice,
                                 CustomerName = d.CustomerName,
@@ -847,7 +853,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
-            var order = await _orderService.GetByOrderIdAsync(id);
+            int empArea = Convert.ToInt32(employee.Area);
+            var order = await _orderService.GetByOrderIdAsync(id,empArea);
             var positionInfo = await amiyaPositionInfoService.GetByIdAsync(Convert.ToInt32(employee.PositionId));
             if (employeeId != order.BelongEmpId && employee.IsCustomerService == true && !positionInfo.IsDirector)
             //if (employeeId != order.BelongEmpId && employee.IsCustomerService == true)
@@ -858,7 +865,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                     var bindCustomerInfo = await bindCustomerServiceService.GetEmployeeIdByPhone(order.Phone);
                     if (bindCustomerInfo != 0 && bindCustomerInfo != employeeId)
                     {
-                        throw new Exception("该订单已归属到其他客服名下，您暂时无法操作！");
+                        if (empArea == (int)Area.China)
+                        {
+                            throw new Exception("该订单已归属到其他客服名下，您暂时无法操作！");
+                        }
+                        else
+                        {
+                            throw new Exception("This order has been assigned to another customer service representative. You are temporarily unable to operate it!");
+                        }
                     }
                 }
             }
@@ -888,6 +902,17 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderUpdateInfo.Province = customerBaseInfo.Province;
             orderUpdateInfo.City = customerBaseInfo.City;
             orderUpdateInfo.Sex = customerBaseInfo.Sex;
+            if (empArea != (int)Area.China)
+            {
+                if (orderUpdateInfo.Sex == "男")
+                {
+                    orderUpdateInfo.Sex = "Male";
+                }
+                else
+                {
+                    orderUpdateInfo.Sex = "Female";
+                }
+            }
             orderUpdateInfo.Birthday = customerBaseInfo.Birthday;
             orderUpdateInfo.Age = customerBaseInfo.Age;
             orderUpdateInfo.Occupation = customerBaseInfo.Occupation;
@@ -985,10 +1010,21 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("orderProsperity/{id}")]
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData<OrderProsperityVo>> OrderProsperityAsync(string id)
-        {                                                                               
+        {
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int empArea = Convert.ToInt32(employee.Area);
             var order = await _orderService.GetByOrderIdAsync(id);
             if (order.OrderStatus != (int)ContentPlateFormOrderStatus.OrderComplete)
-            { throw new Exception("该订单暂未成交，无法生成喜报！"); }
+            { 
+                if (empArea == (int)Area.China)
+                {
+                    throw new Exception("该订单暂未成交，无法生成喜报！");
+                }
+                else
+                {
+                    throw new Exception("This order has not been deal completed yet, so a congratulatory notice cannot be generated.");
+                }
+            }
             OrderProsperityVo orderUpdateInfo = new OrderProsperityVo();
             orderUpdateInfo.Price = order.DepositAmount.Value + order.DealAmount.Value;
             orderUpdateInfo.LiveAnchorName = order.LiveAnchorName;
@@ -1072,7 +1108,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
-
+            int empArea = Convert.ToInt32(employee.Area);
             //修改订单
             ContentPlateFormOrderUpdateDto updateDto = new ContentPlateFormOrderUpdateDto();
             updateDto.Id = updateVo.Id;
@@ -1103,7 +1139,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.AppointmentDetailDate = updateVo.AppointmentDetailDate;
             updateDto.IsDoctorOrder = updateVo.IsDoctorOrder;
             updateDto.ConsultEmpId = updateVo.ConsultEmpId;
-
+            updateDto.EmployeeArea = empArea;
             updateDto.City = updateVo.City;
             updateDto.Sex = updateVo.Sex;
             updateDto.Birthday = updateVo.Birthday;
@@ -1146,11 +1182,19 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
+            int empArea = Convert.ToInt32(employee.Area);
             if (employee.PositionId != "1")
             {
                 if (employee.PositionId != "13")
                 {
-                    throw new Exception("只有管理员与财务才可进行订单审核！");
+                    if (empArea == (int)Area.China)
+                    {
+                        throw new Exception("只有管理员与财务才可进行订单审核！");
+                    }
+                    else
+                    {
+                        throw new Exception("Only administrators and finance staff are allowed to review orders.");
+                    }
                 }
             }
             //修改订单
@@ -1168,6 +1212,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.CheckPicture = updateVo.CheckPicture;
             updateDto.ReconciliationDocumentsId = updateVo.ReconciliationDocumentsId;
             updateDto.HospitalId = updateVo.HospitalId;
+            updateDto.EmployeeArea = empArea;
             await _orderService.CheckContentPlateFormOrderAsync(updateDto);
             return ResultData.Success();
         }
@@ -1183,11 +1228,19 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
+            int empArea = Convert.ToInt32(employee.Area);
             if (employee.PositionId != "1")
             {
                 if (employee.PositionId != "13")
                 {
-                    throw new Exception("只有管理员与财务才可进行订单回款！");
+                    if (empArea == (int)Area.China)
+                    {
+                        throw new Exception("只有管理员与财务才可进行订单审核！");
+                    }
+                    else
+                    {
+                        throw new Exception("Only administrators and finance staff are allowed to review orders.");
+                    }
                 }
             }
             //修改订单
@@ -1415,6 +1468,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
+                int empArea = Convert.ToInt32(employee.Area);
                 operationLog.OperationBy = employeeId;
                 if (updateVo.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND || updateVo.ConsumptionType == (int)ConsumptionType.Refund)
                 {
@@ -1424,7 +1478,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                     }
                     else
                     {
-                        throw new Exception("只有管理员与财务方可录入退款订单，请联系对应人员操作！");
+                        if (empArea == (int)Area.China)
+                        {
+                            throw new Exception("只有管理员与财务才可进行订单审核！");
+                        }
+                        else
+                        {
+                            throw new Exception("Only administrators and finance staff are allowed to review orders.");
+                        }
                     }
                 }
 
@@ -1518,6 +1579,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
+                int empArea = Convert.ToInt32(employee.Area);
                 operationLog.OperationBy = employeeId;
                 UpdateContentPlateFormOrderFinishDto updateDto = new UpdateContentPlateFormOrderFinishDto();
                 if (updateVo.ToHospitalType == (int)ContentPlateFormOrderToHospitalType.REFUND || updateVo.ConsumptionType == (int)ConsumptionType.Refund)
@@ -1528,7 +1590,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                     }
                     else
                     {
-                        throw new Exception("只有管理员与财务方可录入退款订单，请联系对应人员操作！");
+                        if (empArea == (int)Area.China)
+                        {
+                            throw new Exception("只有管理员与财务才可进行订单审核！");
+                        }
+                        else
+                        {
+                            throw new Exception("Only administrators and finance staff are allowed to review orders.");
+                        }
                     }
                 }
                 updateDto.Id = updateVo.Id;
@@ -1571,7 +1640,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                             }
                             else
                             {
-                                throw new Exception("只有管理员与财务方可录入退款订单，请联系对应人员操作！");
+                                if (empArea == (int)Area.China)
+                                {
+                                    throw new Exception("只有管理员与财务才可进行订单审核！");
+                                }
+                                else
+                                {
+                                    throw new Exception("Only administrators and finance staff are allowed to review orders.");
+                                }
                             }
                         }
                         AddContentPlatFormOrderDealDetailsDto addContentPlatFormOrderDealDetailsDto = new AddContentPlatFormOrderDealDetailsDto();
@@ -2057,7 +2133,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public ResultData<List<ContentPlateFormOrderTypeVo>> GetOrderConsultationTypeList()
         {
-            var orderTypes = from d in _orderService.GetOrderConsultationTypeList()
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int empArea = Convert.ToInt32(employee.Area);
+            var orderTypes = from d in _orderService.GetOrderConsultationTypeList(empArea)
                              select new ContentPlateFormOrderTypeVo
                              {
                                  OrderType = d.OrderType,
@@ -2074,7 +2152,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public ResultData<List<ContentPlateFormOrderTypeVo>> GetContentPlateFormOrderTypeList()
         {
-            var orderTypes = from d in _orderService.GetOrderTypeList()
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int empArea = Convert.ToInt32(employee.Area);
+            var orderTypes = from d in _orderService.GetOrderTypeList(empArea)
                              select new ContentPlateFormOrderTypeVo
                              {
                                  OrderType = d.OrderType,
@@ -2091,7 +2171,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public ResultData<List<ContentPlateFormOrderStatusVo>> GetContentPlateFormOrderStatusList()
         {
-            var orderStatus = from d in _orderService.GetOrderStatusList()
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int empArea = Convert.ToInt32(employee.Area);
+            var orderStatus = from d in _orderService.GetOrderStatusList(empArea)
                               select new ContentPlateFormOrderStatusVo
                               {
                                   OrderStatus = d.OrderStatus,
@@ -2121,7 +2203,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("contentPlateFormOrderSourceList")]
         public ResultData<List<ContentPlateFormOrderSourceVo>> GetContentPlateFormOrderSourceList()
         {
-            var orderSources = from d in _orderService.GetOrderSourceList()
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int empArea = Convert.ToInt32(employee.Area);
+            var orderSources = from d in _orderService.GetOrderSourceList(empArea)
                                select new ContentPlateFormOrderSourceVo
                                {
                                    OrderSource = d.OrderSource,

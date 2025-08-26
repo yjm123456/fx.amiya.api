@@ -42,7 +42,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<ContentPlatFormOrderInfoDto>> GetOrderListWithPageAsync(List<int> liveAnchorId, int? getCustomerType, string liveAnchorWechatId, DateTime? startDate, DateTime? endDate, DateTime? appointmentStartDate, DateTime? appointmentEndDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int employeeId,int? belongCompany, int orderSource, int pageNum, int pageSize);
+        Task<FxPageInfo<ContentPlatFormOrderInfoDto>> GetOrderListWithPageAsync(List<int> liveAnchorId, int? getCustomerType, string liveAnchorWechatId, DateTime? startDate, DateTime? endDate, DateTime? appointmentStartDate, DateTime? appointmentEndDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int employeeId,int? belongCompany, int orderSource, int area, int pageNum, int pageSize);
 
         /// <summary>
         /// 获取内容平台已完成订单
@@ -84,7 +84,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<UnSendContentPlatFormOrderInfoDto>> GetUnSendOrderListWithPageAsync(List<int?> liveAnchorIds, string keyword, DateTime? startDate, DateTime? endDate, int? consultationEmpId, int loginEmployeeId, int? belongCustomerid, int statusCode, string contentPlatFormId, int orderSource, int pageNum, int pageSize);
+        Task<FxPageInfo<UnSendContentPlatFormOrderInfoDto>> GetUnSendOrderListWithPageAsync(List<int?> liveAnchorIds, string keyword, DateTime? startDate, DateTime? endDate, int? consultationEmpId, int loginEmployeeId, int? belongCustomerid, int statusCode, string contentPlatFormId, int orderSource, int pageNum, int pageSize, int area);
 
         /// <summary>
         /// 客服未派单报表
@@ -145,6 +145,14 @@ namespace Fx.Amiya.IService
         /// <param name="id"></param>
         /// <returns></returns>
         Task DeleteOrderAsync(string id);
+
+        /// <summary>
+        /// 根据编号和地区获取订单信息
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="area"></param>
+        /// <returns></returns>
+        Task<ContentPlateFormOrderUpdateDto> GetByOrderIdAsync(string orderId, int area);
 
         /// <summary>
         /// 根据编号获取要修改的内容平台订单信息
@@ -260,7 +268,7 @@ namespace Fx.Amiya.IService
         /// 获取订单类型
         /// </summary>
         /// <returns></returns>
-        List<ContentPlateFormOrderTypeDto> GetOrderTypeList();
+        List<ContentPlateFormOrderTypeDto> GetOrderTypeList(int area);
 
         /// <summary>
         /// 获取订单到院状态
@@ -271,7 +279,7 @@ namespace Fx.Amiya.IService
         /// 获取下单状态
         /// </summary>
         /// <returns></returns>
-        List<ContentPlateFormOrderStatusDto> GetOrderStatusList();
+        List<ContentPlateFormOrderStatusDto> GetOrderStatusList(int area);
 
         /// <summary>
         /// 获取已绑定客服的内容平台订单
@@ -291,13 +299,13 @@ namespace Fx.Amiya.IService
         /// 获取订单来源枚举数据
         /// </summary>
         /// <returns></returns>
-        List<ContentPlateFormOrderSourceDto> GetOrderSourceList();
+        List<ContentPlateFormOrderSourceDto> GetOrderSourceList(int area);
 
         /// <summary>
         /// 获取面诊状态数据
         /// </summary>
         /// <returns></returns>
-        List<ContentPlateFormOrderTypeDto> GetOrderConsultationTypeList();
+        List<ContentPlateFormOrderTypeDto> GetOrderConsultationTypeList(int area);
 
         /// <summary>
         /// 内容平台已派单数据

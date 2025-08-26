@@ -133,5 +133,7 @@ namespace Fx.Amiya.Dto.ShoppingCartRegistration
         /// </summary>
         public int? AffiliatedPerson { get; set; }
 
+        public int Area { get; set; }
+
     }
 }

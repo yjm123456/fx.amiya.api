@@ -415,5 +415,10 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 咨询师（卖手）名称
         /// </summary>
         public string ConsultEmpName { get; set; }
+
+        /// <summary>
+        /// 账户地区
+        /// </summary>
+        public int EmployeeArea { get; set; }
     }
 }

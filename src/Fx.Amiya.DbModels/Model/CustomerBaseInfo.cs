@@ -35,5 +35,7 @@ namespace Fx.Amiya.DbModels.Model
         public string City { get; set; }
 
         public string Remark { get; set; }
+
+        public int Area { get; set; }
     }
 }

@@ -12,6 +12,7 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         public int OrderType { get; set; }
         public string OrderTypeText { get; set; }
         public int BelongMonth { get; set; }
+        public string BelongMonthText { get; set; }
         public decimal AddOrderPrice { get; set; }
         public string ContentPlateformId { get; set; }
         public string ContentPlatformName { get; set; }
@@ -175,5 +176,7 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 归属公司
         /// </summary>
         public string OrderBelongCompany { get; set; }
+
+        public int Area { get; set; }
     }
 }

@@ -140,7 +140,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                    RefundDate = d.RefundDate,
                                                    IsBadReview = d.IsBadReview,
                                                    EmergencyLevel = d.EmergencyLevel,
-                                                   EmergencyLevelText = ServiceClass.GetShopCartRegisterEmergencyLevelText(d.EmergencyLevel),
+                                                   EmergencyLevelText = d.EmergencyLevelText,
                                                    Source = d.Source,
                                                    ShoppingCartRegistrationCustomerType = d.ShoppingCartRegistrationCustomerType,
                                                    ShoppingCartRegistrationCustomerTypeText = d.ShoppingCartRegistrationCustomerTypeText,
@@ -239,6 +239,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.FromTitle = addVo.FromTitle;
                 addDto.IsRepeateCreateOrder = addVo.IsRepeateCreateOrder;
                 addDto.BelongCompany = addVo.BelongCompany;
+                addDto.Area = Convert.ToInt32(employee.Area);
                 var contentPlatFormOrder = await contentPlateFormOrderService.GetOrderListByPhoneAsync(addVo.Phone);
                 var isSendOrder = contentPlatFormOrder.Where(x => x.OrderStatus != (int)ContentPlateFormOrderStatus.HaveOrder).Count();
                 if (contentPlatFormOrder.Count > 0)
@@ -345,7 +346,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var shoppingCartRegistration = await shoppingCartRegistrationService.GetByPhoneAsync(phone, employeeId);
+                var shoppingCartRegistration = await shoppingCartRegistrationService.GetByPhoneAsync(phone, employeeId, Convert.ToInt32(employee.Area));
                 ShoppingCartRegistrationVo shoppingCartRegistrationVo = new ShoppingCartRegistrationVo();
                 shoppingCartRegistrationVo.Id = shoppingCartRegistration.Id;
                 shoppingCartRegistrationVo.RecordDate = shoppingCartRegistration.RecordDate;
@@ -385,7 +386,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 shoppingCartRegistrationVo.IsReContent = shoppingCartRegistration.IsReContent;
                 shoppingCartRegistrationVo.IsBadReview = shoppingCartRegistration.IsBadReview;
                 shoppingCartRegistrationVo.EmergencyLevel = shoppingCartRegistration.EmergencyLevel;
-                shoppingCartRegistrationVo.EmergencyLevelText = ServiceClass.GetShopCartRegisterEmergencyLevelText(shoppingCartRegistration.EmergencyLevel);
+                shoppingCartRegistrationVo.EmergencyLevelText = shoppingCartRegistration.EmergencyLevelText;
                 shoppingCartRegistrationVo.Source = shoppingCartRegistration.Source;
                 shoppingCartRegistrationVo.SourceText = shoppingCartRegistration.SourceText;
                 shoppingCartRegistrationVo.ShoppingCartRegistrationCustomerType = shoppingCartRegistration.ShoppingCartRegistrationCustomerType;
@@ -481,7 +482,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.GetCustomerType = updateVo.GetCustomerType;
                 updateDto.RefundReason = updateVo.RefundReason;
                 updateDto.BadReviewDate = updateVo.BadReviewDate;
-                updateDto.AffiliatedPerson= updateVo.AffiliatedPerson;
+                updateDto.AffiliatedPerson = updateVo.AffiliatedPerson;
                 updateDto.BadReviewReason = updateVo.BadReviewReason;
                 updateDto.IsBadReview = updateVo.IsBadReview;
                 updateDto.AssignEmpId = updateVo.AssignEmpId;

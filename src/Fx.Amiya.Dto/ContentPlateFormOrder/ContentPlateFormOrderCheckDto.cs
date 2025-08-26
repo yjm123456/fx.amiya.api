@@ -68,5 +68,10 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// </summary>
         public int HospitalId { get; set; }
 
+        /// <summary>
+        /// 地区
+        /// </summary>
+        public int EmployeeArea { get; set; }
+
     }
 }

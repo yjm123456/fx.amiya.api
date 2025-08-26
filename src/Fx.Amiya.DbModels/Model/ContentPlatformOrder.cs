@@ -202,6 +202,10 @@ namespace Fx.Amiya.DbModels.Model
         /// 咨询师（卖手）id
         /// </summary>
         public int? ConsultEmpId { get; set; }
+        /// <summary>
+        /// 地区
+        /// </summary>
+        public int Area { get; set; }
 
         public Contentplatform Contentplatform { get; set; }
         public LiveAnchor LiveAnchor { get; set; }

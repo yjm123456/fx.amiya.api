@@ -37,6 +37,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.CustomerState).HasColumnName("customer_state").HasColumnType("int").IsRequired();
             builder.Property(t => t.CustomerRequirement).HasColumnName("customer_requirement").HasColumnType("varchar(100)").IsRequired(false);
             builder.Property(t => t.Remark).HasColumnName("remark").HasColumnType("varchar(5000)").IsRequired(false);
+            builder.Property(t => t.Area).HasColumnName("area").HasColumnType("int").IsRequired();
         }
     }
 }

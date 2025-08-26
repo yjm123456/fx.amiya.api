@@ -1,71 +1,4 @@
-﻿
-
-------------------------------------余建明 2024/10/15 BEGIN--------------------------------------
---小黄车登记列表新增是否为历史顾客激活，激活人选项
-ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration` 
-ADD COLUMN `is_history_customer_active` BIT(1) NOT NULL DEFAULT b'0' AFTER `is_ribuluo_living`,
-ADD COLUMN `active_emp_id` INT NULL AFTER `is_history_customer_active`;
-
---小黄车登记列表新增来源词条和客户微信号
-ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration` 
-ADD COLUMN `custoemr_wechat_no` VARCHAR(100) NULL AFTER `sub_phone`,
-ADD COLUMN `from_title` VARCHAR(400) NULL AFTER `active_emp_id`;
-------------------------------------余建明 2024/10/17 END--------------------------------------
-
-
-
-------------------------------------王健 2024/10/17 BEGIN--------------------------------------
-
---直播前月度目标添加负责人
-ALTER TABLE `tbl_liveanchor_monthly_target_before_living`
-	ADD COLUMN `owner_id` INT NULL AFTER `video_showcase_fee_complete_rate`;
-
-------------------------------------王健 2024/10/17 END--------------------------------------
-
-
-------------------------------------余建明 2024/10/21 BEGIN--------------------------------------
---助理提取薪资模块新增提成金额
-ALTER TABLE `amiyadb`.`tbl_customer_service_check_performance` 
-ADD COLUMN `performance_commission` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `delete_date`,
-ADD COLUMN `performance_commission_check` DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER `performance_commission`;
-------------------------------------余建明 2024/10/21 END--------------------------------------
-
-
-------------------------------------余建明 2024/10/28 BEGIN--------------------------------------
---助理薪资数据加入版本号
-ALTER TABLE `amiyadb`.`tbl_customer_service_compensation` 
-ADD COLUMN `verison` VARCHAR(45) NULL AFTER `special_hospital_visit_price`;
-
---将当前助理薪资默认为1.0版本
-update  amiyadb.tbl_customer_service_compensation set verison="1.0";
-------------------------------------余建明 2024/10/28 END--------------------------------------
-
---小黄车列表新增是否重复下单（针对直播中面诊卡）
-ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration` 
-ADD COLUMN `is_repeate_create_order` BIT(1) NOT NULL DEFAULT b'0' AFTER `from_title`;
-
---成交情况表加入上一条成交单id
-ALTER TABLE `amiyadb`.`tbl_content_platform_order_deal_info` 
-ADD COLUMN `last_deal_info_id` VARCHAR(50) NULL AFTER `consumption_type`;
-
---成交情况列表加入是否有效数据列
-ALTER TABLE `amiyadb`.`tbl_content_platform_order_deal_info` 
-ADD COLUMN `valid` BIT(1) NOT NULL AFTER `last_deal_info_id`;
-
-update tbl_content_platform_order_deal_info set valid=true;
-
-
---粉丝见面会详情新增是否需助理跟进
-ALTER TABLE `amiyadb`.`tbl_fans_meeting_details` 
-
-
---内容平台成交情况表新增补单时间，上一条成交创建时间
-ALTER TABLE `amiyadb`.`tbl_content_platform_order_deal_info` 
-ADD COLUMN `last_deal_info_create_date` DATETIME NULL AFTER `last_deal_info_id`,
-ADD COLUMN `replenishment_create_date` DATETIME NULL AFTER `last_deal_info_create_date`;
-ADD COLUMN `is_need_customerservice_help` BIT(1) NOT NULL AFTER `is_need_hospital_help`;
-
-------------------------------------余建明 2025/01/09 BEGIN--------------------------------------
+﻿------------------------------------余建明 2025/01/09 BEGIN--------------------------------------
 --小黄车登记列表新增归属公司
 ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration` 
 ADD COLUMN `belong_company` INT NOT NULL DEFAULT 0 AFTER `is_repeate_create_order`;
@@ -152,6 +85,7 @@ ADD COLUMN `remark` VARCHAR(500) NULL AFTER `hospital_type`;
 --------------------------------------------------------------------------------------------------------以上部分已更新到线上--------------------------------------
 
 
+------------------------------------余建明 2025/08/22 BEGIN--------------------------------------
 --员工管理新增地区（默认为“0”中国区）
 ALTER TABLE `amiyadb`.`tbl_amiya_employee` 
 ADD COLUMN `area` INT NOT NULL DEFAULT 0 AFTER `administrative_inspection`;
@@ -160,3 +94,18 @@ ADD COLUMN `area` INT NOT NULL DEFAULT 0 AFTER `administrative_inspection`;
 --平台列表新增英文名
 ALTER TABLE `amiyadb`.`tbl_content_platform` 
 ADD COLUMN `content_platform_english_name` VARCHAR(45) NULL AFTER `content_platform_name`;
+
+--内容平台订单列表新增地区属性（根据登陆账户进行确定）
+ALTER TABLE `amiyadb`.`tbl_content_platform_order` 
+ADD COLUMN `area` INT NOT NULL DEFAULT 0 AFTER `consult_emp_id`;
+
+--客户基础信息新增地区属性
+ALTER TABLE `amiyadb`.`tbl_customer_base_info` 
+ADD COLUMN `area` INT NULL DEFAULT 0 AFTER `remark`;
+
+--小黄车列表新增地区属性
+ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration` 
+ADD COLUMN `area` INT NOT NULL DEFAULT 0 AFTER `affiliated_person`;
+
+
+------------------------------------余建明 2025/08/22 END--------------------------------------

@@ -134,6 +134,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 addDto.BelongCompanyEnumId = addVo.BelongCompanyEnumId;
                 addDto.IsDoctorOrder = false;
                 addDto.AppointmentDetailDate = "0：00—12:00";
+                addDto.Area = (int)Area.China;
                 await _orderService.AddContentPlateFormOrderAsync(addDto);
 
 
@@ -195,7 +196,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// <returns></returns>
         [HttpGet("contentPlateFormOrderLlistWithPage")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderInfoVo>>> GetOrderListWithPageAsync(int? liveAnchorId, int? getCustomerType, string liveAnchorWechatId, DateTime? startDate, DateTime? endDate, DateTime? appointmentStartDate, DateTime? appointmentEndDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId,int?belongCompany, int orderSource, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<ContentPlatFormOrderInfoVo>>> GetOrderListWithPageAsync(int? liveAnchorId, int? getCustomerType, string liveAnchorWechatId, DateTime? startDate, DateTime? endDate, DateTime? appointmentStartDate, DateTime? appointmentEndDate, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? appointmentHospital, int? consultationType, string hospitalDepartmentId, string keyword, int? orderStatus, string contentPlateFormId, int? belongEmpId, int? belongCompany, int orderSource, int pageNum, int pageSize)
         {
             try
             {
@@ -206,7 +207,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 {
                     liveAnchorIds.Add(liveAnchorId.Value);
                 }
-                var q = await _orderService.GetOrderListWithPageAsync(liveAnchorIds, getCustomerType, liveAnchorWechatId, startDate, endDate, appointmentStartDate, appointmentEndDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, appointmentHospital, consultationType, hospitalDepartmentId, keyword, orderStatus, contentPlateFormId, belongEmpId, employeeId,belongCompany, orderSource, pageNum, pageSize);
+                var q = await _orderService.GetOrderListWithPageAsync(liveAnchorIds, getCustomerType, liveAnchorWechatId, startDate, endDate, appointmentStartDate, appointmentEndDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, appointmentHospital, consultationType, hospitalDepartmentId, keyword, orderStatus, contentPlateFormId, belongEmpId, employeeId, belongCompany, orderSource, (int)Area.China, pageNum, pageSize);
                 List<ContentPlatFormOrderInfoVo> contentPlatFormOrderInfoVoList = new List<ContentPlatFormOrderInfoVo>();
                 var resutList = q.List.ToList();
                 foreach (var x in resutList)
@@ -333,7 +334,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             {
                 liveAnchorIds.Add(liveAnchorId.Value);
             }
-            var q = await _orderService.GetUnSendOrderListWithPageAsync(liveAnchorIds, keyword, startDate, endDate, consultationEmpId, LoginEmployeeId, (int)employeeId, orderStatus, contentPlateFormId, orderSource, pageNum, pageSize);
+            var q = await _orderService.GetUnSendOrderListWithPageAsync(liveAnchorIds, keyword, startDate, endDate, consultationEmpId, LoginEmployeeId, (int)employeeId, orderStatus, contentPlateFormId, orderSource, pageNum, pageSize,(int)Area.China);
             var unSendOrder = from d in q.List
                               select new UnContentPlateFormSendOrderInfoVo
                               {
@@ -924,7 +925,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [FxInternalAuthorize]
         public ResultData<List<BaseKeyAndValueVo>> GetOrderConsultationTypeList()
         {
-            var orderTypes = from d in _orderService.GetOrderConsultationTypeList()
+            var orderTypes = from d in _orderService.GetOrderConsultationTypeList((int)Area.China)
                              select new BaseKeyAndValueVo
                              {
                                  Id = d.OrderType.ToString(),
@@ -941,7 +942,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("contentPlateFormOrderTypeList")]
         public ResultData<List<BaseKeyAndValueVo>> GetContentPlateFormOrderTypeList()
         {
-            var orderTypes = from d in _orderService.GetOrderTypeList()
+            var orderTypes = from d in _orderService.GetOrderTypeList((int)Area.China)
                              select new BaseKeyAndValueVo
                              {
                                  Id = d.OrderType.ToString(),
@@ -958,7 +959,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("contentPlateFormOrderStatusList")]
         public ResultData<List<BaseKeyAndValueVo>> GetContentPlateFormOrderStatusList()
         {
-            var orderStatus = from d in _orderService.GetOrderStatusList()
+            var orderStatus = from d in _orderService.GetOrderStatusList((int)Area.China)
                               select new BaseKeyAndValueVo
                               {
                                   Id = d.OrderStatus.ToString(),
@@ -976,7 +977,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("contentPlateFormOrderSourceList")]
         public ResultData<List<BaseKeyAndValueVo>> GetContentPlateFormOrderSourceList()
         {
-            var orderSources = from d in _orderService.GetOrderSourceList()
+            var orderSources = from d in _orderService.GetOrderSourceList((int)Area.China)
                                select new BaseKeyAndValueVo
                                {
                                    Id = d.OrderSource.ToString(),

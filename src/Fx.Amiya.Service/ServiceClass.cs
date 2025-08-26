@@ -308,6 +308,11 @@ namespace Fx.Amiya.Service
         }
 
         #region 内容平台订单相关枚举
+        /// <summary>
+        /// 内容平台订单类型
+        /// </summary>
+        /// <param name="appType"></param>
+        /// <returns></returns>
         public static string GetContentPlateFormOrderTypeText(byte appType)
         {
             string typeText = "";
@@ -353,6 +358,11 @@ namespace Fx.Amiya.Service
             }
             return typeText;
         }
+        /// <summary>
+        /// 内容平台订单状态
+        /// </summary>
+        /// <param name="appType"></param>
+        /// <returns></returns>
         public static string GetContentPlateFormOrderStatusText(byte appType)
         {
             string typeText = "";
@@ -506,7 +516,7 @@ namespace Fx.Amiya.Service
             return orderType;
         }
         /// <summary>
-        /// 获取抖点订单类型文本
+        /// 获取抖店订单类型文本
         /// </summary>
         /// <param name="orderType"></param>
         /// <returns></returns>

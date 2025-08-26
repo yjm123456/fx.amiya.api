@@ -107,6 +107,7 @@ namespace Fx.Amiya.Service
                                                && (!belongChannel.HasValue || d.BelongChannel == belongChannel.Value)
                                                && (!belongCompany.HasValue || d.BelongCompany == belongCompany.Value)
                                                && (!isRibuluoLiving.HasValue || d.IsRiBuLuoLiving == isRibuluoLiving.Value)
+                                               && (d.Area == area)
                                                select new ShoppingCartRegistrationDto
                                                {
                                                    Id = d.Id,
@@ -147,6 +148,7 @@ namespace Fx.Amiya.Service
                                                    BadReviewReason = d.BadReviewReason,
                                                    IsBadReview = d.IsBadReview,
                                                    EmergencyLevel = d.EmergencyLevel,
+                                                   EmergencyLevelText = (area == (int)Area.China ? ServiceClass.GetShopCartRegisterEmergencyLevelText(d.EmergencyLevel) : ServiceClassEnglishVersion.GetShopCartRegisterEmergencyLevelTextEnglish(d.EmergencyLevel)),
                                                    Source = d.Source,
                                                    SourceText = (area == (int)Area.China ? ServiceClass.GetTiktokCustomerSourceText(d.Source) : ServiceClassEnglishVersion.GetTiktokCustomerSourceTextEnglish(d.Source)),
                                                    ProductType = d.ProductType,
@@ -180,7 +182,14 @@ namespace Fx.Amiya.Service
                 foreach (var x in shoppingCartRegistrationPageInfo.List)
                 {
                     var contentPlatFormInfo = await _contentPlatformService.GetByIdAsync(x.ContentPlatFormId);
-                    x.ContentPlatFormName = contentPlatFormInfo.ContentPlatformName;
+                    if (area == (int)Area.China)
+                    {
+                        x.ContentPlatFormName = contentPlatFormInfo.ContentPlatformName;
+                    }
+                    else
+                    {
+                        x.ContentPlatFormName = contentPlatFormInfo.ContentPlatformEnglishName;
+                    }
                     var liveAnchorInfo = await _liveAnchorService.GetByIdAsync(x.LiveAnchorId);
                     x.LiveAnchorName = liveAnchorInfo.Name;
                     var empInfo = await _amiyaEmployeeService.GetByIdAsync(x.CreateBy);
@@ -298,6 +307,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistration.FromTitle = addDto.FromTitle;
                 shoppingCartRegistration.IsRepeateCreateOrder = addDto.IsRepeateCreateOrder;
                 shoppingCartRegistration.BelongCompany = addDto.BelongCompany;
+                shoppingCartRegistration.Area = addDto.Area;
                 var baseLiveAnchorId = await _liveAnchorService.GetByIdAsync(addDto.LiveAnchorId);
                 if (!string.IsNullOrEmpty(baseLiveAnchorId.LiveAnchorBaseId))
                 {
@@ -497,11 +507,11 @@ namespace Fx.Amiya.Service
         }
 
 
-        public async Task<ShoppingCartRegistrationDto> GetByPhoneAsync(string phone, int createBy)
+        public async Task<ShoppingCartRegistrationDto> GetByPhoneAsync(string phone, int createBy, int area)
         {
             try
             {
-                var shoppingCartRegistration = dalShoppingCartRegistration.GetAll().Where(k => k.CreateBy == createBy || k.AssignEmpId == createBy).Where(e => e.Phone == phone || e.SubPhone == phone).OrderByDescending(k => k.CreateDate).FirstOrDefault();
+                var shoppingCartRegistration = dalShoppingCartRegistration.GetAll().Where(k => k.CreateBy == createBy || k.AssignEmpId == createBy).Where(e => e.Phone == phone || e.SubPhone == phone).Where(x => x.Area == area).OrderByDescending(k => k.CreateDate).FirstOrDefault();
                 if (shoppingCartRegistration == null)
                 {
                     return new ShoppingCartRegistrationDto();
@@ -524,12 +534,12 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.CustomerNickName = shoppingCartRegistration.CustomerNickName;
                 shoppingCartRegistrationDto.Phone = shoppingCartRegistration.Phone;
                 shoppingCartRegistrationDto.GetCustomerType = shoppingCartRegistration.GetCustomerType;
-                shoppingCartRegistrationDto.GetCustomerTypeText = ServiceClass.GetShoppingCartGetCustomerTypeText(shoppingCartRegistration.GetCustomerType);
+                shoppingCartRegistrationDto.GetCustomerTypeText = (area == (int)Area.China ? ServiceClass.GetShoppingCartGetCustomerTypeText(shoppingCartRegistration.GetCustomerType) : ServiceClassEnglishVersion.GetShoppingCartGetCustomerTypeTextEnglish(shoppingCartRegistration.GetCustomerType));
                 shoppingCartRegistrationDto.SubPhone = shoppingCartRegistration.SubPhone;
                 shoppingCartRegistrationDto.Price = shoppingCartRegistration.Price;
                 shoppingCartRegistrationDto.IsAddWeChat = shoppingCartRegistration.IsAddWeChat;
                 shoppingCartRegistrationDto.ConsultationType = shoppingCartRegistration.ConsultationType;
-                shoppingCartRegistrationDto.ConsultationTypeText = ServiceClass.GetConsulationTypeText(shoppingCartRegistration.ConsultationType);
+                //shoppingCartRegistrationDto.ConsultationTypeText =(area==(int)Area.China ? ServiceClass.GetConsulationTypeText(shoppingCartRegistration.ConsultationType) : ServiceClassEnglishVersion.GetConsulationTypeTextEnglish(shoppingCartRegistration.ConsultationType));
                 shoppingCartRegistrationDto.IsWriteOff = shoppingCartRegistration.IsWriteOff;
                 shoppingCartRegistrationDto.IsConsultation = shoppingCartRegistration.IsConsultation;
                 shoppingCartRegistrationDto.ConsultationDate = shoppingCartRegistration.ConsultationDate;
@@ -550,13 +560,14 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.BadReviewReason = shoppingCartRegistration.BadReviewReason;
                 shoppingCartRegistrationDto.IsBadReview = shoppingCartRegistration.IsBadReview;
                 shoppingCartRegistrationDto.EmergencyLevel = shoppingCartRegistration.EmergencyLevel;
+                shoppingCartRegistrationDto.EmergencyLevelText = (area == (int)Area.China ? ServiceClass.GetShopCartRegisterEmergencyLevelText(shoppingCartRegistration.EmergencyLevel) : ServiceClassEnglishVersion.GetShopCartRegisterEmergencyLevelTextEnglish(shoppingCartRegistration.EmergencyLevel));
                 shoppingCartRegistrationDto.Source = shoppingCartRegistration.Source;
                 shoppingCartRegistrationDto.ProductType = shoppingCartRegistration.ProductType;
                 shoppingCartRegistrationDto.ShoppingCartRegistrationCustomerType = shoppingCartRegistration.ShoppingCartRegistrationCustomerType;
-                shoppingCartRegistrationDto.ShoppingCartRegistrationCustomerTypeText = ServiceClass.GetShoppingCartCustomerTypeText(shoppingCartRegistration.ShoppingCartRegistrationCustomerType);
-                shoppingCartRegistrationDto.SourceText = ServiceClass.GetTiktokCustomerSourceText(shoppingCartRegistration.Source);
+                shoppingCartRegistrationDto.ShoppingCartRegistrationCustomerTypeText = (area == (int)Area.China ? ServiceClass.GetShoppingCartCustomerTypeText(shoppingCartRegistration.ShoppingCartRegistrationCustomerType) : ServiceClassEnglishVersion.GetShoppingCartCustomerTypeTextEnglish(shoppingCartRegistration.ShoppingCartRegistrationCustomerType));
+                shoppingCartRegistrationDto.SourceText = (area == (int)Area.China ? ServiceClass.GetTiktokCustomerSourceText(shoppingCartRegistration.Source) : ServiceClassEnglishVersion.GetTiktokCustomerSourceTextEnglish(shoppingCartRegistration.Source));
                 shoppingCartRegistrationDto.BelongChannel = shoppingCartRegistration.BelongChannel;
-                shoppingCartRegistrationDto.BelongChannelName = ServiceClass.BelongChannelText(shoppingCartRegistration.BelongChannel);
+                shoppingCartRegistrationDto.BelongChannelName = (area == (int)Area.China ? ServiceClass.BelongChannelText(shoppingCartRegistration.BelongChannel) : ServiceClassEnglishVersion.BelongChannelTextEnglish(shoppingCartRegistration.BelongChannel));
                 shoppingCartRegistrationDto.IsRiBuLuoLiving = shoppingCartRegistration.IsRiBuLuoLiving;
                 shoppingCartRegistrationDto.IsHistoryCustomerActive = shoppingCartRegistration.IsHistoryCustomerActive;
                 shoppingCartRegistrationDto.ActiveEmployeeId = shoppingCartRegistration.ActiveEmployeeId;

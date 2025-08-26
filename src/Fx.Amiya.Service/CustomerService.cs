@@ -1002,6 +1002,7 @@ namespace Fx.Amiya.Service
                     customerInfo.WechatNumber = editDto.WechatNumber;
                     customerInfo.Province = editDto.Province;
                     customerInfo.City = editDto.City;
+                    customerInfo.Area = editDto.Area;
                     await dalCustomerBaseInfo.AddAsync(customerInfo, true);
                 }
                 else
@@ -1013,6 +1014,7 @@ namespace Fx.Amiya.Service
                     customerBaseInfo.WechatNumber = editDto.WechatNumber;
                     customerBaseInfo.Province = editDto.Province;
                     customerBaseInfo.City = editDto.City;
+                    customerBaseInfo.Area = editDto.Area;
                     await dalCustomerBaseInfo.UpdateAsync(customerBaseInfo, true);
                 }
                 
@@ -1020,7 +1022,7 @@ namespace Fx.Amiya.Service
             catch (Exception err)
             {
                 
-                throw new Exception(err.Message.ToString()); ;
+                throw new Exception(err.Message.ToString());
             }
         }
 

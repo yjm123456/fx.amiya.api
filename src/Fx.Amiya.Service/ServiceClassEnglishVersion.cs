@@ -207,5 +207,242 @@ namespace Fx.Amiya.Service
             }
             return text;
         }
+
+
+
+
+        /// <summary>
+        /// 内容平台订单状态【英文版】
+        /// </summary>
+        /// <param name="appType"></param>
+        /// <returns></returns>
+        public static string GetContentPlateFormOrderStatusTextEnglish(byte appType)
+        {
+            string typeText = "";
+            switch (appType)
+            {
+                case 1:
+                    typeText = "Created order";
+                    break;
+
+                case 2:
+                    typeText = "Dispatched order";
+                    break;
+
+                case 3:
+                    typeText = "Accepted order";
+                    break;
+
+                case 4:
+                    typeText = "Deal order";
+                    break;
+
+                case 5:
+                    typeText = "Repeat order-can work together";
+                    break;
+
+                case 6:
+                    typeText = "UnDeal order";
+                    break;
+                case 7:
+                    typeText = "Repeat order-can't work together";
+                    break;
+            }
+            return typeText;
+        }
+
+
+        /// <summary>
+        /// 获取内容平台订单来源【英文版】
+        /// </summary>
+        /// <param name="consumeType"></param>
+        /// <returns></returns>
+        public static string GerContentPlatFormOrderSourceTextEnglish(int channel)
+        {
+            string channelTypeText = "";
+            switch (channel)
+            {
+                case 1:
+                    channelTypeText = "Consulation card";
+                    break;
+
+                case 2:
+                    channelTypeText = "Other card";
+                    break;
+                case 3:
+                    channelTypeText = "Beauty card";
+                    break;
+                case 4:
+                    channelTypeText = "Living room";
+                    break;
+                case 5:
+                    channelTypeText = "Short video";
+                    break;
+                case 6:
+                    channelTypeText = "Private message";
+                    break;
+            }
+            return channelTypeText;
+        }
+
+
+        /// <summary>
+        /// 获取内容平台面诊类型【英文版】
+        /// </summary>
+        /// <param name="ConsultationType"></param>
+        /// <returns></returns>
+        public static string GetContentPlateFormOrderConsultationTypeTextEnglish(int ConsultationType)
+        {
+            string typeText = "";
+            switch (ConsultationType)
+            {
+
+                case 1:
+                    typeText = "(Assistant)Consulationed by photo";
+                    break;
+                case 2:
+                    typeText = "(Live anchor)Consulationed by video";
+                    break;
+                case 3:
+                    typeText = "(Live anchor)Consulationed by voice";
+                    break;
+                case 0:
+                    typeText = "Other";
+                    break;
+
+            }
+            return typeText;
+        }
+
+        /// <summary>
+        /// 内容平台订单类型【英文版】
+        /// </summary>
+        /// <param name="appType"></param>
+        /// <returns></returns>
+
+        public static string GetContentPlateFormOrderTypeTextEnglish(byte appType)
+        {
+            string typeText = "";
+            switch (appType)
+            {
+                case 1:
+                    typeText = "Consultation order";
+                    break;
+
+                case 2:
+                    typeText = "Deposit order";
+                    break;
+                case 3:
+                    typeText = "Appointment order";
+                    break;
+
+            }
+            return typeText;
+        }
+
+        /// <summary>
+        /// 获取审核情况【英文版】
+        /// </summary>
+        /// <param name="BuyAgainType"></param>
+        /// <returns></returns>
+        public static string GetCheckTypeTextEnglish(int CheckType)
+        {
+            string CheckTypeText = "";
+            switch (CheckType)
+            {
+                case 0:
+                    CheckTypeText = "UnChecked";
+                    break;
+
+                case 1:
+                    CheckTypeText = "Check not pass";
+                    break;
+                case 2:
+                    CheckTypeText = "Check successful";
+                    break;
+                case 3:
+                    CheckTypeText = "Checking";
+                    break;
+            }
+            return CheckTypeText;
+        }
+
+
+
+        /// <summary>
+        /// 获取内容平台到院类型文本【英文版】
+        /// </summary>
+        /// <param name="consumeType"></param>
+        /// <returns></returns>
+        public static string GerContentPlatFormOrderToHospitalTypeTextEnglish(int toHospitalType)
+        {
+            string toHospitalTypeText = "";
+            switch (toHospitalType)
+            {
+                case 1:
+                    toHospitalTypeText = "First examination";
+                    break;
+
+                case 2:
+                    toHospitalTypeText = "Follow-up examination";
+                    break;
+
+                case 3:
+                    toHospitalTypeText = "Repeat consumption";
+
+                    break;
+                case 4:
+                    toHospitalTypeText = "Refund";
+                    break;
+
+                case 0:
+                    toHospitalTypeText = "Other";
+                    break;
+
+            }
+            return toHospitalTypeText;
+        }
+
+        /// <summary>
+        /// 业绩类型文本【英文版】
+        /// </summary>
+        /// <param name="performanceType"></param>
+        /// <returns></returns>
+        public static string GetContentPlateFormOrderDealPerformanceTypeEnglish(int performanceType)
+        {
+            string typeText = "";
+            switch (performanceType)
+            {
+                case 0:
+                    typeText = "Other";
+                    break;
+                case 1:
+                    typeText = "Assistant activate";
+                    break;
+
+                case 2:
+                    typeText = "VIP steward activate";
+                    break;
+                case 3:
+                    typeText = "Hospital submit the order";
+                    break;
+                case 4:
+                    typeText = "Assistant checked";
+                    break;
+                case 5:
+                    typeText = "Financial staff checked";
+                    break;
+                case 6:
+                    typeText = "VIP steward checked";
+                    break;
+                case 7:
+                    typeText = "Hospital submit the order-API（Not checked）";
+                    break;
+                case 8:
+                    typeText = "Assistant replenishment order";
+                    break;
+            }
+            return typeText;
+        }
     }
 }
