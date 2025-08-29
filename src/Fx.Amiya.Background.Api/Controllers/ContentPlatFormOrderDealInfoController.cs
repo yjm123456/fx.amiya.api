@@ -338,7 +338,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("contentPlateFormOrderDealPerformanceType")]
         public ResultData<List<BaseIdAndNameVo>> GetContentPlateFormOrderDealPerformanceTypeList()
         {
-            var orderTypes = from d in _contentPlatFormOrderDealInfoService.GetOrderDealPerformanceTypeList()
+
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            var orderTypes = from d in _contentPlatFormOrderDealInfoService.GetOrderDealPerformanceTypeList(Convert.ToInt32(employee.Area))
                              select new BaseIdAndNameVo
                              {
                                  Id = d.Id,
@@ -355,7 +357,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("typeList")]
         public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetStatusListAsync()
         {
-            var nameList = await _contentPlatFormOrderDealInfoService.GetConsumptionTypeAsync();
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            var nameList = await _contentPlatFormOrderDealInfoService.GetConsumptionTypeAsync(Convert.ToInt32(employee.Area));
             var result = nameList.Select(e => new BaseIdAndNameVo<int>
             {
                 Id = e.Key,

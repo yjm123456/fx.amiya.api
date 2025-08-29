@@ -79,7 +79,7 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<List<AmiyaGoodsDemandKeyAndValueDto>> GetIdAndNames(string hospitalDepartmentId)
+        public async Task<List<AmiyaGoodsDemandKeyAndValueDto>> GetIdAndNames(string hospitalDepartmentId, int area)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace Fx.Amiya.Service
                                        select new AmiyaGoodsDemandKeyAndValueDto
                                        {
                                            Id = d.Id,
-                                           ProjectNname = d.ProjectNname
+                                           ProjectNname = (area == (int)Area.China ? d.ProjectNname : d.Description)
                                        };
                 return amiyaGoodsDemand.ToList();
             }
@@ -112,6 +112,7 @@ namespace Fx.Amiya.Service
                 amiyaGoodsDemandDto.ProjectNname = amiyaGoodsDemand.ProjectNname;
                 amiyaGoodsDemandDto.HospitalDepartmentId = amiyaGoodsDemand.HospitalDepartmentId;
                 amiyaGoodsDemandDto.HospitalDepartmentName = _amiyaHospitalDepartmentService.GetByIdAsync(amiyaGoodsDemand.HospitalDepartmentId).Result.DepartmentName;
+                amiyaGoodsDemandDto.HospitalDepartmentDescription = _amiyaHospitalDepartmentService.GetByIdAsync(amiyaGoodsDemand.HospitalDepartmentId).Result.Description;
                 amiyaGoodsDemandDto.ThumbPictureUrl = (!string.IsNullOrEmpty(amiyaGoodsDemand.ThumbPictureUrl)) ? amiyaGoodsDemand.ThumbPictureUrl : "";
                 amiyaGoodsDemandDto.Description = amiyaGoodsDemand.Description;
                 amiyaGoodsDemandDto.Valid = amiyaGoodsDemand.Valid;

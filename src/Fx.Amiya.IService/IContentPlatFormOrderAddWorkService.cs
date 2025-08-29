@@ -17,7 +17,7 @@ namespace Fx.Amiya.IService
         Task AddAsync(AddContentPlatFormOrderAddWorkDto addDto);
         Task<ContentPlatFormOrderAddWorkDto> GetByIdAsync(string id);
 
-        Task<ContentPlatFormOrderAddWorkDto> GetByPhoneAsync(string phone, int empId);
+        Task<ContentPlatFormOrderAddWorkDto> GetByPhoneAsync(int area, string phone, int empId);
         Task UpdateAsync(UpdateContentPlatFormOrderAddWorkDto updateContentPlatFormOrderAddWorkDto);
 
         Task UpdateAcceptByAsync(UpdateAcceptByDto updateAcceptByDto);
@@ -34,6 +34,6 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<FxPageInfo<ContentPlatFormOrderAddWorkDto>> GetHistoryDataAsync(QueryContentplatFormOrderAddWorkHistoryDto query);
 
-        public List<BaseIdAndNameDto> GetContentPlatformOrderAddWorkTypeText();
+        public List<BaseIdAndNameDto> GetContentPlatformOrderAddWorkTypeText(int area);
     }
 }

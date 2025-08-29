@@ -66,7 +66,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var q = await hospitalInfoService.GetListWithPageAsync(keyword, cityId, pageNum, pageSize, valid);
+                var empInfo = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                var q = await hospitalInfoService.GetListWithPageAsync(keyword, cityId, pageNum, pageSize, Convert.ToInt32(empInfo.Area), valid);
                 var hospital = from d in q.List
                                select new HospitalInfoVo
                                {
@@ -132,7 +133,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var q = await hospitalInfoService.GetCheckListWithPageAsync(keyword, pageNum, pageSize, CheckState, submitState);
+                var empInfo = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                var q = await hospitalInfoService.GetCheckListWithPageAsync(keyword, pageNum, pageSize, CheckState, submitState, Convert.ToInt32(empInfo.Area));
                 var hospital = from d in q.List
                                select new HospitalCheckInfoVo
                                {
@@ -193,7 +195,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var hospital = from d in await hospitalInfoService.GetCheckPassedHospitalNameListAsync(null, name)
+                var empInfo = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                var hospital = from d in await hospitalInfoService.GetCheckPassedHospitalNameListAsync(Convert.ToInt32(empInfo.Area), null, name)
                                select new HospitalNameVo
                                {
                                    Id = d.Id,
@@ -221,6 +224,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
+                var empInfo = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(empInfo.Id);
                 var hospital = await hospitalInfoService.GetByIdAsync(id);
                 SingleHospitalInfoVo hospitalInfoVo = new SingleHospitalInfoVo();
                 hospitalInfoVo.Id = hospital.Id;
@@ -268,7 +273,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 }
                 hospitalInfoVo.HospitalEnvironmentInfo = HospitalEnvironmentInfo;
                 //科室与医生
-                var hospitalDepartmentInfo = await _amiyaHospitalDepartmentService.GetIdAndNames();
+                var hospitalDepartmentInfo = await _amiyaHospitalDepartmentService.GetIdAndNames(Convert.ToInt32(empInfo.Area));
                 List<DepartmentAndDoctor> DepartmentAndDoctors = new List<DepartmentAndDoctor>();
                 foreach (var z in hospitalDepartmentInfo)
                 {
@@ -317,9 +322,12 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
+                var empInfo = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 QueryAmiyaTotalSendHospitalInstructionsDto queryAmiyaTotalSendHospitalInstructionsVo = new QueryAmiyaTotalSendHospitalInstructionsDto();
                 queryAmiyaTotalSendHospitalInstructionsVo.CityId = query.CityId;
                 queryAmiyaTotalSendHospitalInstructionsVo.HospitalName = query.HospitalName;
+                queryAmiyaTotalSendHospitalInstructionsVo.Area = Convert.ToInt32(empInfo.Area);
+
                 var q = await hospitalInfoService.GetAmiyaTotalSendHospitalInstructionsAsync(queryAmiyaTotalSendHospitalInstructionsVo);
                 var hospital = from d in q
                                select new AmiyaTotalSendHospitalInstructionsVo
@@ -360,7 +368,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var hospital = from d in await hospitalInfoService.GetHospitalSimpleNameListAsync(true)
+                var empInfo = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                var hospital = from d in await hospitalInfoService.GetHospitalSimpleNameListAsync(Convert.ToInt32(empInfo.Area), true)
                                select new BaseIdAndNameVo<int>
                                {
                                    Id = d.Id,
@@ -386,7 +395,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var hospital = from d in await hospitalInfoService.GetHospitalNameListAsync(true, name)
+                var empInfo = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                var hospital = from d in await hospitalInfoService.GetHospitalNameListAsync(Convert.ToInt32(empInfo.Area), true, name)
                                select new HospitalNameVo
                                {
                                    Id = d.Id,
@@ -414,7 +424,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var hospital = from d in await hospitalInfoService.GetHospitalNameListAsync(null, name)
+                var empInfo = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                var hospital = from d in await hospitalInfoService.GetHospitalNameListAsync(Convert.ToInt32(empInfo.Area), null, name)
                                select new HospitalNameVo
                                {
                                    Id = d.Id,
@@ -472,6 +483,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.YearServiceMoney = addVo.YearServiceMoney;
                 addDto.SecurityDepositMoney = addVo.SecurityDepositMoney;
                 addDto.Remark = addVo.Remark;
+                addDto.HospitalArea = employee.Area;
                 await hospitalInfoService.AddAsync(addDto, employeeId);
                 return ResultData.Success();
             }

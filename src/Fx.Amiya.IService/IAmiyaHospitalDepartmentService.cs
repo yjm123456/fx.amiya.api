@@ -19,7 +19,7 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<FxPageInfo<AmiyaHospitalDepartmentDto>> GetListWithPageAsync(string keyword);
 
-        Task<List<AmiyaHospitalDepartmentKeyAndValueDto>> GetIdAndNames();
+        Task<List<AmiyaHospitalDepartmentKeyAndValueDto>> GetIdAndNames(int area);
 
 
         /// <summary>

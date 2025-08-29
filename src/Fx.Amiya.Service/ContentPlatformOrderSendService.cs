@@ -246,6 +246,7 @@ namespace Fx.Amiya.Service
             sendOrderInfo.SendDate = DateTime.Now;
             sendOrderInfo.IsUncertainDate = addDto.IsUncertainDate;
             sendOrderInfo.Remark = addDto.Remark;
+            sendOrderInfo.Area = addDto.Area;
             if (isMain)
             {
                 sendOrderInfo.IsMainHospital = true;
@@ -714,7 +715,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<SendContentPlatformOrderDto>> GetSendOrderList(List<int?> liveAnchorIds, int? consultationEmpId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, string keyword, int? belongChannel, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int loginEmployeeId, int belongEmployeeId, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int? hospitalEmpId, int pageNum, int pageSize, bool? isMainHospital)
+        public async Task<FxPageInfo<SendContentPlatformOrderDto>> GetSendOrderList(List<int?> liveAnchorIds, int? consultationEmpId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, string keyword, int? belongChannel, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int loginEmployeeId, int belongEmployeeId, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int? hospitalEmpId, int pageNum, int pageSize, int area, bool? isMainHospital)
         {
 
             var orders = _dalContentPlatformOrderSend.GetAll().Include(x => x.ContentPlatformOrder)
@@ -737,7 +738,8 @@ namespace Fx.Amiya.Service
             .Where(e => liveAnchorIds.Count <= 0 || liveAnchorIds.Contains(e.ContentPlatformOrder.LiveAnchorId))
             .Where(e => belongEmployeeId == -1 || (e.ContentPlatformOrder.SupportEmpId == 0 ? e.ContentPlatformOrder.BelongEmpId == belongEmployeeId || e.ContentPlatformOrder.ConsultEmpId == belongEmployeeId : e.ContentPlatformOrder.SupportEmpId == belongEmployeeId || e.ContentPlatformOrder.ConsultEmpId == belongEmployeeId))
             .Where(e => orderStatus == null || (orderStatus != null && orderStatus == (int)ContentPlateFormOrderStatus.RepeatOrderProfundity ? e.IsRepeatProfundityOrder == true : e.OrderStatus == orderStatus))
-            .Where(e => string.IsNullOrWhiteSpace(contentPlatFormId) || e.ContentPlatformOrder.ContentPlateformId == contentPlatFormId);
+            .Where(e => string.IsNullOrWhiteSpace(contentPlatFormId) || e.ContentPlatformOrder.ContentPlateformId == contentPlatFormId)
+            .Where(e => e.Area == area);
 
             if (startDate != null && endDate != null)
             {
@@ -786,10 +788,10 @@ namespace Fx.Amiya.Service
                                         {
                                             Id = d.Id,
                                             OrderId = d.ContentPlatformOrderId,
-                                            ContentPlatFormName = d.ContentPlatformOrder.Contentplatform.ContentPlatformName,
+                                            ContentPlatFormName = (area == (int)Area.China ? d.ContentPlatformOrder.Contentplatform.ContentPlatformName : d.ContentPlatformOrder.Contentplatform.ContentPlatformEnglishName),
                                             LiveAnchorName = d.ContentPlatformOrder.LiveAnchor.HostAccountName,
                                             LiveAnchorWeChatNo = d.ContentPlatformOrder.LiveAnchorWeChatNo,
-                                            BelongChannelText = ServiceClass.BelongChannelText(d.ContentPlatformOrder.BelongChannel),
+                                            BelongChannelText = (area == (int)Area.China ? ServiceClass.BelongChannelText(d.ContentPlatformOrder.BelongChannel) : ServiceClassEnglishVersion.BelongChannelTextEnglish(d.ContentPlatformOrder.BelongChannel)),
                                             //IsOldCustomer = d.ContentPlatformOrder.IsOldCustomer == true ? "老客业绩" : "新客业绩",
                                             //IsAcompanying = d.ContentPlatformOrder.IsAcompanying,
                                             //CommissionRatio = d.ContentPlatformOrder.CommissionRatio,
@@ -802,12 +804,12 @@ namespace Fx.Amiya.Service
                                             //AppointmentHospital = d.ContentPlatformOrder.HospitalInfo.Name,
                                             SendHospitalId = d.HospitalId,
                                             AppointmentDate = d.AppointmentDate.HasValue ? d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "未确认时间",
-                                            GoodsName = d.ContentPlatformOrder.AmiyaGoodsDemand.ProjectNname,
+                                            GoodsName = (area == (int)Area.China ? d.ContentPlatformOrder.AmiyaGoodsDemand.ProjectNname : d.ContentPlatformOrder.AmiyaGoodsDemand.Description),
                                             ThumbPictureUrl = d.ContentPlatformOrder.AmiyaGoodsDemand.ThumbPictureUrl,
                                             //LateProjectStage = d.ContentPlatformOrder.LateProjectStage,
                                             ConsultingContent = d.ContentPlatformOrder.ConsultingContent,
                                             //OrderTypeText = ServiceClass.GetContentPlateFormOrderTypeText((byte)d.ContentPlatformOrder.OrderType),
-                                            OrderStatusText = ServiceClass.GetContentPlateFormOrderStatusText((byte)d.OrderStatus),
+                                            OrderStatusText = (area == (int)Area.China ? ServiceClass.GetContentPlateFormOrderStatusText((byte)d.OrderStatus) : ServiceClassEnglishVersion.GetContentPlateFormOrderStatusTextEnglish((byte)d.OrderStatus)),
                                             //DepositAmount = d.ContentPlatformOrder.DepositAmount,
                                             DealAmount = d.ContentPlatformOrder.DealAmount,
                                             //DealPictureUrl = d.ContentPlatformOrder.DealPictureUrl,
@@ -815,7 +817,7 @@ namespace Fx.Amiya.Service
                                             //ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ContentPlatformOrder.ToHospitalType),
                                             //UnDealReason = d.ContentPlatformOrder.UnDealReason,
                                             ConsultationType = d.ContentPlatformOrder.ConsulationType,
-                                            ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(d.ContentPlatformOrder.ConsulationType),
+                                            ConsultationTypeText = (area == (int)Area.China ? ServiceClass.GetContentPlateFormOrderConsultationTypeText(d.ContentPlatformOrder.ConsulationType) : ServiceClassEnglishVersion.GetContentPlateFormOrderConsultationTypeTextEnglish(d.ContentPlatformOrder.ConsulationType)),
                                             Sender = d.Sender,
                                             SenderName = d.AmiyaEmployee.Name,
                                             //CheckState = d.ContentPlatformOrder.CheckState,
@@ -829,7 +831,7 @@ namespace Fx.Amiya.Service
                                             HospitalRemark = d.HospitalRemark,
                                             //UnDealPictureUrl = d.ContentPlatformOrder.UnDealPictureUrl,
                                             //OtherContentPlatFormOrderId = d.ContentPlatformOrder.OtherContentPlatFormOrderId,
-                                            OrderSourceText = ServiceClass.GerContentPlatFormOrderSourceText(d.ContentPlatformOrder.OrderSource.Value),
+                                            OrderSourceText = (area == (int)Area.China ? ServiceClass.GerContentPlatFormOrderSourceText(d.ContentPlatformOrder.OrderSource.Value) : ServiceClassEnglishVersion.GerContentPlatFormOrderSourceTextEnglish(d.ContentPlatformOrder.OrderSource.Value)),
                                             AcceptConsulting = d.ContentPlatformOrder.AcceptConsulting,
                                             IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
                                             IsMainHospital = d.IsMainHospital,

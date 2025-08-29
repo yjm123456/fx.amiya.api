@@ -19,7 +19,7 @@ namespace Fx.Amiya.IService
         /// <returns></returns>
         Task<FxPageInfo<AmiyaGoodsDemandDto>> GetListWithPageAsync(string keyword, int pageNum, int pageSize);
 
-        Task<List<AmiyaGoodsDemandKeyAndValueDto>> GetIdAndNames(string hospitalDepartmentId);
+        Task<List<AmiyaGoodsDemandKeyAndValueDto>> GetIdAndNames(string hospitalDepartmentId, int area);
 
 
         /// <summary>

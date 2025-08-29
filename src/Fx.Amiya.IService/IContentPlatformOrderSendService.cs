@@ -62,7 +62,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="addDto"></param>
         /// <returns></returns>
-        Task AddMultiAsync(AddContentPlatFormSendOrderInfoDto addDto,bool isMain);
+        Task AddMultiAsync(AddContentPlatFormSendOrderInfoDto addDto, bool isMain);
         /// <summary>
         /// 修改派单
         /// </summary>
@@ -134,7 +134,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<HospitalCurrentDayNotRepeatedSendOrderDto>> GetTodayNotRepeatSendOrderByHospitalIdAsync(int hospitalId,int orderStatus,DateTime startDate,DateTime enDate,int pageNum,int pageSize);
+        Task<FxPageInfo<HospitalCurrentDayNotRepeatedSendOrderDto>> GetTodayNotRepeatSendOrderByHospitalIdAsync(int hospitalId, int orderStatus, DateTime startDate, DateTime enDate, int pageNum, int pageSize);
 
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<SendContentPlatformOrderDto>> GetSendOrderList(List<int?> liveAnchorIds, int? consultationEmpId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, string keyword, int? belongChannel, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int employeeId,int belongEmployeeId, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int? hospitalEmpId, int pageNum, int pageSize,bool? isMainHospital);
+        Task<FxPageInfo<SendContentPlatformOrderDto>> GetSendOrderList(List<int?> liveAnchorIds, int? consultationEmpId, int? sendBy, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, string keyword, int? belongChannel, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int employeeId, int belongEmployeeId, int? orderStatus, string contentPlatFormId, DateTime? startDate, DateTime? endDate, int? hospitalId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int orderSource, int? hospitalEmpId, int pageNum, int pageSize, int area, bool? isMainHospital);
 
         Task<List<SendContentPlatformOrderDto>> GetSendOrderReportList(int? liveAnchorId, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? hospitalId, int employeeId, int belongEmpId, int? orderStatus
           , bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, string contentPlatFormId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, DateTime? startDate, DateTime? endDate, bool isHidePhone);
@@ -271,7 +271,7 @@ namespace Fx.Amiya.IService
         /// <param name="sendOrderId"></param>
         /// <param name="OrderStatus"></param>
         /// <returns></returns>
-        Task UpdateSendOrderStatusAsync(int sendOrderId,int OrderStatus);
-        
+        Task UpdateSendOrderStatusAsync(int sendOrderId, int OrderStatus);
+
     }
 }

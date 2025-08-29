@@ -647,6 +647,14 @@ namespace Fx.Amiya.Background.Api.Controllers
             customerSimpleInfoVo.CreateDate = customer.CreateDate;
             customerSimpleInfoVo.AllPrice = customer.AllPrice;
             customerSimpleInfoVo.RealName = customer.RealName;
+            if (!string.IsNullOrEmpty(customer.Sex))
+            {
+                customerSimpleInfoVo.SexId = (customer.Sex == "男" ? 1 : 2);
+            }
+            else
+            {
+                customerSimpleInfoVo.SexId = 0;
+            }
             customerSimpleInfoVo.Sex = customer.Sex;
             customerSimpleInfoVo.Phone = customer.Phone;
             customerSimpleInfoVo.Birthday = customer.Birthday;

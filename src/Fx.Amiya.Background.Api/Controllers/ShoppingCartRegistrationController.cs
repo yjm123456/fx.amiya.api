@@ -761,7 +761,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("getBelongCompanyList")]
         public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetBelongCompanyListAsync()
         {
-            var nameList = shoppingCartRegistrationService.GetBelonCompanyList();
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int employeeArea = Convert.ToInt32(employee.Area);
+            var nameList = shoppingCartRegistrationService.GetBelonCompanyList(employeeArea);
             var result = nameList.Select(e => new BaseIdAndNameVo<int>
             {
                 Id = e.Id,

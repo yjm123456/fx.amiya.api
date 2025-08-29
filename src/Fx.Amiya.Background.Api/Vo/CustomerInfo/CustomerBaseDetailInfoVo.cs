@@ -50,6 +50,10 @@ namespace Fx.Amiya.Background.Api.Vo.CustomerInfo
         /// </summary>
         public string Sex { get; set; }
         /// <summary>
+        /// 性别
+        /// </summary>
+        public int SexId { get; set; }
+        /// <summary>
         /// 联系电话
         /// </summary>
         public string Phone { get; set; }

@@ -666,7 +666,7 @@ namespace Fx.Amiya.Service
             {
                 var employee = await dalAmiyaEmployee.GetAll().SingleOrDefaultAsync(e => e.Id == employeeId);
 
-                employee.Area =area;
+                employee.Area = area;
                 await dalAmiyaEmployee.UpdateAsync(employee, true);
             }
             catch (Exception ex)
@@ -742,10 +742,10 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<FxPageInfo<CustomerServiceEmployeeDto>> GetCustomerSeviceListWithPageAsync(int pageNum, int pageSize)
+        public async Task<FxPageInfo<CustomerServiceEmployeeDto>> GetCustomerSeviceListWithPageAsync(int area, int pageNum, int pageSize)
         {
             var employee = from d in dalAmiyaEmployee.GetAll()
-                           where d.IsCustomerService && d.Valid
+                           where d.IsCustomerService && d.Valid && d.Area == area
                            select new CustomerServiceEmployeeDto
                            {
                                Id = d.Id,
@@ -777,12 +777,14 @@ namespace Fx.Amiya.Service
         /// 获取客服姓名列表
         /// </summary>
         /// <param name="baseLiveAnchorId">主播基础信息id</param>
+        /// <param name="area">地区</param>
         /// <returns></returns>
-        public async Task<List<AmiyaEmployeeNameDto>> GetCustomerServiceNameListAsync(string baseLiveAnchorId = null)
+        public async Task<List<AmiyaEmployeeNameDto>> GetCustomerServiceNameListAsync(int area, string baseLiveAnchorId = null)
         {
             var employee = from d in dalAmiyaEmployee.GetAll()
                            where d.IsCustomerService == true && (string.IsNullOrEmpty(baseLiveAnchorId) || d.LiveAnchorBaseId == baseLiveAnchorId)
                            && d.Valid == true
+                           && d.Area == area
                            select new AmiyaEmployeeNameDto
                            {
                                Id = d.Id,
@@ -795,11 +797,12 @@ namespace Fx.Amiya.Service
         /// 获取运营咨询人员姓名列表
         /// </summary>
         /// <returns></returns>
-        public async Task<List<AmiyaEmployeeNameDto>> GetOperatingConsultingNameListAsync()
+        public async Task<List<AmiyaEmployeeNameDto>> GetOperatingConsultingNameListAsync(int area)
         {
             var employee = from d in dalAmiyaEmployee.GetAll()
                            where d.Valid
                            && (d.AmiyaPositionInfo.Id == 19 || d.AmiyaPositionInfo.Id == 21)
+                           && d.Area == area
                            select new AmiyaEmployeeNameDto
                            {
                                Id = d.Id,
@@ -830,7 +833,7 @@ namespace Fx.Amiya.Service
         /// 获取面诊员姓名列表
         /// </summary>
         /// <returns></returns>
-        public async Task<List<AmiyaEmployeeNameDto>> GetConsultingNameListAsync()
+        public async Task<List<AmiyaEmployeeNameDto>> GetConsultingNameListAsync(int area)
         {
             var employee = from d in dalAmiyaEmployee.GetAll()
                            where d.IsCustomerService && d.Valid
@@ -849,10 +852,10 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <returns></returns>
 
-        public async Task<List<AmiyaEmployeeNameDto>> GetemployeeByPositionIdAsync(int? positionId)
+        public async Task<List<AmiyaEmployeeNameDto>> GetemployeeByPositionIdAsync(int area, int? positionId)
         {
             var employee = from d in dalAmiyaEmployee.GetAll()
-                           where d.Valid
+                           where d.Valid && d.Area == area
                            && (!positionId.HasValue || d.AmiyaPositionInfo.Id == positionId)
                            select new AmiyaEmployeeNameDto
                            {
@@ -921,7 +924,6 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-
                 throw new Exception(ex.Message.ToString());
             }
         }
@@ -942,7 +944,6 @@ namespace Fx.Amiya.Service
             }
             catch (Exception ex)
             {
-
                 throw new Exception(ex.Message.ToString());
             }
         }

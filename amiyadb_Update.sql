@@ -82,7 +82,6 @@ ADD COLUMN `remark` VARCHAR(500) NULL AFTER `xiaohongshu_calling_card_sendnum`;
 ALTER TABLE `amiyadb`.`tbl_hospital_info` 
 ADD COLUMN `remark` VARCHAR(500) NULL AFTER `hospital_type`;
 ------------------------------------余建明 2025/07/31 END--------------------------------------
---------------------------------------------------------------------------------------------------------以上部分已更新到线上--------------------------------------
 
 
 ------------------------------------余建明 2025/08/22 BEGIN--------------------------------------
@@ -107,5 +106,33 @@ ADD COLUMN `area` INT NULL DEFAULT 0 AFTER `remark`;
 ALTER TABLE `amiyadb`.`tbl_shopping_cart_registration` 
 ADD COLUMN `area` INT NOT NULL DEFAULT 0 AFTER `affiliated_person`;
 
+--医院新增地区属性
+ALTER TABLE `amiyadb`.`tbl_hospital_info` 
+ADD COLUMN `hospital_area` INT NOT NULL DEFAULT 0 AFTER `remark`;
+
+--省份，城市字段扩大内容并加入胡志明市
+ALTER TABLE `amiyadb`.`tbl_province` 
+CHANGE COLUMN `name` `name` VARCHAR(500) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' NOT NULL ;
+INSERT INTO `amiyadb`.`tbl_province` (`id`, `name`, `valid`) VALUES ('a9d70561-fcb3-465a-82b1-f6776e92358s', 'Thành phố Hồ Chí Minh', true);
+ALTER TABLE `amiyadb`.`tbl_cooperative_hospital_city` 
+CHANGE COLUMN `name` `name` VARCHAR(500) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' NOT NULL ;
+INSERT INTO `amiyadb`.`tbl_cooperative_hospital_city` (`name`, `valid`, `is_hot`, `province_id`, `sort`) VALUES ('Thành phố Hồ Chí Minh', true, true, 'a9d70561-fcb3-465a-82b1-f6776e92358s', 0);
+
+--客户基础信息列表的省份与城市与性别扩容
+ALTER TABLE `amiyadb`.`tbl_customer_base_info` 
+CHANGE COLUMN `province` `province` VARCHAR(500) NULL DEFAULT NULL ,
+CHANGE COLUMN `city` `city` VARCHAR(500) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' NULL DEFAULT NULL ;
+ALTER TABLE `amiyadb`.`tbl_customer_base_info` 
+CHANGE COLUMN `sex` `sex` CHAR(20) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' NULL DEFAULT NULL ;
+
+
 
 ------------------------------------余建明 2025/08/22 END--------------------------------------
+--------------------------------------------------------------------------------------------------------以上部分已更新到线上--------------------------------------
+------------------------------------余建明 2025/08/29 BEGIN--------------------------------------
+--派单列表新增地区属性
+ALTER TABLE `amiyadb`.`tbl_content_platform_order_send` 
+ADD COLUMN `area` INT NOT NULL DEFAULT 0 AFTER `hospital_emp_id`;
+
+
+------------------------------------余建明 2025/08/29 END--------------------------------------

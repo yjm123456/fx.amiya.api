@@ -153,7 +153,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             {
                 employeeId = -1;
             }
-            var orders = await _sendOrderInfoService.GetSendOrderList(liveAnchorIds, consultationEmpId, sendBy, isAcompanying, isOldCustomer, commissionRatio, keyword,belongChannel, belongMonth, minAddOrderPrice, maxAddOrderPrice, LoginEmployeeId, (int)employeeId, orderStatus, contentPlatFormId, startDate, endDate, hospitalId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, orderSource, hospitalEmpId, pageNum, pageSize, isMainHospital);
+            var orders = await _sendOrderInfoService.GetSendOrderList(liveAnchorIds, consultationEmpId, sendBy, isAcompanying, isOldCustomer, commissionRatio, keyword,belongChannel, belongMonth, minAddOrderPrice, maxAddOrderPrice, LoginEmployeeId, (int)employeeId, orderStatus, contentPlatFormId, startDate, endDate, hospitalId, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, orderSource, hospitalEmpId, pageNum, pageSize,(int)Area.China, isMainHospital);
 
             var contentPlatformOrders = from d in orders.List
                                         select new SendContentPlatformOrderVo

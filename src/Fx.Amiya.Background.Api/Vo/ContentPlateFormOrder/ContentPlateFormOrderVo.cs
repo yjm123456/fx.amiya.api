@@ -14,7 +14,7 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// <summary>
         /// 编号
         /// </summary>
-        
+
         public string Id { get; set; }
         /// <summary>
         /// 用户id
@@ -50,12 +50,12 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 内容平台id（下单平台）
         /// </summary>
 
-        public string  ContentPlateFormId { get; set; }
+        public string ContentPlateFormId { get; set; }
 
         /// <summary>
         /// 主播账号id
         /// </summary>
-        
+
         public int LiveAnchorId { get; set; }
         /// <summary>
         /// 主播微信号
@@ -74,12 +74,12 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// <summary>
         /// 客户姓名
         /// </summary>
-        
+
         public string CustomerName { get; set; }
         /// <summary>
         /// 手机号
         /// </summary>
-        
+
         public string Phone { get; set; }
         /// <summary>
         /// 加密手机号
@@ -90,6 +90,11 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 性别
         /// </summary>
         public string Sex { get; set; }
+
+        /// <summary>
+        /// 性别ID（1：男；2：女；0：未知）
+        /// </summary>
+        public int SexId { get; set; }
         /// <summary>
         /// 生日
         /// </summary>
@@ -145,7 +150,7 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// <summary>
         /// 预约门店id
         /// </summary>
-        
+
         public int AppointmentHospitalId { get; set; }
 
 

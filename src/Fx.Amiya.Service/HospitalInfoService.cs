@@ -65,7 +65,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<HospitalInfoDto>> GetListWithPageAsync(string keyword, int? cityId, int pageNum, int pageSize, bool? valid)
+        public async Task<FxPageInfo<HospitalInfoDto>> GetListWithPageAsync(string keyword, int? cityId, int pageNum, int pageSize, int area, bool? valid)
         {
             try
             {
@@ -76,6 +76,7 @@ namespace Fx.Amiya.Service
                                where (keyword == null || d.Name.Contains(keyword))
                                && (valid == null || d.Valid == valid)
                                && (cityId == null || d.CityId == cityId)
+                               && (d.HospitalArea == area)
                                orderby d.Sort descending
                                select new HospitalInfoDto
                                {
@@ -218,7 +219,7 @@ namespace Fx.Amiya.Service
         /// <param name="CheckState">审核状态（-1查询全部）</param>
         /// <param name="submitState">资料提交状态（-1查询全部）</param>
         /// <returns></returns>
-        public async Task<FxPageInfo<HospitalCheckInfoDto>> GetCheckListWithPageAsync(string keyword, int pageNum, int pageSize, int CheckState, int submitState)
+        public async Task<FxPageInfo<HospitalCheckInfoDto>> GetCheckListWithPageAsync(string keyword, int pageNum, int pageSize, int CheckState, int submitState, int area)
         {
             try
             {
@@ -230,6 +231,7 @@ namespace Fx.Amiya.Service
                                && (d.Valid == true)
                                && (CheckState == -1 || d.CheckState == CheckState)
                                && (submitState == -1 || d.SubmitState == submitState)
+                               && (d.HospitalArea == area)
                                select new HospitalCheckInfoDto
                                {
                                    Id = d.Id,
@@ -270,7 +272,7 @@ namespace Fx.Amiya.Service
                 var hospital = from d in dalHospitalInfo.GetAll().Include(x => x.CooperativeHospitalCity).ThenInclude(x => x.Province)
                                where
                                (query.HospitalName == null || d.Name.Contains(query.HospitalName) || d.SimpleName.Contains(query.HospitalName))
-                                && (d.Valid == true)
+                                && (d.Valid == true && d.HospitalArea == query.Area)
                                && (query.CityId == 0 || d.CityId == query.CityId)
                                select new HospitalInfoDto
                                {
@@ -363,13 +365,14 @@ namespace Fx.Amiya.Service
         /// 获取医院名称列表
         /// </summary>
         /// <returns></returns>
-        public async Task<List<HospitalNameDto>> GetHospitalNameListAsync(bool? valid, string name)
+        public async Task<List<HospitalNameDto>> GetHospitalNameListAsync(int area, bool? valid, string name)
         {
             try
             {
                 var hospital = from d in dalHospitalInfo.GetAll()
                                where (valid == null || d.Valid == valid)
                                && (string.IsNullOrWhiteSpace(name) || d.Name.Contains(name))
+                               && (d.HospitalArea == area)
                                select new HospitalNameDto
                                {
                                    Id = d.Id,
@@ -387,12 +390,13 @@ namespace Fx.Amiya.Service
         /// 获取医院简称列表
         /// </summary>
         /// <returns></returns>
-        public async Task<List<HospitalNameDto>> GetHospitalSimpleNameListAsync(bool? valid)
+        public async Task<List<HospitalNameDto>> GetHospitalSimpleNameListAsync(int area, bool? valid)
         {
             try
             {
                 var hospital = from d in dalHospitalInfo.GetAll()
                                where (valid == null || d.Valid == valid)
+                               && (d.HospitalArea == area)
                                select new HospitalNameDto
                                {
                                    Id = d.Id,
@@ -425,7 +429,7 @@ namespace Fx.Amiya.Service
         /// 获取资料审核通过的医院医院名称列表
         /// </summary>
         /// <returns></returns>
-        public async Task<List<HospitalNameDto>> GetCheckPassedHospitalNameListAsync(bool? valid, string name)
+        public async Task<List<HospitalNameDto>> GetCheckPassedHospitalNameListAsync(int area, bool? valid, string name)
         {
             try
             {
@@ -433,6 +437,7 @@ namespace Fx.Amiya.Service
                                where (valid == null || d.Valid == valid)
                                && (string.IsNullOrWhiteSpace(name) || d.Name.Contains(name))
                                && (d.CheckState == Convert.ToInt32(CheckType.CheckedSuccess))
+                               && (d.HospitalArea == area)
                                select new HospitalNameDto
                                {
                                    Id = d.Id,
@@ -448,15 +453,15 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
-        /// 获取资料审核通过的医院医院名称列表
+        /// 获取有效的医院医院名称列表
         /// </summary>
         /// <returns></returns>
-        public async Task<List<HospitalNameDto>> GetValidHospitalNameListAsync()
+        public async Task<List<HospitalNameDto>> GetValidHospitalNameListAsync(int area)
         {
             try
             {
                 var hospital = from d in dalHospitalInfo.GetAll()
-                               where (d.Valid == true)
+                               where (d.Valid == true && d.HospitalArea == area)
                                select new HospitalNameDto
                                {
                                    Id = d.Id,
@@ -515,6 +520,7 @@ namespace Fx.Amiya.Service
                 hospitalInfo.YearServiceMoney = addDto.YearServiceMoney;
                 hospitalInfo.SecurityDepositMoney = addDto.SecurityDepositMoney;
                 hospitalInfo.Remark = addDto.Remark;
+                hospitalInfo.HospitalArea = addDto.HospitalArea;
                 await dalHospitalInfo.AddAsync(hospitalInfo, true);
 
                 List<HospitalTagDetail> hospitalTagDetailList = new List<HospitalTagDetail>();

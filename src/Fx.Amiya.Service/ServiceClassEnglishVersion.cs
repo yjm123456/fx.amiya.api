@@ -210,6 +210,42 @@ namespace Fx.Amiya.Service
 
 
 
+        /// <summary>
+        /// 获取归属公司【英文版】
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static string GetBelongCompanyTypeTextEnglish(int type)
+        {
+            string sourceText = "";
+            switch (type)
+            {
+                case 0:
+                    sourceText = "Other";
+                    break;
+                case 1:
+                    sourceText = "Ameiya";
+                    break;
+                case 2:
+                    sourceText = "Ameiya SaiDa";
+                    break;
+                case 3:
+                    sourceText = "Ameiya ShangXueYuan";
+                    break;
+
+                case 4:
+                    sourceText = "Ameiya Meiyan";
+                    break;
+
+                case 5:
+                    sourceText = "Run Tang";
+                    break;
+            }
+            return sourceText;
+
+        }
+
+
 
         /// <summary>
         /// 内容平台订单状态【英文版】
@@ -341,6 +377,26 @@ namespace Fx.Amiya.Service
         }
 
         /// <summary>
+        /// 获取录单申请类型【英文版】
+        /// </summary>
+        /// <param name="rankcode"></param>
+        /// <returns></returns>
+        public static string GetContentPlatformOrderAddWorkTypeTextEnglish(int contentPlatformOrderAddWorkType)
+        {
+            string contentPlatformOrderAddWorkTypeText = "";
+            switch (contentPlatformOrderAddWorkType)
+            {
+                case 1:
+                    contentPlatformOrderAddWorkTypeText = "Add order application";
+                    break;
+                case 2:
+                    contentPlatformOrderAddWorkTypeText = "Update bind application";
+                    break;
+            }
+            return contentPlatformOrderAddWorkTypeText;
+        }
+
+        /// <summary>
         /// 获取审核情况【英文版】
         /// </summary>
         /// <param name="BuyAgainType"></param>
@@ -443,6 +499,40 @@ namespace Fx.Amiya.Service
                     break;
             }
             return typeText;
+        }
+
+
+        /// <summary>
+        /// 获取成交情况消费类型【英文版】
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static string GetConsumptionTypeTextEnglish(int? type)
+        {
+            string consumptionType = "";
+            switch (type)
+            {
+                case 0:
+                    consumptionType = "Deposit consumption";
+                    break;
+                case 1:
+                    consumptionType = "Deal consumption";
+                    break;
+                case 2:
+                    consumptionType = "Refund consumption";
+                    break;
+                case 3:
+                    consumptionType = "Other consumption";
+                    break;
+                case 4:
+                    consumptionType = "Debt recovery";
+                    break;
+                default:
+                    consumptionType = "Unknow";
+                    break;
+            }
+            return consumptionType;
+
         }
     }
 }

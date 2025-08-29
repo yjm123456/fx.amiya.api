@@ -420,7 +420,7 @@ namespace Fx.Amiya.Service
                                 OrderType = d.OrderType,
                                 OrderTypeText = d.OrderType != 0 ? (area == (int)Area.China ? ServiceClass.GetContentPlateFormOrderTypeText((byte)d.OrderType) : ServiceClassEnglishVersion.GetContentPlateFormOrderTypeTextEnglish((byte)d.OrderType)) : "",
                                 ContentPlateformId = d.ContentPlateformId,
-                                ContentPlatformName = (area==(int)Area.China? d.Contentplatform.ContentPlatformName: d.Contentplatform.ContentPlatformEnglishName),
+                                ContentPlatformName = (area == (int)Area.China ? d.Contentplatform.ContentPlatformName : d.Contentplatform.ContentPlatformEnglishName),
                                 LiveAnchorId = d.LiveAnchorId,
                                 LiveAnchorName = d.LiveAnchor.HostAccountName,
                                 GetCustomerTypeText = (area == (int)Area.China ? ServiceClass.GetShoppingCartGetCustomerTypeText(d.GetCustomerType) : ServiceClassEnglishVersion.GetShoppingCartGetCustomerTypeTextEnglish(d.GetCustomerType)),
@@ -477,7 +477,7 @@ namespace Fx.Amiya.Service
                                 BelongChannelText = (area == (int)Area.China ? ServiceClass.BelongChannelText(d.BelongChannel) : ServiceClassEnglishVersion.BelongChannelTextEnglish(d.BelongChannel)),
                                 ConsultingContent2 = d.ConsultingContent2,
                                 IsRiBuLuoLiving = d.IsRiBuLuoLiving,
-                                OrderBelongCompany = ServiceClass.GetBelongCompanyTypeText(d.OrderBelongCompany),
+                                OrderBelongCompany = (area == (int)Area.China ? ServiceClass.GetBelongCompanyTypeText(d.OrderBelongCompany) : ServiceClassEnglishVersion.GetBelongCompanyTypeTextEnglish(d.OrderBelongCompany)),
                             };
 
 
@@ -499,7 +499,7 @@ namespace Fx.Amiya.Service
                     if (!string.IsNullOrEmpty(x.GoodsDepartmentId))
                     {
                         var departmentInfo = await _departmentService.GetByIdAsync(x.GoodsDepartmentId);
-                        x.DepartmentName = departmentInfo.DepartmentName;
+                        x.DepartmentName = (area == (int)Area.China ? departmentInfo.DepartmentName : departmentInfo.Description);
                     }
                     if (!string.IsNullOrEmpty(x.LiveAnchorWeChatNo))
                     {
@@ -619,7 +619,7 @@ namespace Fx.Amiya.Service
                                   OrderId = o.Id,
                                   ContentPlatFormName = (area == (int)Area.China ? o.Contentplatform.ContentPlatformName : o.Contentplatform.ContentPlatformEnglishName),
                                   LiveAnchorName = o.LiveAnchor.HostAccountName,
-                                  GoodsName = o.AmiyaGoodsDemand.ProjectNname,
+                                  GoodsName = (area == (int)Area.China ? o.AmiyaGoodsDemand.ProjectNname : o.AmiyaGoodsDemand.Description),
                                   BelongEmpId = o.BelongEmpId.HasValue ? o.BelongEmpId.Value : 0,
                                   ThumbPictureUrl = o.AmiyaGoodsDemand.ThumbPictureUrl,
                                   ConsultingContent = o.ConsultingContent,
@@ -1078,12 +1078,28 @@ namespace Fx.Amiya.Service
                 unitOfWork.BeginTransaction();
                 var sendInfo = dalContentPlatformOrderSend.GetAll().Where(e => e.Id == updateDto.Id).SingleOrDefault();
                 if (sendInfo == null)
-                    throw new Exception("派单编号错误");
+                {
+                    if (updateDto.Area == (int)Area.China)
+                    {
+                        throw new Exception("派单编号错误");
+                    }
+                    else
+                    {
+                        throw new Exception("Invalid send order Id.");
+                    }
+                }
                 if (!sendInfo.IsMainHospital)
                 {
                     //次派订单修改逻辑
                     //await UpdateOtherSendInfoAsync(updateDto, employeeId);
-                    throw new Exception("该数据为辅派订单，请通过订单号找到主派订单进行改派！");
+                    if (updateDto.Area == (int)Area.China)
+                    {
+                        throw new Exception("该数据为辅派订单，请通过订单号找到主派订单进行改派！");
+                    }
+                    else
+                    {
+                        throw new Exception("This data is for a supplementary dispatch order. Please find the main dispatch order through the order number to make a change of dispatch");
+                    }
                 }
                 else
                 {
@@ -1148,9 +1164,27 @@ namespace Fx.Amiya.Service
         private async Task UpdateMainSendInfoAsync(UpdateContentPlatFormSendOrderInfoDto updateDto, ContentPlatformOrderSend sendInfo, int employeeId)
         {
             if (updateDto.OtherHospitalId.Contains(updateDto.HospitalId))
-                throw new Exception("主派医院和次派医院重复");
+            {
+                if (updateDto.Area == (int)Area.China)
+                {
+                    throw new Exception("主派医院和次派医院重复");
+                }
+                else
+                {
+                    throw new Exception("The primary hospital and the secondary hospital are repeated");
+                }
+            }
             if (updateDto.OtherHospitalId.Distinct().Count() != updateDto.OtherHospitalId.Count())
-                throw new Exception("次派医院重复");
+            {
+                if (updateDto.Area == (int)Area.China)
+                {
+                    throw new Exception("次派医院重复");
+                }
+                else
+                {
+                    throw new Exception("The secondary hospital is repeated");
+                }
+            }
             //已有次派派单信息
             var otherHospitalList = dalContentPlatformOrderSend.GetAll().Where(e => e.ContentPlatformOrderId == sendInfo.ContentPlatformOrderId && e.IsMainHospital == false).ToList();
             var contentPlatFormOrder = await this.GetByOrderIdAsync(updateDto.OrderId);
@@ -1159,7 +1193,16 @@ namespace Fx.Amiya.Service
             if (!isChangeMainHospital)
             {
                 if (contentPlatFormOrder.HasDealInfo)
-                    throw new Exception("该订单已有成交信息,不能修改主派医院");
+                {
+                    if (updateDto.Area == (int)Area.China)
+                    {
+                        throw new Exception("该订单已有成交信息,不能修改主派医院");
+                    }
+                    else
+                    {
+                        throw new Exception("This order already has transaction information and the main dispatching hospital cannot be modified");
+                    }
+                }
                 //主派和次派数据重复删除主派,次派变主派,次派订单状态不修改,主订单状态变为该次派订单状态
                 if (otherHospitalList.Select(e => e.HospitalId).Contains(updateDto.HospitalId))
                 {
@@ -1999,10 +2042,10 @@ namespace Fx.Amiya.Service
             result.CustomerType = order.CustomerType;
             result.CustomerTypeText = (area == (int)Area.China ? ServiceClass.GetShoppingCartCustomerTypeText(order.CustomerType) : ServiceClassEnglishVersion.GetShoppingCartCustomerTypeTextEnglish(order.CustomerType));
             var goodsInfo = await amiyaGoodsDemandService.GetByIdAsync(order.GoodsId);
-            result.GoodsName = goodsInfo.ProjectNname;
-            result.GoodsDescription = goodsInfo.Description;
+            result.GoodsName = (area == (int)Area.China ? goodsInfo.ProjectNname : goodsInfo.Description);
+            //result.GoodsDescription = goodsInfo.Description;
             result.ThumbPicture = goodsInfo.ThumbPictureUrl;
-            result.HospitalDepartmentName = goodsInfo.HospitalDepartmentName;
+            result.HospitalDepartmentName = (area == (int)Area.China ? goodsInfo.HospitalDepartmentName : goodsInfo.HospitalDepartmentDescription);
             result.UnSendReason = order.UnSendReason;
             result.AcceptConsulting = order.AcceptConsulting;
             result.LastDealHospitalId = order.LastDealHospitalId;
@@ -2013,7 +2056,7 @@ namespace Fx.Amiya.Service
                 result.LastDealHospitalName = hospitalInfo.Name;
             }
             var contentPlatFormInfo = await _contentPlatformService.GetByIdAsync(order.ContentPlateformId);
-            result.ContentPlateFormName =(area==(int)Area.China ? contentPlatFormInfo.ContentPlatformName : contentPlatFormInfo.ContentPlatformEnglishName);
+            result.ContentPlateFormName = (area == (int)Area.China ? contentPlatFormInfo.ContentPlatformName : contentPlatFormInfo.ContentPlatformEnglishName);
             result.IsRepeatProfundityOrder = order.IsRepeatProfundityOrder;
             result.IsCreateBill = order.IsCreateBill;
             result.CreateBillCompany = dalCompanyBaseInfo.GetAll().Where(e => e.Id == order.BelongCompany).SingleOrDefault()?.Name;
@@ -2023,7 +2066,7 @@ namespace Fx.Amiya.Service
             result.HasDealInfo = order.ContentPlatformOrderDealInfoList.Count() > 0;
             result.IsRiBuLuoLiving = order.IsRiBuLuoLiving;
             result.BelongCompanyEnumId = order.OrderBelongCompany;
-            result.BelongCompanyName = ServiceClass.GetBelongCompanyTypeText(order.OrderBelongCompany);
+            result.BelongCompanyName = (area == (int)Area.China ? ServiceClass.GetBelongCompanyTypeText(order.OrderBelongCompany) : ServiceClassEnglishVersion.GetBelongCompanyTypeTextEnglish(order.OrderBelongCompany));
             return result;
         }
 
@@ -3740,7 +3783,7 @@ namespace Fx.Amiya.Service
             return orderTypeList;
         }
 
-        public List<ContentPlateFormOrderTypeDto> GetOrderToHospitalTypeList()
+        public List<ContentPlateFormOrderTypeDto> GetOrderToHospitalTypeList(int area)
         {
             var orderTypes = Enum.GetValues(typeof(ContentPlateFormOrderToHospitalType));
             List<ContentPlateFormOrderTypeDto> orderTypeList = new List<ContentPlateFormOrderTypeDto>();
@@ -3748,7 +3791,14 @@ namespace Fx.Amiya.Service
             {
                 ContentPlateFormOrderTypeDto orderType = new ContentPlateFormOrderTypeDto();
                 orderType.OrderType = Convert.ToByte(item);
-                orderType.OrderTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(Convert.ToByte(item));
+                if (area == (int)Area.China)
+                {
+                    orderType.OrderTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(Convert.ToByte(item));
+                }
+                else
+                {
+                    orderType.OrderTypeText = ServiceClassEnglishVersion.GerContentPlatFormOrderToHospitalTypeTextEnglish(Convert.ToByte(item));
+                }
                 orderTypeList.Add(orderType);
             }
             return orderTypeList;
@@ -5977,7 +6027,7 @@ namespace Fx.Amiya.Service
         public async Task<FxPageInfo<SendContentPlatformOrderDto>> GetOnlyMainHospitalOrderAsync(QueryOnlyMainHospitalOrderByPageDto queryDto)
         {
             var employee = await _amiyaEmployeeService.GetByIdAsync(queryDto.employeeId);
-            var orders = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderSendList).Where(e => e.ContentPlatformOrderSendList.Count() == 1);
+            var orders = _dalContentPlatformOrder.GetAll().Include(e => e.ContentPlatformOrderSendList).Where(e => e.ContentPlatformOrderSendList.Count() == 1 && e.Area == queryDto.Area);
             if (!string.IsNullOrEmpty(queryDto.KeyWord))
             {
                 orders = from d in orders
@@ -6020,18 +6070,18 @@ namespace Fx.Amiya.Service
                 {
                     Id = d.ContentPlatformOrderSendList.First().Id,
                     OrderId = d.Id,
-                    ContentPlatFormName = d.Contentplatform.ContentPlatformName,
+                    ContentPlatFormName = queryDto.Area == (int)Area.China ? d.Contentplatform.ContentPlatformName : d.Contentplatform.ContentPlatformEnglishName,
                     LiveAnchorName = d.LiveAnchor.HostAccountName,
                     BelongEmpId = d.BelongEmpId.HasValue ? d.BelongEmpId.Value : 0,
                     CustomerName = ServiceClass.GetIncompleteCustomerName(d.CustomerName),
                     Phone = config.EnablePhoneEncrypt == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
                     EncryptPhone = ServiceClass.Encrypt(d.Phone, config.PhoneEncryptKey),
                     SendHospitalId = d.ContentPlatformOrderSendList.First().HospitalId,
-                    GoodsName = d.AmiyaGoodsDemand.ProjectNname,
+                    GoodsName = (queryDto.Area == (int)Area.China ? d.AmiyaGoodsDemand.ProjectNname : d.AmiyaGoodsDemand.Description),
                     ThumbPictureUrl = d.AmiyaGoodsDemand.ThumbPictureUrl,
                     ConsultingContent = d.ConsultingContent,
                     OrderTypeText = ServiceClass.GetContentPlateFormOrderTypeText((byte)d.OrderType),
-                    OrderStatusText = ServiceClass.GetContentPlateFormOrderStatusText((byte)d.OrderStatus),
+                    OrderStatusText = (queryDto.Area == (int)Area.China ? ServiceClass.GetContentPlateFormOrderStatusText((byte)d.OrderStatus) : ServiceClassEnglishVersion.GetContentPlateFormOrderStatusTextEnglish((byte)d.OrderStatus)),
                     IsToHospital = (d.OrderStatus == (int)ContentPlateFormOrderStatus.OrderComplete || d.OrderStatus == (int)ContentPlateFormOrderStatus.WithoutCompleteOrder) ? true : false,
                     ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ToHospitalType),
                     SenderName = d.ContentPlatformOrderSendList.First().AmiyaEmployee.Name,
@@ -6039,11 +6089,11 @@ namespace Fx.Amiya.Service
                     SendOrderRemark = d.ContentPlatformOrderSendList.First().Remark,
                     OrderRemark = d.Remark,
                     HospitalRemark = d.ContentPlatformOrderSendList.First().HospitalRemark,
-                    OrderSourceText = ServiceClass.GerContentPlatFormOrderSourceText(d.OrderSource.Value),
+                    OrderSourceText = (queryDto.Area == (int)Area.China ? ServiceClass.GerContentPlatFormOrderSourceText(d.OrderSource.Value) : ServiceClassEnglishVersion.GerContentPlatFormOrderSourceTextEnglish(d.OrderSource.Value)),
                     IsRepeatProfundityOrder = d.ContentPlatformOrderSendList.First().IsRepeatProfundityOrder,
                     IsMainHospital = d.ContentPlatformOrderSendList.First().IsMainHospital,
                     ConsultingContent2 = d.ConsultingContent2,
-                    BelongChannelText = ServiceClass.BelongChannelText(d.BelongChannel),
+                    BelongChannelText = (queryDto.Area == (int)Area.China ? ServiceClass.BelongChannelText(d.BelongChannel) : ServiceClassEnglishVersion.BelongChannelTextEnglish(d.BelongChannel)),
                     IsSpecifyHospitalEmployee = d.ContentPlatformOrderSendList.First().IsSpecifyHospitalEmployee,
                     HospitalEmployeeId = d.ContentPlatformOrderSendList.First().HospitalEmployeeId,
                 })

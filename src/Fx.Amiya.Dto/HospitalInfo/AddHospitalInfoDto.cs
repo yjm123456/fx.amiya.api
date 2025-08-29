@@ -95,5 +95,7 @@ namespace Fx.Amiya.Dto.HospitalInfo
         /// </summary>
         public string Remark { get; set; }
 
+        public int HospitalArea { get; set; }
+
     }
 }

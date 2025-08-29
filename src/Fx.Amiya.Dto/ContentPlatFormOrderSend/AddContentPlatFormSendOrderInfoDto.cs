@@ -54,5 +54,7 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 医院账户id
         /// </summary>
         public int HospitalEmployeeId { get; set; }
+
+        public int Area { get; set; }
     }
 }

@@ -25,15 +25,17 @@ namespace Fx.Amiya.Background.Api.Controllers
 
         private IAmiyaGoodsDemandService amiyaGoodsDemandService;
         private IAmiyaHospitalDepartmentService _amiyaHospitalDepartmentService;
+        private IHttpContextAccessor httpContextAccessor;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="amiyaGoodsDemandService"></param>
-        public AmiyaGoodsDemandController(IAmiyaGoodsDemandService amiyaGoodsDemandService, IAmiyaHospitalDepartmentService amiyaHospitalDepartmentService)
+        public AmiyaGoodsDemandController(IAmiyaGoodsDemandService amiyaGoodsDemandService, IAmiyaHospitalDepartmentService amiyaHospitalDepartmentService, IHttpContextAccessor httpContextAccessor)
         {
             this.amiyaGoodsDemandService = amiyaGoodsDemandService;
             _amiyaHospitalDepartmentService = amiyaHospitalDepartmentService;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
 
@@ -52,16 +54,16 @@ namespace Fx.Amiya.Background.Api.Controllers
                 var q = await amiyaGoodsDemandService.GetListWithPageAsync(keyword, pageNum, pageSize);
 
                 var amiyaGoodsDemand = from d in q.List
-                              select new AmiyaGoodsDemandVo
-                              {
-                                  Id = d.Id,
-                                  ProjectNname = d.ProjectNname,
-                                  HospitalDepartmentId=d.HospitalDepartmentId,
-                                  HospitalDepartmentName = _amiyaHospitalDepartmentService.GetByIdAsync(d.HospitalDepartmentId).Result.DepartmentName,
-                                  Description = d.Description,
-                                  ThumbPictureUrl=d.ThumbPictureUrl,
-                                  Valid = d.Valid
-                              };
+                                       select new AmiyaGoodsDemandVo
+                                       {
+                                           Id = d.Id,
+                                           ProjectNname = d.ProjectNname,
+                                           HospitalDepartmentId = d.HospitalDepartmentId,
+                                           HospitalDepartmentName = _amiyaHospitalDepartmentService.GetByIdAsync(d.HospitalDepartmentId).Result.DepartmentName,
+                                           Description = d.Description,
+                                           ThumbPictureUrl = d.ThumbPictureUrl,
+                                           Valid = d.Valid
+                                       };
 
                 FxPageInfo<AmiyaGoodsDemandVo> amiyaGoodsDemandPageInfo = new FxPageInfo<AmiyaGoodsDemandVo>();
                 amiyaGoodsDemandPageInfo.TotalCount = q.TotalCount;
@@ -86,14 +88,16 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var q = await amiyaGoodsDemandService.GetIdAndNames(hospitalDepartmentId);
+                var empInfo = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(empInfo.Id);
+                var q = await amiyaGoodsDemandService.GetIdAndNames(hospitalDepartmentId, Convert.ToInt32(empInfo.Area));
 
                 var amiyaGoodsDemand = from d in q
-                              select new AmiyaGoodsDemandIdAndNameVo
-                              {
-                                  Id = d.Id,
-                                  ProjectName = d.ProjectNname
-                              };
+                                       select new AmiyaGoodsDemandIdAndNameVo
+                                       {
+                                           Id = d.Id,
+                                           ProjectName = d.ProjectNname
+                                       };
 
                 return ResultData<List<AmiyaGoodsDemandIdAndNameVo>>.Success().AddData("AmiyaGoodsDemandList", amiyaGoodsDemand.ToList());
             }

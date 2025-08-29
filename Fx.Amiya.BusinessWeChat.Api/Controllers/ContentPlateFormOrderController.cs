@@ -631,6 +631,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 addDto.OtherHospitalId = addVo.OtherHospitalId;
                 addDto.IsSpecifyHospitalEmployee = addVo.IsSpecifyHospitalEmployee;
                 addDto.HospitalEmployeeId = addVo.HospitalEmployeeId;
+                addDto.Area = (int)Area.China;
                 await _orderService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -673,7 +674,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 updateDto.IsUncertainDate = updateVo.IsUncertainDate;
                 updateDto.AppointmentDate = updateVo.AppointmentDate;
                 updateDto.Remark = updateVo.Remark;
-
+                updateDto.Area = (int)Area.China;
                 await _orderService.UpdateAsync(updateDto, employeeId);
                 return ResultData.Success();
             }
@@ -994,7 +995,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("contentPlateFormOrderToHospitalTypeList")]
         public ResultData<List<BaseKeyAndValueVo>> GetContentPlateFormOrderToHospitalTypeList()
         {
-            var orderTypes = from d in _orderService.GetOrderToHospitalTypeList()
+            var orderTypes = from d in _orderService.GetOrderToHospitalTypeList((int)Area.China)
                              select new BaseKeyAndValueVo
                              {
                                  Id = d.OrderType.ToString(),

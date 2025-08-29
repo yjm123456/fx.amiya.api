@@ -35,7 +35,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         /// 构造函数
         /// </summary>
         /// <param name="hospitalInfoService"></param>
-        public HospitalInfoController(IHospitalInfoService hospitalInfoService,IHospitalEmployeeService hospitalEmployeeService)
+        public HospitalInfoController(IHospitalInfoService hospitalInfoService, IHospitalEmployeeService hospitalEmployeeService)
         {
             this.hospitalInfoService = hospitalInfoService;
             this.hospitalEmployeeService = hospitalEmployeeService;
@@ -53,7 +53,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         {
             try
             {
-                var hospital = from d in await hospitalInfoService.GetHospitalNameListAsync(true, name)
+                var hospital = from d in await hospitalInfoService.GetHospitalNameListAsync((int)Area.China, true, name)
                                select new BaseKeyAndValueVo
                                {
                                    Id = d.Id.ToString(),
@@ -77,7 +77,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         {
             try
             {
-                var hospital = from d in await hospitalInfoService.GetHospitalSimpleNameListAsync(true)
+                var hospital = from d in await hospitalInfoService.GetHospitalSimpleNameListAsync((int)Area.China, true)
                                select new BaseKeyAndValueVo
                                {
                                    Id = d.Id.ToString(),
@@ -104,7 +104,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         {
             try
             {
-                var hospital = from d in await hospitalInfoService.GetCheckPassedHospitalNameListAsync(null, name)
+                var hospital = from d in await hospitalInfoService.GetCheckPassedHospitalNameListAsync((int)Area.China, null, name)
                                select new BaseKeyAndValueVo
                                {
                                    Id = d.Id.ToString(),

@@ -178,7 +178,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var selectResult = await contentPlatFormOrderAddWorkService.GetByPhoneAsync(phone, employeeId);
+                var selectResult = await contentPlatFormOrderAddWorkService.GetByPhoneAsync(Convert.ToInt32(employee.Area),phone, employeeId);
                 ContentPlatFormOrderAddWorkVo result = new ContentPlatFormOrderAddWorkVo();
                 result.Id = selectResult.Id;
                 result.HospitalId = selectResult.HospitalId;
@@ -369,7 +369,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public ResultData<List<BaseIdAndNameVo>> GetContentPlatformOrderAddWorkTypeList()
         {
-            var orderTypes = from d in contentPlatFormOrderAddWorkService.GetContentPlatformOrderAddWorkTypeText()
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            var orderTypes = from d in contentPlatFormOrderAddWorkService.GetContentPlatformOrderAddWorkTypeText(Convert.ToInt32(employee.Area))
                              select new BaseIdAndNameVo
                              {
                                  Id = d.Id,

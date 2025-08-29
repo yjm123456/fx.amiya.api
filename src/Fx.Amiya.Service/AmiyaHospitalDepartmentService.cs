@@ -79,7 +79,7 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<List<AmiyaHospitalDepartmentKeyAndValueDto>> GetIdAndNames()
+        public async Task<List<AmiyaHospitalDepartmentKeyAndValueDto>> GetIdAndNames(int area)
         {
             try
             {
@@ -88,7 +88,7 @@ namespace Fx.Amiya.Service
                                               select new AmiyaHospitalDepartmentKeyAndValueDto
                                               {
                                                   Id = d.Id,
-                                                  DepartmentName = d.DepartmentName
+                                                  DepartmentName = (area == (int)Area.China ? d.DepartmentName : d.Description)
                                               };
                 return amiyaHospitalDepartment.ToList();
             }
@@ -103,15 +103,15 @@ namespace Fx.Amiya.Service
             try
             {
                 var res = from d in dalAmiyaHospitalDepartment.GetAll()
-                                              where d.Id == id
-                                              select new AmiyaHospitalDepartmentDto
-                                              {
-                                                  Id = d.Id,
-                                                  DepartmentName = d.DepartmentName,
-                                                  Description = d.Description,
-                                                  Valid = d.Valid,
-                                                  Sort = d.Sort
-                                              };
+                          where d.Id == id
+                          select new AmiyaHospitalDepartmentDto
+                          {
+                              Id = d.Id,
+                              DepartmentName = d.DepartmentName,
+                              Description = d.Description,
+                              Valid = d.Valid,
+                              Sort = d.Sort
+                          };
                 var amiyaHospitalDepartment = res.FirstOrDefault();
                 if (amiyaHospitalDepartment == null)
                 {
@@ -247,14 +247,14 @@ namespace Fx.Amiya.Service
         private async Task<AmiyaHospitalDepartmentDto> GetNearHospitalDepartment(string Id, bool IsUp)
         {
             var hospitalDepartment = from d in dalAmiyaHospitalDepartment.GetAll().OrderByDescending(z => z.Sort)
-                                select new AmiyaHospitalDepartmentDto
-                                {
-                                    Id = d.Id,
-                                    DepartmentName = d.DepartmentName,
-                                    Description = d.Description,
-                                    Valid = d.Valid,
-                                    Sort = d.Sort
-                                };
+                                     select new AmiyaHospitalDepartmentDto
+                                     {
+                                         Id = d.Id,
+                                         DepartmentName = d.DepartmentName,
+                                         Description = d.Description,
+                                         Valid = d.Valid,
+                                         Sort = d.Sort
+                                     };
             var hospitalDepartmentList = hospitalDepartment.ToList();
             int ExistRow = 0;
             AmiyaHospitalDepartmentDto department = new AmiyaHospitalDepartmentDto();

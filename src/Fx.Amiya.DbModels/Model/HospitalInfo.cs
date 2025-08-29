@@ -135,6 +135,11 @@ namespace Fx.Amiya.DbModels.Model
         /// </summary>
         public bool IsShareInMiniProgram { get; set; }
 
+        /// <summary>
+        /// 医院地区
+        /// </summary>
+        public int HospitalArea { get; set; }
+
         public AmiyaEmployee CreateByAmiyaEmployee { get; set; }
         public AmiyaEmployee UpdateByAmiyaEmployee { get; set; }
         public CooperativeHospitalCity CooperativeHospitalCity { get; set; }

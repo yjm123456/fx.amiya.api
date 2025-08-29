@@ -415,7 +415,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("customerServiceList")]
         public async Task<ResultData<FxPageInfo<CustomerServiceEmployeeVo>>> GetCustomerSeviceListWithPageAsync(int pageNum, int pageSize)
         {
-            var q = await employeeService.GetCustomerSeviceListWithPageAsync(pageNum, pageSize);
+            var loginEmployee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            var q = await employeeService.GetCustomerSeviceListWithPageAsync(Convert.ToInt32(loginEmployee.Area), pageNum, pageSize);
             var customerService = from d in q.List
                                   select new CustomerServiceEmployeeVo
                                   {
@@ -441,7 +442,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("customerServiceNameList")]
         public async Task<ResultData<List<AmiyaEmployeeNameVo>>> GetCustomerServiceNameListAsync(string baseLiveAnchorId)
         {
-            var employee = from d in await employeeService.GetCustomerServiceNameListAsync(baseLiveAnchorId)
+            var loginEmployee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            var employee = from d in await employeeService.GetCustomerServiceNameListAsync(Convert.ToInt32(loginEmployee.Area), baseLiveAnchorId)
                            select new AmiyaEmployeeNameVo
                            {
                                Id = d.Id,
@@ -456,7 +458,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("operatingConsultingNameList")]
         public async Task<ResultData<List<AmiyaEmployeeNameVo>>> GetOperatingConsultingNameListAsync()
         {
-            var employee = from d in await employeeService.GetOperatingConsultingNameListAsync()
+            var loginEmployee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            var employee = from d in await employeeService.GetOperatingConsultingNameListAsync(Convert.ToInt32(loginEmployee.Area))
                            select new AmiyaEmployeeNameVo
                            {
                                Id = d.Id,
@@ -472,7 +475,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("consultationNameList")]
         public async Task<ResultData<List<AmiyaEmployeeNameVo>>> GetConsultingNameListAsync()
         {
-            var employee = from d in await employeeService.GetConsultingNameListAsync()
+            var loginEmployee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            var employee = from d in await employeeService.GetConsultingNameListAsync(Convert.ToInt32(loginEmployee.Area))
                            select new AmiyaEmployeeNameVo
                            {
                                Id = d.Id,
@@ -488,7 +492,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("getEmployeeByPositionId")]
         public async Task<ResultData<List<AmiyaEmployeeNameVo>>> GetemployeeByPositionIdAsync(int? positionId)
         {
-            var employee = from d in await employeeService.GetemployeeByPositionIdAsync(positionId)
+            var loginEmployee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            var employee = from d in await employeeService.GetemployeeByPositionIdAsync(Convert.ToInt32(loginEmployee.Area), positionId)
                            select new AmiyaEmployeeNameVo
                            {
                                Id = d.Id,

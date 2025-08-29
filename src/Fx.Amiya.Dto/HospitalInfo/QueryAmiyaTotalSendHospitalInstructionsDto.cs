@@ -20,5 +20,10 @@ namespace Fx.Amiya.Dto.HospitalInfo
         /// 医院名称
         /// </summary>
         public string HospitalName { get; set; }
+
+        /// <summary>
+        /// 地区
+        /// </summary>
+        public int Area { get; set; }
     }
 }

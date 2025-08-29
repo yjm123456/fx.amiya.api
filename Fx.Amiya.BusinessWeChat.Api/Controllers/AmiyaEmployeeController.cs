@@ -156,7 +156,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("customerServiceNameList")]
         public async Task<ResultData<List<BaseKeyAndValueVo>>> GetCustomerServiceNameListAsync()
         {
-            var employee = from d in await employeeService.GetCustomerServiceNameListAsync()
+            var employee = from d in await employeeService.GetCustomerServiceNameListAsync((int)Area.China, null)
                            select new BaseKeyAndValueVo
                            {
                                Id = d.Id.ToString(),
@@ -172,7 +172,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("getEmployeeByPositionId")]
         public async Task<ResultData<List<BaseKeyAndValueVo>>> GetemployeeByPositionIdAsync(int? positionId)
         {
-            var employee = from d in await employeeService.GetemployeeByPositionIdAsync(positionId)
+            var employee = from d in await employeeService.GetemployeeByPositionIdAsync((int)Area.China, positionId)
                            select new BaseKeyAndValueVo
                            {
                                Id = d.Id.ToString(),
@@ -191,7 +191,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
             try
             {
                 await employeeService.UpdateAvatarAsync(updateVo.Id, updateVo.Url);
-                return ResultData<string>.Success().AddData("avatar",updateVo.Url);
+                return ResultData<string>.Success().AddData("avatar", updateVo.Url);
             }
             catch (Exception ex)
             {
@@ -209,7 +209,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("customerServiceNameListByBaseLiveAnchorId")]
         public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetCustomerServiceNameListAsync(string baseLiveAnchorId)
         {
-            var employee = from d in await employeeService.GetCustomerServiceNameListAsync(baseLiveAnchorId)
+            var employee = from d in await employeeService.GetCustomerServiceNameListAsync((int)Area.China, null)
                            select new BaseIdAndNameVo<int>
                            {
                                Id = d.Id,

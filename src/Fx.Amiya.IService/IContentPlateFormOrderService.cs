@@ -274,7 +274,7 @@ namespace Fx.Amiya.IService
         /// 获取订单到院状态
         /// </summary>
         /// <returns></returns>
-        List<ContentPlateFormOrderTypeDto> GetOrderToHospitalTypeList();
+        List<ContentPlateFormOrderTypeDto> GetOrderToHospitalTypeList(int area);
         /// <summary>
         /// 获取下单状态
         /// </summary>

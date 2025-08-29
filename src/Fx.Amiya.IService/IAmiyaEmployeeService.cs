@@ -194,7 +194,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<CustomerServiceEmployeeDto>> GetCustomerSeviceListWithPageAsync(int pageNum, int pageSize);
+        Task<FxPageInfo<CustomerServiceEmployeeDto>> GetCustomerSeviceListWithPageAsync(int area, int pageNum, int pageSize);
 
 
         /// <summary>
@@ -202,13 +202,13 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="baseLiveAnchorId">主播基础信息id</param>
         /// <returns></returns>
-        Task<List<AmiyaEmployeeNameDto>> GetCustomerServiceNameListAsync(string baseLiveAnchorId=null);
+        Task<List<AmiyaEmployeeNameDto>> GetCustomerServiceNameListAsync(int area,string baseLiveAnchorId=null);
 
         /// <summary>
         /// 获取运营咨询人员姓名列表
         /// </summary>
         /// <returns></returns>
-        Task<List<AmiyaEmployeeNameDto>> GetOperatingConsultingNameListAsync();
+        Task<List<AmiyaEmployeeNameDto>> GetOperatingConsultingNameListAsync(int area);
         /// <summary>
         /// 获取财务人员姓名列表
         /// </summary>
@@ -219,14 +219,14 @@ namespace Fx.Amiya.IService
         /// 获取面诊员姓名列表
         /// </summary>
         /// <returns></returns>
-        Task<List<AmiyaEmployeeNameDto>> GetConsultingNameListAsync();
+        Task<List<AmiyaEmployeeNameDto>> GetConsultingNameListAsync(int area);
 
         /// <summary>
         /// 根据职位id获取人员
         /// </summary>
         /// <param name="positionId"></param>
         /// <returns></returns>
-        Task<List<AmiyaEmployeeNameDto>> GetemployeeByPositionIdAsync(int? positionId);
+        Task<List<AmiyaEmployeeNameDto>> GetemployeeByPositionIdAsync(int area,int? positionId);
         /// <summary>
         /// 根据基础主播id
         /// </summary>

@@ -38,6 +38,8 @@ namespace Fx.Amiya.DbModels.Model
         /// 订单状态
         /// </summary>
         public int OrderStatus { get; set; }
+
+        public int Area { get; set; }
         public ContentPlatformOrder ContentPlatformOrder { get; set; }
         public AmiyaEmployee AmiyaEmployee { get; set; }
         public HospitalInfo HospitalInfo { get; set; }

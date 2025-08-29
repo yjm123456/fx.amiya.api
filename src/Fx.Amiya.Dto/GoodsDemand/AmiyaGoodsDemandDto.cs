@@ -25,6 +25,10 @@ namespace Fx.Amiya.Dto.GoodsDemand
         /// </summary>
         public string HospitalDepartmentName { get; set; }
         /// <summary>
+        /// 医院科室描述
+        /// </summary>
+        public string HospitalDepartmentDescription { get; set; }
+        /// <summary>
         /// 缩略图
         /// </summary>
         public string ThumbPictureUrl { get; set; }

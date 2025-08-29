@@ -42,7 +42,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         {
             try
             {
-                var q = await amiyaGoodsDemandService.GetIdAndNames(hospitalDepartmentId);
+                var q = await amiyaGoodsDemandService.GetIdAndNames(hospitalDepartmentId, (int)Area.China);
 
                 var amiyaGoodsDemand = from d in q
                                        select new AmiyaGoodsDemandIdAndNameVo
@@ -69,7 +69,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         {
             try
             {
-                var q = await amiyaHospitalDepartmentService.GetIdAndNames();
+                var q = await amiyaHospitalDepartmentService.GetIdAndNames((int)Area.China);
 
                 var amiyaHospitalDepartment = from d in q
                                               select new AmiyaHospitalDepartmentIdAndNameVo
@@ -95,7 +95,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         {
             try
             {
-                var q = await amiyaHospitalDepartmentService.GetIdAndNames();
+                var q = await amiyaHospitalDepartmentService.GetIdAndNames((int)Area.China);
                 var k = await amiyaGoodsDemandService.GetAll();
                 var amiyaHospitalDepartment = from d in q
                                               select new AmiyaHospitalDepartmentIdAndNameVo

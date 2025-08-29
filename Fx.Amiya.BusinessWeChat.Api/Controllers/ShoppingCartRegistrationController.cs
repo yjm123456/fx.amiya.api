@@ -325,7 +325,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [HttpGet("getBelongCompanyList")]
         public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetBelongCompanyListAsync()
         {
-            var nameList = shoppingCartRegistrationService.GetBelonCompanyList();
+            var nameList = shoppingCartRegistrationService.GetBelonCompanyList((int)Area.China);
             var result = nameList.Select(e => new BaseIdAndNameVo<int>
             {
                 Id = e.Id,

@@ -178,7 +178,7 @@ namespace Fx.Amiya.IService
         /// 获取消费类型
         /// </summary>
         /// <returns></returns>
-        Task<List<BaseKeyValueDto<int>>> GetConsumptionTypeAsync();
+        Task<List<BaseKeyValueDto<int>>> GetConsumptionTypeAsync(int area);
 
         #region【业绩板块】
 
@@ -473,7 +473,7 @@ namespace Fx.Amiya.IService
         #endregion
 
         #region 【枚举下拉框】
-        List<BaseIdAndNameDto> GetOrderDealPerformanceTypeList();
+        List<BaseIdAndNameDto> GetOrderDealPerformanceTypeList(int area);
 
         #endregion
     }

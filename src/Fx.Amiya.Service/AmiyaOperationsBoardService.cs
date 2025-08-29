@@ -4581,7 +4581,7 @@ namespace Fx.Amiya.Service
             var orderDealInfo = await contentPlatFormOrderDealInfoService.GetPerformanceDetailByDateAndAssistantIdListAsync(selectDate.StartDate, selectDate.EndDate, assistantIdList);
 
             #region 机构业绩
-            var hospitalInfo = await hospitalInfoService.GetHospitalNameListAsync(null, null);
+            var hospitalInfo = await hospitalInfoService.GetHospitalNameListAsync((int)Area.China, null, null);
             return orderDealInfo.GroupBy(x => x.LastDealHospitalId).Select(e => new AssistantHospitalPerformanceDto
             {
                 Name = hospitalInfo.Where(h => h.Id == e.Key).Select(e => e.Name).FirstOrDefault(),
@@ -4602,7 +4602,7 @@ namespace Fx.Amiya.Service
             var orderDealInfo = await contentPlatFormOrderDealInfoService.GetPerformanceDetailByDateAndBaseLiveAnchorIdAsync(selectDate.StartDate, selectDate.EndDate, query.LiveAnchorBaseId);
 
             #region 机构业绩
-            var hospitalInfo = await hospitalInfoService.GetHospitalNameListAsync(null, null);
+            var hospitalInfo = await hospitalInfoService.GetHospitalNameListAsync((int)Area.China, null, null);
             return orderDealInfo.GroupBy(x => x.LastDealHospitalId).Select(e => new AssistantHospitalPerformanceDto
             {
                 Name = hospitalInfo.Where(h => h.Id == e.Key).Select(e => e.Name).FirstOrDefault(),
@@ -4659,7 +4659,7 @@ namespace Fx.Amiya.Service
                 }
             }
             #region 机构线索
-            var hospitalInfo = await hospitalInfoService.GetHospitalNameListAsync(null, null);
+            var hospitalInfo = await hospitalInfoService.GetHospitalNameListAsync((int)Area.China, null, null);
             var sendOrderHospitalList = await contentPlateFormOrderService.GetDealCountDataByPhoneListAsync(selectDate.StartDate, selectDate.EndDate, sendPhoneList);
             var hospitalIds = sendOrderHospitalList.Distinct().ToList();
             var toHospitalData = await contentPlatFormOrderDealInfoService.GeVisitAndDealNumByHospitalIdAndPhoneListAsync(hospitalIds, selectDate.StartDate, selectDate.EndDate, sendPhoneList);
@@ -4720,7 +4720,7 @@ namespace Fx.Amiya.Service
                 }
             }
             #region 机构线索
-            var hospitalInfo = await hospitalInfoService.GetHospitalNameListAsync(null, null);
+            var hospitalInfo = await hospitalInfoService.GetHospitalNameListAsync((int)Area.China, null, null);
             var sendOrderHospitalList = await contentPlateFormOrderService.GetDealCountDataByPhoneListAsync(selectDate.StartDate, selectDate.EndDate, sendPhoneList);
             var hospitalIds = sendOrderHospitalList.Distinct().ToList();
             var toHospitalData = await contentPlatFormOrderDealInfoService.GeVisitAndDealNumByHospitalIdAndPhoneListAsync(hospitalIds, selectDate.StartDate, selectDate.EndDate, sendPhoneList);
@@ -6135,7 +6135,7 @@ namespace Fx.Amiya.Service
             }).ToList();
             beforeLiveClueAndPerformanceBrokenData.PerformanceData = FillDate(query.EndDate.Year, query.EndDate.Month, performance);
 
-            var newCustomerPerformance = performanceData.Where(x=>x.IsOldcustomer==false).GroupBy(e => e.CreateDate.Day).Select(e => new PerformanceBrokenLineListInfoDto
+            var newCustomerPerformance = performanceData.Where(x => x.IsOldcustomer == false).GroupBy(e => e.CreateDate.Day).Select(e => new PerformanceBrokenLineListInfoDto
             {
                 date = e.Key.ToString(),
                 Performance = ChangePriceToTenThousand(e.Sum(e => e.Price))

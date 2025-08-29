@@ -17,13 +17,13 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.Name).HasColumnName("name").HasColumnType("varchar(100)").IsRequired(false);
             builder.Property(t => t.RealName).HasColumnName("real_name").HasColumnType("varchar(45)").IsRequired(false);
             // builder.Property(t => t.Age).HasColumnName("age").HasColumnType("int").IsRequired();
-            builder.Property(t => t.Sex).HasColumnName("sex").HasColumnType("char(1)").IsRequired(false);
+            builder.Property(t => t.Sex).HasColumnName("sex").HasColumnType("char(20)").IsRequired(false);
             builder.Property(t => t.Phone).HasColumnName("phone").HasColumnType("varchar(20)").IsRequired();
             builder.Property(t => t.Birthday).HasColumnName("birthday").HasColumnType("date").IsRequired(false);
             builder.Property(t => t.Occupation).HasColumnName("occupation").HasColumnType("varchar(50)").IsRequired(false);
             builder.Property(t => t.WechatNumber).HasColumnName("wechat_number").HasColumnType("varchar(50)").IsRequired(false);
-            builder.Property(t => t.Province).HasColumnName("province").HasColumnType("varchar(45)").IsRequired(false);
-            builder.Property(t => t.City).HasColumnName("city").HasColumnType("varchar(20)").IsRequired(false);
+            builder.Property(t => t.Province).HasColumnName("province").HasColumnType("varchar(500)").IsRequired(false);
+            builder.Property(t => t.City).HasColumnName("city").HasColumnType("varchar(500)").IsRequired(false);
             builder.Property(t => t.PersonalWechat).HasColumnName("personal_wechat").HasColumnType("bit").IsRequired();
             builder.Property(t => t.BusinessWeChat).HasColumnName("business_wechat").HasColumnType("bit").IsRequired();
             builder.Property(t => t.WechatMiniProgram).HasColumnName("wechat_miniprogram").HasColumnType("bit").IsRequired();

@@ -14,7 +14,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.ToTable("tbl_province");
             builder.HasKey(e => e.Id);
             builder.Property(e=>e.Id).HasColumnName("id").HasColumnType("varchar(50)").IsRequired();
-            builder.Property(e=>e.Name).HasColumnName("name").HasColumnType("varchar(20)").IsRequired();
+            builder.Property(e=>e.Name).HasColumnName("name").HasColumnType("varchar(500)").IsRequired();
             builder.Property(e=>e.Valid).HasColumnName("valid").HasColumnType("bit").IsRequired();
         }
     }

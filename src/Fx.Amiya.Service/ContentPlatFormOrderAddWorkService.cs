@@ -63,7 +63,7 @@ namespace Fx.Amiya.Service
                     CheckStateText = ServiceClass.GetCheckTypeText(e.CheckState),
                     CheckRemark = e.CheckRemark,
                     CheckDate = e.CheckDate,
-                    Picture=e.Picture
+                    Picture = e.Picture
                 });
             FxPageInfo<ContentPlatFormOrderAddWorkDto> fxPageInfo = new FxPageInfo<ContentPlatFormOrderAddWorkDto>();
             fxPageInfo.TotalCount = await record.CountAsync();
@@ -124,7 +124,7 @@ namespace Fx.Amiya.Service
         }
 
 
-        public async Task<ContentPlatFormOrderAddWorkDto> GetByPhoneAsync(string phone, int empId)
+        public async Task<ContentPlatFormOrderAddWorkDto> GetByPhoneAsync(int area, string phone, int empId)
         {
             var selectResult = await _dalContentPlatFormOrderAddWork.GetAll().Where(x => x.Phone == phone && x.CreateBy == empId && x.Valid == true).OrderByDescending(x => x.CreateDate).FirstOrDefaultAsync();
             if (selectResult == null)
@@ -138,12 +138,12 @@ namespace Fx.Amiya.Service
             result.Phone = selectResult.Phone;
             result.SendRemark = selectResult.SendRemark;
             result.AddWorkType = selectResult.AddWorkType;
-            result.AddWorkTypeText = ServiceClass.GetContentPlatformOrderAddWorkTypeText(selectResult.AddWorkType);
+            result.AddWorkTypeText = area == (int)Area.China ? ServiceClass.GetContentPlatformOrderAddWorkTypeText(selectResult.AddWorkType) : ServiceClassEnglishVersion.GetContentPlatformOrderAddWorkTypeTextEnglish(selectResult.AddWorkType);
             result.CreateBy = selectResult.CreateBy;
             result.CreateDate = selectResult.CreateDate;
             result.BelongCustomerServiceId = selectResult.BelongCustomerServiceId;
             result.CheckState = selectResult.CheckState;
-            result.CheckStateText = ServiceClass.GetCheckTypeText(selectResult.CheckState);
+            result.CheckStateText = area == (int)Area.China ? ServiceClass.GetCheckTypeText(selectResult.CheckState) : ServiceClassEnglishVersion.GetCheckTypeTextEnglish(selectResult.CheckState);
             result.CheckRemark = selectResult.CheckRemark;
             result.CheckDate = selectResult.CheckDate;
             result.Picture = selectResult.Picture;
@@ -234,7 +234,7 @@ namespace Fx.Amiya.Service
         /// 获取申请类型
         /// </summary>
         /// <returns></returns>
-        public List<BaseIdAndNameDto> GetContentPlatformOrderAddWorkTypeText()
+        public List<BaseIdAndNameDto> GetContentPlatformOrderAddWorkTypeText(int area)
         {
             var appointmentTypes = Enum.GetValues(typeof(ContentPlatformOrderAddWorkType));
             List<BaseIdAndNameDto> appointmentTypeList = new List<BaseIdAndNameDto>();
@@ -242,7 +242,14 @@ namespace Fx.Amiya.Service
             {
                 BaseIdAndNameDto appointmentType = new BaseIdAndNameDto();
                 appointmentType.Id = Convert.ToInt32(item).ToString();
-                appointmentType.Name = ServiceClass.GetContentPlatformOrderAddWorkTypeText(Convert.ToByte(item));
+                if (area == (int)Area.China)
+                {
+                    appointmentType.Name = ServiceClass.GetContentPlatformOrderAddWorkTypeText(Convert.ToByte(item));
+                }
+                else
+                {
+                    appointmentType.Name = ServiceClassEnglishVersion.GetContentPlatformOrderAddWorkTypeTextEnglish(Convert.ToByte(item));
+                }
                 appointmentTypeList.Add(appointmentType);
             }
             return appointmentTypeList;
@@ -283,8 +290,8 @@ namespace Fx.Amiya.Service
                     CheckStateText = ServiceClass.GetCheckTypeText(e.CheckState),
                     CheckRemark = e.CheckRemark,
                     CheckDate = e.CheckDate,
-                    Valid=e.Valid,
-                    Picture=e.Picture
+                    Valid = e.Valid,
+                    Picture = e.Picture
                 });
             FxPageInfo<ContentPlatFormOrderAddWorkDto> fxPageInfo = new FxPageInfo<ContentPlatFormOrderAddWorkDto>();
             fxPageInfo.TotalCount = await record.CountAsync();

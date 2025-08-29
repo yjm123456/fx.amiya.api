@@ -317,7 +317,7 @@ namespace Fx.Amiya.Service
             HospitalTransformCycleDataDto data = new HospitalTransformCycleDataDto();
             var seqDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.EndDate.Year, query.EndDate.Month);
 
-            var hospitalList = await hospitalInfoService.GetValidHospitalNameListAsync();
+            var hospitalList = await hospitalInfoService.GetValidHospitalNameListAsync((int)Area.China);
             var hospitalIdList = hospitalList.Select(e => e.Id).ToList();
 
             #region 派单上门
@@ -474,7 +474,7 @@ namespace Fx.Amiya.Service
             result.Items = new List<HospitalCluesDataItemDto>();
             var selectDate = DateTimeExtension.GetStartDateEndDate(query.StartDate, query.EndDate);
 
-            var hospitalList = await hospitalInfoService.GetValidHospitalNameListAsync();
+            var hospitalList = await hospitalInfoService.GetValidHospitalNameListAsync((int)Area.China);
             var hospitalIdList = hospitalList.Select(e => e.Id).ToList();
 
             #region 机构线索
@@ -525,7 +525,7 @@ namespace Fx.Amiya.Service
             HospitalPerformanceRateDto result = new HospitalPerformanceRateDto();
             var selectDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.EndDate.Year, query.EndDate.Month);
 
-            var hospitalIdAndNameList = await hospitalInfoService.GetValidHospitalNameListAsync();
+            var hospitalIdAndNameList = await hospitalInfoService.GetValidHospitalNameListAsync((int)Area.China);
 
             var dealInfoList = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate >= selectDate.StartDate && e.CreateDate < selectDate.EndDate && e.IsToHospital == true && e.Valid == true && e.ToHospitalDate.HasValue)
                      //.Where(e => e.LastDealHospitalId == query.HospitalId.Value)
@@ -560,7 +560,7 @@ namespace Fx.Amiya.Service
             HospitalPerformanceRateDto result = new HospitalPerformanceRateDto();
             var selectDate = DateTimeExtension.GetSequentialDateByStartAndEndDate(query.EndDate.Year, query.EndDate.Month);
 
-            var hospitalIdAndNameList = await hospitalInfoService.GetValidHospitalNameListAsync();
+            var hospitalIdAndNameList = await hospitalInfoService.GetValidHospitalNameListAsync((int)Area.China);
 
             var dealInfoList = await dalContentPlatFormOrderDealInfo.GetAll().Where(e => e.CreateDate >= selectDate.StartDate && e.CreateDate < selectDate.EndDate && e.IsToHospital == true && e.Valid == true && e.IsDeal == true && e.ToHospitalDate.HasValue)
                      //.Where(e => e.LastDealHospitalId == query.HospitalId.Value)

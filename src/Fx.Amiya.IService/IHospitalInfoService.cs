@@ -25,7 +25,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<HospitalInfoDto>> GetListWithPageAsync(string keyword, int? cityId, int pageNum, int pageSize,bool? valid);
+        Task<FxPageInfo<HospitalInfoDto>> GetListWithPageAsync(string keyword, int? cityId, int pageNum, int pageSize, int area, bool? valid);
 
         /// <summary>
         /// 获取即将到期的医院列表数据
@@ -41,7 +41,7 @@ namespace Fx.Amiya.IService
         /// <param name="CheckState"></param>
         /// <param name="submitState"></param>
         /// <returns></returns>
-        Task<FxPageInfo<HospitalCheckInfoDto>> GetCheckListWithPageAsync(string keyword, int pageNum, int pageSize, int CheckState, int submitState);
+        Task<FxPageInfo<HospitalCheckInfoDto>> GetCheckListWithPageAsync(string keyword, int pageNum, int pageSize, int CheckState, int submitState,int area);
 
         /// <summary>
         /// 啊美雅全国供应链派单指南
@@ -54,13 +54,13 @@ namespace Fx.Amiya.IService
         /// 获取医院名称列表
         /// </summary>
         /// <returns></returns>
-        Task<List<HospitalNameDto>> GetHospitalNameListAsync(bool? valid,string name);
+        Task<List<HospitalNameDto>> GetHospitalNameListAsync(int area, bool? valid,string name);
         /// <summary>
         /// 获取医院简称列表
         /// </summary>
         /// <param name="valid"></param>
         /// <returns></returns>
-        Task<List<HospitalNameDto>> GetHospitalSimpleNameListAsync(bool? valid);
+        Task<List<HospitalNameDto>> GetHospitalSimpleNameListAsync(int area, bool? valid);
         /// <summary>
         /// 小程序获取医院名称列表
         /// </summary>
@@ -80,7 +80,7 @@ namespace Fx.Amiya.IService
         /// <param name="valid"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        Task<List<HospitalNameDto>> GetCheckPassedHospitalNameListAsync(bool? valid, string name);
+        Task<List<HospitalNameDto>> GetCheckPassedHospitalNameListAsync(int area, bool? valid, string name);
         /// <summary>
         /// 添加医院
         /// </summary>
@@ -113,7 +113,7 @@ namespace Fx.Amiya.IService
         /// 获取有效的医院列表
         /// </summary>
         /// <returns></returns>
-        Task<List<HospitalNameDto>> GetValidHospitalNameListAsync();
+        Task<List<HospitalNameDto>> GetValidHospitalNameListAsync(int area);
 
         /// <summary>
         /// 修改医院信息

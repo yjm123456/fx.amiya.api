@@ -83,7 +83,7 @@ namespace Fx.Amiya.IService
         /// 获取归属公司
         /// </summary>
         /// <returns></returns>
-        List<BaseIdAndNameDto<int>> GetBelonCompanyList();
+        List<BaseIdAndNameDto<int>> GetBelonCompanyList(int area);
         /// <summary>
         /// 根据创建人与时间线获取医美/带货客资加v量
         /// </summary>

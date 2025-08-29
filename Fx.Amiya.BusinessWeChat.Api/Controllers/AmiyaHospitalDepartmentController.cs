@@ -52,7 +52,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         {
             try
             {
-                var q = await amiyaHospitalDepartmentService.GetIdAndNames();
+                var q = await amiyaHospitalDepartmentService.GetIdAndNames((int)Area.China);
 
                 var amiyaHospitalDepartment = from d in q
                                               select new BaseKeyAndValueVo

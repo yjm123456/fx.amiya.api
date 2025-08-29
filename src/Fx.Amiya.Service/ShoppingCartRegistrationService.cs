@@ -167,7 +167,7 @@ namespace Fx.Amiya.Service
                                                    CustomerWechatNo = d.CustomerWechatNo,
                                                    FromTitle = d.FromTitle,
                                                    IsRepeateCreateOrder = d.IsRepeateCreateOrder,
-                                                   BelongCompany = ServiceClass.GetBelongCompanyTypeText(d.BelongCompany)
+                                                   BelongCompany = (area == (int)Area.China ? ServiceClass.GetBelongCompanyTypeText(d.BelongCompany): ServiceClassEnglishVersion.GetBelongCompanyTypeTextEnglish(d.BelongCompany))
                                                };
                 var employee = await dalAmiyaEmployee.GetAll().Include(e => e.AmiyaPositionInfo).SingleOrDefaultAsync(e => e.Id == employeeId);
                 if (!employee.AmiyaPositionInfo.IsDirector)
@@ -1251,7 +1251,7 @@ namespace Fx.Amiya.Service
         /// 获取归属公司列表
         /// </summary>
         /// <returns></returns>
-        public List<BaseIdAndNameDto<int>> GetBelonCompanyList()
+        public List<BaseIdAndNameDto<int>> GetBelonCompanyList(int area)
         {
             var belongCompanys = Enum.GetValues(typeof(CustomerBelongCompany));
             List<BaseIdAndNameDto<int>> data = new List<BaseIdAndNameDto<int>>();
@@ -1259,7 +1259,14 @@ namespace Fx.Amiya.Service
             {
                 BaseIdAndNameDto<int> item = new BaseIdAndNameDto<int>();
                 item.Id = Convert.ToInt32(belong);
-                item.Name = ServiceClass.GetBelongCompanyTypeText(item.Id);
+                if (area == (int)Area.China)
+                {
+                    item.Name = ServiceClass.GetBelongCompanyTypeText(item.Id);
+                }
+                else
+                {
+                    item.Name = ServiceClassEnglishVersion.GetBelongCompanyTypeTextEnglish(item.Id);
+                }
                 data.Add(item);
             }
             return data;

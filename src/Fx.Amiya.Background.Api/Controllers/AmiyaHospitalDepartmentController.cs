@@ -23,14 +23,16 @@ namespace Fx.Amiya.Background.Api.Controllers
     {
 
         private IAmiyaHospitalDepartmentService amiyaHospitalDepartmentService;
+        private IHttpContextAccessor httpContextAccessor;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="amiyaHospitalDepartmentService"></param>
-        public AmiyaHospitalDepartmentController(IAmiyaHospitalDepartmentService amiyaHospitalDepartmentService)
+        public AmiyaHospitalDepartmentController(IAmiyaHospitalDepartmentService amiyaHospitalDepartmentService, IHttpContextAccessor httpContextAccessor)
         {
             this.amiyaHospitalDepartmentService = amiyaHospitalDepartmentService;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
 
@@ -80,7 +82,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var q = await amiyaHospitalDepartmentService.GetIdAndNames();
+                var empInfo= httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int employeeId = Convert.ToInt32(empInfo.Id);
+                var q = await amiyaHospitalDepartmentService.GetIdAndNames(Convert.ToInt32(empInfo.Area)) ;
 
                 var amiyaHospitalDepartment = from d in q
                               select new AmiyaHospitalDepartmentIdAndNameVo

@@ -152,6 +152,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.CustomerName = addVo.CustomerName;
                 addDto.Phone = addVo.Phone;
                 addDto.City = addVo.City;
+                if (addVo.Sex == "Male")
+                {
+                    addVo.Sex = "男";
+                }
+                else if (addVo.Sex == "Female")
+                {
+                    addVo.Sex = "女";
+                }
                 addDto.Sex = addVo.Sex;
                 addDto.Birthday = addVo.Birthday;
                 addDto.Occupation = addVo.Occupation;
@@ -197,7 +205,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 editDto.WechatNumber = addVo.WechatNumber;
                 editDto.Province = addVo.Province;
                 editDto.City = addVo.City;
-                editDto.Area = Convert.ToInt32(employee.Area) ;
+                editDto.Area = Convert.ToInt32(employee.Area);
                 await customerService.EditAsync(editDto);
                 return ResultData.Success();
             }
@@ -438,7 +446,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     liveAnchorIds.Add(liveAnchorId.Value);
                 }
             }
-            var q = await _orderService.GetUnSendOrderListWithPageAsync(liveAnchorIds, keyword, startDate, endDate, consultationEmpId, (int)loginEmployeeId, employeeId, orderStatus, contentPlateFormId, orderSource, pageNum, pageSize,Convert.ToInt32(employee.Area));
+            var q = await _orderService.GetUnSendOrderListWithPageAsync(liveAnchorIds, keyword, startDate, endDate, consultationEmpId, (int)loginEmployeeId, employeeId, orderStatus, contentPlateFormId, orderSource, pageNum, pageSize, Convert.ToInt32(employee.Area));
             var unSendOrder = from d in q.List
                               select new UnContentPlateFormSendOrderInfoVo
                               {
@@ -854,7 +862,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
             int empArea = Convert.ToInt32(employee.Area);
-            var order = await _orderService.GetByOrderIdAsync(id,empArea);
+            var order = await _orderService.GetByOrderIdAsync(id, empArea);
             var positionInfo = await amiyaPositionInfoService.GetByIdAsync(Convert.ToInt32(employee.PositionId));
             if (employeeId != order.BelongEmpId && employee.IsCustomerService == true && !positionInfo.IsDirector)
             //if (employeeId != order.BelongEmpId && employee.IsCustomerService == true)
@@ -902,6 +910,14 @@ namespace Fx.Amiya.Background.Api.Controllers
             orderUpdateInfo.Province = customerBaseInfo.Province;
             orderUpdateInfo.City = customerBaseInfo.City;
             orderUpdateInfo.Sex = customerBaseInfo.Sex;
+            if (!string.IsNullOrEmpty(customerBaseInfo.Sex))
+            {
+                orderUpdateInfo.SexId = (customerBaseInfo.Sex == "男" ? 1 : 2);
+            }
+            else
+            {
+                orderUpdateInfo.SexId = 0;
+            }
             if (empArea != (int)Area.China)
             {
                 if (orderUpdateInfo.Sex == "男")
@@ -1015,7 +1031,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             int empArea = Convert.ToInt32(employee.Area);
             var order = await _orderService.GetByOrderIdAsync(id);
             if (order.OrderStatus != (int)ContentPlateFormOrderStatus.OrderComplete)
-            { 
+            {
                 if (empArea == (int)Area.China)
                 {
                     throw new Exception("该订单暂未成交，无法生成喜报！");
@@ -1141,6 +1157,14 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.ConsultEmpId = updateVo.ConsultEmpId;
             updateDto.EmployeeArea = empArea;
             updateDto.City = updateVo.City;
+            if (updateVo.Sex == "Male")
+            {
+                updateVo.Sex = "男";
+            }
+            else if (updateVo.Sex == "Female")
+            {
+                updateVo.Sex = "女";
+            }
             updateDto.Sex = updateVo.Sex;
             updateDto.Birthday = updateVo.Birthday;
             updateDto.Occupation = updateVo.Occupation;
@@ -1283,6 +1307,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.EmployeeId = employeeId;
                 addDto.IsSpecifyHospitalEmployee = addVo.IsSpecifyHospitalEmployee;
                 addDto.HospitalEmployeeId = addVo.HospitalEmployeeId;
+                addDto.Area = Convert.ToInt32(employee.Area);
                 //await _orderService.SendOrderAsync(addDto);
                 await _orderService.AddAsync(addDto);
                 return ResultData.Success();
@@ -1383,6 +1408,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.SendBy = updateVo.SendBy;
                 updateDto.IsSpecifyHospitalEmployee = updateVo.IsSpecifyHospitalEmployee;
                 updateDto.HospitalEmployeeId = updateVo.HospitalEmployeeId;
+                updateDto.Area = Convert.ToInt32(employee.Area);
                 await _orderService.UpdateAsync(updateDto, employeeId);
                 return ResultData.Success();
             }
@@ -1805,6 +1831,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             queryDto.KeyWord = query.KeyWord;
             queryDto.OrderStatus = query.OrderStatus;
             queryDto.HospitalId = query.HospitalId;
+            queryDto.Area = Convert.ToInt32(employee.Area);
             var res = await _orderService.GetOnlyMainHospitalOrderAsync(queryDto);
             FxPageInfo<SendContentPlatformOrderVo> pageInfo = new FxPageInfo<SendContentPlatformOrderVo>();
             pageInfo.TotalCount = res.TotalCount;
@@ -2222,7 +2249,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("contentPlateFormOrderToHospitalTypeList")]
         public ResultData<List<ContentPlateFormOrderTypeVo>> GetContentPlateFormOrderToHospitalTypeList()
         {
-            var orderTypes = from d in _orderService.GetOrderToHospitalTypeList()
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int empArea = Convert.ToInt32(employee.Area);
+            var orderTypes = from d in _orderService.GetOrderToHospitalTypeList(empArea)
                              select new ContentPlateFormOrderTypeVo
                              {
                                  OrderType = d.OrderType,

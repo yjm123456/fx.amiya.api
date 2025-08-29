@@ -1069,7 +1069,7 @@ namespace Fx.Amiya.Service
         /// 获取消费类型名称列表
         /// </summary>
         /// <returns></returns>
-        public async Task<List<BaseKeyValueDto<int>>> GetConsumptionTypeAsync()
+        public async Task<List<BaseKeyValueDto<int>>> GetConsumptionTypeAsync(int area)
         {
             var showDirectionTypes = Enum.GetValues(typeof(ConsumptionType));
             List<BaseKeyValueDto<int>> requestTypeList = new List<BaseKeyValueDto<int>>();
@@ -1077,7 +1077,13 @@ namespace Fx.Amiya.Service
             {
                 BaseKeyValueDto<int> requestType = new BaseKeyValueDto<int>();
                 requestType.Key = Convert.ToInt32(item);
-                requestType.Value = ServiceClass.GetConsumptionTypeText(Convert.ToInt32(item));
+                if (area == (int)Area.China)
+                {
+                    requestType.Value = ServiceClass.GetConsumptionTypeText(Convert.ToInt32(item));
+                }
+                else{
+                    requestType.Value = ServiceClassEnglishVersion.GetConsumptionTypeTextEnglish(Convert.ToInt32(item));
+                }
                 requestTypeList.Add(requestType);
             }
             return requestTypeList;
@@ -3316,7 +3322,7 @@ namespace Fx.Amiya.Service
 
         #region 【枚举下拉框】
 
-        public List<BaseIdAndNameDto> GetOrderDealPerformanceTypeList()
+        public List<BaseIdAndNameDto> GetOrderDealPerformanceTypeList(int area)
         {
             var orderTypes = Enum.GetValues(typeof(ContentPlateFormOrderDealPerformanceType));
             List<BaseIdAndNameDto> orderTypeList = new List<BaseIdAndNameDto>();
@@ -3324,7 +3330,14 @@ namespace Fx.Amiya.Service
             {
                 BaseIdAndNameDto orderType = new BaseIdAndNameDto();
                 orderType.Id = Convert.ToInt32(item).ToString();
-                orderType.Name = ServiceClass.GetContentPlateFormOrderDealPerformanceType(Convert.ToInt32(item));
+                if (area == (int)Area.China)
+                {
+                    orderType.Name = ServiceClass.GetContentPlateFormOrderDealPerformanceType(Convert.ToInt32(item));
+                }
+                else
+                {
+                    orderType.Name = ServiceClassEnglishVersion.GetContentPlateFormOrderDealPerformanceTypeEnglish(Convert.ToInt32(item));
+                }
                 orderTypeList.Add(orderType);
             }
             return orderTypeList;
