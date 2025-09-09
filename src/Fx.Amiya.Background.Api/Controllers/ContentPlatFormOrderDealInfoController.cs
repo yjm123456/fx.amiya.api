@@ -82,7 +82,8 @@ namespace Fx.Amiya.Background.Api.Controllers
 
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
-            var result = await _contentPlatFormOrderDealInfoService.GetOrderListWithPageAsync(startDate, endDate, sendStartDate, sendEndDate, consultationType, minAddOrderPrice, maxAddOrderPrice, isToHospital, tohospitalStartDate, toHospitalEndDate, dealStartDate, dealEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId, createBillCompanyId, isCreateBill, pageNum, pageSize, dataFrom, consumptionType);
+            int empArea = Convert.ToInt32(employee.Area);
+            var result = await _contentPlatFormOrderDealInfoService.GetOrderListWithPageAsync(startDate, endDate, sendStartDate, sendEndDate, consultationType, minAddOrderPrice, maxAddOrderPrice, isToHospital, tohospitalStartDate, toHospitalEndDate, dealStartDate, dealEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId, createBillCompanyId, isCreateBill, pageNum, pageSize, empArea, dataFrom, consumptionType);
 
             var contentPlatformOrders = from d in result.List
                                         select new ContentPlatFormOrderDealInfoVo
@@ -279,7 +280,7 @@ namespace Fx.Amiya.Background.Api.Controllers
 
                 var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                await _contentPlatFormOrderDealInfoService.UpdateDealPictureAsync(updateVo.Id, updateVo.DealPicture,employeeId);
+                await _contentPlatFormOrderDealInfoService.UpdateDealPictureAsync(updateVo.Id, updateVo.DealPicture, employeeId);
                 return ResultData.Success();
             }
             catch (Exception ex)

@@ -596,6 +596,7 @@ namespace Fx.Amiya.Service
                                        RepeatOrderRule = d.RepeatOrderRule,
                                        YearServiceFee = d.YearServiceFee,
                                        Remark = d.Remark,
+                                       HospitalArea = d.HospitalArea,
                                        YearServiceFeeText = d.YearServiceFee.HasValue ? ServiceClass.GetYearServiceFeeOrSecurityDepositText(d.YearServiceFee.Value) : null,
                                        SecurityDeposit = d.SecurityDeposit,
                                        SecurityDepositText = d.SecurityDeposit.HasValue ? ServiceClass.GetYearServiceFeeOrSecurityDepositText(d.SecurityDeposit.Value) : null,

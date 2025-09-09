@@ -186,7 +186,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                 foreach (var x in updateVo.EncryptPhoneList)
                 {
                     //(todo;)
-                    var orderList = await _contentPlatFormOrderService.GetListByEncryptPhoneAsync(x, 1, 9999);
+                    var orderList = await _contentPlatFormOrderService.GetListByEncryptPhoneAsync((int)Area.China, x, 1, 9999);
                     var orderIdList = orderList.List.Select(x => x.Id).ToList();
                     UpdateBelongEmpInfoOrderDto updateOrderBelongEmpIdDto = new UpdateBelongEmpInfoOrderDto();
                     updateOrderBelongEmpIdDto.OrderId = orderIdList;

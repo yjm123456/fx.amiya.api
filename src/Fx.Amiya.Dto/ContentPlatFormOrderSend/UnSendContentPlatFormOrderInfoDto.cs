@@ -29,6 +29,7 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         public decimal? DepositAmount { get; set; }
         public decimal? DealAmount { get; set; }
         public string OrderTypeText{ get; set; }
+        public int OrderStatus { get; set; }
         public string OrderStatusText { get; set; }
         public int AppointmentHospitalId { get; set; }
         public string AppointmentHospital { get; set; }

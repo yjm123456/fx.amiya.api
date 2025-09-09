@@ -84,14 +84,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       ImportantTypeText = d.ImportantTypeText,
                                                       Remark = d.Remark,
                                                       CreateByEmpName = d.CreateByEmpName,
-                                                      AppointmentHospitalId=d.AppointmentHospitalId,
-                                                      AppointmentHospitalName=d.AppointmentHospitalName,
-                                                      Consultation=d.Consultation,
-                                                      AssignLiveanchorId=d.AssignLiveanchorId,
+                                                      AppointmentHospitalId = d.AppointmentHospitalId,
+                                                      AppointmentHospitalName = d.AppointmentHospitalName,
+                                                      Consultation = d.Consultation,
+                                                      AssignLiveanchorId = d.AssignLiveanchorId,
                                                       CustomerPic1 = d.CustomerPic1,
                                                       CustomerPic2 = d.CustomerPic2,
                                                       CustomerPic3 = d.CustomerPic3,
-                                                      AssignLiveanchorName =d.AssignLiveanchorName
+                                                      AssignLiveanchorName = d.AssignLiveanchorName
                                                   };
 
                 FxPageInfo<CustomerAppointmentScheduleVo> customerAppointmentSchedulePageInfo = new FxPageInfo<CustomerAppointmentScheduleVo>();
@@ -145,11 +145,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                       ImportantTypeText = d.ImportantTypeText,
                                                       Remark = d.Remark,
                                                       CreateByEmpName = d.CreateByEmpName,
-                                                      AppointmentHospitalId=d.AppointmentHospitalId,
-                                                      AppointmentHospitalName=d.AppointmentHospitalName,
-                                                      Consultation=d.Consultation,
-                                                      AssignLiveanchorId=d.AssignLiveanchorId,
-                                                      AssignLiveanchorName=d.AssignLiveanchorName
+                                                      AppointmentHospitalId = d.AppointmentHospitalId,
+                                                      AppointmentHospitalName = d.AppointmentHospitalName,
+                                                      Consultation = d.Consultation,
+                                                      AssignLiveanchorId = d.AssignLiveanchorId,
+                                                      AssignLiveanchorName = d.AssignLiveanchorName
                                                   };
 
                 List<CustomerAppointmentScheduleVo> customerAppointmentSchedulePageInfo = new List<CustomerAppointmentScheduleVo>();
@@ -381,8 +381,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                 return ResultData.Fail(ex.Message);
             }
         }
-        
-        
+
+
 
         #region 枚举下拉框
 
@@ -394,7 +394,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public ResultData<List<BaseIdAndNameVo>> GetOrderConsultationTypeList()
         {
-            var orderTypes = from d in customerAppointmentScheduleService.GetAppointmentTypeList()
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            var orderTypes = from d in customerAppointmentScheduleService.GetAppointmentTypeList(employee.Area)
                              select new BaseIdAndNameVo
                              {
                                  Id = d.Id,

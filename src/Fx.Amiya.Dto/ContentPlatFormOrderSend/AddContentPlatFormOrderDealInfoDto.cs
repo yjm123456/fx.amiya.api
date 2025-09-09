@@ -121,5 +121,7 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// 补单时间
         /// </summary>
         public DateTime? ReplenishmentCreateDate { get; set; }
+
+        public int Area { get; set; }
     }
 }

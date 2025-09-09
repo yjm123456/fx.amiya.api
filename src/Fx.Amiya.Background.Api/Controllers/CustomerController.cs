@@ -636,6 +636,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData<CustomerBaseDetailInfoVo>> GetBaseAndBindCustomerInfoByPhoneAsync(string encryptPhone)
         {
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+
             var customer = await customerBaseInfoService.GetByEncryptPhoneAsync(encryptPhone);
             CustomerBaseDetailInfoVo customerSimpleInfoVo = new CustomerBaseDetailInfoVo();
             customerSimpleInfoVo.Id = customer.Id;
@@ -655,7 +657,14 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 customerSimpleInfoVo.SexId = 0;
             }
-            customerSimpleInfoVo.Sex = customer.Sex;
+            if (employee.Area == (int)Area.China && !string.IsNullOrEmpty(customer.Sex))
+            {
+                customerSimpleInfoVo.Sex = customer.Sex;
+            }
+            else
+            {
+                customerSimpleInfoVo.Sex = customer.Sex == "男" ? "male" : "female";
+            }
             customerSimpleInfoVo.Phone = customer.Phone;
             customerSimpleInfoVo.Birthday = customer.Birthday;
             customerSimpleInfoVo.Age = customer.Age;

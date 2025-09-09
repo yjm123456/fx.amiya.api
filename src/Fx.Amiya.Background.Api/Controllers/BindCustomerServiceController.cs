@@ -127,7 +127,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 UpdateBindCustomerServiceDto updateDto = new UpdateBindCustomerServiceDto();
                 updateDto.CustomerServiceId = updateVo.CustomerServiceId;
                 updateDto.EncryptPhoneList = updateVo.EncryptPhoneList;
-                updateVo.OriginalCustomerServiceIds= await bindCustomerServiceService.UpdateAsync(updateDto, employeeId);
+                updateVo.OriginalCustomerServiceIds = await bindCustomerServiceService.UpdateAsync(updateDto, employeeId);
                 return ResultData.Success();
             }
             catch (Exception ex)
@@ -191,7 +191,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 UpdateBindCustomerServiceDto updateDto = new UpdateBindCustomerServiceDto();
                 updateDto.CustomerServiceId = updateVo.CustomerServiceId;
                 updateDto.EncryptPhoneList = updateVo.EncryptPhoneList;
-                updateVo.OriginalCustomerServiceIds= await bindCustomerServiceService.UpdateAsync(updateDto, employeeId);
+                updateVo.OriginalCustomerServiceIds = await bindCustomerServiceService.UpdateAsync(updateDto, employeeId);
 
                 foreach (var x in updateVo.EncryptPhoneList)
                 {
@@ -238,12 +238,12 @@ namespace Fx.Amiya.Background.Api.Controllers
                 UpdateBindCustomerServiceDto updateDto = new UpdateBindCustomerServiceDto();
                 updateDto.CustomerServiceId = updateVo.CustomerServiceId;
                 updateDto.EncryptPhoneList = updateVo.EncryptPhoneList;
-                updateVo.OriginalCustomerServiceIds= await bindCustomerServiceService.UpdateAsync(updateDto, employeeId);
+                updateVo.OriginalCustomerServiceIds = await bindCustomerServiceService.UpdateAsync(updateDto, employeeId);
 
                 foreach (var x in updateVo.EncryptPhoneList)
                 {
                     //(todo;)
-                    var orderList = await _contentPlatFormOrderService.GetListByEncryptPhoneAsync(x, 1, 9999);
+                    var orderList = await _contentPlatFormOrderService.GetListByEncryptPhoneAsync(employee.Area, x, 1, 9999);
                     var orderIdList = orderList.List.Select(x => x.Id).ToList();
                     UpdateBelongEmpInfoOrderDto updateOrderBelongEmpIdDto = new UpdateBelongEmpInfoOrderDto();
                     updateOrderBelongEmpIdDto.OrderId = orderIdList;

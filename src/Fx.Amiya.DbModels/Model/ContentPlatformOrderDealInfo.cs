@@ -164,5 +164,6 @@ namespace Fx.Amiya.DbModels.Model
         /// 是否有效
         /// </summary>
         public bool Valid { get; set; }
+        public int Area { get; set; }
     }
 }

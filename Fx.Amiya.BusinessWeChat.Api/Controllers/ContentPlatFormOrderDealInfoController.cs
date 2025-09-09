@@ -2,7 +2,6 @@
 
 using Fx.Amiya.BusinessWeChat.Api.Vo.Base;
 using Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlateFormOrder;
-using Fx.Amiya.BusinessWeChat.Api.Vo.ContentPlatFormOrderSend;
 using Fx.Amiya.IService;
 using Fx.Authorization.Attributes;
 using Fx.Common;
@@ -80,7 +79,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
 
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int employeeId = Convert.ToInt32(employee.Id);
-            var result = await _contentPlatFormOrderDealInfoService.GetOrderListWithPageAsync(startDate, endDate, sendStartDate, sendEndDate, consultationType, minAddOrderPrice, maxAddOrderPrice, isToHospital, tohospitalStartDate, toHospitalEndDate, dealStartDate, dealEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId, createBillCompanyId, isCreateBill, pageNum, pageSize, dataFrom, consumptionType);
+            var result = await _contentPlatFormOrderDealInfoService.GetOrderListWithPageAsync(startDate, endDate, sendStartDate, sendEndDate, consultationType, minAddOrderPrice, maxAddOrderPrice, isToHospital, tohospitalStartDate, toHospitalEndDate, dealStartDate, dealEndDate, toHospitalType, isDeal, lastDealHospitalId, isAccompanying, isOldCustomer, CheckState, isReturnBakcPrice, returnBackPriceStartDate, returnBackPriceEndDate, customerServiceId, keyWord, employeeId, createBillCompanyId, isCreateBill, pageNum, pageSize, (int)Area.China, dataFrom, consumptionType);
 
             var contentPlatformOrders = from d in result.List
                                         select new ContentPlatFormOrderDealInfoVo

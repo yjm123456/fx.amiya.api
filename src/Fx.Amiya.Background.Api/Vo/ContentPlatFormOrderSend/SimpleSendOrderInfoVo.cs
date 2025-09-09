@@ -30,7 +30,11 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend
         /// <summary>
         /// 订单状态
         /// </summary>
-        public string OrderStatus { get; set; }
+        public int OrderStatus { get; set; }
+        /// <summary>
+        /// 订单状态文本
+        /// </summary>
+        public string OrderStatusText { get; set; }
 
         /// <summary>
         /// 派单人

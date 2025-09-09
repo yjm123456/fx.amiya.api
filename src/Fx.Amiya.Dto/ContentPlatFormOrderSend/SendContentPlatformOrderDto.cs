@@ -98,6 +98,11 @@ namespace Fx.Amiya.Dto.ContentPlatFormOrderSend
         /// <summary>
         /// 订单状态
         /// </summary>
+        public int OrderStatus { get; set; }
+
+        /// <summary>
+        /// 订单状态文本
+        /// </summary>
         public string OrderStatusText { get; set; }
 
         /// <summary>

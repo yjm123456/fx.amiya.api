@@ -776,6 +776,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
                     }
                 }
                 updateDto.AddContentPlatFormOrderDealDetailsDtoList = addContentPlatFormOrderDealDetailsDtos;
+                updateDto.Area = (int)Area.China;
                 await _orderService.FinishContentPlateFormOrderAsync(updateDto);
                 return ResultData.Success();
             }

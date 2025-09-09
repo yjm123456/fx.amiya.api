@@ -168,6 +168,10 @@ namespace Fx.Amiya.Dto.HospitalInfo
         /// 备注
         /// </summary>
         public string Remark { get; set; }
+        /// <summary>
+        /// 医院地区
+        /// </summary>
+        public int HospitalArea { get; set; }
 
         public List<HospitalTagNameDto> ScaleTagList { get; set; }
         public List<HospitalTagNameDto> FacilityTagList { get; set; }

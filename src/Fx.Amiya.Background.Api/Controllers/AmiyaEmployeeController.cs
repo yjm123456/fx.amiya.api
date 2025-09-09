@@ -371,9 +371,6 @@ namespace Fx.Amiya.Background.Api.Controllers
             try
             {
                 List<EmployeeBaseInfoVo> employeeList = new List<EmployeeBaseInfoVo>();
-
-
-
                 if (employee.Type == (byte)EmployeeType.AmiyaEmployee)
                 {
                     var amiyeEmployee = from d in await employeeService.GetInfoListIdsAsync(employee.Ids)
@@ -394,9 +391,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                                           };
                     employeeList.AddRange(hospitalEmplyee.ToList());
                 }
-
-
-
                 return ResultData<List<EmployeeBaseInfoVo>>.Success().AddData("employee", employeeList);
             }
             catch (Exception ex)
@@ -517,7 +511,6 @@ namespace Fx.Amiya.Background.Api.Controllers
             }).ToList();
             return ResultData<List<BaseIdAndNameVo>>.Success().AddData("areaTypeText", list);
         }
-
         #endregion
 
     }

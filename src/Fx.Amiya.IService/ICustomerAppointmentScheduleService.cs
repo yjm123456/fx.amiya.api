@@ -35,7 +35,7 @@ namespace Fx.Amiya.IService
         Task UpdateAsync(UpdateCustomerAppointmentScheduleDto updateDto);
         Task DeleteAsync(string id);
 
-        List<BaseIdAndNameDto> GetAppointmentTypeList();
+        List<BaseIdAndNameDto> GetAppointmentTypeList(int area);
         /// <summary>
         /// 完成客户预约日程
         /// </summary>

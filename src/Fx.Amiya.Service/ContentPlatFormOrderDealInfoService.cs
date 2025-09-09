@@ -14,14 +14,12 @@ using Fx.Amiya.Dto.WxAppConfig;
 using Fx.Amiya.IDal;
 using Fx.Amiya.IService;
 using Fx.Common;
-using Fx.Infrastructure.DataAccess;
 using jos_sdk_net.Util;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Fx.Amiya.Service
@@ -207,7 +205,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, DateTime? dealStartDate, DateTime? dealEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, string createBillCompanyId, bool? isCreateBill, int pageNum, int pageSize, bool? dataFrom, int? consumptionType)
+        public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetOrderListWithPageAsync(DateTime? startDate, DateTime? endDate, DateTime? sendStartDate, DateTime? sendEndDate, int? consultationType, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, bool? isToHospital, DateTime? tohospitalStartDate, DateTime? toHospitalEndDate, DateTime? dealStartDate, DateTime? dealEndDate, int? toHospitalType, bool? isDeal, int? lastDealHospitalId, bool? isAccompanying, bool? isOldCustomer, int? CheckState, bool? isReturnBakcPrice, DateTime? returnBackPriceStartDate, DateTime? returnBackPriceEndDate, int? customerServiceId, string keyWord, int employeeId, string createBillCompanyId, bool? isCreateBill, int pageNum, int pageSize, int empArea, bool? dataFrom, int? consumptionType)
         {
             var config = await wxAppConfigService.GetCallCenterConfig();
             try
@@ -283,7 +281,16 @@ namespace Fx.Amiya.Service
                 {
                     if (!tohospitalStartDate.HasValue || !toHospitalEndDate.HasValue)
                     {
-                        throw new Exception("到院时间为必填项，请完整填写到院的开始时间与结束时间！");
+                        if (empArea == (int)Area.China)
+                        {
+
+                            throw new Exception("到院时间为必填项，请完整填写到院的开始时间与结束时间！");
+                        }
+                        else
+                        {
+
+                            throw new Exception("The time of arrival at the hospital is a required field. Please fill in the start and end times of your arrival completely");
+                        }
                     }
                     DateTime startrq = ((DateTime)tohospitalStartDate).Date;
                     DateTime endrq = ((DateTime)toHospitalEndDate).Date.AddDays(1);
@@ -298,7 +305,14 @@ namespace Fx.Amiya.Service
                 {
                     if (!dealStartDate.HasValue || !dealEndDate.HasValue)
                     {
-                        throw new Exception("成交时间为必填项，请完整填写成交的开始时间与结束时间！");
+                        if (empArea == (int)Area.China)
+                        {
+                            throw new Exception("成交时间为必填项，请完整填写成交的开始时间与结束时间！");
+                        }
+                        else
+                        {
+                            throw new Exception("The transaction time is a required field. Please fill in the start and end times of the transaction completely");
+                        }
                     }
                     DateTime startrq = ((DateTime)dealStartDate).Date;
                     DateTime endrq = ((DateTime)dealEndDate).Date.AddDays(1);
@@ -312,7 +326,14 @@ namespace Fx.Amiya.Service
                 {
                     if (!returnBackPriceStartDate.HasValue || !returnBackPriceEndDate.HasValue)
                     {
-                        throw new Exception("回款时间为必填项，请完整填写回款的开始时间与结束时间！");
+                        if (empArea == (int)Area.China)
+                        {
+                            throw new Exception("回款时间为必填项，请完整填写回款的开始时间与结束时间！");
+                        }
+                        else
+                        {
+                            throw new Exception("The collection time is a required field. Please fill in the start and end times of the collection completely");
+                        }
                     }
                     DateTime startrq = ((DateTime)returnBackPriceStartDate).Date;
                     DateTime endrq = ((DateTime)returnBackPriceEndDate).Date.AddDays(1);
@@ -342,6 +363,7 @@ namespace Fx.Amiya.Service
                                                    && (!consultationType.HasValue || d.ContentPlatFormOrder.ConsulationType == consultationType)
                                                    && (!minAddOrderPrice.HasValue || d.ContentPlatFormOrder.AddOrderPrice >= minAddOrderPrice)
                                                    && (!maxAddOrderPrice.HasValue || d.ContentPlatFormOrder.AddOrderPrice <= maxAddOrderPrice)
+                                                   && (d.Area == empArea)
                                                    select new ContentPlatFormOrderDealInfoDto
                                                    {
                                                        Id = d.Id,
@@ -352,15 +374,15 @@ namespace Fx.Amiya.Service
                                                        IsDeal = d.IsDeal,
                                                        IsOldCustomer = d.IsOldCustomer,
                                                        IsAcompanying = d.IsAcompanying,
-                                                       ConsultationTypeText = ServiceClass.GetContentPlateFormOrderConsultationTypeText(d.ContentPlatFormOrder.ConsulationType),
+                                                       ConsultationTypeText = (empArea == (int)Area.China ? ServiceClass.GetContentPlateFormOrderConsultationTypeText(d.ContentPlatFormOrder.ConsulationType) : ServiceClassEnglishVersion.GetContentPlateFormOrderConsultationTypeTextEnglish(d.ContentPlatFormOrder.ConsulationType)),
                                                        CommissionRatio = d.CommissionRatio,
                                                        IsToHospital = d.IsToHospital,
                                                        AddOrderPrice = d.ContentPlatFormOrder.AddOrderPrice,
                                                        ToHospitalType = d.ToHospitalType,
-                                                       ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ToHospitalType),
+                                                       ToHospitalTypeText = (empArea == (int)Area.China ? ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ToHospitalType) : ServiceClassEnglishVersion.GerContentPlatFormOrderToHospitalTypeTextEnglish(d.ToHospitalType)),
                                                        ToHospitalDate = d.ToHospitalDate,
                                                        DealPerformanceType = d.DealPerformanceType,
-                                                       DealPerformanceTypeText = ServiceClass.GetContentPlateFormOrderDealPerformanceType(d.DealPerformanceType),
+                                                       DealPerformanceTypeText = (empArea == (int)Area.China ? ServiceClass.GetContentPlateFormOrderDealPerformanceType(d.DealPerformanceType) : ServiceClassEnglishVersion.GetContentPlateFormOrderDealPerformanceTypeEnglish(d.DealPerformanceType)),
                                                        LastDealHospitalId = d.LastDealHospitalId,
                                                        SendDate = d.ContentPlatFormOrder.SendDate,
                                                        DealPicture = d.DealPicture,
@@ -369,7 +391,7 @@ namespace Fx.Amiya.Service
                                                        DealDate = d.DealDate,
                                                        OtherAppOrderId = d.OtherAppOrderId,
                                                        CheckState = d.CheckState,
-                                                       CheckStateText = ServiceClass.GetCheckTypeText(d.CheckState.Value),
+                                                       CheckStateText = (empArea == (int)Area.China ? ServiceClass.GetCheckTypeText(d.CheckState.Value) : ServiceClassEnglishVersion.GetCheckTypeTextEnglish(d.CheckState.Value)),
                                                        CheckPrice = d.CheckPrice,
                                                        CheckDate = d.CheckDate,
                                                        CheckBy = d.CheckBy,
@@ -388,7 +410,7 @@ namespace Fx.Amiya.Service
                                                        IsCreateBill = d.IsCreateBill,
                                                        BelongCompany = d.BelongCompany,
                                                        ConsumptionType = d.ConsumptionType,
-                                                       ConsumptionTypeText = ServiceClass.GetConsumptionTypeText(d.ConsumptionType),
+                                                       ConsumptionTypeText = (empArea == (int)Area.China ? ServiceClass.GetConsumptionTypeText(d.ConsumptionType): ServiceClassEnglishVersion.GetConsumptionTypeTextEnglish(d.ConsumptionType)),
                                                        CustomerServiceSettlePrice = d.CustomerServiceSettlePrice ?? 0m
                                                    };
 
@@ -740,7 +762,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetListWithPageAsync(string contentPlafFormOrderId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ContentPlatFormOrderDealInfoDto>> GetListWithPageAsync(string contentPlafFormOrderId, int pageNum, int pageSize,int area)
         {
             try
             {
@@ -758,18 +780,18 @@ namespace Fx.Amiya.Service
                                                        CommissionRatio = d.CommissionRatio,
                                                        IsToHospital = d.IsToHospital,
                                                        ToHospitalType = d.ToHospitalType,
-                                                       ToHospitalTypeText = ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ToHospitalType),
+                                                       ToHospitalTypeText = (area==(int)Area.China? ServiceClass.GerContentPlatFormOrderToHospitalTypeText(d.ToHospitalType): ServiceClassEnglishVersion.GerContentPlatFormOrderToHospitalTypeTextEnglish(d.ToHospitalType)),
                                                        ToHospitalDate = d.ToHospitalDate,
                                                        LastDealHospitalId = d.LastDealHospitalId,
                                                        DealPicture = d.DealPicture,
                                                        DealPerformanceType = d.DealPerformanceType,
-                                                       DealPerformanceTypeText = ServiceClass.GetContentPlateFormOrderDealPerformanceType(d.DealPerformanceType),
+                                                       DealPerformanceTypeText = (area==(int)Area.China? ServiceClass.GetContentPlateFormOrderDealPerformanceType(d.DealPerformanceType): ServiceClassEnglishVersion.GetContentPlateFormOrderDealPerformanceTypeEnglish(d.DealPerformanceType)),
                                                        Remark = d.Remark,
                                                        Price = d.Price,
                                                        DealDate = d.DealDate,
                                                        OtherAppOrderId = d.OtherAppOrderId,
                                                        CheckState = d.CheckState,
-                                                       CheckStateText = ServiceClass.GetCheckTypeText(d.CheckState.Value),
+                                                       CheckStateText = (area==(int)Area.China? ServiceClass.GetCheckTypeText(d.CheckState.Value): ServiceClassEnglishVersion.GetCheckTypeTextEnglish(d.CheckState.Value)),
                                                        CheckPrice = d.CheckPrice,
                                                        CheckDate = d.CheckDate,
                                                        CheckBy = d.CheckBy,
@@ -784,7 +806,7 @@ namespace Fx.Amiya.Service
                                                        ReconciliationDocumentsId = d.ReconciliationDocumentsId,
                                                        IsRepeatProfundityOrder = d.IsRepeatProfundityOrder,
                                                        ConsumptionType = d.ConsumptionType,
-                                                       ConsumptionTypeText = ServiceClass.GetConsumptionTypeText(d.ConsumptionType)
+                                                       ConsumptionTypeText = (area==(int)Area.China? ServiceClass.GetConsumptionTypeText(d.ConsumptionType): ServiceClassEnglishVersion.GetConsumptionTypeTextEnglish(d.ConsumptionType))
                                                    };
 
                 FxPageInfo<ContentPlatFormOrderDealInfoDto> ContentPlatFOrmOrderDealInfoPageInfo = new FxPageInfo<ContentPlatFormOrderDealInfoDto>();
@@ -931,6 +953,8 @@ namespace Fx.Amiya.Service
                 ContentPlatFOrmOrderDealInfo.LastDealInfoId = addDto.LastDealInfoId;
                 ContentPlatFOrmOrderDealInfo.LastDealInfoCreateDate = addDto.LastDealInfoCreateDate;
                 ContentPlatFOrmOrderDealInfo.Valid = true;
+                ContentPlatFOrmOrderDealInfo.Area = addDto.Area;
+
                 await dalContentPlatFormOrderDealInfo.AddAsync(ContentPlatFOrmOrderDealInfo, true);
 
                 //添加邀约凭证图片
@@ -1081,7 +1105,8 @@ namespace Fx.Amiya.Service
                 {
                     requestType.Value = ServiceClass.GetConsumptionTypeText(Convert.ToInt32(item));
                 }
-                else{
+                else
+                {
                     requestType.Value = ServiceClassEnglishVersion.GetConsumptionTypeTextEnglish(Convert.ToInt32(item));
                 }
                 requestTypeList.Add(requestType);
@@ -1542,10 +1567,10 @@ namespace Fx.Amiya.Service
             return returnInfo;
         }
 
-        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetTodaySendPerformanceByHospitalIdAsync(List<int> hospitalId, DateTime startDate,DateTime endDate)
+        public async Task<List<ContentPlatFormOrderDealInfoDto>> GetTodaySendPerformanceByHospitalIdAsync(List<int> hospitalId, DateTime startDate, DateTime endDate)
         {
             //筛选结束的月份
-             endDate = endDate.Date.AddDays(1);
+            endDate = endDate.Date.AddDays(1);
             var result = await dalContentPlatFormOrderDealInfo.GetAll()
                 .Where(o => o.IsToHospital == true && o.ToHospitalDate.HasValue == true && o.ToHospitalDate >= startDate && o.ToHospitalDate < endDate)
                 .Where(o => hospitalId.Count == 0 || hospitalId.Contains(o.LastDealHospitalId.Value))

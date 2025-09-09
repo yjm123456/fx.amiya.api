@@ -174,7 +174,7 @@ namespace Fx.Amiya.BusinessWeChat.Api.Controllers
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var selectResult = await contentPlatFormOrderAddWorkService.GetByPhoneAsync(phone, employeeId);
+                var selectResult = await contentPlatFormOrderAddWorkService.GetByPhoneAsync((int)Area.China, phone, employeeId);
                 ContentPlatFormOrderAddWorkVo result = new ContentPlatFormOrderAddWorkVo();
                 result.Id = selectResult.Id;
                 result.HospitalId = selectResult.HospitalId;

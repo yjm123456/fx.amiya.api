@@ -385,7 +385,7 @@ namespace Fx.Amiya.Service
         }
 
 
-        public List<BaseIdAndNameDto> GetAppointmentTypeList()
+        public List<BaseIdAndNameDto> GetAppointmentTypeList(int area)
         {
             var appointmentTypes = Enum.GetValues(typeof(AppointmentType));
             List<BaseIdAndNameDto> appointmentTypeList = new List<BaseIdAndNameDto>();
@@ -393,7 +393,14 @@ namespace Fx.Amiya.Service
             {
                 BaseIdAndNameDto appointmentType = new BaseIdAndNameDto();
                 appointmentType.Id = Convert.ToInt32(item).ToString();
-                appointmentType.Name = ServiceClass.GetAppointmentTypeText(Convert.ToByte(item));
+                if (area == (int)Area.China)
+                {
+                    appointmentType.Name = ServiceClass.GetAppointmentTypeText(Convert.ToByte(item));
+                }
+                else
+                {
+                    appointmentType.Name = ServiceClassEnglishVersion.GetAppointmentTypeTextEnglish(Convert.ToByte(item));
+                }
                 appointmentTypeList.Add(appointmentType);
             }
             return appointmentTypeList;

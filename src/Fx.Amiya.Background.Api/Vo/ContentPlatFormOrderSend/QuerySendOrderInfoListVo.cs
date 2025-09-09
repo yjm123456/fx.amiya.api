@@ -15,5 +15,6 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlatFormOrderSend
         /// 是否为主派医院
         /// </summary>
         public bool? IsMainHospital { get; set; }
+        public int Area { get; set; }
     }
 }

@@ -132,5 +132,7 @@ namespace Fx.Amiya.Dto.ContentPlateFormOrder
         /// 上一条成交情况id
         /// </summary>
         public string LastDealInfoId { get; set; }
+
+        public int Area { get; set; }
     }
 }

@@ -122,7 +122,11 @@ namespace Fx.Amiya.IService
         /// 越南
         /// </summary>
         Vietnam = 1,
+
     }
+    /// <summary>
+    /// 审核状态枚举
+    /// </summary>
     public enum CheckType
     {
         /// <summary>

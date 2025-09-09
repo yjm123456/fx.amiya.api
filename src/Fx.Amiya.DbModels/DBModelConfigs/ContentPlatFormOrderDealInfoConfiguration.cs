@@ -52,6 +52,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(e => e.LastDealInfoCreateDate).HasColumnName("last_deal_info_create_date").HasColumnType("DATETIME").IsRequired(false);
             builder.Property(e => e.ReplenishmentCreateDate).HasColumnName("replenishment_create_date").HasColumnType("DATETIME").IsRequired(false);
             builder.Property(e => e.Valid).HasColumnName("valid").HasColumnType("bit").IsRequired();
+            builder.Property(e => e.Area).HasColumnName("area").HasColumnType("int").IsRequired();
 
             builder.HasOne(t => t.ContentPlatFormOrder).WithMany(t => t.ContentPlatformOrderDealInfoList).HasForeignKey(t => t.ContentPlatFormOrderId);
             

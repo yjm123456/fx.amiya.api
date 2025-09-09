@@ -376,6 +376,33 @@ namespace Fx.Amiya.Service
             return typeText;
         }
 
+
+        /// <summary>
+        /// 获取客户预约日程的预约类型【英文版】
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public static string GetAppointmentTypeTextEnglish(int type)
+        {
+            var statusText = "";
+            switch (type)
+            {
+                //case 0:
+                //    statusText = "其他";
+                //    break;
+                case 1:
+                    statusText = "Video Design reservation";
+                    break;
+                case 2:
+                    statusText = "Make an appointment for hospital consultation";
+                    break;
+                default:
+                    statusText = "Unknown";
+                    break;
+            }
+            return statusText;
+        }
+
         /// <summary>
         /// 获取录单申请类型【英文版】
         /// </summary>

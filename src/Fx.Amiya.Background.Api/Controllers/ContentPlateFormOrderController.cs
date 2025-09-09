@@ -458,6 +458,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                   ThumbPictureUrl = d.ThumbPictureUrl,
                                   ConsultingContent = d.ConsultingContent,
                                   CustomerName = d.CustomerName,
+                                  OrderStatus = d.OrderStatus,
                                   Phone = d.Phone,
                                   ConsultationTypeText = d.ConsultationTypeText,
                                   EncryptPhone = d.EncryptPhone,
@@ -794,7 +795,8 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 int employeeId = Convert.ToInt32(employee.Id);
-                var q = await _orderService.GetOrderDealListWithPageAsync(liveAnchorId, startDate, endDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, consultationEmpId, checkState, ReturnBackPriceState, keyword, contentPlateFormId, hospitalId, toHospitalType, employeeId, pageNum, pageSize);
+                int empArea = Convert.ToInt32(employee.Area);
+                var q = await _orderService.GetOrderDealListWithPageAsync(liveAnchorId, startDate, endDate, belongMonth, minAddOrderPrice, maxAddOrderPrice, consultationEmpId, checkState, ReturnBackPriceState, keyword, contentPlateFormId, hospitalId, toHospitalType, employeeId, empArea, pageNum, pageSize);
                 var order = from d in q.List
                             select new ContentPlatFormCompleteOrderInfoVo
                             {
@@ -810,13 +812,14 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 CustomerName = d.CustomerName,
                                 IsAcompanying = d.IsAcompanying,
                                 Phone = d.Phone,
-                                IsToHospital = d.IsToHospital == true ? "是" : "否",
+                                IsToHospital = (empArea == (int)Area.China ? (d.IsToHospital == true ? "是" : "否") : (d.IsToHospital == true ? "true" : "false")),
                                 ToHospitalType = d.ToHospitalTypeText,
-                                AppointmentDate = d.AppointmentDate == null ? "未预约时间" : d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss"),
+                                AppointmentDate = d.AppointmentDate == null ? "/" : d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss"),
                                 AppointmentHospitalName = d.AppointmentHospitalName,
                                 GoodsName = d.GoodsName,
                                 ThumbPictureUrl = d.ThumbPictureUrl,
                                 ConsultingContent = d.ConsultingContent,
+                                OrderStatus = d.OrderStatus,
                                 OrderStatusText = d.OrderStatusText,
                                 DepositAmount = d.DepositAmount,
                                 DealAmount = d.DealAmount,
@@ -824,6 +827,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 UnDealReason = d.UnDealReason,
                                 LateProjectStage = d.LateProjectStage,
                                 Remark = d.Remark,
+                                CheckState = d.CheckState,
                                 CheckStateText = d.CheckStateText,
                                 CheckPrice = d.CheckPrice,
                                 CheckRemark = d.CheckRemark,
@@ -835,7 +839,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 ReturnBackPrice = d.ReturnBackPrice,
                                 OtherContentPlatFormOrderId = d.OtherContentPlatFormOrderId,
                                 CommissionRatio = d.CommissionRatio,
-                                IsOldCustomer = d.IsOldCustomer == false ? "新客业绩" : "老客业绩",
+                                IsOldCustomer = (empArea == (int)Area.China ? (d.IsOldCustomer == false ? "新客业绩" : "老客业绩") : (d.IsOldCustomer == false ? "New customer performance" : "Old customer performance")),
                                 CustomerServiceSettlePrice = d.CustomerServiceSettlePrice,
                                 ConsultingContent2 = d.ConsultingContent2
                             };
@@ -1076,7 +1080,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var q = await _orderService.GetListByEncryptPhoneAsync(encryptPhone, pageNum, pageSize);
+                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                int empArea = Convert.ToInt32(employee.Area);
+                var q = await _orderService.GetListByEncryptPhoneAsync(empArea, encryptPhone, pageNum, pageSize);
 
                 var order = from d in q.List
                             select new ContentPlatFormOrderInfoSimpleVo
@@ -1091,6 +1097,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 DepositAmount = d.DepositAmount.HasValue ? d.DepositAmount : 0,
                                 OrderTypeText = d.OrderTypeText,
                                 OrderStatusText = d.OrderStatusText,
+                                OrderStatus = d.OrderStatus,
                                 AppointmentHospitalName = d.AppointmentHospitalName,
                                 AppointmentDate = d.AppointmentDate,
                                 UnDealReason = d.UnDealReason,
@@ -1506,11 +1513,11 @@ namespace Fx.Amiya.Background.Api.Controllers
                     {
                         if (empArea == (int)Area.China)
                         {
-                            throw new Exception("只有管理员与财务才可进行订单审核！");
+                            throw new Exception("只有管理员与财务才可录入退款订单！");
                         }
                         else
                         {
-                            throw new Exception("Only administrators and finance staff are allowed to review orders.");
+                            throw new Exception("Only administrators and finance staff can enter refund orders.");
                         }
                     }
                 }
@@ -1543,6 +1550,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.NextAppointmentDate = updateVo.NextAppointmentDate;
                 updateDto.IsNeedHospitalHelp = updateVo.IsNeedHospitalHelp;
                 updateDto.SendOrderId = updateVo.SendOrderId;
+                updateDto.Area = empArea;
                 List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
                 if (updateDto.IsFinish == true && updateVo.AddContentPlatFormOrderDealDetailsVoList != null)
                 {
@@ -1652,7 +1660,6 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.NextAppointmentDate = updateVo.NextAppointmentDate;
                 updateDto.IsNeedHospitalHelp = updateVo.IsNeedHospitalHelp;
                 updateDto.EmpId = employeeId;
-
                 List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
                 if (updateDto.IsFinish == true)
                 {
@@ -1736,8 +1743,10 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.DealPerformanceType = (int)ContentPlateFormOrderDealPerformanceType.HospitalDeclaration;
             updateDto.InvitationDocuments = updateVo.InvitationDocuments;
             updateDto.ConsumptionType = updateVo.ConsumptionType;
+            var hospitalInfo = await _hospitalInfoService.GetByIdAsync(updateVo.LastDealHospitalId.Value);
             updateDto.EmpId = 266;
             updateDto.SendOrderId = updateVo.SendOrderId;
+            updateDto.Area = hospitalInfo.HospitalArea;
             List<AddContentPlatFormOrderDealDetailsDto> addContentPlatFormOrderDealDetailsDtos = new List<AddContentPlatFormOrderDealDetailsDto>();
             if (updateDto.IsFinish == true)
             {

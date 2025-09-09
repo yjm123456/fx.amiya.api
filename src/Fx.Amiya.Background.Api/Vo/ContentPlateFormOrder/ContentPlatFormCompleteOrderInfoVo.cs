@@ -91,6 +91,11 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         /// 订单状态
         /// </summary>
         [Description("订单状态")]
+        public int OrderStatus { get; set; }
+        /// <summary>
+        /// 订单状态文本
+        /// </summary>
+        [Description("订单状态文本")]
         public string OrderStatusText { get; set; }
         /// <summary>
         /// 定金金额
@@ -140,6 +145,10 @@ namespace Fx.Amiya.Background.Api.Vo.ContentPlateFormOrder
         public string Remark { get; set; }
         /// <summary>
         /// 审核状态
+        /// </summary>
+        public int? CheckState { get; set; }
+        /// <summary>
+        /// 审核状态文本
         /// </summary>
         public string CheckStateText { get; set; }
         /// <summary>

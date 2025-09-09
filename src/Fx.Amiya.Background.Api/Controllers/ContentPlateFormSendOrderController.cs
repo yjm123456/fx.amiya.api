@@ -479,6 +479,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                             ThumbPictureUrl = d.ThumbPictureUrl,
                                             LateProjectStage = d.LateProjectStage,
                                             OrderTypeText = d.OrderTypeText,
+                                            OrderStatus = d.OrderStatus,
                                             OrderStatusText = d.OrderStatusText,
                                             DepositAmount = d.DepositAmount,
                                             DealAmount = d.DealAmount,
@@ -527,8 +528,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData<FxPageInfo<ContentPlatFormOrderDealInfoVo>>> GetDealInfo(string contentPlatFormOrderId, int pageNum, int pageSize)
         {
-
-            var result = await orderDealInfoService.GetListWithPageAsync(contentPlatFormOrderId, pageNum, pageSize);
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            var result = await orderDealInfoService.GetListWithPageAsync(contentPlatFormOrderId, pageNum, pageSize, employee.Area);
 
             var contentPlatformOrders = from d in result.List
                                         select new ContentPlatFormOrderDealInfoVo
@@ -616,12 +617,15 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("sendOrderInfoList")]
         public async Task<ResultData<FxPageInfo<SimpleSendOrderInfoVo>>> GetSendOrderInfiListAsync([FromQuery] QuerySendOrderInfoListVo query)
         {
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            var empArea = Convert.ToInt32(employee.Area);
             FxPageInfo<SimpleSendOrderInfoVo> pageInfo = new FxPageInfo<SimpleSendOrderInfoVo>();
             QuerySendOrderInfoListDto queryDto = new QuerySendOrderInfoListDto();
             queryDto.ContentPlatformId = query.ContentPlatformId;
             queryDto.PageNum = query.PageNum;
             queryDto.PageSize = query.PageSize;
             queryDto.IsMainHospital = query.IsMainHospital;
+            queryDto.Area = empArea;
             var res = await _sendOrderInfoService.GetSendOrderInfoListByContentplateformIdAsync(queryDto);
             pageInfo.TotalCount = res.TotalCount;
             pageInfo.List = res.List.Select(e => new SimpleSendOrderInfoVo
@@ -637,6 +641,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 SenderName = e.SenderName,
                 HospitalRemark = e.HospitalRemark,
                 OrderStatus = e.OrderStatus,
+                OrderStatusText = e.OrderStatusText,
                 IsSpecifyHospitalEmployee = e.IsSpecifyHospitalEmployee,
                 HospitalEmployeeId = e.HospitalEmployeeId,
                 HospitalEmployeeName = e.HospitalEmployeeName
