@@ -2298,12 +2298,12 @@ namespace Fx.Amiya.Service
                             {
                                 Id = d.Id,
                                 OrderTypeText = area == (int)Area.China ? ServiceClass.GetContentPlateFormOrderTypeText((byte)d.OrderType) : ServiceClassEnglishVersion.GetContentPlateFormOrderTypeTextEnglish((byte)d.OrderType),
-                                ContentPlatformName = (area == (int)Area.China ? d.Contentplatform.ContentPlatformName: d.Contentplatform.ContentPlatformEnglishName),
+                                ContentPlatformName = (area == (int)Area.China ? d.Contentplatform.ContentPlatformName : d.Contentplatform.ContentPlatformEnglishName),
                                 ConsultingContent = d.ConsultingContent,
                                 LateProjectStage = d.LateProjectStage,
                                 CreateDate = d.CreateDate,
                                 LiveAnchorName = d.LiveAnchor.HostAccountName,
-                                GoodsName = (area==(int)Area.China? d.AmiyaGoodsDemand.ProjectNname: d.AmiyaGoodsDemand.Description),
+                                GoodsName = (area == (int)Area.China ? d.AmiyaGoodsDemand.ProjectNname : d.AmiyaGoodsDemand.Description),
                                 DepositAmount = d.DepositAmount,
                                 DealAmount = d.DealAmount,
                                 UnDealReason = d.UnDealReason,
@@ -2658,7 +2658,6 @@ namespace Fx.Amiya.Service
                 {
                     if (input.CheckPrice == dealInfoUpdate.Price && dealInfoUpdate.CheckPrice + input.CheckPrice == dealInfoUpdate.Price)
                     {
-
                         dealInfoCheck.CheckState = (int)CheckType.CheckedSuccess;
                         dealInfoCheck.CheckPrice = input.CheckPrice;
                         dealInfoCheck.SettlePrice = input.SettlePrice;
@@ -3740,7 +3739,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ContentPlateformOrderSimpleInfoDto>> GetContentOrderInfoByEncryPhone(string phone, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ContentPlateformOrderSimpleInfoDto>> GetContentOrderInfoByEncryPhone(string phone, int area, int pageNum, int pageSize)
         {
             FxPageInfo<ContentPlateformOrderSimpleInfoDto> fxPageInfo = new FxPageInfo<ContentPlateformOrderSimpleInfoDto>();
             /*var config = await _dalConfig.GetAll().SingleOrDefaultAsync();
@@ -3749,10 +3748,10 @@ namespace Fx.Amiya.Service
             var result = _dalContentPlatformOrder.GetAll().Include(x => x.ContentPlatformOrderSendList).Where(e => e.Phone == phone).Select(e => new ContentPlateformOrderSimpleInfoDto
             {
                 Id = e.Id,
-                AppointmentHospital = e.AppointmentHospitalId.HasValue ? dalHospitalInfo.GetAll().Where(h => h.Id == e.AppointmentHospitalId.Value).FirstOrDefault().Name : "未知医院",
-                SendHospital = e.ContentPlatformOrderSendList.Count > 0 ? dalHospitalInfo.GetAll().Where(h => h.Id == e.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate).FirstOrDefault().HospitalId).FirstOrDefault().Name : "未知医院",
+                AppointmentHospital = e.AppointmentHospitalId.HasValue ? dalHospitalInfo.GetAll().Where(h => h.Id == e.AppointmentHospitalId.Value).FirstOrDefault().Name : "/",
+                SendHospital = e.ContentPlatformOrderSendList.Count > 0 ? dalHospitalInfo.GetAll().Where(h => h.Id == e.ContentPlatformOrderSendList.OrderByDescending(x => x.SendDate).FirstOrDefault().HospitalId).FirstOrDefault().Name : "/",
 
-                OrderStatus = ServiceClass.GetContentPlateFormOrderStatusText((byte)e.OrderStatus),
+                OrderStatus = (area == (int)Area.China ? ServiceClass.GetContentPlateFormOrderStatusText((byte)e.OrderStatus) : ServiceClassEnglishVersion.GetContentPlateFormOrderStatusTextEnglish((byte)e.OrderStatus)),
                 ConsultContent = e.ConsultingContent,
                 IsToHosiotal = e.IsToHospital
             });
@@ -5386,7 +5385,7 @@ namespace Fx.Amiya.Service
                 .Where(e => e.CreateDate >= startDate && e.CreateDate < endDate && e.LastDealHospitalId == hospitalId && e.IsDeal == true && e.IsOldCustomer == false)
                 .Select(e => e.ContentPlatFormOrder.Phone)
                 .Distinct()
-                .Count(); ;
+                .Count();
 
             //累计新客成交量
             //var totalnewCustomerDealCount = 
@@ -5403,7 +5402,7 @@ namespace Fx.Amiya.Service
                 .Where(e => e.CreateDate >= startDate && e.LastDealHospitalId == hospitalId && e.CreateDate < endDate && e.IsDeal == true && e.IsOldCustomer == true)
                 .Select(e => e.ContentPlatFormOrder.Phone)
                 .Distinct()
-                .Count(); ;
+                .Count();
 
             //累计老客成交量
             //var totalOldCustomerDealCount = 
@@ -5563,7 +5562,7 @@ namespace Fx.Amiya.Service
                 .Where(e => e.IsToHospital == true && e.LastDealHospitalId == hospitalId && e.ContentPlatformOrderDealInfoList.OrderByDescending(k => k.CreateDate).FirstOrDefault(e => e.IsOldCustomer == false).CreateDate >= startDate && e.ContentPlatformOrderDealInfoList.OrderByDescending(k => k.CreateDate).FirstOrDefault(e => e.IsOldCustomer == false).CreateDate < endDate)
                 .Select(e => new { HospitalDepartmentId = e.HospitalDepartmentId, Phone = e.Phone }).ToList()
                 .GroupBy(e => e.HospitalDepartmentId)
-                .Select(e => new { HospitalDepartmentId = e.Key, ToHospitalCount = e.Select(e => e.Phone).Distinct().Count() }).ToList(); ;*/
+                .Select(e => new { HospitalDepartmentId = e.Key, ToHospitalCount = e.Select(e => e.Phone).Distinct().Count() }).ToList();*/
 
 
             //当月新客成交人数
@@ -5677,7 +5676,7 @@ namespace Fx.Amiya.Service
                 .Where(e => e.IsToHospital == true && e.LastDealHospitalId == hospitalId && e.ContentPlatformOrderDealInfoList.OrderByDescending(k => k.CreateDate).FirstOrDefault(e => e.IsOldCustomer == false).CreateDate >= startDate && e.ContentPlatformOrderDealInfoList.OrderByDescending(k => k.CreateDate).FirstOrDefault(e => e.IsOldCustomer == false).CreateDate < endDate)
                 .Select(e => new { NetWorkConsulationName = e.NetWorkConsulationName, Phone = e.Phone }).ToList()
                 .GroupBy(e => e.NetWorkConsulationName)
-                .Select(e => new { NetWorkConsulationName = e.Key, ToHospitalCount = e.Select(e => e.Phone).Distinct().Count() }).ToList(); ;*/
+                .Select(e => new { NetWorkConsulationName = e.Key, ToHospitalCount = e.Select(e => e.Phone).Distinct().Count() }).ToList();*/
 
 
             //当月新客成交人数
@@ -5792,7 +5791,7 @@ namespace Fx.Amiya.Service
                 .Where(e => e.IsToHospital == true && e.LastDealHospitalId == hospitalId && e.ContentPlatformOrderDealInfoList.OrderByDescending(k => k.CreateDate).FirstOrDefault(e => e.IsOldCustomer == false).CreateDate >= startDate && e.ContentPlatformOrderDealInfoList.OrderByDescending(k => k.CreateDate).FirstOrDefault(e => e.IsOldCustomer == false).CreateDate < endDate)
                 .Select(e => new { SceneConsulationName = e.SceneConsulationName, Phone = e.Phone }).ToList()
                 .GroupBy(e => e.SceneConsulationName)
-                .Select(e => new { SceneConsulationName = e.Key, ToHospitalCount = e.Select(e => e.Phone).Distinct().Count() }).ToList(); ;*/
+                .Select(e => new { SceneConsulationName = e.Key, ToHospitalCount = e.Select(e => e.Phone).Distinct().Count() }).ToList();*/
 
 
             //当月新客成交人数
@@ -5961,7 +5960,7 @@ namespace Fx.Amiya.Service
                     .Where(e => e.LastDealHospitalId != null && e.ContentPlatformOrderDealInfoList.Where(x => x.ContentPlatFormOrderId != null).OrderByDescending(k => k.CreateDate).FirstOrDefault(e => e.IsOldCustomer == false).CreateDate >= startDate && e.ContentPlatformOrderDealInfoList.Where(x => x.ContentPlatFormOrderId != null).OrderByDescending(k => k.CreateDate).FirstOrDefault(e => e.IsOldCustomer == false).CreateDate < endDate)
                     .Select(e => new { HospitalId = e.LastDealHospitalId, Phone = e.Phone }).ToList()
                     .GroupBy(e => e.HospitalId)
-                    .Select(e => new { HospitalId = e.Key, ToHospitalCount = e.Select(e => e.Phone).Distinct().Count() }).ToList(); ;
+                    .Select(e => new { HospitalId = e.Key, ToHospitalCount = e.Select(e => e.Phone).Distinct().Count() }).ToList();
 
 
                 //累计新客成交人数

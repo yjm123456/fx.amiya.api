@@ -338,7 +338,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="encryphone"></param>
         /// <returns></returns>
-        Task<FxPageInfo<ContentPlateformOrderSimpleInfoDto>> GetContentOrderInfoByEncryPhone(string phone, int pageNum,int pageSize);
+        Task<FxPageInfo<ContentPlateformOrderSimpleInfoDto>> GetContentOrderInfoByEncryPhone(string phone, int area, int pageNum,int pageSize);
         /// <summary>
         /// 修该订单状态
         /// </summary>

@@ -358,8 +358,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("typeList")]
         public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetStatusListAsync()
         {
-            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            var nameList = await _contentPlatFormOrderDealInfoService.GetConsumptionTypeAsync(Convert.ToInt32(employee.Area));
+            int area = 0;
+            var empInfo = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            if (empInfo == null)
+            {
+                var hospitalEmpInfo = httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
+                //area =//医院账户的地区id hospitalEmpInfo.Area
+            }
+            else
+            {
+                area = Convert.ToInt32(empInfo.Area);
+            }
+            var nameList = await _contentPlatFormOrderDealInfoService.GetConsumptionTypeAsync(area);
             var result = nameList.Select(e => new BaseIdAndNameVo<int>
             {
                 Id = e.Key,

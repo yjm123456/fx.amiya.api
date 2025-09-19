@@ -1782,8 +1782,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData<FxPageInfo<ContentPlateformOrderSimpleInfoVo>>> GetContentPlateformOrderSimpleInfoAsync(string phone, int pageNum, int pageSize)
         {
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            int empArea = Convert.ToInt32(employee.Area);
             FxPageInfo<ContentPlateformOrderSimpleInfoVo> fxPageInfo = new FxPageInfo<ContentPlateformOrderSimpleInfoVo>();
-            var result = await _orderService.GetContentOrderInfoByEncryPhone(phone, pageNum, pageSize);
+            var result = await _orderService.GetContentOrderInfoByEncryPhone(phone,empArea, pageNum, pageSize);
             fxPageInfo.TotalCount = result.TotalCount;
             fxPageInfo.List = result.List.Select(e => new ContentPlateformOrderSimpleInfoVo
             {
@@ -2258,9 +2260,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("contentPlateFormOrderToHospitalTypeList")]
         public ResultData<List<ContentPlateFormOrderTypeVo>> GetContentPlateFormOrderToHospitalTypeList()
         {
-            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            int empArea = Convert.ToInt32(employee.Area);
-            var orderTypes = from d in _orderService.GetOrderToHospitalTypeList(empArea)
+            int area = 0;
+            var empInfo = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            if (empInfo == null)
+            {
+                var hospitalEmpInfo = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
+                //area =//医院账户的地区id hospitalEmpInfo.Area
+            }
+            else
+            {
+                area = Convert.ToInt32(empInfo.Area);
+            }
+            var orderTypes = from d in _orderService.GetOrderToHospitalTypeList(area)
                              select new ContentPlateFormOrderTypeVo
                              {
                                  OrderType = d.OrderType,

@@ -224,8 +224,17 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
+                int area = 0;
                 var empInfo = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-                int employeeId = Convert.ToInt32(empInfo.Id);
+                if (empInfo == null)
+                {
+                    var hospitalEmpInfo = httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
+                    //area =//医院账户的地区id hospitalEmpInfo.Area
+                }
+                else
+                {
+                    area = Convert.ToInt32(empInfo.Area);
+                }
                 var hospital = await hospitalInfoService.GetByIdAsync(id);
                 SingleHospitalInfoVo hospitalInfoVo = new SingleHospitalInfoVo();
                 hospitalInfoVo.Id = hospital.Id;
@@ -273,7 +282,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 }
                 hospitalInfoVo.HospitalEnvironmentInfo = HospitalEnvironmentInfo;
                 //科室与医生
-                var hospitalDepartmentInfo = await _amiyaHospitalDepartmentService.GetIdAndNames(Convert.ToInt32(empInfo.Area));
+                var hospitalDepartmentInfo = await _amiyaHospitalDepartmentService.GetIdAndNames(area);
                 List<DepartmentAndDoctor> DepartmentAndDoctors = new List<DepartmentAndDoctor>();
                 foreach (var z in hospitalDepartmentInfo)
                 {
@@ -395,8 +404,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
+                int area = 0;
                 var empInfo = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-                var hospital = from d in await hospitalInfoService.GetHospitalNameListAsync(Convert.ToInt32(empInfo.Area), true, name)
+                if (empInfo == null)
+                {
+                    var hospitalEmpInfo = httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
+                    //area =//医院账户的地区id hospitalEmpInfo.Area
+                }
+                else
+                {
+                    area = Convert.ToInt32(empInfo.Area);
+                }
+                var hospital = from d in await hospitalInfoService.GetHospitalNameListAsync(area, true, name)
                                select new HospitalNameVo
                                {
                                    Id = d.Id,

@@ -523,7 +523,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.ContentPlatFormId = shoppingCartRegistration.ContentPlatFormId;
                 shoppingCartRegistrationDto.ShoppingCartRegistrationCustomerType = shoppingCartRegistration.ShoppingCartRegistrationCustomerType;
                 var contentPlatForm = await _contentPlatformService.GetByIdAsync(shoppingCartRegistrationDto.ContentPlatFormId);
-                shoppingCartRegistrationDto.ContentPlatFormName = contentPlatForm.ContentPlatformName;
+                shoppingCartRegistrationDto.ContentPlatFormName = (area==(int)Area.China? contentPlatForm.ContentPlatformName: contentPlatForm.ContentPlatformEnglishName);
                 shoppingCartRegistrationDto.LiveAnchorId = shoppingCartRegistration.LiveAnchorId;
                 var liveAnchorInfo = await _liveAnchorService.GetByIdAsync(shoppingCartRegistrationDto.LiveAnchorId);
                 shoppingCartRegistrationDto.LiveAnchorName = liveAnchorInfo.Name;
@@ -573,7 +573,7 @@ namespace Fx.Amiya.Service
                 shoppingCartRegistrationDto.ActiveEmployeeId = shoppingCartRegistration.ActiveEmployeeId;
                 shoppingCartRegistrationDto.CustomerWechatNo = shoppingCartRegistration.CustomerWechatNo;
                 shoppingCartRegistrationDto.FromTitle = shoppingCartRegistration.FromTitle;
-                shoppingCartRegistrationDto.BelongCompany = ServiceClass.GetBelongCompanyTypeText(shoppingCartRegistration.BelongCompany);
+                shoppingCartRegistrationDto.BelongCompany = (area==(int)Area.China? ServiceClass.GetBelongCompanyTypeText(shoppingCartRegistration.BelongCompany): ServiceClassEnglishVersion.GetBelongCompanyTypeTextEnglish(shoppingCartRegistration.BelongCompany));
                 shoppingCartRegistrationDto.BelongCompanyEnumId = shoppingCartRegistration.BelongCompany;
 
                 return shoppingCartRegistrationDto;
