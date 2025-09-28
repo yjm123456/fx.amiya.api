@@ -26,7 +26,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="trackTypeId"></param>
         /// <returns></returns>
-        Task<List<TrackThemeNameDto>> GetNameListByTrackTypeIdAsync(int trackTypeId);
+        Task<List<TrackThemeNameDto>> GetNameListByTrackTypeIdAsync(int trackTypeId,int area);
 
 
 

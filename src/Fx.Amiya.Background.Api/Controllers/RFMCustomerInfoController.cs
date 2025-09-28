@@ -243,7 +243,9 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("rfmtagNameList")]
         public async Task<ResultData<List<BaseIdAndNameVo<int>>>> GetRFMTagNameListAsync()
         {
-            var nameList = rFMCustomerInfoService.GetRFMTagText();
+
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            var nameList = rFMCustomerInfoService.GetRFMTagText(Convert.ToInt32(employee.Area));
             var result = nameList.Select(e => new BaseIdAndNameVo<int>
             {
                 Id = Convert.ToInt32(e.Key),

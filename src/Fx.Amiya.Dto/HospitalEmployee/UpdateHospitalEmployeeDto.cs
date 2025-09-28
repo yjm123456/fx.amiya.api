@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Fx.Amiya.Dto.HospitalEmployee
 {
-   public class UpdateHospitalEmployeeDto
+    public class UpdateHospitalEmployeeDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -14,5 +14,6 @@ namespace Fx.Amiya.Dto.HospitalEmployee
         public bool IsCreateSubAccount { get; set; }
         public int HospitalPositionId { get; set; }
         public bool IsCustomerService { get; set; }
+        public int Area { get; set; }
     }
 }

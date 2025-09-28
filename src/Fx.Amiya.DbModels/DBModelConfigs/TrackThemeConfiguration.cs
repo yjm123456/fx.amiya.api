@@ -15,6 +15,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.HasKey(t => t.Id);
             builder.Property(t=>t.Id).HasColumnName("id").HasColumnType("int").IsRequired();
             builder.Property(t=>t.Name).HasColumnName("name").HasColumnType("varchar(150)").IsRequired();
+            builder.Property(t => t.Description).HasColumnName("description").HasColumnType("varchar(150)").IsRequired();
             builder.Property(t=>t.TrackTypeId).HasColumnName("track_type_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.Valid).HasColumnName("valid").HasColumnType("bit").IsRequired();
 

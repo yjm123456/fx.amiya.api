@@ -3262,6 +3262,7 @@ namespace Fx.Amiya.Service
                         dealTrack.EmployeeId = input.EmpId;
                         dealTrack.CreateDate = DateTime.Now;
                         dealTrack.Phone = order.Phone;
+                        dealTrack.Area = input.Area;
                         await trackService.AddWaitTrackAfterDealAsync(dealTrack);
                     }
                 }

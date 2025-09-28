@@ -22,5 +22,7 @@ namespace Fx.Amiya.Dto.Track
         public string Phone { get; set; }
 
         public int Days { get; set; }
+
+        public int Area { get; set; }
     }
 }

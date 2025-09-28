@@ -44,7 +44,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var positionInfos = from d in await amiyaPositionInfoService.GetListAsync()
+                var empInfo= httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                var positionInfos = from d in await amiyaPositionInfoService.GetListAsync(empInfo.Area)
                                     select new AmiyaPositionInfoVo
                                     {
                                         Id = d.Id,

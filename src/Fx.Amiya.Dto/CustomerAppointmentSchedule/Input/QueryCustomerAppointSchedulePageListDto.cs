@@ -25,5 +25,7 @@ namespace Fx.Amiya.Dto.CustomerAppointmentSchedule.Input
         /// </summary>
         public string AssignLiveanchorId { get; set; }
 
+        public int Area { get; set; }
+
     }
 }

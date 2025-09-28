@@ -124,7 +124,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<AmiyaEmployeeDto>> GetListWithPageAsync(string keyword, bool valid, int positionId, int? area, int pageNum, int pageSize);
+        Task<FxPageInfo<AmiyaEmployeeDto>> GetListWithPageAsync(string keyword, int? area, bool valid, int positionId, int loginArea, int pageNum, int pageSize);
 
         /// <summary>
         /// 重置密码

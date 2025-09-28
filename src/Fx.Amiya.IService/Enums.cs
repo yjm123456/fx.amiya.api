@@ -123,6 +123,11 @@ namespace Fx.Amiya.IService
         /// </summary>
         Vietnam = 1,
 
+        /// <summary>
+        /// 马来西亚
+        /// </summary>
+        Malaysia = 2,
+
     }
     /// <summary>
     /// 审核状态枚举

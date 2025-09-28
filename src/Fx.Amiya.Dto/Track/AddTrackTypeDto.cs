@@ -8,6 +8,7 @@ namespace Fx.Amiya.Dto.Track
    public class AddTrackTypeDto
     {
         public string Name { get; set; }
+        public string Description { get; set; }
         /// <summary>
         /// 是否需要模板
         /// </summary>

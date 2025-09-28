@@ -8,6 +8,8 @@ namespace Fx.Amiya.DbModels.Model
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
+
         public bool Valid { get; set; }
         public bool HasModel { get; set; }
         public bool IsOldCustomer { get; set; }

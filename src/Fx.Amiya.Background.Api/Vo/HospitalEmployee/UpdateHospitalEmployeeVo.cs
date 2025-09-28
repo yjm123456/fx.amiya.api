@@ -52,5 +52,6 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalEmployee
         /// 是否是客服
         /// </summary>
         public bool IsCustomerService { get; set; }
+        public int Area { get; set; }
     }
 }

@@ -23,7 +23,7 @@ namespace Fx.Amiya.Service
         }
 
 
-        public async Task<List<AmiyaPositionInfoDto>> GetListAsync()
+        public async Task<List<AmiyaPositionInfoDto>> GetListAsync(int area)
         {
             try
             {
@@ -31,7 +31,7 @@ namespace Fx.Amiya.Service
                                select new AmiyaPositionInfoDto
                                {
                                    Id = d.Id,
-                                   Name = d.Name,
+                                   Name = area == (int)Area.China ? d.Name : d.Description,
                                    CreateDate = d.CreateDate,
                                    UpdateDate = d.UpdateDate,
                                    UpdateBy = d.UpdateBy,
@@ -40,10 +40,10 @@ namespace Fx.Amiya.Service
                                    DepartmentId = d.DepartmentId,
                                    DepartmentName = d.AmiyaDepartment.Name,
                                    ReadDataCenter = d.ReadDataCenter,
-                                   ReadLiveAnchorData=d.ReadLiveAnchorData,
-                                   ReadCooperateLiveAnchorData=d.ReadCooperateLiveAnchorData,
-                                   ReadSelfLiveAnchorData=d.ReadSelfLiveAnchorData,
-                                   ReadTakeGoodsData=d.ReadTakeGoodsData
+                                   ReadLiveAnchorData = d.ReadLiveAnchorData,
+                                   ReadCooperateLiveAnchorData = d.ReadCooperateLiveAnchorData,
+                                   ReadSelfLiveAnchorData = d.ReadSelfLiveAnchorData,
+                                   ReadTakeGoodsData = d.ReadTakeGoodsData
                                };
                 return await position.ToListAsync();
             }

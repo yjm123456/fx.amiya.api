@@ -54,6 +54,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                             {
                                 Id = d.Id,
                                 Name = d.Name,
+                                Description = d.Description,
                                 Valid = d.Valid,
                                 HasModel = d.HasModel,
                                 IsOldCustomer = d.IsOldCustomer
@@ -79,7 +80,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData<List<TrackTypeVo>>> GetTrackTypeListAsync(bool? isOldCustomer)
         {
-            var trackType = from d in await trackService.GetTrackTypeListAsync(isOldCustomer)
+            int area = 0;
+            var empInfo = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            if (empInfo == null)
+            {
+                var hospitalEmpInfo = httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
+                area = hospitalEmpInfo.Area;
+            }
+            else
+            {
+                area = Convert.ToInt32(empInfo.Area);
+            }
+            var trackType = from d in await trackService.GetTrackTypeListAsync(isOldCustomer, area)
                             select new TrackTypeVo
                             {
                                 Id = d.Id,
@@ -107,6 +119,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             addDto.Name = addVo.Name;
             addDto.HasModel = addVo.HasModel;
             addDto.IsOldCustomer = addVo.IsOldCustomer;
+            addDto.Description = addVo.Description;
             if (addVo.HasModel == true)
             {
                 List<AddTrackTypeThemeModelDto> trackTypeThemeModelDto = new List<AddTrackTypeThemeModelDto>();
@@ -134,10 +147,12 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("byId/{id}")]
         public async Task<ResultData<TrackTypeVo>> GetByIdAsync(int id)
         {
-            var trackType = await trackService.GetbyIdAsync(id);
+            var empInfo = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            var trackType = await trackService.GetbyIdAsync(id, empInfo.Area);
             TrackTypeVo trackTypeVo = new TrackTypeVo();
             trackTypeVo.Id = trackType.Id;
             trackTypeVo.Name = trackType.Name;
+            trackTypeVo.Description = trackType.Description;
             trackTypeVo.HasModel = trackType.HasModel;
             trackTypeVo.IsOldCustomer = trackType.IsOldCustomer;
             trackTypeVo.Valid = trackType.Valid;
@@ -173,6 +188,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.Id = updateVo.Id;
             updateDto.Name = updateVo.Name;
             updateDto.Valid = updateVo.Valid;
+            updateDto.Description = updateVo.Description;
             updateDto.HasModel = updateVo.HasModel;
             updateDto.IsOldCustomer = updateVo.IsOldCustomer;
             if (updateVo.HasModel == true)
@@ -231,6 +247,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                             {
                                 Id = d.Id,
                                 Name = d.Name,
+                                Description = d.Description,
                                 Valid = d.Valid
                             };
             FxPageInfo<TrackToolVo> trackToolPageInfo = new FxPageInfo<TrackToolVo>();
@@ -251,7 +268,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData<List<TrackToolVo>>> GetTrackToolListAsync()
         {
-            var trackTool = from d in await trackService.GetTrackToolListAsync()
+            int area = 0;
+            var empInfo = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            if (empInfo == null)
+            {
+                var hospitalEmpInfo = httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
+                area = hospitalEmpInfo.Area;
+            }
+            else
+            {
+                area = Convert.ToInt32(empInfo.Area);
+            }
+            var trackTool = from d in await trackService.GetTrackToolListAsync(area)
                             select new TrackToolVo
                             {
                                 Id = d.Id,
@@ -276,6 +304,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             AddTrackToolDto addDto = new AddTrackToolDto();
             addDto.Name = addVo.Name;
+            addDto.Description = addVo.Description;
             await trackService.AddTrackToolAsync(addDto);
             return ResultData.Success();
         }
@@ -296,6 +325,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             UpdateTrackToolDto updateDto = new UpdateTrackToolDto();
             updateDto.Id = updateVo.Id;
             updateDto.Name = updateVo.Name;
+            updateDto.Description = updateVo.Description;
             updateDto.Valid = updateVo.Valid;
             await trackService.UpdateTrackToolAsync(updateDto);
             return ResultData.Success();
@@ -340,13 +370,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 if (employeeId == null)
                 {
-                    var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                     employeeId = Convert.ToInt32(employee.Id);
                 }
 
-                var q = await trackService.GetRecordListWithPageAsync(keyword, startDate, endDate, (int)employeeId, isOldCustomerTrack, pageNum, pageSize);
+                var q = await trackService.GetRecordListWithPageAsync(keyword, startDate, endDate, (int)employeeId, isOldCustomerTrack, employee.Area, pageNum, pageSize);
 
                 var trackRecord = from d in q.List
                                   select new TrackRecordVo
@@ -401,7 +431,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData<FxPageInfo<TrackRecordVo>>> GetRecordListByEncryptPhoneWithPageAsync(string encryptPhone, string shoppingCartRegistionId, int pageNum, int pageSize)
         {
-            var q = await trackService.GetRecordListByEncryptPhoneWithPageAsync(encryptPhone, shoppingCartRegistionId, pageNum, pageSize);
+            int area = 0;
+            var empInfo = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            if (empInfo == null)
+            {
+                var hospitalEmpInfo = httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
+                area = hospitalEmpInfo.Area;
+            }
+            else
+            {
+                area = Convert.ToInt32(empInfo.Area);
+            }
+            var q = await trackService.GetRecordListByEncryptPhoneWithPageAsync(encryptPhone, shoppingCartRegistionId, area, pageNum, pageSize);
 
             var trackRecord = from d in q.List
                               select new TrackRecordVo
@@ -503,7 +544,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData> AddTrackRecordByHospitalAsync(AddTrackRecordVo addVo)
         {
-           
+
 
             AddTrackRecordDto addDto = new AddTrackRecordDto();
             addDto.WaitTrackId = addVo.WaitTrackId;
@@ -562,13 +603,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData<FxPageInfo<WaitTrackCustomerVo>>> GetWaitTrackListWithPageAsync(string keyword, DateTime? startDate, DateTime? endDate, int? employeeId, int pageNum, int pageSize)
         {
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             if (employeeId == null)
             {
-                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 employeeId = Convert.ToInt32(employee.Id);
             }
 
-            var q = await trackService.GetWaitTrackListWithPageAsync(keyword, startDate, endDate, (int)employeeId, pageNum, pageSize);
+            var q = await trackService.GetWaitTrackListWithPageAsync(keyword, startDate, endDate, (int)employeeId, employee.Area, pageNum, pageSize);
 
             var waitTrack = from d in q.List
                             select new WaitTrackCustomerVo

@@ -488,7 +488,7 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<FxPageInfo<AmiyaEmployeeDto>> GetListWithPageAsync(string keyword, bool valid, int positionId, int? area, int pageNum, int pageSize)
+        public async Task<FxPageInfo<AmiyaEmployeeDto>> GetListWithPageAsync(string keyword, int? area, bool valid, int positionId, int loginArea, int pageNum, int pageSize)
         {
             try
             {
@@ -506,7 +506,7 @@ namespace Fx.Amiya.Service
                                     Email = (d.Email == "0") ? "" : d.Email,
                                     Valid = d.Valid,
                                     PositionId = d.AmiyaPositionId,
-                                    PositionName = d.AmiyaPositionInfo.Name,
+                                    PositionName = (loginArea == (int)Area.China ? d.AmiyaPositionInfo.Name : d.AmiyaPositionInfo.Description),
                                     IsCustomerService = d.IsCustomerService,
                                     LiveAnchorBaseId = d.LiveAnchorBaseId,
                                     OldCustomerCommission = d.OldCustomerCommission,

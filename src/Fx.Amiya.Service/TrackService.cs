@@ -63,6 +63,7 @@ namespace Fx.Amiya.Service
                             {
                                 Id = d.Id,
                                 Name = d.Name,
+                                Description = d.Description,
                                 Valid = d.Valid,
                                 HasModel = d.HasModel,
                                 IsOldCustomer = d.IsOldCustomer
@@ -79,14 +80,14 @@ namespace Fx.Amiya.Service
         /// 获取有效的回访类型列表
         /// </summary>
         /// <returns></returns>
-        public async Task<List<TrackTypeDto>> GetTrackTypeListAsync(bool? isOldCustomer)
+        public async Task<List<TrackTypeDto>> GetTrackTypeListAsync(bool? isOldCustomer, int area)
         {
             var trackType = from d in dalTrackType.GetAll()
                             where d.Valid && (!isOldCustomer.HasValue || d.IsOldCustomer == isOldCustomer)
                             select new TrackTypeDto
                             {
                                 Id = d.Id,
-                                Name = d.Name,
+                                Name = area == (int)Area.China ? d.Name : d.Description,
                                 Valid = d.Valid,
                                 HasModel = d.HasModel
                             };
@@ -111,6 +112,7 @@ namespace Fx.Amiya.Service
                 TrackType trackType = new TrackType();
                 trackType.Name = addDto.Name;
                 trackType.HasModel = addDto.HasModel;
+                trackType.Description = addDto.Description;
                 trackType.IsOldCustomer = addDto.IsOldCustomer;
                 trackType.Valid = true;
                 await dalTrackType.AddAsync(trackType, true);
@@ -125,7 +127,7 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public async Task<TrackTypeDto> GetbyIdAsync(int Id)
+        public async Task<TrackTypeDto> GetbyIdAsync(int Id, int area)
         {
             var model = await dalTrackType.GetAll().SingleOrDefaultAsync(e => e.Id == Id);
             if (model.Id == 0)
@@ -133,10 +135,11 @@ namespace Fx.Amiya.Service
             TrackTypeDto result = new TrackTypeDto();
             result.Id = model.Id;
             result.Name = model.Name;
+            result.Description = model.Description;
             result.Valid = model.Valid;
             result.HasModel = model.HasModel;
             result.IsOldCustomer = model.IsOldCustomer;
-            var trackTypeThemeModel = await trackTypeThemeModelService.GetListAsync(Id);
+            var trackTypeThemeModel = await trackTypeThemeModelService.GetListAsync(Id, area);
             result.TrackTypeThemeModelDto = trackTypeThemeModel;
             return result;
         }
@@ -157,6 +160,7 @@ namespace Fx.Amiya.Service
             if (count > 0)
                 throw new Exception("修改失败，已存在该回访类型");
             trackType.Name = updateDto.Name;
+            trackType.Description = updateDto.Description;
             trackType.Valid = updateDto.Valid;
             trackType.HasModel = updateDto.HasModel;
             trackType.IsOldCustomer = updateDto.IsOldCustomer;
@@ -202,6 +206,7 @@ namespace Fx.Amiya.Service
                             {
                                 Id = d.Id,
                                 Name = d.Name,
+                                Description = d.Description,
                                 Valid = d.Valid
                             };
 
@@ -216,14 +221,14 @@ namespace Fx.Amiya.Service
         /// 获取有效的回访工具列表
         /// </summary>
         /// <returns></returns>
-        public async Task<List<TrackToolDto>> GetTrackToolListAsync()
+        public async Task<List<TrackToolDto>> GetTrackToolListAsync(int area)
         {
             var trackTool = from d in dalTrackTool.GetAll()
                             where d.Valid
                             select new TrackToolDto
                             {
                                 Id = d.Id,
-                                Name = d.Name,
+                                Name = area == (int)Area.China ? d.Name : d.Description,
                                 Valid = d.Valid
                             };
 
@@ -245,6 +250,7 @@ namespace Fx.Amiya.Service
 
             TrackTool trackTool = new TrackTool();
             trackTool.Name = addDto.Name;
+            trackTool.Description = addDto.Description;
             trackTool.Valid = true;
             await dalTrackTool.AddAsync(trackTool, true);
         }
@@ -266,6 +272,7 @@ namespace Fx.Amiya.Service
                 throw new Exception("修改失败，已存在该回访工具");
 
             trackTool.Name = updateDto.Name;
+            trackTool.Description = updateDto.Description;
             trackTool.Valid = updateDto.Valid;
             await dalTrackTool.UpdateAsync(trackTool, true);
         }
@@ -305,7 +312,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<TrackRecordDto>> GetRecordListWithPageAsync(string keyword, DateTime? startDate, DateTime? endDate, int employeeId, bool? isOldCustomerTrack, int pageNum, int pageSize)
+        public async Task<FxPageInfo<TrackRecordDto>> GetRecordListWithPageAsync(string keyword, DateTime? startDate, DateTime? endDate, int employeeId, bool? isOldCustomerTrack, int area, int pageNum, int pageSize)
         {
             var q = from d in dalTrackRecord.GetAll()
                     where string.IsNullOrWhiteSpace(keyword) || d.Phone == keyword || d.TrackTheme == keyword
@@ -337,13 +344,13 @@ namespace Fx.Amiya.Service
                                   EncryptPhone = ServiceClass.Encrypt(d.Phone, config.PhoneEncryptKey),
                                   TrackDate = d.TrackDate,
                                   TrackContent = d.TrackContent,
-                                  TrackTheme = d.TrackThemeId != null ? d.TrackThemeInfo.Name : d.TrackTheme,
+                                  TrackTheme = d.TrackThemeId != null ? (area == (int)Area.China ? d.TrackThemeInfo.Name : d.TrackThemeInfo.Description) : d.TrackTheme,
                                   TrackThemeId = d.TrackThemeId,
                                   TrackTypeId = d.TrackTypeId,
-                                  TrackTypeName = d.TrackType.Name,
+                                  TrackTypeName = (area == (int)Area.China ? d.TrackType.Name : d.TrackType.Description),
                                   TrackToolId = d.TrackToolId,
                                   TrackPlan = d.TrackPlan,
-                                  TrackToolName = d.TrackTool.Name,
+                                  TrackToolName = (area == (int)Area.China ? d.TrackTool.Name : d.TrackTool.Description),
                                   EmployeeId = d.EmployeeId,
                                   EmployeeName = d.AmiyaEmployee.Name,
                                   Valid = d.Valid,
@@ -372,7 +379,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<TrackRecordDto>> GetRecordListByEncryptPhoneWithPageAsync(string encryptPhone, string shoppingCartRegistionId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<TrackRecordDto>> GetRecordListByEncryptPhoneWithPageAsync(string encryptPhone, string shoppingCartRegistionId, int area, int pageNum, int pageSize)
         {
             var config = await GetCallCenterConfig();
             string phone = ServiceClass.Decrypto(encryptPhone, config.PhoneEncryptKey);
@@ -386,19 +393,19 @@ namespace Fx.Amiya.Service
                                   Phone = config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.Phone) : d.Phone,
                                   TrackDate = d.TrackDate,
                                   TrackContent = d.TrackContent,
-                                  TrackTheme = d.TrackThemeId != null ? d.TrackThemeInfo.Name : d.TrackTheme,
+                                  TrackTheme = d.TrackThemeId != null ? (area == (int)Area.China ? d.TrackThemeInfo.Name : d.TrackThemeInfo.Description) : d.TrackTheme,
                                   TrackPlan = d.TrackPlan,
                                   TrackThemeId = d.TrackThemeId,
                                   TrackTypeId = d.TrackTypeId,
-                                  TrackTypeName = d.TrackType.Name,
+                                  TrackTypeName = (area == (int)Area.China ? d.TrackType.Name : d.TrackType.Description),
                                   TrackToolId = d.TrackToolId,
-                                  TrackToolName = d.TrackTool.Name,
+                                  TrackToolName = (area == (int)Area.China ? d.TrackTool.Name : d.TrackTool.Description),
                                   EmployeeId = d.EmployeeId,
                                   EmployeeName = d.AmiyaEmployee.Name,
                                   Valid = d.Valid,
                                   CallRecordId = d.CallRecordId,
                                   IsPlanTrack = d.WaitTrackCustomer != null ? true : false,
-                                  PlanTrackTheme = d.WaitTrackCustomer.TrackThemeId != null ? d.WaitTrackCustomer.TrackThemeInfo.Name : d.WaitTrackCustomer.TrackTheme,
+                                  PlanTrackTheme = d.WaitTrackCustomer.TrackThemeId != null ? (area == (int)Area.China ? d.WaitTrackCustomer.TrackThemeInfo.Name : d.WaitTrackCustomer.TrackThemeInfo.Description) : d.WaitTrackCustomer.TrackTheme,
                                   TrackPicture1 = d.TrackPicture1,
                                   TrackPicture2 = d.TrackPicture2,
                                   TrackPicture3 = d.TrackPicture3,
@@ -525,7 +532,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<WaitTrackCustomerDto>> GetWaitTrackListWithPageAsync(string keyword, DateTime? startDate, DateTime? endDate, int employeeId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<WaitTrackCustomerDto>> GetWaitTrackListWithPageAsync(string keyword, DateTime? startDate, DateTime? endDate, int employeeId, int area, int pageNum, int pageSize)
         {
             var q = from d in dalWaitTrackCustomer.GetAll()
                     where (string.IsNullOrWhiteSpace(keyword) || d.Phone.Contains(keyword) || d.TrackThemeInfo.Name.Contains(keyword) || d.TrackTheme.Contains(keyword))
@@ -555,10 +562,10 @@ namespace Fx.Amiya.Service
                                 EncryptPhone = ServiceClass.Encrypt(d.Phone, config.PhoneEncryptKey),
                                 PlanTrackDate = d.PlanTrackDate,
                                 TrackTypeId = d.TrackTypeId,
-                                TrackTypeName = d.TrackType.Name,
+                                TrackTypeName = (area == (int)Area.China ? d.TrackType.Name : d.TrackType.Description),
                                 TrackPlan = d.TrackPlan,
                                 TrackThemeId = d.TrackThemeId,
-                                TrackTheme = d.TrackThemeId != null ? d.TrackThemeInfo.Name : d.TrackTheme,
+                                TrackTheme = d.TrackThemeId != null ? (area == (int)Area.China ? d.TrackThemeInfo.Name : d.TrackThemeInfo.Description) : d.TrackTheme,
                                 CreateDate = d.CreateDate,
                                 CreateBy = d.CreateBy,
                                 CreateName = d.CreateEmployee.Name,
@@ -685,7 +692,14 @@ namespace Fx.Amiya.Service
                 oneDay.TrackTypeId = 6;
                 oneDay.TrackThemeId = 54;
                 oneDay.CreateDate = DateTime.Now;
-                oneDay.TrackPlan = "告知术后注意事项、以及恢复期可能发生的问题，并安抚";
+                if (dealTrack.Area == (int)Area.China)
+                {
+                    oneDay.TrackPlan = "告知术后注意事项、以及恢复期可能发生的问题，并安抚";
+                }
+                else
+                {
+                    oneDay.TrackPlan = "Inform the postoperative precautions and possible problems during the recovery period, and comfort them.";
+                }
                 oneDay.CreateBy = dealTrack.EmployeeId;
                 oneDay.Status = false;
                 oneDay.PlanTrackEmployeeId = dealTrack.EmployeeId;
@@ -697,7 +711,14 @@ namespace Fx.Amiya.Service
                 oneWeek.TrackTypeId = 6;
                 oneWeek.TrackThemeId = 55;
                 oneWeek.CreateDate = DateTime.Now;
-                oneWeek.TrackPlan = "关心恢复的情况";
+                if (dealTrack.Area == (int)Area.China)
+                {
+                    oneWeek.TrackPlan = "关心恢复的情况";
+                }
+                else
+                {
+                    oneWeek.TrackPlan = "Care about the recovery situation.";
+                }
                 oneWeek.CreateBy = dealTrack.EmployeeId;
                 oneWeek.Status = false;
                 oneWeek.PlanTrackEmployeeId = dealTrack.EmployeeId;
@@ -710,7 +731,14 @@ namespace Fx.Amiya.Service
                 halfMonth.TrackTypeId = 6;
                 halfMonth.TrackThemeId = 56;
                 halfMonth.CreateDate = DateTime.Now;
-                halfMonth.TrackPlan = "关心目前的效果，告知1个月的时候会有吸收代谢的情况，看个人代谢的情况，建议一个月的时候加强效果";
+                if (dealTrack.Area == (int)Area.China)
+                {
+                    halfMonth.TrackPlan = "关心目前的效果，告知1个月的时候会有吸收代谢的情况，看个人代谢的情况，建议一个月的时候加强效果";
+                }
+                else
+                {
+                    halfMonth.TrackPlan = "Be concerned about the current effect. Inform that there will be a situation of absorption and metabolism after one month. It depends on the individual's metabolic situation. It is recommended to enhance the effect after one month.";
+                }
                 halfMonth.CreateBy = dealTrack.EmployeeId;
                 halfMonth.Status = false;
                 halfMonth.PlanTrackEmployeeId = dealTrack.EmployeeId;
@@ -723,7 +751,14 @@ namespace Fx.Amiya.Service
                 oneMonth.TrackTypeId = 12;
                 oneMonth.TrackThemeId = 57;
                 oneMonth.CreateDate = DateTime.Now;
-                oneMonth.TrackPlan = "关心吸收的情况，邀约补量，或下一步调整";
+                if (dealTrack.Area == (int)Area.China)
+                {
+                    oneMonth.TrackPlan = "关心吸收的情况，邀约补量，或下一步调整";
+                }
+                else
+                {
+                    oneMonth.TrackPlan = "Pay attention to the absorption situation, invite to supplement the quantity, or make adjustments in the next step.";
+                }
                 oneMonth.CreateBy = dealTrack.EmployeeId;
                 oneMonth.Status = false;
                 oneMonth.PlanTrackEmployeeId = dealTrack.EmployeeId;
@@ -736,7 +771,15 @@ namespace Fx.Amiya.Service
                 threeMonth.TrackTypeId = 12;
                 threeMonth.TrackThemeId = 58;
                 threeMonth.CreateDate = DateTime.Now;
-                threeMonth.TrackPlan = "补量以及下一步的调整";
+
+                if (dealTrack.Area == (int)Area.China)
+                {
+                    threeMonth.TrackPlan = "补量以及下一步的调整";
+                }
+                else
+                {
+                    threeMonth.TrackPlan = "Replenishment and the next adjustment";
+                }
                 threeMonth.CreateBy = dealTrack.EmployeeId;
                 threeMonth.Status = false;
                 threeMonth.PlanTrackEmployeeId = dealTrack.EmployeeId;

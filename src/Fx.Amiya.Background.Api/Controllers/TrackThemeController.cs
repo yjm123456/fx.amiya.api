@@ -20,9 +20,12 @@ namespace Fx.Amiya.Background.Api.Controllers
     public class TrackThemeController : ControllerBase
     {
         private ITrackThemeService trackThemeService;
-        public TrackThemeController(ITrackThemeService trackThemeService)
+        private IHttpContextAccessor httpContextAccessor;
+        public TrackThemeController(
+            IHttpContextAccessor httpContextAccessor, ITrackThemeService trackThemeService)
         {
             this.trackThemeService = trackThemeService;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         /// <summary>
@@ -33,15 +36,16 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <returns></returns>
         [HttpGet("listWithPage")]
         [FxInternalAuthorize]
-        public async Task<ResultData<FxPageInfo<TrackThemeVo>>> GetListWithPageAsync([FromQuery]QueryTrackThemeVo query)
+        public async Task<ResultData<FxPageInfo<TrackThemeVo>>> GetListWithPageAsync([FromQuery] QueryTrackThemeVo query)
         {
-            var q = await trackThemeService.GetListWithPageAsync(query.TrackTypeId, query.PageNum.Value, query.PageSize.Value,query.Valid);
+            var q = await trackThemeService.GetListWithPageAsync(query.TrackTypeId, query.PageNum.Value, query.PageSize.Value, query.Valid);
 
             var trackTheme = from d in q.List
                              select new TrackThemeVo
                              {
                                  Id = d.Id,
                                  Name = d.Name,
+                                 Description = d.Description,
                                  TrackTypeId = d.TrackTypeId,
                                  TrackTypeName = d.TrackTypeName,
                                  Valid = d.Valid
@@ -63,7 +67,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData<List<TrackThemeNameVo>>> GetNameListByTrackTypeIdAsync(int trackTypeId)
         {
-            var trackTheme = from d in await trackThemeService.GetNameListByTrackTypeIdAsync(trackTypeId)
+            int area = 0;
+            var empInfo = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            if (empInfo == null)
+            {
+                var hospitalEmpInfo = httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
+                area = hospitalEmpInfo.Area;
+            }
+            else
+            {
+                area = Convert.ToInt32(empInfo.Area);
+            }
+            var trackTheme = from d in await trackThemeService.GetNameListByTrackTypeIdAsync(trackTypeId, area)
                              select new TrackThemeNameVo
                              {
                                  Id = d.Id,
@@ -86,6 +101,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             AddTrackThemeDto addDto = new AddTrackThemeDto();
             addDto.Name = addVo.Name;
             addDto.TrackTypeId = addVo.TrackTypeId;
+            addDto.Description = addVo.Description;
             await trackThemeService.AddAsync(addDto);
             return ResultData.Success();
         }
@@ -106,6 +122,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             TrackThemeVo trackThemeVo = new TrackThemeVo();
             trackThemeVo.Id = trackTheme.Id;
             trackThemeVo.Name = trackTheme.Name;
+            trackThemeVo.Description = trackTheme.Description;
             trackThemeVo.TrackTypeId = trackTheme.TrackTypeId;
             trackThemeVo.TrackTypeName = trackTheme.TrackTypeName;
             trackThemeVo.Valid = trackTheme.Valid;
@@ -125,6 +142,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             UpdateTrackThemeDto updateDto = new UpdateTrackThemeDto();
             updateDto.Id = updateVo.Id;
             updateDto.Name = updateVo.Name;
+            updateDto.Description = updateVo.Description;
             updateDto.TrackTypeId = updateVo.TrackTypeId;
             updateDto.Valid = updateVo.Valid;
             await trackThemeService.UpdateAsync(updateDto);

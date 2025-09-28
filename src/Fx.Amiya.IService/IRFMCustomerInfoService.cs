@@ -14,7 +14,7 @@ namespace Fx.Amiya.IService
         Task ImportRFMCustomerInfoAsync(List<ImportRfmCustomerDto> list);
         Task<FxPageInfo<RFMCustomerInfoDto>> GetListByPageAsync(int? employeeId,int? leave,string keyword,int pageNum,int pageSize);
         List<BaseKeyValueDto> GetRFMValueText();
-        List<BaseKeyValueDto> GetRFMTagText();
+        List<BaseKeyValueDto> GetRFMTagText(int area);
         Task AddAsync(AddRFMCustomerInfoDto addDto);
         Task<RFMCustomerInfoDto> GetByIdAsync(string id);
         Task UpdateAsync(UpdateRFMCustomerInfoDto updateDto);

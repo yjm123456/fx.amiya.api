@@ -65,6 +65,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 addDto.Password = addVo.Password.GetMD5String();
                 addDto.HospitalPositionId = addVo.HospitalPositionId;
                 addDto.IsCustomerService = addVo.IsCustomerService;
+                addDto.Area = addVo.Area;
 
                 if (httpContextAccessor.HttpContext.User is FxAmiyaHospitalEmployeeIdentity tenant)
                 {
@@ -119,20 +120,21 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="hospitalId">医院编号，可空</param>
         /// <param name="keyword">搜索关键字,可空</param>
+        /// <param name="area">地区,可空</param>
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <param name="valid">是否有效</param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
         [FxInternalOrTenantAuthroize]
-        public async Task<ResultData<FxPageInfo<HospitalEmployeeVo>>> GetListWithPageAsync(int? hospitalId, string keyword, int pageNum, int pageSize, bool? valid)
+        public async Task<ResultData<FxPageInfo<HospitalEmployeeVo>>> GetListWithPageAsync(int? hospitalId, string keyword, int? area, int pageNum, int pageSize, bool? valid)
         {
             try
             {
                 if (httpContextAccessor.HttpContext.User is FxAmiyaHospitalEmployeeIdentity tenant)
                     hospitalId = tenant.HospitalId;
 
-                var q = await hospitalEmployeeService.GetListWithPageAsync(hospitalId, keyword, pageNum, pageSize, valid);
+                var q = await hospitalEmployeeService.GetListWithPageAsync(hospitalId, area, keyword, pageNum, pageSize, valid);
 
                 var employeeInfos = from d in q.List
                                     select new HospitalEmployeeVo
@@ -147,6 +149,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                         HospitalPositionId = d.HospitalPositionId,
                                         HospitalPositionName = d.HospitalPositionName,
                                         IsCustomerService = d.IsCustomerService,
+                                        Area=d.Area
                                     };
 
                 FxPageInfo<HospitalEmployeeVo> employeePage = new FxPageInfo<HospitalEmployeeVo>();
@@ -186,6 +189,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 employeeVo.HospitalPositionId = q.HospitalPositionId;
                 employeeVo.HospitalPositionName = q.HospitalPositionName;
                 employeeVo.IsCustomerService = q.IsCustomerService;
+                employeeVo.Area = q.Area;
 
                 return ResultData<HospitalEmployeeVo>.Success().AddData("employeeInfo", employeeVo);
             }
@@ -217,6 +221,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 updateDto.HospitalPositionId = updateVo.HospitalPositionId;
                 updateDto.IsCreateSubAccount = updateVo.IsCreateSubAccount;
                 updateDto.IsCustomerService = updateVo.IsCustomerService;
+                updateDto.Area = updateVo.Area;
 
                 string employeeType = "";
                 if (httpContextAccessor.HttpContext.User is FxAmiyaHospitalEmployeeIdentity tenant)

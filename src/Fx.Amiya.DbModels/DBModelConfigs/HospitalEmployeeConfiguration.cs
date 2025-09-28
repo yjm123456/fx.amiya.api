@@ -23,6 +23,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.Property(t => t.IsCreateSubAccount).HasColumnName("is_create_sub_account").HasColumnType("bit").IsRequired();
             builder.Property(t => t.HospitalPositionId).HasColumnName("hospital_position_id").HasColumnType("int").IsRequired();
             builder.Property(t => t.IsCustomerService).HasColumnName("is_customer_service").HasColumnType("bit").IsRequired();
+            builder.Property(t => t.Area).HasColumnName("area").HasColumnType("int").IsRequired();
 
 
             builder.HasOne(t => t.HospitalInfo).WithMany(t => t.HospitalEmployeeList).HasForeignKey(t => t.HospitalId);

@@ -43,7 +43,7 @@ namespace Fx.Amiya.Service
                 var employeeInfoList = dalAmiyaEmployee.GetAll().Select(e => new { Name = e.Name, Id = e.Id });
                 var wechatNoInfoList = dalLiveAnchorWeChatInfo.GetAll().Select(e => new { Name = e.WeChatNo, Id = e.Id });
                 var RFMValue = GetRFMValueText();
-                var RFMTagValue = GetRFMTagText();
+                var RFMTagValue = GetRFMTagText((int)Area.China);
                 foreach (var item in list)
                 {
                     RMFCustomerInfo info = new RMFCustomerInfo();
@@ -72,7 +72,7 @@ namespace Fx.Amiya.Service
                 unitOfWork.RollBack();
                 throw new Exception(ex.Message.ToString());
             }
-            
+
         }
 
         public List<BaseKeyValueDto> GetRFMValueText()
@@ -89,7 +89,7 @@ namespace Fx.Amiya.Service
             }
             return billReturnBackStateTextList;
         }
-        public List<BaseKeyValueDto> GetRFMTagText()
+        public List<BaseKeyValueDto> GetRFMTagText(int area)
         {
             var billReturnBackStateTexts = Enum.GetValues(typeof(RFMTagLevel));
 
@@ -98,23 +98,32 @@ namespace Fx.Amiya.Service
             {
                 BaseKeyValueDto baseKeyValueDto = new BaseKeyValueDto();
                 baseKeyValueDto.Key = Convert.ToInt32(item).ToString();
-                baseKeyValueDto.Value = ServiceClass.GetRFMTagText(Convert.ToInt32(item));
+                if (area == (int)Area.China)
+                {
+
+                    baseKeyValueDto.Value = ServiceClass.GetRFMTagText(Convert.ToInt32(item));
+                }
+                else
+                {
+
+                    baseKeyValueDto.Value = ServiceClassEnglishVersion.GetRFMTagTextEnglish(Convert.ToInt32(item));
+                }
                 billReturnBackStateTextList.Add(baseKeyValueDto);
             }
             return billReturnBackStateTextList;
         }
 
-        public async Task<FxPageInfo<RFMCustomerInfoDto>> GetListByPageAsync(int? employeeId,int? leave,string keyword, int pageNum, int pageSize)
+        public async Task<FxPageInfo<RFMCustomerInfoDto>> GetListByPageAsync(int? employeeId, int? leave, string keyword, int pageNum, int pageSize)
         {
             var config = await GetCallCenterConfig();
             FxPageInfo<RFMCustomerInfoDto> fxPageInfo = new FxPageInfo<RFMCustomerInfoDto>();
             var infoList = dalRFMCustomerInfo.GetAll()
                 .Where(e => string.IsNullOrEmpty(keyword) || e.Phone.Contains(keyword))
                 .Where(e => e.Valid == true).Where(e => !employeeId.HasValue || e.CustomerServiceId == employeeId)
-                .Where(e=>!leave.HasValue||e.RFMTag==leave)
-                .OrderBy(e=>e.RFMTag)
-                .ThenBy(e=>e.Phone)
-                .ThenByDescending(e=>e.LastDealDate);
+                .Where(e => !leave.HasValue || e.RFMTag == leave)
+                .OrderBy(e => e.RFMTag)
+                .ThenBy(e => e.Phone)
+                .ThenByDescending(e => e.LastDealDate);
             fxPageInfo.TotalCount = infoList.Count();
             fxPageInfo.List = infoList.Skip((pageNum - 1) * pageSize).Take(pageSize).Select(e => new RFMCustomerInfoDto
             {

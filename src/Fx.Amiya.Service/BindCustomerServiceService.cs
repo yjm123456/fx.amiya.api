@@ -569,7 +569,7 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <returns></returns>
         /// <summary>
-        public async Task<FxPageInfo<BindCustomerServiceDto>> GetAllCustomerByRFMTypeAsync(List<int> bindCustomerServiceIds, int rfmType, int pageNum, int pageSize)
+        public async Task<FxPageInfo<BindCustomerServiceDto>> GetAllCustomerByRFMTypeAsync(List<int> bindCustomerServiceIds, int area, int rfmType, int pageNum, int pageSize)
         {
             var config = await GetCallCenterConfig();
             var bindCustomerServiceInfoResult = from d in dalBindCustomerService.GetAll().Include(x => x.CustomerServiceAmiyaEmployee)
@@ -587,7 +587,7 @@ namespace Fx.Amiya.Service
                                                     AllOrderCount = d.AllOrderCount,
                                                     ConsumptionDate = DateTime.Now.Subtract(d.NewConsumptionDate.Value).Days + 1,
                                                     RfmType = d.RfmType,
-                                                    RfmTypeText = ServiceClass.GetRFMTagText(d.RfmType),
+                                                    RfmTypeText = (area == (int)Area.China ? ServiceClass.GetRFMTagText(d.RfmType) : ServiceClassEnglishVersion.GetRFMTagTextEnglish(d.RfmType)),
                                                     CreateDate = d.CreateDate,
                                                     FirstConsumptionDate = d.FirstConsumptionDate,
                                                 };
@@ -700,7 +700,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<BindCustomerRFMLevelUpdateLogDto>> GetCustomerRFMTypeUpdateDataAsync(DateTime? startDate, DateTime? endDate, string keyWord, int? customerServiceId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<BindCustomerRFMLevelUpdateLogDto>> GetCustomerRFMTypeUpdateDataAsync(DateTime? startDate, DateTime? endDate, string keyWord, int? customerServiceId, int area, int pageNum, int pageSize)
         {
             var config = await GetCallCenterConfig();
             var bindCustomerServiceInfoResult = from d in dalBindCustomerRFMLevelUpdateLog.GetAll().Include(x => x.BindCustomerService).Include(x => x.CustomerServiceInfo)
@@ -715,8 +715,8 @@ namespace Fx.Amiya.Service
                                                     CustomerServiceName = d.CustomerServiceInfo.Name,
                                                     Phone = ServiceClass.GetIncompletePhone(d.BindCustomerService.BuyerPhone),
                                                     EncryptPhone = ServiceClass.Encrypt(d.BindCustomerService.BuyerPhone, config.PhoneEncryptKey),
-                                                    From = ServiceClass.GetRFMTagText(d.From),
-                                                    To = ServiceClass.GetRFMTagText(d.To),
+                                                    From = (area == (int)Area.China ? ServiceClass.GetRFMTagText(d.From) : ServiceClassEnglishVersion.GetRFMTagTextEnglish(d.From)),
+                                                    To = (area == (int)Area.China ? ServiceClass.GetRFMTagText(d.To) : ServiceClassEnglishVersion.GetRFMTagTextEnglish(d.To)),
                                                     CreateDate = d.CreateDate,
                                                 };
             FxPageInfo<BindCustomerRFMLevelUpdateLogDto> result = new FxPageInfo<BindCustomerRFMLevelUpdateLogDto>();

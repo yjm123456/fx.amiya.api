@@ -128,7 +128,6 @@ CHANGE COLUMN `sex` `sex` CHAR(20) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unic
 
 
 ------------------------------------余建明 2025/08/22 END--------------------------------------
---------------------------------------------------------------------------------------------------------以上部分已更新到线上--------------------------------------
 ------------------------------------余建明 2025/08/29 BEGIN--------------------------------------
 --派单列表新增地区属性
 ALTER TABLE `amiyadb`.`tbl_content_platform_order_send` 
@@ -136,3 +135,31 @@ ADD COLUMN `area` INT NOT NULL DEFAULT 0 AFTER `hospital_emp_id`;
 
 
 ------------------------------------余建明 2025/08/29 END--------------------------------------
+--------------------------------------------------------------------------------------------------------以上部分已更新到线上--------------------------------------
+
+
+------------------------------------余建明 2025/09/23 BEGIN--------------------------------------
+--职位列表新增描述
+ALTER TABLE `amiyadb`.`tbl_amiya_position_info` 
+ADD COLUMN `description` VARCHAR(70) NULL AFTER `name`;
+
+--回访目的管理新增描述
+ALTER TABLE `amiyadb`.`tbl_track_type` 
+ADD COLUMN `description` VARCHAR(150) NULL DEFAULT  AFTER `is_old_customer`;
+
+--客户类型管理新增描述
+ALTER TABLE `amiyadb`.`tbl_track_theme` 
+ADD COLUMN `description` VARCHAR(150) NULL AFTER `valid`;
+
+--回访工具新增描述
+ALTER TABLE `amiyadb`.`tbl_track_tool` 
+ADD COLUMN `description` VARCHAR(150) NULL AFTER `valid`;
+
+--医院账户新增地区属性
+ALTER TABLE `amiyadb`.`tbl_hospital_employee` 
+ADD COLUMN `area` INT NOT NULL DEFAULT 0 AFTER `is_customer_service`;
+
+
+
+------------------------------------余建明 2025/09/23 END--------------------------------------
+

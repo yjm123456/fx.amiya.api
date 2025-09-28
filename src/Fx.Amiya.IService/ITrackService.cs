@@ -19,7 +19,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<TrackTypeDto>> GetTrackTypeListWithPageAsync(bool? valid,int pageNum, int pageSize);
+        Task<FxPageInfo<TrackTypeDto>> GetTrackTypeListWithPageAsync(bool? valid, int pageNum, int pageSize);
 
 
 
@@ -27,7 +27,7 @@ namespace Fx.Amiya.IService
         /// 获取有效的回访类型列表
         /// </summary>
         /// <returns></returns>
-        Task<List<TrackTypeDto>> GetTrackTypeListAsync(bool? isOldCustomer);
+        Task<List<TrackTypeDto>> GetTrackTypeListAsync(bool? isOldCustomer, int area);
 
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
-        Task<TrackTypeDto> GetbyIdAsync(int Id);
+        Task<TrackTypeDto> GetbyIdAsync(int Id,int area);
 
         /// <summary>
         /// 修改回访类型
@@ -68,14 +68,14 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<TrackToolDto>> GetTrackToolListWithPageAsync(bool? valid,int pageNum, int pageSize);
+        Task<FxPageInfo<TrackToolDto>> GetTrackToolListWithPageAsync(bool? valid, int pageNum, int pageSize);
 
 
         /// <summary>
         /// 获取有效的回访工具列表
         /// </summary>
         /// <returns></returns>
-        Task<List<TrackToolDto>> GetTrackToolListAsync();
+        Task<List<TrackToolDto>> GetTrackToolListAsync(int area);
 
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<TrackRecordDto>> GetRecordListWithPageAsync(string keyword, DateTime? startDate, DateTime? endDate, int employeeId, bool? isOldCustomerTrack, int pageNum, int pageSize);
+        Task<FxPageInfo<TrackRecordDto>> GetRecordListWithPageAsync(string keyword, DateTime? startDate, DateTime? endDate, int employeeId, bool? isOldCustomerTrack, int area, int pageNum, int pageSize);
 
 
 
@@ -126,7 +126,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<TrackRecordDto>> GetRecordListByEncryptPhoneWithPageAsync(string phone, string shoppingCartRegistionId, int pageNum, int pageSize);
+        Task<FxPageInfo<TrackRecordDto>> GetRecordListByEncryptPhoneWithPageAsync(string phone, string shoppingCartRegistionId, int area, int pageNum, int pageSize);
 
 
 
@@ -151,7 +151,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<WaitTrackCustomerDto>> GetWaitTrackListWithPageAsync(string keyword, DateTime? startDate, DateTime? endDate, int employeeId,int pageNum, int pageSize);
+        Task<FxPageInfo<WaitTrackCustomerDto>> GetWaitTrackListWithPageAsync(string keyword, DateTime? startDate, DateTime? endDate, int employeeId, int area, int pageNum, int pageSize);
         /// <summary>
         /// 获取未加V原因名称列表
         /// </summary>

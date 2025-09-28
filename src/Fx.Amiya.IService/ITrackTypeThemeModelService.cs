@@ -11,7 +11,7 @@ namespace Fx.Amiya.IService
 {
     public interface ITrackTypeThemeModelService
     {
-        Task<List<TrackTypeThemeModelDto>> GetListAsync(int? trackTypeId);
+        Task<List<TrackTypeThemeModelDto>> GetListAsync(int? trackTypeId, int area);
         Task AddAsync(List<AddTrackTypeThemeModelDto> addDto);
     }
 }

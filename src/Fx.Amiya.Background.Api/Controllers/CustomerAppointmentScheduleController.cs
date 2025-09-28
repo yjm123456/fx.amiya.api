@@ -55,6 +55,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 QueryCustomerAppointSchedulePageListDto queryCustomerAppointSchedulePageListDto = new QueryCustomerAppointSchedulePageListDto();
                 queryCustomerAppointSchedulePageListDto.ImportantType = query.ImportantType;
                 queryCustomerAppointSchedulePageListDto.IsFinish = query.IsFinish;
+                queryCustomerAppointSchedulePageListDto.Area = employee.Area;
                 queryCustomerAppointSchedulePageListDto.KeyWord = query.KeyWord;
                 queryCustomerAppointSchedulePageListDto.CreateBy = employeeId;
                 queryCustomerAppointSchedulePageListDto.AppointmentType = query.AppointmentType;

@@ -13,6 +13,7 @@ namespace Fx.Amiya.Background.Api.Vo.Track
         /// </summary>
         [Required(ErrorMessage ="回访类型名称不能为空")]
         public string Name { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// 是否需要模板

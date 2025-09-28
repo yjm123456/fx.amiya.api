@@ -16,6 +16,7 @@ namespace Fx.Amiya.DbModels.Model
         public bool IsCreateSubAccount { get; set; }
         public int HospitalPositionId { get; set; }
         public bool IsCustomerService { get; set; }
+        public int Area { get; set; }
 
 
         public HospitalInfo HospitalInfo { get; set; }

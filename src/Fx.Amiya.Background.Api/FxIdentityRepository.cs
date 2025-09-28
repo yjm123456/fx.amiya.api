@@ -52,7 +52,8 @@ namespace Fx.Amiya.Background.Api
                 Valid = employee.Valid,
                 Frozen = false,
                 PositionId = employee.HospitalPositionId.ToString(),
-                HospitalId = employee.HospitalId
+                HospitalId = employee.HospitalId,
+                Area = employee.Area,
             };
         }
     }

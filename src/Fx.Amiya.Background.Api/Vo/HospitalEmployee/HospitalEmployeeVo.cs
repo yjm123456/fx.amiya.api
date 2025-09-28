@@ -31,5 +31,6 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalEmployee
         /// </summary>
         public string HospitalPositionName { get; set; }
         public bool IsCustomerService { get; set; }
+        public int Area { get; set; }
     }
 }

@@ -86,11 +86,11 @@ namespace Fx.Amiya.Service
                                                              CustomerName = d.CustomerName,
                                                              Phone = ServiceClass.GetIncompletePhone(d.Phone),
                                                              AppointmentType = d.AppointmentType,
-                                                             AppointmentTypeText = ServiceClass.GetAppointmentTypeText(d.AppointmentType),
+                                                             AppointmentTypeText =(query.Area==(int)Area.China? ServiceClass.GetAppointmentTypeText(d.AppointmentType) : ServiceClassEnglishVersion.GetAppointmentTypeTextEnglish(d.AppointmentType)),
                                                              AppointmentDate = d.AppointmentDate,
                                                              IsFinish = d.IsFinish,
                                                              ImportantType = d.ImportantType,
-                                                             ImportantTypeText = ServiceClass.GetShopCartRegisterEmergencyLevelText(d.ImportantType),
+                                                             ImportantTypeText = (query.Area == (int)Area.China ? ServiceClass.GetShopCartRegisterEmergencyLevelText(d.ImportantType): ServiceClassEnglishVersion.GetShopCartRegisterEmergencyLevelTextEnglish(d.ImportantType)),
                                                              Remark = d.Remark,
                                                              CreateByEmpName = d.AmiyaEmployeeInfo.Name,
                                                              CustomerPic1 = d.CustomerPic1,
@@ -198,7 +198,7 @@ namespace Fx.Amiya.Service
 
 
                 List<CustomerAppointmentScheduleDto> customerAppointmentScheduleServicePageInfo = new List<CustomerAppointmentScheduleDto>();
-                customerAppointmentScheduleServicePageInfo = await customerAppointmentScheduleService.ToListAsync();
+                var zz = await customerAppointmentScheduleService.ToListAsync();
                 return customerAppointmentScheduleServicePageInfo;
             }
             catch (Exception ex)

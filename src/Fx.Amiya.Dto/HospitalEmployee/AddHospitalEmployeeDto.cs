@@ -14,6 +14,7 @@ namespace Fx.Amiya.Dto.HospitalEmployee
 
         public bool IsCreateSubAccount { get; set; }
         public bool IsCustomerService { get; set; }
+        public int Area { get; set; }
 
     }
 }

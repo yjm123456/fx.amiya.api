@@ -31,17 +31,17 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<List<TrackTypeThemeModelDto>> GetListAsync(int? trackTypeId)
+        public async Task<List<TrackTypeThemeModelDto>> GetListAsync(int? trackTypeId, int area)
         {
-            var trackTypeThemeModel = from d in dalTrackTypeThemeModel.GetAll().Include(x=>x.TrackTheme).Include(x=>x.TrackType)
+            var trackTypeThemeModel = from d in dalTrackTypeThemeModel.GetAll().Include(x => x.TrackTheme).Include(x => x.TrackType)
                                       where trackTypeId == null || d.TrackTypeId == trackTypeId
                                       select new TrackTypeThemeModelDto
                                       {
                                           Id = d.Id,
                                           TrackTypeId = d.TrackTypeId,
-                                          TrackTypeName=d.TrackType.Name,
+                                          TrackTypeName = (area == (int)Area.China ? d.TrackType.Name : d.TrackType.Description),
                                           TrackThemeId = d.TrackThemeId,
-                                          TrackThemeName=d.TrackTheme.Name,
+                                          TrackThemeName = (area == (int)Area.China ? d.TrackTheme.Name : d.TrackTheme.Description),
                                           DaysLater = d.DaysLater,
                                           TrackPlan = d.TrackPlan,
                                       };
@@ -79,7 +79,7 @@ namespace Fx.Amiya.Service
                 }
                 unitOfWork.Commit();
             }
-            catch(Exception err)
+            catch (Exception err)
             {
                 unitOfWork.RollBack();
                 throw new Exception(err.Message.ToString());

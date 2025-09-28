@@ -82,7 +82,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="customerId"></param>
         /// <returns></returns>
-        Task UpdateBindUserIdAsync(string customerId,string appid=null);
+        Task UpdateBindUserIdAsync(string customerId, string appid = null);
         /// <summary>
         /// 内容平台与升单成交加入成交金额
         /// </summary>
@@ -134,7 +134,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<BindCustomerServiceDto>> GetAllCustomerByRFMTypeAsync(List<int> bindCustomerServiceIds, int rfmType, int pageNum, int pageSize);
+        Task<FxPageInfo<BindCustomerServiceDto>> GetAllCustomerByRFMTypeAsync(List<int> bindCustomerServiceIds, int area, int rfmType, int pageNum, int pageSize);
 
         /// <summary>
         /// 修改客户RFM等级
@@ -168,6 +168,6 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<BindCustomerRFMLevelUpdateLogDto>> GetCustomerRFMTypeUpdateDataAsync(DateTime? startDate, DateTime? endDate, string keyWord, int? customerServiceId, int pageNum, int pageSize);
+        Task<FxPageInfo<BindCustomerRFMLevelUpdateLogDto>> GetCustomerRFMTypeUpdateDataAsync(DateTime? startDate, DateTime? endDate, string keyWord, int? customerServiceId, int area, int pageNum, int pageSize);
     }
 }

@@ -16,6 +16,7 @@ namespace Fx.Amiya.Service
     public class HospitalEmployeeService : IHospitalEmployeeService
     {
         private IDalHospitalEmployee dalHospitalEmployee;
+
         public HospitalEmployeeService(IDalHospitalEmployee dalHospitalEmployee)
         {
             this.dalHospitalEmployee = dalHospitalEmployee;
@@ -38,6 +39,7 @@ namespace Fx.Amiya.Service
                 employee.HospitalId = addDto.HospitalId;
                 employee.HospitalPositionId = addDto.HospitalPositionId;
                 employee.IsCustomerService = addDto.IsCustomerService;
+                employee.Area = addDto.Area;
                 employee.Valid = true;
                 if (employeeType == "amiyaEmployee")
                     employee.IsCreateSubAccount = addDto.IsCreateSubAccount;
@@ -79,7 +81,8 @@ namespace Fx.Amiya.Service
                     IsCreateSubAccount = employee.IsCreateSubAccount,
                     HospitalPositionId = employee.HospitalPositionId,
                     HospitalPositionName = employee.HospitalPositionInfo.Name,
-                    IsCustomerService = employee.IsCustomerService
+                    IsCustomerService = employee.IsCustomerService,
+                    Area = employee.Area,
                 };
 
                 return employeeDto;
@@ -94,7 +97,7 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<HospitalEmployeeDto>> GetListWithPageAsync(int? hospitalId, string keyword, int pageNum, int pageSize, bool? valid)
+        public async Task<FxPageInfo<HospitalEmployeeDto>> GetListWithPageAsync(int? hospitalId, int? area, string keyword, int pageNum, int pageSize, bool? valid)
         {
             try
             {
@@ -106,6 +109,7 @@ namespace Fx.Amiya.Service
                                 && (hospitalId == null || d.HospitalId == hospitalId)
                                 && (keyword == null || d.Name.Contains(keyword) || d.UserName.Contains(keyword))
                                 && (valid == null || d.Valid == valid)
+                                && (area == null || d.Area == area)
                                 select new HospitalEmployeeDto
                                 {
                                     Id = d.Id,
@@ -119,6 +123,7 @@ namespace Fx.Amiya.Service
                                     HospitalPositionId = d.HospitalPositionId,
                                     HospitalPositionName = d.HospitalPositionInfo.Name,
                                     IsCustomerService = d.IsCustomerService,
+                                    Area = d.Area
                                 };
                 FxPageInfo<HospitalEmployeeDto> employeePageInfo = new FxPageInfo<HospitalEmployeeDto>();
                 employeePageInfo.TotalCount = await employees.CountAsync();
@@ -186,6 +191,7 @@ namespace Fx.Amiya.Service
 
                 employee.Name = updateDto.Name;
                 employee.UserName = updateDto.UserName;
+                employee.Area = updateDto.Area;
                 employee.Valid = updateDto.Valid;
                 employee.HospitalPositionId = updateDto.HospitalPositionId;
                 employee.IsCustomerService = updateDto.IsCustomerService;
@@ -237,6 +243,7 @@ namespace Fx.Amiya.Service
                 employeeDto.HospitalPositionName = employee.HospitalPositionInfo.Name;
                 employeeDto.IsCustomerService = employee.IsCustomerService;
                 employeeDto.Avatar = employee.Avatar;
+                employeeDto.Area = employee.Area;
                 return employeeDto;
             }
             catch (Exception ex)
@@ -372,6 +379,7 @@ namespace Fx.Amiya.Service
                     employeeDto.HospitalPositionId = employee.HospitalPositionId;
                     employeeDto.IsCustomerService = employee.IsCustomerService;
                     employeeDto.Avatar = employee.Avatar;
+                    employeeDto.Area = employee.Area;
                     result.Add(employeeDto);
                 }
                 return result;

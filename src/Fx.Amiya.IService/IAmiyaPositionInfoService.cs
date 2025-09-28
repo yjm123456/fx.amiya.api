@@ -12,7 +12,7 @@ namespace Fx.Amiya.IService
         /// 获取职位列表
         /// </summary>
         /// <returns></returns>
-        Task<List<AmiyaPositionInfoDto>> GetListAsync();
+        Task<List<AmiyaPositionInfoDto>> GetListAsync(int area);
 
 
         /// <summary>

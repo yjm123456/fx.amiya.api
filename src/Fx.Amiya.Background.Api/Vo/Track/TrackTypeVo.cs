@@ -16,6 +16,7 @@ namespace Fx.Amiya.Background.Api.Vo.Track
         /// 回访类型名称
         /// </summary>
         public string Name { get; set; }
+        public string Description { get; set; }
         /// <summary>
         /// 是否有效
         /// </summary>

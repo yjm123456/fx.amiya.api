@@ -13,5 +13,6 @@ namespace Fx.Amiya.Background.Api.Vo.TrackTheme
         [Required(ErrorMessage ="回访主题名称不能为空")]
         [StringLength(150,ErrorMessage ="回访主题名称不超过{1}个字符")]
         public string Name { get; set; }
+        public string Description { get; set; }
     }
 }

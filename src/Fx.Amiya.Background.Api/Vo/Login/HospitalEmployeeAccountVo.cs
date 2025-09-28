@@ -29,5 +29,6 @@ namespace Fx.Amiya.Background.Api.Vo.Login
         /// 头像
         /// </summary>
         public string Avatar { get; set; }
+        public int Area { get; set; }
     }
 }

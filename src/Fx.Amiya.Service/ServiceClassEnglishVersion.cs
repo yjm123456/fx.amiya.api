@@ -561,5 +561,45 @@ namespace Fx.Amiya.Service
             return consumptionType;
 
         }
+
+
+        public static string GetRFMTagTextEnglish(int tag)
+        {
+            string str = "";
+            switch (tag)
+            {
+                case 0:
+                    str = "Super VIP（RV）";
+                    break;
+                case 1:
+                    str = "Important value customers(R1)";
+                    break;
+                case 2:
+                    str = "Important retained customers(R2)";
+                    break;
+                case 3:
+                    str = "Important development clients(R3)";
+                    break;
+                case 4:
+                    str = "Important customer retention(R4)";
+                    break;
+                case 5:
+                    str = "General value customer(R5)";
+                    break;
+                case 6:
+                    str = "Generally maintain customers(R6)";
+                    break;
+                case 7:
+                    str = "Generally develop customers(R7)";
+                    break;
+                case 8:
+                    str = "Generally retain customers(R8)";
+                    break;
+                default:
+                    str = "/";
+                    break;
+            }
+            return str;
+        }
     }
 }

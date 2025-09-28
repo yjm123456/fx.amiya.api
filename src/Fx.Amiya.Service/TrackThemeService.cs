@@ -13,7 +13,7 @@ using Fx.Common;
 
 namespace Fx.Amiya.Service
 {
-  public  class TrackThemeService: ITrackThemeService
+    public class TrackThemeService : ITrackThemeService
     {
         private IDalTrackTheme dalTrackTheme;
         public TrackThemeService(IDalTrackTheme dalTrackTheme)
@@ -28,18 +28,19 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<TrackThemeDto>> GetListWithPageAsync(int? trackTypeId,int pageNum, int pageSize, bool? valid)
+        public async Task<FxPageInfo<TrackThemeDto>> GetListWithPageAsync(int? trackTypeId, int pageNum, int pageSize, bool? valid)
         {
             var trackTheme = from d in dalTrackTheme.GetAll()
-                             where trackTypeId==null||d.TrackTypeId== trackTypeId
-                             where valid.HasValue ?d.Valid==valid:d.Valid==true
+                             where trackTypeId == null || d.TrackTypeId == trackTypeId
+                             where valid.HasValue ? d.Valid == valid : d.Valid == true
                              select new TrackThemeDto
-                             { 
-                                Id=d.Id,
-                                Name=d.Name,
-                                TrackTypeId=d.TrackTypeId,
-                                TrackTypeName=d.TrackType.Name,
-                                Valid=d.Valid
+                             {
+                                 Id = d.Id,
+                                 Name = d.Name,
+                                 Description = d.Description,
+                                 TrackTypeId = d.TrackTypeId,
+                                 TrackTypeName = d.TrackType.Name,
+                                 Valid = d.Valid
                              };
             FxPageInfo<TrackThemeDto> trackThemePageInfo = new FxPageInfo<TrackThemeDto>();
             trackThemePageInfo.TotalCount = await trackTheme.CountAsync();
@@ -54,14 +55,14 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="trackTypeId"></param>
         /// <returns></returns>
-        public async Task<List<TrackThemeNameDto>> GetNameListByTrackTypeIdAsync(int trackTypeId)
+        public async Task<List<TrackThemeNameDto>> GetNameListByTrackTypeIdAsync(int trackTypeId, int area)
         {
             var trackTheme = from d in dalTrackTheme.GetAll()
                              where d.TrackTypeId == trackTypeId && d.Valid
                              select new TrackThemeNameDto
-                             { 
-                                Id=d.Id,
-                                Name=d.Name
+                             {
+                                 Id = d.Id,
+                                 Name = area == (int)Area.China ? d.Name : d.Description
                              };
             return await trackTheme.ToListAsync();
         }
@@ -76,9 +77,10 @@ namespace Fx.Amiya.Service
         {
             TrackTheme trackTheme = new TrackTheme();
             trackTheme.Name = addDto.Name;
+            trackTheme.Description = addDto.Description;
             trackTheme.TrackTypeId = addDto.TrackTypeId;
             trackTheme.Valid = true;
-            await dalTrackTheme.AddAsync(trackTheme,true);
+            await dalTrackTheme.AddAsync(trackTheme, true);
         }
 
 
@@ -90,12 +92,13 @@ namespace Fx.Amiya.Service
         /// <returns></returns>
         public async Task<TrackThemeDto> GetByIdAsync(int id)
         {
-            var trackTheme = await dalTrackTheme.GetAll().Include(e=>e.TrackType).SingleOrDefaultAsync(e => e.Id == id);
+            var trackTheme = await dalTrackTheme.GetAll().Include(e => e.TrackType).SingleOrDefaultAsync(e => e.Id == id);
             if (trackTheme == null)
                 throw new Exception("回访主题编号错误");
             TrackThemeDto trackThemeDto = new TrackThemeDto();
             trackThemeDto.Id = trackTheme.Id;
             trackThemeDto.Name = trackTheme.Name;
+            trackThemeDto.Description = trackTheme.Description;
             trackThemeDto.TrackTypeId = trackTheme.TrackTypeId;
             trackThemeDto.TrackTypeName = trackTheme.TrackType.Name;
             trackThemeDto.Valid = trackTheme.Valid;
@@ -115,9 +118,10 @@ namespace Fx.Amiya.Service
                 throw new Exception("回访主题编号错误");
 
             trackTheme.Name = updateDto.Name;
+            trackTheme.Description = updateDto.Description;
             trackTheme.TrackTypeId = updateDto.TrackTypeId;
             trackTheme.Valid = updateDto.Valid;
-            await dalTrackTheme.UpdateAsync(trackTheme,true);
+            await dalTrackTheme.UpdateAsync(trackTheme, true);
         }
 
 
@@ -133,7 +137,7 @@ namespace Fx.Amiya.Service
             if (trackTheme == null)
                 throw new Exception("回访主题编号错误");
             trackTheme.Valid = false;
-            await dalTrackTheme.UpdateAsync(trackTheme,true);
+            await dalTrackTheme.UpdateAsync(trackTheme, true);
         }
     }
 }

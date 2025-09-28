@@ -149,11 +149,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("listWithPage")]
-        public async Task<ResultData<FxPageInfo<AmiyaEmployeeVo>>> GetListWithPageAsync(string keyword, bool valid, int positionId, int? area, int pageNum, int pageSize)
+        public async Task<ResultData<FxPageInfo<AmiyaEmployeeVo>>> GetListWithPageAsync(string keyword, int? area, bool valid, int positionId, int pageNum, int pageSize)
         {
             try
             {
-                var q = await employeeService.GetListWithPageAsync(keyword, valid, positionId, area, pageNum, pageSize);
+
+                var empInfo = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                var q = await employeeService.GetListWithPageAsync(keyword, area, valid, positionId, Convert.ToInt32(empInfo.Area), pageNum, pageSize);
 
                 var employeeInfos = from d in q.List
                                     select new AmiyaEmployeeVo

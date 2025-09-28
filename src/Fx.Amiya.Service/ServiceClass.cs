@@ -1653,6 +1653,9 @@ namespace Fx.Amiya.Service
                 case 1:
                     statusText = "Vietnam";
                     break;
+                case 2:
+                    statusText = "Malaysia";
+                    break;
             }
             return statusText;
         }

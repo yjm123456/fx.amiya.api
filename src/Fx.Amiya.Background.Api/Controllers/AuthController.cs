@@ -192,7 +192,8 @@ namespace Fx.Amiya.Background.Api.Controllers
                     IsCustomerService = employee.IsCustomerService,
                     EmployeeType = EmployeeTypeConstant.HOSPITAL_EMPLOYEE_TYPE,
                     Token = identity.BuildJwtToken(jwtConfig.Key, jwtConfig.ExpireInSeconds / 60),
-                    RefreshToken = identity.BuildRefreshToken(jwtConfig.Key, jwtConfig.RefreshTokenExpireInSeconds / 60)
+                    RefreshToken = identity.BuildRefreshToken(jwtConfig.Key, jwtConfig.RefreshTokenExpireInSeconds / 60),
+                    Area = employee.Area
                 };
 
                 return ResultData<HospitalEmployeeAccountVo>.Success().AddData("token", avvountVo);

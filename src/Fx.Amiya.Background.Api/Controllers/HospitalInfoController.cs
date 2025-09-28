@@ -229,7 +229,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 if (empInfo == null)
                 {
                     var hospitalEmpInfo = httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
-                    //area =//医院账户的地区id hospitalEmpInfo.Area
+                    area = hospitalEmpInfo.Area;
                 }
                 else
                 {
@@ -409,7 +409,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 if (empInfo == null)
                 {
                     var hospitalEmpInfo = httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
-                    //area =//医院账户的地区id hospitalEmpInfo.Area
+                    area = hospitalEmpInfo.Area;
                 }
                 else
                 {

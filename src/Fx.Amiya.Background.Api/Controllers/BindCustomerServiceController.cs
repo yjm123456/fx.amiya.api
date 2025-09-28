@@ -326,6 +326,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
+
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 List<int> employeeIds = new List<int>();
                 List<BindCustomerServiceRfmDataVo> hospitalPerformanceVo = new List<BindCustomerServiceRfmDataVo>();
                 if (query.EmployeeId.HasValue)
@@ -340,7 +342,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                         employeeIds = empInfo.Select(x => x.Id).ToList();
                     }
                 }
-                var q = await bindCustomerServiceService.GetAllCustomerByRFMTypeAsync(employeeIds, query.rfmType, query.PageNum.Value, query.PageSize.Value);
+                var q = await bindCustomerServiceService.GetAllCustomerByRFMTypeAsync(employeeIds, employee.Area, query.rfmType, query.PageNum.Value, query.PageSize.Value);
                 var billReturnBackPriceData = from d in q.List
                                               select new BindCustomerInfoVo
                                               {
@@ -376,12 +378,12 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("getCustomerRFMTypeUpdateData")]
-
         public async Task<ResultData<FxPageInfo<BindCustomerRFMLevelUpdateLogVo>>> GetCustomerRFMTypeUpdateDataAsync([FromQuery] QueryCustomerRFMTypeUpdateDataVo query)
         {
             try
             {
-                var q = await bindCustomerServiceService.GetCustomerRFMTypeUpdateDataAsync(query.StartDate.Value, query.EndDate.Value, query.KeyWord, query.customerServiceId, query.PageNum.Value, query.PageSize.Value);
+                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                var q = await bindCustomerServiceService.GetCustomerRFMTypeUpdateDataAsync(query.StartDate.Value, query.EndDate.Value, query.KeyWord, query.customerServiceId, employee.Area, query.PageNum.Value, query.PageSize.Value);
                 var billReturnBackPriceData = from d in q.List
                                               select new BindCustomerRFMLevelUpdateLogVo
                                               {
