@@ -70,11 +70,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
+                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 QueryMessageNoticeDto queryCustomerAppointSchedulePageListDto = new QueryMessageNoticeDto();
                 queryCustomerAppointSchedulePageListDto.NoticeType = query.NoticeType;
                 queryCustomerAppointSchedulePageListDto.AcceptBy = query.AcceptBy;
                 queryCustomerAppointSchedulePageListDto.StartDate = query.StartDate;
                 queryCustomerAppointSchedulePageListDto.EndDate = query.EndDate;
+                queryCustomerAppointSchedulePageListDto.Area = employee.Area;
                 var q = await messageNoticeService.GetListAsync(queryCustomerAppointSchedulePageListDto);
 
                 var messageNotice = from d in q
@@ -130,11 +132,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
+                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 QueryMessageNoticeDto queryCustomerAppointSchedulePageListDto = new QueryMessageNoticeDto();
                 queryCustomerAppointSchedulePageListDto.NoticeType = query.NoticeType;
                 queryCustomerAppointSchedulePageListDto.AcceptBy = query.AcceptBy;
                 queryCustomerAppointSchedulePageListDto.StartDate = query.StartDate;
                 queryCustomerAppointSchedulePageListDto.EndDate = query.EndDate;
+                queryCustomerAppointSchedulePageListDto.Area = employee.Area;
                 var q = await messageNoticeService.GetBannerListAsync(queryCustomerAppointSchedulePageListDto);
 
                 var messageNotice = from d in q
@@ -189,7 +193,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public ResultData<List<BaseIdAndNameVo>> GetMessageNoticeTypeList()
         {
-            var orderTypes = from d in messageNoticeService.GetMessageNoticeTypeList()
+            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            var orderTypes = from d in messageNoticeService.GetMessageNoticeTypeList(employee.Area)
                              select new BaseIdAndNameVo
                              {
                                  Id = d.Id,

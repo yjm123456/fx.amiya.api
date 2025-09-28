@@ -601,5 +601,38 @@ namespace Fx.Amiya.Service
             }
             return str;
         }
+
+        /// <summary>
+        /// 获取消息通知类型【英文版】
+        /// </summary>
+        /// <param name="consulationType"></param>
+        /// <returns></returns>
+        public static string GetNoticeTypeTextEnglish(int noticeType)
+        {
+            string inventoryStateText = "";
+            switch (noticeType)
+            {
+                case 1:
+                    inventoryStateText = "Order notice";
+                    break;
+
+                case 2:
+                    inventoryStateText = "Schedule notice";
+                    break;
+
+                case 3:
+                    inventoryStateText = "Operation notice";
+                    break;
+
+                case 4:
+                    inventoryStateText = "Triage notice";
+                    break;
+
+                case 5:
+                    inventoryStateText = "System notice";
+                    break;
+            }
+            return inventoryStateText;
+        }
     }
 }

@@ -21,6 +21,6 @@ namespace Fx.Amiya.IService
         Task<int> GetMyUnReadAsync(int employeeId);
         Task AddAsync(AddMessageNoticeDto addDto);
         Task UpdateToReadAsync(UpdateMessageNoticeToReadDto updateDto);
-        List<BaseIdAndNameDto> GetMessageNoticeTypeList();
+        List<BaseIdAndNameDto> GetMessageNoticeTypeList(int area);
     }
 }

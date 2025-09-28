@@ -17,5 +17,7 @@ namespace Fx.Amiya.Dto.MessageNotice.Input
         /// </summary>
         public int? NoticeType { get; set; }
 
+        public int Area { get; set; }
+
     }
 }

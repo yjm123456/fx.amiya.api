@@ -60,7 +60,7 @@ namespace Fx.Amiya.Service
                                                IsRead = d.IsRead,
                                                NoticeType = d.NoticeType,
                                                OrderId = d.NoticeType == (int)MessageNoticeMessageTextEnum.OrderNotice ? d.NoticeContent.Substring(5, 16) : "",
-                                               NoticeTypeText = ServiceClass.GetNoticeTypeText(d.NoticeType),
+                                               NoticeTypeText = (query.Area == (int)Area.China ? ServiceClass.GetNoticeTypeText(d.NoticeType) : ServiceClassEnglishVersion.GetNoticeTypeTextEnglish(d.NoticeType)),
                                                NoticeContent = d.NoticeContent,
                                                AcceptByEmpName = d.AmiyaEmployeeInfo.Name,
                                            };
@@ -85,7 +85,7 @@ namespace Fx.Amiya.Service
                                            select new MessageNoticeDto
                                            {
                                                Id = d.Id,
-                                               NoticeTypeText = ServiceClass.GetNoticeTypeText(d.NoticeType),
+                                               NoticeTypeText = (query.Area == (int)Area.China ? ServiceClass.GetNoticeTypeText(d.NoticeType) : ServiceClassEnglishVersion.GetNoticeTypeTextEnglish(d.NoticeType)),
                                                NoticeContent = d.NoticeContent,
                                                CreateDate = d.CreateDate
                                            };
@@ -169,7 +169,7 @@ namespace Fx.Amiya.Service
             }
         }
 
-        public List<BaseIdAndNameDto> GetMessageNoticeTypeList()
+        public List<BaseIdAndNameDto> GetMessageNoticeTypeList(int area)
         {
             var appointmentTypes = Enum.GetValues(typeof(MessageNoticeMessageTextEnum));
             List<BaseIdAndNameDto> appointmentTypeList = new List<BaseIdAndNameDto>();
@@ -177,7 +177,14 @@ namespace Fx.Amiya.Service
             {
                 BaseIdAndNameDto appointmentType = new BaseIdAndNameDto();
                 appointmentType.Id = Convert.ToInt32(item).ToString();
-                appointmentType.Name = ServiceClass.GetNoticeTypeText(Convert.ToByte(item));
+                if (area == (int)Area.China)
+                {
+                    appointmentType.Name = ServiceClass.GetNoticeTypeText(Convert.ToByte(item));
+                }
+                else
+                {
+                    appointmentType.Name = ServiceClassEnglishVersion.GetNoticeTypeTextEnglish(Convert.ToByte(item));
+                }
                 appointmentTypeList.Add(appointmentType);
             }
             return appointmentTypeList;
