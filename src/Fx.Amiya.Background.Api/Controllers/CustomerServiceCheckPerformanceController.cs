@@ -53,6 +53,8 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
+
+                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
                 QueryCustomerServiceCheckPerformanceDto queryDto = new QueryCustomerServiceCheckPerformanceDto();
                 queryDto.StartDate = query.StartDate;
                 if (query.EndDate.HasValue)
@@ -62,6 +64,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 queryDto.PageNum = query.PageNum;
                 queryDto.PageSize = query.PageSize;
                 queryDto.Valid = query.Valid;
+                queryDto.Area = employee.Area;
                 queryDto.KeyWord = query.KeyWord;
                 queryDto.BelongEmpId = query.BelongEmpId;
                 queryDto.CheckEmpId = query.CheckEmpId;

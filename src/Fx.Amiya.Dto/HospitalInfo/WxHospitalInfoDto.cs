@@ -14,6 +14,11 @@ namespace Fx.Amiya.Dto.HospitalInfo
 
         public string Phone { get; set; }
         public string ThumbPicUrl { get; set; }
+
+        /// <summary>
+        /// 医院地区
+        /// </summary>
+        public int HospitalArea { get; set; }
         /// <summary>
         /// 是否推荐
         /// </summary>

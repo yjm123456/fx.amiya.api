@@ -1039,7 +1039,7 @@ namespace Fx.Amiya.Service
             return pageInfo;
         }
 
-        public List<BuyAgainTypeDto> GetBuyAgainTypeList()
+        public List<BuyAgainTypeDto> GetBuyAgainTypeList(int area)
         {
             var buyAgainTypes = Enum.GetValues(typeof(BuyAgainType));
             List<BuyAgainTypeDto> buyAgainTypeList = new List<BuyAgainTypeDto>();
@@ -1047,7 +1047,14 @@ namespace Fx.Amiya.Service
             {
                 BuyAgainTypeDto orderAppType = new BuyAgainTypeDto();
                 orderAppType.Type = Convert.ToByte(item);
-                orderAppType.TypeText = ServiceClass.GetBuyAgainTypeText(Convert.ToByte(item));
+                if (area == (int)Area.China)
+                {
+                    orderAppType.TypeText = ServiceClass.GetBuyAgainTypeText(Convert.ToByte(item));
+                }
+                else
+                {
+                    orderAppType.TypeText = ServiceClassEnglishVersion.GetBuyAgainTypeTextEnglish(Convert.ToByte(item));
+                }
                 buyAgainTypeList.Add(orderAppType);
             }
             return buyAgainTypeList;

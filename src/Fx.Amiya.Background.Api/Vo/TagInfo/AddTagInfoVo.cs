@@ -11,6 +11,10 @@ namespace Fx.Amiya.Background.Api.Vo.TagInfo
         /// 标签名称
         /// </summary>
         public string Name { get; set; }
+        /// <summary>
+        /// 标签描述
+        /// </summary>
+        public string Description { get; set; }
 
         /// <summary>
         /// 标签类型0=规模，1=设施

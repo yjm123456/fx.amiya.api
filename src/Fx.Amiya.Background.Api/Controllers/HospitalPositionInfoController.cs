@@ -39,11 +39,13 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var positionInfos = from d in await hospitalPositionInfoService.GetListAsync()
+                var empInfo = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                var positionInfos = from d in await hospitalPositionInfoService.GetListAsync(empInfo.Area)
                                     select new HospitalPositionInfoVo
                                     {
                                         Id = d.Id,
                                         Name = d.Name,
+                                        Description = d.Description,
                                         CreateDate = d.CreateDate,
                                         UpdateDate = d.UpdateDate,
                                         UpdateBy = d.UpdateBy,
@@ -68,7 +70,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var positionInfos = from d in await hospitalPositionInfoService.GetListAsync()
+                int area = 0;
+                var hospitalEmpInfo = httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
+                area = hospitalEmpInfo.Area;
+                var positionInfos = from d in await hospitalPositionInfoService.GetListAsync(area)
                                     select new HospitalSimplePositionInfoVo
                                     {
                                         Id = d.Id,
@@ -87,7 +92,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <summary>
         /// 添加医院职位
         /// </summary>
-         /// <param name="addVo"></param>
+        /// <param name="addVo"></param>
         /// <returns></returns>
         [HttpPost("add")]
         [FxInternalAuthorize]
@@ -97,6 +102,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 AddHospitalPositionInfoDto addDto = new AddHospitalPositionInfoDto();
                 addDto.Name = addVo.Name;
+                addDto.Description = addVo.Description;
                 await hospitalPositionInfoService.AddAsync(addDto);
                 return ResultData.Success();
             }
@@ -124,6 +130,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 HospitalPositionInfoVo positionInfoVo = new HospitalPositionInfoVo();
                 positionInfoVo.Id = position.Id;
                 positionInfoVo.Name = position.Name;
+                positionInfoVo.Description = position.Description;
                 positionInfoVo.CreateDate = position.CreateDate;
                 positionInfoVo.UpdateBy = position.UpdateBy;
                 positionInfoVo.UpdateDate = position.UpdateDate;
@@ -156,6 +163,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 UpdateHospitalPositionInfoDto updateDto = new UpdateHospitalPositionInfoDto();
                 updateDto.Id = updateVo.Id;
                 updateDto.Name = updateVo.Name;
+                updateDto.Description = updateVo.Description;
 
                 await hospitalPositionInfoService.UpdateAsync(updateDto, employeeId);
                 return ResultData.Success();

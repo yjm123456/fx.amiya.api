@@ -21,6 +21,11 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalPosition
         public string Name { get; set; }
 
         /// <summary>
+        /// 描述
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime CreateDate { get; set; }

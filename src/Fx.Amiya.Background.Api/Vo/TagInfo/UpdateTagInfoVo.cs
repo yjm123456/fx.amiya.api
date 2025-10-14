@@ -17,6 +17,7 @@ namespace Fx.Amiya.Background.Api.Vo.TagInfo
         /// </summary>
         public string Name { get; set; }
 
+        public string Description { get; set; }
         /// <summary>
         /// 标签类型0=医院规模，1=医院设施
         /// </summary>

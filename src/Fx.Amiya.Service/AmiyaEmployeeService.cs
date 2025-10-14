@@ -316,7 +316,7 @@ namespace Fx.Amiya.Service
                     Valid = employee.Valid,
                     Email = (employee.Email == "0") ? "" : employee.Email,
                     PositionId = employee.AmiyaPositionId,
-                    PositionName = employee.AmiyaPositionInfo.Name,
+                    PositionName = (employee.Area == (int)Area.China ? employee.AmiyaPositionInfo.Name : employee.AmiyaPositionInfo.Description),
                     IsDirector = employee.AmiyaPositionInfo.IsDirector,
                     IsCustomerService = employee.IsCustomerService,
                     DepartmentId = employee.AmiyaPositionInfo.DepartmentId,

@@ -78,7 +78,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("appTypeList")]
         public ResultData<List<BuyAgainTypeVo>> GeBuyAgainTypeList()
         {
-            var orderAppTypes = from d in customerHospitalConsumeService.GetBuyAgainTypeList()
+            int area = 0;
+            var empInfo = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            if (empInfo == null)
+            {
+                var hospitalEmpInfo = httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
+                area = hospitalEmpInfo.Area;
+            }
+            else
+            {
+                area = Convert.ToInt32(empInfo.Area);
+            }
+            var orderAppTypes = from d in customerHospitalConsumeService.GetBuyAgainTypeList(area)
                                 select new BuyAgainTypeVo
                                 {
                                     Type = d.Type,

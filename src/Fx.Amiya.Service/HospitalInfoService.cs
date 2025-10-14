@@ -607,7 +607,7 @@ namespace Fx.Amiya.Service
                                                        select new HospitalTagNameDto
                                                        {
                                                            Id = t.TagId,
-                                                           Name = t.TagInfo.Name
+                                                           Name = (d.HospitalArea == (int)Area.China ? t.TagInfo.Name : t.TagInfo.Description)
                                                        }).ToList(),
 
 
@@ -616,7 +616,7 @@ namespace Fx.Amiya.Service
                                                           select new HospitalTagNameDto
                                                           {
                                                               Id = t.TagId,
-                                                              Name = t.TagInfo.Name
+                                                              Name = (d.HospitalArea == (int)Area.China ? t.TagInfo.Name : t.TagInfo.Description)
                                                           }).ToList()
                                    };
 
@@ -1022,6 +1022,7 @@ namespace Fx.Amiya.Service
                                    Latitude = h.Latitude,
                                    Phone = h.Phone,
                                    ThumbPicUrl = h.ThumbPicUrl,
+                                   HospitalArea = h.HospitalArea,
                                    IsRecommend = GetRecommendHospital(h.RecommendHospitalInfoList) == null ? false : true,
                                    RecommendIndex = GetRecommendHospital(h.RecommendHospitalInfoList),
                                    DocterList = (from d in h.DocterList
@@ -1040,7 +1041,7 @@ namespace Fx.Amiya.Service
                                                    select new HospitalTagNameDto
                                                    {
                                                        Id = s.TagId,
-                                                       Name = s.TagInfo.Name
+                                                       Name = (h.HospitalArea == (int)Area.China ? s.TagInfo.Name : s.TagInfo.Description)
                                                    }).ToList(),
 
                                    FacilityTagList = (from s in h.HospitalTagDetailList
@@ -1048,7 +1049,7 @@ namespace Fx.Amiya.Service
                                                       select new HospitalTagNameDto
                                                       {
                                                           Id = s.TagId,
-                                                          Name = s.TagInfo.Name
+                                                          Name = (h.HospitalArea == (int)Area.China ? s.TagInfo.Name : s.TagInfo.Description)
                                                       }).ToList()
                                };
 
@@ -1100,6 +1101,7 @@ namespace Fx.Amiya.Service
                                    Latitude = h.Latitude,
                                    Phone = h.Phone,
                                    ThumbPicUrl = h.ThumbPicUrl,
+                                   HospitalArea = h.HospitalArea,
                                    IsRecommend = GetRecommendHospital(h.RecommendHospitalInfoList) == null ? false : true,
                                    RecommendIndex = GetRecommendHospital(h.RecommendHospitalInfoList),
                                    DocterList = (from d in h.DocterList
@@ -1118,7 +1120,7 @@ namespace Fx.Amiya.Service
                                                    select new HospitalTagNameDto
                                                    {
                                                        Id = s.TagId,
-                                                       Name = s.TagInfo.Name
+                                                       Name = (h.HospitalArea == (int)Area.China ? s.TagInfo.Name : s.TagInfo.Description)
                                                    }).ToList(),
 
                                    FacilityTagList = (from s in h.HospitalTagDetailList
@@ -1126,7 +1128,7 @@ namespace Fx.Amiya.Service
                                                       select new HospitalTagNameDto
                                                       {
                                                           Id = s.TagId,
-                                                          Name = s.TagInfo.Name
+                                                          Name = (h.HospitalArea == (int)Area.China ? s.TagInfo.Name : s.TagInfo.Description)
                                                       }).ToList()
                                };
                 var q = await hospital.ToListAsync();
@@ -1230,6 +1232,7 @@ namespace Fx.Amiya.Service
                                    Longitude = h.Longitude,
                                    Latitude = h.Latitude,
                                    Phone = h.Phone,
+                                   HospitalArea = h.HospitalArea,
                                    ThumbPicUrl = h.ThumbPicUrl,
                                    IsRecommend = GetRecommendHospital(h.RecommendHospitalInfoList) == null ? false : true,
                                    RecommendIndex = GetRecommendHospital(h.RecommendHospitalInfoList),
@@ -1249,7 +1252,7 @@ namespace Fx.Amiya.Service
                                                    select new HospitalTagNameDto
                                                    {
                                                        Id = s.TagId,
-                                                       Name = s.TagInfo.Name
+                                                       Name = (h.HospitalArea == (int)Area.China ? s.TagInfo.Name : s.TagInfo.Description)
                                                    }).ToList(),
 
                                    FacilityTagList = (from s in h.HospitalTagDetailList
@@ -1257,7 +1260,7 @@ namespace Fx.Amiya.Service
                                                       select new HospitalTagNameDto
                                                       {
                                                           Id = s.TagId,
-                                                          Name = s.TagInfo.Name
+                                                          Name = (h.HospitalArea == (int)Area.China ? s.TagInfo.Name : s.TagInfo.Description)
                                                       }).ToList()
                                };
                 var q = await hospital.ToListAsync();

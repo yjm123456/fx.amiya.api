@@ -1031,8 +1031,17 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalOrTenantAuthroize]
         public async Task<ResultData<OrderProsperityVo>> OrderProsperityAsync(string id)
         {
-            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            int empArea = Convert.ToInt32(employee.Area);
+            int empArea = 0;
+            var empInfo = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            if (empInfo == null)
+            {
+                var hospitalEmpInfo = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
+                empArea = hospitalEmpInfo.Area;
+            }
+            else
+            {
+                empArea = Convert.ToInt32(empInfo.Area);
+            }
             var order = await _orderService.GetByOrderIdAsync(id);
             if (order.OrderStatus != (int)ContentPlateFormOrderStatus.OrderComplete)
             {
@@ -1785,7 +1794,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             int empArea = Convert.ToInt32(employee.Area);
             FxPageInfo<ContentPlateformOrderSimpleInfoVo> fxPageInfo = new FxPageInfo<ContentPlateformOrderSimpleInfoVo>();
-            var result = await _orderService.GetContentOrderInfoByEncryPhone(phone,empArea, pageNum, pageSize);
+            var result = await _orderService.GetContentOrderInfoByEncryPhone(phone, empArea, pageNum, pageSize);
             fxPageInfo.TotalCount = result.TotalCount;
             fxPageInfo.List = result.List.Select(e => new ContentPlateformOrderSimpleInfoVo
             {

@@ -135,7 +135,6 @@ ADD COLUMN `area` INT NOT NULL DEFAULT 0 AFTER `hospital_emp_id`;
 
 
 ------------------------------------余建明 2025/08/29 END--------------------------------------
---------------------------------------------------------------------------------------------------------以上部分已更新到线上--------------------------------------
 
 
 ------------------------------------余建明 2025/09/23 BEGIN--------------------------------------
@@ -162,4 +161,24 @@ ADD COLUMN `area` INT NOT NULL DEFAULT 0 AFTER `is_customer_service`;
 
 
 ------------------------------------余建明 2025/09/23 END--------------------------------------
+
+--------------------------------------------------------------------------------------------------------以上部分已更新到线上--------------------------------------
+
+
+------------------------------------余建明 2025/10/11 BEGIN--------------------------------------
+--医院标签新增描述
+ALTER TABLE `amiyadb`.`tbl_tag_info` 
+ADD COLUMN `description` VARCHAR(100) NULL AFTER `name`;
+UPDATE `amiyadb`.`tbl_tag_info` SET `description` = '5A' WHERE (`id` = '1');
+
+--医院职位列表新增描述
+ALTER TABLE `amiyadb`.`tbl_hospital_position_info` 
+ADD COLUMN `description` VARCHAR(150) NULL AFTER `name`;
+
+UPDATE `amiyadb`.`tbl_hospital_position_info` SET `description` = 'Administrator' WHERE (`id` = '1');
+UPDATE `amiyadb`.`tbl_hospital_position_info` SET `description` = 'Customer service' WHERE (`id` = '3');
+UPDATE `amiyadb`.`tbl_hospital_position_info` SET `description` = 'Doctor' WHERE (`id` = '4');
+
+
+------------------------------------余建明 2025/10/11 END--------------------------------------
 

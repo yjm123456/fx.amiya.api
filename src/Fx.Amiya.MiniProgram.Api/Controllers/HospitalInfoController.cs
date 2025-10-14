@@ -185,7 +185,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         /// <param name="tags">标签(选中多个用逗号隔开,例：2,3,4)</param>
         /// <returns></returns>
         [HttpGet("getListHospital")]
-        public async Task<ResultData<FxPageInfo<WxHospitalInfoVo>>> GetListHospitalAsync(int pageNum, int pageSize, string city, string hospitalName,string tags)
+        public async Task<ResultData<FxPageInfo<WxHospitalInfoVo>>> GetListHospitalAsync(int pageNum, int pageSize, string city, string hospitalName, string tags)
         {
             try
             {
@@ -194,7 +194,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
                 {
                     Tags = tags.Split(',').ToList();
                 }
-                var q = await hospitalInfoService.GetWxHospitalNameListAsync(pageNum, pageSize, city, hospitalName,Tags);
+                var q = await hospitalInfoService.GetWxHospitalNameListAsync(pageNum, pageSize, city, hospitalName, Tags);
                 var hospital = from h in q.List
                                select new WxHospitalInfoVo
                                {
@@ -254,7 +254,7 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         {
             try
             {
-                var tagInfo = from d in await _tagInfoService.GetNameListAsync(type)
+                var tagInfo = from d in await _tagInfoService.GetNameListAsync(type, (int)Area.China)
                               select new TagNameVo
                               {
                                   Id = d.Id,

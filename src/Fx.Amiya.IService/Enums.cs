@@ -1163,6 +1163,22 @@ namespace Fx.Amiya.IService
         /// 带货
         /// </summary>
         TakeGoods = 2,
+        /// <summary>
+        /// 干细胞
+        /// </summary>
+        StemCell = 3,
+        /// <summary>
+        /// 人事合作
+        /// </summary>
+        PersonnelCooperation = 4,
+        /// <summary>
+        /// 医美供应链
+        /// </summary>
+        MedicalAestheticsSupplyChain = 5,
+        /// <summary>
+        /// 货品供应链
+        /// </summary>
+        GoodsSupplyChain = 6
     }
 
 

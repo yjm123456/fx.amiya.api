@@ -978,6 +978,22 @@ namespace Fx.Amiya.Service
                 case 2:
                     sourceText = "带货顾客";
                     break;
+
+                case 3:
+                    sourceText = "干细胞";
+                    break;
+
+                case 4:
+                    sourceText = "人事合作";
+                    break;
+
+                case 5:
+                    sourceText = "医美供应链";
+                    break;
+
+                case 6:
+                    sourceText = "货品供应链";
+                    break;
             }
             return sourceText;
 

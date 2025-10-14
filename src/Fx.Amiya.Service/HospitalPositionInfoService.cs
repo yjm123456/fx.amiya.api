@@ -21,7 +21,7 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<List<HospitalPositionInfoDto>> GetListAsync()
+        public async Task<List<HospitalPositionInfoDto>> GetListAsync(int area)
         {
             try
             {
@@ -29,7 +29,7 @@ namespace Fx.Amiya.Service
                                select new HospitalPositionInfoDto
                                {
                                    Id = d.Id,
-                                   Name = d.Name,
+                                   Name = (area == (int)Area.China ? d.Name : d.Description),
                                    CreateDate = d.CreateDate,
                                    UpdateDate = d.UpdateDate,
                                    UpdateBy = d.UpdateBy,
@@ -49,6 +49,7 @@ namespace Fx.Amiya.Service
             {
                 HospitalPositionInfo positionInfo = new HospitalPositionInfo();
                 positionInfo.Name = addDto.Name;
+                positionInfo.Description = addDto.Description;
                 positionInfo.CreateDate = DateTime.Now;
 
                 await dalHospitalPositionInfo.AddAsync(positionInfo, true);
@@ -73,6 +74,7 @@ namespace Fx.Amiya.Service
                 HospitalPositionInfoDto positionDto = new HospitalPositionInfoDto();
                 positionDto.Id = position.Id;
                 positionDto.Name = position.Name;
+                positionDto.Description = position.Description;
                 positionDto.CreateDate = position.CreateDate;
                 positionDto.UpdateBy = position.UpdateBy;
                 positionDto.UpdateDate = position.UpdateDate;
@@ -98,6 +100,7 @@ namespace Fx.Amiya.Service
                     throw new Exception("职位编号错误");
 
                 position.Name = updateDto.Name;
+                position.Description = updateDto.Description;
                 position.UpdateBy = employeeId;
                 position.UpdateDate = DateTime.Now;
 

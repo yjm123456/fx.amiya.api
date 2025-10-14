@@ -8,6 +8,11 @@ namespace Fx.Amiya.Dto.HospitalPosition
     {
            public int Id { get; set; }
         public string Name { get; set; }
+
+        /// <summary>
+        /// 描述
+        /// </summary>
+        public string Description { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public int? UpdateBy { get; set; }

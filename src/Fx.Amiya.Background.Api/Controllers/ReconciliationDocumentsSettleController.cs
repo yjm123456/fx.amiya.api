@@ -39,7 +39,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 构造函数
         /// </summary>
         /// <param name="billService"></param>
-        public ReconciliationDocumentsSettleController(IBillService billService, IOperationLogService operationLogService, IHttpContextAccessor httpContextAccessor, IRecommandDocumentSettleService reconciliationDocumentsSettleService, IAmiyaOperationsBoardService amiyaOperationsBoardService,ILiveAnchorService liveAnchorService)
+        public ReconciliationDocumentsSettleController(IBillService billService, IOperationLogService operationLogService, IHttpContextAccessor httpContextAccessor, IRecommandDocumentSettleService reconciliationDocumentsSettleService, IAmiyaOperationsBoardService amiyaOperationsBoardService, ILiveAnchorService liveAnchorService)
         {
 
             this.billService = billService;
@@ -145,7 +145,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 {
                     if ((query.EndDate.Value - query.StartDate.Value).TotalDays > 31)
                     {
-                       // throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
+                        // throw new Exception("开始时间与结束时间不能超过一个月，请重新选择后再进行查询！");
                     }
                 }
                 var res = new List<ReconciliationDocumentsSettleVo>();
@@ -284,7 +284,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     }
                 }
                 var liveAnchorIds = await liveAnchorService.GetAllLiveAnchorListByBaseInfoIds(liveAnchorBaseIds);
-                queryReconciliationDocumentsSettleDto.LiveAnchorIds = liveAnchorIds.Select(x=>x.Id).ToList();
+                queryReconciliationDocumentsSettleDto.LiveAnchorIds = liveAnchorIds.Select(x => x.Id).ToList();
                 queryReconciliationDocumentsSettleDto.KeyWord = query.KeyWord;
                 queryReconciliationDocumentsSettleDto.StartDate = query.StartDate;
                 queryReconciliationDocumentsSettleDto.EndDate = query.EndDate;
@@ -330,6 +330,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                                         BelongEmpName = d.BelongEmpName,
                                                         BelongLiveAnchor = d.BelongLiveAnchor,
                                                         CustomerServiceSettlePrice = d.CustomerServiceSettlePrice,
+                                                        CompensationCheckState = d.CompensationCheckState,
                                                         CompensationCheckStateText = d.CompensationCheckStateText,
                                                         CheckDate = d.CheckDate,
                                                         CheckRemark = d.CheckRemark,

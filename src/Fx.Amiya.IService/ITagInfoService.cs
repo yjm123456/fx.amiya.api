@@ -20,7 +20,7 @@ namespace Fx.Amiya.IService
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Task<FxPageInfo<TagInfoDto>> GetListWithPageAsync(byte? type, string name, int pageNum, int pageSize);
+        Task<FxPageInfo<TagInfoDto>> GetListWithPageAsync(byte? type, int area, string name, int pageNum, int pageSize);
 
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace Fx.Amiya.IService
         /// </summary>
         /// <param name="type">0=医院规模,1=医院设施</param>
         /// <returns></returns>
-         Task<List<TagNameDto>> GetNameListAsync(byte? type);
+        Task<List<TagNameDto>> GetNameListAsync(byte? type, int area);
 
 
         /// <summary>

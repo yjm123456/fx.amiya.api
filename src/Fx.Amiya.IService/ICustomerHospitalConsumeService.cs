@@ -47,7 +47,7 @@ namespace Fx.Amiya.IService
 
         Task<List<CustomerHospitalConsumeDto>> GetListByPhoneAsync(string encryptPhone);
 
-        List<BuyAgainTypeDto> GetBuyAgainTypeList();
+        List<BuyAgainTypeDto> GetBuyAgainTypeList(int area);
 
         List<ChannelTypeDto> GetChannelTypeList();
 

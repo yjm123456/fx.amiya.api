@@ -19,10 +19,12 @@ namespace Fx.Amiya.Background.Api.Controllers
     public class TagInfoController : ControllerBase
     {
         private ITagInfoService tagInfoService;
+        private IHttpContextAccessor _httpContextAccessor;
 
-        public TagInfoController(ITagInfoService tagInfoService)
+        public TagInfoController(IHttpContextAccessor httpContextAccessor, ITagInfoService tagInfoService)
         {
             this.tagInfoService = tagInfoService;
+            this._httpContextAccessor = httpContextAccessor;
         }
 
 
@@ -40,12 +42,14 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var q = await tagInfoService.GetListWithPageAsync(type, name, pageNum, pageSize);
+                var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                var q = await tagInfoService.GetListWithPageAsync(type, employee.Area, name, pageNum, pageSize);
                 var tagInfo = from d in q.List
                               select new TagInfoVo
                               {
                                   Id = d.Id,
                                   Name = d.Name,
+                                  Description = d.Description,
                                   Type = d.Type,
                                   TypeName = d.TypeName,
                                   Valid = d.Valid
@@ -70,19 +74,30 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <param name="type">0=医院规模,1=医院设施，null=全部</param>
         /// <returns></returns>
-       [HttpGet("nameList")]
-       [FxInternalOrTenantAuthroize]
+        [HttpGet("nameList")]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData<List<TagNameVo>>> GetNameListAsync(byte? type)
         {
             try
             {
-                var tagInfo = from d in await tagInfoService.GetNameListAsync(type)
+                int area = 0;
+                var empInfo = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                if (empInfo == null)
+                {
+                    var hospitalEmpInfo = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
+                    area = hospitalEmpInfo.Area;
+                }
+                else
+                {
+                    area = Convert.ToInt32(empInfo.Area);
+                }
+                var tagInfo = from d in await tagInfoService.GetNameListAsync(type,area)
                               select new TagNameVo
                               {
                                   Id = d.Id,
                                   Name = d.Name
                               };
-                return ResultData<List<TagNameVo>>.Success().AddData("tagInfo",tagInfo.ToList());
+                return ResultData<List<TagNameVo>>.Success().AddData("tagInfo", tagInfo.ToList());
             }
             catch (Exception ex)
             {
@@ -104,6 +119,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 AddTagInfoDto addDto = new AddTagInfoDto();
                 addDto.Name = addVo.Name;
+                addDto.Description = addVo.Description;
                 addDto.Type = addVo.Type;
 
                 await tagInfoService.AddAsync(addDto);
@@ -131,6 +147,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 TagInfoVo tagInfoVo = new TagInfoVo();
                 tagInfoVo.Id = tagInfo.Id;
                 tagInfoVo.Name = tagInfo.Name;
+                tagInfoVo.Description = tagInfo.Description;
                 tagInfoVo.Type = tagInfo.Type;
                 tagInfoVo.TypeName = tagInfo.TypeName;
                 tagInfoVo.Valid = tagInfo.Valid;
@@ -159,6 +176,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 UpdateTagInfoDto updateDto = new UpdateTagInfoDto();
                 updateDto.Id = updateVo.Id;
                 updateDto.Name = updateVo.Name;
+                updateDto.Description = updateVo.Description;
                 updateDto.Type = updateVo.Type;
                 updateDto.Valid = updateVo.Valid;
 

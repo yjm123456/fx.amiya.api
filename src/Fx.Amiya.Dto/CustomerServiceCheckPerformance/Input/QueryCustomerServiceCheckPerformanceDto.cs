@@ -13,6 +13,7 @@ namespace Fx.Amiya.Dto.CustomerServiceCheckPerformance.Input
         /// 归属客服
         /// </summary>
         public int? BelongEmpId { get; set; }
+        public int Area { get; set; }
 
         /// <summary>
         /// 稽查客服

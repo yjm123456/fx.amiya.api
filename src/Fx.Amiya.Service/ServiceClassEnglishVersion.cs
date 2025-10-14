@@ -40,6 +40,28 @@ namespace Fx.Amiya.Service
         }
 
 
+        public static string GetOrderFromTextEnglish(int orderFrom)
+        {
+            string orderTypeText = "";
+            switch (orderFrom)
+            {
+                case 0:
+                    orderTypeText = "Unknown";
+                    break;
+
+                case 1:
+                    orderTypeText = "Order platform";
+                    break;
+                case 2:
+                    orderTypeText = "Content platform";
+                    break;
+                case 3:
+                    orderTypeText = "Consumption tracking";
+                    break;
+            }
+            return orderTypeText;
+        }
+
 
         /// <summary>
         /// 获取抖音新增客户来源类型【英文版】
@@ -175,6 +197,22 @@ namespace Fx.Amiya.Service
                     break;
                 case 2:
                     sourceText = "Promoting products get customers";
+                    break;
+
+                case 3:
+                    sourceText = "Stem cell";
+                    break;
+
+                case 4:
+                    sourceText = "Personnel cooperation";
+                    break;
+
+                case 5:
+                    sourceText = "Medical aesthetics supply chain";
+                    break;
+
+                case 6:
+                    sourceText = "Goods supply chain";
                     break;
             }
             return sourceText;
@@ -633,6 +671,90 @@ namespace Fx.Amiya.Service
                     break;
             }
             return inventoryStateText;
+        }
+
+
+        /// <summary>
+        /// 获取助理薪资类型【英文版】
+        /// </summary>
+        /// <param name="consulationType"></param>
+        /// <returns></returns>
+        public static string GetPerformanceTypeTextEnglish(int performanceType)
+        {
+            string inventoryStateText = "";
+            switch (performanceType)
+            {
+                case 1:
+                    inventoryStateText = "Deal performance";
+                    break;
+
+                //case 2:
+                //    inventoryStateText = "Refund performance";
+                //    break;
+
+                case 3:
+                    inventoryStateText = "Check performance";
+                    break;
+
+            }
+            return inventoryStateText;
+        }
+
+        /// <summary>
+        /// 获取消费追踪类型文本【英文版】
+        /// </summary>
+        /// <param name="consumeType"></param>
+        /// <returns></returns>
+        public static string GerConsumeTypeTextEnglish(byte consumeType)
+        {
+            string consumeTypeText = "";
+            switch (consumeType)
+            {
+                case 0:
+                    consumeTypeText = "Other consumption on the same day";
+                    break;
+
+                case 1:
+                    consumeTypeText = "Reconsumption";
+                    break;
+            }
+            return consumeTypeText;
+        }
+
+        /// <summary>
+        /// 获取升单类型【英文版】
+        /// </summary>
+        /// <param name="BuyAgainType"></param>
+        /// <returns></returns>
+        public static string GetBuyAgainTypeTextEnglish(int BuyAgainType)
+        {
+            string BuyAgainTypeText = "";
+            switch (BuyAgainType)
+            {
+                case 0:
+                    BuyAgainTypeText = "Buy again 5%";
+                    break;
+
+                case 1:
+                    BuyAgainTypeText = "Buy again 30%";
+                    break;
+                case 2:
+                    BuyAgainTypeText = "Buy again 35%";
+                    break;
+                case 3:
+                    BuyAgainTypeText = "Buy again 10%";
+                    break;
+                case 4:
+                    BuyAgainTypeText = "Buy again 15%";
+                    break;
+                case 5:
+                    BuyAgainTypeText = "Buy again 20%";
+                    break;
+                case 6:
+                    BuyAgainTypeText = "Buy again 50%";
+                    break;
+            }
+            return BuyAgainTypeText;
         }
     }
 }

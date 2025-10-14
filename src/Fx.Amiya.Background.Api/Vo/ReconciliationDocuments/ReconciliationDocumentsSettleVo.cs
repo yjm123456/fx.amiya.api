@@ -163,6 +163,10 @@ namespace Fx.Amiya.Background.Api.Vo.ReconciliationDocuments
         /// <summary>
         /// 薪资审核状态
         /// </summary>
+        public int CompensationCheckState { get; set; }
+        /// <summary>
+        /// 薪资审核状态文本
+        /// </summary>
         public string CompensationCheckStateText { get; set; }
 
         /// <summary>

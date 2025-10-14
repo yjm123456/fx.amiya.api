@@ -16,5 +16,6 @@ namespace Fx.Amiya.Background.Api.Vo.HospitalPosition
         /// 职位名称
         /// </summary>
         public string Name { get; set; }
+        public string Description { get; set; }
     }
 }

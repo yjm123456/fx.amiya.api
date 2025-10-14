@@ -30,7 +30,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<TagInfoDto>> GetListWithPageAsync(byte? type, string name, int pageNum, int pageSize)
+        public async Task<FxPageInfo<TagInfoDto>> GetListWithPageAsync(byte? type, int area, string name, int pageNum, int pageSize)
         {
             try
             {
@@ -57,8 +57,9 @@ namespace Fx.Amiya.Service
                                  {
                                      Id = d.Id,
                                      Name = d.Name,
+                                     Description = d.Description,
                                      Type = d.Type,
-                                     TypeName = d.Type == 0 ? "级别" : "设施",
+                                     TypeName = (area == (int)Area.China ? (d.Type == 0 ? "级别" : "设施") : (d.Type == 0 ? "Level" : "Facilities")),
                                      Valid = d.Valid
                                  };
 
@@ -81,7 +82,7 @@ namespace Fx.Amiya.Service
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public async Task<List<TagNameDto>> GetNameListAsync(byte? type)
+        public async Task<List<TagNameDto>> GetNameListAsync(byte? type, int area)
         {
             try
             {
@@ -107,10 +108,10 @@ namespace Fx.Amiya.Service
                                  select new TagNameDto
                                  {
                                      Id = d.Id,
-                                     Name = d.Name,
+                                     Name = (area == (int)Area.China ? d.Name : d.Description),
                                  };
 
-     
+
 
                 return await tagInfoDto.ToListAsync();
 
@@ -132,11 +133,13 @@ namespace Fx.Amiya.Service
             {
                 TagInfo tagInfo = new TagInfo();
                 tagInfo.Name = addDto.Name;
+                tagInfo.Description = addDto.Description;
                 tagInfo.Valid = true;
                 if (addDto.Type == 0)
                 {
                     tagInfo.Type = (byte)TagType.ScaleTag;
-                }else
+                }
+                else
                 {
                     tagInfo.Type = (byte)TagType.FacilityTag;
                 }
@@ -161,8 +164,9 @@ namespace Fx.Amiya.Service
                 TagInfoDto tagInfoDto = new TagInfoDto();
                 tagInfoDto.Id = tagInfo.Id;
                 tagInfoDto.Name = tagInfo.Name;
+                tagInfoDto.Description = tagInfo.Description;
                 tagInfoDto.Type = tagInfo.Type;
-                tagInfoDto.TypeName = tagInfo.Type==0 ? "级别" : "设施";
+                tagInfoDto.TypeName = tagInfo.Type == 0 ? "级别" : "设施";
                 tagInfoDto.Valid = tagInfo.Valid;
 
                 return tagInfoDto;
@@ -186,6 +190,7 @@ namespace Fx.Amiya.Service
 
                 tagInfo.Name = updateDto.Name;
                 tagInfo.Type = updateDto.Type;
+                tagInfo.Description = updateDto.Description;
                 tagInfo.Valid = updateDto.Valid;
 
                 await dalTagInfo.UpdateAsync(tagInfo, true);
@@ -198,7 +203,7 @@ namespace Fx.Amiya.Service
         }
 
 
-       
+
         public async Task DeleteAsync(int id)
         {
             try
@@ -207,7 +212,7 @@ namespace Fx.Amiya.Service
                 if (tagInfo == null)
                     throw new Exception("标签编号错误");
 
-                await dalTagInfo.DeleteAsync(tagInfo,true);
+                await dalTagInfo.DeleteAsync(tagInfo, true);
             }
             catch (Exception ex)
             {

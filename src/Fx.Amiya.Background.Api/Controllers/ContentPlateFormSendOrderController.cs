@@ -99,16 +99,16 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxTenantAuthorize]
         public async Task<ResultData<FxPageInfo<ContentPlatFormOrderSendInfoVo>>> GetListByHospitalIdAsync(string keyword, int? OrderStatus, DateTime? startDate, DateTime? endDate, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, int pageNum, int pageSize)
         {
-            var employee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
-            int hospitalId = employee.HospitalId;
-            int employeeId = Convert.ToInt32(employee.Id);
-            var hospitalPositionId = Convert.ToInt32(employee.PositionId);
+            var hospitalEmployee = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
+            int hospitalId = hospitalEmployee.HospitalId;
+            int employeeId = Convert.ToInt32(hospitalEmployee.Id);
+            var hospitalPositionId = Convert.ToInt32(hospitalEmployee.PositionId);
             bool isSpecifyHospitalEmployee = false;
             if (hospitalPositionId == 4 || hospitalPositionId == 5)
             {
                 isSpecifyHospitalEmployee = true;
             }
-            var q = await _sendOrderInfoService.GetListByHospitalIdAsync(hospitalId, keyword, OrderStatus, startDate, endDate, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, isSpecifyHospitalEmployee, employeeId, pageNum, pageSize);
+            var q = await _sendOrderInfoService.GetListByHospitalIdAsync(hospitalId, keyword, OrderStatus, startDate, endDate, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, isSpecifyHospitalEmployee, employeeId, hospitalEmployee.Area, pageNum, pageSize);
             var sendOrder = from d in q.List
                             select new ContentPlatFormOrderSendInfoVo
                             {
@@ -129,6 +129,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 GoodsName = d.GoodsName,
                                 ThumbPicUrl = d.ThumbPicUrl,
                                 OrderStatus = d.OrderStatus,
+                                OrderStatusText = d.OrderStatusText,
                                 Phone = d.Phone,
                                 EncryptPhone = d.EncryptPhone,
                                 FirstlyRemark = d.FirstlyRemark,
@@ -209,6 +210,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                                 GoodsName = d.GoodsName,
                                 ThumbPicUrl = d.ThumbPicUrl,
                                 OrderStatus = d.OrderStatus,
+                                OrderStatusText = d.OrderStatusText,
                                 Phone = d.Phone,
                                 EncryptPhone = d.EncryptPhone,
                                 DealPictureUrl = d.DealPictureUrl,
@@ -263,7 +265,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 isSpecifyHospitalEmployee = true;
             }
-            var q = await _sendOrderInfoService.GetListByHospitalIdAsync(hospitalId, keyword, orderStatus, startDate, endDate, null, toHospitalStartDate, toHospitalEndDate, toHospitalType, isSpecifyHospitalEmployee, employeeId, pageNum, pageSize);
+            var q = await _sendOrderInfoService.GetListByHospitalIdAsync(hospitalId, keyword, orderStatus, startDate, endDate, null, toHospitalStartDate, toHospitalEndDate, toHospitalType, isSpecifyHospitalEmployee, employeeId, employee.Area, pageNum, pageSize);
             var sendOrder = from d in q.List
                             select new HospitalCustomerVo
                             {

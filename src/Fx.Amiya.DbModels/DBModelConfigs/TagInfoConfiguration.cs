@@ -15,6 +15,7 @@ namespace Fx.Amiya.DbModels.DBModelConfigs
             builder.HasKey(t => t.Id);
             builder.Property(t => t.Id).HasColumnName("id").HasColumnType("int").IsRequired();
             builder.Property(t => t.Name).HasColumnName("name").HasColumnType("varchar(50)").IsRequired();
+            builder.Property(t => t.Description).HasColumnName("description").HasColumnType("varchar(100)").IsRequired();
             builder.Property(t => t.Type).HasColumnName("type").HasColumnType("tinyint").IsRequired();
             builder.Property(t => t.Valid).HasColumnName("valid").HasColumnType("bit").IsRequired();
         }

@@ -348,7 +348,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<ContentPlatFormOrderSendInfoDto>> GetListByHospitalIdAsync(int hospitalId, string keyword, int? OrderStatus, DateTime? startDate, DateTime? endDate, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool isSpecifyHospitalEmployee, int hospitalEmpId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ContentPlatFormOrderSendInfoDto>> GetListByHospitalIdAsync(int hospitalId, string keyword, int? OrderStatus, DateTime? startDate, DateTime? endDate, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool isSpecifyHospitalEmployee, int hospitalEmpId, int area, int pageNum, int pageSize)
         {
             var q = from d in _dalContentPlatformOrderSend.GetAll().Include(x => x.ContentPlatformOrder)
                     where (d.HospitalId == hospitalId && d.IsSpecifyHospitalEmployee == isSpecifyHospitalEmployee)
@@ -402,11 +402,12 @@ namespace Fx.Amiya.Service
                                 HospitalName = d.ContentPlatformOrder.HospitalInfo.Name,
                                 SendDate = d.SendDate,
                                 SendBy = d.AmiyaEmployee.Name,
-                                AppointmentDate = d.AppointmentDate.HasValue ? d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "未确定时间",
+                                AppointmentDate = d.AppointmentDate.HasValue ? d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "/",
                                 IsUncertainDate = d.IsUncertainDate,
-                                OrderStatus = d.OrderStatus != 0 ? ServiceClass.GetContentPlateFormOrderStatusText((byte)d.OrderStatus) : "",
+                                OrderStatus = d.OrderStatus,
+                                OrderStatusText = d.OrderStatus != 0 ? ServiceClass.GetContentPlateFormOrderStatusText((byte)d.OrderStatus) : "",
                                 DepartmentId = d.ContentPlatformOrder.AmiyaGoodsDemand.HospitalDepartmentId,
-                                GoodsName = d.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.ContentPlatformOrder.AmiyaGoodsDemand.ProjectNname : "****",
+                                GoodsName = d.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? (area == (int)Area.China ? d.ContentPlatformOrder.AmiyaGoodsDemand.ProjectNname : d.ContentPlatformOrder.AmiyaGoodsDemand.Description) : "****",
                                 ThumbPicUrl = d.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.ContentPlatformOrder.AmiyaGoodsDemand.ThumbPictureUrl : "****",
                                 Phone = d.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? (p != null ? d.ContentPlatformOrder.Phone : config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.ContentPlatformOrder.Phone) : d.ContentPlatformOrder.Phone) : ServiceClass.GetIncompletePhone(d.ContentPlatformOrder.Phone),
                                 EncryptPhone = ServiceClass.Encrypt(d.ContentPlatformOrder.Phone, config.PhoneEncryptKey),
@@ -545,7 +546,8 @@ namespace Fx.Amiya.Service
                                 DepartmentId = d.ContentPlatformOrder.HospitalDepartmentId,
                                 AppointmentDate = d.AppointmentDate.HasValue ? d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "未确定时间",
                                 IsUncertainDate = d.IsUncertainDate,
-                                OrderStatus = d.OrderStatus != 0 ? ServiceClass.GetContentPlateFormOrderStatusText((byte)d.OrderStatus) : "",
+                                OrderStatus = d.OrderStatus,
+                                OrderStatusText = d.OrderStatus != 0 ? ServiceClass.GetContentPlateFormOrderStatusText((byte)d.OrderStatus) : "",
                                 GoodsName = d.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.ContentPlatformOrder.AmiyaGoodsDemand.ProjectNname : "****",
                                 ThumbPicUrl = d.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.ContentPlatformOrder.AmiyaGoodsDemand.ThumbPictureUrl : "****",
                                 Phone = d.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? (p != null ? d.ContentPlatformOrder.Phone : config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.ContentPlatformOrder.Phone) : d.ContentPlatformOrder.Phone) : ServiceClass.GetIncompletePhone(d.ContentPlatformOrder.Phone),
@@ -809,7 +811,7 @@ namespace Fx.Amiya.Service
                                             //LateProjectStage = d.ContentPlatformOrder.LateProjectStage,
                                             ConsultingContent = d.ContentPlatformOrder.ConsultingContent,
                                             //OrderTypeText = ServiceClass.GetContentPlateFormOrderTypeText((byte)d.ContentPlatformOrder.OrderType),
-                                            OrderStatus=d.OrderStatus,
+                                            OrderStatus = d.OrderStatus,
                                             OrderStatusText = (area == (int)Area.China ? ServiceClass.GetContentPlateFormOrderStatusText((byte)d.OrderStatus) : ServiceClassEnglishVersion.GetContentPlateFormOrderStatusTextEnglish((byte)d.OrderStatus)),
                                             //DepositAmount = d.ContentPlatformOrder.DepositAmount,
                                             DealAmount = d.ContentPlatformOrder.DealAmount,
