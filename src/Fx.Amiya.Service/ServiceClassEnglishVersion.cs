@@ -756,5 +756,39 @@ namespace Fx.Amiya.Service
             }
             return BuyAgainTypeText;
         }
+
+        /// <summary>
+        /// 财务对账单状态【英文版】
+        /// </summary>
+        /// <param name="reconciliationDocumentsState"></param>
+        /// <returns></returns>
+        public static string ReconciliationDocumentsStateTextEnglish(int reconciliationDocumentsState)
+        {
+            string typeText = "";
+            switch (reconciliationDocumentsState)
+            {
+                case 0:
+                    typeText = "Submitted";
+                    break;
+
+                case 1:
+                    typeText = "To be confirmed";
+                    break;
+
+                case 2:
+                    typeText = "Problem bill";
+                    break;
+
+                case 3:
+                    typeText = "Reconciliation completed";
+                    break;
+                case 4:
+                    typeText = "Returned money completed";
+                    break;
+            }
+            return typeText;
+        }
+
+
     }
 }

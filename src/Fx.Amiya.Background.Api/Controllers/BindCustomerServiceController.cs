@@ -276,6 +276,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         [HttpGet("getAllCustomerByRFM")]
         public async Task<ResultData<List<BindCustomerServiceRfmDataVo>>> GetAllCustomerByRFMAsync([FromQuery] GetAllCustomerByRFM query)
         {
+            var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
             List<int> employeeIds = new List<int>();
             List<BindCustomerServiceRfmDataVo> bindResult = new List<BindCustomerServiceRfmDataVo>();
             if (query.EmployeeId.HasValue)
@@ -296,7 +297,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 BindCustomerServiceRfmDataVo bindCustomerServiceRFMData = new BindCustomerServiceRfmDataVo();
                 bindCustomerServiceRFMData.RFMType = x;
-                bindCustomerServiceRFMData.RFMTypeText = ServiceClass.GetRFMTagText(x);
+                bindCustomerServiceRFMData.RFMTypeText = (employee.Area == (int)Area.China ? ServiceClass.GetRFMTagText(x) : ServiceClassEnglishVersion.GetRFMTagTextEnglish(x));
                 bindCustomerServiceRFMData.CustomerCount = 0;
                 bindCustomerServiceRFMData.CustomerIncreaseFromYesterday = 0;
                 bindCustomerServiceRFMData.TotalConsumptionPrice = 0.00M;

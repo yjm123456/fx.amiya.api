@@ -1753,6 +1753,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             updateDto.InvitationDocuments = updateVo.InvitationDocuments;
             updateDto.ConsumptionType = updateVo.ConsumptionType;
             var hospitalInfo = await _hospitalInfoService.GetByIdAsync(updateVo.LastDealHospitalId.Value);
+            //线上266，线下193
             updateDto.EmpId = 266;
             updateDto.SendOrderId = updateVo.SendOrderId;
             updateDto.Area = hospitalInfo.HospitalArea;
@@ -2219,7 +2220,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         public ResultData<List<ContentPlateFormOrderStatusVo>> GetContentPlateFormOrderStatusList()
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            int empArea = Convert.ToInt32(employee.Area);
+            int empArea = Convert.ToInt32(employee.Area); 
             var orderStatus = from d in _orderService.GetOrderStatusList(empArea)
                               select new ContentPlateFormOrderStatusVo
                               {

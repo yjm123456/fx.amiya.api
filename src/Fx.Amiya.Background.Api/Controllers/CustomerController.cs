@@ -673,7 +673,14 @@ namespace Fx.Amiya.Background.Api.Controllers
             }
             else
             {
-                customerSimpleInfoVo.Sex = customer.Sex == "男" ? "male" : "female";
+                if (string.IsNullOrEmpty(customer.Sex))
+                {
+                    customerSimpleInfoVo.Sex = "/";
+                }
+                else
+                {
+                    customerSimpleInfoVo.Sex = customer.Sex == "男" ? "male" : "female";
+                }
             }
             customerSimpleInfoVo.Phone = customer.Phone;
             customerSimpleInfoVo.Birthday = customer.Birthday;

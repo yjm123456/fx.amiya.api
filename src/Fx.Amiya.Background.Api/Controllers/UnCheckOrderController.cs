@@ -56,7 +56,18 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var q = await unCheckOrderService.GetListByPageAsync(startDate, endDate, isSubmitReconciliationDocuments, orderFrom, hospitalId, keyword, pageNum, pageSize);
+                int empArea = 0;
+                var empInfo = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                if (empInfo == null)
+                {
+                    var hospitalEmpInfo = httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
+                    empArea = hospitalEmpInfo.Area;
+                }
+                else
+                {
+                    empArea = Convert.ToInt32(empInfo.Area);
+                }
+                var q = await unCheckOrderService.GetListByPageAsync(startDate, endDate, isSubmitReconciliationDocuments, orderFrom, hospitalId, keyword,empArea, pageNum, pageSize);
 
                 var express = from e in q.List
                               select new UnCheckOrderVo

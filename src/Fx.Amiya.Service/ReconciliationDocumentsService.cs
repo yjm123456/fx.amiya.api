@@ -56,7 +56,7 @@ namespace Fx.Amiya.Service
 
 
 
-        public async Task<FxPageInfo<ReconciliationDocumentsDto>> GetListWithPageAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int? hospitalId, bool? isCreateBill, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ReconciliationDocumentsDto>> GetListWithPageAsync(decimal? returnBackPricePercent, int? reconciliationState, DateTime? startDate, DateTime? endDate, DateTime? startDealDate, DateTime? endDealDate, string keyword, int? hospitalId, bool? isCreateBill,int area, int pageNum, int pageSize)
         {
             try
             {
@@ -99,7 +99,7 @@ namespace Fx.Amiya.Service
                                                   QuestionReason = d.QuestionReason,
                                                   Remark = d.Remark,
                                                   ReconciliationState = d.ReconciliationState,
-                                                  ReconciliationStateText = ServiceClass.ReconciliationDocumentsStateText(d.ReconciliationState),
+                                                  ReconciliationStateText =(area==(int)Area.China? ServiceClass.ReconciliationDocumentsStateText(d.ReconciliationState) : ServiceClassEnglishVersion.ReconciliationDocumentsStateTextEnglish(d.ReconciliationState)),
                                                   CreateBy = d.CreateBy,
                                                   CreateByName = d.HospitalEmployee.Name,
                                                   CreateDate = d.CreateDate,

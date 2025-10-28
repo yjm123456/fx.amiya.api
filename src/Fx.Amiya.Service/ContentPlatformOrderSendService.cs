@@ -405,7 +405,7 @@ namespace Fx.Amiya.Service
                                 AppointmentDate = d.AppointmentDate.HasValue ? d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "/",
                                 IsUncertainDate = d.IsUncertainDate,
                                 OrderStatus = d.OrderStatus,
-                                OrderStatusText = d.OrderStatus != 0 ? ServiceClass.GetContentPlateFormOrderStatusText((byte)d.OrderStatus) : "",
+                                OrderStatusText = d.OrderStatus != 0 ? (area==(int)Area.China? ServiceClass.GetContentPlateFormOrderStatusText((byte)d.OrderStatus) : ServiceClassEnglishVersion.GetContentPlateFormOrderStatusTextEnglish((byte)d.OrderStatus)) : "",
                                 DepartmentId = d.ContentPlatformOrder.AmiyaGoodsDemand.HospitalDepartmentId,
                                 GoodsName = d.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? (area == (int)Area.China ? d.ContentPlatformOrder.AmiyaGoodsDemand.ProjectNname : d.ContentPlatformOrder.AmiyaGoodsDemand.Description) : "****",
                                 ThumbPicUrl = d.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.ContentPlatformOrder.AmiyaGoodsDemand.ThumbPictureUrl : "****",
@@ -484,7 +484,7 @@ namespace Fx.Amiya.Service
             return sendOrderPageInfo;
         }
 
-        public async Task<FxPageInfo<ContentPlatFormOrderSendInfoDto>> GetFollowingListByHospitalIdAsync(int hospitalId, string keyword, DateTime? startDate, DateTime? endDate, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool isSpecifyHospitalEmployee, int hospitalEmpId, int pageNum, int pageSize)
+        public async Task<FxPageInfo<ContentPlatFormOrderSendInfoDto>> GetFollowingListByHospitalIdAsync(int hospitalId, string keyword, DateTime? startDate, DateTime? endDate, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, bool isSpecifyHospitalEmployee, int hospitalEmpId,int area, int pageNum, int pageSize)
         {
             var q = from d in _dalContentPlatformOrderSend.GetAll().Include(x => x.ContentPlatformOrder)
                     where (d.HospitalId == hospitalId && d.IsSpecifyHospitalEmployee == isSpecifyHospitalEmployee)
@@ -547,7 +547,7 @@ namespace Fx.Amiya.Service
                                 AppointmentDate = d.AppointmentDate.HasValue ? d.AppointmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "未确定时间",
                                 IsUncertainDate = d.IsUncertainDate,
                                 OrderStatus = d.OrderStatus,
-                                OrderStatusText = d.OrderStatus != 0 ? ServiceClass.GetContentPlateFormOrderStatusText((byte)d.OrderStatus) : "",
+                                OrderStatusText = d.OrderStatus != 0 ? (area==(int)Area.China? ServiceClass.GetContentPlateFormOrderStatusText((byte)d.OrderStatus) : ServiceClassEnglishVersion.GetContentPlateFormOrderStatusTextEnglish((byte)d.OrderStatus)) : "",
                                 GoodsName = d.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.ContentPlatformOrder.AmiyaGoodsDemand.ProjectNname : "****",
                                 ThumbPicUrl = d.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? d.ContentPlatformOrder.AmiyaGoodsDemand.ThumbPictureUrl : "****",
                                 Phone = d.OrderStatus > ((int)ContentPlateFormOrderStatus.SendOrder) && d.OrderStatus != ((int)ContentPlateFormOrderStatus.RepeatOrder) ? (p != null ? d.ContentPlatformOrder.Phone : config.HidePhoneNumber == true ? ServiceClass.GetIncompletePhone(d.ContentPlatformOrder.Phone) : d.ContentPlatformOrder.Phone) : ServiceClass.GetIncompletePhone(d.ContentPlatformOrder.Phone),
@@ -794,7 +794,7 @@ namespace Fx.Amiya.Service
                                             LiveAnchorName = d.ContentPlatformOrder.LiveAnchor.HostAccountName,
                                             LiveAnchorWeChatNo = d.ContentPlatformOrder.LiveAnchorWeChatNo,
                                             BelongChannelText = (area == (int)Area.China ? ServiceClass.BelongChannelText(d.ContentPlatformOrder.BelongChannel) : ServiceClassEnglishVersion.BelongChannelTextEnglish(d.ContentPlatformOrder.BelongChannel)),
-                                            //IsOldCustomer = d.ContentPlatformOrder.IsOldCustomer == true ? "老客业绩" : "新客业绩",
+                                            IsOldCustomer = d.ContentPlatformOrder.IsOldCustomer == true ? "老客业绩" : "新客业绩",
                                             //IsAcompanying = d.ContentPlatformOrder.IsAcompanying,
                                             //CommissionRatio = d.ContentPlatformOrder.CommissionRatio,
                                             //BelongMonth = d.ContentPlatformOrder.BelongMonth,
@@ -885,7 +885,7 @@ namespace Fx.Amiya.Service
         /// <param name="IsToHospital">是否到院， 空查询全部</param>
         /// <param name="toHospitalType">到院类型，为空查询所有</param>
         /// <param name="toHospitalStartDate">到院时间起</param>
-        /// <param name="toHospitalEndDate">到院时间止</param>        
+        /// <param name="toHospitalEndDate">到院时间止</param>
         /// <returns></returns>
         public async Task<List<SendContentPlatformOrderDto>> GetSendOrderReportList(int? liveAnchorId, int? belongMonth, decimal? minAddOrderPrice, decimal? maxAddOrderPrice, int? hospitalId, int employeeId, int belongEmpId, int? orderStatus, bool? isAcompanying, bool? isOldCustomer, decimal? commissionRatio, string contentPlatFormId, bool? IsToHospital, DateTime? toHospitalStartDate, DateTime? toHospitalEndDate, int? toHospitalType, DateTime? startDate, DateTime? endDate, bool isHidePhone)
         {

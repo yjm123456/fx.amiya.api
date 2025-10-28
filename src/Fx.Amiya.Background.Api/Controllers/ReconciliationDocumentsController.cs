@@ -176,7 +176,19 @@ namespace Fx.Amiya.Background.Api.Controllers
         {
             try
             {
-                var q = await reconciliationDocumentsService.GetListWithPageAsync(returnBackPricePercent, reconciliationState, startDate, endDate, startDealDate, endDealDate, keyword, hospitalId, isCreateBill, pageNum, pageSize);
+
+                int empArea = 0;
+                var empInfo = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+                if (empInfo == null)
+                {
+                    var hospitalEmpInfo = _httpContextAccessor.HttpContext.User as FxAmiyaHospitalEmployeeIdentity;
+                    empArea = hospitalEmpInfo.Area;
+                }
+                else
+                {
+                    empArea = Convert.ToInt32(empInfo.Area);
+                }
+                var q = await reconciliationDocumentsService.GetListWithPageAsync(returnBackPricePercent, reconciliationState, startDate, endDate, startDealDate, endDealDate, keyword, hospitalId, isCreateBill,empArea, pageNum, pageSize);
 
                 var reconciliationDocuments = from d in q.List
                                               select new ReconciliationDocumentsVo

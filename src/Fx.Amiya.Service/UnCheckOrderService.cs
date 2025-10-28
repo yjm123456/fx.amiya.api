@@ -38,7 +38,7 @@ namespace Fx.Amiya.Service
         /// <param name="pageNum"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<FxPageInfo<UnCheckOrderDto>> GetListByPageAsync(DateTime? startDate, DateTime? endDate, bool? isSubmitReconciliationDocuments, int? orderFrom, int? hospitalId, string keyword, int pageNum, int pageSize)
+        public async Task<FxPageInfo<UnCheckOrderDto>> GetListByPageAsync(DateTime? startDate, DateTime? endDate, bool? isSubmitReconciliationDocuments, int? orderFrom, int? hospitalId, string keyword, int area, int pageNum, int pageSize)
         {
             if (endDate.HasValue)
             {
@@ -58,7 +58,7 @@ namespace Fx.Amiya.Service
                     Id = e.Id,
                     OrderId = e.OrderId,
                     OrderFrom = e.OrderFrom,
-                    OrderFromText = ServiceClass.GetOrderFromText(e.OrderFrom),
+                    OrderFromText = (area == (int)Area.China ? ServiceClass.GetOrderFromText(e.OrderFrom) : ServiceClassEnglishVersion.GetOrderFromTextEnglish(e.OrderFrom)),
                     Phone = e.Phone,
                     DealDate = e.DealDate,
                     DealPrice = e.DealPrice,
@@ -68,7 +68,7 @@ namespace Fx.Amiya.Service
                     SystemUpdatePrice = e.SystemUpdatePrice,
                     ReturnBackPrice = e.ReturnBackPrice,
                     IsSubmitReconciliationDocuments = e.IsSubmitReconciliationDocuments,
-                    IsSubmitReconciliationDocumentsText = e.IsSubmitReconciliationDocuments == true ? "已上传" : "未上传",
+                    IsSubmitReconciliationDocumentsText = e.IsSubmitReconciliationDocuments == true ? (area == (int)Area.China ? "已上传" : "Has been uploaded") : (area == (int)Area.China ? "未上传" : "Not uploaded"),
                     SendHospital = e.SendHospital,
                     CreateBy = e.CreateBy,
                     CreateDate = e.CreateDate,
@@ -119,7 +119,7 @@ namespace Fx.Amiya.Service
             catch (Exception err)
             {
                 unitOfWork.RollBack();
-                throw new Exception(err.Message.ToString());;
+                throw new Exception(err.Message.ToString());
             }
         }
 
@@ -216,7 +216,7 @@ namespace Fx.Amiya.Service
             catch (Exception err)
             {
                 unitOfWork.RollBack();
-                throw new Exception(err.Message.ToString());;
+                throw new Exception(err.Message.ToString());
             }
         }
 
@@ -246,7 +246,7 @@ namespace Fx.Amiya.Service
             }
             catch (Exception err)
             {
-                throw new Exception(err.Message.ToString());;
+                throw new Exception(err.Message.ToString()); 
             }
         }
 
@@ -271,7 +271,7 @@ namespace Fx.Amiya.Service
             catch (Exception err)
             {
                 unitOfWork.RollBack();
-                throw new Exception(err.Message.ToString());;
+                throw new Exception(err.Message.ToString());
             }
         }
     }

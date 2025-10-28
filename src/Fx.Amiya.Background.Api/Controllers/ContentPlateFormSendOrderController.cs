@@ -188,7 +188,7 @@ namespace Fx.Amiya.Background.Api.Controllers
             {
                 isSpecifyHospitalEmployee = true;
             }
-            var q = await _sendOrderInfoService.GetFollowingListByHospitalIdAsync(hospitalId, keyword, startDate, endDate, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, isSpecifyHospitalEmployee, employeeId, pageNum, pageSize);
+            var q = await _sendOrderInfoService.GetFollowingListByHospitalIdAsync(hospitalId, keyword, startDate, endDate, IsToHospital, toHospitalStartDate, toHospitalEndDate, toHospitalType, isSpecifyHospitalEmployee, employeeId, employee.Area, pageNum, pageSize);
             var sendOrder = from d in q.List
                             select new ContentPlatFormOrderSendInfoVo
                             {
