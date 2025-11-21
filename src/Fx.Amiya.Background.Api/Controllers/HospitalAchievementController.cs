@@ -20,7 +20,6 @@ namespace Fx.Amiya.Background.Api.Controllers
     /// </summary>
     [Route("[controller]")]
     [ApiController]
-    [FxInternalAuthorize]
     public class HospitalAchievementController : ControllerBase
     {
         private IHospitalPerformanceService hospitalPerformanceService;
@@ -38,6 +37,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getHospitalOperationDailyData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<HospitalOperatingDataVo>>> GetHospitalOperationDailyData(int? year,int? month)
         {
             List<HospitalOperatingDataVo> hospitalPerformanceVo = new List<HospitalOperatingDataVo>();
@@ -72,6 +72,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getHospitalOperationYearData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<HospitalOperatingYearDataVo>> GetHospitalOperationYearData(int? year)
         {
             HospitalOperatingYearDataVo hospitalPerformanceVo = new HospitalOperatingYearDataVo();
@@ -187,6 +188,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getHospitalOperationMonthData")]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData<HospitalOperatingYearDataVo>> GetHospitalOperationMonthData(DateTime startdate,DateTime endDate)
         {
             HospitalOperatingYearDataVo hospitalPerformanceVo = new HospitalOperatingYearDataVo();
@@ -304,6 +306,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="hospitalId">医院id</param>
         /// <returns></returns>
         [HttpGet("getHospitalSendOrderBrokenLine")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<PerformanceBrokenLine>>> GetSendOrderBrokenLine(int year, int hospitalId)
         {
             int month = DateTime.Now.Month;
@@ -330,6 +333,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="hospitalId">医院id</param>
         /// <returns></returns>
         [HttpGet("getHospitalVisitBrokenLine")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<PerformanceBrokenLine>>> GetVisitBrokenLine(int year, int hospitalId)
         {
             int month = DateTime.Now.Month;
@@ -354,6 +358,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="hospitalId">医院id</param>
         /// <returns></returns>
         [HttpGet("getHospitalVisitRateBrokenLine")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<PerformanceBrokenLine>>> GetVisitRateBrokenLine(int year, int hospitalId)
         {
             int month = DateTime.Now.Month;
@@ -378,6 +383,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="hospitalId">医院id</param>
         /// <returns></returns>
         [HttpGet("getHospitalNewCustomerDealBrokenLine")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<PerformanceBrokenLine>>> GetNewCustomerDealBrokenLine(int year, int hospitalId)
         {
             int month = DateTime.Now.Month;
@@ -401,6 +407,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="hospitalId">医院id</param>
         /// <returns></returns>
         [HttpGet("getHospitalNewCustomerDealRateBrokenLine")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<PerformanceBrokenLine>>> GetNewCustomerDealRateBrokenLine(int year, int hospitalId)
         {
             int month = DateTime.Now.Month;
@@ -424,6 +431,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="hospitalId">医院id</param>
         /// <returns></returns>
         [HttpGet("getHospitalNewCustomerPerformanceBrokenLine")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<PerformanceBrokenLine>>> GetNewCustomerPerformanceBrokenLine(int year, int hospitalId)
         {
             int month = DateTime.Now.Month;
@@ -447,6 +455,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="hospitalId">医院id</param>
         /// <returns></returns>
         [HttpGet("getHospitalNewCustomerUnitPriceBrokenLine")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<PerformanceBrokenLine>>> GetNewCustomerUnitPriceBrokenLine(int year, int hospitalId)
         {
             int month = DateTime.Now.Month;
@@ -471,6 +480,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="hospitalId">医院id</param>
         /// <returns></returns>
         [HttpGet("getHospitalOldCustomerDealBrokenLine")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<PerformanceBrokenLine>>> GetOldCustomerDealBrokenLine(int year, int hospitalId)
         {
             int month = DateTime.Now.Month;
@@ -494,6 +504,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="hospitalId">医院id</param>
         /// <returns></returns>
         [HttpGet("getHospitalOldCustomerPerformanceBrokenLine")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<PerformanceBrokenLine>>> GetOldCustomerPerformanceBrokenLine(int year, int hospitalId)
         {
             int month = DateTime.Now.Month;
@@ -518,6 +529,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="hospitalId">医院id</param>
         /// <returns></returns>
         [HttpGet("getHospitalOldCustomerUnitPriceBrokenLine")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<PerformanceBrokenLine>>> GetOldCustomerUnitPriceBrokenLine(int year, int hospitalId)
         {
             int month = DateTime.Now.Month;
@@ -541,6 +553,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="hospitalId">医院id</param>
         /// <returns></returns>
         [HttpGet("getHospitalTotalPriceBrokenLine")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<PerformanceBrokenLine>>> GetHospitalTotalPriceBrokenLine(int year, int hospitalId)
         {
             int month = DateTime.Now.Month;
@@ -568,6 +581,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="isCity">是否为城市运营数据</param>
         /// <returns></returns>
         [HttpGet("getHospitalOperationMonthlyData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<HospitalOperatingDataVo>>> GetHospitalOperationMonthlyData(int? year, int? month, bool isCity)
         {
             List<HospitalOperatingDataVo> hospitalPerformanceVo = new List<HospitalOperatingDataVo>();
@@ -604,6 +618,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("topTenHospitalPerformanceData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<TopTenHospitalPerformanceVo>> GetTopTenHospitalPerformanceData()
         {
             TopTenHospitalPerformanceVo topTenHospitalPerformance = new TopTenHospitalPerformanceVo();
@@ -715,6 +730,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("topTenCityPerformanceData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<TopTenCityPerformanceVo>> GetTopTenCityPerformanceData()
         {
 
@@ -829,6 +845,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="hospitalId"></param>
         /// <returns></returns>
         [HttpGet("gethospitalNewCustomerAchievement")]
+        [FxInternalAuthorize]
         public async Task<ResultData<HospitalNewCustomerAchievementVo>> GetHospitalNewCustomerAchievementAsync(int hospitalId)
         {
             HospitalNewCustomerAchievementVo result = new HospitalNewCustomerAchievementVo();

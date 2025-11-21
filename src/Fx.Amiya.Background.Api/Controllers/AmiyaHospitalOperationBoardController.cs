@@ -23,7 +23,6 @@ namespace Fx.Amiya.Background.Api.Controllers
     /// </summary>
     [Route("[controller]")]
     [ApiController]
-    [FxInternalAuthorize]
     public class AmiyaHospitalOperationBoardController : ControllerBase
     {
         private readonly IAmiyaHospitalOperationBoardService amiyaHospitalOperationBoardService;
@@ -42,6 +41,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("hospitalPerformance")]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData<HospitalPerformanceVo>> GetHospitalPerformanceAsync([FromQuery] QueryAmiyaHospitalOperationsDataVo query)
         {
             QueryHospitalPerformanceDto queryDto = new QueryHospitalPerformanceDto();
@@ -77,6 +77,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("hospitalVisitData")]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData<HospitalVisitDataVo>> GetEffOrPotDistributeConsulationDataAsync([FromQuery] QueryAmiyaHospitalOperationsDataVo query)
         {
             HospitalVisitDataVo data = new HospitalVisitDataVo();
@@ -117,6 +118,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("hospitalPerformancebrokenLineData")]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData<HospitalPerformanceBrokenLineVo>> GetHospitalPerformanceBrokenLineAsync([FromQuery] QueryAmiyaHospitalOperationsDataVo query)
         {
             HospitalPerformanceBrokenLineVo performanceBroken = new HospitalPerformanceBrokenLineVo();
@@ -149,6 +151,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("hospitalVisitBrokenLineData")]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData<HospitalPerformanceBrokenLineVo>> GetAdminCustomerServiceEffOrPotBrokenLineDataAsync([FromQuery] QueryAmiyaHospitalOperationsDataVo query)
         {
             QueryHospitalPerformanceDto queryDto = new QueryHospitalPerformanceDto();
@@ -184,6 +187,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("hospitalPerformanceFilterData")]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData<HospitalNewOrOldCustomerDataVo>> GetHospitalPerformanceFilterDataAsync([FromQuery] QuerHospitalPerformanceFilterDataVo query)
         {
             HospitalNewOrOldCustomerDataVo result = new HospitalNewOrOldCustomerDataVo();
@@ -239,6 +243,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("getHospitalTransformCycleData")]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData<HospitalTransformCycleDataVo>> GetHospitalTransformCycleDataAsync([FromQuery] QuerHospitalPerformanceFilterDataVo query)
         {
             HospitalTransformCycleDataVo data = new HospitalTransformCycleDataVo();
@@ -258,6 +263,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("hospitalVisitRateData")]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData<HospitaslVisitDataVo>> GetHospitalVisitRateDataAsync([FromQuery] QueryHospitalVisitDataVo query)
         {
             HospitaslVisitDataVo dataVo = new HospitaslVisitDataVo();
@@ -287,6 +293,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("hospitalDealRateData")]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData<HospitaslVisitDataVo>> GetHospitalDealRateDataAsync([FromQuery] QueryHospitalVisitDataVo query)
         {
             HospitaslVisitDataVo dataVo = new HospitaslVisitDataVo();
@@ -318,6 +325,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("hospitalHospitalCluesData")]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData<HospitaslVisitDataVo>> GetHospitalCluesDataAsync([FromQuery] QueryHospitalVisitDataVo query)
         {
             HospitaslVisitDataVo dataVo = new HospitaslVisitDataVo();
@@ -347,6 +355,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("hospitalPerformanceRateData")]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData<HospitalPerformanceRateVo>> GetHospitalPerformanceRateDataAsync([FromQuery] QueryAmiyaHospitalOperationsDataVo query)
         {
             HospitalPerformanceRateVo result = new HospitalPerformanceRateVo();
@@ -371,6 +380,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("hospitalPerCustomerPriceDataData")]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData<HospitalPerformanceRateVo>> GetHospitalPerCustomerPriceDataAsync([FromQuery] QueryHospitalVisitDataVo query)
         {
             HospitalPerformanceRateVo result = new HospitalPerformanceRateVo();
@@ -399,6 +409,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("getHospitalTotalAchievementByYear")]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData<HospitalPerformanceYearDataListVo>> GetHospitalTotalAchievementByYearAsync([FromQuery] QueryHospitalPerfomanceYearDataVo query)
         {
             QueryHospitalPerfomanceYearDataDto queryDto = new QueryHospitalPerfomanceYearDataDto();
@@ -439,7 +450,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 JulyPerformance = e.JulyPerformance,
                 AugustPerformance = e.AugustPerformance,
                 SeptemberPerformance = e.SeptemberPerformance,
-                OctoberPerformance = e.OctoberPerformance,
+                OctoberPerformance = e.OctoberPerformance, 
                 NovemberPerformance = e.NovemberPerformance,
                 DecemberPerformance = e.DecemberPerformance,
                 SumPerformance = e.SumPerformance,

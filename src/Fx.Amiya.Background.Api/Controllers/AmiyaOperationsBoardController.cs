@@ -23,7 +23,6 @@ namespace Fx.Amiya.Background.Api.Controllers
     /// </summary>
     [Route("[controller]")]
     [ApiController]
-    [FxInternalAuthorize]
     public class AmiyaOperationsBoardController : ControllerBase
     {
         private readonly IAmiyaOperationsBoardService amiyaOperationsBoardService;
@@ -46,6 +45,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("getTimeSpan")]
+        [FxInternalOrTenantAuthroize]
         public async Task<ResultData<decimal>> GetTimeSpanAsync([FromQuery] QueryOperationDataVo query)
         {
             decimal result = 0.00M;
@@ -60,6 +60,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// 根据条件获取业绩数据
         /// </summary>
         /// <returns></returns>
+        [FxInternalAuthorize]
         [HttpGet("getTotalAchievementAndDateSchedule")]
         public async Task<ResultData<OperationTotalAchievementDataVo>> GetTotalAchievementAndDateScheduleAsync([FromQuery] QueryOperationDataVo query)
         {
@@ -111,6 +112,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getNewOrOldCustomerCompare")]
+        [FxInternalAuthorize]
         public async Task<ResultData<GetNewOrOldCustomerCompareDataVo>> GetNewOrOldCustomerCompareDataAsync([FromQuery] QueryOperationDataVo query)
         {
             GetNewOrOldCustomerCompareDataVo result = new GetNewOrOldCustomerCompareDataVo();
@@ -397,6 +399,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getNewOrOldCustomerCompareByEmployeeAndHospital")]
+        [FxInternalAuthorize]
         public async Task<ResultData<NewOrOldCustomerPerformanceDataListVo>> GetNewOrOldCustomerCompareByEmployeeAndHospitalDataAsync([FromQuery] QueryOperationDataVo query)
         {
             QueryOperationDataDto queryOperationDataVo = new QueryOperationDataDto();
@@ -437,6 +440,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getTotalFlowRateAndDateSchedule")]
+        [FxInternalAuthorize]
         public async Task<ResultData<OperationTotalFlowRateDataVo>> GetTotalFlowRateAndDateScheduleAsync([FromQuery] QueryOperationDataVo query)
         {
             OperationTotalFlowRateDataVo result = new OperationTotalFlowRateDataVo();
@@ -495,6 +499,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getGroupFlowRateCompare")]
+        [FxInternalAuthorize]
         public async Task<ResultData<GetGroupFlowRateCompareDataVo>> GetGroupFlowRateCompareDataAsync([FromQuery] QueryOperationDataVo query)
         {
             GetGroupFlowRateCompareDataVo result = new GetGroupFlowRateCompareDataVo();
@@ -628,6 +633,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getCustomerFlowRateByEmployeeAndHospital")]
+        [FxInternalAuthorize]
         public async Task<ResultData<CustomerFlowRateDataListVo>> GetCustomerFlowRateByEmployeeAndHospitalAsync([FromQuery] QueryCustomerFlowRateWithEmployeeAndHospitalVo query)
         {
             QueryCustomerFlowRateWithEmployeeAndHospitalDto queryDto = new QueryCustomerFlowRateWithEmployeeAndHospitalDto();
@@ -672,6 +678,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getFlowRateByContentPlatform")]
+        [FxInternalAuthorize]
         public async Task<ResultData<GetFlowRateByContentPlatformDataVo>> GetFlowRateByContentPlatformAsync([FromQuery] QueryOperationDataVo query)
         {
             GetFlowRateByContentPlatformDataVo result = new GetFlowRateByContentPlatformDataVo();
@@ -711,6 +718,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getFlowRateDetailsByContentPlatform")]
+        [FxInternalAuthorize]
         public async Task<ResultData<GetFlowRateDetailsByContentPlatformDataVo>> GetFlowRateDetailsByContentPlatformAsync([FromQuery] QueryOperationDataVo query)
         {
             GetFlowRateDetailsByContentPlatformDataVo result = new GetFlowRateDetailsByContentPlatformDataVo();
@@ -739,6 +747,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("assistantTargetCompleteData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<AssistantTargetCompleteVo>>> GetAssistantTargetCompleteDataAsync([FromQuery] QueryAssistantTargetCompleteDataVo query)
         {
             QueryAssistantTargetCompleteDataDto queryDto = new QueryAssistantTargetCompleteDataDto();
@@ -781,6 +790,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("companyTransformData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<FlowTransFormDataVo>>> GetFlowTransformDataAsync([FromQuery] QueryTransformDataVo query)
         {
             QueryTransformDataDto queryDto = new QueryTransformDataDto();
@@ -825,6 +835,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("companyTransformNewData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<FlowTransFormDataVo>>> GetFlowTransformNewDataAsync([FromQuery] QueryTransformDataVo query)
         {
             QueryTransformDataDto queryDto = new QueryTransformDataDto();
@@ -872,6 +883,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("assistantTransformData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<FlowTransFormDataVo>>> GetAssistantFlowTransformDataAsync([FromQuery] QueryTransformDataVo query)
         {
             QueryTransformDataDto queryDto = new QueryTransformDataDto();
@@ -921,6 +933,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("assistantYearTransformData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<FlowTransFormDataVo>>> GetAssistantYearFlowTransformDataAsync([FromQuery] QueryTransformDataVo query)
         {
             QueryTransformDataDto queryDto = new QueryTransformDataDto();
@@ -972,6 +985,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("assistantTransformNewData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<FlowTransFormDataVo>>> GetAssistantFlowTransformNewDataAsync([FromQuery] QueryTransformDataVo query)
         {
             QueryTransformDataDto queryDto = new QueryTransformDataDto();
@@ -1018,6 +1032,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("hospitalTransformData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<HospitalTransformDataVo>>> GetHospitalTransformDataAsync([FromQuery] QueryHospitalTransformDataVo query)
         {
             QueryHospitalTransformDataDto queryDto = new QueryHospitalTransformDataDto();
@@ -1055,6 +1070,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("getTotalAchievementByYear")]
+        [FxInternalAuthorize]
         public async Task<ResultData<PerformanceYearDataListVo>> GetTotalAchievementByYearAsync([FromQuery] QueryPerfomanceYearDataVo query)
         {
             QueryPerfomanceYearDataDto queryDto = new QueryPerfomanceYearDataDto();
@@ -1132,6 +1148,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("getTotalCluesByYear")]
+        [FxInternalAuthorize]
         public async Task<ResultData<PerformanceYearDataListVo>> GetTotalCluesByYearAsync([FromQuery] QueryPerfomanceYearDataVo query)
         {
             QueryPerfomanceYearDataDto queryDto = new QueryPerfomanceYearDataDto();
@@ -1190,6 +1207,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("getTotalAssistantAchievementByYear")]
+        [FxInternalAuthorize]
         public async Task<ResultData<AssistantPerformanceYearDataListVo>> GetTotalAssistantAchievementByYearAsync([FromQuery] QueryPerfomanceYearDataVo query)
         {
             QueryPerfomanceYearDataDto queryDto = new QueryPerfomanceYearDataDto();
@@ -1250,6 +1268,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("getAssistantTotalAchievementByYear")]
+        [FxInternalAuthorize]
         public async Task<ResultData<AssistantPersonalPerformanceYearDataListVo>> GetAssistantTotalAchievementByYearAsync([FromQuery] QueryPerfomanceYearDataVo query)
         {
             QueryPerfomanceYearDataDto queryDto = new QueryPerfomanceYearDataDto();
@@ -1331,6 +1350,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("assistantPerformance")]
+        [FxInternalAuthorize]
         public async Task<ResultData<AssistantPerformanceVo>> GetAssitantPerformanceAsync([FromQuery] QueryAssistantPerformanceVo query)
         {
             QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
@@ -1374,6 +1394,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("brokenLineData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<AssistantPerformanceBrokenLineVo>> GetAssistantPerformanceBrokenLineAsync([FromQuery] QueryAssistantPerformanceVo query)
         {
             AssistantPerformanceBrokenLineVo performanceBroken = new AssistantPerformanceBrokenLineVo();
@@ -1405,6 +1426,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("assistantPerformanceFilterData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<AssistantOperationDataVo>> GetAssistantPerformanceFilterDataAsync([FromQuery] QueryAssistantPerformanceFilterDataVo query)
         {
             AssistantOperationDataVo result = new AssistantOperationDataVo();
@@ -1478,6 +1500,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("analysisData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<AssiatantPerformanceAnalysisDataVo>> GetPerformanceAnalysisDataAsync([FromQuery] QueryAssistantPerformanceVo query)
         {
             AssiatantPerformanceAnalysisDataVo analysisData = new AssiatantPerformanceAnalysisDataVo();
@@ -1565,6 +1588,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("assistantHospitalPerformanceData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<AssistantHospitalPerformanceVo>>> GetAssistantHospitalPerformanceDataAsync([FromQuery] QueryAssistantPerformanceVo query)
         {
             QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
@@ -1587,6 +1611,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("assistantHospitalCluesData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<AssistantHospitalCluesDataVo>> GetAssistantHospitalCluesDataAsync([FromQuery] QueryAssistantHospitalCluesDataVo query)
         {
             AssistantHospitalCluesDataVo dataVo = new AssistantHospitalCluesDataVo();
@@ -1619,6 +1644,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("assiatantTargetCompleteAndPerformanceRateData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<AssiatantTargetCompleteAndPerformanceRateVo>> GetAssiatantTargetCompleteAndPerformanceRateDataAsync([FromQuery] QueryAssistantPerformanceVo query)
         {
             AssiatantTargetCompleteAndPerformanceRateVo result = new AssiatantTargetCompleteAndPerformanceRateVo();
@@ -1647,6 +1673,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("distributeConsulationData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<AssistantDistributeConsulationVo>> GetDistributeConsulationDataAsync([FromQuery] QueryAssistantPerformanceVo query)
         {
             AssistantDistributeConsulationVo data = new AssistantDistributeConsulationVo();
@@ -1684,6 +1711,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("effOrPotDistributeConsulationData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<AssistantEffOrPotDistributeConsulationVo>> GetEffOrPotDistributeConsulationDataAsync([FromQuery] QueryAssistantPerformanceVo query)
         {
             AssistantEffOrPotDistributeConsulationVo data = new AssistantEffOrPotDistributeConsulationVo();
@@ -1721,6 +1749,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("assistantDistributeConsulationBrokenLineData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<AssistantDistributeConsulationBrokenLineVo>> GetAssistantDistributeConsulationBrokenLineDataAsync([FromQuery] QueryAssistantPerformanceVo query)
         {
             AssistantDistributeConsulationBrokenLineVo data = new AssistantDistributeConsulationBrokenLineVo();
@@ -1757,6 +1786,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("assistantEffOrPotBrokenLineData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<AdminCustomerServiceEffOrPotBrokenLineDataVo>> GetAdminCustomerServiceEffOrPotBrokenLineDataAsync([FromQuery] QueryAssistantPerformanceVo query)
         {
             QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
@@ -1780,6 +1810,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("getAssistantTransformCycleData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<AssistantTransformCycleDataVo>> GetAssistantTransformCycleDataAsync([FromQuery] QueryAssistantPerformanceVo query)
         {
             AssistantTransformCycleDataVo data = new AssistantTransformCycleDataVo();
@@ -1808,6 +1839,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("getTransformCycleData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<AssistantTransformCycleDataVo>> GetLiveAnchorTransformCycleDataAsync([FromQuery] QueryLiveAnchorPerformanceVo query)
         {
             AssistantTransformCycleDataVo data = new AssistantTransformCycleDataVo();
@@ -1839,6 +1871,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("adminCustomerServiceCustomerTypeData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<AdminCustomerServiceCustomerTypeVo>> GetAdminCustomerServiceCustomerTypeDataAsync([FromQuery] QueryAssistantPerformanceVo query)
         {
             QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
@@ -1881,6 +1914,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("adminCustomerServiceCustomerTypeAddWechatData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<AdminCustomerServiceCustomerTypeVo>> GetAdminCustomerServiceCustomerTypeAddWechatDataAsync([FromQuery] QueryAssistantPerformanceVo query)
         {
             QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
@@ -1915,6 +1949,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("adminCustomerServiceCustomerTypeBrokenLineData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<AdminCustomerServiceCustomerTypeBrokenLineDataVo>> GetAdminCustomerServiceCustomerTypeBrokenLineDataAsync([FromQuery] QueryAssistantPerformanceVo query)
         {
             QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
@@ -1939,6 +1974,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("adminCustomerFilterData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<AdminCustomerFilterDataVo>> GetAdminCustomerFilterDataAsync([FromQuery] QueryAssistantPerformanceVo query)
         {
             QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
@@ -1988,6 +2024,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("adminCustomerAnalysisData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<AdminCustomerAnalysisDataVo>> GetAdminCustomerAnalysisDataAsync([FromQuery] QueryAssistantPerformanceVo query)
         {
             QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
@@ -2031,6 +2068,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("adminCustomerAssistantDisAndAddVData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<AdminCustomerAssistantDisAndAddVDataVo>> GetAdminCustomerAssistantDisAndAddVDataAsync([FromQuery] QueryAssistantPerformanceVo query)
         {
             QueryAssistantPerformanceDto queryDto = new QueryAssistantPerformanceDto();
@@ -2074,6 +2112,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("adminCustomerMonthTransformData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<GetListAdminCustomerTransFormVo>> AdminCustomerMonthTransformDataAsync([FromQuery] QueryTransformDataVo query)
         {
             GetListAdminCustomerTransFormVo res = new GetListAdminCustomerTransFormVo();
@@ -2116,6 +2155,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("getBeforeLiveClueAndPerformanceData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<BeforeLiveClueAndPerformanceDataVo>> GetBeforeLiveClueAndPerformanceDataAsync([FromQuery] QueryBeforeLiveDataVo query)
         {
             QueryBeforeLiveDataDto queryDto = new QueryBeforeLiveDataDto();
@@ -2152,6 +2192,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("getBeforeLiveClueAndPerformanceBrokenData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<BeforeLiveClueAndPerformanceBrokenDataVo>> GetBeforeLiveClueAndPerformanceBrokenDataAsync([FromQuery] QueryBeforeLiveBrokenDataVo query)
         {
             QueryBeforeLiveBrokenDataDto queryDto = new QueryBeforeLiveBrokenDataDto();
@@ -2191,6 +2232,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("getBeforeLiveFilterData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<BeforeLiveFilterDataVo>> GetBeforeLiveFilterDataAsync([FromQuery] QueryBeforeLiveFilterDataVo query)
         {
             QueryBeforeLiveFilterDataDto queryDto = new QueryBeforeLiveFilterDataDto();
@@ -2244,6 +2286,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("getBeforeLiveTransformCycleData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<BeforeLiveTransformCycleDataVo>> GetBeforeLiveTransformCycleDataAsync([FromQuery] QueryBeforeLiveDataVo query)
         {
             QueryBeforeLiveDataDto queryDto = new QueryBeforeLiveDataDto();
@@ -2262,6 +2305,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("getBeforeLivePerformanceRate")]
+        [FxInternalAuthorize]
         public async Task<ResultData<BeforeLiveTargetCompleteAndPerformanceRateVo>> GetBeforeLivePerformanceRateAsync([FromQuery] QueryBeforeLiveDataVo query)
         {
             QueryBeforeLiveDataDto queryDto = new QueryBeforeLiveDataDto();
@@ -2279,6 +2323,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("getBeforeLiveTargetCompleteRate")]
+        [FxInternalAuthorize]
         public async Task<ResultData<BeforeLiveTargetCompleteRateVo>> GetBeforeLiveTargetCompleteRateAsync([FromQuery] QueryBeforeLiveDataVo query)
         {
             QueryBeforeLiveDataDto queryDto = new QueryBeforeLiveDataDto();
@@ -2296,6 +2341,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("getBeforeLiveDepartmentContentPlatformClueRate")]
+        [FxInternalAuthorize]
         public async Task<ResultData<BeforeLiveDepartmentContentPlatformClueRateVo>> GetBeforeLiveDepartmentContentPlatformClueRateAsync([FromQuery] QueryBeforeLiveDataVo query)
         {
             QueryBeforeLiveDataDto queryDto = new QueryBeforeLiveDataDto();
@@ -2340,6 +2386,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("getBeforeLiveDepartmentContentPlatformPerformanceRate")]
+        [FxInternalAuthorize]
         public async Task<ResultData<BeforeLiveDepartmentContentPlatformPerformanceRateVo>> GetBeforeLiveDepartmentContentPlatformPerformanceRateAsync([FromQuery] QueryBeforeLiveFilterDataVo query)
         {
             QueryBeforeLiveFilterDataDto queryDto = new QueryBeforeLiveFilterDataDto();
@@ -2386,6 +2433,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("getBeforeLiveLiveanchorIPData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<BeforeLiveLiveanchorIPDataVo>>> GetBeforeLiveLiveanchorIPDataAsync([FromQuery] QueryBeforeLiveDataVo query)
         {
             QueryBeforeLiveDataDto queryDto = new QueryBeforeLiveDataDto();
@@ -2412,6 +2460,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("BeforeLivingYearTransformData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<FlowTransFormDataVo>>> BeforeLivingYearFlowTransformDataAsync([FromQuery] QueryTransformDataVo query)
         {
             var employee = _httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
@@ -2618,6 +2667,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("companyPerformanceData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<CompanyPerformanceDataVo>>> GetCompanyPerformanceDataAsync([FromQuery] QueryAmiyaCompanyOperationsDataVo query)
         {
             QueryAmiyaCompanyOperationsDataDto querDto = new QueryAmiyaCompanyOperationsDataDto();
@@ -2646,6 +2696,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("companyCustomerAcquisition")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<CompanyCustomerAcquisitionDataVo>>> GetCompanyCustomerAcquisitionDataAsync([FromQuery] QueryAmiyaCompanyOperationsDataVo query)
         {
             QueryAmiyaCompanyOperationsDataDto querDto = new QueryAmiyaCompanyOperationsDataDto();
@@ -2676,6 +2727,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("companyOperationsData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<CompanyOperationsDataVo>>> GetCompanyOperationsDataAsync([FromQuery] QueryAmiyaCompanyOperationsDataVo query)
         {
             QueryAmiyaCompanyOperationsDataDto querDto = new QueryAmiyaCompanyOperationsDataDto();
@@ -2705,6 +2757,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("companyIndicatorConversionData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<CompanyIndicatorConversionDataVo>>> GetCompanyIndicatorConversionDataAsync([FromQuery] QueryAmiyaCompanyOperationsDataVo query)
         {
             QueryAmiyaCompanyOperationsDataDto querDto = new QueryAmiyaCompanyOperationsDataDto();
@@ -2736,6 +2789,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("companyNewCustomerConversionData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<CompanyNewCustomerConversionDataVo>>> GetCompanyNewCustomerConversionDataAsync([FromQuery] QueryAmiyaCompanyOperationsDataVo query)
         {
             List<CompanyNewCustomerConversionDataDto> res = new List<CompanyNewCustomerConversionDataDto>();
@@ -2778,6 +2832,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("assistantPerformanceData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<AssistantPerformanceDataVo>>> GetAssistantPerformanceDataAsync([FromQuery] QueryAmiyaAssistantOperationsDataVo query)
         {
             QueryAmiyaAssistantOperationsDataDto queryDto = new QueryAmiyaAssistantOperationsDataDto();
@@ -2817,6 +2872,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("assistantCustomerAcquisition")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<AssistantCustomerAcquisitionDataVo>>> GetAssistantCustomerAcquisitionDataAsync([FromQuery] QueryAmiyaAssistantOperationsDataVo query)
         {
             QueryAmiyaAssistantOperationsDataDto queryDto = new QueryAmiyaAssistantOperationsDataDto();
@@ -2857,6 +2913,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("assistantOperationsData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<AssistantOperationsDataVo>>> GetAssistantOperationsDataAsync([FromQuery] QueryAmiyaAssistantOperationsDataVo query)
         {
             QueryAmiyaAssistantOperationsDataDto queryDto = new QueryAmiyaAssistantOperationsDataDto();
@@ -2895,6 +2952,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("assistantIndicatorConversionData")]
+        [FxInternalAuthorize]
         public async Task<ResultData<List<AssistantIndicatorConversionDataVo>>> GetAssistantIndicatorConversionDataAsync([FromQuery] QueryAmiyaAssistantOperationsDataVo query)
         {
             QueryAmiyaAssistantOperationsDataDto queryDto = new QueryAmiyaAssistantOperationsDataDto();

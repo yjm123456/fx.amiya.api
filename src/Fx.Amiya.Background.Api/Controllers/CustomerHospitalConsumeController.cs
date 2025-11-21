@@ -492,10 +492,10 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData> CustomerManageDeleteteAsync([Required] int Id)
         {
-            int enployeeId = 0;
+            int employeeId = 0;
             var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-            enployeeId = Convert.ToInt32(employee.Id);
-            await customerHospitalConsumeService.CustomerManageDeleteAsync(Id, enployeeId);
+            employeeId = Convert.ToInt32(employee.Id);
+            await customerHospitalConsumeService.CustomerManageDeleteAsync(Id, employeeId);
             return ResultData.Success();
         }
 

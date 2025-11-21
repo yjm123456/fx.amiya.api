@@ -26,6 +26,12 @@ namespace Fx.Amiya.MiniProgram.Api.Controllers
         private IValidateCodeService validateCodeService;
         private IHttpContextAccessor httpContextAccessor;
         private IFxSmsBasedTemplateSender smsSender;
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="validateCodeService"></param>
+        /// <param name="httpContextAccessor"></param>
+        /// <param name="smsSender"></param>
         public ValidateCodeController(
             IValidateCodeService validateCodeService,
             IHttpContextAccessor httpContextAccessor,
