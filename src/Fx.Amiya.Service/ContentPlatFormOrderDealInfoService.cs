@@ -358,7 +358,7 @@ namespace Fx.Amiya.Service
                                                    && (!isAccompanying.HasValue || d.IsAcompanying == isAccompanying.Value)
                                                    && (!CheckState.HasValue || d.CheckState == CheckState.Value)
                                                    && (!isReturnBakcPrice.HasValue || d.IsReturnBackPrice == isReturnBakcPrice.Value)
-                                                   //&& (!customerServiceId.HasValue || d.CreateBy == customerServiceId) 
+                                                   //&& (!customerServiceId.HasValue || d.CreateBy == customerServiceId)
                                                    && (!customerServiceId.HasValue || d.ContentPlatFormOrder.BelongEmpId == customerServiceId)
                                                    && (!consultationType.HasValue || d.ContentPlatFormOrder.ConsulationType == consultationType)
                                                    && (!minAddOrderPrice.HasValue || d.ContentPlatFormOrder.AddOrderPrice >= minAddOrderPrice)

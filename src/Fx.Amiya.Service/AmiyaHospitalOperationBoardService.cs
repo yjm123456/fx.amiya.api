@@ -622,57 +622,57 @@ namespace Fx.Amiya.Service
                         totalPerformanceYearData.SortName = newPerformanceYearData.SortName = oldPerformanceYearData.SortName = query.Year + "年实际业绩";
                         #region 整体
                         var JanTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 1, query.HospitalId, null);
-                        totalPerformanceYearData.JanuaryPerformance = JanTotalLossPerformance.Sum(x => x.Price).ToString();
+                        totalPerformanceYearData.JanuaryPerformance = DecimalExtension.ChangePriceToTenThousand(JanTotalLossPerformance.Sum(x => x.Price)).ToString();
                         var FebTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 2, query.HospitalId, null);
-                        totalPerformanceYearData.FebruaryPerformance = FebTotalLossPerformance.Sum(x => x.Price).ToString();
+                        totalPerformanceYearData.FebruaryPerformance = DecimalExtension.ChangePriceToTenThousand(FebTotalLossPerformance.Sum(x => x.Price)).ToString();
                         var MarTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 3, query.HospitalId, null);
-                        totalPerformanceYearData.MarchPerformance = MarTotalLossPerformance.Sum(x => x.Price).ToString();
+                        totalPerformanceYearData.MarchPerformance = DecimalExtension.ChangePriceToTenThousand(MarTotalLossPerformance.Sum(x => x.Price)).ToString();
                         var AprTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 4, query.HospitalId, null);
-                        totalPerformanceYearData.AprilPerformance = AprTotalLossPerformance.Sum(x => x.Price).ToString();
+                        totalPerformanceYearData.AprilPerformance = DecimalExtension.ChangePriceToTenThousand(AprTotalLossPerformance.Sum(x => x.Price)).ToString();
                         var MayTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 5, query.HospitalId, null);
-                        totalPerformanceYearData.MayPerformance = MayTotalLossPerformance.Sum(x => x.Price).ToString();
+                        totalPerformanceYearData.MayPerformance = DecimalExtension.ChangePriceToTenThousand(MayTotalLossPerformance.Sum(x => x.Price)).ToString();
                         var JunTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 6, query.HospitalId, null);
-                        totalPerformanceYearData.JunePerformance = JunTotalLossPerformance.Sum(x => x.Price).ToString();
+                        totalPerformanceYearData.JunePerformance = DecimalExtension.ChangePriceToTenThousand(JunTotalLossPerformance.Sum(x => x.Price)).ToString();
                         var JulTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 7, query.HospitalId, null);
-                        totalPerformanceYearData.JulyPerformance = JulTotalLossPerformance.Sum(x => x.Price).ToString();
+                        totalPerformanceYearData.JulyPerformance = DecimalExtension.ChangePriceToTenThousand(JulTotalLossPerformance.Sum(x => x.Price)).ToString();
                         var AugTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 8, query.HospitalId, null);
-                        totalPerformanceYearData.AugustPerformance = AugTotalLossPerformance.Sum(x => x.Price).ToString();
+                        totalPerformanceYearData.AugustPerformance = DecimalExtension.ChangePriceToTenThousand(AugTotalLossPerformance.Sum(x => x.Price)).ToString();
                         var SepTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 9, query.HospitalId, null);
-                        totalPerformanceYearData.SeptemberPerformance = SepTotalLossPerformance.Sum(x => x.Price).ToString();
+                        totalPerformanceYearData.SeptemberPerformance = DecimalExtension.ChangePriceToTenThousand(SepTotalLossPerformance.Sum(x => x.Price)).ToString();
                         var OctTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 10, query.HospitalId, null);
-                        totalPerformanceYearData.OctoberPerformance = OctTotalLossPerformance.Sum(x => x.Price).ToString();
+                        totalPerformanceYearData.OctoberPerformance = DecimalExtension.ChangePriceToTenThousand(OctTotalLossPerformance.Sum(x => x.Price)).ToString();
                         var NovTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 11, query.HospitalId, null);
-                        totalPerformanceYearData.NovemberPerformance = NovTotalLossPerformance.Sum(x => x.Price).ToString();
+                        totalPerformanceYearData.NovemberPerformance = DecimalExtension.ChangePriceToTenThousand(NovTotalLossPerformance.Sum(x => x.Price)).ToString();
                         var DecTotalLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 12, query.HospitalId, null);
-                        totalPerformanceYearData.DecemberPerformance = DecTotalLossPerformance.Sum(x => x.Price).ToString();
+                        totalPerformanceYearData.DecemberPerformance = DecimalExtension.ChangePriceToTenThousand(DecTotalLossPerformance.Sum(x => x.Price)).ToString();
                         totalPerformanceYearData.SumPerformance = (Convert.ToDecimal(totalPerformanceYearData.JanuaryPerformance) + Convert.ToDecimal(totalPerformanceYearData.FebruaryPerformance) + Convert.ToDecimal(totalPerformanceYearData.MarchPerformance) + Convert.ToDecimal(totalPerformanceYearData.AprilPerformance) + Convert.ToDecimal(totalPerformanceYearData.MayPerformance) + Convert.ToDecimal(totalPerformanceYearData.JunePerformance) + Convert.ToDecimal(totalPerformanceYearData.JulyPerformance) + Convert.ToDecimal(totalPerformanceYearData.AugustPerformance) + Convert.ToDecimal(totalPerformanceYearData.SeptemberPerformance) + Convert.ToDecimal(totalPerformanceYearData.OctoberPerformance) + Convert.ToDecimal(totalPerformanceYearData.NovemberPerformance) + Convert.ToDecimal(totalPerformanceYearData.DecemberPerformance)).ToString();
                         totalPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(totalPerformanceYearData.SumPerformance) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
                         #endregion
                         #region 新客
                         var JanDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 1, query.HospitalId, false);
-                        newPerformanceYearData.JanuaryPerformance = JanDaoDaoLossPerformance.Sum(x => x.Price).ToString();
+                        newPerformanceYearData.JanuaryPerformance = DecimalExtension.ChangePriceToTenThousand(JanDaoDaoLossPerformance.Sum(x => x.Price)).ToString();
                         var FebDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 2, query.HospitalId, false);
-                        newPerformanceYearData.FebruaryPerformance = FebDaoDaoLossPerformance.Sum(x => x.Price).ToString();
+                        newPerformanceYearData.FebruaryPerformance = DecimalExtension.ChangePriceToTenThousand(FebDaoDaoLossPerformance.Sum(x => x.Price)).ToString();
                         var MarDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 3, query.HospitalId, false);
-                        newPerformanceYearData.MarchPerformance = MarDaoDaoLossPerformance.Sum(x => x.Price).ToString();
+                        newPerformanceYearData.MarchPerformance = DecimalExtension.ChangePriceToTenThousand(MarDaoDaoLossPerformance.Sum(x => x.Price)).ToString();
                         var AprDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 4, query.HospitalId, false);
-                        newPerformanceYearData.AprilPerformance = AprDaoDaoLossPerformance.Sum(x => x.Price).ToString();
+                        newPerformanceYearData.AprilPerformance = DecimalExtension.ChangePriceToTenThousand(AprDaoDaoLossPerformance.Sum(x => x.Price)).ToString();
                         var MayDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 5, query.HospitalId, false);
-                        newPerformanceYearData.MayPerformance = MayDaoDaoLossPerformance.Sum(x => x.Price).ToString();
+                        newPerformanceYearData.MayPerformance = DecimalExtension.ChangePriceToTenThousand(MayDaoDaoLossPerformance.Sum(x => x.Price)).ToString();
                         var JunDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 6, query.HospitalId, false);
-                        newPerformanceYearData.JunePerformance = JunDaoDaoLossPerformance.Sum(x => x.Price).ToString();
+                        newPerformanceYearData.JunePerformance = DecimalExtension.ChangePriceToTenThousand(JunDaoDaoLossPerformance.Sum(x => x.Price)).ToString();
                         var JulDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 7, query.HospitalId, false);
-                        newPerformanceYearData.JulyPerformance = JulDaoDaoLossPerformance.Sum(x => x.Price).ToString();
+                        newPerformanceYearData.JulyPerformance = DecimalExtension.ChangePriceToTenThousand(JulDaoDaoLossPerformance.Sum(x => x.Price)).ToString();
                         var AugDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 8, query.HospitalId, false);
-                        newPerformanceYearData.AugustPerformance = AugDaoDaoLossPerformance.Sum(x => x.Price).ToString();
+                        newPerformanceYearData.AugustPerformance = DecimalExtension.ChangePriceToTenThousand(AugDaoDaoLossPerformance.Sum(x => x.Price)).ToString();
                         var SepDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 9, query.HospitalId, false);
-                        newPerformanceYearData.SeptemberPerformance = SepDaoDaoLossPerformance.Sum(x => x.Price).ToString();
+                        newPerformanceYearData.SeptemberPerformance = DecimalExtension.ChangePriceToTenThousand(SepDaoDaoLossPerformance.Sum(x => x.Price)).ToString();
                         var OctDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 10, query.HospitalId, false);
-                        newPerformanceYearData.OctoberPerformance = OctDaoDaoLossPerformance.Sum(x => x.Price).ToString();
+                        newPerformanceYearData.OctoberPerformance = DecimalExtension.ChangePriceToTenThousand(OctDaoDaoLossPerformance.Sum(x => x.Price)).ToString();
                         var NovDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 11, query.HospitalId, false);
-                        newPerformanceYearData.NovemberPerformance = NovDaoDaoLossPerformance.Sum(x => x.Price).ToString();
+                        newPerformanceYearData.NovemberPerformance = DecimalExtension.ChangePriceToTenThousand(NovDaoDaoLossPerformance.Sum(x => x.Price)).ToString();
                         var DecDaoDaoLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 12, query.HospitalId, false);
-                        newPerformanceYearData.DecemberPerformance = DecDaoDaoLossPerformance.Sum(x => x.Price).ToString();
+                        newPerformanceYearData.DecemberPerformance = DecimalExtension.ChangePriceToTenThousand(DecDaoDaoLossPerformance.Sum(x => x.Price)).ToString();
                         newPerformanceYearData.SumPerformance = (Convert.ToDecimal(newPerformanceYearData.JanuaryPerformance) + Convert.ToDecimal(newPerformanceYearData.FebruaryPerformance) + Convert.ToDecimal(newPerformanceYearData.MarchPerformance) + Convert.ToDecimal(newPerformanceYearData.AprilPerformance) + Convert.ToDecimal(newPerformanceYearData.MayPerformance) + Convert.ToDecimal(newPerformanceYearData.JunePerformance) + Convert.ToDecimal(newPerformanceYearData.JulyPerformance) + Convert.ToDecimal(newPerformanceYearData.AugustPerformance) + Convert.ToDecimal(newPerformanceYearData.SeptemberPerformance) + Convert.ToDecimal(newPerformanceYearData.OctoberPerformance) + Convert.ToDecimal(newPerformanceYearData.NovemberPerformance) + Convert.ToDecimal(newPerformanceYearData.DecemberPerformance)).ToString();
                         newPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(newPerformanceYearData.SumPerformance) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
 
@@ -681,29 +681,29 @@ namespace Fx.Amiya.Service
                         #region 老客
 
                         var JanJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 1, query.HospitalId, true);
-                        oldPerformanceYearData.JanuaryPerformance = JanJiNaLossPerformance.Sum(x => x.Price).ToString();
+                        oldPerformanceYearData.JanuaryPerformance = DecimalExtension.ChangePriceToTenThousand(JanJiNaLossPerformance.Sum(x => x.Price)).ToString();
                         var FebJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 2, query.HospitalId, true);
-                        oldPerformanceYearData.FebruaryPerformance = FebJiNaLossPerformance.Sum(x => x.Price).ToString();
+                        oldPerformanceYearData.FebruaryPerformance = DecimalExtension.ChangePriceToTenThousand(FebJiNaLossPerformance.Sum(x => x.Price)).ToString();
                         var MarJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 3, query.HospitalId, true);
-                        oldPerformanceYearData.MarchPerformance = MarJiNaLossPerformance.Sum(x => x.Price).ToString();
+                        oldPerformanceYearData.MarchPerformance = DecimalExtension.ChangePriceToTenThousand(MarJiNaLossPerformance.Sum(x => x.Price)).ToString();
                         var AprJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 4, query.HospitalId, true);
-                        oldPerformanceYearData.AprilPerformance = AprJiNaLossPerformance.Sum(x => x.Price).ToString();
+                        oldPerformanceYearData.AprilPerformance = DecimalExtension.ChangePriceToTenThousand(AprJiNaLossPerformance.Sum(x => x.Price)).ToString();
                         var MayJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 5, query.HospitalId, true);
-                        oldPerformanceYearData.MayPerformance = MayJiNaLossPerformance.Sum(x => x.Price).ToString();
+                        oldPerformanceYearData.MayPerformance = DecimalExtension.ChangePriceToTenThousand(MayJiNaLossPerformance.Sum(x => x.Price)).ToString();
                         var JunJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 6, query.HospitalId, true);
-                        oldPerformanceYearData.JunePerformance = JunJiNaLossPerformance.Sum(x => x.Price).ToString();
+                        oldPerformanceYearData.JunePerformance = DecimalExtension.ChangePriceToTenThousand(JunJiNaLossPerformance.Sum(x => x.Price)).ToString();
                         var JulJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 7, query.HospitalId, true);
-                        oldPerformanceYearData.JulyPerformance = JulJiNaLossPerformance.Sum(x => x.Price).ToString();
+                        oldPerformanceYearData.JulyPerformance = DecimalExtension.ChangePriceToTenThousand(JulJiNaLossPerformance.Sum(x => x.Price)).ToString();
                         var AugJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 8, query.HospitalId, true);
-                        oldPerformanceYearData.AugustPerformance = AugJiNaLossPerformance.Sum(x => x.Price).ToString();
+                        oldPerformanceYearData.AugustPerformance = DecimalExtension.ChangePriceToTenThousand(AugJiNaLossPerformance.Sum(x => x.Price)).ToString();
                         var SepJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 9, query.HospitalId, true);
-                        oldPerformanceYearData.SeptemberPerformance = SepJiNaLossPerformance.Sum(x => x.Price).ToString();
+                        oldPerformanceYearData.SeptemberPerformance = DecimalExtension.ChangePriceToTenThousand(SepJiNaLossPerformance.Sum(x => x.Price)).ToString();
                         var OctJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 10, query.HospitalId, true);
-                        oldPerformanceYearData.OctoberPerformance = OctJiNaLossPerformance.Sum(x => x.Price).ToString();
+                        oldPerformanceYearData.OctoberPerformance = DecimalExtension.ChangePriceToTenThousand(OctJiNaLossPerformance.Sum(x => x.Price)).ToString();
                         var NovJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 11, query.HospitalId, true);
-                        oldPerformanceYearData.NovemberPerformance = NovJiNaLossPerformance.Sum(x => x.Price).ToString();
+                        oldPerformanceYearData.NovemberPerformance = DecimalExtension.ChangePriceToTenThousand(NovJiNaLossPerformance.Sum(x => x.Price)).ToString();
                         var DecJiNaLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 12, query.HospitalId, true);
-                        oldPerformanceYearData.DecemberPerformance = DecJiNaLossPerformance.Sum(x => x.Price).ToString();
+                        oldPerformanceYearData.DecemberPerformance = DecimalExtension.ChangePriceToTenThousand(DecJiNaLossPerformance.Sum(x => x.Price)).ToString();
                         oldPerformanceYearData.SumPerformance = (Convert.ToDecimal(oldPerformanceYearData.JanuaryPerformance) + Convert.ToDecimal(oldPerformanceYearData.FebruaryPerformance) + Convert.ToDecimal(oldPerformanceYearData.MarchPerformance) + Convert.ToDecimal(oldPerformanceYearData.AprilPerformance) + Convert.ToDecimal(oldPerformanceYearData.MayPerformance) + Convert.ToDecimal(oldPerformanceYearData.JunePerformance) + Convert.ToDecimal(oldPerformanceYearData.JulyPerformance) + Convert.ToDecimal(oldPerformanceYearData.AugustPerformance) + Convert.ToDecimal(oldPerformanceYearData.SeptemberPerformance) + Convert.ToDecimal(oldPerformanceYearData.OctoberPerformance) + Convert.ToDecimal(oldPerformanceYearData.NovemberPerformance) + Convert.ToDecimal(oldPerformanceYearData.DecemberPerformance)).ToString();
                         oldPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(oldPerformanceYearData.SumPerformance) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
                         #endregion
@@ -713,37 +713,92 @@ namespace Fx.Amiya.Service
                         totalPerformanceYearData.SortName = newPerformanceYearData.SortName = oldPerformanceYearData.SortName = query.Year - 1 + "年实际业绩";
                         #region 整体
                         var JanTotalLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 1, query.HospitalId, null);
-                        totalPerformanceYearData.JanuaryPerformance = JanTotalLastYearLossPerformance.Sum(x => x.Price).ToString();
+                        totalPerformanceYearData.JanuaryPerformance =DecimalExtension.ChangePriceToTenThousand( JanTotalLastYearLossPerformance.Sum(x => x.Price)).ToString();
                         var FebTotalLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 2, query.HospitalId, null);
-                        totalPerformanceYearData.FebruaryPerformance = FebTotalLastYearLossPerformance.Sum(x => x.Price).ToString();
+                        totalPerformanceYearData.FebruaryPerformance = DecimalExtension.ChangePriceToTenThousand(FebTotalLastYearLossPerformance.Sum(x => x.Price)).ToString();
                         var MarTotalLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 3, query.HospitalId, null);
-                        totalPerformanceYearData.MarchPerformance = MarTotalLastYearLossPerformance.Sum(x => x.Price).ToString();
+                        totalPerformanceYearData.MarchPerformance = DecimalExtension.ChangePriceToTenThousand(MarTotalLastYearLossPerformance.Sum(x => x.Price)).ToString();
                         var AprTotalLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 4, query.HospitalId, null);
-                        totalPerformanceYearData.AprilPerformance = AprTotalLastYearLossPerformance.Sum(x => x.Price).ToString();
+                        totalPerformanceYearData.AprilPerformance = DecimalExtension.ChangePriceToTenThousand(AprTotalLastYearLossPerformance.Sum(x => x.Price)).ToString();
                         var MayTotalLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 5, query.HospitalId, null);
-                        totalPerformanceYearData.MayPerformance = MayTotalLastYearLossPerformance.Sum(x => x.Price).ToString();
+                        totalPerformanceYearData.MayPerformance = DecimalExtension.ChangePriceToTenThousand(MayTotalLastYearLossPerformance.Sum(x => x.Price)).ToString();
                         var JunTotalLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 6, query.HospitalId, null);
-                        totalPerformanceYearData.JunePerformance = JunTotalLastYearLossPerformance.Sum(x => x.Price).ToString();
+                        totalPerformanceYearData.JunePerformance = DecimalExtension.ChangePriceToTenThousand(JunTotalLastYearLossPerformance.Sum(x => x.Price)).ToString();
                         var JulTotalLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 7, query.HospitalId, null);
-                        totalPerformanceYearData.JulyPerformance = JulTotalLastYearLossPerformance.Sum(x => x.Price).ToString();
+                        totalPerformanceYearData.JulyPerformance = DecimalExtension.ChangePriceToTenThousand(JulTotalLastYearLossPerformance.Sum(x => x.Price)).ToString();
                         var AugTotalLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 8, query.HospitalId, null);
-                        totalPerformanceYearData.AugustPerformance = AugTotalLastYearLossPerformance.Sum(x => x.Price).ToString();
+                        totalPerformanceYearData.AugustPerformance = DecimalExtension.ChangePriceToTenThousand(AugTotalLastYearLossPerformance.Sum(x => x.Price)).ToString();
                         var SepTotalLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 9, query.HospitalId, null);
-                        totalPerformanceYearData.SeptemberPerformance = SepTotalLastYearLossPerformance.Sum(x => x.Price).ToString();
+                        totalPerformanceYearData.SeptemberPerformance = DecimalExtension.ChangePriceToTenThousand(SepTotalLastYearLossPerformance.Sum(x => x.Price)).ToString();
                         var OctTotalLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 10, query.HospitalId, null);
-                        totalPerformanceYearData.OctoberPerformance = OctTotalLastYearLossPerformance.Sum(x => x.Price).ToString();
+                        totalPerformanceYearData.OctoberPerformance = DecimalExtension.ChangePriceToTenThousand(OctTotalLastYearLossPerformance.Sum(x => x.Price)).ToString();
                         var NovTotalLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 11, query.HospitalId, null);
-                        totalPerformanceYearData.NovemberPerformance = NovTotalLastYearLossPerformance.Sum(x => x.Price).ToString();
+                        totalPerformanceYearData.NovemberPerformance = DecimalExtension.ChangePriceToTenThousand(NovTotalLastYearLossPerformance.Sum(x => x.Price)).ToString();
                         var DecTotalLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 12, query.HospitalId, null);
-                        totalPerformanceYearData.DecemberPerformance = DecTotalLastYearLossPerformance.Sum(x => x.Price).ToString();
-                        totalPerformanceYearData.SumPerformance = (Convert.ToDecimal(totalPerformanceYearData.JanuaryPerformance) + Convert.ToDecimal(totalPerformanceYearData.FebruaryPerformance) + Convert.ToDecimal(totalPerformanceYearData.MarchPerformance) + Convert.ToDecimal(totalPerformanceYearData.AprilPerformance) + Convert.ToDecimal(totalPerformanceYearData.MayPerformance) + Convert.ToDecimal(totalPerformanceYearData.JunePerformance) + Convert.ToDecimal(totalPerformanceYearData.JulyPerformance) + Convert.ToDecimal(totalPerformanceYearData.AugustPerformance) + Convert.ToDecimal(totalPerformanceYearData.SeptemberPerformance) + Convert.ToDecimal(totalPerformanceYearData.OctoberPerformance) + Convert.ToDecimal(totalPerformanceYearData.NovemberPerformance) + Convert.ToDecimal(totalPerformanceYearData.DecemberPerformance)).ToString();
+                        totalPerformanceYearData.DecemberPerformance = DecimalExtension.ChangePriceToTenThousand(DecTotalLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        totalPerformanceYearData.SumPerformance = DecimalExtension.ChangePriceToTenThousand(Convert.ToDecimal(totalPerformanceYearData.JanuaryPerformance) + Convert.ToDecimal(totalPerformanceYearData.FebruaryPerformance) + Convert.ToDecimal(totalPerformanceYearData.MarchPerformance) + Convert.ToDecimal(totalPerformanceYearData.AprilPerformance) + Convert.ToDecimal(totalPerformanceYearData.MayPerformance) + Convert.ToDecimal(totalPerformanceYearData.JunePerformance) + Convert.ToDecimal(totalPerformanceYearData.JulyPerformance) + Convert.ToDecimal(totalPerformanceYearData.AugustPerformance) + Convert.ToDecimal(totalPerformanceYearData.SeptemberPerformance) + Convert.ToDecimal(totalPerformanceYearData.OctoberPerformance) + Convert.ToDecimal(totalPerformanceYearData.NovemberPerformance) + Convert.ToDecimal(totalPerformanceYearData.DecemberPerformance)).ToString();
                         totalPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(totalPerformanceYearData.SumPerformance) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
                         #endregion
-
+                        #region 新客
+                        var JanNewLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 1, query.HospitalId, false);
+                        newPerformanceYearData.JanuaryPerformance = DecimalExtension.ChangePriceToTenThousand(JanNewLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        var FebNewLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 2, query.HospitalId, false);
+                        newPerformanceYearData.FebruaryPerformance = DecimalExtension.ChangePriceToTenThousand(FebNewLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        var MarNewLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 3, query.HospitalId, false);
+                        newPerformanceYearData.MarchPerformance = DecimalExtension.ChangePriceToTenThousand(MarNewLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        var AprNewLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 4, query.HospitalId, false);
+                        newPerformanceYearData.AprilPerformance = DecimalExtension.ChangePriceToTenThousand(AprNewLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        var MayNewLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 5, query.HospitalId, false);
+                        newPerformanceYearData.MayPerformance = DecimalExtension.ChangePriceToTenThousand(MayNewLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        var JunNewLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 6, query.HospitalId, false);
+                        newPerformanceYearData.JunePerformance = DecimalExtension.ChangePriceToTenThousand(JunNewLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        var JulNewLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 7, query.HospitalId, false);
+                        newPerformanceYearData.JulyPerformance = DecimalExtension.ChangePriceToTenThousand(JulNewLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        var AugNewLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 8, query.HospitalId, false);
+                        newPerformanceYearData.AugustPerformance = DecimalExtension.ChangePriceToTenThousand(AugNewLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        var SepNewLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 9, query.HospitalId, false);
+                        newPerformanceYearData.SeptemberPerformance = DecimalExtension.ChangePriceToTenThousand(SepNewLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        var OctNewLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 10, query.HospitalId, false);
+                        newPerformanceYearData.OctoberPerformance = DecimalExtension.ChangePriceToTenThousand(OctNewLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        var NovNewLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 11, query.HospitalId, false);
+                        newPerformanceYearData.NovemberPerformance = DecimalExtension.ChangePriceToTenThousand(NovNewLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        var DecNewLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 12, query.HospitalId, false);
+                        newPerformanceYearData.DecemberPerformance = DecimalExtension.ChangePriceToTenThousand(DecNewLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        newPerformanceYearData.SumPerformance = DecimalExtension.ChangePriceToTenThousand(Convert.ToDecimal(newPerformanceYearData.JanuaryPerformance) + Convert.ToDecimal(newPerformanceYearData.FebruaryPerformance) + Convert.ToDecimal(newPerformanceYearData.MarchPerformance) + Convert.ToDecimal(newPerformanceYearData.AprilPerformance) + Convert.ToDecimal(newPerformanceYearData.MayPerformance) + Convert.ToDecimal(newPerformanceYearData.JunePerformance) + Convert.ToDecimal(newPerformanceYearData.JulyPerformance) + Convert.ToDecimal(newPerformanceYearData.AugustPerformance) + Convert.ToDecimal(newPerformanceYearData.SeptemberPerformance) + Convert.ToDecimal(newPerformanceYearData.OctoberPerformance) + Convert.ToDecimal(newPerformanceYearData.NovemberPerformance) + Convert.ToDecimal(newPerformanceYearData.DecemberPerformance)).ToString();
+                        newPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(newPerformanceYearData.SumPerformance) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
+                        #endregion
+                        #region 老客
+                        var JanOldLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 1, query.HospitalId, true);
+                        oldPerformanceYearData.JanuaryPerformance = DecimalExtension.ChangePriceToTenThousand(JanOldLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        var FebOldLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 2, query.HospitalId, true);
+                        oldPerformanceYearData.FebruaryPerformance = DecimalExtension.ChangePriceToTenThousand(FebOldLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        var MarOldLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 3, query.HospitalId, true);
+                        oldPerformanceYearData.MarchPerformance = DecimalExtension.ChangePriceToTenThousand(MarOldLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        var AprOldLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 4, query.HospitalId, true);
+                        oldPerformanceYearData.AprilPerformance = DecimalExtension.ChangePriceToTenThousand(AprOldLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        var MayOldLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 5, query.HospitalId, true);
+                        oldPerformanceYearData.MayPerformance = DecimalExtension.ChangePriceToTenThousand(MayOldLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        var JunOldLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 6, query.HospitalId, true);
+                        oldPerformanceYearData.JunePerformance = DecimalExtension.ChangePriceToTenThousand(JunOldLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        var JulOldLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 7, query.HospitalId, true);
+                        oldPerformanceYearData.JulyPerformance = DecimalExtension.ChangePriceToTenThousand(JulOldLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        var AugOldLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 8, query.HospitalId, true);
+                        oldPerformanceYearData.AugustPerformance = DecimalExtension.ChangePriceToTenThousand(AugOldLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        var SepOldLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 9, query.HospitalId, true);
+                        oldPerformanceYearData.SeptemberPerformance = DecimalExtension.ChangePriceToTenThousand(SepOldLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        var OctOldLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 10, query.HospitalId, true);
+                        oldPerformanceYearData.OctoberPerformance = DecimalExtension.ChangePriceToTenThousand(OctOldLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        var NovOldLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 11, query.HospitalId, true);
+                        oldPerformanceYearData.NovemberPerformance = DecimalExtension.ChangePriceToTenThousand(NovOldLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        var DecOldLastYearLossPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year - 1, 12, query.HospitalId, true);
+                        oldPerformanceYearData.DecemberPerformance = DecimalExtension.ChangePriceToTenThousand(DecOldLastYearLossPerformance.Sum(x => x.Price)).ToString();
+                        oldPerformanceYearData.SumPerformance = DecimalExtension.ChangePriceToTenThousand(Convert.ToDecimal(oldPerformanceYearData.JanuaryPerformance) + Convert.ToDecimal(oldPerformanceYearData.FebruaryPerformance) + Convert.ToDecimal(oldPerformanceYearData.MarchPerformance) + Convert.ToDecimal(oldPerformanceYearData.AprilPerformance) + Convert.ToDecimal(oldPerformanceYearData.MayPerformance) + Convert.ToDecimal(oldPerformanceYearData.JunePerformance) + Convert.ToDecimal(oldPerformanceYearData.JulyPerformance) + Convert.ToDecimal(oldPerformanceYearData.AugustPerformance) + Convert.ToDecimal(oldPerformanceYearData.SeptemberPerformance) + Convert.ToDecimal(oldPerformanceYearData.OctoberPerformance) + Convert.ToDecimal(oldPerformanceYearData.NovemberPerformance) + Convert.ToDecimal(oldPerformanceYearData.DecemberPerformance)).ToString();
+                        oldPerformanceYearData.AveragePerformance = Math.Round(Convert.ToDecimal(oldPerformanceYearData.SumPerformance) / thisMonth, 2, MidpointRounding.AwayFromZero).ToString();
+                        #endregion
                         break;
 
                     case 2:
-                        totalPerformanceYearData.SortName = "环比";
+                        totalPerformanceYearData.SortName = newPerformanceYearData.SortName = oldPerformanceYearData.SortName = "环比";
                         #region 整体
                         var completeTotalLastMonth = result.TotalPerformanceData.SingleOrDefault(x => x.SortName == (query.Year - 1) + "年实际业绩");
                         var completeTotalThisMonth = result.TotalPerformanceData.SingleOrDefault(x => x.SortName == query.Year + "年实际业绩");
@@ -762,11 +817,46 @@ namespace Fx.Amiya.Service
                         totalPerformanceYearData.SumPerformance = "/";
                         totalPerformanceYearData.AveragePerformance = "/";
                         #endregion
-
+                        #region 新客
+                        var completeNewLastMonth = result.NewCustomerPerformanceData.SingleOrDefault(x => x.SortName == (query.Year - 1) + "年实际业绩");
+                        var completeNewThisMonth = result.NewCustomerPerformanceData.SingleOrDefault(x => x.SortName == query.Year + "年实际业绩");
+                        newPerformanceYearData.JanuaryPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeNewThisMonth.JanuaryPerformance), Convert.ToDecimal(completeNewLastMonth.DecemberPerformance)).ToString();
+                        newPerformanceYearData.FebruaryPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeNewThisMonth.FebruaryPerformance), Convert.ToDecimal(completeNewThisMonth.JanuaryPerformance)).ToString();
+                        newPerformanceYearData.MarchPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeNewThisMonth.MarchPerformance), Convert.ToDecimal(completeNewThisMonth.FebruaryPerformance)).ToString();
+                        newPerformanceYearData.AprilPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeNewThisMonth.AprilPerformance), Convert.ToDecimal(completeNewThisMonth.MarchPerformance)).ToString();
+                        newPerformanceYearData.MayPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeNewThisMonth.MayPerformance), Convert.ToDecimal(completeNewThisMonth.AprilPerformance)).ToString();
+                        newPerformanceYearData.JunePerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeNewThisMonth.JunePerformance), Convert.ToDecimal(completeNewThisMonth.MayPerformance)).ToString();
+                        newPerformanceYearData.JulyPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeNewThisMonth.JulyPerformance), Convert.ToDecimal(completeNewThisMonth.JunePerformance)).ToString();
+                        newPerformanceYearData.AugustPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeNewThisMonth.AugustPerformance), Convert.ToDecimal(completeNewThisMonth.JulyPerformance)).ToString();
+                        newPerformanceYearData.SeptemberPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeNewThisMonth.SeptemberPerformance), Convert.ToDecimal(completeNewThisMonth.AugustPerformance)).ToString();
+                        newPerformanceYearData.OctoberPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeNewThisMonth.OctoberPerformance), Convert.ToDecimal(completeNewThisMonth.SeptemberPerformance)).ToString();
+                        newPerformanceYearData.NovemberPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeNewThisMonth.NovemberPerformance), Convert.ToDecimal(completeNewThisMonth.OctoberPerformance)).ToString();
+                        newPerformanceYearData.DecemberPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeNewThisMonth.DecemberPerformance), Convert.ToDecimal(completeNewThisMonth.NovemberPerformance)).ToString();
+                        newPerformanceYearData.SumPerformance = "/";
+                        newPerformanceYearData.AveragePerformance = "/";
+                        #endregion
+                        #region 老客
+                        var completeOldLastMonth = result.OldCustomerPerformanceData.SingleOrDefault(x => x.SortName == (query.Year - 1) + "年实际业绩");
+                        var completeOldThisMonth = result.OldCustomerPerformanceData.SingleOrDefault(x => x.SortName == query.Year + "年实际业绩");
+                        oldPerformanceYearData.JanuaryPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeOldThisMonth.JanuaryPerformance), Convert.ToDecimal(completeOldLastMonth.DecemberPerformance)).ToString();
+                        oldPerformanceYearData.FebruaryPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeOldThisMonth.FebruaryPerformance), Convert.ToDecimal(completeOldThisMonth.JanuaryPerformance)).ToString();
+                        oldPerformanceYearData.MarchPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeOldThisMonth.MarchPerformance), Convert.ToDecimal(completeOldThisMonth.FebruaryPerformance)).ToString();
+                        oldPerformanceYearData.AprilPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeOldThisMonth.AprilPerformance), Convert.ToDecimal(completeOldThisMonth.MarchPerformance)).ToString();
+                        oldPerformanceYearData.MayPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeOldThisMonth.MayPerformance), Convert.ToDecimal(completeOldThisMonth.AprilPerformance)).ToString();
+                        oldPerformanceYearData.JunePerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeOldThisMonth.JunePerformance), Convert.ToDecimal(completeOldThisMonth.MayPerformance)).ToString();
+                        oldPerformanceYearData.JulyPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeOldThisMonth.JulyPerformance), Convert.ToDecimal(completeOldThisMonth.JunePerformance)).ToString();
+                        oldPerformanceYearData.AugustPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeOldThisMonth.AugustPerformance), Convert.ToDecimal(completeOldThisMonth.JulyPerformance)).ToString();
+                        oldPerformanceYearData.SeptemberPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeOldThisMonth.SeptemberPerformance), Convert.ToDecimal(completeOldThisMonth.AugustPerformance)).ToString();
+                        oldPerformanceYearData.OctoberPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeOldThisMonth.OctoberPerformance), Convert.ToDecimal(completeOldThisMonth.SeptemberPerformance)).ToString();
+                        oldPerformanceYearData.NovemberPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeOldThisMonth.NovemberPerformance), Convert.ToDecimal(completeOldThisMonth.OctoberPerformance)).ToString();
+                        oldPerformanceYearData.DecemberPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeOldThisMonth.DecemberPerformance), Convert.ToDecimal(completeOldThisMonth.NovemberPerformance)).ToString();
+                        oldPerformanceYearData.SumPerformance = "/";
+                        oldPerformanceYearData.AveragePerformance = "/";
+                        #endregion
                         break;
 
                     case 3:
-                        totalPerformanceYearData.SortName = "同比";
+                        totalPerformanceYearData.SortName = newPerformanceYearData.SortName = oldPerformanceYearData.SortName = "同比";
                         #region 整体
                         var completeTotalHistoryYear = result.TotalPerformanceData.SingleOrDefault(x => x.SortName == (query.Year - 1) + "年实际业绩");
                         var completeTotalThisYear = result.TotalPerformanceData.SingleOrDefault(x => x.SortName == query.Year + "年实际业绩");
@@ -785,63 +875,100 @@ namespace Fx.Amiya.Service
                         totalPerformanceYearData.SumPerformance = "/";
                         totalPerformanceYearData.AveragePerformance = "/";
                         #endregion
+                        #region 新客
+                        var completeNewHistoryYear = result.NewCustomerPerformanceData.SingleOrDefault(x => x.SortName == (query.Year - 1) + "年实际业绩");
+                        var completeNewThisYear = result.NewCustomerPerformanceData.SingleOrDefault(x => x.SortName == query.Year + "年实际业绩");
+                        newPerformanceYearData.JanuaryPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeNewThisYear.JanuaryPerformance), Convert.ToDecimal(completeNewHistoryYear.JanuaryPerformance)).ToString();
+                        newPerformanceYearData.FebruaryPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeNewThisYear.FebruaryPerformance), Convert.ToDecimal(completeNewHistoryYear.FebruaryPerformance)).ToString();
+                        newPerformanceYearData.MarchPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeNewThisYear.MarchPerformance), Convert.ToDecimal(completeNewHistoryYear.MarchPerformance)).ToString();
+                        newPerformanceYearData.AprilPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeNewThisYear.AprilPerformance), Convert.ToDecimal(completeNewHistoryYear.AprilPerformance)).ToString();
+                        newPerformanceYearData.MayPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeNewThisYear.MayPerformance), Convert.ToDecimal(completeNewHistoryYear.MayPerformance)).ToString();
+                        newPerformanceYearData.JunePerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeNewThisYear.JunePerformance), Convert.ToDecimal(completeNewHistoryYear.JunePerformance)).ToString();
+                        newPerformanceYearData.JulyPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeNewThisYear.JulyPerformance), Convert.ToDecimal(completeNewHistoryYear.JulyPerformance)).ToString();
+                        newPerformanceYearData.AugustPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeNewThisYear.AugustPerformance), Convert.ToDecimal(completeNewHistoryYear.AugustPerformance)).ToString();
+                        newPerformanceYearData.SeptemberPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeNewThisYear.SeptemberPerformance), Convert.ToDecimal(completeNewHistoryYear.SeptemberPerformance)).ToString();
+                        newPerformanceYearData.OctoberPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeNewThisYear.OctoberPerformance), Convert.ToDecimal(completeNewHistoryYear.OctoberPerformance)).ToString();
+                        newPerformanceYearData.NovemberPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeNewThisYear.NovemberPerformance), Convert.ToDecimal(completeNewHistoryYear.NovemberPerformance)).ToString();
+                        newPerformanceYearData.DecemberPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeNewThisYear.DecemberPerformance), Convert.ToDecimal(completeNewHistoryYear.DecemberPerformance)).ToString();
+                        newPerformanceYearData.SumPerformance = "/";
+                        newPerformanceYearData.AveragePerformance = "/";
+                        #endregion
+
+                        #region 老客
+                        var completeOldHistoryYear = result.OldCustomerPerformanceData.SingleOrDefault(x => x.SortName == (query.Year - 1) + "年实际业绩");
+                        var completeOldThisYear = result.OldCustomerPerformanceData.SingleOrDefault(x => x.SortName == query.Year + "年实际业绩");
+                        oldPerformanceYearData.JanuaryPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeOldThisYear.JanuaryPerformance), Convert.ToDecimal(completeOldHistoryYear.JanuaryPerformance)).ToString();
+                        oldPerformanceYearData.FebruaryPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeOldThisYear.FebruaryPerformance), Convert.ToDecimal(completeOldHistoryYear.FebruaryPerformance)).ToString();
+                        oldPerformanceYearData.MarchPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeOldThisYear.MarchPerformance), Convert.ToDecimal(completeOldHistoryYear.MarchPerformance)).ToString();
+                        oldPerformanceYearData.AprilPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeOldThisYear.AprilPerformance), Convert.ToDecimal(completeOldHistoryYear.AprilPerformance)).ToString();
+                        oldPerformanceYearData.MayPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeOldThisYear.MayPerformance), Convert.ToDecimal(completeOldHistoryYear.MayPerformance)).ToString();
+                        oldPerformanceYearData.JunePerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeOldThisYear.JunePerformance), Convert.ToDecimal(completeOldHistoryYear.JunePerformance)).ToString();
+                        oldPerformanceYearData.JulyPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeOldThisYear.JulyPerformance), Convert.ToDecimal(completeOldHistoryYear.JulyPerformance)).ToString();
+                        oldPerformanceYearData.AugustPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeOldThisYear.AugustPerformance), Convert.ToDecimal(completeOldHistoryYear.AugustPerformance)).ToString();
+                        oldPerformanceYearData.SeptemberPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeOldThisYear.SeptemberPerformance), Convert.ToDecimal(completeOldHistoryYear.SeptemberPerformance)).ToString();
+                        oldPerformanceYearData.OctoberPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeOldThisYear.OctoberPerformance), Convert.ToDecimal(completeOldHistoryYear.OctoberPerformance)).ToString();
+                        oldPerformanceYearData.NovemberPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeOldThisYear.NovemberPerformance), Convert.ToDecimal(completeOldHistoryYear.NovemberPerformance)).ToString();
+                        oldPerformanceYearData.DecemberPerformance = DecimalExtension.CalculateChain(Convert.ToDecimal(completeOldThisYear.DecemberPerformance), Convert.ToDecimal(completeOldHistoryYear.DecemberPerformance)).ToString();
+                        oldPerformanceYearData.SumPerformance = "/";
+                        oldPerformanceYearData.AveragePerformance = "/";
+                        #endregion
                         break;
 
                     case 4:
                         totalPerformanceYearData.SortName = newPerformanceYearData.SortName = oldPerformanceYearData.SortName = query.Year + "年客单价";
                         #region 整体
                         var JanTotalAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 1, query.HospitalId, null);
-                        totalPerformanceYearData.JanuaryPerformance = DecimalExtension.Division(JanTotalAvgPerformance.Sum(x => x.Price), JanTotalAvgPerformance.Count).ToString();
+                        totalPerformanceYearData.JanuaryPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(JanTotalAvgPerformance.Sum(x => x.Price), JanTotalAvgPerformance.Count).Value).ToString();
                         var FebTotalAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 2, query.HospitalId, null);
-                        totalPerformanceYearData.FebruaryPerformance = DecimalExtension.Division(FebTotalAvgPerformance.Sum(x => x.Price), FebTotalAvgPerformance.Count).ToString();
+                        totalPerformanceYearData.FebruaryPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(FebTotalAvgPerformance.Sum(x => x.Price), FebTotalAvgPerformance.Count).Value).ToString();
                         var MarTotalAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 3, query.HospitalId, null);
-                        totalPerformanceYearData.MarchPerformance = DecimalExtension.Division(MarTotalAvgPerformance.Sum(x => x.Price), MarTotalAvgPerformance.Count).ToString();
+                        totalPerformanceYearData.MarchPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(MarTotalAvgPerformance.Sum(x => x.Price), MarTotalAvgPerformance.Count).Value).ToString();
                         var AprTotalAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 4, query.HospitalId, null);
-                        totalPerformanceYearData.AprilPerformance = DecimalExtension.Division(AprTotalAvgPerformance.Sum(x => x.Price), AprTotalAvgPerformance.Count).ToString();
+                        totalPerformanceYearData.AprilPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(AprTotalAvgPerformance.Sum(x => x.Price), AprTotalAvgPerformance.Count).Value).ToString();
                         var MayTotalAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 5, query.HospitalId, null);
-                        totalPerformanceYearData.MayPerformance = DecimalExtension.Division(MayTotalAvgPerformance.Sum(x => x.Price), MayTotalAvgPerformance.Count).ToString();
+                        totalPerformanceYearData.MayPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(MayTotalAvgPerformance.Sum(x => x.Price), MayTotalAvgPerformance.Count).Value).ToString();
                         var JunTotalAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 6, query.HospitalId, null);
-                        totalPerformanceYearData.JunePerformance = DecimalExtension.Division(JunTotalAvgPerformance.Sum(x => x.Price), JunTotalAvgPerformance.Count).ToString();
+                        totalPerformanceYearData.JunePerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(JunTotalAvgPerformance.Sum(x => x.Price), JunTotalAvgPerformance.Count).Value).ToString();
                         var JulTotalAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 7, query.HospitalId, null);
-                        totalPerformanceYearData.JulyPerformance = DecimalExtension.Division(JulTotalAvgPerformance.Sum(x => x.Price), JulTotalAvgPerformance.Count).ToString();
+                        totalPerformanceYearData.JulyPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(JulTotalAvgPerformance.Sum(x => x.Price), JulTotalAvgPerformance.Count).Value).ToString();
                         var AugTotalAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 8, query.HospitalId, null);
-                        totalPerformanceYearData.AugustPerformance = DecimalExtension.Division(AugTotalAvgPerformance.Sum(x => x.Price), AugTotalAvgPerformance.Count).ToString();
+                        totalPerformanceYearData.AugustPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(AugTotalAvgPerformance.Sum(x => x.Price), AugTotalAvgPerformance.Count).Value).ToString();
                         var SepTotalAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 9, query.HospitalId, null);
-                        totalPerformanceYearData.SeptemberPerformance = DecimalExtension.Division(SepTotalAvgPerformance.Sum(x => x.Price), SepTotalAvgPerformance.Count).ToString();
+                        totalPerformanceYearData.SeptemberPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(SepTotalAvgPerformance.Sum(x => x.Price), SepTotalAvgPerformance.Count).Value).ToString();
                         var OctTotalAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 10, query.HospitalId, null);
-                        totalPerformanceYearData.OctoberPerformance = DecimalExtension.Division(OctTotalAvgPerformance.Sum(x => x.Price), OctTotalAvgPerformance.Count).ToString();
+                        totalPerformanceYearData.OctoberPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(OctTotalAvgPerformance.Sum(x => x.Price), OctTotalAvgPerformance.Count).Value).ToString();
                         var NovTotalAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 11, query.HospitalId, null);
-                        totalPerformanceYearData.NovemberPerformance = DecimalExtension.Division(NovTotalAvgPerformance.Sum(x => x.Price), NovTotalAvgPerformance.Count).ToString();
+                        totalPerformanceYearData.NovemberPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(NovTotalAvgPerformance.Sum(x => x.Price), NovTotalAvgPerformance.Count).Value).ToString();
                         var DecTotalAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 12, query.HospitalId, null);
-                        totalPerformanceYearData.DecemberPerformance = DecimalExtension.Division(DecTotalAvgPerformance.Sum(x => x.Price), DecTotalAvgPerformance.Count).ToString();
+                        totalPerformanceYearData.DecemberPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(DecTotalAvgPerformance.Sum(x => x.Price), DecTotalAvgPerformance.Count).Value).ToString();
                         totalPerformanceYearData.SumPerformance = "/";
                         totalPerformanceYearData.AveragePerformance = "/";
                         #endregion
                         #region 新客
                         var JanNewCustomerAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 1, query.HospitalId, false);
-                        newPerformanceYearData.JanuaryPerformance = DecimalExtension.Division(JanNewCustomerAvgPerformance.Sum(x => x.Price), JanNewCustomerAvgPerformance.Count).ToString();
+                        newPerformanceYearData.JanuaryPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(JanNewCustomerAvgPerformance.Sum(x => x.Price), JanNewCustomerAvgPerformance.Count).Value).ToString();
                         var FebNewCustomerAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 2, query.HospitalId, false);
-                        newPerformanceYearData.FebruaryPerformance = DecimalExtension.Division(FebNewCustomerAvgPerformance.Sum(x => x.Price), FebNewCustomerAvgPerformance.Count).ToString();
+                        newPerformanceYearData.FebruaryPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(FebNewCustomerAvgPerformance.Sum(x => x.Price), FebNewCustomerAvgPerformance.Count).Value).ToString();
                         var MarNewCustomerAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 3, query.HospitalId, false);
-                        newPerformanceYearData.MarchPerformance = DecimalExtension.Division(MarNewCustomerAvgPerformance.Sum(x => x.Price), MarNewCustomerAvgPerformance.Count).ToString();
+                        newPerformanceYearData.MarchPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(MarNewCustomerAvgPerformance.Sum(x => x.Price), MarNewCustomerAvgPerformance.Count).Value).ToString();
                         var AprNewCustomerAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 4, query.HospitalId, false);
-                        newPerformanceYearData.AprilPerformance = DecimalExtension.Division(AprNewCustomerAvgPerformance.Sum(x => x.Price), AprNewCustomerAvgPerformance.Count).ToString();
+                        newPerformanceYearData.AprilPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(AprNewCustomerAvgPerformance.Sum(x => x.Price), AprNewCustomerAvgPerformance.Count).Value).ToString();
                         var MayNewCustomerAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 5, query.HospitalId, false);
-                        newPerformanceYearData.MayPerformance = DecimalExtension.Division(MayNewCustomerAvgPerformance.Sum(x => x.Price), MayNewCustomerAvgPerformance.Count).ToString();
+                        newPerformanceYearData.MayPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(MayNewCustomerAvgPerformance.Sum(x => x.Price), MayNewCustomerAvgPerformance.Count).Value).ToString();
                         var JunNewCustomerAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 6, query.HospitalId, false);
-                        newPerformanceYearData.JunePerformance = DecimalExtension.Division(JunNewCustomerAvgPerformance.Sum(x => x.Price), JunNewCustomerAvgPerformance.Count).ToString();
+                        newPerformanceYearData.JunePerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(JunNewCustomerAvgPerformance.Sum(x => x.Price), JunNewCustomerAvgPerformance.Count).Value).ToString();
                         var JulNewCustomerAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 7, query.HospitalId, false);
-                        newPerformanceYearData.JulyPerformance = DecimalExtension.Division(JulNewCustomerAvgPerformance.Sum(x => x.Price), JulNewCustomerAvgPerformance.Count).ToString();
+                        newPerformanceYearData.JulyPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(JulNewCustomerAvgPerformance.Sum(x => x.Price), JulNewCustomerAvgPerformance.Count).Value).ToString();
                         var AugNewCustomerAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 8, query.HospitalId, false);
-                        newPerformanceYearData.AugustPerformance = DecimalExtension.Division(AugNewCustomerAvgPerformance.Sum(x => x.Price), AugNewCustomerAvgPerformance.Count).ToString();
+                        newPerformanceYearData.AugustPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(AugNewCustomerAvgPerformance.Sum(x => x.Price), AugNewCustomerAvgPerformance.Count).Value).ToString();
                         var SepNewCustomerAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 9, query.HospitalId, false);
-                        newPerformanceYearData.SeptemberPerformance = DecimalExtension.Division(SepNewCustomerAvgPerformance.Sum(x => x.Price), SepNewCustomerAvgPerformance.Count).ToString();
+                        newPerformanceYearData.SeptemberPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(SepNewCustomerAvgPerformance.Sum(x => x.Price), SepNewCustomerAvgPerformance.Count).Value).ToString();
                         var OctNewCustomerAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 10, query.HospitalId, false);
-                        newPerformanceYearData.OctoberPerformance = DecimalExtension.Division(OctNewCustomerAvgPerformance.Sum(x => x.Price), OctNewCustomerAvgPerformance.Count).ToString();
+                        newPerformanceYearData.OctoberPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(OctNewCustomerAvgPerformance.Sum(x => x.Price), OctNewCustomerAvgPerformance.Count).Value).ToString();
                         var NovNewCustomerAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 11, query.HospitalId, false);
-                        newPerformanceYearData.NovemberPerformance = DecimalExtension.Division(NovNewCustomerAvgPerformance.Sum(x => x.Price), NovNewCustomerAvgPerformance.Count).ToString();
+                        newPerformanceYearData.NovemberPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(NovNewCustomerAvgPerformance.Sum(x => x.Price), NovNewCustomerAvgPerformance.Count).Value).ToString();
                         var DecNewCustomerAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 12, query.HospitalId, false);
-                        newPerformanceYearData.DecemberPerformance = DecimalExtension.Division(DecNewCustomerAvgPerformance.Sum(x => x.Price), DecNewCustomerAvgPerformance.Count).ToString();
+                        newPerformanceYearData.DecemberPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(DecNewCustomerAvgPerformance.Sum(x => x.Price), DecNewCustomerAvgPerformance.Count).Value).ToString();
                         newPerformanceYearData.SumPerformance = "/";
                         newPerformanceYearData.AveragePerformance = "/";
 
@@ -850,29 +977,29 @@ namespace Fx.Amiya.Service
                         #region 老客
 
                         var JanOldCustomerAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 1, query.HospitalId, true);
-                        oldPerformanceYearData.JanuaryPerformance = DecimalExtension.Division(JanOldCustomerAvgPerformance.Sum(x => x.Price), JanOldCustomerAvgPerformance.Count).ToString();
+                        oldPerformanceYearData.JanuaryPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(JanOldCustomerAvgPerformance.Sum(x => x.Price), JanOldCustomerAvgPerformance.Count).Value).ToString();
                         var FebOldCustomerAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 2, query.HospitalId, true);
-                        oldPerformanceYearData.FebruaryPerformance = DecimalExtension.Division(FebOldCustomerAvgPerformance.Sum(x => x.Price), FebOldCustomerAvgPerformance.Count).ToString();
+                        oldPerformanceYearData.FebruaryPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(FebOldCustomerAvgPerformance.Sum(x => x.Price), FebOldCustomerAvgPerformance.Count).Value).ToString();
                         var MarOldCustomerAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 3, query.HospitalId, true);
-                        oldPerformanceYearData.MarchPerformance = DecimalExtension.Division(MarOldCustomerAvgPerformance.Sum(x => x.Price), MarOldCustomerAvgPerformance.Count).ToString();
+                        oldPerformanceYearData.MarchPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(MarOldCustomerAvgPerformance.Sum(x => x.Price), MarOldCustomerAvgPerformance.Count).Value).ToString();
                         var AprOldCustomerAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 4, query.HospitalId, true);
-                        oldPerformanceYearData.AprilPerformance = DecimalExtension.Division(AprOldCustomerAvgPerformance.Sum(x => x.Price), AprOldCustomerAvgPerformance.Count).ToString();
+                        oldPerformanceYearData.AprilPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(AprOldCustomerAvgPerformance.Sum(x => x.Price), AprOldCustomerAvgPerformance.Count).Value).ToString();
                         var MayOldCustomerAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 5, query.HospitalId, true);
-                        oldPerformanceYearData.MayPerformance = DecimalExtension.Division(MayOldCustomerAvgPerformance.Sum(x => x.Price), MayOldCustomerAvgPerformance.Count).ToString();
+                        oldPerformanceYearData.MayPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(MayOldCustomerAvgPerformance.Sum(x => x.Price), MayOldCustomerAvgPerformance.Count).Value).ToString();
                         var JunOldCustomerAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 6, query.HospitalId, true);
-                        oldPerformanceYearData.JunePerformance = DecimalExtension.Division(JunOldCustomerAvgPerformance.Sum(x => x.Price), JunOldCustomerAvgPerformance.Count).ToString();
+                        oldPerformanceYearData.JunePerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(JunOldCustomerAvgPerformance.Sum(x => x.Price), JunOldCustomerAvgPerformance.Count).Value).ToString();
                         var JulOldCustomerAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 7, query.HospitalId, true);
-                        oldPerformanceYearData.JulyPerformance = DecimalExtension.Division(JulOldCustomerAvgPerformance.Sum(x => x.Price), JulOldCustomerAvgPerformance.Count).ToString();
+                        oldPerformanceYearData.JulyPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(JulOldCustomerAvgPerformance.Sum(x => x.Price), JulOldCustomerAvgPerformance.Count).Value).ToString();
                         var AugOldCustomerAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 8, query.HospitalId, true);
-                        oldPerformanceYearData.AugustPerformance = DecimalExtension.Division(AugOldCustomerAvgPerformance.Sum(x => x.Price), AugOldCustomerAvgPerformance.Count).ToString();
+                        oldPerformanceYearData.AugustPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(AugOldCustomerAvgPerformance.Sum(x => x.Price), AugOldCustomerAvgPerformance.Count).Value).ToString();
                         var SepOldCustomerAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 9, query.HospitalId, true);
-                        oldPerformanceYearData.SeptemberPerformance = DecimalExtension.Division(SepOldCustomerAvgPerformance.Sum(x => x.Price), SepOldCustomerAvgPerformance.Count).ToString();
+                        oldPerformanceYearData.SeptemberPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(SepOldCustomerAvgPerformance.Sum(x => x.Price), SepOldCustomerAvgPerformance.Count).Value).ToString();
                         var OctOldCustomerAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 10, query.HospitalId, true);
-                        oldPerformanceYearData.OctoberPerformance = DecimalExtension.Division(OctOldCustomerAvgPerformance.Sum(x => x.Price), OctOldCustomerAvgPerformance.Count).ToString();
+                        oldPerformanceYearData.OctoberPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(OctOldCustomerAvgPerformance.Sum(x => x.Price), OctOldCustomerAvgPerformance.Count).Value).ToString();
                         var NovOldCustomerAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 11, query.HospitalId, true);
-                        oldPerformanceYearData.NovemberPerformance = DecimalExtension.Division(NovOldCustomerAvgPerformance.Sum(x => x.Price), NovOldCustomerAvgPerformance.Count).ToString();
+                        oldPerformanceYearData.NovemberPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(NovOldCustomerAvgPerformance.Sum(x => x.Price), NovOldCustomerAvgPerformance.Count).Value).ToString();
                         var DecOldCustomerAvgPerformance = await contentPlatFormOrderDealInfoService.GetSimpleHospitalPerformanceDetailByDateAsync(query.Year, 12, query.HospitalId, true);
-                        oldPerformanceYearData.DecemberPerformance = DecimalExtension.Division(DecOldCustomerAvgPerformance.Sum(x => x.Price), DecOldCustomerAvgPerformance.Count).ToString();
+                        oldPerformanceYearData.DecemberPerformance = DecimalExtension.ChangePriceToTenThousand(DecimalExtension.Division(DecOldCustomerAvgPerformance.Sum(x => x.Price), DecOldCustomerAvgPerformance.Count).Value).ToString();
                         oldPerformanceYearData.SumPerformance = "/";
                         oldPerformanceYearData.AveragePerformance = "/";
                         #endregion

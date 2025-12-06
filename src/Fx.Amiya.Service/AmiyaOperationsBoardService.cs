@@ -5299,7 +5299,7 @@ namespace Fx.Amiya.Service
                 var resData = e.OrderBy(e => e.IntervalDays).Skip(0).Take(endIndex);
                 return new KeyValuePair<string, int>(
                 nameList.Where(a => a.Id == e.Key).FirstOrDefault()?.LiveAnchorName ?? "其它",
-                resData.Count() == 0 ? 0 : resData.Sum(e => e.IntervalDays) / (resData.Count())
+                resData.Count() == 0 ? 0 : resData.Sum(e => e.IntervalDays) / resData.Count()
              );
             }).OrderBy(e => e.Value).ToList();
             //当前主播转化周期

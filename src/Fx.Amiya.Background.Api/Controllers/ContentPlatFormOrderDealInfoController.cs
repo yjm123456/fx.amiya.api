@@ -299,34 +299,35 @@ namespace Fx.Amiya.Background.Api.Controllers
 
         public async Task<ResultData> UpdateAsync(UpdateContentPlatFormOrderDealInfoVo updateVo)
         {
-            try
-            {
-                UpdateContentPlatFormOrderDealInfoDto updateDto = new UpdateContentPlatFormOrderDealInfoDto();
+            throw new Exception("该功能已暂停");
+            //try
+            //{
+            //    UpdateContentPlatFormOrderDealInfoDto updateDto = new UpdateContentPlatFormOrderDealInfoDto();
 
-                var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
-                int employeeId = Convert.ToInt32(employee.Id);
-                updateDto.Id = updateVo.Id;
-                updateDto.ContentPlatFormOrderId = updateVo.ContentPlatFormOrderId;
-                updateDto.IsToHospital = updateVo.IsToHospital;
-                updateDto.ToHospitalDate = updateVo.TohospitalDate;
-                updateDto.IsDeal = updateVo.IsDeal;
-                updateDto.LastDealHospitalId = updateVo.LastDealHospitalId;
-                updateDto.DealPicture = updateVo.DealPicture;
-                updateDto.ToHospitalType = updateVo.ToHospitalType;
-                updateDto.Remark = updateVo.Remark;
-                updateDto.Price = updateVo.Price;
-                updateDto.UpdateBy = employeeId;
-                updateDto.DealDate = updateVo.DealDate;
-                updateDto.OtherAppOrderId = updateVo.OtherAppOrderId;
-                updateDto.DealPerformanceType = updateVo.DealPerformanceType;
-                updateDto.ConsumptionType = updateVo.ConsumptionType;
-                await _contentPlatFormOrderDealInfoService.UpdateAsync(updateDto);
-                return ResultData.Success();
-            }
-            catch (Exception ex)
-            {
-                return ResultData.Fail(ex.Message);
-            }
+            //    var employee = httpContextAccessor.HttpContext.User as FxAmiyaEmployeeIdentity;
+            //    int employeeId = Convert.ToInt32(employee.Id);
+            //    updateDto.Id = updateVo.Id;
+            //    updateDto.ContentPlatFormOrderId = updateVo.ContentPlatFormOrderId;
+            //    updateDto.IsToHospital = updateVo.IsToHospital;
+            //    updateDto.ToHospitalDate = updateVo.TohospitalDate;
+            //    updateDto.IsDeal = updateVo.IsDeal;
+            //    updateDto.LastDealHospitalId = updateVo.LastDealHospitalId;
+            //    updateDto.DealPicture = updateVo.DealPicture;
+            //    updateDto.ToHospitalType = updateVo.ToHospitalType;
+            //    updateDto.Remark = updateVo.Remark;
+            //    updateDto.Price = updateVo.Price;
+            //    updateDto.UpdateBy = employeeId;
+            //    updateDto.DealDate = updateVo.DealDate;
+            //    updateDto.OtherAppOrderId = updateVo.OtherAppOrderId;
+            //    updateDto.DealPerformanceType = updateVo.DealPerformanceType;
+            //    updateDto.ConsumptionType = updateVo.ConsumptionType;
+            //    await _contentPlatFormOrderDealInfoService.UpdateAsync(updateDto);
+            //    return ResultData.Success();
+            //}
+            //catch (Exception ex)
+            //{
+            //    return ResultData.Fail(ex.Message);
+            //}
         }
 
 

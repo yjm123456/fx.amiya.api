@@ -805,6 +805,7 @@ namespace Fx.Amiya.BusinessWechat.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData> UpdateFinishOrderByEmployeeAsync(UpdateContentPlateFormOrderFinishVo updateVo)
         {
+            throw new Exception("该功能已停用");
             OperationAddDto operationLog = new OperationAddDto();
             try
             {

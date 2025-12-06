@@ -659,7 +659,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                 //    //        x.Sender = empInfo.Name;
                 //    //    }
                 //    //}
-                //    contentPlatFormOrderInfoVoList.Add(resultVo);
+                //    contentPlatFormOrderInfoVoList.Add(resultVo); 
                 //}
                 #endregion
 
@@ -1280,6 +1280,7 @@ namespace Fx.Amiya.Background.Api.Controllers
                     else
                     {
                         throw new Exception("Only administrators and finance staff are allowed to review orders.");
+
                     }
                 }
             }
@@ -1617,6 +1618,7 @@ namespace Fx.Amiya.Background.Api.Controllers
         [FxInternalAuthorize]
         public async Task<ResultData> UpdateFinishOrderByEmployeeAsync(UpdateContentPlateFormOrderFinishVo updateVo)
         {
+            throw new Exception("该功能已停用");
             OperationAddDto operationLog = new OperationAddDto();
             try
             {
